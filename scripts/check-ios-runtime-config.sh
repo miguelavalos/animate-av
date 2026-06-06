@@ -7,6 +7,7 @@ configuration="Debug"
 destination_args=(-destination "generic/platform=iOS")
 preview_worker_api_url="https://api-account-av-preview.avalsys.com"
 production_worker_api_url="https://api-account-av.avalsys.com"
+local_api_url_regex='^http://(127\.0\.0\.1|localhost)(:[0-9]+)?$'
 
 usage() {
   cat <<'USAGE'
@@ -179,7 +180,9 @@ elif [ "$env_name" = "staging" ]; then
   [ "$api_base_url" = "$preview_worker_api_url" ] || fail "staging API URL mismatch"
   [[ "$publishable_key" == pk_test_* ]] || fail "staging publishable key must use pk_test"
 else
-  [ "$api_base_url" = "$preview_worker_api_url" ] || fail "dev API URL must be preview worker"
+  if [ "$api_base_url" != "$preview_worker_api_url" ] && ! [[ "$api_base_url" =~ $local_api_url_regex ]]; then
+    fail "dev API URL must be preview worker or local loopback"
+  fi
   [[ "$publishable_key" == pk_test_* ]] || fail "$env_name publishable key must use pk_test"
 fi
 
