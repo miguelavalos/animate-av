@@ -12,7 +12,7 @@ final class MomentsHomePresentationTests: XCTestCase {
         XCTAssertEqual(presentation.accountTitle, "Account required")
         XCTAssertEqual(
             presentation.accountDetail,
-            "Sign in is required before creating and saving Moments."
+            "Sign in is required before creating and saving videos."
         )
         XCTAssertTrue(presentation.createAction.isDisabled)
         XCTAssertTrue(presentation.openInProgressAction.isDisabled)
@@ -29,12 +29,12 @@ final class MomentsHomePresentationTests: XCTestCase {
 
         XCTAssertEqual(presentation.accountTitle, "Account connected")
         XCTAssertEqual(presentation.accountDetail, "Signed in as Ava.")
-        XCTAssertEqual(presentation.momentStatusDetail, "No synced Moments yet.")
+        XCTAssertEqual(presentation.momentStatusDetail, "No synced videos yet.")
         XCTAssertTrue(presentation.createAction.isProminent)
         XCTAssertFalse(presentation.createAction.isDisabled)
         XCTAssertEqual(
             presentation.openInProgressAction.detail,
-            "Moments appear after you start one."
+            "Videos appear after you start one."
         )
     }
 
@@ -49,7 +49,7 @@ final class MomentsHomePresentationTests: XCTestCase {
             ])
         )
 
-        XCTAssertEqual(presentation.latestInProgressAction?.title, "Continue latest Moment")
+        XCTAssertEqual(presentation.latestInProgressAction?.title, "Continue latest video")
         XCTAssertEqual(presentation.latestInProgressAction?.systemImage, "arrow.right.circle")
         XCTAssertTrue(presentation.latestInProgressAction?.isProminent == true)
         XCTAssertFalse(presentation.createAction.isProminent)
@@ -69,11 +69,11 @@ final class MomentsHomePresentationTests: XCTestCase {
 
         XCTAssertEqual(
             presentation.momentStatusDetail,
-            "2 synced Moments tracked across the current account."
+            "2 synced videos tracked across the current account."
         )
         XCTAssertEqual(
             presentation.openInProgressAction.detail,
-            "Continue Moments that still need action."
+            "Continue videos that still need action."
         )
     }
 
@@ -88,11 +88,11 @@ final class MomentsHomePresentationTests: XCTestCase {
 
         XCTAssertEqual(
             presentation.momentStatusDetail,
-            "1 synced Moment tracked across the current account."
+            "1 synced video tracked across the current account."
         )
         XCTAssertEqual(
             presentation.openInProgressAction.detail,
-            "Continue Moments that still need action."
+            "Continue videos that still need action."
         )
     }
 

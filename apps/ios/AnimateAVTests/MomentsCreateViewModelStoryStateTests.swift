@@ -454,21 +454,17 @@ final class MomentsCreateViewModelStoryStateTests: XCTestCase {
             id: "00000000-0000-0000-0000-000000000001",
             sourceLocalIdentifier: "local-asset-1"
         )
-        let extraRestoredMedia = MomentsCreateTestFixtures.makeSelectedMedia(
-            id: "00000000-0000-0000-0000-000000000002",
-            sourceLocalIdentifier: "local-asset-extra"
-        )
         let preparedStory = applyPreparedBackendStory(to: viewModel)
         viewModel.applyMediaUploadState(
             MomentsCreateMediaUploadState(
-                selectedMedia: [syncedLocalMedia, extraRestoredMedia],
+                selectedMedia: [syncedLocalMedia],
                 statusMessage: nil,
                 isImporting: false,
                 importProgress: nil
             )
         )
 
-        XCTAssertNotEqual(viewModel.currentStoryInputSignature(momentId: "moment-1"), preparedStory.signature)
+        XCTAssertEqual(viewModel.currentStoryInputSignature(momentId: "moment-1"), preparedStory.signature)
         XCTAssertTrue(viewModel.isStoryPreparedForCurrentInput)
     }
 
@@ -666,17 +662,16 @@ final class MomentsCreateViewModelStoryStateTests: XCTestCase {
         momentId: String = "moment-1"
     ) -> (media: MomentMediaAsset, signature: String) {
         let media = makeBackendMedia()
-        let signature = viewModel.currentStoryInputSignature(
-            momentId: momentId,
-            persistedMedia: [makeStoryMedia(from: media)]
-        )
-
         viewModel.applyMomentCreationState(
             MomentsCreateMomentCreationState(
                 isCreatingMoment: false,
                 activeMomentId: momentId,
                 setupErrorMessage: nil
             )
+        )
+        let signature = viewModel.currentStoryInputSignature(
+            momentId: momentId,
+            persistedMedia: [makeStoryMedia(from: media)]
         )
         viewModel.applyStoryState(
             MomentsCreateStoryState(

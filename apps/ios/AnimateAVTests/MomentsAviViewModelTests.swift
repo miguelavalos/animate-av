@@ -27,7 +27,7 @@ final class MomentsAviViewModelTests: XCTestCase {
         )
 
         XCTAssertEqual(presentation.workflowFocusTitle, "Active work")
-        XCTAssertTrue(presentation.workflowFocusMessage.contains("1 Moment in In Progress"))
+        XCTAssertTrue(presentation.workflowFocusMessage.contains("1 video in In Progress"))
         XCTAssertEqual(presentation.workflowFocusSystemImage, "clock.badge.checkmark")
     }
 

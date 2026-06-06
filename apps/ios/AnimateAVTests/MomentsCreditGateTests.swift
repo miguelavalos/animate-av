@@ -78,20 +78,20 @@ final class MomentsCreditGateTests: XCTestCase {
     }
 
     func testLaunchTemplateDurationsCreditsAndAssetRanges() {
-        XCTAssertEqual(MomentTemplate.birthdayMessage.durationSeconds, 30)
-        XCTAssertEqual(MomentTemplate.birthdayMessage.creditCost, 2)
+        XCTAssertEqual(MomentTemplate.birthdayMessage.durationSeconds, 5)
+        XCTAssertEqual(MomentTemplate.birthdayMessage.creditCost, 1)
         XCTAssertEqual(MomentTemplate.birthdayMessage.minimumAssets, 1)
-        XCTAssertEqual(MomentTemplate.birthdayMessage.maximumAssets, 80)
+        XCTAssertEqual(MomentTemplate.birthdayMessage.maximumAssets, 1)
 
-        XCTAssertEqual(MomentTemplate.partyRecap.durationSeconds, 30)
-        XCTAssertEqual(MomentTemplate.partyRecap.creditCost, 2)
+        XCTAssertEqual(MomentTemplate.partyRecap.durationSeconds, 10)
+        XCTAssertEqual(MomentTemplate.partyRecap.creditCost, 1)
         XCTAssertEqual(MomentTemplate.partyRecap.minimumAssets, 1)
-        XCTAssertEqual(MomentTemplate.partyRecap.maximumAssets, 80)
+        XCTAssertEqual(MomentTemplate.partyRecap.maximumAssets, 1)
 
-        XCTAssertEqual(MomentTemplate.softRoast.durationSeconds, 30)
-        XCTAssertEqual(MomentTemplate.softRoast.creditCost, 2)
+        XCTAssertEqual(MomentTemplate.softRoast.durationSeconds, 15)
+        XCTAssertEqual(MomentTemplate.softRoast.creditCost, 1)
         XCTAssertEqual(MomentTemplate.softRoast.minimumAssets, 1)
-        XCTAssertEqual(MomentTemplate.softRoast.maximumAssets, 80)
+        XCTAssertEqual(MomentTemplate.softRoast.maximumAssets, 1)
     }
 
     func testSetupFormRequiresOccasionBeforeCreate() {
@@ -148,13 +148,11 @@ final class MomentsCreditGateTests: XCTestCase {
     func testMediaRulesEnforceTemplateMinimumsAndMaximums() {
         XCTAssertFalse(MomentsMediaRules.canUseSelection(template: .birthdayMessage, selectedCount: 0))
         XCTAssertTrue(MomentsMediaRules.canUseSelection(template: .birthdayMessage, selectedCount: 1))
-        XCTAssertTrue(MomentsMediaRules.canUseSelection(template: .birthdayMessage, selectedCount: 80))
-        XCTAssertFalse(MomentsMediaRules.canUseSelection(template: .birthdayMessage, selectedCount: 81))
+        XCTAssertFalse(MomentsMediaRules.canUseSelection(template: .birthdayMessage, selectedCount: 2))
 
         XCTAssertFalse(MomentsMediaRules.canUseSelection(template: .partyRecap, selectedCount: 0))
         XCTAssertTrue(MomentsMediaRules.canUseSelection(template: .partyRecap, selectedCount: 1))
-        XCTAssertTrue(MomentsMediaRules.canUseSelection(template: .partyRecap, selectedCount: 80))
-        XCTAssertFalse(MomentsMediaRules.canUseSelection(template: .partyRecap, selectedCount: 81))
+        XCTAssertFalse(MomentsMediaRules.canUseSelection(template: .partyRecap, selectedCount: 2))
     }
 
     func testStoryRulesUseSelectedConvexMediaCount() {
@@ -172,8 +170,8 @@ final class MomentsCreditGateTests: XCTestCase {
             )
         }
 
-        XCTAssertTrue(MomentsStoryRules.canPlan(mediaAssets: assets, template: .birthdayMessage))
-        XCTAssertTrue(MomentsStoryRules.canPlan(mediaAssets: assets, template: .partyRecap))
+        XCTAssertFalse(MomentsStoryRules.canPlan(mediaAssets: assets, template: .birthdayMessage))
+        XCTAssertFalse(MomentsStoryRules.canPlan(mediaAssets: assets, template: .partyRecap))
     }
 
     func testStoryInputSignatureTracksMediaOrderAndDirection() {

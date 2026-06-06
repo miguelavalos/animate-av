@@ -14,7 +14,7 @@ final class MomentsInProgressPresentationTests: XCTestCase {
             .signedOut(
                 MomentsInProgressUnavailablePresentation(
                     systemImage: "person.crop.circle.fill",
-                    title: "Sign in to make Moments",
+                    title: "Sign in to make videos",
                     message: "In Progress and Gallery unlock once your account is connected."
                 )
             )
@@ -34,7 +34,7 @@ final class MomentsInProgressPresentationTests: XCTestCase {
                 MomentsInProgressUnavailablePresentation(
                     systemImage: "rectangle.stack.badge.plus",
                     title: "Nothing here yet",
-                    message: "Active Moments appear in In Progress. Finished videos appear in Gallery."
+                    message: "Active videos appear in In Progress. Finished videos appear in Gallery."
                 )
             )
         )
@@ -67,11 +67,11 @@ final class MomentsInProgressPresentationTests: XCTestCase {
 
         XCTAssertEqual(
             fallback.deletionMessage,
-            "This removes this Moment, including selected media records and generated video files that belong to it."
+            "This removes this video, including source-image records and generated video files that belong to it."
         )
         XCTAssertEqual(
             titled.deletionMessage,
-            "This removes Family Weekend, including selected media records and generated video files that belong to it."
+            "This removes Family Weekend, including source-image records and generated video files that belong to it."
         )
     }
 

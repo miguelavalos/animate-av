@@ -46,8 +46,8 @@ final class MomentsInProgressListPresentationTests: XCTestCase {
         XCTAssertFalse(row.isFinished)
         XCTAssertEqual(row.metadata.map(\.systemImage), ["clock", "text.bubble"])
         XCTAssertTrue(row.metadata[0].text.hasPrefix("Updated "))
-        XCTAssertEqual(row.metadata[1].text, "Story")
-        XCTAssertEqual(row.statusTitle, "Story ready")
+        XCTAssertEqual(row.metadata[1].text, "Plan")
+        XCTAssertEqual(row.statusTitle, "Plan ready")
         XCTAssertEqual(row.accessorySystemImage, "chevron.up.circle.fill")
     }
 

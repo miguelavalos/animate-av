@@ -70,7 +70,7 @@ final class MomentStatusRulesTests: XCTestCase {
     }
 
     func testDisplayHelpersFormatBackendValuesForUI() {
-        XCTAssertEqual(MomentStatusRules.displayTitle(for: "story_ready"), "Story ready")
+        XCTAssertEqual(MomentStatusRules.displayTitle(for: "story_ready"), "Plan ready")
         XCTAssertEqual(MomentStatusRules.displayKind("final"), "Final")
         XCTAssertEqual(MomentStatusRules.displayKind("final_export"), "Final Export")
     }
@@ -78,18 +78,18 @@ final class MomentStatusRulesTests: XCTestCase {
     func testNextActionAsksForMediaWhenWorkspaceHasNoMedia() {
         let action = MomentStatusRules.nextAction(for: makeWorkspace())
 
-        XCTAssertEqual(action.title, "Add media")
+        XCTAssertEqual(action.title, "Add source image")
         XCTAssertEqual(action.systemImage, "photo.badge.plus")
-        XCTAssertEqual(action.primaryButtonTitle, "Add Media in Create")
+        XCTAssertEqual(action.primaryButtonTitle, "Add Source Image in Create")
         XCTAssertEqual(action.continuationFocus, .media)
     }
 
     func testNextActionAsksForStoryWhenMediaExistsWithoutScenes() {
         let action = MomentStatusRules.nextAction(for: makeWorkspace(mediaAssets: [makeMediaAsset()]))
 
-        XCTAssertEqual(action.title, "Prepare story")
+        XCTAssertEqual(action.title, "Prepare video")
         XCTAssertEqual(action.systemImage, "text.bubble")
-        XCTAssertEqual(action.primaryButtonTitle, "Prepare Story in Create")
+        XCTAssertEqual(action.primaryButtonTitle, "Prepare Video in Create")
         XCTAssertEqual(action.continuationFocus, .story)
     }
 

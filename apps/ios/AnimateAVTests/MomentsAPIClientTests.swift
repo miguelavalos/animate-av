@@ -361,7 +361,7 @@ final class MomentsAPIClientTests: XCTestCase {
         form.theme = .travel
         form.look = .real
         form.tone = .cinematic
-        form.duration = .auto
+        form.duration = .short
         form.mediaUse = .aviPick
         form.occasion = "   "
         form.details = ""

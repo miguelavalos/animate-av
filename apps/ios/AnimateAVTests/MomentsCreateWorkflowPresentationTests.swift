@@ -354,7 +354,7 @@ final class MomentsCreateWorkflowPresentationTests: XCTestCase {
         )
 
         XCTAssertTrue(summary.hasScenes)
-        XCTAssertEqual(summary.presentedScenes.map(\.title), ["Opening", "Main moments"])
+        XCTAssertEqual(summary.presentedScenes.map(\.title), ["Opening", "Main motion"])
         XCTAssertEqual(summary.presentedScenes.map(\.caption), ["Open with the arrival.", "Show the trip highlights."])
     }
 
@@ -380,16 +380,16 @@ final class MomentsCreateWorkflowPresentationTests: XCTestCase {
 
         XCTAssertEqual(
             presentation.statusMessage,
-            "Story is ready. Create the final video or adjust it first."
+            "Plan is ready. Create the final video or adjust it first."
         )
-        XCTAssertEqual(presentation.modeTitle, "Story")
+        XCTAssertEqual(presentation.modeTitle, "Plan")
         XCTAssertEqual(presentation.mediaCountTitle, "2 items")
-        XCTAssertEqual(presentation.primaryActionTitle, "Refresh story")
-        XCTAssertEqual(presentation.editActionTitle, "Edit story")
+        XCTAssertEqual(presentation.primaryActionTitle, "Refresh plan")
+        XCTAssertEqual(presentation.editActionTitle, "Edit plan")
         XCTAssertTrue(presentation.canRunPrimaryAction)
         XCTAssertTrue(presentation.canShowRefreshAction)
         XCTAssertEqual(presentation.visibleScenes.count, 2)
-        XCTAssertEqual(presentation.remainingSceneTitle, "2 more scenes in this story")
+        XCTAssertEqual(presentation.remainingSceneTitle, "2 more scenes in this plan")
     }
 
     func testStoryDecisionPresentationKeepsFinalPathNonBlockingWhenImproveIsUnavailable() {
@@ -407,9 +407,9 @@ final class MomentsCreateWorkflowPresentationTests: XCTestCase {
 
         XCTAssertEqual(
             presentation.statusMessage,
-            "Story is ready. Create the final video or adjust it first."
+            "Plan is ready. Create the final video or adjust it first."
         )
-        XCTAssertEqual(presentation.primaryActionTitle, "Refresh story")
+        XCTAssertEqual(presentation.primaryActionTitle, "Refresh plan")
         XCTAssertFalse(presentation.canRunPrimaryAction)
         XCTAssertFalse(presentation.canShowRefreshAction)
     }
@@ -424,10 +424,10 @@ final class MomentsCreateWorkflowPresentationTests: XCTestCase {
             canRefreshStory: true
         )
 
-        XCTAssertEqual(presentation.statusMessage, "Ready for Avi to prepare the story.")
+        XCTAssertEqual(presentation.statusMessage, "Ready for Avi to prepare the video.")
         XCTAssertEqual(presentation.modeTitle, "Ready")
         XCTAssertEqual(presentation.mediaCountTitle, "1 item")
-        XCTAssertEqual(presentation.primaryActionTitle, "Prepare story")
+        XCTAssertEqual(presentation.primaryActionTitle, "Prepare video")
         XCTAssertTrue(presentation.canRunPrimaryAction)
         XCTAssertFalse(presentation.canShowRefreshAction)
 
@@ -456,7 +456,7 @@ final class MomentsCreateWorkflowPresentationTests: XCTestCase {
 
         XCTAssertEqual(presentation.activeMomentId, "moment-1")
         XCTAssertEqual(presentation.pickerTitle, "Adding media...")
-        XCTAssertEqual(presentation.remainingSlots, 79)
+        XCTAssertEqual(presentation.remainingSlots, 0)
         XCTAssertEqual(presentation.selectedCountTitle, "1 selected")
         XCTAssertEqual(presentation.selectionMessage, "")
         XCTAssertEqual(presentation.syncedMediaAssets.map(\.id), ["first", "second"])
@@ -464,7 +464,7 @@ final class MomentsCreateWorkflowPresentationTests: XCTestCase {
         XCTAssertEqual(presentation.availabilityMessage, "Add media.")
     }
 
-    func testMediaPresentationUsesSingularMissingMediaCopy() {
+    func testMediaPresentationBlocksMultipleSourceImages() {
         let presentation = MomentsCreateMediaPresentation(
             activeMomentId: "moment-1",
             template: .birthdayMessage,
@@ -476,7 +476,7 @@ final class MomentsCreateWorkflowPresentationTests: XCTestCase {
             )
         )
 
-        XCTAssertEqual(presentation.selectionMessage, "")
+        XCTAssertEqual(presentation.selectionMessage, "Use one source image for Animate AV videos.")
     }
 
     func testStoryPresentationFormatsPreparationStateAndSortsSavedScenes() {
@@ -494,8 +494,8 @@ final class MomentsCreateWorkflowPresentationTests: XCTestCase {
             availabilityMessage: "Ready."
         )
 
-        XCTAssertEqual(presentation.planButtonTitle, "Preparing story...")
-        XCTAssertEqual(presentation.emptyMessage, "Avi can prepare a story from your photos and clips.")
+        XCTAssertEqual(presentation.planButtonTitle, "Preparing video...")
+        XCTAssertEqual(presentation.emptyMessage, "Avi can prepare the animation plan from your source image.")
         XCTAssertEqual(presentation.savedScenes.map(\.id), ["scene-1", "scene-2"])
         XCTAssertTrue(presentation.canPlanStory)
         XCTAssertEqual(presentation.availabilityMessage, "Ready.")
@@ -856,23 +856,23 @@ final class MomentsCreateWorkflowPresentationTests: XCTestCase {
     func testRecoveryCopyCoversMediaAndStoryFailurePaths() {
         XCTAssertEqual(
             MomentsRecoveryCopy.mediaImportFailure(),
-            "Couldn’t add that media. Your photos are still on this device; try again or choose different items."
+            "Couldn’t add that source image. Your photo is still on this device; try again or choose a different image."
         )
         XCTAssertEqual(
             MomentsRecoveryCopy.mediaUploadUnavailable(),
-            "Media upload is not ready yet. Your photos and videos are still on this device; please try again in a moment."
+            "Source image upload is not ready yet. Your photo is still on this device; please try again in a moment."
         )
         XCTAssertEqual(
             MomentsRecoveryCopy.mediaStorySaveFailure(),
-            "Couldn’t save media for the story. Your photos and videos are still on this device; try again or choose different items."
+            "Couldn’t save the source image for the video. Your photo is still on this device; try again or choose a different image."
         )
         XCTAssertEqual(
             MomentsRecoveryCopy.storyStartFailure(),
-            "Couldn’t start a Moment for this story. No credits were used. Please try again."
+            "Couldn’t start this video. No Credits were used. Please try again."
         )
         XCTAssertEqual(
             MomentsRecoveryCopy.storyFailure(),
-            "Avi couldn’t prepare the story right now. No credits were used. Please try again."
+            "Avi couldn’t prepare the video right now. No Credits were used. Please try again."
         )
     }
 

@@ -57,7 +57,7 @@ struct MomentSetupForm: Equatable {
     var creationMode: MomentCreationMode = .quick
     var look: MomentLook = .real
     var theme: MomentCreationStyleID = .celebration
-    var duration: MomentDuration = .auto
+    var duration: MomentDuration = .short
     var mediaUse: MomentMediaUse = .aviPick
     var template: MomentTemplate
     var occasion = "Birthday"
@@ -96,7 +96,7 @@ struct MomentSetupForm: Equatable {
         form.creationMode = MomentCreationMode(rawValue: moment.creationMode) ?? .quick
         form.look = MomentLook(rawValue: moment.look) ?? .real
         form.theme = MomentCreationStyleID(rawValue: moment.theme) ?? .celebration
-        form.duration = MomentDuration(rawValue: moment.duration) ?? .auto
+        form.duration = MomentDuration(rawValue: moment.duration) ?? .short
         form.mediaUse = MomentMediaUse(rawValue: moment.mediaUse) ?? .aviPick
         return form
     }

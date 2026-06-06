@@ -434,7 +434,7 @@ final class MomentsCreateViewModel: ObservableObject {
         form.theme = style.id
         form.look = preserveUserOverrides && hasUserLookOverride ? currentLook : .real
         form.creationMode = .quick
-        form.duration = preserveUserOverrides && hasUserDurationOverride ? currentDuration : .auto
+        form.duration = preserveUserOverrides && hasUserDurationOverride ? currentDuration : .short
         if !preserveUserOverrides {
             hasUserDurationOverride = false
         }
@@ -502,7 +502,7 @@ final class MomentsCreateViewModel: ObservableObject {
     func effectiveFinalRenderForm() -> MomentSetupForm {
         var finalForm = form
         if !hasUserDurationOverride {
-            finalForm.duration = .auto
+            finalForm.duration = .short
         }
         return finalForm
     }

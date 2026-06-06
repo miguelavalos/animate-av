@@ -48,14 +48,6 @@ struct MomentsCreateMediaCard: View {
                             isEnabled: !presentation.summary.isImporting,
                             action: choosePhotos
                         )
-
-                        MomentsCreateMediaChoiceAction(
-                            title: L10n.string("create.media.addCollection"),
-                            systemImage: "rectangle.stack.badge.plus",
-                            isPrimary: false,
-                            isEnabled: !presentation.summary.isImporting,
-                            action: chooseAlbum
-                        )
                     }
                 }
                 .frame(maxWidth: .infinity, minHeight: 232, alignment: .topLeading)

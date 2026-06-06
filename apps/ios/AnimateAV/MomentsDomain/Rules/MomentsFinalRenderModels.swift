@@ -231,7 +231,7 @@ enum MomentsFinalRenderRules {
         case .insufficientCredits:
             return insufficientCreditsMessage
         case .storyNotReady:
-            return "Prepare the story before creating the final video."
+            return "Prepare the video before creating the final video."
         }
     }
 }

@@ -120,6 +120,8 @@ enum MomentDuration: String, CaseIterable, Identifiable, Codable {
     case standard
     case extended
 
+    static var allCases: [MomentDuration] { [.short, .standard, .extended] }
+
     var id: String { rawValue }
 
     var title: String {
@@ -178,8 +180,8 @@ struct MomentCreationStyle: Identifiable, Equatable {
     var durationSeconds: Int { 15 }
     var creditCost: Int { 1 }
     var minimumAssets: Int { 1 }
-    var recommendedAssets: ClosedRange<Int> { 4...10 }
-    var maximumAssets: Int { 20 }
+    var recommendedAssets: ClosedRange<Int> { 1...1 }
+    var maximumAssets: Int { 1 }
 
     static var launchStyles: [MomentCreationStyle] { [
         MomentCreationStyle(

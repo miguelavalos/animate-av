@@ -22,17 +22,17 @@ struct MomentTemplate: Identifiable, Equatable {
     }
 
     var mediaRange: String {
-        L10n.string("create.template.mediaRange", minimumAssets, maximumAssets)
+        L10n.string("create.template.mediaRange", minimumAssets)
     }
 
     static var birthdayMessage: MomentTemplate {
         MomentTemplate(
         id: .birthdayMessage,
         title: L10n.string("create.template.celebration.title"),
-        durationSeconds: 30,
-        creditCost: 2,
+        durationSeconds: 5,
+        creditCost: 1,
         minimumAssets: 1,
-        maximumAssets: 80,
+        maximumAssets: 1,
         summary: L10n.string("create.template.celebration.summary")
         )
     }
@@ -41,10 +41,10 @@ struct MomentTemplate: Identifiable, Equatable {
         MomentTemplate(
         id: .partyRecap,
         title: L10n.string("create.template.eventRecap.title"),
-        durationSeconds: 30,
-        creditCost: 2,
+        durationSeconds: 10,
+        creditCost: 1,
         minimumAssets: 1,
-        maximumAssets: 80,
+        maximumAssets: 1,
         summary: L10n.string("create.template.eventRecap.summary")
         )
     }
@@ -53,10 +53,10 @@ struct MomentTemplate: Identifiable, Equatable {
         MomentTemplate(
         id: .softRoast,
         title: L10n.string("create.template.softRoast.title"),
-        durationSeconds: 30,
-        creditCost: 2,
+        durationSeconds: 15,
+        creditCost: 1,
         minimumAssets: 1,
-        maximumAssets: 80,
+        maximumAssets: 1,
         summary: L10n.string("create.template.softRoast.summary")
         )
     }

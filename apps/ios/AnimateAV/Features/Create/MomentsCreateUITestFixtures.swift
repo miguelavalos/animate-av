@@ -34,14 +34,14 @@ enum MomentsCreateUITestFixtures {
             id: momentId,
             template: .birthdayMessage,
             status: momentStatus(for: mode),
-            title: "Family Weekend",
+            title: "Animated Portrait",
             tone: "warm",
             tempo: "balanced",
-            occasion: "Birthday",
-            details: "Keep the opening gentle, highlight the cake scene, and end with the beach clip.",
+            occasion: "Portrait animation",
+            details: "Keep the animation warm, expressive, and focused on the source image.",
             storyInputSignature: nil,
-            durationSeconds: 30,
-            creditCost: 2,
+            durationSeconds: 5,
+            creditCost: 1,
             updatedAt: 1_781_592_000_000
         )
     }
@@ -75,16 +75,13 @@ enum MomentsCreateUITestFixtures {
 
     static var selectedMedia: [MomentsSelectedMedia] {
         [
-            selectedMedia(id: "11111111-1111-1111-1111-111111111111", filename: "cake-candles.jpg", sortOrder: 0),
-            selectedMedia(id: "22222222-2222-2222-2222-222222222222", filename: "beach-toast.mov", kind: "video", contentType: "video/quicktime", sortOrder: 1)
+            selectedMedia(id: "11111111-1111-1111-1111-111111111111", filename: "portrait-source.jpg", sortOrder: 0)
         ]
     }
 
     static var mediaAssets: [MomentMediaAsset] {
         [
-            mediaAsset(id: "media-1", kind: "image", sortOrder: 0),
-            mediaAsset(id: "media-2", kind: "video", sortOrder: 1),
-            mediaAsset(id: "media-3", kind: "image", sortOrder: 2)
+            mediaAsset(id: "media-1", kind: "image", sortOrder: 0)
         ]
     }
 
@@ -164,18 +161,18 @@ enum MomentsCreateUITestFixtures {
             ),
             plan: MomentsRenderPlan(
                 schemaVersion: 1,
-                minimumDurationMs: 16_000,
-                targetDurationMs: 30_000,
-                creditCost: 2,
-                totalCreditCost: 2,
-                secondsPerCredit: 15,
-                plannedAssetCount: 3,
-                usedAssetCount: 3,
+                minimumDurationMs: 5_000,
+                targetDurationMs: 5_000,
+                creditCost: 1,
+                totalCreditCost: 1,
+                secondsPerCredit: 5,
+                plannedAssetCount: 1,
+                usedAssetCount: 1,
                 rejectedAssetCount: 0,
                 rendererMode: "image_to_video",
-                renderOptionId: "standard_moment",
-                renderOptionTitle: "Standard Moment",
-                userMessage: "Avi will use the strongest clips, keep the beach toast as the ending, and render a 30 second video.",
+                renderOptionId: "animate_short",
+                renderOptionTitle: "Short animation",
+                userMessage: "Avi will animate the source image with audio and render an up to 5 second video.",
                 qualityWarnings: []
             ),
             canCreateVideo: hasCredits,

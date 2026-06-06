@@ -12,8 +12,8 @@ final class MomentsInProgressWorkspacePresentationTests: XCTestCase {
 
         let presentation = MomentsInProgressWorkspaceDetailPresentation(workspace: workspace)
 
-        XCTAssertEqual(presentation.title, "Moment detail")
-        XCTAssertEqual(presentation.nextAction.title, "Prepare story")
+        XCTAssertEqual(presentation.title, "Video detail")
+        XCTAssertEqual(presentation.nextAction.title, "Prepare video")
         XCTAssertEqual(presentation.continuationRequest.moment, workspace.moment)
         XCTAssertEqual(presentation.continuationRequest.focus, .story)
     }
@@ -92,7 +92,7 @@ final class MomentsInProgressWorkspacePresentationTests: XCTestCase {
         )
 
         XCTAssertEqual(presentation.tiles.map(\.title), ["Status", "Final", "Latest job"])
-        XCTAssertEqual(presentation.tiles.map(\.value), ["Story ready", "Available", "Final · Failed"])
+        XCTAssertEqual(presentation.tiles.map(\.value), ["Plan ready", "Available", "Final · Failed"])
         XCTAssertEqual(presentation.tiles.map(\.systemImage), ["circle.dashed", "video.fill", "gearshape.2"])
     }
 
@@ -112,7 +112,7 @@ final class MomentsInProgressWorkspacePresentationTests: XCTestCase {
 
         XCTAssertEqual(presentation.title, "Media")
         XCTAssertEqual(presentation.emptySystemImage, "photo.badge.plus")
-        XCTAssertEqual(presentation.emptyMessage, "No media is attached to this Moment yet. Add photos or clips from Create to prepare the story.")
+        XCTAssertEqual(presentation.emptyMessage, "No source image is attached to this video yet. Add one image from Create to prepare the video.")
         XCTAssertEqual(presentation.mediaAssets.map(\.id), ["first", "second"])
     }
 
@@ -139,9 +139,9 @@ final class MomentsInProgressWorkspacePresentationTests: XCTestCase {
             makeScene(id: "scene-1", sceneIndex: 0, caption: "Opening beat")
         ])
 
-        XCTAssertEqual(presentation.title, "Story")
+        XCTAssertEqual(presentation.title, "Plan")
         XCTAssertEqual(presentation.emptySystemImage, "text.bubble")
-        XCTAssertEqual(presentation.emptyMessage, "Prepare the story after this Moment has enough media.")
+        XCTAssertEqual(presentation.emptyMessage, "Prepare the video after this source image is ready.")
         XCTAssertEqual(presentation.storyScenes.map(\.id), ["scene-1", "scene-2"])
     }
 

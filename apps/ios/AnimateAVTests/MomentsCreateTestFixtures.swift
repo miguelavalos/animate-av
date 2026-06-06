@@ -9,7 +9,7 @@ enum MomentsCreateTestFixtures {
         look: String = "real",
         theme: String = "celebration",
         mood: String? = nil,
-        duration: String = "auto",
+        duration: String = "short",
         mediaUse: String = "aviPick",
         status: String = "in_progress",
         occasion: String? = nil,
@@ -32,8 +32,8 @@ enum MomentsCreateTestFixtures {
             occasion: occasion,
             details: details,
             storyInputSignature: storyInputSignature,
-            durationSeconds: 30,
-            creditCost: 2,
+            durationSeconds: 5,
+            creditCost: 1,
             updatedAt: 10
         )
     }
@@ -166,9 +166,9 @@ enum MomentsCreateTestFixtures {
                 usedAssetCount: usedAssetCount,
                 rejectedAssetCount: max(0, plannedAssetCount - usedAssetCount),
                 rendererMode: "image_to_video",
-                renderOptionId: "standard_moment",
-                renderOptionTitle: "Standard Moment",
-                userMessage: "Avi will use the strongest moments.",
+                renderOptionId: "animate_short",
+                renderOptionTitle: "Short animation",
+                userMessage: "Avi will animate the source image.",
                 qualityWarnings: ["One item may be cropped."]
             ),
             canCreateVideo: canCreateVideo,
