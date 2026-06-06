@@ -156,9 +156,9 @@ fi
 [ "$revenuecat_monthly_package_id" != '$(inherited)' ] || fail "ANIMATEAV_REVENUECAT_MONTHLY_PACKAGE_ID is missing"
 
 if [ "$configuration" = "Release" ]; then
-  [ "$product_bundle_identifier" = "app.avalsys.animateav" ] || fail "Release bundle must be app.avalsys.animateav, got $product_bundle_identifier"
+  [ "$product_bundle_identifier" = "com.avalsys.animateav" ] || fail "Release bundle must be com.avalsys.animateav, got $product_bundle_identifier"
 elif [ "$configuration" = "Debug" ]; then
-  [ "$product_bundle_identifier" = "app.avalsys.animateav.dev" ] || fail "Debug bundle must be app.avalsys.animateav.dev, got $product_bundle_identifier"
+  [ "$product_bundle_identifier" = "com.avalsys.animateav.dev" ] || fail "Debug bundle must be com.avalsys.animateav.dev, got $product_bundle_identifier"
 fi
 
 if [ "$env_name" = "prod" ]; then

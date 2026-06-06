@@ -10,7 +10,7 @@ final class StoryWorkflow: WorkspaceObservingWorkflow {
     private let currentUserProvider: any MomentsCurrentUserProviding
     private let authTokenProvider: any MomentsAuthTokenProviding
     private let storyClient: MomentsStoryClient
-    private let logger = Logger(subsystem: "app.avalsys.animateav", category: "story")
+    private let logger = Logger(subsystem: "com.avalsys.animateav", category: "story")
 
     init(
         currentUserProvider: any MomentsCurrentUserProviding,

@@ -19,7 +19,7 @@ final class FinalRenderWorkflow: WorkspaceObservingWorkflow {
     private let creditBalanceProvider: any MomentsCreditBalanceProviding
     private let finalRenderClient: MomentsFinalRenderClient
     private let galleryStore: any MomentsGalleryStoring
-    private let logger = Logger(subsystem: "app.avalsys.animateav", category: "final-render")
+    private let logger = Logger(subsystem: "com.avalsys.animateav", category: "final-render")
     private var downloadingArtifactIds = Set<String>()
     private var lastCreditRefreshKey: String?
 

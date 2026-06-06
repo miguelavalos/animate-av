@@ -83,7 +83,7 @@ enum AppConfig {
     }
 
     private static var diagnosticsReleaseName: String? {
-        let bundleIdentifier = Bundle.main.bundleIdentifier ?? "app.avalsys.animateav"
+        let bundleIdentifier = Bundle.main.bundleIdentifier ?? "com.avalsys.animateav"
         let version = Bundle.main.object(forInfoDictionaryKey: "CFBundleShortVersionString") as? String ?? "0"
         let build = Bundle.main.object(forInfoDictionaryKey: "CFBundleVersion") as? String ?? "0"
         return "\(bundleIdentifier)@\(version)+\(build)"

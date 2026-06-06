@@ -6,7 +6,7 @@ struct MomentsUploadClient: Sendable {
     var session: URLSession = .shared
     var uploadRetryPolicy = MomentsUploadRetryPolicy()
     var networkRetryPolicy = MomentsNetworkRetryPolicy()
-    private let logger = Logger(subsystem: "app.avalsys.animateav", category: "upload-client")
+    private let logger = Logger(subsystem: "com.avalsys.animateav", category: "upload-client")
 
     var isConfigured: Bool {
         URL(string: baseURLString.trimmingCharacters(in: .whitespacesAndNewlines)) != nil

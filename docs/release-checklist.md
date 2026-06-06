@@ -16,7 +16,7 @@ in the private AVALSYS suite.
   --configuration Release` passes before archive/upload.
 - [ ] Auth, account, credit, purchase, upload, render, and deletion smokes use a
   signed install. Any simulator that previously ran an unsigned build has had
-  both `app.avalsys.animateav.dev` and `app.avalsys.animateav` uninstalled
+  both `com.avalsys.animateav.dev` and `com.avalsys.animateav` uninstalled
   before the signed smoke.
 - [ ] Focused tests pass or failures are documented in the private handoff.
 - [ ] `scripts/check-public-hygiene.sh` passes for normal public repo changes.

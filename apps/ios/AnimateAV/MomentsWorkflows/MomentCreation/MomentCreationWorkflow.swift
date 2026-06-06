@@ -14,7 +14,7 @@ final class MomentCreationWorkflow: ObservableObject {
     private let momentDeleter: any MomentsDeleting
     private let workspaceObserver: any MomentsActiveWorkspaceObserving
     private var workflowGeneration = WorkflowGeneration()
-    private let logger = Logger(subsystem: "app.avalsys.animateav", category: "moment-creation")
+    private let logger = Logger(subsystem: "com.avalsys.animateav", category: "moment-creation")
 
     init(
         currentUserProvider: any MomentsCurrentUserProviding,

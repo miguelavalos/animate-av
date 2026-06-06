@@ -28,7 +28,7 @@ struct DefaultAVAccountService: AVAccountService {
     private let accountService = ClerkAccountAVService(
         publishableKeyProvider: { AppConfig.avAccountKey },
         fallbackDisplayName: L10n.string("account.displayName.user"),
-        loggerSubsystem: "app.avalsys.animateav"
+        loggerSubsystem: "com.avalsys.animateav"
     )
 
     var isAvailable: Bool {

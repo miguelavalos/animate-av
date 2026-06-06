@@ -102,8 +102,8 @@ Before any auth smoke after unsigned testing, remove stale app state before
 reinstalling a signed simulator build:
 
 ```bash
-xcrun simctl uninstall booted app.avalsys.animateav.dev
-xcrun simctl uninstall booted app.avalsys.animateav
+xcrun simctl uninstall booted com.avalsys.animateav.dev
+xcrun simctl uninstall booted com.avalsys.animateav
 ```
 
 Then rebuild with simulator signing enabled.

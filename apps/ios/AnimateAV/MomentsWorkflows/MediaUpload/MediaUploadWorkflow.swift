@@ -13,7 +13,7 @@ final class MediaUploadWorkflow: WorkspaceObservingWorkflow {
     private let currentUserProvider: any MomentsCurrentUserProviding
     private let authTokenProvider: any MomentsAuthTokenProviding
     private let uploadClient: MomentsUploadClient
-    private let logger = Logger(subsystem: "app.avalsys.animateav", category: "media-upload")
+    private let logger = Logger(subsystem: "com.avalsys.animateav", category: "media-upload")
     private var restoredWorkspaceMomentId: String?
 
     init(

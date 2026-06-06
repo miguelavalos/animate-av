@@ -11,7 +11,7 @@ struct MomentsAuthOnboardingView: View {
 
     @StateObject private var signInCoordinator = AVAuthSignInCoordinator()
 
-    private let authLogger = Logger(subsystem: "app.avalsys.animateav", category: "auth")
+    private let authLogger = Logger(subsystem: "com.avalsys.animateav", category: "auth")
 
     var body: some View {
         AVAuthConfiguredOnboardingScreen(
