@@ -108,6 +108,26 @@ xcrun simctl uninstall booted com.avalsys.animateav
 
 Then rebuild with simulator signing enabled.
 
+## Real Device Install
+
+Use the device helper for signed iPhone installs. It regenerates local runtime
+config, validates effective settings for the selected device, builds, installs,
+and launches the app:
+
+```bash
+scripts/install-ios-device.sh --env staging --development-team <APPLE_DEVELOPER_TEAM_ID>
+```
+
+Use `--device <UDID>` when more than one iPhone is connected. Use
+`--configuration Release --env prod` only when following the private release
+runbook.
+
+The `--development-team` value is a local Xcode CLI override for machines where
+Xcode UI can sign the app but `xcodebuild` reports `No Account for Team` or no
+matching provisioning profile. Do not commit that team id, change shared
+Infisical config, or edit `project.pbxproj` to work around a local Xcode account
+resolver issue.
+
 ## Tests
 
 Run the focused simulator test suite after generating the Xcode project:

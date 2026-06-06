@@ -67,6 +67,13 @@ Validate effective runtime config after generating local settings:
 scripts/check-ios-runtime-config.sh --env staging
 ```
 
+For signed iPhone installs, use the helper instead of editing Xcode signing
+settings into the project:
+
+```bash
+scripts/install-ios-device.sh --env staging --development-team <APPLE_DEVELOPER_TEAM_ID>
+```
+
 Use the private release runbook for production archive checks.
 
 ## Test
