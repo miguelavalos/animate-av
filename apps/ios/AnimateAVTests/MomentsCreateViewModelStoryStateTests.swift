@@ -1,0 +1,895 @@
+import XCTest
+import Combine
+@testable import AnimateAV
+
+@MainActor
+final class MomentsCreateViewModelStoryStateTests: XCTestCase {
+    func testSubmittingFinalVideoWithoutWorkflowFailsVisibly() {
+        let viewModel = MomentsCreateViewModel()
+
+        viewModel.submitFinalVideoConfirmation()
+
+        XCTAssertEqual(
+            viewModel.finalVideoCommandState,
+            .failed("Video creation is not configured for this build.")
+        )
+        XCTAssertEqual(viewModel.workflowErrorAlertMessage, "Video creation is not configured for this build.")
+    }
+
+    func testFinalVideoCommandTracksQueuedBackendJob() {
+        let viewModel = MomentsCreateViewModel()
+        let job = MomentsCreateTestFixtures.makeRenderJob(
+            id: "render-job-1",
+            kind: "final",
+            status: "queued",
+            userMessage: "Avi is creating your video."
+        )
+
+        viewModel.beginFinalVideoCommand(.confirming("Creating final video."))
+        viewModel.applyFinalRenderState(
+            MomentsCreateFinalRenderState(
+                finalExport: nil,
+                latestFinalJob: job,
+                renderPlan: nil,
+                statusMessage: "Creating final video.",
+                isGenerating: false
+            )
+        )
+
+        XCTAssertEqual(
+            viewModel.finalVideoCommandState,
+            .queued("Avi is creating your video.")
+        )
+        XCTAssertFalse(viewModel.finalVideoCommandState.isRunning)
+        XCTAssertNil(viewModel.workflowErrorAlertMessage)
+    }
+
+    func testClearingFinalSessionAfterGalleryMoveRemovesDownloadState() {
+        let viewModel = MomentsCreateViewModel()
+        let finalExport = MomentsCreateTestFixtures.makeArtifact(id: "artifact-1", kind: "final_export")
+        let galleryVideo = MomentsGalleryVideoRecord(
+            id: "artifact-1",
+            momentId: "moment-1",
+            artifactId: "artifact-1",
+            title: "Travel",
+            r2Key: "animateav/artifact-1.mp4",
+            localRelativePath: "artifact-1.mp4",
+            createdAt: 1_780_000_000_000
+        )
+
+        viewModel.applyFinalRenderState(
+            MomentsCreateFinalRenderState(
+                finalExport: finalExport,
+                latestFinalJob: nil,
+                renderPlan: nil,
+                pendingGalleryVideo: galleryVideo,
+                statusMessage: "Saved locally.",
+                isGenerating: false
+            )
+        )
+
+        viewModel.clearFinalSessionAfterGalleryMove()
+
+        XCTAssertNil(viewModel.finalExport)
+        XCTAssertNil(viewModel.pendingGalleryVideo)
+        XCTAssertNil(viewModel.latestFinalJob)
+        XCTAssertNil(viewModel.workflowPresentation.finalRenderSummary.finalExport)
+        XCTAssertNil(viewModel.workflowPresentation.finalRenderSummary.pendingGalleryVideo)
+        XCTAssertFalse(viewModel.workflowPresentation.showsMediaFirstWorkspace)
+    }
+
+    func testBeginNewMomentWithoutPickerRequestShowsMediaChoice() {
+        let viewModel = MomentsCreateViewModel()
+        viewModel.beginNewMoment()
+
+        XCTAssertTrue(viewModel.hasLocalMomentWorkspace)
+        XCTAssertEqual(viewModel.mediaPickerOpenRequest, 0)
+        XCTAssertTrue(viewModel.workflowPresentation.showsMediaFirstWorkspace)
+    }
+
+    func testBeginNewMomentCanExplicitlyOpenPhotoPicker() {
+        let viewModel = MomentsCreateViewModel()
+        viewModel.beginNewMoment(openMediaPicker: true)
+
+        XCTAssertTrue(viewModel.hasLocalMomentWorkspace)
+        XCTAssertEqual(viewModel.mediaPickerOpenRequest, 1)
+        XCTAssertEqual(viewModel.albumPickerOpenRequest, 0)
+    }
+
+    func testBeginNewMomentCanExplicitlyOpenAlbumPicker() {
+        let viewModel = MomentsCreateViewModel()
+        viewModel.beginNewMoment(openAlbumPicker: true)
+
+        XCTAssertTrue(viewModel.hasLocalMomentWorkspace)
+        XCTAssertEqual(viewModel.mediaPickerOpenRequest, 0)
+        XCTAssertEqual(viewModel.albumPickerOpenRequest, 1)
+    }
+
+    func testFinalRenderUsesWorkspaceMediaIdentifiersAfterReload() {
+        let harness = MomentCreationFailureHarness(error: NSError(domain: "test", code: 1))
+        let workflow = harness.finalRenderWorkflow
+        let workspaceMedia = [
+            MomentsCreateTestFixtures.makeMediaAsset(
+                id: "backend-media-2",
+                sortOrder: 2,
+                sourceLocalIdentifier: "platform-2"
+            ),
+            MomentsCreateTestFixtures.makeMediaAsset(
+                id: "backend-media-1",
+                sortOrder: 1,
+                sourceLocalIdentifier: "platform-1"
+            )
+        ]
+
+        XCTAssertEqual(
+            workflow.selectedSourceLocalIdentifiersForFinalRender(from: [], workspaceMedia: workspaceMedia),
+            ["platform-1", "platform-2"]
+        )
+    }
+
+    func testFinalRenderDownloadUsesBackendWorkflowArtifactIdWhenAvailable() {
+        let harness = MomentCreationFailureHarness(error: NSError(domain: "test", code: 1))
+        let workflow = harness.finalRenderWorkflow
+        let artifact = MomentArtifact(
+            id: "convex-artifact-doc",
+            workflowArtifactId: "workflow-artifact-1",
+            kind: "final_export",
+            r2Key: "animateav/user/moment/final-exports/workflow-artifact-1.mp4",
+            status: "available",
+            hasWatermark: false,
+            expiresAt: 0
+        )
+
+        XCTAssertEqual(workflow.finalDownloadArtifactId(for: artifact), "workflow-artifact-1")
+    }
+
+    func testFinalRenderPlanBlocksRecoveredWorkspaceWhenSourceMediaIsMissing() async {
+        let harness = MomentCreationFailureHarness(error: NSError(domain: "test", code: 1))
+        let workflow = harness.finalRenderWorkflow
+        harness.publishWorkspace(
+            MomentWorkspace(
+                moment: MomentsCreateTestFixtures.makeMoment(id: "moment-1"),
+                mediaAssets: [
+                    MomentsCreateTestFixtures.makeMediaAsset(
+                        id: "backend-media-1",
+                        sourceLocalIdentifier: "missing-photos-asset"
+                    )
+                ],
+                storyScenes: [],
+                renderJobs: [],
+                artifacts: []
+            )
+        )
+        await Task.yield()
+
+        await workflow.prepareFinalRenderPlan(
+            momentId: "moment-1",
+            template: .birthdayMessage,
+            creationStyle: nil,
+            form: MomentSetupForm(template: .birthdayMessage),
+            selectedMedia: []
+        )
+
+        XCTAssertEqual(workflow.statusMessage, L10n.string("workflow.final.sourceMediaMissing"))
+        XCTAssertFalse(workflow.isGenerating)
+        XCTAssertNil(workflow.renderPlan)
+    }
+
+    func testFinalRenderPlanWithoutWatermarkIsCurrentForWatermarkedRender() {
+        let plan = MomentsCreateTestFixtures.makeRenderPlan(momentId: "moment-1")
+
+        XCTAssertFalse(
+            FinalRenderWorkflow.needsRenderPlanForFinalRender(
+                renderPlan: plan,
+                momentId: "moment-1",
+                removesWatermark: false
+            )
+        )
+        XCTAssertTrue(
+            FinalRenderWorkflow.needsRenderPlanForFinalRender(
+                renderPlan: plan,
+                momentId: "moment-1",
+                removesWatermark: true
+            )
+        )
+    }
+
+    func testVisibleFinalRenderPlanCanBeConfirmedEvenWhenLocalSignatureChanged() {
+        let viewModel = MomentsCreateViewModel()
+        let plan = MomentsCreateTestFixtures.makeRenderPlan(momentId: "moment-1")
+
+        viewModel.applyFinalRenderState(
+            MomentsCreateFinalRenderState(
+                finalExport: nil,
+                latestFinalJob: nil,
+                renderPlan: plan,
+                statusMessage: nil,
+                isGenerating: false
+            )
+        )
+
+        XCTAssertTrue(viewModel.hasConfirmableRenderPlan(momentId: "moment-1"))
+        XCTAssertEqual(viewModel.confirmableRenderPlan(momentId: "moment-1")?.planId, plan.planId)
+        XCTAssertFalse(viewModel.hasConfirmableRenderPlan(momentId: "other-moment"))
+    }
+
+    func testBlockedFinalRenderPlanCannotBeConfirmed() {
+        let viewModel = MomentsCreateViewModel()
+        let plan = MomentsCreateTestFixtures.makeRenderPlan(
+            momentId: "moment-1",
+            canCreateVideo: false
+        )
+
+        viewModel.applyFinalRenderState(
+            MomentsCreateFinalRenderState(
+                finalExport: nil,
+                latestFinalJob: nil,
+                renderPlan: plan,
+                statusMessage: nil,
+                isGenerating: false
+            )
+        )
+
+        XCTAssertFalse(viewModel.hasConfirmableRenderPlan(momentId: "moment-1"))
+    }
+
+    func testInsufficientCreditRenderPlanClearsWhenBalanceCanCoverCost() {
+        let viewModel = MomentsCreateViewModel()
+        let plan = MomentsCreateTestFixtures.makeRenderPlan(
+            momentId: "moment-1",
+            canCreateVideo: false,
+            totalCreditCost: 2,
+            createVideoBlockers: ["insufficient_credits"]
+        )
+
+        viewModel.applyFinalRenderState(
+            MomentsCreateFinalRenderState(
+                finalExport: nil,
+                latestFinalJob: nil,
+                renderPlan: plan,
+                statusMessage: nil,
+                isGenerating: false
+            )
+        )
+        XCTAssertEqual(viewModel.currentRenderPlan?.planId, plan.planId)
+
+        viewModel.applyAccountState(
+            MomentsCreateAccountState(
+                isSignedIn: true,
+                balance: MomentsCreditBalance(proMonthly: 0, promotional: 5, purchased: 0),
+                creditBalanceLoadState: .loaded
+            )
+        )
+
+        XCTAssertNil(viewModel.currentRenderPlan)
+    }
+
+    func testStoryScenesClearStaleErrorAndMarkCurrentInputPrepared() {
+        let viewModel = MomentsCreateViewModel()
+        let media = MomentsCreateTestFixtures.makeSelectedMedia(
+            id: "00000000-0000-0000-0000-000000000001"
+        )
+
+        viewModel.applyMomentCreationState(
+            MomentsCreateMomentCreationState(
+                isCreatingMoment: false,
+                activeMomentId: "moment-1",
+                setupErrorMessage: nil
+            )
+        )
+        viewModel.applyMediaUploadState(
+            MomentsCreateMediaUploadState(
+                selectedMedia: [media],
+                statusMessage: nil,
+                isImporting: false,
+                importProgress: nil
+            )
+        )
+        viewModel.applyStoryState(
+            MomentsCreateStoryState(
+                activeWorkspace: nil,
+                savedScenes: [],
+                generatedScenes: [],
+                statusMessage: MomentsRecoveryCopy.storyFailure(),
+                isPlanning: false
+            )
+        )
+
+        XCTAssertEqual(viewModel.storySummary.statusMessage, MomentsRecoveryCopy.storyFailure())
+        XCTAssertFalse(viewModel.isStoryPreparedForCurrentInput)
+
+        viewModel.applyStoryState(
+            MomentsCreateStoryState(
+                activeWorkspace: nil,
+                savedScenes: [MomentsCreateTestFixtures.makeScene(id: "scene-1")],
+                generatedScenes: [],
+                statusMessage: MomentsRecoveryCopy.storyFailure(),
+                isPlanning: false
+            )
+        )
+
+        XCTAssertNil(viewModel.storySummary.statusMessage)
+        XCTAssertTrue(viewModel.isStoryPreparedForCurrentInput)
+    }
+
+    func testCurrentStorySignaturePrefersLocalMediaWhenWorkspaceHasUploadedMedia() {
+        let viewModel = MomentsCreateViewModel()
+        let localMedia = MomentsCreateTestFixtures.makeSelectedMedia(
+            id: "00000000-0000-0000-0000-000000000001",
+            sourceLocalIdentifier: "local-asset-1"
+        )
+
+        viewModel.applyMomentCreationState(
+            MomentsCreateMomentCreationState(
+                isCreatingMoment: false,
+                activeMomentId: "moment-1",
+                setupErrorMessage: nil
+            )
+        )
+        viewModel.applyMediaUploadState(
+            MomentsCreateMediaUploadState(
+                selectedMedia: [localMedia],
+                statusMessage: nil,
+                isImporting: false,
+                importProgress: nil
+            )
+        )
+
+        viewModel.applyStoryState(
+            MomentsCreateStoryState(
+                activeWorkspace: MomentWorkspace(
+                    moment: MomentsCreateTestFixtures.makeMoment(id: "moment-1"),
+                    mediaAssets: [
+                        MomentsCreateTestFixtures.makeMediaAsset(
+                            id: "backend-media-1",
+                            sortOrder: 0
+                        )
+                    ],
+                    storyScenes: [],
+                    renderJobs: [],
+                    artifacts: []
+                ),
+                savedScenes: [],
+                generatedScenes: [],
+                statusMessage: nil,
+                isPlanning: false
+            )
+        )
+
+        let expectedLocalSignature = viewModel.currentStoryInputSignature(
+            momentId: "moment-1",
+            persistedMedia: [
+                MomentsStoryMedia(
+                    mediaAssetId: localMedia.id.uuidString,
+                    mediaKind: localMedia.kind,
+                    sortOrder: localMedia.sortOrder,
+                    selected: localMedia.selected,
+                    moderationStatus: "pending"
+                )
+            ]
+        )
+        let backendMediaSignature = viewModel.currentStoryInputSignature(
+            momentId: "moment-1",
+            persistedMedia: [
+                MomentsStoryMedia(
+                    mediaAssetId: "backend-media-1",
+                    mediaKind: "image",
+                    sortOrder: 0,
+                    selected: true,
+                    moderationStatus: "approved"
+                )
+            ]
+        )
+
+        XCTAssertEqual(viewModel.currentStoryInputSignature(momentId: "moment-1"), expectedLocalSignature)
+        XCTAssertNotEqual(viewModel.currentStoryInputSignature(momentId: "moment-1"), backendMediaSignature)
+    }
+
+    func testWorkspaceSignatureReconcilesAfterStoryScenesArriveFirst() {
+        let viewModel = MomentsCreateViewModel()
+        let localMedia = MomentsCreateTestFixtures.makeSelectedMedia(
+            id: "00000000-0000-0000-0000-000000000001",
+            sourceLocalIdentifier: "local-asset-1"
+        )
+        let backendMedia = makeBackendMedia()
+        let backendSignature = viewModel.currentStoryInputSignature(
+            momentId: "moment-1",
+            persistedMedia: [makeStoryMedia(from: backendMedia)]
+        )
+
+        viewModel.applyMomentCreationState(
+            MomentsCreateMomentCreationState(
+                isCreatingMoment: false,
+                activeMomentId: "moment-1",
+                setupErrorMessage: nil
+            )
+        )
+        viewModel.applyMediaUploadState(
+            MomentsCreateMediaUploadState(
+                selectedMedia: [localMedia],
+                statusMessage: nil,
+                isImporting: false,
+                importProgress: nil
+            )
+        )
+
+        viewModel.applyStoryState(
+            MomentsCreateStoryState(
+                activeWorkspace: nil,
+                savedScenes: [MomentsCreateTestFixtures.makeScene(id: "scene-1")],
+                generatedScenes: [],
+                statusMessage: nil,
+                isPlanning: false
+            )
+        )
+        XCTAssertTrue(viewModel.isStoryPreparedForCurrentInput)
+
+        viewModel.applyStoryState(
+            MomentsCreateStoryState(
+                activeWorkspace: MomentWorkspace(
+                    moment: MomentsCreateTestFixtures.makeMoment(
+                        id: "moment-1",
+                        occasion: "Birthday",
+                        storyInputSignature: backendSignature
+                    ),
+                    mediaAssets: [backendMedia],
+                    storyScenes: [MomentsCreateTestFixtures.makeScene(id: "scene-1")],
+                    renderJobs: [],
+                    artifacts: []
+                ),
+                savedScenes: [MomentsCreateTestFixtures.makeScene(id: "scene-1")],
+                generatedScenes: [],
+                statusMessage: nil,
+                isPlanning: false
+            )
+        )
+
+        XCTAssertEqual(viewModel.lastPreparedStoryInputSignature, backendSignature)
+        XCTAssertTrue(viewModel.isStoryPreparedForCurrentInput)
+    }
+
+    func testRestoredLocalMediaDoesNotInvalidatePreparedBackendStory() {
+        let viewModel = MomentsCreateViewModel()
+        let syncedLocalMedia = MomentsCreateTestFixtures.makeSelectedMedia(
+            id: "00000000-0000-0000-0000-000000000001",
+            sourceLocalIdentifier: "local-asset-1"
+        )
+        let extraRestoredMedia = MomentsCreateTestFixtures.makeSelectedMedia(
+            id: "00000000-0000-0000-0000-000000000002",
+            sourceLocalIdentifier: "local-asset-extra"
+        )
+        let preparedStory = applyPreparedBackendStory(to: viewModel)
+        viewModel.applyMediaUploadState(
+            MomentsCreateMediaUploadState(
+                selectedMedia: [syncedLocalMedia, extraRestoredMedia],
+                statusMessage: nil,
+                isImporting: false,
+                importProgress: nil
+            )
+        )
+
+        XCTAssertNotEqual(viewModel.currentStoryInputSignature(momentId: "moment-1"), preparedStory.signature)
+        XCTAssertTrue(viewModel.isStoryPreparedForCurrentInput)
+    }
+
+    func testDirectionChangeInvalidatesPreparedBackendStoryWithRestoredLocalMedia() {
+        let viewModel = MomentsCreateViewModel()
+        applyPreparedBackendStory(to: viewModel)
+
+        XCTAssertTrue(viewModel.isStoryPreparedForCurrentInput)
+
+        viewModel.form.details = "Make this more cinematic."
+
+        XCTAssertFalse(viewModel.isStoryPreparedForCurrentInput)
+    }
+
+    func testExplicitMediaEditInvalidatesPreparedBackendStory() {
+        let viewModel = MomentsCreateViewModel()
+        let preparedStory = applyPreparedBackendStory(to: viewModel)
+
+        XCTAssertTrue(viewModel.isStoryPreparedForCurrentInput)
+
+        viewModel.markPreparedStoryMediaEdited()
+        viewModel.applyMediaUploadState(
+            MomentsCreateMediaUploadState(
+                selectedMedia: [
+                    MomentsCreateTestFixtures.makeSelectedMedia(
+                        id: "00000000-0000-0000-0000-000000000002",
+                        sourceLocalIdentifier: "local-asset-extra"
+                    )
+                ],
+                statusMessage: nil,
+                isImporting: false,
+                importProgress: nil
+            )
+        )
+
+        XCTAssertFalse(viewModel.isStoryPreparedForCurrentInput)
+
+        viewModel.applyStoryState(
+            MomentsCreateStoryState(
+                activeWorkspace: MomentWorkspace(
+                    moment: MomentsCreateTestFixtures.makeMoment(
+                        id: "moment-1",
+                        occasion: "Birthday",
+                        storyInputSignature: preparedStory.signature
+                    ),
+                    mediaAssets: [preparedStory.media],
+                    storyScenes: [MomentsCreateTestFixtures.makeScene(id: "scene-1")],
+                    renderJobs: [],
+                    artifacts: []
+                ),
+                savedScenes: [MomentsCreateTestFixtures.makeScene(id: "scene-1")],
+                generatedScenes: [],
+                statusMessage: nil,
+                isPlanning: false
+            )
+        )
+
+        XCTAssertFalse(viewModel.isStoryPreparedForCurrentInput)
+    }
+
+    func testExplicitMediaEditInvalidatesPreparedFinalRenderPlan() {
+        let viewModel = MomentsCreateViewModel()
+        applyPreparedBackendStory(to: viewModel)
+        viewModel.applyFinalRenderState(
+            MomentsCreateFinalRenderState(
+                finalExport: nil,
+                latestFinalJob: nil,
+                renderPlan: MomentsCreateTestFixtures.makeRenderPlan(),
+                statusMessage: nil,
+                isGenerating: false
+            )
+        )
+
+        XCTAssertNotNil(viewModel.currentRenderPlan)
+
+        viewModel.markPreparedStoryMediaEdited()
+
+        XCTAssertNil(viewModel.currentRenderPlan)
+        XCTAssertNil(viewModel.finalRenderSummary.renderPlan)
+    }
+
+    func testSyncedBackendMediaIdsDoNotInvalidatePreparedFinalRenderPlan() {
+        let viewModel = MomentsCreateViewModel()
+        let localMedia = MomentsCreateTestFixtures.makeSelectedMedia(
+            id: "00000000-0000-0000-0000-000000000001",
+            sourceLocalIdentifier: "local-asset-1"
+        )
+        viewModel.applyMomentCreationState(
+            MomentsCreateMomentCreationState(
+                isCreatingMoment: false,
+                activeMomentId: "moment-1",
+                setupErrorMessage: nil
+            )
+        )
+        viewModel.applyMediaUploadState(
+            MomentsCreateMediaUploadState(
+                selectedMedia: [localMedia],
+                statusMessage: nil,
+                isImporting: false,
+                importProgress: nil
+            )
+        )
+        viewModel.applyFinalRenderState(
+            MomentsCreateFinalRenderState(
+                finalExport: nil,
+                latestFinalJob: nil,
+                renderPlan: MomentsCreateTestFixtures.makeRenderPlan(),
+                statusMessage: nil,
+                isGenerating: false
+            )
+        )
+
+        let signatureBeforeSync = viewModel.currentFinalRenderInputSignatureSource(momentId: "moment-1")
+        XCTAssertNotNil(viewModel.currentRenderPlan)
+
+        viewModel.applyStoryState(
+            MomentsCreateStoryState(
+                activeWorkspace: MomentWorkspace(
+                    moment: MomentsCreateTestFixtures.makeMoment(
+                        id: "moment-1",
+                        template: .partyRecap,
+                        theme: "eventRecap",
+                        mood: "warm",
+                        duration: "auto",
+                        mediaUse: "aviPick",
+                        occasion: "Event Recap",
+                        details: ""
+                    ),
+                    mediaAssets: [
+                        MomentsCreateTestFixtures.makeMediaAsset(
+                            id: "backend-media-1",
+                            sourceLocalIdentifier: "local-asset-1"
+                        )
+                    ],
+                    storyScenes: [],
+                    renderJobs: [],
+                    artifacts: []
+                ),
+                savedScenes: [],
+                generatedScenes: [],
+                statusMessage: nil,
+                isPlanning: false
+            )
+        )
+
+        let signatureAfterSync = viewModel.currentFinalRenderInputSignatureSource(momentId: "moment-1")
+        XCTAssertEqual(signatureBeforeSync, signatureAfterSync, "\(viewModel.form)")
+        XCTAssertNotNil(viewModel.currentRenderPlan)
+        XCTAssertNotNil(viewModel.finalRenderSummary.renderPlan)
+    }
+
+    func testGenerateStoryShowsImmediateMomentCreationError() async {
+        let harness = MomentCreationFailureHarness(error: MomentsSyncError.notConfigured)
+        let viewModel = MomentsCreateViewModel()
+        viewModel.bind(
+            accountStateProvider: harness,
+            momentCreationWorkflow: harness.momentCreationWorkflow,
+            mediaUploadWorkflow: harness.mediaUploadWorkflow,
+            storyWorkflow: harness.storyWorkflow,
+            finalRenderWorkflow: harness.finalRenderWorkflow
+        )
+        await Task.yield()
+        await Task.yield()
+        viewModel.applyAccountState(
+            MomentsCreateAccountState(
+                isSignedIn: true,
+                balance: MomentsCreditBalance(proMonthly: 0, promotional: 15, purchased: 0),
+                creditBalanceLoadState: .loaded
+            )
+        )
+        viewModel.beginNewMoment(openMediaPicker: false)
+        viewModel.applyMediaUploadState(
+            MomentsCreateMediaUploadState(
+                selectedMedia: [
+                    MomentsCreateTestFixtures.makeSelectedMedia(
+                        id: "00000000-0000-0000-0000-000000000001"
+                    )
+                ],
+                statusMessage: nil,
+                isImporting: false,
+                importProgress: nil
+            )
+        )
+
+        viewModel.generateStory()
+        await fulfillment(of: [harness.createAttemptExpectation], timeout: 1)
+        await waitForStoryStatusMessage(in: viewModel)
+
+        XCTAssertEqual(viewModel.storySummary.statusMessage, MomentsSyncError.notConfigured.localizedDescription)
+    }
+
+    @discardableResult
+    private func applyPreparedBackendStory(
+        to viewModel: MomentsCreateViewModel,
+        momentId: String = "moment-1"
+    ) -> (media: MomentMediaAsset, signature: String) {
+        let media = makeBackendMedia()
+        let signature = viewModel.currentStoryInputSignature(
+            momentId: momentId,
+            persistedMedia: [makeStoryMedia(from: media)]
+        )
+
+        viewModel.applyMomentCreationState(
+            MomentsCreateMomentCreationState(
+                isCreatingMoment: false,
+                activeMomentId: momentId,
+                setupErrorMessage: nil
+            )
+        )
+        viewModel.applyStoryState(
+            MomentsCreateStoryState(
+                activeWorkspace: MomentWorkspace(
+                    moment: MomentsCreateTestFixtures.makeMoment(
+                        id: momentId,
+                        occasion: "Birthday",
+                        storyInputSignature: signature
+                    ),
+                    mediaAssets: [media],
+                    storyScenes: [MomentsCreateTestFixtures.makeScene(id: "scene-1")],
+                    renderJobs: [],
+                    artifacts: []
+                ),
+                savedScenes: [MomentsCreateTestFixtures.makeScene(id: "scene-1")],
+                generatedScenes: [],
+                statusMessage: nil,
+                isPlanning: false
+            )
+        )
+
+        return (media, signature)
+    }
+
+    private func makeBackendMedia() -> MomentMediaAsset {
+        MomentMediaAsset(
+            id: "backend-media-1",
+            platformMediaAssetId: "local-asset-1",
+            uploadId: "upload-backend-media-1",
+            kind: "image",
+            sortOrder: 0,
+            selected: true,
+            moderationStatus: "approved",
+            uploadedAt: nil,
+            sourceExpiresAt: nil
+        )
+    }
+
+    private func makeStoryMedia(from media: MomentMediaAsset) -> MomentsStoryMedia {
+        MomentsStoryMedia(
+            mediaAssetId: media.id,
+            mediaKind: media.kind,
+            sortOrder: Int(media.sortOrder),
+            selected: media.selected,
+            moderationStatus: media.moderationStatus
+        )
+    }
+
+    private func waitForStoryStatusMessage(in viewModel: MomentsCreateViewModel) async {
+        for _ in 0..<20 where viewModel.storySummary.statusMessage == nil {
+            try? await Task.sleep(nanoseconds: 25_000_000)
+        }
+    }
+}
+
+@MainActor
+private final class MomentCreationFailureHarness:
+    MomentsAccountStateProviding,
+    MomentsCurrentUserProviding,
+    MomentsAuthTokenProviding,
+    MomentsCreditBalanceProviding,
+    MomentsCreating,
+    MomentsDeleting,
+    MomentsActiveWorkspaceObserving
+{
+    let createAttemptExpectation = XCTestExpectation(description: "Moment creation attempted")
+    private let creationError: Error
+    private let signedInSubject = CurrentValueSubject<Bool, Never>(true)
+    private let currentUserSubject = CurrentValueSubject<String?, Never>("user-1")
+    private let displayNameSubject = CurrentValueSubject<String?, Never>("Ava")
+    private let balanceSubject = CurrentValueSubject<MomentsCreditBalance, Never>(
+        MomentsCreditBalance(proMonthly: 0, promotional: 15, purchased: 0)
+    )
+    private let creditBalanceLoadStateSubject = CurrentValueSubject<MomentsCreditBalanceLoadState, Never>(.loaded)
+    private let workspaceSubject = CurrentValueSubject<MomentWorkspace?, Never>(nil)
+    private let workspaceErrorSubject = CurrentValueSubject<String?, Never>(nil)
+
+    init(error: Error) {
+        creationError = error
+    }
+
+    var momentCreationWorkflow: MomentCreationWorkflow {
+        MomentCreationWorkflow(
+            currentUserProvider: self,
+            authTokenProvider: self,
+            creditBalanceProvider: self,
+            momentCreator: self,
+            momentDeleter: self,
+            workspaceObserver: self
+        )
+    }
+
+    var mediaUploadWorkflow: MediaUploadWorkflow {
+        MediaUploadWorkflow(
+            currentUserProvider: self,
+            authTokenProvider: self,
+            workspaceObserver: self,
+            uploadClient: MomentsUploadClient(baseURLString: "https://api.example.com")
+        )
+    }
+
+    var storyWorkflow: StoryWorkflow {
+        StoryWorkflow(
+            currentUserProvider: self,
+            authTokenProvider: self,
+            workspaceObserver: self,
+            storyClient: MomentsStoryClient(baseURLString: "https://api.example.com")
+        )
+    }
+
+    var finalRenderWorkflow: FinalRenderWorkflow {
+        FinalRenderWorkflow(
+            currentUserProvider: self,
+            authTokenProvider: self,
+            creditBalanceProvider: self,
+            workspaceObserver: self,
+            finalRenderClient: MomentsFinalRenderClient(baseURLString: "https://api.example.com"),
+            galleryStore: TestGalleryStore()
+        )
+    }
+
+    var isSignedInPublisher: AnyPublisher<Bool, Never> {
+        signedInSubject.eraseToAnyPublisher()
+    }
+
+    var currentUserIdPublisher: AnyPublisher<String?, Never> {
+        currentUserSubject.eraseToAnyPublisher()
+    }
+
+    var displayNamePublisher: AnyPublisher<String?, Never> {
+        displayNameSubject.eraseToAnyPublisher()
+    }
+
+    var creditBalancePublisher: AnyPublisher<MomentsCreditBalance, Never> {
+        balanceSubject.eraseToAnyPublisher()
+    }
+
+    var creditBalanceLoadStatePublisher: AnyPublisher<MomentsCreditBalanceLoadState, Never> {
+        creditBalanceLoadStateSubject.eraseToAnyPublisher()
+    }
+
+    var currentUserId: String? {
+        currentUserSubject.value
+    }
+
+    var currentCreditBalance: MomentsCreditBalance {
+        balanceSubject.value
+    }
+
+    func refreshCreditBalance() async {}
+
+    var isConfigured: Bool {
+        true
+    }
+
+    var activeWorkspacePublisher: AnyPublisher<MomentWorkspace?, Never> {
+        workspaceSubject.eraseToAnyPublisher()
+    }
+
+    var workspaceErrorPublisher: AnyPublisher<String?, Never> {
+        workspaceErrorSubject.eraseToAnyPublisher()
+    }
+
+    func currentBearerToken() async throws -> String? {
+        "token-1"
+    }
+
+    func createMoment(bearerToken: String, form: MomentSetupForm) async throws -> String {
+        createAttemptExpectation.fulfill()
+        throw creationError
+    }
+
+    func updateMomentSetup(bearerToken: String, momentId: String, form: MomentSetupForm) async throws {}
+
+    func deleteMoment(bearerToken: String, momentId: String) async throws {}
+
+    func observeWorkspace(ownerUserId: String?, momentId: String?) {}
+
+    func clearWorkspace() {
+        workspaceSubject.send(nil)
+    }
+
+    func publishWorkspace(_ workspace: MomentWorkspace) {
+        workspaceSubject.send(workspace)
+    }
+
+}
+
+private struct TestGalleryStore: MomentsGalleryStoring {
+    func loadRecords() -> [MomentsGalleryVideoRecord] { [] }
+    func saveRecords(_ records: [MomentsGalleryVideoRecord]) {}
+    func localFileExists(for record: MomentsGalleryVideoRecord) -> Bool { false }
+    func localFileURL(for record: MomentsGalleryVideoRecord) -> URL { URL(fileURLWithPath: "/tmp/\(record.id).mp4") }
+    func contains(artifactId: String) -> Bool { false }
+    func saveDownloadedVideo(
+        temporaryFileURL: URL,
+        momentId: String,
+        artifactId: String,
+        title: String,
+        r2Key: String,
+        createdAt: Date
+    ) throws -> MomentsGalleryVideoRecord {
+        MomentsGalleryVideoRecord(
+            id: artifactId,
+            momentId: momentId,
+            artifactId: artifactId,
+            title: title,
+            r2Key: r2Key,
+            localRelativePath: "\(artifactId).mp4",
+            createdAt: createdAt.timeIntervalSince1970 * 1000
+        )
+    }
+    func addRecord(_ record: MomentsGalleryVideoRecord) {}
+    func renameRecord(_ record: MomentsGalleryVideoRecord, title: String) {}
+    func deleteRecord(_ record: MomentsGalleryVideoRecord, deleteLocalFile: Bool) {}
+}

@@ -1,0 +1,109 @@
+name: AnimateAV
+options:
+  bundleIdPrefix: app.avalsys
+  deploymentTarget:
+    iOS: "18.0"
+  xcodeVersion: "16.0"
+
+settings:
+  base:
+    DEVELOPMENT_LANGUAGE: en
+    PRODUCT_NAME: AnimateAV
+    SWIFT_VERSION: "6.0"
+    EXCLUDED_ARCHS[sdk=iphonesimulator*]: x86_64
+
+packages:
+  AccountAV:
+    path: ../../../account-av
+  AppsAV:
+    path: ../../../apps-av/apple
+  ConvexMobile:
+    url: https://github.com/get-convex/convex-swift
+    from: 0.8.1
+  RevenueCat:
+    url: https://github.com/RevenueCat/purchases-ios-spm.git
+    from: 5.75.0
+
+schemes:
+  AnimateAV:
+    build:
+      targets:
+        AnimateAV: all
+    run:
+      config: Debug
+      executable: AnimateAV
+      environmentVariables:
+        ANIMATEAV_APP_LANGUAGE: en
+    analyze:
+      config: Debug
+    profile:
+      config: Release
+    archive:
+      config: Release
+    management:
+      shared: true
+    test:
+      config: Debug
+      targets:
+        - AnimateAVTests
+
+targets:
+  AnimateAV:
+    type: application
+    platform: iOS
+    configFiles:
+      Debug: Config/Debug.xcconfig
+      Release: Config/Release.xcconfig
+    sources:
+      - path: AnimateAV
+    dependencies:
+      - package: AccountAV
+        product: AccountAV
+      - package: AppsAV
+        product: AVDiagnosticsFoundation
+      - package: AppsAV
+        product: AVBrandFoundation
+      - package: AppsAV
+        product: AVAppShellFoundation
+      - package: AppsAV
+        product: AVLaunchFoundation
+      - package: AppsAV
+        product: AVMediaAnalysisFoundation
+      - package: AppsAV
+        product: AVSettingsFoundation
+      - package: AppsAV
+        product: AVAviFoundation
+      - package: AppsAV
+        product: AVPaywallFoundation
+      - package: ConvexMobile
+        product: ConvexMobile
+      - package: RevenueCat
+        product: RevenueCat
+    settings:
+      base:
+        CODE_SIGN_ENTITLEMENTS: AnimateAV/App/AnimateAV.entitlements
+        CODE_SIGN_STYLE: Automatic
+        DEVELOPMENT_TEAM: "$(AVALSYS_APPLE_DEVELOPMENT_TEAM)"
+        ENABLE_DEBUG_DYLIB: NO
+        GENERATE_INFOPLIST_FILE: NO
+        INFOPLIST_FILE: AnimateAV/App/Info.plist
+        PRODUCT_BUNDLE_IDENTIFIER: "$(PRODUCT_BUNDLE_IDENTIFIER)"
+        ASSETCATALOG_COMPILER_APPICON_NAME: AppIcon
+        ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME: BrandAccent
+        TARGETED_DEVICE_FAMILY: "1"
+        SUPPORTS_MACCATALYST: NO
+
+  AnimateAVTests:
+    type: bundle.unit-test
+    platform: iOS
+    sources:
+      - path: AnimateAVTests
+    dependencies:
+      - target: AnimateAV
+    settings:
+      base:
+        GENERATE_INFOPLIST_FILE: YES
+        PRODUCT_MODULE_NAME: AnimateAVTests
+        PRODUCT_BUNDLE_IDENTIFIER: "$(PRODUCT_BUNDLE_IDENTIFIER).tests"
+        TARGETED_DEVICE_FAMILY: "1"
+        TEST_HOST: "$(BUILT_PRODUCTS_DIR)/AnimateAV.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/AnimateAV"

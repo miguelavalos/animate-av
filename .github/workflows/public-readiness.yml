@@ -1,0 +1,33 @@
+name: Public Readiness
+
+on:
+  pull_request:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  public-hygiene:
+    name: Public hygiene
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v5
+
+      - name: Run public hygiene checks
+        run: scripts/check-public-hygiene.sh
+
+  release-asset-gate:
+    name: Release canonical asset gate
+    if: github.event_name == 'workflow_dispatch'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v5
+
+      - name: Run public release readiness checks
+        run: scripts/check-public-release-readiness.sh

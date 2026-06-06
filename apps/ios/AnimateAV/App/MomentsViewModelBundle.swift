@@ -1,0 +1,42 @@
+import Foundation
+
+@MainActor
+struct MomentsViewModelBundle {
+    let home: MomentsHomeViewModel
+    let create: MomentsCreateViewModel
+    let inProgress: MomentsInProgressViewModel
+    let gallery: MomentsGalleryViewModel
+    let avi: MomentsAviViewModel
+
+    init(
+        accountController: AccountController,
+        workflows: MomentsWorkflowBundle,
+        galleryMomentsProvider: any GalleryMomentsListProviding,
+        authTokenProvider: any MomentsAuthTokenProviding,
+        finalRenderClient: MomentsFinalRenderClient
+    ) {
+        home = MomentsHomeViewModel()
+        create = MomentsCreateViewModel()
+        inProgress = MomentsInProgressViewModel()
+        gallery = MomentsGalleryViewModel(
+            galleryMomentsProvider: galleryMomentsProvider,
+            authTokenProvider: authTokenProvider,
+            finalRenderClient: finalRenderClient
+        )
+        avi = MomentsAviViewModel()
+
+        home.bind(to: workflows.inProgressMoments)
+        home.bind(accountStateProvider: accountController)
+        create.bind(
+            accountStateProvider: accountController,
+            momentCreationWorkflow: workflows.momentCreation,
+            mediaUploadWorkflow: workflows.mediaUpload,
+            storyWorkflow: workflows.story,
+            finalRenderWorkflow: workflows.finalRender
+        )
+        inProgress.bind(to: workflows.inProgressMoments)
+        inProgress.bind(accountStateProvider: accountController)
+        avi.bind(to: workflows.inProgressMoments)
+        avi.bind(accountStateProvider: accountController)
+    }
+}

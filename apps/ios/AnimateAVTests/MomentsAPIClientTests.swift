@@ -1,0 +1,718 @@
+import Foundation
+import XCTest
+@testable import AnimateAV
+
+final class MomentsAPIClientTests: XCTestCase {
+    override func tearDown() {
+        MomentsURLProtocolMock.reset()
+        super.tearDown()
+    }
+
+    func testPrepareUploadUsesSharedAccountAPIBaseURL() async throws {
+        let session = makeMockSession(
+            json: """
+            {
+              "appId": "animateav",
+              "momentId": "moment-1",
+              "mediaAssetId": "media-1",
+              "uploadId": "upload-1",
+              "uploadUrl": "https://uploads.example.com/media-1",
+              "method": "PUT",
+              "headers": { "content-type": "image/jpeg" },
+              "expiresAt": "2026-05-16T17:00:00Z",
+              "generatedAt": "2026-05-16T16:00:00Z"
+            }
+            """
+        )
+        let client = MomentsUploadClient(baseURLString: accountAPIBaseURL, session: session)
+        let media = MomentsSelectedMedia(
+            id: UUID(uuidString: "00000000-0000-0000-0000-000000000001")!,
+            sourceLocalIdentifier: "local-1",
+            originalFilename: "photo.jpg",
+            contentType: "image/jpeg",
+            kind: "photo",
+            byteSize: 4,
+            sha256: "abcd",
+            data: Data([1, 2, 3, 4]),
+            capturedAt: nil,
+            sortOrder: 0,
+            selected: true
+        )
+
+        _ = try await client.prepareUpload(momentId: "moment-1", bearerToken: "token-1", media: media)
+
+        XCTAssertEqual(MomentsURLProtocolMock.lastRequest?.url?.absoluteString, "\(accountAPIBaseURL)/v1/apps/animateav/media/prepare-upload")
+        XCTAssertEqual(MomentsURLProtocolMock.lastRequest?.value(forHTTPHeaderField: "Authorization"), "Bearer token-1")
+    }
+
+    func testPrepareUploadRetriesTransientNetworkLoss() async throws {
+        MomentsURLProtocolMock.failuresBeforeSuccess = 1
+        let session = makeMockSession(
+            json: """
+            {
+              "appId": "animateav",
+              "momentId": "moment-1",
+              "mediaAssetId": "media-1",
+              "uploadId": "upload-1",
+              "uploadUrl": "https://uploads.example.com/media-1",
+              "method": "PUT",
+              "headers": { "content-type": "image/jpeg" },
+              "expiresAt": "2026-05-16T17:00:00Z",
+              "generatedAt": "2026-05-16T16:00:00Z"
+            }
+            """
+        )
+        let client = MomentsUploadClient(
+            baseURLString: accountAPIBaseURL,
+            session: session,
+            networkRetryPolicy: MomentsNetworkRetryPolicy(maximumRetries: 1, baseDelayNanoseconds: 1)
+        )
+        let media = MomentsSelectedMedia(
+            id: UUID(uuidString: "00000000-0000-0000-0000-000000000011")!,
+            sourceLocalIdentifier: "local-1",
+            originalFilename: "photo.jpg",
+            contentType: "image/jpeg",
+            kind: "photo",
+            byteSize: 4,
+            sha256: "abcd",
+            data: Data([1, 2, 3, 4]),
+            capturedAt: nil,
+            sortOrder: 0,
+            selected: true
+        )
+
+        _ = try await client.prepareUpload(momentId: "moment-1", bearerToken: "token-1", media: media)
+
+        XCTAssertEqual(MomentsURLProtocolMock.requestCount, 2)
+    }
+
+    func testUploadUsesPreparedURLAndHeaders() async throws {
+        let session = makeMockSession(json: uploadCompletionJSON)
+        let client = MomentsUploadClient(baseURLString: accountAPIBaseURL, session: session)
+        let uploadURL = URL(string: "\(accountAPIBaseURL)/v1/apps/animateav/uploads/upload-1")!
+        let media = MomentsSelectedMedia(
+            id: UUID(uuidString: "00000000-0000-0000-0000-000000000002")!,
+            sourceLocalIdentifier: "local-1",
+            originalFilename: "photo.jpg",
+            contentType: "image/jpeg",
+            kind: "photo",
+            byteSize: 4,
+            sha256: "abcd",
+            data: Data([1, 2, 3, 4]),
+            capturedAt: nil,
+            sortOrder: 0,
+            selected: true
+        )
+        let prepared = MomentsPreparedUpload(
+            appId: "animateav",
+            momentId: "moment-1",
+            mediaAssetId: "media-1",
+            uploadId: "upload-1",
+            uploadUrl: uploadURL,
+            completionUrl: nil,
+            method: "PUT",
+            headers: [
+                "content-type": "image/jpeg",
+                "x-appsav-moments-moment-id": "moment-1",
+                "x-appsav-moments-media-asset-id": "media-1"
+            ],
+            expiresAt: "2026-05-16T17:00:00Z",
+            generatedAt: "2026-05-16T16:00:00Z"
+        )
+
+        try await client.upload(media: media, preparedUpload: prepared)
+
+        XCTAssertEqual(MomentsURLProtocolMock.lastRequest?.url?.absoluteString, uploadURL.absoluteString)
+        XCTAssertEqual(MomentsURLProtocolMock.lastRequest?.httpMethod, "PUT")
+        XCTAssertNil(MomentsURLProtocolMock.lastRequest?.value(forHTTPHeaderField: "Authorization"))
+        XCTAssertEqual(MomentsURLProtocolMock.lastRequest?.value(forHTTPHeaderField: "x-appsav-moments-moment-id"), "moment-1")
+    }
+
+    func testUploadWithoutSignedURLFailsBeforeSavingMedia() async throws {
+        let session = makeMockSession(json: "{}")
+        let client = MomentsUploadClient(baseURLString: accountAPIBaseURL, session: session)
+        let media = MomentsSelectedMedia(
+            id: UUID(uuidString: "00000000-0000-0000-0000-000000000012")!,
+            sourceLocalIdentifier: "local-1",
+            originalFilename: "photo.jpg",
+            contentType: "image/jpeg",
+            kind: "photo",
+            byteSize: 4,
+            sha256: "abcd",
+            data: Data([1, 2, 3, 4]),
+            capturedAt: nil,
+            sortOrder: 0,
+            selected: true
+        )
+        let prepared = MomentsPreparedUpload(
+            appId: "animateav",
+            momentId: "moment-1",
+            mediaAssetId: "media-1",
+            uploadId: "upload-1",
+            uploadUrl: nil,
+            completionUrl: nil,
+            method: "PUT",
+            headers: ["content-type": "image/jpeg"],
+            expiresAt: "2026-05-16T17:00:00Z",
+            generatedAt: "2026-05-16T16:00:00Z"
+        )
+
+        do {
+            try await client.upload(media: media, preparedUpload: prepared)
+            XCTFail("Expected missing upload URL to fail.")
+        } catch MomentsUploadError.signedUploadUnavailable {
+            XCTAssertEqual(MomentsURLProtocolMock.requestCount, 0)
+        } catch {
+            XCTFail("Unexpected error: \(error)")
+        }
+    }
+
+    func testDirectUploadCompletesPreparedUploadAfterR2Put() async throws {
+        let session = makeMockSession(json: uploadCompletionJSON)
+        let client = MomentsUploadClient(baseURLString: accountAPIBaseURL, session: session)
+        let uploadURL = URL(string: "https://account-1.r2.cloudflarestorage.com/appsav-assets-preview/animateav/user/moment/source/media-1?X-Amz-Signature=test")!
+        let completionURL = URL(string: "\(accountAPIBaseURL)/v1/apps/animateav/uploads/upload-1/complete")!
+        let media = MomentsSelectedMedia(
+            id: UUID(uuidString: "00000000-0000-0000-0000-000000000010")!,
+            sourceLocalIdentifier: "local-1",
+            originalFilename: "photo.jpg",
+            contentType: "image/jpeg",
+            kind: "photo",
+            byteSize: 4,
+            sha256: "abcd",
+            data: Data([1, 2, 3, 4]),
+            capturedAt: nil,
+            sortOrder: 0,
+            selected: true
+        )
+        let prepared = MomentsPreparedUpload(
+            appId: "animateav",
+            momentId: "moment-1",
+            mediaAssetId: "media-1",
+            uploadId: "upload-1",
+            uploadUrl: uploadURL,
+            completionUrl: completionURL,
+            method: "PUT",
+            headers: [
+                "content-type": "image/jpeg",
+                "x-amz-meta-upload-id": "upload-1"
+            ],
+            expiresAt: "2026-05-16T17:00:00Z",
+            generatedAt: "2026-05-16T16:00:00Z"
+        )
+
+        try await client.upload(media: media, preparedUpload: prepared)
+
+        XCTAssertEqual(MomentsURLProtocolMock.requestCount, 2)
+        XCTAssertEqual(MomentsURLProtocolMock.lastRequest?.url?.absoluteString, completionURL.absoluteString)
+        XCTAssertEqual(MomentsURLProtocolMock.lastRequest?.httpMethod, "POST")
+    }
+
+    func testUploadRetriesTransientNetworkLoss() async throws {
+        MomentsURLProtocolMock.failuresBeforeSuccess = 1
+        let session = makeMockSession(json: uploadCompletionJSON)
+        let client = MomentsUploadClient(
+            baseURLString: accountAPIBaseURL,
+            session: session,
+            uploadRetryPolicy: MomentsUploadRetryPolicy(maximumRetries: 1, baseDelayNanoseconds: 1)
+        )
+        let uploadURL = URL(string: "\(accountAPIBaseURL)/v1/apps/animateav/uploads/upload-1")!
+        let media = MomentsSelectedMedia(
+            id: UUID(uuidString: "00000000-0000-0000-0000-000000000003")!,
+            sourceLocalIdentifier: "local-1",
+            originalFilename: "photo.jpg",
+            contentType: "image/jpeg",
+            kind: "photo",
+            byteSize: 4,
+            sha256: "abcd",
+            data: Data([1, 2, 3, 4]),
+            capturedAt: nil,
+            sortOrder: 0,
+            selected: true
+        )
+        let prepared = MomentsPreparedUpload(
+            appId: "animateav",
+            momentId: "moment-1",
+            mediaAssetId: "media-1",
+            uploadId: "upload-1",
+            uploadUrl: uploadURL,
+            completionUrl: nil,
+            method: "PUT",
+            headers: ["content-type": "image/jpeg"],
+            expiresAt: "2026-05-16T17:00:00Z",
+            generatedAt: "2026-05-16T16:00:00Z"
+        )
+
+        try await client.upload(media: media, preparedUpload: prepared)
+
+        XCTAssertEqual(MomentsURLProtocolMock.requestCount, 2)
+    }
+
+    func testStoryUsesSharedAccountAPIBaseURL() async throws {
+        let session = makeMockSession(
+            json: """
+            {
+              "appId": "animateav",
+              "momentId": "moment-1",
+              "workflowRunId": "workflow-1",
+              "status": "ready",
+              "provider": "mock",
+              "model": "mock",
+              "moderationStatus": "allowed",
+              "errorCode": null,
+              "errorMessage": null,
+              "narrationVoice": "avi_clear",
+              "helperCopy": "Ready.",
+              "scenes": [],
+              "generatedAt": "2026-05-16T16:00:00Z"
+            }
+            """
+        )
+        let client = MomentsStoryClient(baseURLString: accountAPIBaseURL, session: session)
+
+        _ = try await client.generatePlan(
+            momentId: "moment-1",
+            ownerUserId: "user-1",
+            bearerToken: "token-1",
+            form: MomentSetupForm(template: .birthdayMessage),
+            mediaAssets: []
+        )
+
+        XCTAssertEqual(MomentsURLProtocolMock.lastRequest?.url?.absoluteString, "\(accountAPIBaseURL)/v1/apps/animateav/story/plans")
+        XCTAssertEqual(MomentsURLProtocolMock.lastRequest?.value(forHTTPHeaderField: "Authorization"), "Bearer token-1")
+    }
+
+    func testStoryRetriesTransientNetworkLoss() async throws {
+        MomentsURLProtocolMock.failuresBeforeSuccess = 1
+        let session = makeMockSession(
+            json: """
+            {
+              "appId": "animateav",
+              "momentId": "moment-1",
+              "workflowRunId": "workflow-1",
+              "status": "ready",
+              "provider": "mock",
+              "model": "mock",
+              "moderationStatus": "allowed",
+              "errorCode": null,
+              "errorMessage": null,
+              "narrationVoice": "avi_clear",
+              "helperCopy": "Ready.",
+              "scenes": [],
+              "generatedAt": "2026-05-16T16:00:00Z"
+            }
+            """
+        )
+        let client = MomentsStoryClient(
+            baseURLString: accountAPIBaseURL,
+            session: session,
+            retryPolicy: MomentsNetworkRetryPolicy(maximumRetries: 1, baseDelayNanoseconds: 1)
+        )
+
+        _ = try await client.generatePlan(
+            momentId: "moment-1",
+            ownerUserId: "user-1",
+            bearerToken: "token-1",
+            form: MomentSetupForm(template: .birthdayMessage),
+            mediaAssets: []
+        )
+
+        XCTAssertEqual(MomentsURLProtocolMock.requestCount, 2)
+    }
+
+    func testPrepareRenderPlanSendsContractSafePayload() async throws {
+        let session = makeMockSession(
+            json: """
+            {
+              "appId": "animateav",
+              "momentId": "moment-1",
+              "planId": "plan-1",
+              "canCreateVideo": true,
+              "createVideoBlockers": [],
+              "generatedAt": "2026-05-16T16:00:00Z",
+              "plan": {
+                "schemaVersion": 1,
+                "secondsPerCredit": 15,
+                "renderOptionId": "short_moment",
+                "renderOptionTitle": "Short Moment",
+                "creationMode": "quick",
+                "look": "real",
+                "theme": "travel",
+                "mood": "cinematic",
+                "duration": "auto",
+                "mediaUse": "aviPick",
+                "creditCost": 1,
+                "totalCreditCost": 1,
+                "targetDurationMs": 15000,
+                "minimumDurationMs": 8000,
+                "fps": 24,
+                "rendererMode": "guided_generative",
+                "plannedAssetCount": 6,
+                "usedAssetCount": 6,
+                "rejectedAssetCount": 0,
+                "qualityWarnings": [],
+                "userMessage": "Ready."
+              }
+            }
+            """
+        )
+        let client = MomentsFinalRenderClient(baseURLString: accountAPIBaseURL, session: session)
+        var form = MomentSetupForm(template: .partyRecap)
+        form.theme = .travel
+        form.look = .real
+        form.tone = .cinematic
+        form.duration = .auto
+        form.mediaUse = .aviPick
+        form.occasion = "   "
+        form.details = ""
+
+        _ = try await client.prepareRenderPlan(
+            momentId: "moment-1",
+            bearerToken: "token-1",
+            template: .partyRecap,
+            creationStyle: nil,
+            form: form,
+            removesWatermark: false,
+            selectedSourceLocalIdentifiers: [" local-1 ", "", "local-2"]
+        )
+
+        XCTAssertEqual(MomentsURLProtocolMock.lastRequest?.url?.absoluteString, "\(accountAPIBaseURL)/v1/apps/animateav/renders/plan")
+        XCTAssertEqual(MomentsURLProtocolMock.lastRequest?.httpMethod, "POST")
+        let body = try XCTUnwrap(MomentsURLProtocolMock.lastRequestBody)
+        let json = try XCTUnwrap(JSONSerialization.jsonObject(with: body) as? [String: Any])
+        XCTAssertEqual(json["appId"] as? String, "animateav")
+        XCTAssertNil(json["occasion"])
+        XCTAssertNil(json["details"])
+        XCTAssertEqual(json["selectedSourceLocalIdentifiers"] as? [String], ["local-1", "local-2"])
+        XCTAssertNil(json["creditCost"])
+    }
+
+    func testConfirmFinalRenderUsesBackendOwnedEndpoint() async throws {
+        let session = makeMockSession(
+            json: """
+            {
+              "appId": "animateav",
+              "momentId": "moment-1",
+              "planId": "plan-1",
+              "reservation": {
+                "id": "reservation-1",
+                "appId": "animateav",
+                "userId": "user-1",
+                "momentId": "moment-1",
+                "workflowRunId": null,
+                "amount": 2,
+                "status": "reserved",
+                "idempotencyKey": "final-confirm:moment-1:birthdayMessage:watermarked:operation-1",
+                "expiresAt": "2026-06-16T16:00:00Z",
+                "createdAt": "2026-05-16T16:00:00Z",
+                "updatedAt": "2026-05-16T16:00:00Z"
+              },
+              "workflow": {
+                "appId": "animateav",
+                "momentId": "moment-1",
+                "renderJobId": "render-1",
+                "workflowRunId": "workflow-1",
+                "status": "running",
+                "startedAt": "2026-05-16T16:00:00Z"
+              },
+              "renderPlan": {
+                "appId": "animateav",
+                "momentId": "moment-1",
+                "planId": "plan-1",
+                "canCreateVideo": true,
+                "createVideoBlockers": [],
+                "generatedAt": "2026-05-16T16:00:00Z",
+                "plan": {
+                  "schemaVersion": 1,
+                  "secondsPerCredit": 15,
+                  "renderOptionId": "standard_moment",
+                  "renderOptionTitle": "Standard Moment",
+                  "creationMode": "quick",
+                  "look": "real",
+                  "theme": "birthday",
+                  "mood": "warm",
+                  "duration": "auto",
+                  "mediaUse": "aviPick",
+                  "creditCost": 2,
+                  "totalCreditCost": 2,
+                  "targetDurationMs": 30000,
+                  "fps": 24,
+                  "rendererMode": "image_to_video",
+                  "plannedAssetCount": 4,
+                  "usedAssetCount": 4,
+                  "rejectedAssetCount": 0,
+                  "qualityWarnings": [],
+                  "userMessage": "Ready."
+                }
+              },
+              "confirmedAt": "2026-05-16T16:00:00Z"
+            }
+            """
+        )
+        let client = MomentsFinalRenderClient(baseURLString: accountAPIBaseURL, session: session)
+
+        let confirmation = try await client.confirmFinalRender(
+            momentId: "moment-1",
+            bearerToken: "token-1",
+            template: .birthdayMessage,
+            creationStyle: nil,
+            form: MomentSetupForm(template: .birthdayMessage),
+            removesWatermark: false,
+            selectedSourceLocalIdentifiers: ["local-1", "local-2"],
+            planId: "plan-1",
+            renderOptionId: "standard_moment"
+        )
+
+        XCTAssertEqual(MomentsURLProtocolMock.lastRequest?.url?.absoluteString, "\(accountAPIBaseURL)/v1/apps/animateav/renders/final/confirm")
+        XCTAssertEqual(MomentsURLProtocolMock.lastRequest?.httpMethod, "POST")
+        XCTAssertEqual(MomentsURLProtocolMock.lastRequest?.value(forHTTPHeaderField: "Authorization"), "Bearer token-1")
+        XCTAssertEqual(confirmation.reservation.id, "reservation-1")
+        XCTAssertEqual(confirmation.workflow.renderJobId, "render-1")
+        XCTAssertEqual(confirmation.renderPlan.plan.totalCreditCost, 2)
+    }
+
+    func testPrepareFinalArtifactDownloadAcceptsPublicSafeResponseWithoutR2Key() async throws {
+        let session = makeMockSession(
+            json: """
+            {
+              "appId": "animateav",
+              "momentId": "moment-1",
+              "artifactId": "artifact-1",
+              "artifactKind": "final_export",
+              "downloadUrl": "https://account-1.r2.cloudflarestorage.com/moments-bucket/animateav/user/moment-1/final%20exports/artifact-1.mp4?X-Amz-Signature=test",
+              "method": "GET",
+              "headers": {},
+              "expiresAt": "2026-05-16T17:00:00Z",
+              "generatedAt": "2026-05-16T16:00:00Z"
+            }
+            """
+        )
+        let client = MomentsFinalRenderClient(baseURLString: accountAPIBaseURL, session: session)
+
+        let response = try await client.prepareFinalArtifactDownload(
+            momentId: "moment-1",
+            artifactId: "artifact-1",
+            bearerToken: "token-1"
+        )
+
+        XCTAssertEqual(MomentsURLProtocolMock.lastRequest?.url?.absoluteString, "\(accountAPIBaseURL)/v1/apps/animateav/artifacts/artifact-1/download")
+        XCTAssertEqual(MomentsURLProtocolMock.lastRequest?.httpMethod, "POST")
+        XCTAssertEqual(MomentsURLProtocolMock.lastRequest?.value(forHTTPHeaderField: "Authorization"), "Bearer token-1")
+        XCTAssertNil(response.r2Key)
+        XCTAssertEqual(response.artifactKind, "final_export")
+    }
+
+    func testRenderStatusUsesSharedAccountAPIBaseURL() async throws {
+        let session = makeMockSession(
+            json: """
+            {
+              "appId": "animateav",
+              "momentId": "moment-1",
+              "renderJobId": "render-1",
+              "workflowRunId": "workflow-1",
+              "renderKind": "final",
+              "status": "running",
+              "progressPercent": 25,
+              "artifactId": null,
+              "artifactKind": null,
+              "artifactStatus": null,
+              "errorCode": null,
+              "errorMessage": null,
+              "updatedAt": "2026-05-16T16:00:00Z"
+            }
+            """
+        )
+        let client = MomentsRenderStatusClient(baseURLString: accountAPIBaseURL, session: session)
+
+        let status = try await client.fetchStatus(renderJobId: "render-1", bearerToken: "token-1")
+
+        XCTAssertEqual(MomentsURLProtocolMock.lastRequest?.url?.absoluteString, "\(accountAPIBaseURL)/v1/apps/animateav/renders/render-1/status")
+        XCTAssertEqual(MomentsURLProtocolMock.lastRequest?.httpMethod, "GET")
+        XCTAssertEqual(MomentsURLProtocolMock.lastRequest?.value(forHTTPHeaderField: "Authorization"), "Bearer token-1")
+        XCTAssertEqual(status.status, "running")
+        XCTAssertEqual(status.progressPercent, 25)
+    }
+
+    func testRenderStatusSurfacesAPIErrorMessage() async throws {
+        let session = makeMockSession(
+            statusCode: 404,
+            json: """
+            {
+              "error": {
+                "code": "moments_render_not_found",
+                "message": "Render job was not found."
+              }
+            }
+            """
+        )
+        let client = MomentsRenderStatusClient(baseURLString: accountAPIBaseURL, session: session)
+
+        do {
+            _ = try await client.fetchStatus(renderJobId: "missing-render", bearerToken: "token-1")
+            XCTFail("Expected API error")
+        } catch {
+            XCTAssertEqual(error.localizedDescription, "Render job was not found.")
+        }
+    }
+
+    func testCreditBalanceUsesBackendBucketsAndBearerToken() async throws {
+        let session = makeMockSession(
+            json: """
+            {
+              "appId": "animateav",
+              "userId": "user-1",
+              "spendableCredits": 10,
+              "reservedCredits": 0,
+              "proMonthlyCredits": 0,
+              "promotionalGrantedCredits": 10,
+              "purchasedCredits": 0,
+              "hasProFeatures": true,
+              "proSource": "promo",
+              "proExpiresAt": "2026-06-25T00:00:00.000Z",
+              "canStartMoment": true,
+              "minimumRenderCredits": 1,
+              "generatedAt": "2026-05-26T10:00:00.000Z"
+            }
+            """
+        )
+        let client = MomentsCreditBalanceClient(baseURLString: accountAPIBaseURL, session: session)
+
+        let balance = try await client.fetchBalance(bearerToken: "token-1")
+
+        XCTAssertEqual(MomentsURLProtocolMock.lastRequest?.url?.absoluteString, "\(accountAPIBaseURL)/v1/apps/animateav/credits/balance")
+        XCTAssertEqual(MomentsURLProtocolMock.lastRequest?.httpMethod, "GET")
+        XCTAssertEqual(MomentsURLProtocolMock.lastRequest?.value(forHTTPHeaderField: "Authorization"), "Bearer token-1")
+        XCTAssertEqual(balance, MomentsCreditBalance(proMonthly: 0, promotional: 10, purchased: 0, availableCredits: 10))
+    }
+
+    func testPromoCodeRedeemUsesBackendAndReturnsUpdatedBalance() async throws {
+        let session = makeMockSession(
+            json: """
+            {
+              "appId": "animateav",
+              "userId": "user-1",
+              "code": "MOMENTS-DEMO-2026",
+              "campaignId": "demo_credit_flow",
+              "creditsGranted": 5,
+              "redemptionId": "promo-redemption-1",
+              "ledgerEntryId": "promo-ledger-1",
+              "balance": {
+                "appId": "animateav",
+                "userId": "user-1",
+                "spendableCredits": 5,
+                "reservedCredits": 0,
+                "proMonthlyCredits": 0,
+                "promotionalGrantedCredits": 5,
+                "purchasedCredits": 0,
+                "hasProFeatures": false,
+                "proSource": "none",
+                "proExpiresAt": null,
+                "canStartMoment": true,
+                "minimumRenderCredits": 1,
+                "generatedAt": "2026-05-27T10:00:00.000Z"
+              },
+              "generatedAt": "2026-05-27T10:00:00.000Z"
+            }
+            """
+        )
+        let client = MomentsPromoCodeClient(baseURLString: accountAPIBaseURL, session: session)
+
+        let response = try await client.redeem(code: "MOMENTS-DEMO-2026", bearerToken: "token-1")
+
+        XCTAssertEqual(MomentsURLProtocolMock.lastRequest?.url?.absoluteString, "\(accountAPIBaseURL)/v1/apps/animateav/credits/promotions/redeem")
+        XCTAssertEqual(MomentsURLProtocolMock.lastRequest?.httpMethod, "POST")
+        XCTAssertEqual(MomentsURLProtocolMock.lastRequest?.value(forHTTPHeaderField: "Authorization"), "Bearer token-1")
+        XCTAssertEqual(response.creditsGranted, 5)
+        XCTAssertEqual(response.balance, MomentsCreditBalance(proMonthly: 0, promotional: 5, purchased: 0, availableCredits: 5))
+    }
+
+    private var accountAPIBaseURL: String {
+        "https://api-account-av-preview.avalsys.com"
+    }
+
+    private var uploadCompletionJSON: String {
+        """
+        {
+          "appId": "animateav",
+          "momentId": "moment-1",
+          "mediaAssetId": "media-1",
+          "uploadId": "upload-1",
+          "storageKey": "uploads/moment-1/media-1.jpg",
+          "status": "uploaded",
+          "uploadedAt": "2026-05-16T16:00:00Z",
+          "bytesReceived": 4
+        }
+        """
+    }
+
+    private func makeMockSession(statusCode: Int = 200, json: String) -> URLSession {
+        MomentsURLProtocolMock.statusCode = statusCode
+        MomentsURLProtocolMock.responseData = Data(json.utf8)
+        let configuration = URLSessionConfiguration.ephemeral
+        configuration.protocolClasses = [MomentsURLProtocolMock.self]
+        return URLSession(configuration: configuration)
+    }
+}
+
+private final class MomentsURLProtocolMock: URLProtocol {
+    nonisolated(unsafe) static var statusCode = 200
+    nonisolated(unsafe) static var responseData = Data()
+    nonisolated(unsafe) static var lastRequest: URLRequest?
+    nonisolated(unsafe) static var lastRequestBody: Data?
+    nonisolated(unsafe) static var requestCount = 0
+    nonisolated(unsafe) static var failuresBeforeSuccess = 0
+
+    override class func canInit(with request: URLRequest) -> Bool {
+        true
+    }
+
+    override class func canonicalRequest(for request: URLRequest) -> URLRequest {
+        request
+    }
+
+    override func startLoading() {
+        Self.lastRequest = request
+        Self.lastRequestBody = request.httpBody
+        if Self.lastRequestBody == nil,
+           let stream = request.httpBodyStream {
+            stream.open()
+            defer { stream.close() }
+            var data = Data()
+            let bufferSize = 1024
+            let buffer = UnsafeMutablePointer<UInt8>.allocate(capacity: bufferSize)
+            defer { buffer.deallocate() }
+            while stream.hasBytesAvailable {
+                let read = stream.read(buffer, maxLength: bufferSize)
+                if read <= 0 { break }
+                data.append(buffer, count: read)
+            }
+            Self.lastRequestBody = data
+        }
+        Self.requestCount += 1
+        if Self.failuresBeforeSuccess > 0 {
+            Self.failuresBeforeSuccess -= 1
+            client?.urlProtocol(self, didFailWithError: URLError(.networkConnectionLost))
+            return
+        }
+        let response = HTTPURLResponse(
+            url: request.url!,
+            statusCode: Self.statusCode,
+            httpVersion: nil,
+            headerFields: ["content-type": "application/json"]
+        )!
+        client?.urlProtocol(self, didReceive: response, cacheStoragePolicy: .notAllowed)
+        client?.urlProtocol(self, didLoad: Self.responseData)
+        client?.urlProtocolDidFinishLoading(self)
+    }
+
+    override func stopLoading() {}
+
+    static func reset() {
+        statusCode = 200
+        responseData = Data()
+        lastRequest = nil
+        lastRequestBody = nil
+        requestCount = 0
+        failuresBeforeSuccess = 0
+    }
+}

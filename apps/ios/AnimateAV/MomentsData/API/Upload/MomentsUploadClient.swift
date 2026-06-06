@@ -1,0 +1,238 @@
+import Foundation
+import OSLog
+
+struct MomentsUploadClient: Sendable {
+    var baseURLString: String
+    var session: URLSession = .shared
+    var uploadRetryPolicy = MomentsUploadRetryPolicy()
+    var networkRetryPolicy = MomentsNetworkRetryPolicy()
+    private let logger = Logger(subsystem: "app.avalsys.animateav", category: "upload-client")
+
+    var isConfigured: Bool {
+        URL(string: baseURLString.trimmingCharacters(in: .whitespacesAndNewlines)) != nil
+    }
+
+    func prepareUpload(momentId: String, bearerToken: String, media: MomentsSelectedMedia) async throws -> MomentsPreparedUpload {
+        guard let baseURL = URL(string: baseURLString.trimmingCharacters(in: .whitespacesAndNewlines)) else {
+            throw MomentsUploadError.apiNotConfigured
+        }
+
+        let endpoint = baseURL
+            .appendingPathComponent("v1")
+            .appendingPathComponent("apps")
+            .appendingPathComponent("animateav")
+            .appendingPathComponent("media")
+            .appendingPathComponent("prepare-upload")
+
+        var request = URLRequest(url: endpoint)
+        request.httpMethod = "POST"
+        request.setValue("application/json", forHTTPHeaderField: "Content-Type")
+        request.setValue("Bearer \(bearerToken)", forHTTPHeaderField: "Authorization")
+        request.httpBody = try JSONEncoder().encode(MomentsPrepareUploadRequest(momentId: momentId, media: media))
+
+        let (data, response) = try await retryingData(for: request)
+        guard let httpResponse = response as? HTTPURLResponse, 200..<300 ~= httpResponse.statusCode else {
+            let statusCode = (response as? HTTPURLResponse)?.statusCode ?? -1
+            logger.error("prepare-upload failed status=\(statusCode, privacy: .public)")
+            throw MomentsAPIError.decode(
+                from: data,
+                fallbackCode: "moments_upload_prepare_failed",
+                fallbackMessage: MomentsUploadError.prepareFailed.localizedDescription
+            )
+        }
+
+        do {
+            let preparedUpload = try JSONDecoder().decode(MomentsPreparedUpload.self, from: data)
+            logger.info("prepare-upload succeeded direct=\(preparedUpload.completionUrl != nil, privacy: .public)")
+            return preparedUpload
+        } catch {
+            logger.error("prepare-upload decode failed error=\(error.localizedDescription, privacy: .public)")
+            throw error
+        }
+    }
+
+    func upload(media: MomentsSelectedMedia, preparedUpload: MomentsPreparedUpload) async throws -> MomentsUploadCompletion {
+        guard let uploadURL = preparedUpload.uploadUrl else {
+            throw MomentsUploadError.signedUploadUnavailable
+        }
+
+        var request = URLRequest(url: uploadURL)
+        request.httpMethod = preparedUpload.method
+        request.timeoutInterval = 45
+        request.cachePolicy = .reloadIgnoringLocalAndRemoteCacheData
+        request.networkServiceType = .responsiveData
+        preparedUpload.headers.forEach { key, value in
+            request.setValue(value, forHTTPHeaderField: key)
+        }
+        request.setValue(String(media.sortOrder), forHTTPHeaderField: "x-appsav-moments-sort-order")
+        request.setValue(media.selected ? "true" : "false", forHTTPHeaderField: "x-appsav-moments-selected")
+
+        if let completionUrl = preparedUpload.completionUrl {
+            _ = try await uploadWithRetry(request: request, data: media.data)
+            logger.info("direct upload put succeeded uploadId=\(preparedUpload.uploadId, privacy: .public)")
+            return try await completeUpload(uploadId: preparedUpload.uploadId, completionUrl: completionUrl, media: media)
+        }
+
+        let uploadResponseData = try await uploadWithRetry(request: request, data: media.data)
+        do {
+            let completion = try JSONDecoder().decode(MomentsUploadCompletion.self, from: uploadResponseData)
+            logger.info("api upload completed uploadId=\(completion.uploadId, privacy: .public)")
+            return completion
+        } catch {
+            logger.error("api upload completion decode failed error=\(error.localizedDescription, privacy: .public)")
+            throw error
+        }
+    }
+
+    private func completeUpload(uploadId: String, completionUrl: URL, media: MomentsSelectedMedia) async throws -> MomentsUploadCompletion {
+        var request = URLRequest(url: completionUrl)
+        request.httpMethod = "POST"
+        request.timeoutInterval = 20
+        request.cachePolicy = .reloadIgnoringLocalAndRemoteCacheData
+        request.setValue("application/json", forHTTPHeaderField: "Content-Type")
+        request.httpBody = try JSONEncoder().encode(MomentsUploadCompletionIntent(media: media))
+
+        let (data, response) = try await retryingData(for: request)
+        guard let httpResponse = response as? HTTPURLResponse, 200..<300 ~= httpResponse.statusCode else {
+            let statusCode = (response as? HTTPURLResponse)?.statusCode ?? -1
+            logger.error("direct upload complete failed uploadId=\(uploadId, privacy: .public) status=\(statusCode, privacy: .public)")
+            throw MomentsAPIError.decode(
+                from: data,
+                fallbackCode: "moments_upload_complete_failed",
+                fallbackMessage: MomentsUploadError.uploadFailed.localizedDescription
+            )
+        }
+
+        do {
+            let completion = try JSONDecoder().decode(MomentsUploadCompletion.self, from: data)
+            logger.info("direct upload completed uploadId=\(uploadId, privacy: .public)")
+            return completion
+        } catch {
+            logger.error("direct upload completion decode failed uploadId=\(uploadId, privacy: .public) error=\(error.localizedDescription, privacy: .public)")
+            throw error
+        }
+    }
+
+    private func uploadWithRetry(request: URLRequest, data: Data) async throws -> Data {
+        var attempt = 0
+
+        while true {
+            do {
+                let (responseData, response) = try await session.upload(for: request, from: data)
+                guard let httpResponse = response as? HTTPURLResponse, 200..<300 ~= httpResponse.statusCode else {
+                    let statusCode = (response as? HTTPURLResponse)?.statusCode ?? -1
+                    logger.error("upload request failed status=\(statusCode, privacy: .public) attempt=\(attempt, privacy: .public)")
+                    throw MomentsAPIError.decode(
+                        from: responseData,
+                        fallbackCode: "moments_upload_failed",
+                        fallbackMessage: MomentsUploadError.uploadFailed.localizedDescription
+                    )
+                }
+                return responseData
+            } catch {
+                guard uploadRetryPolicy.shouldRetry(error: error, attempt: attempt) else {
+                    throw error
+                }
+
+                attempt += 1
+                try await Task.sleep(nanoseconds: uploadRetryPolicy.delayNanoseconds(forAttempt: attempt))
+            }
+        }
+    }
+
+    private func retryingData(for request: URLRequest) async throws -> (Data, URLResponse) {
+        var attempt = 0
+
+        while true {
+            do {
+                return try await session.data(for: request)
+            } catch {
+                guard networkRetryPolicy.shouldRetry(error: error, attempt: attempt) else {
+                    throw error
+                }
+
+                attempt += 1
+                try await Task.sleep(nanoseconds: networkRetryPolicy.delayNanoseconds(forAttempt: attempt))
+            }
+        }
+    }
+}
+
+private struct MomentsUploadCompletionIntent: Encodable {
+    let sortOrder: Int
+    let selected: Bool
+
+    init(media: MomentsSelectedMedia) {
+        sortOrder = media.sortOrder
+        selected = media.selected
+    }
+}
+
+struct MomentsUploadRetryPolicy: Sendable {
+    var maximumRetries = 3
+    var baseDelayNanoseconds: UInt64 = 300_000_000
+
+    func shouldRetry(error: Error, attempt: Int) -> Bool {
+        guard attempt < maximumRetries else { return false }
+
+        let nsError = error as NSError
+        guard nsError.domain == NSURLErrorDomain else { return false }
+
+        switch nsError.code {
+        case NSURLErrorNetworkConnectionLost,
+             NSURLErrorTimedOut,
+             NSURLErrorCannotConnectToHost,
+             NSURLErrorCannotFindHost,
+             NSURLErrorDNSLookupFailed,
+             NSURLErrorNotConnectedToInternet:
+            return true
+        default:
+            return false
+        }
+    }
+
+    func delayNanoseconds(forAttempt attempt: Int) -> UInt64 {
+        baseDelayNanoseconds * UInt64(1 << max(attempt - 1, 0))
+    }
+}
+
+private struct MomentsPrepareUploadRequest: Encodable {
+    let appId = "animateav"
+    let momentId: String
+    let mediaKind: String
+    let sourceLocalIdentifier: String
+    let originalFilename: String
+    let contentType: String
+    let byteSize: Int
+    let sha256: String
+
+    init(momentId: String, media: MomentsSelectedMedia) {
+        self.momentId = momentId
+        mediaKind = media.kind
+        sourceLocalIdentifier = media.sourceLocalIdentifier
+        originalFilename = media.originalFilename
+        contentType = media.contentType
+        byteSize = media.byteSize
+        sha256 = media.sha256
+    }
+}
+
+enum MomentsUploadError: LocalizedError {
+    case unreadableSelection
+    case apiNotConfigured
+    case prepareFailed
+    case signedUploadUnavailable
+    case uploadFailed
+    case photoLibraryAccessDenied
+
+    var errorDescription: String? {
+        switch self {
+        case .unreadableSelection: "The selected item could not be read."
+        case .apiNotConfigured: "Media upload preparation is not configured for this build."
+        case .prepareFailed: "Upload preparation failed."
+        case .signedUploadUnavailable: "Signed upload storage is not enabled for this build."
+        case .uploadFailed: "Media upload failed."
+        case .photoLibraryAccessDenied: "Allow Photos access to import recent photos."
+        }
+    }
+}

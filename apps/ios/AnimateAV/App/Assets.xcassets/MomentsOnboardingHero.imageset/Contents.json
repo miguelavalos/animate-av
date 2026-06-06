@@ -1,0 +1,13 @@
+{
+  "images": [
+    {
+      "filename": "moments-onboarding-hero@1x.jpg",
+      "idiom": "universal",
+      "scale": "1x"
+    }
+  ],
+  "info": {
+    "author": "xcode",
+    "version": 1
+  }
+}

@@ -1,0 +1,8 @@
+blank_issues_enabled: true
+contact_links:
+  - name: Security report
+    url: https://github.com/miguelavalos/moments-av/security/advisories/new
+    about: Report vulnerabilities privately. Do not open public security issues.
+  - name: Public support
+    url: https://moments-av.avalsys.com/support
+    about: Use for account-specific support that should not be posted publicly.

@@ -1,0 +1,42 @@
+import Foundation
+
+struct MomentsRealtimeSessionClient {
+    var baseURLString: String
+    var session: URLSession = .shared
+    var retryPolicy = MomentsNetworkRetryPolicy()
+
+    func createRealtimeSession(bearerToken: String) async throws -> String {
+        guard var endpoint = URL(string: baseURLString.trimmingCharacters(in: .whitespacesAndNewlines)) else {
+            throw MomentsAPIError(code: "moments_realtime_not_configured", message: "Moments realtime is not configured.")
+        }
+
+        endpoint.appendPathComponent("v1")
+        endpoint.appendPathComponent("apps")
+        endpoint.appendPathComponent("animateav")
+        endpoint.appendPathComponent("workspace")
+        endpoint.appendPathComponent("realtime-sessions")
+
+        var request = URLRequest(url: endpoint)
+        request.httpMethod = "POST"
+        request.setValue("application/json", forHTTPHeaderField: "Content-Type")
+        request.setValue("Bearer \(bearerToken)", forHTTPHeaderField: "Authorization")
+        request.httpBody = Data("{}".utf8)
+
+        let (data, response) = try await retryPolicy.run {
+            try await session.data(for: request)
+        }
+        guard let httpResponse = response as? HTTPURLResponse, 200..<300 ~= httpResponse.statusCode else {
+            throw MomentsAPIError.decode(
+                from: data,
+                fallbackCode: "moments_realtime_session_failed",
+                fallbackMessage: "Realtime session failed."
+            )
+        }
+
+        return try JSONDecoder().decode(MomentsRealtimeSessionResponse.self, from: data).realtimeSessionId
+    }
+}
+
+private struct MomentsRealtimeSessionResponse: Decodable {
+    let realtimeSessionId: String
+}
