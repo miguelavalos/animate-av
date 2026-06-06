@@ -34,11 +34,11 @@ enum MomentsAppExperience {
 
     static var visualAssets: AVCommonAppVisualAssets {
         AVCommonAppVisualAssets(
-            headerLogoName: "AnimateAVLogo",
+            headerLogoName: "MomentsHeaderWordmark",
             splashLogoName: "AnimateAVLogo",
-            splashHeroName: "AnimateSplashHero",
+            splashHeroName: "MomentsSplashHero",
             onboardingBrandName: "AnimateAVLogo",
-            onboardingHeroName: "AnimateOnboardingHero",
+            onboardingHeroName: "MomentsOnboardingHero",
             onboardingCTACompanionName: "AviOnboardingCTA",
             onboardingAuthPanelCompanionName: "AviLoginSheetPeek",
             footerAssistantName: "AviFooterIcon"

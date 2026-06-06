@@ -248,7 +248,7 @@ struct MomentCreationStyle: Identifiable, Equatable {
             id: .familyMoments,
             title: L10n.string("create.theme.familyMoments.title"),
             subtitle: L10n.string("create.theme.familyMoments.subtitle"),
-            assetName: "StyleEveryday",
+            assetName: "StyleFamilyMoments",
             template: .birthdayMessage,
             defaultMusic: .warm,
             allowedMusic: [.warm, .fun, .cinematic, .calm],
