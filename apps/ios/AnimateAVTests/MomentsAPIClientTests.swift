@@ -359,7 +359,7 @@ final class MomentsAPIClientTests: XCTestCase {
         let client = MomentsFinalRenderClient(baseURLString: accountAPIBaseURL, session: session)
         var form = MomentSetupForm(template: .partyRecap)
         form.theme = .travel
-        form.look = .real
+        form.look = .cartoon
         form.tone = .cinematic
         form.duration = .short
         form.mediaUse = .aviPick

@@ -51,7 +51,7 @@ enum MomentLook: String, CaseIterable, Identifiable, Codable {
     var id: String { rawValue }
 
     static var selectorOrder: [MomentLook] {
-        [.real, .cinematic, .cartoon, .anime, .comic, .clay]
+        [.cartoon, .anime, .comic, .clay]
     }
 
     var title: String {

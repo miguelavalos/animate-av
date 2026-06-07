@@ -6,7 +6,7 @@ enum MomentsCreateTestFixtures {
         id: String,
         template: MomentTemplateID = .birthdayMessage,
         creationMode: String = "quick",
-        look: String = "real",
+        look: String = "cartoon",
         theme: String = "celebration",
         mood: String? = nil,
         duration: String = "short",

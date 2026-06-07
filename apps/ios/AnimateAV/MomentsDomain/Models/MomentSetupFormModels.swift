@@ -55,7 +55,7 @@ extension MomentSetupTone {
 
 struct MomentSetupForm: Equatable {
     var creationMode: MomentCreationMode = .quick
-    var look: MomentLook = .real
+    var look: MomentLook = .cartoon
     var theme: MomentCreationStyleID = .celebration
     var duration: MomentDuration = .short
     var mediaUse: MomentMediaUse = .aviPick
@@ -94,7 +94,7 @@ struct MomentSetupForm: Equatable {
             details: moment.details ?? ""
         )
         form.creationMode = MomentCreationMode(rawValue: moment.creationMode) ?? .quick
-        form.look = MomentLook(rawValue: moment.look) ?? .real
+        form.look = MomentLook(rawValue: moment.look) ?? .cartoon
         form.theme = MomentCreationStyleID(rawValue: moment.theme) ?? .celebration
         form.duration = MomentDuration(rawValue: moment.duration) ?? .short
         form.mediaUse = MomentMediaUse(rawValue: moment.mediaUse) ?? .aviPick

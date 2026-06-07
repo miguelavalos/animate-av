@@ -964,20 +964,7 @@ private struct MomentsCreateStoryDecisionCard: View {
                     .background(AVBrandColor.neutral100.opacity(0.58), in: RoundedRectangle(cornerRadius: 10, style: .continuous))
                 }
 
-                if presentation.storySummary.hasScenes {
-                    VStack(alignment: .leading, spacing: 7) {
-                        ForEach(storyDecision.visibleScenes.prefix(1)) { scene in
-                            MomentsCreatePresentedStorySceneRow(scene: scene)
-                        }
-
-                        if let remainingSceneTitle = storyDecision.remainingSceneTitle {
-                            Text(remainingSceneTitle)
-                                .font(.caption2)
-                                .fontWeight(.black)
-                                .foregroundStyle(AVBrandColor.textSecondary)
-                        }
-                    }
-                } else if presentation.storySummary.isPlanning {
+                if presentation.storySummary.isPlanning {
                     ProgressView()
                         .tint(AVBrandColor.accent)
                         .frame(maxWidth: .infinity, alignment: .leading)
@@ -1009,8 +996,7 @@ private struct MomentsCreateStoryDecisionCard: View {
                 "create.storyDecision.summary.userDetail",
                 selectedStyle.title,
                 selectedMusicPreset.title,
-                selectedLook.title,
-                storyDecision.durationTitle
+                selectedLook.title
             )
         }
 
@@ -1019,7 +1005,6 @@ private struct MomentsCreateStoryDecisionCard: View {
             selectedStyle.title,
             selectedMusicPreset.title,
             selectedLook.title,
-            storyDecision.durationTitle,
             mediaDetail
         )
     }
@@ -1033,8 +1018,7 @@ private struct MomentsCreateStoryDecisionCard: View {
             "create.storyDecision.summary.aviProposalDetail",
             styleTitle,
             autoStyleSuggestion.musicPreset.title,
-            selectedLook.title,
-            storyDecision.durationTitle
+            selectedLook.title
         )
     }
 
@@ -1053,17 +1037,7 @@ private struct MomentsCreateStoryDecisionCard: View {
     }
 
     private var mediaDetail: String {
-        if presentation.storySummary.hasScenes {
-            return sceneCountTitle
-        }
         return L10n.string("create.mediaCard.selectionMessage")
-    }
-
-    private var sceneCountTitle: String {
-        let count = presentation.storySummary.presentedScenes.count
-        return count == 1
-            ? L10n.string("create.workflowContent.sceneReady", count)
-            : L10n.string("create.workflowContent.scenesReady", count)
     }
 
     private var noteTitle: String {

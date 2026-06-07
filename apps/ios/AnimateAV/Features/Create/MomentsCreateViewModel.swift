@@ -430,7 +430,7 @@ final class MomentsCreateViewModel: ObservableObject {
         let currentLook = form.look
         form.template = style.template
         form.theme = style.id
-        form.look = preserveUserOverrides && hasUserLookOverride ? currentLook : .real
+        form.look = preserveUserOverrides && hasUserLookOverride ? currentLook : .cartoon
         form.creationMode = .quick
         form.duration = .short
         form.mediaUse = .aviPick
