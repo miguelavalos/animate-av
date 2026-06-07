@@ -977,7 +977,7 @@ private struct MomentsCreateVideoDirectionCard: View {
         MomentsCreateVideoDirectionPresentation(
             mediaSummary: presentation.mediaSummary,
             storySummary: presentation.storySummary,
-            selectedDuration: .short,
+            selectedDuration: .auto,
             renderPlan: presentation.finalRenderSummary.renderPlan?.plan,
             canRefreshStory: presentation.canPlanStory,
             availabilityMessage: presentation.storyAvailabilityMessage

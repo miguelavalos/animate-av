@@ -333,14 +333,8 @@
 "create.aviDirection.undoSuggestion" = "Avi-Vorschlag rückgängig machen";
 "create.aviDirection.useSuggestion" = "Avi-Vorschlag verwenden";
 "create.aviDirection.usingSuggestion" = "Avi hat %@ für dieses Foto gewählt. Du kannst Look, Stimme oder Nachricht ändern.";
-"create.duration.auto.subtitle" = "Avi wählt den passenden Bereich.";
-"create.duration.auto.title" = "Auto";
-"create.duration.extended.subtitle" = "Mehr Szenen und Pausen.";
-"create.duration.extended.title" = "31-60 s";
-"create.duration.short.subtitle" = "Schnell und fokussiert.";
-"create.duration.short.title" = "8-15 s";
-"create.duration.standard.subtitle" = "Mehr Rhythmus und Kontext.";
-"create.duration.standard.title" = "16-30 s";
+"create.duration.auto.subtitle" = "Avi hält das Video so kurz, wie es die Nachricht erlaubt.";
+"create.duration.auto.title" = "Avi setzt das Timing";
 "create.guide.look.title" = "Stil";
 "create.guide.voice.detail" = "Legt den Sprechton und das Audiogefühl fest.";
 "create.guide.voice.title" = "Stimme";

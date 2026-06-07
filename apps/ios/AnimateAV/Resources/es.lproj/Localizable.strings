@@ -103,14 +103,8 @@
 "create.aviDirection.undoSuggestion" = "Deshacer sugerencia de Avi";
 "create.aviDirection.useSuggestion" = "Usar sugerencia de Avi";
 "create.aviDirection.usingSuggestion" = "Avi eligió %@ para esta foto. Puedes cambiar el look, la voz o el mensaje.";
-"create.duration.auto.subtitle" = "Avi elige el rango que encaja.";
-"create.duration.auto.title" = "Auto";
-"create.duration.extended.subtitle" = "La animación V1 más larga.";
-"create.duration.extended.title" = "Hasta 15 s";
-"create.duration.short.subtitle" = "Rápido y enfocado.";
-"create.duration.short.title" = "Hasta 5 s";
-"create.duration.standard.subtitle" = "Más movimiento y timing.";
-"create.duration.standard.title" = "Hasta 10 s";
+"create.duration.auto.subtitle" = "Avi mantiene el video tan corto como permita el mensaje.";
+"create.duration.auto.title" = "Avi calcula el timing";
 "create.guide.look.title" = "Estilo";
 "create.guide.voice.detail" = "Define el tono de entrega y la sensación del audio.";
 "create.guide.voice.title" = "Voz";

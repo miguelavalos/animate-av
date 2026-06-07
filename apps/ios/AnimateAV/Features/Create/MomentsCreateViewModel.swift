@@ -596,7 +596,7 @@ final class MomentsCreateViewModel: ObservableObject {
         form.theme = style.id
         form.look = preserveUserOverrides && hasUserLookOverride ? currentLook : .cartoon
         form.creationMode = .quick
-        form.duration = .short
+        form.duration = .auto
         form.mediaUse = .aviPick
         form.occasion = style.title
         form.tone = style.tone
@@ -660,7 +660,7 @@ final class MomentsCreateViewModel: ObservableObject {
 
     func effectiveFinalRenderForm() -> MomentSetupForm {
         var finalForm = form
-        finalForm.duration = .short
+        finalForm.duration = .auto
         return finalForm
     }
 

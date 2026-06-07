@@ -105,38 +105,18 @@ enum MomentMediaUse: String, CaseIterable, Identifiable, Codable {
 
 enum MomentDuration: String, CaseIterable, Identifiable, Codable {
     case auto
-    case short
-    case standard
-    case extended
-
-    static var allCases: [MomentDuration] { [.short, .standard, .extended] }
 
     var id: String { rawValue }
 
     var title: String {
         switch self {
         case .auto: L10n.string("create.duration.auto.title")
-        case .short: L10n.string("create.duration.short.title")
-        case .standard: L10n.string("create.duration.standard.title")
-        case .extended: L10n.string("create.duration.extended.title")
         }
     }
 
     var subtitle: String {
         switch self {
         case .auto: L10n.string("create.duration.auto.subtitle")
-        case .short: L10n.string("create.duration.short.subtitle")
-        case .standard: L10n.string("create.duration.standard.subtitle")
-        case .extended: L10n.string("create.duration.extended.subtitle")
-        }
-    }
-
-    var assetName: String {
-        switch self {
-        case .auto: "LengthAuto"
-        case .short: "LengthShort"
-        case .standard: "LengthStandard"
-        case .extended: "LengthExtended"
         }
     }
 }

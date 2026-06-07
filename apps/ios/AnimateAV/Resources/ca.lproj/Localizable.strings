@@ -103,14 +103,8 @@
 "create.aviDirection.undoSuggestion" = "Desfés el suggeriment d’Avi";
 "create.aviDirection.useSuggestion" = "Usa el suggeriment d’Avi";
 "create.aviDirection.usingSuggestion" = "Avi ha triat %@ per a aquesta foto. Pots canviar el look, la veu o el missatge.";
-"create.duration.auto.subtitle" = "Avi tria el rang que encaixa.";
-"create.duration.auto.title" = "Auto";
-"create.duration.extended.subtitle" = "Més escenes i pauses.";
-"create.duration.extended.title" = "31-60 s";
-"create.duration.short.subtitle" = "Ràpid i enfocat.";
-"create.duration.short.title" = "8-15 s";
-"create.duration.standard.subtitle" = "Més ritme i context.";
-"create.duration.standard.title" = "16-30 s";
+"create.duration.auto.subtitle" = "Avi manté el vídeo tan curt com permeti el missatge.";
+"create.duration.auto.title" = "Avi calcula el timing";
 "create.guide.look.title" = "Estil";
 "create.guide.voice.detail" = "Defineix el to de veu i la sensació de l’audio.";
 "create.guide.voice.title" = "Veu";
