@@ -9,6 +9,10 @@ local runtime flow from this public repo.
 
 - `private/avalsys-suite/docs/platform/native-preview-dev-validation-guide.md`
 - `private/avalsys-suite/docs/animate-av/preview-dev-validation-guide.md`
+- `private/avalsys-suite/docs/agents/plan-step.md` when the user says
+  `usa plan-step` or asks for step-by-step plan execution.
+- `private/avalsys-suite/docs/agents/plan-goal.md` when the user says
+  `usa plan-goal` or asks for reviewed full-plan execution.
 
 Mandatory rules:
 
