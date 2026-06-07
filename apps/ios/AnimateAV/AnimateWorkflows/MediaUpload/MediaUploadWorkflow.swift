@@ -100,7 +100,7 @@ final class MediaUploadWorkflow: WorkspaceObservingWorkflow {
     override func workspaceDidChange(_ workspace: AnimateWorkspace?) {
         guard selectedMedia.isEmpty,
               let workspace,
-              restoredWorkspaceMomentId != workspace.moment.id,
+              restoredWorkspaceMomentId != workspace.video.id,
               !workspace.mediaAssets.isEmpty else { return }
 
         Task { [weak self] in
@@ -111,7 +111,7 @@ final class MediaUploadWorkflow: WorkspaceObservingWorkflow {
     func restoreLocalMediaForEditing() {
         guard selectedMedia.isEmpty,
               let activeWorkspace,
-              restoredWorkspaceMomentId != activeWorkspace.moment.id,
+              restoredWorkspaceMomentId != activeWorkspace.video.id,
               !activeWorkspace.mediaAssets.isEmpty else { return }
 
         Task { [weak self, activeWorkspace] in
@@ -292,9 +292,9 @@ final class MediaUploadWorkflow: WorkspaceObservingWorkflow {
         )
         do {
             let restoredMedia = try await MediaPickerImport.loadLocalMediaAssets(workspace.mediaAssets)
-            guard activeWorkspace?.moment.id == workspace.moment.id, selectedMedia.isEmpty else { return }
+            guard activeWorkspace?.video.id == workspace.video.id, selectedMedia.isEmpty else { return }
             if restoredMedia.count == expectedSelectedCount {
-                restoredWorkspaceMomentId = workspace.moment.id
+                restoredWorkspaceMomentId = workspace.video.id
                 selectedMedia = restoredMedia
                 statusMessage = L10n.string("workflow.media.localReady")
             } else if restoredMedia.isEmpty, expectedSelectedCount > 0 {
@@ -303,10 +303,10 @@ final class MediaUploadWorkflow: WorkspaceObservingWorkflow {
                 statusMessage = L10n.string("workflow.media.savedReadyThumbnailsPending")
             }
         } catch AnimateUploadError.photoLibraryAccessDenied {
-            guard activeWorkspace?.moment.id == workspace.moment.id else { return }
+            guard activeWorkspace?.video.id == workspace.video.id else { return }
             statusMessage = L10n.string("workflow.media.savedReady")
         } catch {
-            guard activeWorkspace?.moment.id == workspace.moment.id else { return }
+            guard activeWorkspace?.video.id == workspace.video.id else { return }
             AnimateMediaUploadDiagnostics.captureRestoreError(error, expectedAssetCount: expectedSelectedCount)
             statusMessage = L10n.string("workflow.media.savedReady")
         }

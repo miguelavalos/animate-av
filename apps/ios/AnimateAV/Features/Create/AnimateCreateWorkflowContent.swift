@@ -278,7 +278,7 @@ private struct AnimateCreateMediaFirstWorkspace: View {
 
     private var mediaPresentation: AnimateCreateMediaPresentation {
         AnimateCreateMediaPresentation(
-            activeMomentId: presentation.activeMomentId,
+            activeVideoId: presentation.activeVideoId,
             template: presentation.template,
             summary: presentation.mediaSummary,
             canAddMedia: presentation.canAddMedia,
@@ -327,11 +327,11 @@ private struct AnimateCreateMediaFirstWorkspace: View {
     }
 
     private var discardConfirmationActionTitle: String {
-        presentation.hasUnsavedLocalMoment ? L10n.string("create.discard.local") : L10n.string("create.discard.current")
+        presentation.hasUnsavedLocalVideo ? L10n.string("create.discard.local") : L10n.string("create.discard.current")
     }
 
     private var discardConfirmationMessage: String {
-        if presentation.hasUnsavedLocalMoment {
+        if presentation.hasUnsavedLocalVideo {
             return L10n.string("create.discard.localMessage")
         }
 
@@ -934,7 +934,7 @@ private struct AnimateCreateVideoDirectionCard: View {
 
     private var mediaPresentation: AnimateCreateMediaPresentation {
         AnimateCreateMediaPresentation(
-            activeMomentId: presentation.activeMomentId,
+            activeVideoId: presentation.activeVideoId,
             template: presentation.template,
             summary: presentation.mediaSummary,
             canAddMedia: presentation.canAddMedia,
@@ -962,11 +962,11 @@ private struct AnimateCreateVideoDirectionCard: View {
     }
 
     private var discardActionTitle: String {
-        presentation.hasUnsavedLocalMoment ? L10n.string("create.discard.closeDraft") : L10n.string("create.discard.current")
+        presentation.hasUnsavedLocalVideo ? L10n.string("create.discard.closeDraft") : L10n.string("create.discard.current")
     }
 
     private var discardActionIconName: String {
-        presentation.hasUnsavedLocalMoment ? "xmark.circle" : "trash"
+        presentation.hasUnsavedLocalVideo ? "xmark.circle" : "trash"
     }
 
     private var canShowDiscardAction: Bool {

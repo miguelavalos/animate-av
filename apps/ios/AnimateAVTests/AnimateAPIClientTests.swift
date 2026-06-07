@@ -113,8 +113,8 @@ final class AnimateAPIClientTests: XCTestCase {
             method: "PUT",
             headers: [
                 "content-type": "image/jpeg",
-                "x-appsav-moments-moment-id": "moment-1",
-                "x-appsav-moments-media-asset-id": "media-1"
+                "x-appsav-videos-moment-id": "moment-1",
+                "x-appsav-videos-media-asset-id": "media-1"
             ],
             expiresAt: "2026-05-16T17:00:00Z",
             generatedAt: "2026-05-16T16:00:00Z"
@@ -125,7 +125,7 @@ final class AnimateAPIClientTests: XCTestCase {
         XCTAssertEqual(AnimateURLProtocolMock.lastRequest?.url?.absoluteString, uploadURL.absoluteString)
         XCTAssertEqual(AnimateURLProtocolMock.lastRequest?.httpMethod, "PUT")
         XCTAssertNil(AnimateURLProtocolMock.lastRequest?.value(forHTTPHeaderField: "Authorization"))
-        XCTAssertEqual(AnimateURLProtocolMock.lastRequest?.value(forHTTPHeaderField: "x-appsav-moments-moment-id"), "moment-1")
+        XCTAssertEqual(AnimateURLProtocolMock.lastRequest?.value(forHTTPHeaderField: "x-appsav-videos-moment-id"), "moment-1")
     }
 
     func testUploadWithoutSignedURLFailsBeforeSavingMedia() async throws {
@@ -838,7 +838,7 @@ final class AnimateAPIClientTests: XCTestCase {
               "momentId": "moment-1",
               "artifactId": "artifact-1",
               "artifactKind": "final_export",
-              "downloadUrl": "https://account-1.r2.cloudflarestorage.com/moments-bucket/animateav/user/moment-1/final%20exports/artifact-1.mp4?X-Amz-Signature=test",
+              "downloadUrl": "https://account-1.r2.cloudflarestorage.com/videos-bucket/animateav/user/moment-1/final%20exports/artifact-1.mp4?X-Amz-Signature=test",
               "method": "GET",
               "headers": {},
               "expiresAt": "2026-05-16T17:00:00Z",

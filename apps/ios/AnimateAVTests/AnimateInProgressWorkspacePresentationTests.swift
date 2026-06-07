@@ -4,7 +4,7 @@ import XCTest
 final class AnimateInProgressWorkspacePresentationTests: XCTestCase {
     func testWorkspaceDetailPresentationFormatsTitleActionAndContinuationRequest() {
         let workspace = makeWorkspace(
-            moment: makeMoment(title: "Family Weekend"),
+            video: makeMoment(title: "Family Weekend"),
             mediaAssets: [
                 makeMediaAsset(id: "media-1", kind: "image", sortOrder: 0, selected: true, moderationStatus: "approved")
             ]
@@ -14,13 +14,13 @@ final class AnimateInProgressWorkspacePresentationTests: XCTestCase {
 
         XCTAssertEqual(presentation.title, "Video detail")
         XCTAssertEqual(presentation.nextAction.title, "Prepare video")
-        XCTAssertEqual(presentation.continuationRequest.moment, workspace.moment)
+        XCTAssertEqual(presentation.continuationRequest.video, workspace.video)
         XCTAssertEqual(presentation.continuationRequest.focus, .story)
     }
 
     func testWorkspaceDetailPresentationUsesFailedRenderContinuationFocus() {
         let workspace = makeWorkspace(
-            moment: makeMoment(title: "Family Weekend"),
+            video: makeMoment(title: "Family Weekend"),
             renderJobs: [
                 makeRenderJob(id: "job-1", kind: "final", status: "failed", updatedAt: 20)
             ]
@@ -35,7 +35,7 @@ final class AnimateInProgressWorkspacePresentationTests: XCTestCase {
     func testWorkspaceHeaderPresentationFormatsTitleUpdateAndCounts() {
         let presentation = AnimateInProgressWorkspaceHeaderPresentation(
             workspace: makeWorkspace(
-                moment: makeMoment(title: "Family Weekend", updatedAt: 1_781_592_000_000),
+                video: makeMoment(title: "Family Weekend", updatedAt: 1_781_592_000_000),
                 mediaAssets: [
                     makeMediaAsset(id: "media-1", kind: "image", sortOrder: 0, selected: true, moderationStatus: "approved")
                 ],
@@ -56,7 +56,7 @@ final class AnimateInProgressWorkspacePresentationTests: XCTestCase {
     func testWorkspaceHeaderPresentationFormatsPluralCounts() {
         let presentation = AnimateInProgressWorkspaceHeaderPresentation(
             workspace: makeWorkspace(
-                moment: makeMoment(title: "Family Weekend"),
+                video: makeMoment(title: "Family Weekend"),
                 mediaAssets: [
                     makeMediaAsset(id: "media-1", kind: "image", sortOrder: 0, selected: true, moderationStatus: "approved"),
                     makeMediaAsset(id: "media-2", kind: "video", sortOrder: 1, selected: false, moderationStatus: "pending")
@@ -78,7 +78,7 @@ final class AnimateInProgressWorkspacePresentationTests: XCTestCase {
     func testWorkspaceSummaryPresentationFormatsStatusArtifactsAndLatestJob() {
         let presentation = AnimateInProgressWorkspaceSummaryPresentation(
             workspace: makeWorkspace(
-                moment: makeMoment(status: "story_ready"),
+                video: makeMoment(status: "story_ready"),
                 renderJobs: [
                     makeRenderJob(id: "old", kind: "final", status: "queued", updatedAt: 10),
                     makeRenderJob(id: "new", kind: "final", status: "failed", updatedAt: 20)
@@ -98,7 +98,7 @@ final class AnimateInProgressWorkspacePresentationTests: XCTestCase {
 
     func testWorkspaceSummaryPresentationUsesFallbacksWhenNoArtifactsOrJobsExist() {
         let presentation = AnimateInProgressWorkspaceSummaryPresentation(
-            workspace: makeWorkspace(moment: makeMoment(status: "in_progress"))
+            workspace: makeWorkspace(video: makeMoment(status: "in_progress"))
         )
 
         XCTAssertEqual(presentation.tiles.map(\.value), ["In Progress", "Not ready", "Not started"])
@@ -161,14 +161,14 @@ final class AnimateInProgressWorkspacePresentationTests: XCTestCase {
     }
 
     private func makeWorkspace(
-        moment: AnimateVideo,
+        video: AnimateVideo,
         mediaAssets: [AnimateMediaAsset] = [],
         storyScenes: [AnimateStoryScene] = [],
         renderJobs: [AnimateRenderJob] = [],
         artifacts: [AnimateArtifact] = []
     ) -> AnimateWorkspace {
         AnimateWorkspace(
-            moment: moment,
+            video: video,
             mediaAssets: mediaAssets,
             storyScenes: storyScenes,
             renderJobs: renderJobs,
@@ -210,7 +210,7 @@ final class AnimateInProgressWorkspacePresentationTests: XCTestCase {
 
     func testWorkspaceLookupsFindLatestArtifactAndRenderJob() {
         let workspace = makeWorkspace(
-            moment: makeMoment(),
+            video: makeMoment(),
             renderJobs: [
                 makeRenderJob(id: "final", kind: "final", status: "queued", updatedAt: 30),
                 makeRenderJob(id: "final-old", kind: "final", status: "queued", updatedAt: 10),

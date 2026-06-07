@@ -6,12 +6,12 @@ struct AnimateVideoGroups {
 }
 
 struct AnimateInProgressSummary: Equatable {
-    var moments: [AnimateVideo] = []
+    var videos: [AnimateVideo] = []
     var groups = AnimateVideoGroups()
-    var latestMoment: AnimateVideo?
+    var latestVideo: AnimateVideo?
 
-    var momentCount: Int {
-        moments.count
+    var videoCount: Int {
+        videos.count
     }
 
     var inProgressCount: Int {
@@ -22,8 +22,8 @@ struct AnimateInProgressSummary: Equatable {
         groups.finished.count
     }
 
-    var hasMoments: Bool {
-        !moments.isEmpty
+    var hasVideos: Bool {
+        !videos.isEmpty
     }
 
     var latestAnimateVideo: AnimateVideo? {
@@ -31,27 +31,27 @@ struct AnimateInProgressSummary: Equatable {
     }
 
     var latestInProgressContinuationRequest: AnimateContinuationRequest? {
-        latestAnimateVideo.map { AnimateContinuationRequest(moment: $0) }
+        latestAnimateVideo.map { AnimateContinuationRequest(video: $0) }
     }
 
     var videoSummary: AnimateInProgressSummary {
-        Self.make(from: moments.filter { $0.assetKind == "video" })
+        Self.make(from: videos.filter { $0.assetKind == "video" })
     }
 
     var imageSummary: AnimateInProgressSummary {
-        Self.make(from: moments.filter { $0.assetKind == "image" })
+        Self.make(from: videos.filter { $0.assetKind == "image" })
     }
 
-    static func make(from moments: [AnimateVideo]) -> AnimateInProgressSummary {
+    static func make(from videos: [AnimateVideo]) -> AnimateInProgressSummary {
         AnimateInProgressSummary(
-            moments: moments,
-            groups: AnimateStatusRules.group(moments),
-            latestMoment: moments.max { $0.updatedAt < $1.updatedAt }
+            videos: videos,
+            groups: AnimateStatusRules.group(videos),
+            latestVideo: videos.max { $0.updatedAt < $1.updatedAt }
         )
     }
 
     func removing(momentId: String) -> AnimateInProgressSummary {
-        Self.make(from: moments.filter { $0.id != momentId })
+        Self.make(from: videos.filter { $0.id != momentId })
     }
 }
 

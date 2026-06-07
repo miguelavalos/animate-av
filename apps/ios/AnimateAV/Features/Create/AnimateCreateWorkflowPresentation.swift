@@ -1,11 +1,11 @@
 import Foundation
 
 struct AnimateCreateWorkflowPresentation: Equatable {
-    var activeMomentId: String?
+    var activeVideoId: String?
     var isSignedIn = false
     var isCreatingVideo = false
     var hasAnimateWorkspace = false
-    var hasUnsavedLocalMoment = false
+    var hasUnsavedLocalVideo = false
     var template: AnimateVideoTemplate
     var creationStyleTitle = ""
     var toneTitle = ""
@@ -31,7 +31,7 @@ struct AnimateCreateWorkflowPresentation: Equatable {
 
     var showsMediaFirstWorkspace: Bool {
         hasAnimateWorkspace
-            || hasUnsavedLocalMoment
+            || hasUnsavedLocalVideo
             || mediaSummary.selectedCount > 0
             || !mediaSummary.syncedMediaAssets.isEmpty
             || finalRenderSummary.finalExport != nil
@@ -101,11 +101,11 @@ struct AnimateCreateWorkflowPresentation: Equatable {
     }
 
     static func make(
-        activeMomentId: String?,
+        activeVideoId: String?,
         isSignedIn: Bool,
         isCreatingVideo: Bool,
         hasAnimateWorkspace: Bool,
-        hasUnsavedLocalMoment: Bool,
+        hasUnsavedLocalVideo: Bool,
         template: AnimateVideoTemplate,
         creationStyleTitle: String,
         toneTitle: String,
@@ -119,11 +119,11 @@ struct AnimateCreateWorkflowPresentation: Equatable {
         availability: AnimateCreateWorkflowAvailability
     ) -> AnimateCreateWorkflowPresentation {
         AnimateCreateWorkflowPresentation(
-            activeMomentId: activeMomentId,
+            activeVideoId: activeVideoId,
             isSignedIn: isSignedIn,
             isCreatingVideo: isCreatingVideo,
             hasAnimateWorkspace: hasAnimateWorkspace,
-            hasUnsavedLocalMoment: hasUnsavedLocalMoment,
+            hasUnsavedLocalVideo: hasUnsavedLocalVideo,
             template: template,
             creationStyleTitle: creationStyleTitle,
             toneTitle: toneTitle,

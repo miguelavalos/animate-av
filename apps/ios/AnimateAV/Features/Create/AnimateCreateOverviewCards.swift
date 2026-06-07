@@ -17,16 +17,16 @@ struct AnimateCreateIntroCard: View {
 }
 
 struct AnimateCreateActiveMomentCard: View {
-    let activeMoment: AnimateVideo?
+    let activeVideo: AnimateVideo?
 
     var body: some View {
-        if let activeMoment {
+        if let activeVideo {
             AVAppShellCard {
                 AVAppShellInfoRow(
-                    title: activeMoment.title,
-                    detail: AnimateVideoFormatting.updatedAt(activeMoment),
+                    title: activeVideo.title,
+                    detail: AnimateVideoFormatting.updatedAt(activeVideo),
                     systemImage: "rectangle.stack",
-                    eyebrow: AnimateVideoFormatting.statusTitle(activeMoment)
+                    eyebrow: AnimateVideoFormatting.statusTitle(activeVideo)
                 )
             }
         }
@@ -76,7 +76,7 @@ struct AnimateCreateCreditsCard: View {
     }
 }
 
-struct MomentsCurrentCreationCard: View {
+struct AnimateCurrentCreationCard: View {
     let selectedCount: Int
     let continueCreation: () -> Void
 
@@ -121,8 +121,8 @@ struct MomentsCurrentCreationCard: View {
 private extension AnimateContinuationFocus {
     var title: String {
         switch self {
-        case .moment:
-            L10n.string("create.continuation.moment.title")
+        case .video:
+            L10n.string("create.continuation.video.title")
         case .media:
             L10n.string("create.continuation.media.title")
         case .story:
@@ -134,8 +134,8 @@ private extension AnimateContinuationFocus {
 
     var message: String {
         switch self {
-        case .moment:
-            L10n.string("create.continuation.moment.message")
+        case .video:
+            L10n.string("create.continuation.video.message")
         case .media:
             L10n.string("create.continuation.media.message")
         case .story:
@@ -147,7 +147,7 @@ private extension AnimateContinuationFocus {
 
     var systemImage: String {
         switch self {
-        case .moment:
+        case .video:
             "rectangle.stack"
         case .media:
             "photo.badge.plus"

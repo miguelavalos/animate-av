@@ -34,8 +34,8 @@ final class AnimateVideosWorkflow: ObservableObject {
 
         videosObserver.momentsPublisher
             .receive(on: DispatchQueue.main)
-            .sink { [weak self] moments in
-                self?.apply(moments)
+            .sink { [weak self] videos in
+                self?.apply(videos)
             }
             .store(in: &cancellables)
 
@@ -90,67 +90,67 @@ final class AnimateVideosWorkflow: ObservableObject {
         clearActiveVideo()
     }
 
-    func renameVideo(_ moment: AnimateVideo, title: String) async -> Bool {
+    func renameVideo(_ video: AnimateVideo, title: String) async -> Bool {
         let trimmedTitle = title.trimmingCharacters(in: .whitespacesAndNewlines)
         guard !trimmedTitle.isEmpty else { return false }
-        let previousTitle = optimisticMomentTitles[moment.id]
-        optimisticMomentTitles[moment.id] = trimmedTitle
-        applyOptimisticTitle(momentId: moment.id, title: trimmedTitle)
+        let previousTitle = optimisticMomentTitles[video.id]
+        optimisticMomentTitles[video.id] = trimmedTitle
+        applyOptimisticTitle(momentId: video.id, title: trimmedTitle)
 
         do {
             guard currentUserProvider.currentUserId != nil else {
-                restoreOptimisticTitle(momentId: moment.id, previousTitle: previousTitle)
+                restoreOptimisticTitle(momentId: video.id, previousTitle: previousTitle)
                 errorMessage = L10n.string("inProgress.rename.failed")
                 return false
             }
             guard let bearerToken = try? await authTokenProvider.currentBearerToken() else {
-                restoreOptimisticTitle(momentId: moment.id, previousTitle: previousTitle)
+                restoreOptimisticTitle(momentId: video.id, previousTitle: previousTitle)
                 errorMessage = L10n.string("inProgress.rename.failed")
                 return false
             }
             try await videoTitleUpdater.updateMomentTitle(
                 bearerToken: bearerToken,
-                momentId: moment.id,
+                momentId: video.id,
                 title: trimmedTitle
             )
             errorMessage = nil
             return true
         } catch {
-            restoreOptimisticTitle(momentId: moment.id, previousTitle: previousTitle)
+            restoreOptimisticTitle(momentId: video.id, previousTitle: previousTitle)
             errorMessage = L10n.string("inProgress.rename.failed")
             return false
         }
     }
 
-    func deleteVideo(_ moment: AnimateVideo) async -> Bool {
+    func deleteVideo(_ video: AnimateVideo) async -> Bool {
         errorMessage = nil
-        let didDelete = await videoDeletionWorkflow.deleteVideo(moment)
+        let didDelete = await videoDeletionWorkflow.deleteVideo(video)
         guard didDelete else { return false }
 
-        if workspaceSelectionWorkflow.activeMoment?.id == moment.id {
+        if workspaceSelectionWorkflow.activeVideo?.id == video.id {
             clearActiveVideo()
         }
         observeAnimateVideos(ownerUserId: currentOwnerUserId)
         return true
     }
 
-    private func apply(_ moments: [AnimateVideo]) {
-        let renamedMoments = moments.map { moment in
-            guard let title = optimisticMomentTitles[moment.id] else { return moment }
-            if moment.title == title {
-                optimisticMomentTitles[moment.id] = nil
-                return moment
+    private func apply(_ videos: [AnimateVideo]) {
+        let renamedVideos = videos.map { video in
+            guard let title = optimisticMomentTitles[video.id] else { return video }
+            if video.title == title {
+                optimisticMomentTitles[video.id] = nil
+                return video
             }
-            return moment.renamed(title)
+            return video.renamed(title)
         }
-        videosSummary = AnimateInProgressSummary.make(from: renamedMoments)
+        videosSummary = AnimateInProgressSummary.make(from: renamedVideos)
     }
 
     private func applyOptimisticTitle(momentId: String, title: String) {
-        let moments = videosSummary.moments.map { moment in
-            moment.id == momentId ? moment.renamed(title) : moment
+        let videos = videosSummary.videos.map { video in
+            video.id == momentId ? video.renamed(title) : video
         }
-        videosSummary = AnimateInProgressSummary.make(from: moments)
+        videosSummary = AnimateInProgressSummary.make(from: videos)
     }
 
     private func restoreOptimisticTitle(momentId: String, previousTitle: String?) {

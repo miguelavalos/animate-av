@@ -3,7 +3,7 @@ import Foundation
 
 @MainActor
 final class AnimateWorkspaceSelectionWorkflow: ObservableObject {
-    @Published private(set) var activeMoment: AnimateVideo?
+    @Published private(set) var activeVideo: AnimateVideo?
     @Published private(set) var activeWorkspace: AnimateWorkspace?
     @Published private(set) var isLoadingAnimateWorkspace = false
     @Published private(set) var errorMessage: String?
@@ -30,7 +30,7 @@ final class AnimateWorkspaceSelectionWorkflow: ObservableObject {
     }
 
     var activeVideoPublisher: AnyPublisher<AnimateVideo?, Never> {
-        $activeMoment.eraseToAnyPublisher()
+        $activeVideo.eraseToAnyPublisher()
     }
 
     var activeWorkspacePublisher: AnyPublisher<AnimateWorkspace?, Never> {
@@ -46,7 +46,7 @@ final class AnimateWorkspaceSelectionWorkflow: ObservableObject {
     }
 
     func observeAnimateWorkspace(ownerUserId: String?, momentId: String?) {
-        activeMoment = nil
+        activeVideo = nil
         activeWorkspace = nil
         isLoadingAnimateWorkspace = false
         errorMessage = nil
@@ -62,14 +62,14 @@ final class AnimateWorkspaceSelectionWorkflow: ObservableObject {
 
     func clearAnimateWorkspace() {
         workspaceObserver.clearWorkspace()
-        activeMoment = nil
+        activeVideo = nil
         activeWorkspace = nil
         isLoadingAnimateWorkspace = false
     }
 
     private func apply(workspace: AnimateWorkspace?) {
         activeWorkspace = workspace
-        activeMoment = workspace?.moment
+        activeVideo = workspace?.video
         isLoadingAnimateWorkspace = false
     }
 

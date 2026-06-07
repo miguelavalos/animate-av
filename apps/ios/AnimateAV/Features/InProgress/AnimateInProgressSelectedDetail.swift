@@ -1,7 +1,7 @@
 import SwiftUI
 
 struct AnimateInProgressSelectedDetail: View {
-    let selectedMomentId: String?
+    let selectedVideoId: String?
     let isLoadingAnimateWorkspace: Bool
     let activeWorkspace: AnimateWorkspace?
     let isDeletingVideo: Bool
@@ -13,7 +13,7 @@ struct AnimateInProgressSelectedDetail: View {
             Divider()
                 .padding(.vertical, 8)
             AnimateInProgressLoadingDetail()
-        } else if let activeWorkspace, selectedMomentId == activeWorkspace.moment.id {
+        } else if let activeWorkspace, selectedVideoId == activeWorkspace.video.id {
             Divider()
                 .padding(.vertical, 8)
             AnimateInProgressWorkspaceDetail(

@@ -122,7 +122,7 @@
 "create.music.calm.title" = "Calme";
 "create.music.cinematic.subtitle" = "Rythme dramatique et atmosphère.";
 "create.music.cinematic.title" = "Cinématographique";
-"create.music.fun.subtitle" = "Énergie joueuse pour les moments partagés.";
+"create.music.fun.subtitle" = "Énergie joueuse pour les videos partagés.";
 "create.music.fun.title" = "Amusant";
 "create.music.upbeat.subtitle" = "Rapide, lumineux et vivant.";
 "create.music.upbeat.title" = "Énergique";
@@ -140,7 +140,7 @@
 "create.selector.look.title" = "Choisir le look";
 "create.selector.voice.calm.detail" = "Doux, plus lent et discret.";
 "create.selector.voice.cinematic.detail" = "Rythme plus dramatique et atmosphère marquée.";
-"create.selector.voice.fun.detail" = "Énergie joueuse pour les moments partagés.";
+"create.selector.voice.fun.detail" = "Énergie joueuse pour les videos partagés.";
 "create.selector.voice.intro.detail" = "Choisis le ressenti du message parlé et de l’audio.";
 "create.selector.voice.intro.title" = "La voix guide la vidéo";
 "create.selector.voice.title" = "Choisir la voix";
@@ -331,7 +331,7 @@
 "home.avi.createVideo.title" = "Faire une vidéo cartoon";
 "home.avi.creating.detail" = "Avi dessine le mouvement, la voix et le style.";
 "home.avi.creating.title" = "Avi anime";
-"home.avi.currentMoment.title" = "Vidéo actuelle";
+"home.avi.currentVideo.title" = "Vidéo actuelle";
 "home.avi.preparing.detail" = "Avi transforme la photo en plan cartoon.";
 "home.avi.preparing.title" = "Avi s’échauffe";
 "home.avi.selected.detail" = "%d %@ sélectionnés. Place au style cartoon.";
@@ -412,9 +412,9 @@
 "tab.home" = "Accueil";
 "tab.inProgress" = "En cours";
 "inProgress.loadingDetail" = "Chargement du détail de la vidéo...";
-"home.latestMoment.eyebrow" = "Dernier cartoon";
-"home.moments.emptyRow.title" = "Pas encore de cartoons";
-"home.moments.emptyRow.detail" = "Commence avec une photo et Avi créera la première surprise animée.";
+"home.latestVideo.eyebrow" = "Dernier cartoon";
+"home.videos.emptyRow.title" = "Pas encore de cartoons";
+"home.videos.emptyRow.detail" = "Commence avec une photo et Avi créera la première surprise animée.";
 "credits.available.count" = "%d disponibles";
 "credits.videoCredits.title" = "Crédits";
 "paywall.balance.noCredits" = "Aucun crédit";
@@ -498,8 +498,8 @@
 "create.continuation.final.title" = "Continuer avec la vidéo";
 "create.continuation.media.message" = "Ajoute une photo et prépare la vidéo.";
 "create.continuation.media.title" = "Continuer avec l’image";
-"create.continuation.moment.message" = "Ouvre cette vidéo et continue la prochaine étape en attente.";
-"create.continuation.moment.title" = "Continuer la vidéo";
+"create.continuation.video.message" = "Ouvre cette vidéo et continue la prochaine étape en attente.";
+"create.continuation.video.title" = "Continuer la vidéo";
 "create.continuation.story.message" = "Prépare la vidéo depuis la photo sélectionnée.";
 "create.continuation.story.title" = "Continuer avec la vidéo";
 "create.credits.detail" = "Des crédits sont nécessaires avant de créer la vidéo finale.";
@@ -771,10 +771,10 @@
 "purchase.error.notConfigured" = "Les achats ne sont pas configurés pour cette build.";
 "purchase.error.offeringUnavailable" = "Les achats ne sont pas disponibles pour le moment. Réessaie plus tard.";
 "purchase.error.productUnavailable" = "Ce produit n’est pas disponible pour le moment. Réessaie plus tard.";
-"workflow.moment.signInStart" = "Connecte-toi avant de démarrer une vidéo.";
-"workflow.moment.signInContinue" = "Connecte-toi avant de continuer une vidéo.";
-"workflow.moment.signInDiscard" = "Connecte-toi avant de supprimer une vidéo.";
-"workflow.moment.setupNotReady" = "Le brouillon n’est pas encore prêt à être créé.";
+"workflow.video.signInStart" = "Connecte-toi avant de démarrer une vidéo.";
+"workflow.video.signInContinue" = "Connecte-toi avant de continuer une vidéo.";
+"workflow.video.signInDiscard" = "Connecte-toi avant de supprimer une vidéo.";
+"workflow.video.setupNotReady" = "Le brouillon n’est pas encore prêt à être créé.";
 "workflow.media.templateFull" = "Avi a la photo pour cette vidéo.";
 "workflow.media.noNewMedia" = "Aucune nouvelle image ajoutée.";
 "workflow.media.noAlbumPhotos" = "Aucune photo trouvée dans cet album.";
@@ -911,7 +911,7 @@
 "create.workflowContent.theme" = "Thème";
 "create.workflowContent.pacing" = "Rythme";
 "create.workflowContent.tone" = "Voix";
-"create.workflowContent.moment" = "Vidéo";
+"create.workflowContent.video" = "Vidéo";
 "create.workflowContent.readyCheck" = "Vérification finale";
 "create.workflowContent.mediaSelected" = "Image sélectionnée";
 "create.workflowContent.storyPrepared" = "Direction préparée";

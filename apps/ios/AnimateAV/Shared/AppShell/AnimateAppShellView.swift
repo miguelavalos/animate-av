@@ -124,7 +124,7 @@ struct AnimateAppShellView: View {
                     selectTab: selectRootTab,
                     startMoment: startOrContinueMoment,
                     continueVideo: { request in
-                        createViewModel.continueVideo(request.moment, focus: request.focus)
+                        createViewModel.continueVideo(request.video, focus: request.focus)
                         selectRootTab(.create)
                     }
                 )
@@ -141,7 +141,7 @@ struct AnimateAppShellView: View {
                     balance: accountController.creditBalance,
                     creditBalanceLoadState: accountController.creditBalanceLoadState,
                     continueVideo: { request in
-                        createViewModel.continueVideo(request.moment, focus: request.focus)
+                        createViewModel.continueVideo(request.video, focus: request.focus)
                         selectedTab = .create
                     },
                     startMoment: {
@@ -223,8 +223,8 @@ struct AnimateAppShellView: View {
             return
         }
 
-        if let activeMoment = inProgressViewModel.videosSummary.latestAnimateVideo {
-            createViewModel.continueVideo(activeMoment)
+        if let activeVideo = inProgressViewModel.videosSummary.latestAnimateVideo {
+            createViewModel.continueVideo(activeVideo)
             selectRootTab(.create)
             return
         }
@@ -238,7 +238,7 @@ struct AnimateAppShellView: View {
             return
         }
 
-        if createViewModel.activeMomentId != nil {
+        if createViewModel.activeVideoId != nil {
             createViewModel.clearSessionState()
         }
 

@@ -45,7 +45,7 @@ extension AnimateCreateViewModel {
         }
 
         runOperation {
-            let discarded = await videoCreationWorkflow.discardActiveVideo(momentId: self.activeMomentId)
+            let discarded = await videoCreationWorkflow.discardActiveVideo(momentId: self.activeVideoId)
             if discarded {
                 self.resetActiveMoment(force: true)
             } else if let message = videoCreationWorkflow.errorMessage {
@@ -68,7 +68,7 @@ extension AnimateCreateViewModel {
             await mediaUploadWorkflow.importPickerItems(
                 items,
                 template: template,
-                momentId: self.activeMomentId
+                momentId: self.activeVideoId
             )
         }
     }
@@ -94,8 +94,8 @@ extension AnimateCreateViewModel {
         runOperation {
             defer { self.isPreparingStory = false }
             let momentId: String?
-            if let activeMomentId = self.activeMomentId {
-                momentId = activeMomentId
+            if let activeVideoId = self.activeVideoId {
+                momentId = activeVideoId
             } else if let videoCreationWorkflow = self.videoCreationWorkflow {
                 momentId = await videoCreationWorkflow.createVideo(form: form)
                 if momentId != nil {
@@ -264,8 +264,8 @@ extension AnimateCreateViewModel {
     }
 
     private func resolveMomentIdForPreparation(form: AnimateVideoSetupForm) async -> String? {
-        if let activeMomentId {
-            return activeMomentId
+        if let activeVideoId {
+            return activeVideoId
         }
         guard let videoCreationWorkflow else {
             return nil
@@ -348,13 +348,13 @@ extension AnimateCreateViewModel {
     }
 
     private var activeTemplateContext: (momentId: String, template: AnimateVideoTemplate)? {
-        guard let activeMomentId else { return nil }
-        return (activeMomentId, form.template)
+        guard let activeVideoId else { return nil }
+        return (activeVideoId, form.template)
     }
 
     private var activeFormContext: (momentId: String, form: AnimateVideoSetupForm)? {
-        guard let activeMomentId else { return nil }
-        return (activeMomentId, form)
+        guard let activeVideoId else { return nil }
+        return (activeVideoId, form)
     }
 
     private func videoCreationFailureMessage() -> String {

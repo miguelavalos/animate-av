@@ -1,11 +1,11 @@
 extension AnimateCreateViewModel {
     var workflowPresentation: AnimateCreateWorkflowPresentation {
         AnimateCreateWorkflowPresentation.make(
-            activeMomentId: activeMomentId,
+            activeVideoId: activeVideoId,
             isSignedIn: isSignedIn,
             isCreatingVideo: isCreatingVideo,
             hasAnimateWorkspace: hasAnimateWorkspace,
-            hasUnsavedLocalMoment: hasLocalAnimateWorkspace,
+            hasUnsavedLocalVideo: hasLocalAnimateWorkspace,
             template: form.template,
             creationStyleTitle: selectedCreationStyle.title,
             toneTitle: form.tone.title,

@@ -38,7 +38,7 @@ enum AnimateInProgressAvailability: Equatable {
             )
         }
 
-        if !videosSummary.hasMoments {
+        if !videosSummary.hasVideos {
             return .empty(
                 AnimateInProgressUnavailablePresentation(
                     systemImage: "rectangle.stack.badge.plus",

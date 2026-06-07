@@ -11,9 +11,9 @@ final class AnimateInProgressObserverTests: XCTestCase {
         observer.observeAnimateVideos(ownerUserId: "user-1")
         let moment = makeMoment(id: "moment-1")
         repository.sendMoments([moment])
-        await waitUntil { observer.moments == [moment] }
+        await waitUntil { observer.videos == [moment] }
 
-        XCTAssertEqual(observer.moments, [moment])
+        XCTAssertEqual(observer.videos, [moment])
         XCTAssertNil(observer.errorMessage)
         XCTAssertEqual(repository.observedOwnerUserIds, ["user-1"])
     }
@@ -24,23 +24,23 @@ final class AnimateInProgressObserverTests: XCTestCase {
 
         observer.observeAnimateVideos(ownerUserId: "user-1")
         repository.sendMoments([makeMoment(id: "moment-1")])
-        await waitUntil { !observer.moments.isEmpty }
+        await waitUntil { !observer.videos.isEmpty }
 
         observer.observeAnimateVideos(ownerUserId: nil)
 
-        XCTAssertTrue(observer.moments.isEmpty)
+        XCTAssertTrue(observer.videos.isEmpty)
         XCTAssertNil(observer.errorMessage)
         XCTAssertEqual(repository.observedOwnerUserIds, ["user-1"])
     }
 
     func testInProgressObserverPublishesObservationErrors() {
-        let repository = MockAnimateRepository(momentsError: TestObservationError.moments)
+        let repository = MockAnimateRepository(momentsError: TestObservationError.videos)
         let observer = AnimateInProgressObserver(animateRepository: repository)
 
         observer.observeAnimateVideos(ownerUserId: "user-1")
 
-        XCTAssertTrue(observer.moments.isEmpty)
-        XCTAssertEqual(observer.errorMessage, TestObservationError.moments.localizedDescription)
+        XCTAssertTrue(observer.videos.isEmpty)
+        XCTAssertEqual(observer.errorMessage, TestObservationError.videos.localizedDescription)
     }
 
     func testInProgressObserverIgnoresStaleVideoUpdatesAfterChangingOwner() async {
@@ -51,17 +51,17 @@ final class AnimateInProgressObserverTests: XCTestCase {
         let firstSubject = repository.momentsSubjects[0]
         let firstMoment = makeMoment(id: "moment-1")
         firstSubject.send([firstMoment])
-        await waitUntil { observer.moments == [firstMoment] }
+        await waitUntil { observer.videos == [firstMoment] }
 
         observer.observeAnimateVideos(ownerUserId: "user-2")
         let secondMoment = makeMoment(id: "moment-2")
         repository.sendMoments([secondMoment])
-        await waitUntil { observer.moments == [secondMoment] }
+        await waitUntil { observer.videos == [secondMoment] }
 
         firstSubject.send([makeMoment(id: "stale-moment")])
         try? await Task.sleep(nanoseconds: 20_000_000)
 
-        XCTAssertEqual(observer.moments, [secondMoment])
+        XCTAssertEqual(observer.videos, [secondMoment])
         XCTAssertEqual(repository.observedOwnerUserIds, ["user-1", "user-2"])
     }
 
@@ -70,7 +70,7 @@ final class AnimateInProgressObserverTests: XCTestCase {
         let observer = AnimateWorkspaceObserver(animateRepository: repository)
 
         observer.observeWorkspace(ownerUserId: "user-1", momentId: "moment-1")
-        let workspace = makeWorkspace(moment: makeMoment(id: "moment-1"))
+        let workspace = makeWorkspace(video: makeMoment(id: "moment-1"))
         repository.sendWorkspace(workspace)
         await waitUntil { observer.activeWorkspace == workspace }
 
@@ -86,7 +86,7 @@ final class AnimateInProgressObserverTests: XCTestCase {
         let observer = AnimateWorkspaceObserver(animateRepository: repository)
 
         observer.observeWorkspace(ownerUserId: "user-1", momentId: "moment-1")
-        repository.sendWorkspace(makeWorkspace(moment: makeMoment(id: "moment-1")))
+        repository.sendWorkspace(makeWorkspace(video: makeMoment(id: "moment-1")))
         await waitUntil { observer.activeWorkspace != nil }
 
         observer.observeWorkspace(ownerUserId: "user-1", momentId: nil)
@@ -114,16 +114,16 @@ final class AnimateInProgressObserverTests: XCTestCase {
 
         observer.observeWorkspace(ownerUserId: "user-1", momentId: "moment-1")
         let firstSubject = repository.workspaceSubjects[0]
-        let firstWorkspace = makeWorkspace(moment: makeMoment(id: "moment-1"))
+        let firstWorkspace = makeWorkspace(video: makeMoment(id: "moment-1"))
         firstSubject.send(firstWorkspace)
         await waitUntil { observer.activeWorkspace == firstWorkspace }
 
         observer.observeWorkspace(ownerUserId: "user-1", momentId: "moment-2")
-        let secondWorkspace = makeWorkspace(moment: makeMoment(id: "moment-2"))
+        let secondWorkspace = makeWorkspace(video: makeMoment(id: "moment-2"))
         repository.sendWorkspace(secondWorkspace)
         await waitUntil { observer.activeWorkspace == secondWorkspace }
 
-        firstSubject.send(makeWorkspace(moment: makeMoment(id: "stale-moment")))
+        firstSubject.send(makeWorkspace(video: makeMoment(id: "stale-moment")))
         try? await Task.sleep(nanoseconds: 20_000_000)
 
         XCTAssertEqual(observer.activeWorkspace, secondWorkspace)
@@ -146,9 +146,9 @@ final class AnimateInProgressObserverTests: XCTestCase {
         }
     }
 
-    private func makeWorkspace(moment: AnimateVideo) -> AnimateWorkspace {
+    private func makeWorkspace(video: AnimateVideo) -> AnimateWorkspace {
         AnimateWorkspace(
-            moment: moment,
+            video: video,
             mediaAssets: [],
             storyScenes: [],
             renderJobs: [],
@@ -193,8 +193,8 @@ private final class MockAnimateRepository: AnimateInProgressObserving {
         return subject.eraseToAnyPublisher()
     }
 
-    func sendMoments(_ moments: [AnimateVideo]) {
-        momentsSubjects.last?.send(moments)
+    func sendMoments(_ videos: [AnimateVideo]) {
+        momentsSubjects.last?.send(videos)
     }
 }
 
@@ -232,12 +232,12 @@ private struct WorkspaceRequest: Equatable {
 }
 
 private enum TestObservationError: LocalizedError {
-    case moments
+    case videos
     case workspace
 
     var errorDescription: String? {
         switch self {
-        case .moments:
+        case .videos:
             "Moment observation failed."
         case .workspace:
             "Workspace observation failed."

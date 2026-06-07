@@ -29,7 +29,7 @@ struct AnimateInProgressWorkspaceDetail: View {
             }
             if workspace.activeFinalRenderJob == nil {
                 AnimateInProgressDeleteButton(isDeletingVideo: isDeletingVideo) {
-                    requestDeleteMoment(workspace.moment)
+                    requestDeleteMoment(workspace.video)
                 }
             }
         }

@@ -4,22 +4,22 @@ import SwiftUI
 
 @MainActor
 final class AnimateInProgressViewModel: ObservableObject {
-    @Published private(set) var videosSummary = AnimateInProgressSummary()
+    @Published private(set) var allVideosSummary = AnimateInProgressSummary()
     @Published private(set) var isSignedIn = false
     @Published private(set) var currentUserId: String?
-    @Published private(set) var activeMoment: AnimateVideo?
+    @Published private(set) var activeVideo: AnimateVideo?
     @Published private(set) var activeWorkspace: AnimateWorkspace?
-    @Published private(set) var selectedMomentId: String?
+    @Published private(set) var selectedVideoId: String?
     @Published private(set) var isLoadingAnimateWorkspace = false
     @Published private(set) var isDeletingVideo = false
     @Published private(set) var statusMessage: String?
 
-    var videoMomentsSummary: AnimateInProgressSummary {
-        videosSummary.videoSummary
+    var videosSummary: AnimateInProgressSummary {
+        allVideosSummary.videoSummary
     }
 
-    var imageMomentsSummary: AnimateInProgressSummary {
-        videosSummary.imageSummary
+    var imagesSummary: AnimateInProgressSummary {
+        allVideosSummary.imageSummary
     }
 
     private var workflow: (any AnimateVideosViewing)?
@@ -39,7 +39,7 @@ final class AnimateInProgressViewModel: ObservableObject {
             .receive(on: DispatchQueue.main)
             .sink { [weak self] videosSummary in
                 withAnimation(.snappy(duration: 0.28)) {
-                    self?.videosSummary = videosSummary
+                    self?.allVideosSummary = videosSummary
                 }
             }
             .store(in: &workflowCancellables)
@@ -47,7 +47,7 @@ final class AnimateInProgressViewModel: ObservableObject {
         workflow.activeVideoPublisher
             .receive(on: DispatchQueue.main)
             .sink { [weak self] moment in
-                self?.activeMoment = moment
+                self?.activeVideo = moment
             }
             .store(in: &workflowCancellables)
 
@@ -95,19 +95,19 @@ final class AnimateInProgressViewModel: ObservableObject {
         .store(in: &accountCancellables)
     }
 
-    func selectMoment(_ moment: AnimateVideo) {
-        if selectedMomentId == moment.id {
-            selectedMomentId = nil
+    func selectMoment(_ video: AnimateVideo) {
+        if selectedVideoId == video.id {
+            selectedVideoId = nil
             workflow?.clearAnimateWorkspace()
             return
         }
 
-        selectedMomentId = moment.id
-        workflow?.observeAnimateWorkspace(ownerUserId: currentUserId, momentId: moment.id)
+        selectedVideoId = video.id
+        workflow?.observeAnimateWorkspace(ownerUserId: currentUserId, momentId: video.id)
     }
 
-    func isSelected(_ moment: AnimateVideo) -> Bool {
-        selectedMomentId == moment.id
+    func isSelected(_ video: AnimateVideo) -> Bool {
+        selectedVideoId == video.id
     }
 
     func clearSelection() {
@@ -115,19 +115,19 @@ final class AnimateInProgressViewModel: ObservableObject {
         renameTask?.cancel()
         deletionTask = nil
         renameTask = nil
-        selectedMomentId = nil
+        selectedVideoId = nil
         statusMessage = nil
         workflow?.clearAnimateWorkspace()
     }
 
-    func renameVideo(_ moment: AnimateVideo, title: String) {
+    func renameVideo(_ video: AnimateVideo, title: String) {
         guard let workflow else { return }
         let trimmedTitle = title.trimmingCharacters(in: .whitespacesAndNewlines)
         guard !trimmedTitle.isEmpty else { return }
 
         renameTask?.cancel()
         renameTask = Task { [weak self] in
-            let didRename = await workflow.renameVideo(moment, title: trimmedTitle)
+            let didRename = await workflow.renameVideo(video, title: trimmedTitle)
             guard !Task.isCancelled else { return }
             if didRename {
                 self?.statusMessage = L10n.string("inProgress.rename.saved")
@@ -136,23 +136,23 @@ final class AnimateInProgressViewModel: ObservableObject {
         }
     }
 
-    func deleteVideo(_ moment: AnimateVideo) {
+    func deleteVideo(_ video: AnimateVideo) {
         guard let workflow else { return }
-        if ["final_render_pending", "final_rendering"].contains(moment.status)
-            || (activeWorkspace?.moment.id == moment.id && activeWorkspace?.activeFinalRenderJob != nil) {
+        if ["final_render_pending", "final_rendering"].contains(video.status)
+            || (activeWorkspace?.video.id == video.id && activeWorkspace?.activeFinalRenderJob != nil) {
             statusMessage = L10n.string("create.error.waitBeforeDiscard")
             return
         }
 
         deletionTask?.cancel()
         deletionTask = Task { [weak self] in
-            let didDelete = await workflow.deleteVideo(moment)
+            let didDelete = await workflow.deleteVideo(video)
             guard !Task.isCancelled else { return }
             if didDelete {
-                self?.selectedMomentId = nil
-                self?.activeMoment = nil
+                self?.selectedVideoId = nil
+                self?.activeVideo = nil
                 self?.activeWorkspace = nil
-                self?.videosSummary = self?.videosSummary.removing(momentId: moment.id) ?? AnimateInProgressSummary()
+                self?.allVideosSummary = self?.allVideosSummary.removing(momentId: video.id) ?? AnimateInProgressSummary()
                 self?.statusMessage = L10n.string("inProgress.status.momentDeleted")
             }
             self?.deletionTask = nil

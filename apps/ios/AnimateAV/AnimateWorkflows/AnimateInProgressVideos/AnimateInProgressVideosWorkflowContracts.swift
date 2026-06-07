@@ -16,6 +16,6 @@ protocol AnimateVideosViewing: AnimateInProgressSummaryProviding {
 
     func observeAnimateWorkspace(ownerUserId: String?, momentId: String?)
     func clearAnimateWorkspace()
-    func renameVideo(_ moment: AnimateVideo, title: String) async -> Bool
-    func deleteVideo(_ moment: AnimateVideo) async -> Bool
+    func renameVideo(_ video: AnimateVideo, title: String) async -> Bool
+    func deleteVideo(_ video: AnimateVideo) async -> Bool
 }

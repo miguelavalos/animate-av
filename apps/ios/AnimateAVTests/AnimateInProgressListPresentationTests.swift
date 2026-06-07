@@ -8,7 +8,7 @@ final class AnimateInProgressListPresentationTests: XCTestCase {
                 makeMoment(id: "active", status: "story_ready", updatedAt: 20),
                 makeMoment(id: "done", status: "gallery_ready", updatedAt: 10)
             ]),
-            selectedMomentId: nil
+            selectedVideoId: nil
         )
 
         XCTAssertEqual(presentation.summaryPills.map(\.title), ["Total", "Active", "Done"])
@@ -23,7 +23,7 @@ final class AnimateInProgressListPresentationTests: XCTestCase {
                 makeMoment(id: "newer-active", status: "story_ready", updatedAt: 30),
                 makeMoment(id: "done", status: "gallery_ready", updatedAt: 20)
             ]),
-            selectedMomentId: nil
+            selectedVideoId: nil
         )
 
         XCTAssertEqual(presentation.groups.map(\.title), ["In progress", "Finished"])
@@ -38,7 +38,7 @@ final class AnimateInProgressListPresentationTests: XCTestCase {
             title: "Family Weekend",
             creditCost: 3,
         )
-        let row = AnimateInProgressListRowPresentation(moment: moment, isSelected: true)
+        let row = AnimateInProgressListRowPresentation(video: moment, isSelected: true)
 
         XCTAssertEqual(row.id, "moment-1")
         XCTAssertEqual(row.title, "Family Weekend")
@@ -53,7 +53,7 @@ final class AnimateInProgressListPresentationTests: XCTestCase {
 
     func testFinishedRowUsesFinishedMarkerAndCollapsedAccessoryWhenNotSelected() {
         let row = AnimateInProgressListRowPresentation(
-            moment: makeMoment(id: "done", status: "gallery_ready"),
+            video: makeMoment(id: "done", status: "gallery_ready"),
             isSelected: false
         )
 

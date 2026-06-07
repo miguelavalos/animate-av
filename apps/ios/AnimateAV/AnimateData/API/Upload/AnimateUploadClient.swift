@@ -64,8 +64,8 @@ struct AnimateUploadClient: Sendable {
         preparedUpload.headers.forEach { key, value in
             request.setValue(value, forHTTPHeaderField: key)
         }
-        request.setValue(String(media.sortOrder), forHTTPHeaderField: "x-appsav-moments-sort-order")
-        request.setValue(media.selected ? "true" : "false", forHTTPHeaderField: "x-appsav-moments-selected")
+        request.setValue(String(media.sortOrder), forHTTPHeaderField: "x-appsav-videos-sort-order")
+        request.setValue(media.selected ? "true" : "false", forHTTPHeaderField: "x-appsav-videos-selected")
 
         if let completionUrl = preparedUpload.completionUrl {
             _ = try await uploadWithRetry(request: request, data: media.data)

@@ -4,7 +4,7 @@ extension AnimateCreateViewModel {
     }
 
     var isSetupLocked: Bool {
-        activeMomentId != nil
+        activeVideoId != nil
     }
 
     var isBusy: Bool {
@@ -52,7 +52,7 @@ extension AnimateCreateViewModel {
         }
 
         return AnimateCreateWorkflowCapabilityFactory.make(
-            activeMomentId: activeMomentId,
+            activeVideoId: activeVideoId,
             isSignedIn: isSignedIn,
             hasAnimateWorkspace: hasAnimateWorkspace,
             isImportingMedia: isImportingMedia,
@@ -78,11 +78,11 @@ extension AnimateCreateViewModel {
             return true
         }
         guard storySummary.hasScenes else { return false }
-        guard let activeMomentId else { return false }
-        let preparedSignature = lastPreparedStoryInputSignature ?? effectiveActiveWorkspace?.moment.storyInputSignature
+        guard let activeVideoId else { return false }
+        let preparedSignature = lastPreparedStoryInputSignature ?? effectiveActiveWorkspace?.video.storyInputSignature
         guard let preparedSignature else {
             return true
         }
-        return preparedStoryComparisonInputSignature(momentId: activeMomentId) == preparedSignature
+        return preparedStoryComparisonInputSignature(momentId: activeVideoId) == preparedSignature
     }
 }

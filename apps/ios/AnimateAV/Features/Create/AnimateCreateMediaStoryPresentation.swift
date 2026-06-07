@@ -1,7 +1,7 @@
 import Foundation
 
 struct AnimateCreateMediaPresentation: Equatable {
-    var activeMomentId: String?
+    var activeVideoId: String?
     var template: AnimateVideoTemplate
     var summary: AnimateCreateMediaSummary
     var canAddMedia = false

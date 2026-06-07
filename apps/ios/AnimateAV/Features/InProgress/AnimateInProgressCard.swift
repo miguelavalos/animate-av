@@ -8,7 +8,7 @@ struct AnimateInProgressCard: View {
     let balance: AnimateCreditBalance
     let creditBalanceLoadState: AnimateCreditBalanceLoadState
     let videosSummary: AnimateInProgressSummary
-    let selectedMomentId: String?
+    let selectedVideoId: String?
     let isLoadingAnimateWorkspace: Bool
     let activeWorkspace: AnimateWorkspace?
     let isDeletingVideo: Bool
@@ -51,7 +51,7 @@ struct AnimateInProgressCard: View {
                     retryCredits: retryCredits
                 )
                 AnimateInProgressContinueBlock(
-                    moments: continueMoments,
+                    videos: continueMoments,
                     localMediaForMoment: localMediaForMoment,
                     continueVideo: continueVideo,
                     requestRenameMoment: requestRenameMoment
@@ -62,7 +62,7 @@ struct AnimateInProgressCard: View {
     }
 
     private var continueMoments: [AnimateVideo] {
-        videosSummary.moments.sorted { $0.updatedAt > $1.updatedAt }
+        videosSummary.videos.sorted { $0.updatedAt > $1.updatedAt }
     }
 }
 
@@ -237,13 +237,13 @@ private struct AnimateInProgressAviBlock: View {
 }
 
 private struct AnimateInProgressContinueBlock: View {
-    let moments: [AnimateVideo]
+    let videos: [AnimateVideo]
     let localMediaForMoment: (AnimateVideo) -> [AnimateSelectedMedia]
     let continueVideo: (AnimateContinuationRequest) -> Void
     let requestRenameMoment: (AnimateVideo) -> Void
 
     var body: some View {
-        if moments.isEmpty {
+        if videos.isEmpty {
             AnimateInProgressInlineEmptyState(
                 systemImage: "photo.badge.plus",
                 title: L10n.string("inProgress.empty.inProgress.title"),
@@ -256,15 +256,15 @@ private struct AnimateInProgressContinueBlock: View {
             VStack(alignment: .leading, spacing: 12) {
                 AVAppShellSectionHeader(title: L10n.string("inProgress.title"))
 
-                ForEach(moments) { moment in
+                ForEach(videos) { video in
                     AnimateAnimateVideoCard(
-                        moment: moment,
-                        localMedia: localMediaForMoment(moment),
+                        video: video,
+                        localMedia: localMediaForMoment(video),
                         continueVideo: {
-                            continueVideo(AnimateContinuationRequest(moment: moment))
+                            continueVideo(AnimateContinuationRequest(video: video))
                         },
                         renameVideo: {
-                            requestRenameMoment(moment)
+                            requestRenameMoment(video)
                         }
                     )
                 }
@@ -274,7 +274,7 @@ private struct AnimateInProgressContinueBlock: View {
 }
 
 private struct AnimateAnimateVideoCard: View {
-    let moment: AnimateVideo
+    let video: AnimateVideo
     let localMedia: [AnimateSelectedMedia]
     let continueVideo: () -> Void
     let renameVideo: () -> Void
@@ -286,7 +286,7 @@ private struct AnimateAnimateVideoCard: View {
 
                 VStack(alignment: .leading, spacing: 8) {
                     HStack(alignment: .firstTextBaseline, spacing: 8) {
-                        Text(moment.title)
+                        Text(video.title)
                             .font(.system(size: 19, weight: .black))
                             .foregroundStyle(AVBrandColor.textPrimary)
                             .lineLimit(2)
@@ -306,7 +306,7 @@ private struct AnimateAnimateVideoCard: View {
                         }
                     }
 
-                    Text(AnimateStatusRules.displayTitle(for: moment.status))
+                    Text(AnimateStatusRules.displayTitle(for: video.status))
                         .font(AVBrandTypography.captionStrong)
                         .foregroundStyle(AVBrandColor.textSecondary)
 
@@ -317,7 +317,7 @@ private struct AnimateAnimateVideoCard: View {
                         )
                         AnimateAnimateVideoPill(
                             systemImage: iconName,
-                            text: AnimateVideoFormatting.updatedAt(moment)
+                            text: AnimateVideoFormatting.updatedAt(video)
                         )
                     }
                 }
@@ -344,7 +344,7 @@ private struct AnimateAnimateVideoCard: View {
     private var mediaPreview: some View {
         if !localMedia.isEmpty {
             MomentsSharedMediaSummaryStack(localMedia: localMedia, syncedMedia: [])
-        } else if moment.mediaPreview.isEmpty {
+        } else if video.mediaPreview.isEmpty {
             ZStack {
                 RoundedRectangle(cornerRadius: 16, style: .continuous)
                     .fill(AVBrandColor.accent.opacity(0.12))
@@ -354,7 +354,7 @@ private struct AnimateAnimateVideoCard: View {
             }
             .frame(width: 92, height: 92)
         } else {
-            MomentsSharedMediaSummaryStack(localMedia: [], syncedMedia: moment.mediaPreview)
+            MomentsSharedMediaSummaryStack(localMedia: [], syncedMedia: video.mediaPreview)
         }
     }
 
@@ -364,11 +364,11 @@ private struct AnimateAnimateVideoCard: View {
             return selectedCount > 0 ? selectedCount : localMedia.count
         }
 
-        return moment.mediaCount
+        return video.mediaCount
     }
 
     private var iconName: String {
-        switch moment.status {
+        switch video.status {
         case "final_render_pending", "final_rendering":
             "gearshape.2.fill"
         case "gallery_ready":

@@ -84,13 +84,13 @@ enum AnimateMediaAutoStyleSuggester {
         } else if sceneryAssetCount >= max(3, media.count / 2) {
             candidate = (.travel, .cinematic, 0.68, "Local image analysis sees a scenic set.")
         } else if groupAssetCount >= max(2, media.count / 3) {
-            candidate = (.familyMoments, .warm, 0.66, "Local image analysis sees several group moments.")
+            candidate = (.familyMoments, .warm, 0.66, "Local image analysis sees several group videos.")
         } else if peopleAssetCount >= max(2, media.count / 2) && sceneryAssetCount < peopleAssetCount {
-            candidate = (.favoritePeople, .warm, 0.63, "Local image analysis sees people-focused moments.")
+            candidate = (.favoritePeople, .warm, 0.63, "Local image analysis sees people-focused videos.")
         } else if videoCount > 0 && videoCount >= max(1, photoCount / 3) {
             candidate = (.eventRecap, .fun, 0.64, "Several clips suggest a fast event recap.")
         } else if media.count >= 10 && dateSpan > 6 * 60 * 60 {
-            candidate = (.travel, .cinematic, 0.62, "Many moments across several hours fit a trip or day recap.")
+            candidate = (.travel, .cinematic, 0.62, "Many videos across several hours fit a trip or day recap.")
         } else if media.count >= 6 {
             candidate = (.familyMoments, .warm, 0.58, "A medium set works best as a warm memory recap.")
         } else {

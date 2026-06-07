@@ -22,7 +22,7 @@ struct AnimateInProgressWorkspaceSummaryPresentation: Equatable {
         tiles = [
             AnimateInProgressSummaryTilePresentation(
                 title: L10n.string("moment.summary.status"),
-                value: AnimateStatusRules.displayTitle(for: workspace.moment.status),
+                value: AnimateStatusRules.displayTitle(for: workspace.video.status),
                 systemImage: "circle.dashed"
             ),
             AnimateInProgressSummaryTilePresentation(

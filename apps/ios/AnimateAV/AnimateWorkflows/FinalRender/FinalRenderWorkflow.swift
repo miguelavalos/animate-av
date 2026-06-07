@@ -49,7 +49,7 @@ final class FinalRenderWorkflow: WorkspaceObservingWorkflow {
 
     override func workspaceDidChange(_ workspace: AnimateWorkspace?) {
         finalExport = workspace?.latestArtifact(kind: "final_export")
-        let momentId = workspace?.moment.id
+        let momentId = workspace?.video.id
         if let workspaceFinalJob = workspace?.latestRenderJob(kind: "final") {
             latestFinalJob = workspaceFinalJob
             latestFinalJobMomentId = momentId
@@ -66,7 +66,7 @@ final class FinalRenderWorkflow: WorkspaceObservingWorkflow {
     }
 
     func canGenerate(template: AnimateVideoTemplate) -> Bool {
-        guard activeWorkspace?.moment != nil else { return false }
+        guard activeWorkspace?.video != nil else { return false }
         return currentUserProvider.currentUserId != nil
             && isConfigured
             && !isGenerating
@@ -75,7 +75,7 @@ final class FinalRenderWorkflow: WorkspaceObservingWorkflow {
     func canPreparePlan() -> Bool {
         currentUserProvider.currentUserId != nil
             && isConfigured
-            && activeWorkspace?.moment != nil
+            && activeWorkspace?.video != nil
             && !isGenerating
     }
 
@@ -590,16 +590,16 @@ final class FinalRenderWorkflow: WorkspaceObservingWorkflow {
             )
             let downloadArtifactId = finalDownloadArtifactId(for: artifact)
             let download = try await finalRenderClient.prepareFinalArtifactDownload(
-                momentId: workspace.moment.id,
+                momentId: workspace.video.id,
                 artifactId: downloadArtifactId,
                 bearerToken: bearerToken
             )
             let temporaryFileURL = try await finalRenderClient.downloadFinalArtifact(from: download)
             pendingGalleryVideo = try galleryStore.saveDownloadedVideo(
                 temporaryFileURL: temporaryFileURL,
-                momentId: workspace.moment.id,
+                momentId: workspace.video.id,
                 artifactId: downloadArtifactId,
-                title: workspace.moment.title,
+                title: workspace.video.title,
                 r2Key: download.r2Key ?? artifact.r2Key,
                 createdAt: Date()
             )

@@ -133,7 +133,7 @@ final class AnimateCreditGateTests: XCTestCase {
         )
 
         let form = AnimateVideoSetupForm.continuing(
-            moment: moment,
+            video: moment,
             templates: AnimateVideoTemplate.launchTemplates
         )
 
@@ -242,22 +242,22 @@ final class AnimateCreditGateTests: XCTestCase {
         )
         XCTAssertTrue(
             AnimateFinalRenderRules.canGenerate(
-                moment: moment,
+                video: moment,
                 template: .birthdayMessage,
                 balance: balance
             )
         )
         XCTAssertFalse(
             AnimateFinalRenderRules.canGenerate(
-                moment: moment,
+                video: moment,
                 template: .birthdayMessage,
                 balance: .empty
             )
         )
-        XCTAssertTrue(AnimateFinalRenderRules.canPreparePlan(moment: moment))
+        XCTAssertTrue(AnimateFinalRenderRules.canPreparePlan(video: moment))
         XCTAssertTrue(
             AnimateFinalRenderRules.canGenerate(
-                moment: moment,
+                video: moment,
                 template: .birthdayMessage,
                 balance: balance
             )
@@ -276,11 +276,11 @@ final class AnimateCreditGateTests: XCTestCase {
             creditCost: moment.creditCost,
             updatedAt: moment.updatedAt
         )
-        XCTAssertFalse(AnimateFinalRenderRules.canPreparePlan(moment: staleStoryMoment))
-        XCTAssertTrue(AnimateFinalRenderRules.canPreparePlan(moment: staleStoryMoment, storySceneCount: 1))
+        XCTAssertFalse(AnimateFinalRenderRules.canPreparePlan(video: staleStoryMoment))
+        XCTAssertTrue(AnimateFinalRenderRules.canPreparePlan(video: staleStoryMoment, storySceneCount: 1))
         XCTAssertTrue(
             AnimateFinalRenderRules.canGenerate(
-                moment: staleStoryMoment,
+                video: staleStoryMoment,
                 template: .birthdayMessage,
                 balance: balance,
                 storySceneCount: 1

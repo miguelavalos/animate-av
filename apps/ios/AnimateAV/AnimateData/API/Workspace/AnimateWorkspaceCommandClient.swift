@@ -11,7 +11,7 @@ struct AnimateWorkspaceCommandClient {
 
     func createVideo(bearerToken: String, form: AnimateVideoSetupForm) async throws -> String {
         let response: AnimateWorkspaceCommandResponse = try await send(
-            path: ["workspace", "moments"],
+            path: ["workspace", "videos"],
             method: "POST",
             bearerToken: bearerToken,
             body: AnimateWorkspaceSetupCommand(form: form)
@@ -21,7 +21,7 @@ struct AnimateWorkspaceCommandClient {
 
     func updateVideoSetup(bearerToken: String, momentId: String, form: AnimateVideoSetupForm) async throws {
         let _: AnimateWorkspaceCommandResponse = try await send(
-            path: ["workspace", "moments", momentId, "setup"],
+            path: ["workspace", "videos", momentId, "setup"],
             method: "PATCH",
             bearerToken: bearerToken,
             body: AnimateWorkspaceSetupCommand(form: form)
@@ -30,7 +30,7 @@ struct AnimateWorkspaceCommandClient {
 
     func updateMomentTitle(bearerToken: String, momentId: String, title: String) async throws {
         let _: AnimateWorkspaceCommandResponse = try await send(
-            path: ["workspace", "moments", momentId, "title"],
+            path: ["workspace", "videos", momentId, "title"],
             method: "PATCH",
             bearerToken: bearerToken,
             body: AnimateWorkspaceTitleCommand(title: title)
@@ -39,7 +39,7 @@ struct AnimateWorkspaceCommandClient {
 
     func deleteVideo(bearerToken: String, momentId: String) async throws {
         let _: AnimateWorkspaceCommandResponse = try await send(
-            path: ["workspace", "moments", momentId],
+            path: ["workspace", "videos", momentId],
             method: "DELETE",
             bearerToken: bearerToken,
             body: AnimateWorkspaceDeleteCommand()

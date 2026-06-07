@@ -174,7 +174,7 @@ struct AnimateRemoteClient {
         let realtimeSessionId = try realtimeSessionStore.sessionId(for: ownerUserId)
 
         return client.subscribe(
-            to: "moments:getAnimateWorkspace",
+            to: "videos:getAnimateWorkspace",
             with: [
                 "ownerUserId": ownerUserId,
                 "realtimeSessionId": realtimeSessionId,

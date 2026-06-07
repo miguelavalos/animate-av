@@ -19,7 +19,7 @@ struct AnimateInProgressScreen: View {
     private var presentation: AnimateInProgressPresentation {
         AnimateInProgressPresentation.make(
             isSignedIn: viewModel.isSignedIn,
-            videosSummary: viewModel.videoMomentsSummary,
+            videosSummary: viewModel.videosSummary,
             momentPendingDeletion: momentPendingDeletion
         )
     }
@@ -27,7 +27,7 @@ struct AnimateInProgressScreen: View {
     private var imagesPresentation: AnimateInProgressPresentation {
         AnimateInProgressPresentation.make(
             isSignedIn: viewModel.isSignedIn,
-            videosSummary: viewModel.imageMomentsSummary,
+            videosSummary: viewModel.imagesSummary,
             momentPendingDeletion: nil
         )
     }
@@ -59,7 +59,7 @@ struct AnimateInProgressScreen: View {
             switch selectedAssetKind {
             case .videos:
                 if createViewModel.hasLocalAnimateWorkspace {
-                    MomentsCurrentCreationCard(
+                    AnimateCurrentCreationCard(
                         selectedCount: createViewModel.mediaSelectedCount,
                         continueCreation: startMoment
                     )
@@ -69,8 +69,8 @@ struct AnimateInProgressScreen: View {
                     presentation: presentation,
                     balance: balance,
                     creditBalanceLoadState: creditBalanceLoadState,
-                    videosSummary: viewModel.videoMomentsSummary,
-                    selectedMomentId: viewModel.selectedMomentId,
+                    videosSummary: viewModel.videosSummary,
+                    selectedVideoId: viewModel.selectedVideoId,
                     isLoadingAnimateWorkspace: viewModel.isLoadingAnimateWorkspace,
                     activeWorkspace: viewModel.activeWorkspace,
                     isDeletingVideo: viewModel.isDeletingVideo,
@@ -87,7 +87,7 @@ struct AnimateInProgressScreen: View {
             case .images:
                 AnimateInProgressImagesCard(
                     presentation: imagesPresentation,
-                    videosSummary: viewModel.imageMomentsSummary,
+                    videosSummary: viewModel.imagesSummary,
                     startSignInFlow: startSignInFlow,
                     startImages: startMoment
                 )
@@ -107,9 +107,9 @@ struct AnimateInProgressScreen: View {
         } message: {
             Text(presentation.deletionMessage)
         }
-        .sheet(item: $momentPendingRename) { moment in
-            AnimateInProgressRenameSheet(moment: moment) { title in
-                viewModel.renameVideo(moment, title: title)
+        .sheet(item: $momentPendingRename) { video in
+            AnimateInProgressRenameSheet(video: video) { title in
+                viewModel.renameVideo(video, title: title)
             }
             .presentationDetents([.height(230)])
         }
@@ -139,7 +139,7 @@ struct AnimateInProgressScreen: View {
 
     private func confirmVideoDeletion() {
         if let momentPendingDeletion {
-            if createViewModel.activeMomentId == momentPendingDeletion.id {
+            if createViewModel.activeVideoId == momentPendingDeletion.id {
                 createViewModel.clearSessionState()
             }
             viewModel.deleteVideo(momentPendingDeletion)
@@ -151,14 +151,14 @@ struct AnimateInProgressScreen: View {
         momentPendingDeletion = nil
     }
 
-    private func localMediaForMoment(_ moment: AnimateVideo) -> [AnimateSelectedMedia] {
-        if createViewModel.activeMomentId == moment.id {
+    private func localMediaForMoment(_ video: AnimateVideo) -> [AnimateSelectedMedia] {
+        if createViewModel.activeVideoId == video.id {
             return createViewModel.selectedMedia
         }
 
         guard !createViewModel.selectedMedia.isEmpty,
-              viewModel.videosSummary.latestAnimateVideo?.id == moment.id,
-              viewModel.videoMomentsSummary.inProgressCount == 1 else {
+              viewModel.videosSummary.latestAnimateVideo?.id == video.id,
+              viewModel.videosSummary.inProgressCount == 1 else {
             return []
         }
 
@@ -237,7 +237,7 @@ private struct AnimateInProgressImagesCard: View {
             case .available:
                 AnimateInProgressList(
                     videosSummary: videosSummary,
-                    selectedMomentId: nil,
+                    selectedVideoId: nil,
                     selectMoment: { _ in }
                 )
             }
@@ -304,15 +304,15 @@ private struct AnimateInProgressImagesEmptyState: View {
 }
 
 private struct AnimateInProgressRenameSheet: View {
-    let moment: AnimateVideo
+    let video: AnimateVideo
     let save: (String) -> Void
     @Environment(\.dismiss) private var dismiss
     @State private var title: String
 
-    init(moment: AnimateVideo, save: @escaping (String) -> Void) {
-        self.moment = moment
+    init(video: AnimateVideo, save: @escaping (String) -> Void) {
+        self.video = video
         self.save = save
-        _title = State(initialValue: moment.title)
+        _title = State(initialValue: video.title)
     }
 
     var body: some View {

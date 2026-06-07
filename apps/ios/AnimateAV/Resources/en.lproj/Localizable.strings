@@ -122,7 +122,7 @@
 "create.music.calm.title" = "Calm";
 "create.music.cinematic.subtitle" = "Dramatic pacing and atmosphere.";
 "create.music.cinematic.title" = "Cinematic";
-"create.music.fun.subtitle" = "Playful energy for shared moments.";
+"create.music.fun.subtitle" = "Playful energy for shared videos.";
 "create.music.fun.title" = "Fun";
 "create.music.upbeat.subtitle" = "Fast, bright, and lively.";
 "create.music.upbeat.title" = "Upbeat";
@@ -140,7 +140,7 @@
 "create.selector.look.title" = "Choose look";
 "create.selector.voice.calm.detail" = "Gentle, slower, and understated.";
 "create.selector.voice.cinematic.detail" = "More dramatic pacing and atmosphere.";
-"create.selector.voice.fun.detail" = "Playful energy for shared moments.";
+"create.selector.voice.fun.detail" = "Playful energy for shared videos.";
 "create.selector.voice.intro.detail" = "Pick how the spoken message and audio should feel.";
 "create.selector.voice.intro.title" = "Voice guides the video";
 "create.selector.voice.title" = "Choose voice";
@@ -333,7 +333,7 @@
 "home.avi.createVideo.title" = "Make a cartoon video";
 "home.avi.creating.detail" = "Avi is sketching the motion, voice, and style.";
 "home.avi.creating.title" = "Avi is animating";
-"home.avi.currentMoment.title" = "Current video";
+"home.avi.currentVideo.title" = "Current video";
 "home.avi.preparing.detail" = "Avi is turning the photo into a cartoon plan.";
 "home.avi.preparing.title" = "Avi is warming up";
 "home.avi.selected.detail" = "%d %@ selected. Time to pick the cartoon style.";
@@ -414,9 +414,9 @@
 "tab.home" = "Home";
 "tab.inProgress" = "In Progress";
 "inProgress.loadingDetail" = "Loading video detail...";
-"home.latestMoment.eyebrow" = "Latest cartoon";
-"home.moments.emptyRow.title" = "No cartoons yet";
-"home.moments.emptyRow.detail" = "Start with one photo and Avi will build the first animated surprise.";
+"home.latestVideo.eyebrow" = "Latest cartoon";
+"home.videos.emptyRow.title" = "No cartoons yet";
+"home.videos.emptyRow.detail" = "Start with one photo and Avi will build the first animated surprise.";
 "credits.available.count" = "%d available";
 "credits.videoCredits.title" = "Credits";
 "paywall.balance.noCredits" = "No credits";
@@ -500,8 +500,8 @@
 "create.continuation.final.title" = "Continue with video";
 "create.continuation.media.message" = "Add one photo and let Avi plan the cartoon.";
 "create.continuation.media.title" = "Continue with image";
-"create.continuation.moment.message" = "Open this video and continue the next unfinished step.";
-"create.continuation.moment.title" = "Continue video";
+"create.continuation.video.message" = "Open this video and continue the next unfinished step.";
+"create.continuation.video.title" = "Continue video";
 "create.continuation.story.message" = "Prepare the video from the selected photo.";
 "create.continuation.story.title" = "Continue with video";
 "create.credits.detail" = "Credits are needed before creating the final video.";
@@ -778,10 +778,10 @@
 "purchase.error.notConfigured" = "Purchases are not configured for this build.";
 "purchase.error.offeringUnavailable" = "Purchases are not available right now. Try again later.";
 "purchase.error.productUnavailable" = "This product is not available right now. Try again later.";
-"workflow.moment.signInStart" = "Sign in before starting a video.";
-"workflow.moment.signInContinue" = "Sign in before continuing a video.";
-"workflow.moment.signInDiscard" = "Sign in before discarding a video.";
-"workflow.moment.setupNotReady" = "Setup is not ready to create.";
+"workflow.video.signInStart" = "Sign in before starting a video.";
+"workflow.video.signInContinue" = "Sign in before continuing a video.";
+"workflow.video.signInDiscard" = "Sign in before discarding a video.";
+"workflow.video.setupNotReady" = "Setup is not ready to create.";
 "workflow.media.templateFull" = "Avi has the photo for this video.";
 "workflow.media.noNewMedia" = "No new image added.";
 "workflow.media.noAlbumPhotos" = "No photos found in that album.";
@@ -918,7 +918,7 @@
 "create.workflowContent.theme" = "Theme";
 "create.workflowContent.pacing" = "Pacing";
 "create.workflowContent.tone" = "Voice";
-"create.workflowContent.moment" = "Video";
+"create.workflowContent.video" = "Video";
 "create.workflowContent.readyCheck" = "Ready check";
 "create.workflowContent.mediaSelected" = "Media selected";
 "create.workflowContent.storyPrepared" = "Direction prepared";

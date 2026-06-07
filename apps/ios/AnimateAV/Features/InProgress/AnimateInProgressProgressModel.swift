@@ -7,7 +7,7 @@ struct AnimateInProgressProgressModel {
         phases = [
             AnimateInProgressProgressPhase(
                 title: L10n.string("moment.progress.moment"),
-                detail: AnimateStatusRules.displayTitle(for: workspace.moment.status),
+                detail: AnimateStatusRules.displayTitle(for: workspace.video.status),
                 systemImage: "doc.text",
                 state: .complete
             ),

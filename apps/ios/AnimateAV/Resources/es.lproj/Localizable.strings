@@ -333,7 +333,7 @@
 "home.avi.createVideo.title" = "Hacer un video cartoon";
 "home.avi.creating.detail" = "Avi está dibujando el movimiento, la voz y el estilo.";
 "home.avi.creating.title" = "Avi está animando";
-"home.avi.currentMoment.title" = "Video actual";
+"home.avi.currentVideo.title" = "Video actual";
 "home.avi.preparing.detail" = "Avi está convirtiendo la foto en un plan cartoon.";
 "home.avi.preparing.title" = "Avi está calentando motores";
 "home.avi.selected.detail" = "%d %@ seleccionados. Ahora toca elegir el estilo cartoon.";
@@ -414,9 +414,9 @@
 "tab.home" = "Inicio";
 "tab.inProgress" = "En progreso";
 "inProgress.loadingDetail" = "Cargando detalle del video...";
-"home.latestMoment.eyebrow" = "Último cartoon";
-"home.moments.emptyRow.title" = "Aún no hay cartoons";
-"home.moments.emptyRow.detail" = "Empieza con una foto y Avi creará la primera sorpresa animada.";
+"home.latestVideo.eyebrow" = "Último cartoon";
+"home.videos.emptyRow.title" = "Aún no hay cartoons";
+"home.videos.emptyRow.detail" = "Empieza con una foto y Avi creará la primera sorpresa animada.";
 "credits.available.count" = "%d disponibles";
 "credits.videoCredits.title" = "Créditos";
 "paywall.balance.noCredits" = "Sin créditos";
@@ -500,8 +500,8 @@
 "create.continuation.final.title" = "Continuar con el video";
 "create.continuation.media.message" = "Añade una foto y prepara el video.";
 "create.continuation.media.title" = "Continuar con imagen";
-"create.continuation.moment.message" = "Abre este video y continúa el siguiente paso pendiente.";
-"create.continuation.moment.title" = "Continuar video";
+"create.continuation.video.message" = "Abre este video y continúa el siguiente paso pendiente.";
+"create.continuation.video.title" = "Continuar video";
 "create.continuation.story.message" = "Prepara el video desde la foto seleccionada.";
 "create.continuation.story.title" = "Continuar con video";
 "create.credits.detail" = "Los créditos son necesarios antes de crear el video final.";
@@ -778,10 +778,10 @@
 "purchase.error.notConfigured" = "Las compras no están configuradas para esta build.";
 "purchase.error.offeringUnavailable" = "Las compras no están disponibles ahora mismo. Inténtalo más tarde.";
 "purchase.error.productUnavailable" = "Este producto no está disponible ahora mismo. Inténtalo más tarde.";
-"workflow.moment.signInStart" = "Inicia sesión antes de empezar un video.";
-"workflow.moment.signInContinue" = "Inicia sesión antes de continuar un video.";
-"workflow.moment.signInDiscard" = "Inicia sesión antes de descartar un video.";
-"workflow.moment.setupNotReady" = "El video aún no está listo para crearse.";
+"workflow.video.signInStart" = "Inicia sesión antes de empezar un video.";
+"workflow.video.signInContinue" = "Inicia sesión antes de continuar un video.";
+"workflow.video.signInDiscard" = "Inicia sesión antes de descartar un video.";
+"workflow.video.setupNotReady" = "El video aún no está listo para crearse.";
 "workflow.media.templateFull" = "Avi tiene la foto para este video.";
 "workflow.media.noNewMedia" = "No se añadió una imagen nueva.";
 "workflow.media.noAlbumPhotos" = "No se encontraron fotos en ese álbum.";
@@ -918,7 +918,7 @@
 "create.workflowContent.theme" = "Tema";
 "create.workflowContent.pacing" = "Ritmo";
 "create.workflowContent.tone" = "Voz";
-"create.workflowContent.moment" = "Video";
+"create.workflowContent.video" = "Video";
 "create.workflowContent.readyCheck" = "Revisión final";
 "create.workflowContent.mediaSelected" = "Imagen seleccionada";
 "create.workflowContent.storyPrepared" = "Dirección preparada";

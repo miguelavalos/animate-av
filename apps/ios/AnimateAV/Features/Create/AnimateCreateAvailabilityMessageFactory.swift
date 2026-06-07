@@ -70,21 +70,21 @@ enum AnimateCreateAvailabilityMessageFactory {
     }
 
     static func finalRender(
-        activeMomentId: String?,
+        activeVideoId: String?,
         isFinalRenderAvailable: Bool,
         isFinalRenderGenerating: Bool,
         isFinalRenderConfigured: Bool,
-        moment: AnimateVideo?,
+        video: AnimateVideo?,
         template: AnimateVideoTemplate,
         balance: AnimateCreditBalance,
         creditBalanceLoadState: AnimateCreditBalanceLoadState = .loaded
     ) -> String? {
-        guard activeMomentId != nil else { return AnimateCreateAvailabilityCopy.finalRenderMissingMoment }
+        guard activeVideoId != nil else { return AnimateCreateAvailabilityCopy.finalRenderMissingMoment }
         guard isFinalRenderAvailable else { return AnimateCreateAvailabilityCopy.finalRenderUnavailable }
         if isFinalRenderGenerating { return nil }
         if !isFinalRenderConfigured { return AnimateCreateAvailabilityCopy.finalRenderNotConfigured }
         let availability = AnimateFinalRenderRules.availability(
-            moment: moment,
+            video: video,
             template: template,
             balance: balance
         )

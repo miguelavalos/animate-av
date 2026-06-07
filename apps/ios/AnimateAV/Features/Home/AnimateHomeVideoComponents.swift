@@ -1,7 +1,7 @@
 import AVAppShellFoundation
 import SwiftUI
 
-struct AnimateHomeLatestMomentRow: View {
+struct AnimateHomeLatestVideoRow: View {
     let title: String
     let detail: String
     let openMoment: () -> Void
@@ -11,20 +11,20 @@ struct AnimateHomeLatestMomentRow: View {
             title: title,
             detail: detail,
             systemImage: "clock.badge.checkmark",
-            eyebrow: L10n.string("home.latestMoment.eyebrow"),
-            accessibilityIdentifier: "animate.home.latestMoment",
+            eyebrow: L10n.string("home.latestVideo.eyebrow"),
+            accessibilityIdentifier: "animate.home.latestVideo",
             action: openMoment
         )
     }
 }
 
-struct AnimateHomeEmptyMomentRow: View {
+struct AnimateHomeEmptyVideoRow: View {
     var body: some View {
         AVAppShellInfoRow(
-            title: L10n.string("home.moments.emptyRow.title"),
-            detail: L10n.string("home.moments.emptyRow.detail"),
+            title: L10n.string("home.videos.emptyRow.title"),
+            detail: L10n.string("home.videos.emptyRow.detail"),
             systemImage: "rectangle.stack.badge.plus",
-            accessibilityIdentifier: "animate.home.moments.empty"
+            accessibilityIdentifier: "animate.home.videos.empty"
         )
     }
 }

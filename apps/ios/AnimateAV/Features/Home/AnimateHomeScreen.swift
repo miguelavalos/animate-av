@@ -80,7 +80,7 @@ struct AnimateHomeScreen: View {
                 AnimateHomeSignInCard(startSignInFlow: startSignInFlow)
             }
 
-            AnimateHomeMomentStatusCard(
+            AnimateHomeVideoStatusCard(
                 isSignedIn: viewModel.isSignedIn,
                 videosSummary: videosSummary,
                 presentation: presentation,
@@ -107,7 +107,7 @@ struct AnimateHomeScreen: View {
             if createViewModel.storySummary.isPlanning {
                 return L10n.string("home.avi.preparing.title")
             }
-            return L10n.string("home.avi.currentMoment.title")
+            return L10n.string("home.avi.currentVideo.title")
         }
         return L10n.string("home.avi.createVideo.title")
     }

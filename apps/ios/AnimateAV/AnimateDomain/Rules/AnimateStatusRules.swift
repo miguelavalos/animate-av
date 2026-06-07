@@ -1,20 +1,20 @@
 import Foundation
 
 enum AnimateStatusRules {
-    static func isFinished(_ moment: AnimateVideo) -> Bool {
-        isFinishedStatus(moment.status)
+    static func isFinished(_ video: AnimateVideo) -> Bool {
+        isFinishedStatus(video.status)
     }
 
     static func isFinishedStatus(_ status: String) -> Bool {
         status == "gallery_ready" || status == "completed"
     }
 
-    static func group(_ moments: [AnimateVideo]) -> AnimateVideoGroups {
-        let sortedMoments = moments.sortedByLatestUpdate()
+    static func group(_ videos: [AnimateVideo]) -> AnimateVideoGroups {
+        let sortedVideos = videos.sortedByLatestUpdate()
 
         return AnimateVideoGroups(
-            inProgress: sortedMoments.filter { !isFinished($0) },
-            finished: sortedMoments.filter(isFinished)
+            inProgress: sortedVideos.filter { !isFinished($0) },
+            finished: sortedVideos.filter(isFinished)
         )
     }
 
@@ -94,7 +94,7 @@ enum AnimateStatusRules {
         case "final":
             .finalRender
         default:
-            .moment
+            .video
         }
     }
 

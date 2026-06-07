@@ -6,13 +6,13 @@ struct AnimateInProgressListPresentation: Equatable {
 
     static func make(
         videosSummary: AnimateInProgressSummary,
-        selectedMomentId: String?
+        selectedVideoId: String?
     ) -> AnimateInProgressListPresentation {
         AnimateInProgressListPresentation(
             summaryPills: [
                 AnimateInProgressSummaryPresentation(
                     title: L10n.string("inProgress.summary.total"),
-                    value: videosSummary.momentCount,
+                    value: videosSummary.videoCount,
                     systemImage: "rectangle.stack"
                 ),
                 AnimateInProgressSummaryPresentation(
@@ -30,13 +30,13 @@ struct AnimateInProgressListPresentation: Equatable {
                 AnimateInProgressListGroupPresentation(
                     title: L10n.string("inProgress.group.inProgress"),
                     rows: videosSummary.groups.inProgress.map {
-                        AnimateInProgressListRowPresentation(moment: $0, isSelected: selectedMomentId == $0.id)
+                        AnimateInProgressListRowPresentation(video: $0, isSelected: selectedVideoId == $0.id)
                     }
                 ),
                 AnimateInProgressListGroupPresentation(
                     title: L10n.string("inProgress.group.finished"),
                     rows: videosSummary.groups.finished.map {
-                        AnimateInProgressListRowPresentation(moment: $0, isSelected: selectedMomentId == $0.id)
+                        AnimateInProgressListRowPresentation(video: $0, isSelected: selectedVideoId == $0.id)
                     }
                 )
             ].filter { !$0.rows.isEmpty }
@@ -61,7 +61,7 @@ struct AnimateInProgressListGroupPresentation: Identifiable, Equatable {
 }
 
 struct AnimateInProgressListRowPresentation: Identifiable, Equatable {
-    let moment: AnimateVideo
+    let video: AnimateVideo
     let title: String
     let statusSystemImage: String
     let isFinished: Bool
@@ -70,24 +70,24 @@ struct AnimateInProgressListRowPresentation: Identifiable, Equatable {
     let accessorySystemImage: String
     let isSelected: Bool
 
-    var id: String { moment.id }
+    var id: String { video.id }
 
-    init(moment: AnimateVideo, isSelected: Bool) {
-        self.moment = moment
-        self.title = moment.title
-        self.isFinished = AnimateStatusRules.isFinished(moment)
+    init(video: AnimateVideo, isSelected: Bool) {
+        self.video = video
+        self.title = video.title
+        self.isFinished = AnimateStatusRules.isFinished(video)
         self.statusSystemImage = isFinished ? "checkmark.circle.fill" : "circle.dashed"
         self.metadata = [
             AnimateInProgressListMetadataPresentation(
                 systemImage: "clock",
-                text: AnimateVideoFormatting.updatedAt(moment)
+                text: AnimateVideoFormatting.updatedAt(video)
             ),
             AnimateInProgressListMetadataPresentation(
                 systemImage: "text.bubble",
-                text: AnimateVideoFormatting.storyUsage(moment)
+                text: AnimateVideoFormatting.storyUsage(video)
             )
         ]
-        self.statusTitle = AnimateVideoFormatting.statusTitle(moment)
+        self.statusTitle = AnimateVideoFormatting.statusTitle(video)
         self.accessorySystemImage = isSelected ? "chevron.up.circle.fill" : "chevron.right.circle"
         self.isSelected = isSelected
     }

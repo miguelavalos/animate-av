@@ -32,11 +32,11 @@ extension AnimateCreateViewModel {
 
     var finalRenderAvailabilityMessage: String? {
         AnimateCreateAvailabilityMessageFactory.finalRender(
-            activeMomentId: activeMomentId,
+            activeVideoId: activeVideoId,
             isFinalRenderAvailable: finalRenderWorkflow != nil,
             isFinalRenderGenerating: finalRenderWorkflow?.isGenerating ?? false,
             isFinalRenderConfigured: finalRenderWorkflow?.isConfigured ?? false,
-            moment: activeMoment,
+            video: activeVideo,
             template: form.template,
             balance: balance,
             creditBalanceLoadState: creditBalanceLoadState

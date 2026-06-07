@@ -101,24 +101,24 @@ final class AnimateCreateViewModel: ObservableObject {
     private var hasUserLookOverride = false
     private var autoStyleUndoSelection: (style: AnimateVideoCreationStyle, musicPreset: AnimateVideoMusicPreset, form: AnimateVideoSetupForm)?
 
-    var activeMoment: AnimateVideo? {
-        if let fixtureMode = activeUITestFixtureMode {
-            return AnimateCreateUITestFixtures.moment(for: fixtureMode)
+    var activeVideo: AnimateVideo? {
+        if activeUITestFixtureMode != nil {
+            return AnimateCreateUITestFixtures.video
         }
 
-        return activeWorkspace?.moment
+        return activeWorkspace?.video
     }
 
-    var activeMomentId: String? {
-        activeMoment?.id ?? workflowActiveMomentId
+    var activeVideoId: String? {
+        activeVideo?.id ?? workflowActiveMomentId
     }
 
     var hasAnimateWorkspace: Bool {
-        activeMomentId != nil || isLocalMomentStarted
+        activeVideoId != nil || isLocalMomentStarted
     }
 
     var hasRecoverableMomentContext: Bool {
-        activeMomentId != nil
+        activeVideoId != nil
             || !selectedMedia.isEmpty
             || isImportingMedia
             || isPlanningStory
@@ -130,7 +130,7 @@ final class AnimateCreateViewModel: ObservableObject {
     }
 
     var hasLocalAnimateWorkspace: Bool {
-        activeMomentId == nil && isLocalMomentStarted
+        activeVideoId == nil && isLocalMomentStarted
     }
 
     var hasPendingLocalSetupEdits: Bool {
@@ -402,7 +402,7 @@ final class AnimateCreateViewModel: ObservableObject {
         hasUserLookOverride = false
     }
 
-    func continueVideo(_ moment: AnimateVideo, focus: AnimateContinuationFocus = .moment) {
+    func continueVideo(_ video: AnimateVideo, focus: AnimateContinuationFocus = .video) {
         cancelOperations()
         isContinuingMoment = true
         isLocalMomentStarted = false
@@ -411,11 +411,11 @@ final class AnimateCreateViewModel: ObservableObject {
         pendingFocus = focus
         continuationFocusHint = focus
 
-        if let continuedForm = AnimateVideoSetupForm.continuing(moment: moment, templates: templates) {
+        if let continuedForm = AnimateVideoSetupForm.continuing(video: video, templates: templates) {
             form = continuedForm
         }
 
-        videoCreationWorkflow?.continueVideo(moment)
+        videoCreationWorkflow?.continueVideo(video)
     }
 
     func consumePendingFocus() {
@@ -434,27 +434,27 @@ final class AnimateCreateViewModel: ObservableObject {
         guard let fixtureMode = activeUITestFixtureMode else { return }
 
         let workspace = AnimateCreateUITestFixtures.workspace(for: fixtureMode)
-        let template = templates.first(where: { $0.id == workspace.moment.template }) ?? AnimateVideoTemplate.birthdayMessage
+        let template = templates.first(where: { $0.id == workspace.video.template }) ?? AnimateVideoTemplate.birthdayMessage
         form = AnimateVideoSetupForm(
             template: template,
-            occasion: workspace.moment.occasion ?? "Birthday",
+            occasion: workspace.video.occasion ?? "Birthday",
             recipient: "Ava",
-            tone: AnimateVideoSetupTone(rawValue: workspace.moment.tone ?? "") ?? .warm,
-            tempo: AnimateVideoSetupTempo(rawValue: workspace.moment.tempo ?? "") ?? .balanced,
-            details: workspace.moment.details ?? ""
+            tone: AnimateVideoSetupTone(rawValue: workspace.video.tone ?? "") ?? .warm,
+            tempo: AnimateVideoSetupTempo(rawValue: workspace.video.tempo ?? "") ?? .balanced,
+            details: workspace.video.details ?? ""
         )
         isSignedIn = true
         balance = AnimateCreateUITestFixtures.balance(for: fixtureMode)
         isContinuingMoment = true
-        workflowActiveMomentId = workspace.moment.id
+        workflowActiveMomentId = workspace.video.id
         setupErrorMessage = nil
         selectedMedia = AnimateCreateUITestFixtures.selectedMedia
         mediaStatusMessage = L10n.string("create.media.fixture.synced")
         savedScenes = workspace.storyScenes
         generatedScenes = []
         storyStatusMessage = L10n.string("create.story.status.ready")
-        lastPreparedStoryInputSignature = workspace.moment.storyInputSignature
-            ?? currentStoryInputSignature(momentId: workspace.moment.id)
+        lastPreparedStoryInputSignature = workspace.video.storyInputSignature
+            ?? currentStoryInputSignature(momentId: workspace.video.id)
         activeWorkspace = workspace
         finalExport = workspace.latestArtifact(kind: "final_export")
         pendingGalleryVideo = nil
@@ -482,8 +482,8 @@ final class AnimateCreateViewModel: ObservableObject {
                 return L10n.string("create.final.status.ready")
             }
         }()
-        pendingFocus = .moment
-        continuationFocusHint = .moment
+        pendingFocus = .video
+        continuationFocusHint = .video
     }
 
     var effectiveActiveWorkspace: AnimateWorkspace? {
@@ -732,7 +732,7 @@ final class AnimateCreateViewModel: ObservableObject {
     @discardableResult
     func recordPreparedStoryInputSignature(_ inputSignature: String, momentId: String) -> String {
         let recordedSignature: String
-        if let workspaceSignature = effectiveActiveWorkspace?.moment.storyInputSignature {
+        if let workspaceSignature = effectiveActiveWorkspace?.video.storyInputSignature {
             recordedSignature = workspaceSignature
         } else if currentWorkspaceStorySignatureMedia()?.isEmpty == false {
             recordedSignature = inputSignature
@@ -850,10 +850,10 @@ extension AnimateCreateViewModel {
         guard !usesCreateUITestFixture else { return }
         let previousActiveMomentId = workflowActiveMomentId
         isCreatingVideo = state.isCreatingVideo
-        workflowActiveMomentId = state.activeMomentId
+        workflowActiveMomentId = state.activeVideoId
         setupErrorMessage = state.setupErrorMessage
 
-        if previousActiveMomentId == nil, state.activeMomentId != nil {
+        if previousActiveMomentId == nil, state.activeVideoId != nil {
             pendingFocus = .media
             continuationFocusHint = nil
         }
@@ -921,9 +921,9 @@ extension AnimateCreateViewModel {
     }
 
     private func syncFormWithActiveWorkspace(_ workspace: AnimateWorkspace?) {
-        guard let moment = workspace?.moment else { return }
-        guard moment.id == activeMomentId else { return }
-        guard let continuedForm = AnimateVideoSetupForm.continuing(moment: moment, templates: templates) else { return }
+        guard let moment = workspace?.video else { return }
+        guard moment.id == activeVideoId else { return }
+        guard let continuedForm = AnimateVideoSetupForm.continuing(video: moment, templates: templates) else { return }
         if hasLocalSetupEdits {
             if continuedForm.matchesPersistedSetup(of: form) {
                 hasLocalSetupEdits = false
@@ -945,9 +945,9 @@ extension AnimateCreateViewModel {
 
     private func reconcilePreparedStorySignature() {
         guard !savedScenes.isEmpty || !generatedScenes.isEmpty else { return }
-        guard let activeMomentId else { return }
+        guard let activeVideoId else { return }
 
-        if let workspaceSignature = effectiveActiveWorkspace?.moment.storyInputSignature {
+        if let workspaceSignature = effectiveActiveWorkspace?.video.storyInputSignature {
             if lastPreparedStoryInputSignature != workspaceSignature {
                 hasExplicitMediaEditsAfterPreparedStory = false
             }
@@ -958,7 +958,7 @@ extension AnimateCreateViewModel {
         }
 
         if lastPreparedStoryInputSignature == nil || currentWorkspaceStorySignatureMedia()?.isEmpty == false {
-            lastPreparedStoryInputSignature = preparedStoryComparisonInputSignature(momentId: activeMomentId)
+            lastPreparedStoryInputSignature = preparedStoryComparisonInputSignature(momentId: activeVideoId)
         }
     }
 

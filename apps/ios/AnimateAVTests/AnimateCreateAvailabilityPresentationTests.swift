@@ -27,7 +27,7 @@ final class AnimateCreateAvailabilityPresentationTests: XCTestCase {
 
     func testWorkflowCapabilityFactoryFormatsMediaAndFinalRenderCapabilities() {
         let capability = AnimateCreateWorkflowCapabilityFactory.make(
-            activeMomentId: "moment-1",
+            activeVideoId: "moment-1",
             isSignedIn: true,
             hasAnimateWorkspace: true,
             isImportingMedia: false,
@@ -47,7 +47,7 @@ final class AnimateCreateAvailabilityPresentationTests: XCTestCase {
 
     func testWorkflowCapabilityFactoryBlocksMediaWithoutSlotsOrVideo() {
         let withoutSlots = AnimateCreateWorkflowCapabilityFactory.make(
-            activeMomentId: "moment-1",
+            activeVideoId: "moment-1",
             isSignedIn: true,
             hasAnimateWorkspace: true,
             isImportingMedia: false,
@@ -58,7 +58,7 @@ final class AnimateCreateAvailabilityPresentationTests: XCTestCase {
             selectedMediaCount: 0
         )
         let withoutMoment = AnimateCreateWorkflowCapabilityFactory.make(
-            activeMomentId: nil,
+            activeVideoId: nil,
             isSignedIn: true,
             hasAnimateWorkspace: false,
             isImportingMedia: false,
@@ -147,11 +147,11 @@ final class AnimateCreateAvailabilityPresentationTests: XCTestCase {
     func testAvailabilityMessageFactoryFormatsFinalRenderStoryRequirement() {
         XCTAssertEqual(
             AnimateCreateAvailabilityMessageFactory.finalRender(
-                activeMomentId: "moment-1",
+                activeVideoId: "moment-1",
                 isFinalRenderAvailable: true,
                 isFinalRenderGenerating: false,
                 isFinalRenderConfigured: true,
-                moment: AnimateCreateTestFixtures.makeMoment(id: "moment-1"),
+                video: AnimateCreateTestFixtures.makeMoment(id: "moment-1"),
                 template: .birthdayMessage,
                 balance: AnimateCreditBalance(proMonthly: 4, promotional: 0, purchased: 0)
             ),
@@ -162,11 +162,11 @@ final class AnimateCreateAvailabilityPresentationTests: XCTestCase {
     func testFinalRenderCreditsLoadingDoesNotReportInsufficientCredits() {
         XCTAssertEqual(
             AnimateCreateAvailabilityMessageFactory.finalRender(
-                activeMomentId: "moment-1",
+                activeVideoId: "moment-1",
                 isFinalRenderAvailable: true,
                 isFinalRenderGenerating: false,
                 isFinalRenderConfigured: true,
-                moment: AnimateCreateTestFixtures.makeMoment(id: "moment-1", status: "story_ready"),
+                video: AnimateCreateTestFixtures.makeMoment(id: "moment-1", status: "story_ready"),
                 template: .birthdayMessage,
                 balance: .empty,
                 creditBalanceLoadState: .loading
@@ -178,11 +178,11 @@ final class AnimateCreateAvailabilityPresentationTests: XCTestCase {
     func testFinalRenderCreditsOfflineDoesNotReportInsufficientCredits() {
         XCTAssertEqual(
             AnimateCreateAvailabilityMessageFactory.finalRender(
-                activeMomentId: "moment-1",
+                activeVideoId: "moment-1",
                 isFinalRenderAvailable: true,
                 isFinalRenderGenerating: false,
                 isFinalRenderConfigured: true,
-                moment: AnimateCreateTestFixtures.makeMoment(id: "moment-1", status: "story_ready"),
+                video: AnimateCreateTestFixtures.makeMoment(id: "moment-1", status: "story_ready"),
                 template: .birthdayMessage,
                 balance: .empty,
                 creditBalanceLoadState: .offline

@@ -92,7 +92,7 @@ struct AnimateHomeSignInCard: View {
     }
 }
 
-struct AnimateHomeMomentStatusCard: View {
+struct AnimateHomeVideoStatusCard: View {
     let isSignedIn: Bool
     let videosSummary: AnimateInProgressSummary
     let presentation: AnimateHomePresentation
@@ -101,23 +101,23 @@ struct AnimateHomeMomentStatusCard: View {
     var body: some View {
         AVAppShellDashboardSection(
             title: L10n.string("library.inProgressAndGallery.title"),
-            detail: presentation.momentStatusDetail
+            detail: presentation.videoStatusDetail
         ) {
-            if let latestMoment = videosSummary.latestMoment {
-                AnimateHomeLatestMomentRow(
-                    title: latestMoment.title,
-                    detail: AnimateVideoFormatting.compactDetail(for: latestMoment),
+            if let latestVideo = videosSummary.latestVideo {
+                AnimateHomeLatestVideoRow(
+                    title: latestVideo.title,
+                    detail: AnimateVideoFormatting.compactDetail(for: latestVideo),
                     openMoment: openInProgress
                 )
             } else if isSignedIn {
-                AnimateHomeEmptyMomentRow()
+                AnimateHomeEmptyVideoRow()
             }
 
-            AVAppShellMetricStrip(metrics: momentMetrics)
+            AVAppShellMetricStrip(metrics: videoMetrics)
         }
     }
 
-    private var momentMetrics: [AVAppShellMetric] {
+    private var videoMetrics: [AVAppShellMetric] {
         [
             AVAppShellMetric(
                 id: "in-progress",

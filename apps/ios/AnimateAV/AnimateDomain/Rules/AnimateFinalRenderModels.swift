@@ -177,7 +177,7 @@ struct AnimateRenderPlan: Decodable, Equatable {
 
 enum AnimateFinalRenderRules {
     enum BlockReason {
-        case missingMoment
+        case missingVideo
         case insufficientCredits
         case storyNotReady
     }
@@ -188,36 +188,36 @@ enum AnimateFinalRenderRules {
     }
 
     static func canGenerate(
-        moment: AnimateVideo,
+        video: AnimateVideo,
         template: AnimateVideoTemplate,
         balance: AnimateCreditBalance,
         storySceneCount: Int = 0
     ) -> Bool {
         availability(
-            moment: moment,
+            video: video,
             template: template,
             balance: balance,
             storySceneCount: storySceneCount
         ).canGenerate
     }
 
-    static func canPreparePlan(moment: AnimateVideo?, storySceneCount: Int = 0) -> Bool {
+    static func canPreparePlan(video: AnimateVideo?, storySceneCount: Int = 0) -> Bool {
         if storySceneCount > 0 { return true }
-        guard let moment else { return false }
-        return moment.status == "story_ready"
-            || moment.status == "gallery_ready"
+        guard let video else { return false }
+        return video.status == "story_ready"
+            || video.status == "gallery_ready"
     }
 
     static func availability(
-        moment: AnimateVideo?,
+        video: AnimateVideo?,
         template: AnimateVideoTemplate,
         balance: AnimateCreditBalance,
         storySceneCount: Int = 0
     ) -> Availability {
-        guard let moment else {
-            return Availability(canGenerate: false, blockReason: .missingMoment)
+        guard let video else {
+            return Availability(canGenerate: false, blockReason: .missingVideo)
         }
-        if !canPreparePlan(moment: moment, storySceneCount: storySceneCount) {
+        if !canPreparePlan(video: video, storySceneCount: storySceneCount) {
             return Availability(canGenerate: false, blockReason: .storyNotReady)
         }
         if !AnimateCreditGate.canAfford(template, balance: balance) {
@@ -234,7 +234,7 @@ enum AnimateFinalRenderRules {
         switch availability.blockReason {
         case nil:
             return nil
-        case .missingMoment:
+        case .missingVideo:
             return missingMomentMessage
         case .insufficientCredits:
             return insufficientCreditsMessage

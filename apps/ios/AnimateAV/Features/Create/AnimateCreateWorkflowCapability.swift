@@ -3,7 +3,7 @@ import Foundation
 @MainActor
 enum AnimateCreateWorkflowCapabilityFactory {
     static func make(
-        activeMomentId: String?,
+        activeVideoId: String?,
         isSignedIn: Bool,
         hasAnimateWorkspace: Bool,
         isImportingMedia: Bool,
@@ -28,11 +28,11 @@ enum AnimateCreateWorkflowCapabilityFactory {
                 selectedMediaCount: selectedMediaCount
             ),
             canPrepareFinalRenderPlan: canPrepareFinalRenderPlan(
-                activeMomentId: activeMomentId,
+                activeVideoId: activeVideoId,
                 finalRenderWorkflow: finalRenderWorkflow
             ),
             canGenerateFinalRender: canGenerateFinalRender(
-                activeMomentId: activeMomentId,
+                activeVideoId: activeVideoId,
                 finalRenderWorkflow: finalRenderWorkflow,
                 creditBalanceLoadState: creditBalanceLoadState,
                 template: template
@@ -66,20 +66,20 @@ enum AnimateCreateWorkflowCapabilityFactory {
     }
 
     private static func canPrepareFinalRenderPlan(
-        activeMomentId: String?,
+        activeVideoId: String?,
         finalRenderWorkflow: FinalRenderWorkflow?
     ) -> Bool {
-        guard let finalRenderWorkflow, activeMomentId != nil else { return false }
+        guard let finalRenderWorkflow, activeVideoId != nil else { return false }
         return finalRenderWorkflow.canPreparePlan()
     }
 
     private static func canGenerateFinalRender(
-        activeMomentId: String?,
+        activeVideoId: String?,
         finalRenderWorkflow: FinalRenderWorkflow?,
         creditBalanceLoadState: AnimateCreditBalanceLoadState,
         template: AnimateVideoTemplate
     ) -> Bool {
-        guard let finalRenderWorkflow, activeMomentId != nil else { return false }
+        guard let finalRenderWorkflow, activeVideoId != nil else { return false }
         guard creditBalanceLoadState.hasLoadedBalance else { return false }
         return finalRenderWorkflow.canGenerate(template: template)
     }

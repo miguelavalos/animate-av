@@ -222,15 +222,15 @@ private enum AnimateCreateAssetKind: String, CaseIterable, Identifiable {
 }
 
 enum AnimateCreateSection: Hashable {
-    case moment
+    case video
     case media
     case story
     case finalRender
 
     init(focus: AnimateContinuationFocus) {
         switch focus {
-        case .moment:
-            self = .moment
+        case .video:
+            self = .video
         case .media:
             self = .media
         case .story:

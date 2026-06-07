@@ -78,26 +78,26 @@ struct AnimateVideoSetupForm: Equatable {
     }
 
     static func continuing(
-        moment: AnimateVideo,
+        video: AnimateVideo,
         templates: [AnimateVideoTemplate]
     ) -> AnimateVideoSetupForm? {
-        guard let template = templates.first(where: { $0.id == moment.template }) else {
+        guard let template = templates.first(where: { $0.id == video.template }) else {
             return nil
         }
 
         var form = AnimateVideoSetupForm(
             template: template,
-            occasion: moment.occasion ?? "",
+            occasion: video.occasion ?? "",
             recipient: "",
-            tone: AnimateVideoSetupTone(rawValue: moment.mood ?? moment.tone ?? "") ?? .warm,
-            tempo: AnimateVideoSetupTempo(rawValue: moment.tempo ?? "") ?? .balanced,
-            details: moment.details ?? ""
+            tone: AnimateVideoSetupTone(rawValue: video.mood ?? video.tone ?? "") ?? .warm,
+            tempo: AnimateVideoSetupTempo(rawValue: video.tempo ?? "") ?? .balanced,
+            details: video.details ?? ""
         )
         form.creationMode = .quick
-        form.look = AnimateVideoLook(rawValue: moment.look) ?? .cartoon
-        form.theme = AnimateVideoCreationStyleID(rawValue: moment.theme) ?? .celebration
-        form.duration = AnimateVideoDuration(rawValue: moment.duration) ?? .auto
-        form.mediaUse = AnimateVideoMediaUse(rawValue: moment.mediaUse) ?? .aviPick
+        form.look = AnimateVideoLook(rawValue: video.look) ?? .cartoon
+        form.theme = AnimateVideoCreationStyleID(rawValue: video.theme) ?? .celebration
+        form.duration = AnimateVideoDuration(rawValue: video.duration) ?? .auto
+        form.mediaUse = AnimateVideoMediaUse(rawValue: video.mediaUse) ?? .aviPick
         return form
     }
 

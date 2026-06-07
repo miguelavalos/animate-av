@@ -29,7 +29,7 @@ final class AnimateHomePresentationTests: XCTestCase {
 
         XCTAssertEqual(presentation.accountTitle, "Account connected")
         XCTAssertEqual(presentation.accountDetail, "Signed in as Ava.")
-        XCTAssertEqual(presentation.momentStatusDetail, "No cartoon videos yet.")
+        XCTAssertEqual(presentation.videoStatusDetail, "No cartoon videos yet.")
         XCTAssertTrue(presentation.createAction.isProminent)
         XCTAssertFalse(presentation.createAction.isDisabled)
         XCTAssertEqual(
@@ -53,8 +53,8 @@ final class AnimateHomePresentationTests: XCTestCase {
         XCTAssertEqual(presentation.latestInProgressAction?.systemImage, "arrow.right.circle")
         XCTAssertTrue(presentation.latestInProgressAction?.isProminent == true)
         XCTAssertFalse(presentation.createAction.isProminent)
-        XCTAssertEqual(presentation.latestInProgressContinuationRequest?.moment.id, "latest-plan")
-        XCTAssertEqual(presentation.latestInProgressContinuationRequest?.focus, .moment)
+        XCTAssertEqual(presentation.latestInProgressContinuationRequest?.video.id, "latest-plan")
+        XCTAssertEqual(presentation.latestInProgressContinuationRequest?.focus, .video)
     }
 
     func testVideoCountDrivesStatusAndReviewDetail() {
@@ -68,7 +68,7 @@ final class AnimateHomePresentationTests: XCTestCase {
         )
 
         XCTAssertEqual(
-            presentation.momentStatusDetail,
+            presentation.videoStatusDetail,
             "2 videos ready in your cartoon shelf."
         )
         XCTAssertEqual(
@@ -87,7 +87,7 @@ final class AnimateHomePresentationTests: XCTestCase {
         )
 
         XCTAssertEqual(
-            presentation.momentStatusDetail,
+            presentation.videoStatusDetail,
             "1 video ready in your cartoon shelf."
         )
         XCTAssertEqual(

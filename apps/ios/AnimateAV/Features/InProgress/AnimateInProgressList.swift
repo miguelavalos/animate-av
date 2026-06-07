@@ -2,12 +2,12 @@ import SwiftUI
 
 struct AnimateInProgressList: View {
     let videosSummary: AnimateInProgressSummary
-    let selectedMomentId: String?
+    let selectedVideoId: String?
     let selectMoment: (AnimateVideo) -> Void
     private var presentation: AnimateInProgressListPresentation {
         AnimateInProgressListPresentation.make(
             videosSummary: videosSummary,
-            selectedMomentId: selectedMomentId
+            selectedVideoId: selectedVideoId
         )
     }
 

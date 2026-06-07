@@ -13,7 +13,6 @@
 		0333055D1888E04AE5D5AF87 /* AnimateRealtimeSessionClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89C8382180686ACDA114CDCA /* AnimateRealtimeSessionClient.swift */; };
 		045A2962AD9F610C11E936B2 /* ConvexMobile in Frameworks */ = {isa = PBXBuildFile; productRef = 95121368505D78095BE55711 /* ConvexMobile */; };
 		06D662DCA5EE5ABE4A8C5447 /* AVBrandFoundation in Frameworks */ = {isa = PBXBuildFile; productRef = 98F5D5FC888CBB108BE66135 /* AVBrandFoundation */; };
-		070343BCE7AA2D91AB1340F5 /* AnimateHomeMomentComponents.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CA5B565BE6C4106A76AB5B9 /* AnimateHomeMomentComponents.swift */; };
 		079A30C6824418A97703A8C2 /* AnimateAviFocusCards.swift in Sources */ = {isa = PBXBuildFile; fileRef = 39E607E04535C5B89723204E /* AnimateAviFocusCards.swift */; };
 		07A11E13C0AD65BCB082F70F /* AnimateInProgressDiagnosticComponents.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21E78FF9891334AC256770E5 /* AnimateInProgressDiagnosticComponents.swift */; };
 		097B98697366C373ABCCC9DA /* AnimateFinalRenderClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6D097A65EEB07E101FA2ED49 /* AnimateFinalRenderClient.swift */; };
@@ -123,6 +122,7 @@
 		9A7FB3CA32C47A8168E61D68 /* AnimateGalleryViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 677FD2D0761CADE3AFDA90F2 /* AnimateGalleryViewModel.swift */; };
 		9C0EAF5BDAD257F5A8A3EDA8 /* AnimateGalleryObserver.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08708484C6DE72D1FCCB38D9 /* AnimateGalleryObserver.swift */; };
 		9D48B7DA1A09F0EEE569BE53 /* AnimateInProgressSummary.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5F7FB241429E76E1F04EB49 /* AnimateInProgressSummary.swift */; };
+		9D5D87DC9E32E0253AEF4E11 /* AnimateHomeVideoComponents.swift in Sources */ = {isa = PBXBuildFile; fileRef = D1159F09E9BF277980DF375B /* AnimateHomeVideoComponents.swift */; };
 		9FD4B674035E041E0152DEFB /* AnimateHomeScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = 303DF0FD4567E63A234058C7 /* AnimateHomeScreen.swift */; };
 		9FD75573AF04EA5033E566F9 /* AnimateCreateWorkflowAvailability.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B8EE30037C8C7F6226C9E1E /* AnimateCreateWorkflowAvailability.swift */; };
 		A5EBD56C332A7B5205B0C45B /* AnimateRemoteClient+Dates.swift in Sources */ = {isa = PBXBuildFile; fileRef = C904F93695BF87FB7FE432AD /* AnimateRemoteClient+Dates.swift */; };
@@ -301,7 +301,6 @@
 		7B8EE30037C8C7F6226C9E1E /* AnimateCreateWorkflowAvailability.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnimateCreateWorkflowAvailability.swift; sourceTree = "<group>"; };
 		7BDA94180CA012FB17377C31 /* AnimateLaunchContext.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnimateLaunchContext.swift; sourceTree = "<group>"; };
 		7C029E23218DAE1E7E873DDE /* AnimateCreateAvailabilityPresentationTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnimateCreateAvailabilityPresentationTests.swift; sourceTree = "<group>"; };
-		7CA5B565BE6C4106A76AB5B9 /* AnimateHomeMomentComponents.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnimateHomeMomentComponents.swift; sourceTree = "<group>"; };
 		7DAF371054D0BF5CA516180D /* AnimateHomePresentation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnimateHomePresentation.swift; sourceTree = "<group>"; };
 		7E158D4CF3730D111D45D57E /* AnimateWorkspaceCommandClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnimateWorkspaceCommandClient.swift; sourceTree = "<group>"; };
 		80F90A17D43E7641BD095D1C /* AnimateCreateViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnimateCreateViewModel.swift; sourceTree = "<group>"; };
@@ -374,6 +373,7 @@
 		CF8AF85459BB2D640533641A /* AnimateInProgressWorkspaceDetail.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnimateInProgressWorkspaceDetail.swift; sourceTree = "<group>"; };
 		CFB20A37D1BEF18B8BBCA4E1 /* AnimateWorkspaceLookups.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnimateWorkspaceLookups.swift; sourceTree = "<group>"; };
 		D0A7945DE4B5F39A7E7EB1D9 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
+		D1159F09E9BF277980DF375B /* AnimateHomeVideoComponents.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnimateHomeVideoComponents.swift; sourceTree = "<group>"; };
 		D379BF171DC081DAB5DDE7CE /* AnimateInProgressWorkspaceHeaderPresentation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnimateInProgressWorkspaceHeaderPresentation.swift; sourceTree = "<group>"; };
 		D60C93D7035060252F494DA5 /* AnimateMediaModels.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnimateMediaModels.swift; sourceTree = "<group>"; };
 		D84D1517710BD0049B8D62F8 /* AnimateCreateViewModel+AvailabilityMessages.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "AnimateCreateViewModel+AvailabilityMessages.swift"; sourceTree = "<group>"; };
@@ -703,10 +703,10 @@
 			children = (
 				5A1B7760632D1E8B138E464B /* AnimateHomeActionModels.swift */,
 				AD939C3CCB513101EE73F2E0 /* AnimateHomeCreditComponents.swift */,
-				7CA5B565BE6C4106A76AB5B9 /* AnimateHomeMomentComponents.swift */,
 				7DAF371054D0BF5CA516180D /* AnimateHomePresentation.swift */,
 				303DF0FD4567E63A234058C7 /* AnimateHomeScreen.swift */,
 				46A8E1CD7E8934A0A2A040E3 /* AnimateHomeSections.swift */,
+				D1159F09E9BF277980DF375B /* AnimateHomeVideoComponents.swift */,
 				EEA5018E56504E06D85B6839 /* AnimateHomeViewModel.swift */,
 			);
 			path = Home;
@@ -1201,10 +1201,10 @@
 				9A7FB3CA32C47A8168E61D68 /* AnimateGalleryViewModel.swift in Sources */,
 				FC87EDBB1E533671D2EAB20E /* AnimateHomeActionModels.swift in Sources */,
 				CB82A99F460886B027BAA1E6 /* AnimateHomeCreditComponents.swift in Sources */,
-				070343BCE7AA2D91AB1340F5 /* AnimateHomeMomentComponents.swift in Sources */,
 				D65766E482900D72378CCBA0 /* AnimateHomePresentation.swift in Sources */,
 				9FD4B674035E041E0152DEFB /* AnimateHomeScreen.swift in Sources */,
 				6D279F04925C53142ED4C1DC /* AnimateHomeSections.swift in Sources */,
+				9D5D87DC9E32E0253AEF4E11 /* AnimateHomeVideoComponents.swift in Sources */,
 				8500C0B415992FAD26E84769 /* AnimateHomeViewModel.swift in Sources */,
 				8715FFF02FF18971D6CF857B /* AnimateImageGenerationAccountingClient.swift in Sources */,
 				0232E00E6A06CCA160367546 /* AnimateInProgressArtifactPresentation.swift in Sources */,

@@ -29,7 +29,7 @@ final class AnimateVideoDeletionWorkflow: ObservableObject {
         $errorMessage.eraseToAnyPublisher()
     }
 
-    func deleteVideo(_ moment: AnimateVideo) async -> Bool {
+    func deleteVideo(_ video: AnimateVideo) async -> Bool {
         guard !isDeletingVideo else { return false }
         guard let ownerUserId = currentUserProvider.currentUserId else {
             errorMessage = "Sign in before deleting a moment."
@@ -47,7 +47,7 @@ final class AnimateVideoDeletionWorkflow: ObservableObject {
         let generation = deletionGeneration
 
         do {
-            try await videoDeleter.deleteVideo(bearerToken: bearerToken, momentId: moment.id)
+            try await videoDeleter.deleteVideo(bearerToken: bearerToken, momentId: video.id)
             guard deletionGeneration == generation else { return false }
             isDeletingVideo = false
             return true

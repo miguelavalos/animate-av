@@ -1,7 +1,7 @@
 import Foundation
 
 enum AnimateContinuationFocus: Hashable {
-    case moment
+    case video
     case media
     case story
     case finalRender
@@ -16,11 +16,11 @@ struct AnimateNextAction: Equatable {
 }
 
 struct AnimateContinuationRequest: Equatable {
-    let moment: AnimateVideo
+    let video: AnimateVideo
     let focus: AnimateContinuationFocus
 
-    init(moment: AnimateVideo, focus: AnimateContinuationFocus = .moment) {
-        self.moment = moment
+    init(video: AnimateVideo, focus: AnimateContinuationFocus = .video) {
+        self.video = video
         self.focus = focus
     }
 }

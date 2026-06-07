@@ -37,11 +37,11 @@ final class AnimateStatusRulesTests: XCTestCase {
 
         let summary = AnimateInProgressSummary.make(from: [oldest, newest, middle])
 
-        XCTAssertEqual(summary.momentCount, 3)
+        XCTAssertEqual(summary.videoCount, 3)
         XCTAssertEqual(summary.inProgressCount, 1)
         XCTAssertEqual(summary.finishedCount, 2)
-        XCTAssertEqual(summary.latestMoment?.id, "newest")
-        XCTAssertTrue(summary.hasMoments)
+        XCTAssertEqual(summary.latestVideo?.id, "newest")
+        XCTAssertTrue(summary.hasVideos)
     }
 
     func testListSummarySeparatesAnimateVideoAndImageJobs() {
@@ -51,9 +51,9 @@ final class AnimateStatusRulesTests: XCTestCase {
 
         let summary = AnimateInProgressSummary.make(from: [video, image, completedImage])
 
-        XCTAssertEqual(summary.videoSummary.moments.map(\.id), ["video"])
+        XCTAssertEqual(summary.videoSummary.videos.map(\.id), ["video"])
         XCTAssertEqual(summary.videoSummary.inProgressCount, 1)
-        XCTAssertEqual(summary.imageSummary.moments.map(\.id), ["image", "completed-image"])
+        XCTAssertEqual(summary.imageSummary.videos.map(\.id), ["image", "completed-image"])
         XCTAssertEqual(summary.imageSummary.inProgressCount, 1)
         XCTAssertEqual(summary.imageSummary.finishedCount, 1)
     }
@@ -65,22 +65,22 @@ final class AnimateStatusRulesTests: XCTestCase {
 
         let summary = AnimateInProgressSummary.make(from: [olderInProgress, newestFinished, latestInProgress])
 
-        XCTAssertEqual(summary.latestMoment?.id, "newest-finished")
+        XCTAssertEqual(summary.latestVideo?.id, "newest-finished")
         XCTAssertEqual(summary.latestAnimateVideo?.id, "latest-plan")
-        XCTAssertEqual(summary.latestInProgressContinuationRequest?.moment.id, "latest-plan")
-        XCTAssertEqual(summary.latestInProgressContinuationRequest?.focus, .moment)
+        XCTAssertEqual(summary.latestInProgressContinuationRequest?.video.id, "latest-plan")
+        XCTAssertEqual(summary.latestInProgressContinuationRequest?.focus, .video)
     }
 
     func testEmptyListSummaryHasNoVideos() {
         let summary = AnimateInProgressSummary.make(from: [])
 
-        XCTAssertEqual(summary.momentCount, 0)
+        XCTAssertEqual(summary.videoCount, 0)
         XCTAssertEqual(summary.inProgressCount, 0)
         XCTAssertEqual(summary.finishedCount, 0)
-        XCTAssertNil(summary.latestMoment)
+        XCTAssertNil(summary.latestVideo)
         XCTAssertNil(summary.latestAnimateVideo)
         XCTAssertNil(summary.latestInProgressContinuationRequest)
-        XCTAssertFalse(summary.hasMoments)
+        XCTAssertFalse(summary.hasVideos)
     }
 
     func testDisplayHelpersFormatBackendValuesForUI() {
@@ -182,7 +182,7 @@ final class AnimateStatusRulesTests: XCTestCase {
         artifacts: [AnimateArtifact] = []
     ) -> AnimateWorkspace {
         AnimateWorkspace(
-            moment: makeMoment(id: "moment-1", status: "in_progress", updatedAt: 10),
+            video: makeMoment(id: "moment-1", status: "in_progress", updatedAt: 10),
             mediaAssets: mediaAssets,
             storyScenes: storyScenes,
             renderJobs: renderJobs,

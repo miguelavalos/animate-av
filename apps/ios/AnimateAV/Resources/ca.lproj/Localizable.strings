@@ -122,7 +122,7 @@
 "create.music.calm.title" = "Calmat";
 "create.music.cinematic.subtitle" = "Ritme dramàtic i atmosfera.";
 "create.music.cinematic.title" = "Cinemàtic";
-"create.music.fun.subtitle" = "Energia juganera per moments compartits.";
+"create.music.fun.subtitle" = "Energia juganera per videos compartits.";
 "create.music.fun.title" = "Divertit";
 "create.music.upbeat.subtitle" = "Ràpid, lluminós i viu.";
 "create.music.upbeat.title" = "Animat";
@@ -140,7 +140,7 @@
 "create.selector.look.title" = "Triar look";
 "create.selector.voice.calm.detail" = "Suau, més lent i discret.";
 "create.selector.voice.cinematic.detail" = "Ritme més dramàtic i amb atmosfera.";
-"create.selector.voice.fun.detail" = "Energia juganera per moments compartits.";
+"create.selector.voice.fun.detail" = "Energia juganera per videos compartits.";
 "create.selector.voice.intro.detail" = "Tria com s’ha de sentir el missatge parlat i l’audio.";
 "create.selector.voice.intro.title" = "La veu guia el vídeo";
 "create.selector.voice.title" = "Triar veu";
@@ -331,7 +331,7 @@
 "home.avi.createVideo.title" = "Fer un vídeo cartoon";
 "home.avi.creating.detail" = "L’Avi està dibuixant el moviment, la veu i l’estil.";
 "home.avi.creating.title" = "L’Avi està animant";
-"home.avi.currentMoment.title" = "Vídeo actual";
+"home.avi.currentVideo.title" = "Vídeo actual";
 "home.avi.preparing.detail" = "L’Avi està convertint la foto en un pla cartoon.";
 "home.avi.preparing.title" = "L’Avi escalfa motors";
 "home.avi.selected.detail" = "%d %@ seleccionats. Ara toca triar l’estil cartoon.";
@@ -412,9 +412,9 @@
 "tab.home" = "Inici";
 "tab.inProgress" = "En curs";
 "inProgress.loadingDetail" = "Carregant el detall del vídeo...";
-"home.latestMoment.eyebrow" = "Últim cartoon";
-"home.moments.emptyRow.title" = "Encara no hi ha cartoons";
-"home.moments.emptyRow.detail" = "Comença amb una foto i l’Avi crearà la primera sorpresa animada.";
+"home.latestVideo.eyebrow" = "Últim cartoon";
+"home.videos.emptyRow.title" = "Encara no hi ha cartoons";
+"home.videos.emptyRow.detail" = "Comença amb una foto i l’Avi crearà la primera sorpresa animada.";
 "credits.available.count" = "%d disponibles";
 "credits.videoCredits.title" = "Crèdits de vídeo";
 "paywall.balance.noCredits" = "Cap crèdit";
@@ -498,8 +498,8 @@
 "create.continuation.final.title" = "Continuar amb el vídeo";
 "create.continuation.media.message" = "Afegeix una foto i prepara el vídeo.";
 "create.continuation.media.title" = "Continuar amb imatge";
-"create.continuation.moment.message" = "Obre aquest vídeo i continua el següent pas pendent.";
-"create.continuation.moment.title" = "Continuar vídeo";
+"create.continuation.video.message" = "Obre aquest vídeo i continua el següent pas pendent.";
+"create.continuation.video.title" = "Continuar vídeo";
 "create.continuation.story.message" = "Prepara el vídeo des de la foto seleccionada.";
 "create.continuation.story.title" = "Continuar amb vídeo";
 "create.credits.detail" = "Calen crèdits abans de crear el vídeo final.";
@@ -771,10 +771,10 @@
 "purchase.error.notConfigured" = "Les compres no estan configurades per a aquesta build.";
 "purchase.error.offeringUnavailable" = "Les compres no estan disponibles ara mateix. Torna-ho a provar més tard.";
 "purchase.error.productUnavailable" = "Aquest producte no està disponible ara mateix. Torna-ho a provar més tard.";
-"workflow.moment.signInStart" = "Inicia sessió abans de començar un vídeo.";
-"workflow.moment.signInContinue" = "Inicia sessió abans de continuar un vídeo.";
-"workflow.moment.signInDiscard" = "Inicia sessió abans de descartar un vídeo.";
-"workflow.moment.setupNotReady" = "L’esborrany encara no està llest per crear-se.";
+"workflow.video.signInStart" = "Inicia sessió abans de començar un vídeo.";
+"workflow.video.signInContinue" = "Inicia sessió abans de continuar un vídeo.";
+"workflow.video.signInDiscard" = "Inicia sessió abans de descartar un vídeo.";
+"workflow.video.setupNotReady" = "L’esborrany encara no està llest per crear-se.";
 "workflow.media.templateFull" = "Avi té la foto per a aquest vídeo.";
 "workflow.media.noNewMedia" = "No s’ha afegit cap imatge nova.";
 "workflow.media.noAlbumPhotos" = "No s’han trobat fotos en aquest àlbum.";
@@ -911,7 +911,7 @@
 "create.workflowContent.theme" = "Tema";
 "create.workflowContent.pacing" = "Ritme";
 "create.workflowContent.tone" = "Veu";
-"create.workflowContent.moment" = "Vídeo";
+"create.workflowContent.video" = "Vídeo";
 "create.workflowContent.readyCheck" = "Comprovació final";
 "create.workflowContent.mediaSelected" = "Imatge seleccionada";
 "create.workflowContent.storyPrepared" = "Direcció preparada";

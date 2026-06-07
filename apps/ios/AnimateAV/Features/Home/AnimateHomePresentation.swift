@@ -4,7 +4,7 @@ struct AnimateHomePresentation {
     let accountTitle: String
     let accountDetail: String
     let aviBriefDetail: String
-    let momentStatusDetail: String
+    let videoStatusDetail: String
     let createAction: AnimateHomeAction
     let openInProgressAction: AnimateHomeAction
     let aviGuidanceAction: AnimateHomeAction
@@ -30,7 +30,7 @@ struct AnimateHomePresentation {
             accountTitle: isSignedIn ? L10n.string("home.account.connected.title") : L10n.string("home.account.required.title"),
             accountDetail: accountDetail(isSignedIn: isSignedIn, displayName: displayName),
             aviBriefDetail: aviBriefDetail(isSignedIn: isSignedIn, videosSummary: videosSummary),
-            momentStatusDetail: momentStatusDetail(videosSummary: videosSummary),
+            videoStatusDetail: videoStatusDetail(videosSummary: videosSummary),
             createAction: AnimateHomeAction(
                 title: L10n.string("home.action.create.title"),
                 detail: L10n.string("home.action.create.detail"),
@@ -40,7 +40,7 @@ struct AnimateHomePresentation {
             ),
             openInProgressAction: AnimateHomeAction(
                 title: L10n.string("home.action.openInProgress.title"),
-                detail: videosSummary.hasMoments
+                detail: videosSummary.hasVideos
                     ? L10n.string("home.action.openInProgress.detail.hasMoments")
                     : L10n.string("home.action.openInProgress.detail.empty"),
                 systemImage: "clock",
@@ -64,9 +64,9 @@ struct AnimateHomePresentation {
         return L10n.string("home.account.signInRequired")
     }
 
-    private static func momentStatusDetail(videosSummary: AnimateInProgressSummary) -> String {
-        if videosSummary.hasMoments {
-            return L10n.string("home.momentStatus.synced", videosSummary.momentCount, momentLabel(videosSummary.momentCount))
+    private static func videoStatusDetail(videosSummary: AnimateInProgressSummary) -> String {
+        if videosSummary.hasVideos {
+            return L10n.string("home.momentStatus.synced", videosSummary.videoCount, videoLabel(videosSummary.videoCount))
         }
 
         return L10n.string("home.momentStatus.empty")
@@ -77,18 +77,18 @@ struct AnimateHomePresentation {
             return L10n.string("home.aviBrief.signIn")
         }
 
-        if let latestMoment = videosSummary.latestAnimateVideo {
-            return L10n.string("home.aviBrief.continueVideo", latestMoment.title)
+        if let latestVideo = videosSummary.latestAnimateVideo {
+            return L10n.string("home.aviBrief.continueVideo", latestVideo.title)
         }
 
-        if videosSummary.hasMoments {
+        if videosSummary.hasVideos {
             return L10n.string("home.aviBrief.openInProgress")
         }
 
         return L10n.string("home.aviBrief.firstMemory")
     }
 
-    private static func momentLabel(_ count: Int) -> String {
+    private static func videoLabel(_ count: Int) -> String {
         count == 1 ? L10n.string("moment.noun.one") : L10n.string("moment.noun.other")
     }
 }

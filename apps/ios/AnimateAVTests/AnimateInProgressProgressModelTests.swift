@@ -45,7 +45,7 @@ final class AnimateInProgressProgressModelTests: XCTestCase {
         artifacts: [AnimateArtifact] = []
     ) -> AnimateWorkspace {
         AnimateWorkspace(
-            moment: makeMoment(id: "moment-1", status: "in_progress", updatedAt: 10),
+            video: makeMoment(id: "moment-1", status: "in_progress", updatedAt: 10),
             mediaAssets: mediaAssets,
             storyScenes: storyScenes,
             renderJobs: renderJobs,

@@ -8,31 +8,31 @@ enum AnimateDateFormatting {
 }
 
 enum AnimateVideoFormatting {
-    static func updatedAt(_ moment: AnimateVideo) -> String {
-        "Updated \(AnimateDateFormatting.formattedDate(milliseconds: moment.updatedAt))"
+    static func updatedAt(_ video: AnimateVideo) -> String {
+        "Updated \(AnimateDateFormatting.formattedDate(milliseconds: video.updatedAt))"
     }
 
     static func galleryDate(_ milliseconds: Double) -> String {
         "Saved \(AnimateDateFormatting.formattedDate(milliseconds: milliseconds))"
     }
 
-    static func storyUsage(_ moment: AnimateVideo) -> String {
+    static func storyUsage(_ video: AnimateVideo) -> String {
         L10n.string("moment.kind.story")
     }
 
-    static func statusTitle(_ moment: AnimateVideo) -> String {
-        AnimateStatusRules.displayTitle(for: moment.status)
+    static func statusTitle(_ video: AnimateVideo) -> String {
+        AnimateStatusRules.displayTitle(for: video.status)
     }
 
-    static func compactDetail(for moment: AnimateVideo, includeTitle: Bool = false) -> String {
+    static func compactDetail(for video: AnimateVideo, includeTitle: Bool = false) -> String {
         var parts: [String] = []
 
         if includeTitle {
-            parts.append(moment.title)
+            parts.append(video.title)
         }
 
-        parts.append(statusTitle(moment))
-        parts.append(updatedAt(moment))
+        parts.append(statusTitle(video))
+        parts.append(updatedAt(video))
 
         return parts.joined(separator: " · ")
     }

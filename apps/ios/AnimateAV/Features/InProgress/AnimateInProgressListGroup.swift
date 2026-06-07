@@ -15,7 +15,7 @@ struct AnimateInProgressListGroup: View {
 
             ForEach(group.rows) { row in
                 AnimateInProgressListRow(row: row) {
-                    selectMoment(row.moment)
+                    selectMoment(row.video)
                 }
             }
         }

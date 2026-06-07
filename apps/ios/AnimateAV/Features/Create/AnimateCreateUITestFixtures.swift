@@ -15,7 +15,7 @@ enum AnimateCreateUITestFixtures {
         }
     }
 
-    static let momentId = "moments-ui-moment-1"
+    static let momentId = "videos-ui-moment-1"
 
     static var mode: Mode? {
         Mode.current
@@ -25,7 +25,7 @@ enum AnimateCreateUITestFixtures {
         mode != nil
     }
 
-    static var moment: AnimateVideo {
+    static var video: AnimateVideo {
         moment(for: .full)
     }
 
@@ -52,7 +52,7 @@ enum AnimateCreateUITestFixtures {
 
     static func workspace(for mode: Mode) -> AnimateWorkspace {
         AnimateWorkspace(
-            moment: moment(for: mode),
+            video: moment(for: mode),
             mediaAssets: mediaAssets,
             storyScenes: storyScenes,
             renderJobs: renderJobs(for: mode),
@@ -112,15 +112,15 @@ enum AnimateCreateUITestFixtures {
             return []
         case .finalQueued:
             return [
-                renderJob(id: "final-job-1", kind: "final", status: "queued", model: "mock/moments-final-v1")
+                renderJob(id: "final-job-1", kind: "final", status: "queued", model: "mock/videos-final-v1")
             ]
         case .finalRunning:
             return [
-                renderJob(id: "final-job-1", kind: "final", status: "running", model: "mock/moments-final-v1")
+                renderJob(id: "final-job-1", kind: "final", status: "running", model: "mock/videos-final-v1")
             ]
         case .full:
             return [
-                renderJob(id: "final-job-1", kind: "final", status: "completed", model: "mock/moments-final-v1")
+                renderJob(id: "final-job-1", kind: "final", status: "completed", model: "mock/videos-final-v1")
             ]
         }
     }

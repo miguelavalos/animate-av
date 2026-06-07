@@ -3,7 +3,7 @@ import Foundation
 
 @MainActor
 final class AnimateInProgressObserver: ObservableObject {
-    @Published private(set) var moments: [AnimateVideo] = []
+    @Published private(set) var videos: [AnimateVideo] = []
     @Published private(set) var errorMessage: String?
 
     private let videosObserver: any AnimateInProgressObserving
@@ -16,7 +16,7 @@ final class AnimateInProgressObserver: ObservableObject {
     }
 
     var momentsPublisher: AnyPublisher<[AnimateVideo], Never> {
-        $moments.eraseToAnyPublisher()
+        $videos.eraseToAnyPublisher()
     }
 
     var momentsErrorPublisher: AnyPublisher<String?, Never> {
@@ -27,7 +27,7 @@ final class AnimateInProgressObserver: ObservableObject {
         observationGeneration += 1
         let generation = observationGeneration
         momentsTask?.cancel()
-        moments = []
+        videos = []
         errorMessage = nil
 
         guard let ownerUserId else { return }
@@ -38,10 +38,10 @@ final class AnimateInProgressObserver: ObservableObject {
 
             momentsTask = Task { [weak self] in
                 do {
-                    for try await moments in updates {
+                    for try await videos in updates {
                         await MainActor.run {
                             guard self?.observationGeneration == generation else { return }
-                            self?.moments = moments
+                            self?.videos = videos
                             self?.errorMessage = nil
                         }
                     }
@@ -49,7 +49,7 @@ final class AnimateInProgressObserver: ObservableObject {
                     await MainActor.run {
                         guard self?.observationGeneration == generation else { return }
                         AnimateSyncDiagnostics.captureObserverError(error, observer: self?.diagnosticsObserverName ?? "in_progress")
-                        self?.moments = []
+                        self?.videos = []
                         self?.errorMessage = error.localizedDescription
                     }
                 }
@@ -57,7 +57,7 @@ final class AnimateInProgressObserver: ObservableObject {
         } catch {
             guard observationGeneration == generation else { return }
             AnimateSyncDiagnostics.captureObserverError(error, observer: diagnosticsObserverName)
-            moments = []
+            videos = []
             errorMessage = error.localizedDescription
         }
     }
@@ -65,7 +65,7 @@ final class AnimateInProgressObserver: ObservableObject {
     func clearAnimateVideos() {
         observationGeneration += 1
         momentsTask?.cancel()
-        moments = []
+        videos = []
         errorMessage = nil
     }
 

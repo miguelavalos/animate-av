@@ -8,7 +8,7 @@ struct AnimateInProgressWorkspaceDetailPresentation: Equatable {
     init(workspace: AnimateWorkspace) {
         nextAction = AnimateStatusRules.nextAction(for: workspace)
         continuationRequest = AnimateContinuationRequest(
-            moment: workspace.moment,
+            video: workspace.video,
             focus: nextAction.continuationFocus
         )
     }
