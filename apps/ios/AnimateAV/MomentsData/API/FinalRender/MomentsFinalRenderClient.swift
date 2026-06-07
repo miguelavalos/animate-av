@@ -61,7 +61,9 @@ struct MomentsFinalRenderClient {
         creationStyle: MomentCreationStyleID?,
         form: MomentSetupForm,
         removesWatermark: Bool,
-        selectedSourceLocalIdentifiers: [String]
+        selectedSourceLocalIdentifiers: [String],
+        sourceImageUploadId: String? = nil,
+        generatedImageArtifactId: String? = nil
     ) async throws -> MomentsRenderPlanResponse {
         guard let baseURL = URL(string: baseURLString.trimmingCharacters(in: .whitespacesAndNewlines)) else {
             throw MomentsFinalRenderError.apiNotConfigured
@@ -83,6 +85,8 @@ struct MomentsFinalRenderClient {
             duration: form.duration.rawValue,
             mediaUse: form.mediaUse.rawValue,
             selectedSourceLocalIdentifiers: Self.nonBlankIdentifiers(selectedSourceLocalIdentifiers),
+            sourceImageUploadId: Self.nonBlankOptional(sourceImageUploadId),
+            generatedImageArtifactId: Self.nonBlankOptional(generatedImageArtifactId),
             occasion: Self.nonBlankOptional(form.occasion),
             details: Self.nonBlankOptional(form.details),
             message: messageFields.message,
@@ -120,6 +124,8 @@ struct MomentsFinalRenderClient {
         form: MomentSetupForm,
         removesWatermark: Bool,
         selectedSourceLocalIdentifiers: [String],
+        sourceImageUploadId: String? = nil,
+        generatedImageArtifactId: String? = nil,
         planId: String,
         renderOptionId: String?
     ) async throws -> MomentsConfirmFinalRenderResponse {
@@ -144,6 +150,8 @@ struct MomentsFinalRenderClient {
             duration: form.duration.rawValue,
             mediaUse: form.mediaUse.rawValue,
             selectedSourceLocalIdentifiers: Self.nonBlankIdentifiers(selectedSourceLocalIdentifiers),
+            sourceImageUploadId: Self.nonBlankOptional(sourceImageUploadId),
+            generatedImageArtifactId: Self.nonBlankOptional(generatedImageArtifactId),
             occasion: Self.nonBlankOptional(form.occasion),
             details: Self.nonBlankOptional(form.details),
             message: messageFields.message,

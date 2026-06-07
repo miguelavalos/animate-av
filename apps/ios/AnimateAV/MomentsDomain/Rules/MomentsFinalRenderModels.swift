@@ -33,6 +33,8 @@ struct MomentsRenderPlanRequest: Encodable {
     let duration: String
     let mediaUse: String
     let selectedSourceLocalIdentifiers: [String]?
+    let sourceImageUploadId: String?
+    let generatedImageArtifactId: String?
     let occasion: String?
     let details: String?
     let message: String?
@@ -52,6 +54,8 @@ struct MomentsConfirmFinalRenderRequest: Encodable {
     let duration: String
     let mediaUse: String
     let selectedSourceLocalIdentifiers: [String]?
+    let sourceImageUploadId: String?
+    let generatedImageArtifactId: String?
     let occasion: String?
     let details: String?
     let message: String?

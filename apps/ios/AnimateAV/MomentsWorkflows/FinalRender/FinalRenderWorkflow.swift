@@ -20,10 +20,12 @@ final class FinalRenderWorkflow: WorkspaceObservingWorkflow {
     private let creditBalanceProvider: any MomentsCreditBalanceProviding
     private let finalRenderClient: MomentsFinalRenderClient
     private let videoQuoteClient: MomentsVideoQuoteClient
+    private let imageGenerationAccountingClient: MomentsImageGenerationAccountingClient?
     private let galleryStore: any MomentsGalleryStoring
     private let logger = Logger(subsystem: "com.avalsys.animateav", category: "final-render")
     private var downloadingArtifactIds = Set<String>()
     private var lastCreditRefreshKey: String?
+    private var preparedVideoSourceUpload: PreparedVideoSourceUpload?
 
     init(
         currentUserProvider: any MomentsCurrentUserProviding,
@@ -32,6 +34,7 @@ final class FinalRenderWorkflow: WorkspaceObservingWorkflow {
         workspaceObserver: any MomentsActiveWorkspaceObserving,
         finalRenderClient: MomentsFinalRenderClient,
         videoQuoteClient: MomentsVideoQuoteClient? = nil,
+        imageGenerationAccountingClient: MomentsImageGenerationAccountingClient? = nil,
         galleryStore: any MomentsGalleryStoring = MomentsGalleryStore()
     ) {
         self.currentUserProvider = currentUserProvider
@@ -39,6 +42,7 @@ final class FinalRenderWorkflow: WorkspaceObservingWorkflow {
         self.creditBalanceProvider = creditBalanceProvider
         self.finalRenderClient = finalRenderClient
         self.videoQuoteClient = videoQuoteClient ?? MomentsVideoQuoteClient(baseURLString: finalRenderClient.baseURLString)
+        self.imageGenerationAccountingClient = imageGenerationAccountingClient
         self.galleryStore = galleryStore
         super.init(workspaceObserver: workspaceObserver)
     }
@@ -141,6 +145,10 @@ final class FinalRenderWorkflow: WorkspaceObservingWorkflow {
         do {
             statusMessage = L10n.string("workflow.final.checkingPlan")
             logger.info("Preparing final render plan momentId=\(momentId, privacy: .public)")
+            let sourceImageUploadId = try await prepareVideoSourceUploadIfNeeded(
+                selectedMedia: selectedMedia,
+                bearerToken: bearerToken
+            )
             let plan = try await prepareRenderPlanWithUploadVisibilityRetry(
                 momentId: momentId,
                 bearerToken: bearerToken,
@@ -148,7 +156,8 @@ final class FinalRenderWorkflow: WorkspaceObservingWorkflow {
                 creationStyle: creationStyle,
                 form: form,
                 removesWatermark: removesWatermark,
-                selectedSourceLocalIdentifiers: selectedSourceLocalIdentifiersForFinalRender(from: selectedMedia)
+                selectedSourceLocalIdentifiers: selectedSourceLocalIdentifiersForFinalRender(from: selectedMedia),
+                sourceImageUploadId: sourceImageUploadId
             )
             guard isCurrentWorkflowGeneration(generation) else { return }
             renderPlan = plan
@@ -246,6 +255,10 @@ final class FinalRenderWorkflow: WorkspaceObservingWorkflow {
 
         do {
             let selectedSourceLocalIdentifiers = selectedSourceLocalIdentifiersForFinalRender(from: selectedMedia)
+            let sourceImageUploadId = try await prepareVideoSourceUploadIfNeeded(
+                selectedMedia: selectedMedia,
+                bearerToken: bearerToken
+            )
             logger.info("Confirming final render momentId=\(momentId, privacy: .public) planId=\(renderPlan.planId, privacy: .public) cost=\(renderPlan.plan.totalCreditCost, privacy: .public) selectedMedia=\(selectedSourceLocalIdentifiers.count, privacy: .public)")
             let confirmed = try await finalRenderClient.confirmFinalRender(
                 momentId: momentId,
@@ -255,6 +268,7 @@ final class FinalRenderWorkflow: WorkspaceObservingWorkflow {
                 form: form,
                 removesWatermark: removesWatermark,
                 selectedSourceLocalIdentifiers: selectedSourceLocalIdentifiers,
+                sourceImageUploadId: sourceImageUploadId,
                 planId: renderPlan.planId,
                 renderOptionId: renderPlan.plan.renderOptionId
             )
@@ -345,7 +359,8 @@ final class FinalRenderWorkflow: WorkspaceObservingWorkflow {
         creationStyle: MomentCreationStyleID?,
         form: MomentSetupForm,
         removesWatermark: Bool,
-        selectedSourceLocalIdentifiers: [String]
+        selectedSourceLocalIdentifiers: [String],
+        sourceImageUploadId: String?
     ) async throws -> MomentsRenderPlanResponse {
         var attempt = 0
 
@@ -358,13 +373,56 @@ final class FinalRenderWorkflow: WorkspaceObservingWorkflow {
                     creationStyle: creationStyle,
                     form: form,
                     removesWatermark: removesWatermark,
-                    selectedSourceLocalIdentifiers: selectedSourceLocalIdentifiers
+                    selectedSourceLocalIdentifiers: selectedSourceLocalIdentifiers,
+                    sourceImageUploadId: sourceImageUploadId
                 )
             } catch let error as MomentsAPIError where error.isRetryableMediaVisibilityError && attempt < 2 {
                 attempt += 1
                 try await Task.sleep(nanoseconds: UInt64(attempt) * 750_000_000)
             }
         }
+    }
+
+    private func prepareVideoSourceUploadIfNeeded(
+        selectedMedia: [MomentsSelectedMedia],
+        bearerToken: String
+    ) async throws -> String? {
+        guard let client = imageGenerationAccountingClient,
+              client.isConfigured,
+              let media = selectedMedia
+                .filter(\.selected)
+                .sorted(by: { $0.sortOrder < $1.sortOrder })
+                .first,
+              !media.data.isEmpty
+        else {
+            return nil
+        }
+
+        let cacheKey = "\(media.sourceLocalIdentifier):\(media.sha256)"
+        if let preparedVideoSourceUpload,
+           preparedVideoSourceUpload.cacheKey == cacheKey {
+            return preparedVideoSourceUpload.sourceImageUploadId
+        }
+
+        let preparedUpload = try await client.prepareSourceImageUpload(
+            sourceLocalIdentifier: media.sourceLocalIdentifier,
+            originalFilename: media.originalFilename,
+            contentType: media.contentType,
+            byteSize: media.byteSize,
+            sha256: media.sha256,
+            width: nil,
+            height: nil,
+            bearerToken: bearerToken
+        )
+        let uploadedSource = try await client.uploadSourceImage(
+            data: media.data,
+            preparedUpload: preparedUpload
+        )
+        preparedVideoSourceUpload = PreparedVideoSourceUpload(
+            cacheKey: cacheKey,
+            sourceImageUploadId: uploadedSource.sourceImageUploadId
+        )
+        return uploadedSource.sourceImageUploadId
     }
 
     func selectedSourceLocalIdentifiersForFinalRender(from selectedMedia: [MomentsSelectedMedia]) -> [String] {
@@ -445,6 +503,7 @@ final class FinalRenderWorkflow: WorkspaceObservingWorkflow {
         guard !isGenerating else { return }
         renderPlan = nil
         videoQuote = nil
+        preparedVideoSourceUpload = nil
         statusMessage = nil
     }
 
@@ -463,6 +522,7 @@ final class FinalRenderWorkflow: WorkspaceObservingWorkflow {
         latestFinalJobMomentId = nil
         renderPlan = nil
         videoQuote = nil
+        preparedVideoSourceUpload = nil
         pendingGalleryVideo = nil
         canRetryFinalVideoDownload = false
         statusMessage = nil
@@ -617,6 +677,11 @@ final class FinalRenderWorkflow: WorkspaceObservingWorkflow {
         return trimmed
     }
 
+}
+
+private struct PreparedVideoSourceUpload {
+    let cacheKey: String
+    let sourceImageUploadId: String
 }
 
 private extension MomentsAPIError {

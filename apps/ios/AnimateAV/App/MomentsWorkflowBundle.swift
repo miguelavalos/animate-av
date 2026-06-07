@@ -57,7 +57,8 @@ struct MomentsWorkflowBundle {
             creditBalanceProvider: accountController,
             workspaceObserver: workspaceObserver,
             finalRenderClient: clients.finalRender,
-            videoQuoteClient: clients.videoQuote
+            videoQuoteClient: clients.videoQuote,
+            imageGenerationAccountingClient: clients.imageGenerationAccounting
         )
     }
 }

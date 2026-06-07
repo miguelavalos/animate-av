@@ -373,7 +373,9 @@ final class MomentsAPIClientTests: XCTestCase {
             creationStyle: nil,
             form: form,
             removesWatermark: false,
-            selectedSourceLocalIdentifiers: [" local-1 ", "", "local-2"]
+            selectedSourceLocalIdentifiers: [" local-1 ", "", "local-2"],
+            sourceImageUploadId: " source-upload-1 ",
+            generatedImageArtifactId: " "
         )
 
         XCTAssertEqual(MomentsURLProtocolMock.lastRequest?.url?.absoluteString, "\(accountAPIBaseURL)/v1/apps/animateav/renders/plan")
@@ -386,6 +388,8 @@ final class MomentsAPIClientTests: XCTestCase {
         XCTAssertNil(json["message"])
         XCTAssertNil(json["script"])
         XCTAssertEqual(json["selectedSourceLocalIdentifiers"] as? [String], ["local-1", "local-2"])
+        XCTAssertEqual(json["sourceImageUploadId"] as? String, "source-upload-1")
+        XCTAssertNil(json["generatedImageArtifactId"])
         XCTAssertNil(json["creditCost"])
     }
 
@@ -521,6 +525,8 @@ final class MomentsAPIClientTests: XCTestCase {
             form: MomentSetupForm(template: .birthdayMessage),
             removesWatermark: false,
             selectedSourceLocalIdentifiers: ["local-1", "local-2"],
+            sourceImageUploadId: "source-upload-1",
+            generatedImageArtifactId: nil,
             planId: "plan-1",
             renderOptionId: "standard_moment"
         )
@@ -531,6 +537,10 @@ final class MomentsAPIClientTests: XCTestCase {
         XCTAssertEqual(confirmation.reservation.id, "reservation-1")
         XCTAssertEqual(confirmation.workflow.renderJobId, "render-1")
         XCTAssertEqual(confirmation.renderPlan.plan.totalCreditCost, 2)
+        let body = try XCTUnwrap(MomentsURLProtocolMock.lastRequestBody)
+        let json = try XCTUnwrap(JSONSerialization.jsonObject(with: body) as? [String: Any])
+        XCTAssertEqual(json["sourceImageUploadId"] as? String, "source-upload-1")
+        XCTAssertNil(json["generatedImageArtifactId"])
     }
 
     func testVideoQuoteUsesBackendOwnedQuoteEndpoint() async throws {
