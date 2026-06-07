@@ -3,7 +3,7 @@ import Foundation
 
 @MainActor
 final class AnimateAviViewModel: ObservableObject {
-    @Published private(set) var momentsSummary = AnimateInProgressSummary()
+    @Published private(set) var videosSummary = AnimateInProgressSummary()
     @Published private(set) var isSignedIn = false
     @Published private(set) var creditBalance = AnimateCreditBalance.empty
     @Published private(set) var creditBalanceLoadState = AnimateCreditBalanceLoadState.signedOut
@@ -14,7 +14,7 @@ final class AnimateAviViewModel: ObservableObject {
     var presentation: AnimateAviPresentation {
         AnimateAviPresentation.make(
             isSignedIn: isSignedIn,
-            momentsSummary: momentsSummary,
+            videosSummary: videosSummary,
             creditBalance: creditBalance,
             creditBalanceLoadState: creditBalanceLoadState
         )
@@ -25,8 +25,8 @@ final class AnimateAviViewModel: ObservableObject {
 
         summaryProvider.inProgressSummaryPublisher
             .removeDuplicates()
-            .sink { [weak self] momentsSummary in
-                self?.momentsSummary = momentsSummary
+            .sink { [weak self] videosSummary in
+                self?.videosSummary = videosSummary
             }
             .store(in: &momentsCancellables)
     }

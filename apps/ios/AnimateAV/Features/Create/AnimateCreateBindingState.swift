@@ -7,7 +7,7 @@ struct AnimateCreateAccountState {
 }
 
 struct AnimateCreateVideoCreationState {
-    let isCreatingMoment: Bool
+    let isCreatingVideo: Bool
     let activeMomentId: String?
     let setupErrorMessage: String?
 }

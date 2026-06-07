@@ -327,8 +327,8 @@
 "home.action.openInProgress.detail.hasMoments" = "Termine les cartoons déjà lancés.";
 "home.action.openInProgress.title" = "Ouvrir En cours";
 "home.avi.addMedia.detail" = "Ajoute une photo et Avi lance la magie cartoon.";
-"home.avi.createMoment.detail" = "Choisis une photo pour en faire une mini scène animée.";
-"home.avi.createMoment.title" = "Faire une vidéo cartoon";
+"home.avi.createVideo.detail" = "Choisis une photo pour en faire une mini scène animée.";
+"home.avi.createVideo.title" = "Faire une vidéo cartoon";
 "home.avi.creating.detail" = "Avi dessine le mouvement, la voix et le style.";
 "home.avi.creating.title" = "Avi anime";
 "home.avi.currentMoment.title" = "Vidéo actuelle";
@@ -337,7 +337,7 @@
 "home.avi.selected.detail" = "%d %@ sélectionnés. Place au style cartoon.";
 "home.avi.signIn.detail" = "Connecte ton compte pour qu’Avi garde le fun animé.";
 "home.avi.signIn.title" = "Connecte-toi pour créer";
-"home.aviBrief.continueMoment" = "Continue %@ depuis la prochaine étape inachevée.";
+"home.aviBrief.continueVideo" = "Continue %@ depuis la prochaine étape inachevée.";
 "home.aviBrief.firstMemory" = "Commence avec une photo et laisse Avi la mettre en mouvement.";
 "home.aviBrief.openInProgress" = "Ouvre En cours et termine la prochaine étape cartoon.";
 "home.aviBrief.signIn" = "Connecte-toi pour qu’Avi garde ensemble vidéos, images et crédits.";
@@ -382,11 +382,11 @@
 "inProgress.credits.needed" = "Des crédits sont nécessaires avant la création de la vidéo finale.";
 "inProgress.credits.ready" = "Les crédits sont prêts pour créer la vidéo finale.";
 "inProgress.card.mediaCount" = "%d photo";
-"inProgress.deleteMoment.button" = "Supprimer la vidéo";
-"inProgress.deleteMoment.deleting" = "Suppression de la vidéo...";
-"inProgress.deleteMoment.message" = "Cela supprime %@, y compris les enregistrements de photo et les fichiers vidéo générés qui lui appartiennent.";
-"inProgress.deleteMoment.shortButton" = "Supprimer la vidéo";
-"inProgress.deleteMoment.title" = "Supprimer la vidéo ?";
+"inProgress.deleteVideo.button" = "Supprimer la vidéo";
+"inProgress.deleteVideo.deleting" = "Suppression de la vidéo...";
+"inProgress.deleteVideo.message" = "Cela supprime %@, y compris les enregistrements de photo et les fichiers vidéo générés qui lui appartiennent.";
+"inProgress.deleteVideo.shortButton" = "Supprimer la vidéo";
+"inProgress.deleteVideo.title" = "Supprimer la vidéo ?";
 "inProgress.empty.create.detail" = "Choisis une photo, puis reviens ici pendant qu’Avi travaille.";
 "inProgress.empty.create.title" = "Faire le premier cartoon";
 "inProgress.empty.inProgress.detail" = "Les cartoons qui demandent un geste apparaîtront ici.";

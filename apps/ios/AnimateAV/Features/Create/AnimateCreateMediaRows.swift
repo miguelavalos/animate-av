@@ -365,7 +365,7 @@ struct AnimateCreateSyncedMediaThumbnailImage: View {
         .frame(width: size, height: size)
         .clipped()
         .task(id: "\(media.id)-\(media.platformMediaAssetId ?? "")") {
-            image = MomentsLocalMediaThumbnailCache.thumbnail(
+            image = AnimateLocalMediaThumbnailCache.thumbnail(
                 mediaAssetId: media.id,
                 platformMediaAssetId: media.platformMediaAssetId
             )
@@ -375,7 +375,7 @@ struct AnimateCreateSyncedMediaThumbnailImage: View {
                 targetSize: CGSize(width: 220, height: 220)
             )
             if let image {
-                MomentsLocalMediaThumbnailCache.store(
+                AnimateLocalMediaThumbnailCache.store(
                     image,
                     mediaAssetId: media.id,
                     platformMediaAssetId: media.platformMediaAssetId

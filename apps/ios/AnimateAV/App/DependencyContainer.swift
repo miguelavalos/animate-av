@@ -3,7 +3,7 @@ import Foundation
 @MainActor
 final class MomentsDependencyContainer: ObservableObject {
     let accountController: AccountController
-    let momentsObserver: AnimateInProgressObserver
+    let videosObserver: AnimateInProgressObserver
     let galleryMomentsObserver: AnimateGalleryObserver
     let workspaceObserver: AnimateWorkspaceObserver
     let videoDeletionWorkflow: AnimateVideoDeletionWorkflow
@@ -26,22 +26,22 @@ final class MomentsDependencyContainer: ObservableObject {
     init(
         accountController: AccountController = AccountController(),
         momentsRepository: AnimateRepository = AnimateRepository(),
-        momentsObserver: AnimateInProgressObserver? = nil,
+        videosObserver: AnimateInProgressObserver? = nil,
         galleryMomentsObserver: AnimateGalleryObserver? = nil,
         workspaceObserver: AnimateWorkspaceObserver? = nil
     ) {
         let clients = MomentsWorkflowClients(baseURLString: AppConfig.animateAPIBaseURL)
         self.accountController = accountController
-        let resolvedMomentsObserver = momentsObserver ?? AnimateInProgressObserver(momentsRepository: momentsRepository)
+        let resolvedMomentsObserver = videosObserver ?? AnimateInProgressObserver(momentsRepository: momentsRepository)
         let resolvedAnimateGalleryObserver = galleryMomentsObserver ?? AnimateGalleryObserver(momentsRepository: momentsRepository)
         let resolvedWorkspaceObserver = workspaceObserver ?? AnimateWorkspaceObserver(momentsRepository: momentsRepository)
-        self.momentsObserver = resolvedMomentsObserver
+        self.videosObserver = resolvedMomentsObserver
         self.galleryMomentsObserver = resolvedAnimateGalleryObserver
         self.workspaceObserver = resolvedWorkspaceObserver
         let workflows = AnimateWorkflowBundle(
             accountController: accountController,
             momentsRepository: momentsRepository,
-            momentsObserver: resolvedMomentsObserver,
+            videosObserver: resolvedMomentsObserver,
             workspaceObserver: resolvedWorkspaceObserver,
             clients: clients
         )

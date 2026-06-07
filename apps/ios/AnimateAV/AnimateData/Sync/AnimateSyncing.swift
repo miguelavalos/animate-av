@@ -2,19 +2,19 @@ import Combine
 import Foundation
 
 @MainActor
-protocol MomentsCreating {
+protocol AnimateVideoCreating {
     var isConfigured: Bool { get }
-    func createMoment(bearerToken: String, form: AnimateVideoSetupForm) async throws -> String
-    func updateMomentSetup(bearerToken: String, momentId: String, form: AnimateVideoSetupForm) async throws
+    func createVideo(bearerToken: String, form: AnimateVideoSetupForm) async throws -> String
+    func updateVideoSetup(bearerToken: String, momentId: String, form: AnimateVideoSetupForm) async throws
 }
 
 @MainActor
-protocol MomentsDeleting {
-    func deleteMoment(bearerToken: String, momentId: String) async throws
+protocol AnimateVideoDeleting {
+    func deleteVideo(bearerToken: String, momentId: String) async throws
 }
 
 @MainActor
-protocol MomentsTitleUpdating {
+protocol AnimateVideoTitleUpdating {
     func updateMomentTitle(bearerToken: String, momentId: String, title: String) async throws
 }
 
@@ -68,4 +68,4 @@ extension AnimateRepository:
     AnimateGalleryObserving,
     AnimateWorkspaceObserving {}
 
-extension AnimateWorkspaceCommandClient: MomentsCreating, MomentsDeleting, MomentsTitleUpdating {}
+extension AnimateWorkspaceCommandClient: AnimateVideoCreating, AnimateVideoDeleting, AnimateVideoTitleUpdating {}

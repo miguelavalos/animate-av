@@ -5,7 +5,7 @@ struct AnimateAviCurrentFocusCard: View {
     let workflowFocusTitle: String
     let workflowFocusMessage: String
     let workflowFocusSystemImage: String
-    let momentsSummary: AnimateInProgressSummary
+    let videosSummary: AnimateInProgressSummary
     let creditBalance: AnimateCreditBalance
     let creditBalanceLoadState: AnimateCreditBalanceLoadState
 
@@ -23,12 +23,12 @@ struct AnimateAviCurrentFocusCard: View {
             HStack(spacing: 10) {
                 AVAviStatPill(
                     title: L10n.string("avi.stat.active"),
-                    value: "\(momentsSummary.inProgressCount)",
+                    value: "\(videosSummary.inProgressCount)",
                     systemImage: "clock"
                 )
                 AVAviStatPill(
                     title: L10n.string("library.finished.title"),
-                    value: "\(momentsSummary.finishedCount)",
+                    value: "\(videosSummary.finishedCount)",
                     systemImage: "checkmark.circle"
                 )
                 AVAviStatPill(

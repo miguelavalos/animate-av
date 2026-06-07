@@ -4,7 +4,7 @@ import XCTest
 final class AnimateInProgressListPresentationTests: XCTestCase {
     func testSummaryPillsUseVideoSummaryCounts() {
         let presentation = AnimateInProgressListPresentation.make(
-            momentsSummary: AnimateInProgressSummary.make(from: [
+            videosSummary: AnimateInProgressSummary.make(from: [
                 makeMoment(id: "active", status: "story_ready", updatedAt: 20),
                 makeMoment(id: "done", status: "gallery_ready", updatedAt: 10)
             ]),
@@ -18,7 +18,7 @@ final class AnimateInProgressListPresentationTests: XCTestCase {
 
     func testGroupsOmitEmptySectionsAndPreserveStatusRulesOrder() {
         let presentation = AnimateInProgressListPresentation.make(
-            momentsSummary: AnimateInProgressSummary.make(from: [
+            videosSummary: AnimateInProgressSummary.make(from: [
                 makeMoment(id: "older-active", status: "in_progress", updatedAt: 10),
                 makeMoment(id: "newer-active", status: "story_ready", updatedAt: 30),
                 makeMoment(id: "done", status: "gallery_ready", updatedAt: 20)

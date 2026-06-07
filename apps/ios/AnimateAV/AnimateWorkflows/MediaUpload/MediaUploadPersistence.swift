@@ -66,7 +66,7 @@ enum MediaUploadPersistence {
         let savedMediaAssetIds = uploadedMedia.map(\.uploadCompletion.mediaAssetId)
 
         let savedMedia = zip(uploadedMedia, savedMediaAssetIds).map { uploaded, savedMediaAssetId in
-            MomentsLocalMediaThumbnailCache.store(uploaded.media, mediaAssetId: savedMediaAssetId)
+            AnimateLocalMediaThumbnailCache.store(uploaded.media, mediaAssetId: savedMediaAssetId)
             return AnimateStoryMedia(
                 mediaAssetId: savedMediaAssetId,
                 mediaKind: uploaded.media.kind,
@@ -138,7 +138,7 @@ enum MediaUploadPersistence {
     }
 }
 
-enum MomentsLocalMediaThumbnailCache {
+enum AnimateLocalMediaThumbnailCache {
     private static let thumbnailSize = CGSize(width: 320, height: 320)
 
     static func store(_ media: AnimateSelectedMedia, mediaAssetId: String) {
@@ -205,7 +205,7 @@ enum MomentsLocalMediaThumbnailCache {
 
     private static var cacheDirectory: URL {
         FileManager.default.urls(for: .cachesDirectory, in: .userDomainMask)[0]
-            .appendingPathComponent("MomentsLocalMediaThumbnails", isDirectory: true)
+            .appendingPathComponent("AnimateLocalMediaThumbnails", isDirectory: true)
     }
 
     private static func cacheKey(for key: String) -> String {

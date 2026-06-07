@@ -5,37 +5,37 @@ struct AnimateInProgressListPresentation: Equatable {
     let groups: [AnimateInProgressListGroupPresentation]
 
     static func make(
-        momentsSummary: AnimateInProgressSummary,
+        videosSummary: AnimateInProgressSummary,
         selectedMomentId: String?
     ) -> AnimateInProgressListPresentation {
         AnimateInProgressListPresentation(
             summaryPills: [
                 AnimateInProgressSummaryPresentation(
                     title: L10n.string("inProgress.summary.total"),
-                    value: momentsSummary.momentCount,
+                    value: videosSummary.momentCount,
                     systemImage: "rectangle.stack"
                 ),
                 AnimateInProgressSummaryPresentation(
                     title: L10n.string("inProgress.summary.active"),
-                    value: momentsSummary.inProgressCount,
+                    value: videosSummary.inProgressCount,
                     systemImage: "clock"
                 ),
                 AnimateInProgressSummaryPresentation(
                     title: L10n.string("inProgress.summary.done"),
-                    value: momentsSummary.finishedCount,
+                    value: videosSummary.finishedCount,
                     systemImage: "checkmark.circle"
                 )
             ],
             groups: [
                 AnimateInProgressListGroupPresentation(
                     title: L10n.string("inProgress.group.inProgress"),
-                    rows: momentsSummary.groups.inProgress.map {
+                    rows: videosSummary.groups.inProgress.map {
                         AnimateInProgressListRowPresentation(moment: $0, isSelected: selectedMomentId == $0.id)
                     }
                 ),
                 AnimateInProgressListGroupPresentation(
                     title: L10n.string("inProgress.group.finished"),
-                    rows: momentsSummary.groups.finished.map {
+                    rows: videosSummary.groups.finished.map {
                         AnimateInProgressListRowPresentation(moment: $0, isSelected: selectedMomentId == $0.id)
                     }
                 )

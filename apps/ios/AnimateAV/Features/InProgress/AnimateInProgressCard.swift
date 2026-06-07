@@ -7,15 +7,15 @@ struct AnimateInProgressCard: View {
     let presentation: AnimateInProgressPresentation
     let balance: AnimateCreditBalance
     let creditBalanceLoadState: AnimateCreditBalanceLoadState
-    let momentsSummary: AnimateInProgressSummary
+    let videosSummary: AnimateInProgressSummary
     let selectedMomentId: String?
     let isLoadingAnimateWorkspace: Bool
     let activeWorkspace: AnimateWorkspace?
-    let isDeletingMoment: Bool
+    let isDeletingVideo: Bool
     let statusMessage: String?
     let localMediaForMoment: (AnimateVideo) -> [AnimateSelectedMedia]
     let selectMoment: (AnimateVideo) -> Void
-    let continueMoment: (AnimateContinuationRequest) -> Void
+    let continueVideo: (AnimateContinuationRequest) -> Void
     let requestRenameMoment: (AnimateVideo) -> Void
     let startMoment: () -> Void
     let startSignInFlow: () -> Void
@@ -24,7 +24,7 @@ struct AnimateInProgressCard: View {
 
     var body: some View {
         VStack(alignment: .leading, spacing: 14) {
-            AnimateInProgressAviBlock(momentsSummary: momentsSummary)
+            AnimateInProgressAviBlock(videosSummary: videosSummary)
 
             switch presentation.availability {
             case let .signedOut(unavailable):
@@ -53,7 +53,7 @@ struct AnimateInProgressCard: View {
                 AnimateInProgressContinueBlock(
                     moments: continueMoments,
                     localMediaForMoment: localMediaForMoment,
-                    continueMoment: continueMoment,
+                    continueVideo: continueVideo,
                     requestRenameMoment: requestRenameMoment
                 )
                 AnimateInProgressStatusMessage(message: statusMessage)
@@ -62,7 +62,7 @@ struct AnimateInProgressCard: View {
     }
 
     private var continueMoments: [AnimateVideo] {
-        momentsSummary.moments.sorted { $0.updatedAt > $1.updatedAt }
+        videosSummary.moments.sorted { $0.updatedAt > $1.updatedAt }
     }
 }
 
@@ -181,7 +181,7 @@ private struct AnimateInProgressEmptyContent: View {
 }
 
 private struct AnimateInProgressAviBlock: View {
-    let momentsSummary: AnimateInProgressSummary
+    let videosSummary: AnimateInProgressSummary
 
     var body: some View {
         HStack(spacing: 16) {
@@ -216,20 +216,20 @@ private struct AnimateInProgressAviBlock: View {
     }
 
     private var title: String {
-        if momentsSummary.latestAnimateVideo != nil {
+        if videosSummary.latestAnimateVideo != nil {
             return L10n.string("inProgress.avi.momentInProgress.title")
         }
-        if momentsSummary.finishedCount > 0 {
+        if videosSummary.finishedCount > 0 {
             return L10n.string("inProgress.avi.galleryStarts.title")
         }
         return L10n.string("inProgress.avi.ready.title")
     }
 
     private var message: String {
-        if let moment = momentsSummary.latestAnimateVideo {
+        if let moment = videosSummary.latestAnimateVideo {
             return L10n.string("inProgress.avi.momentInProgress.message", moment.title)
         }
-        if momentsSummary.finishedCount > 0 {
+        if videosSummary.finishedCount > 0 {
             return L10n.string("inProgress.avi.galleryStarts.message")
         }
         return L10n.string("inProgress.avi.ready.message")
@@ -239,7 +239,7 @@ private struct AnimateInProgressAviBlock: View {
 private struct AnimateInProgressContinueBlock: View {
     let moments: [AnimateVideo]
     let localMediaForMoment: (AnimateVideo) -> [AnimateSelectedMedia]
-    let continueMoment: (AnimateContinuationRequest) -> Void
+    let continueVideo: (AnimateContinuationRequest) -> Void
     let requestRenameMoment: (AnimateVideo) -> Void
 
     var body: some View {
@@ -260,10 +260,10 @@ private struct AnimateInProgressContinueBlock: View {
                     AnimateAnimateVideoCard(
                         moment: moment,
                         localMedia: localMediaForMoment(moment),
-                        continueMoment: {
-                            continueMoment(AnimateContinuationRequest(moment: moment))
+                        continueVideo: {
+                            continueVideo(AnimateContinuationRequest(moment: moment))
                         },
-                        renameMoment: {
+                        renameVideo: {
                             requestRenameMoment(moment)
                         }
                     )
@@ -276,11 +276,11 @@ private struct AnimateInProgressContinueBlock: View {
 private struct AnimateAnimateVideoCard: View {
     let moment: AnimateVideo
     let localMedia: [AnimateSelectedMedia]
-    let continueMoment: () -> Void
-    let renameMoment: () -> Void
+    let continueVideo: () -> Void
+    let renameVideo: () -> Void
 
     var body: some View {
-        Button(action: continueMoment) {
+        Button(action: continueVideo) {
             HStack(alignment: .center, spacing: 14) {
                 mediaPreview
 
@@ -294,7 +294,7 @@ private struct AnimateAnimateVideoCard: View {
                         Spacer(minLength: 0)
 
                         Menu {
-                            Button(action: renameMoment) {
+                            Button(action: renameVideo) {
                                 Label(L10n.string("common.rename"), systemImage: "pencil")
                             }
                         } label: {

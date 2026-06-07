@@ -37,15 +37,15 @@ extension AnimateCreateViewModel {
 
     private func bindVideoCreation(_ workflow: AnimateVideoCreationWorkflow) {
         Publishers.CombineLatest3(
-            workflow.$isCreatingMoment,
+            workflow.$isCreatingVideo,
             workflow.$activeMomentId,
             workflow.$errorMessage
         )
             .receive(on: DispatchQueue.main)
-            .sink { [weak self] isCreatingMoment, activeMomentId, setupErrorMessage in
+            .sink { [weak self] isCreatingVideo, activeMomentId, setupErrorMessage in
                 self?.applyVideoCreationState(
                     AnimateCreateVideoCreationState(
-                        isCreatingMoment: isCreatingMoment,
+                        isCreatingVideo: isCreatingVideo,
                         activeMomentId: activeMomentId,
                         setupErrorMessage: setupErrorMessage
                     )

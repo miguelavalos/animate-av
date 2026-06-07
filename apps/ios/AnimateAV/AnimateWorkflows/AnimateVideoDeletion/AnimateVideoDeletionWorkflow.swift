@@ -3,34 +3,34 @@ import Foundation
 
 @MainActor
 final class AnimateVideoDeletionWorkflow: ObservableObject {
-    @Published private(set) var isDeletingMoment = false
+    @Published private(set) var isDeletingVideo = false
     @Published private(set) var errorMessage: String?
 
     private let currentUserProvider: any AnimateCurrentUserProviding
     private let authTokenProvider: any AnimateAuthTokenProviding
-    private let momentDeleter: any MomentsDeleting
+    private let videoDeleter: any AnimateVideoDeleting
     private var deletionGeneration = 0
 
     init(
         currentUserProvider: any AnimateCurrentUserProviding,
         authTokenProvider: any AnimateAuthTokenProviding,
-        momentDeleter: any MomentsDeleting
+        videoDeleter: any AnimateVideoDeleting
     ) {
         self.currentUserProvider = currentUserProvider
         self.authTokenProvider = authTokenProvider
-        self.momentDeleter = momentDeleter
+        self.videoDeleter = videoDeleter
     }
 
-    var isDeletingMomentPublisher: AnyPublisher<Bool, Never> {
-        $isDeletingMoment.eraseToAnyPublisher()
+    var isDeletingVideoPublisher: AnyPublisher<Bool, Never> {
+        $isDeletingVideo.eraseToAnyPublisher()
     }
 
     var deletionErrorPublisher: AnyPublisher<String?, Never> {
         $errorMessage.eraseToAnyPublisher()
     }
 
-    func deleteMoment(_ moment: AnimateVideo) async -> Bool {
-        guard !isDeletingMoment else { return false }
+    func deleteVideo(_ moment: AnimateVideo) async -> Bool {
+        guard !isDeletingVideo else { return false }
         guard let ownerUserId = currentUserProvider.currentUserId else {
             errorMessage = "Sign in before deleting a moment."
             return false
@@ -41,20 +41,20 @@ final class AnimateVideoDeletionWorkflow: ObservableObject {
         }
         _ = ownerUserId
 
-        isDeletingMoment = true
+        isDeletingVideo = true
         errorMessage = nil
         deletionGeneration += 1
         let generation = deletionGeneration
 
         do {
-            try await momentDeleter.deleteMoment(bearerToken: bearerToken, momentId: moment.id)
+            try await videoDeleter.deleteVideo(bearerToken: bearerToken, momentId: moment.id)
             guard deletionGeneration == generation else { return false }
-            isDeletingMoment = false
+            isDeletingVideo = false
             return true
         } catch {
             guard deletionGeneration == generation else { return false }
             errorMessage = error.localizedDescription
-            isDeletingMoment = false
+            isDeletingVideo = false
             return false
         }
     }

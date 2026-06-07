@@ -6,13 +6,13 @@ final class AnimateInProgressObserver: ObservableObject {
     @Published private(set) var moments: [AnimateVideo] = []
     @Published private(set) var errorMessage: String?
 
-    private let momentsObserver: any AnimateInProgressObserving
+    private let videosObserver: any AnimateInProgressObserving
     private var momentsTask: Task<Void, Never>?
     private var observationGeneration = 0
     private let diagnosticsObserverName = "in_progress"
 
     init(momentsRepository: any AnimateInProgressObserving = AnimateRepository()) {
-        momentsObserver = momentsRepository
+        videosObserver = momentsRepository
     }
 
     var momentsPublisher: AnyPublisher<[AnimateVideo], Never> {
@@ -34,7 +34,7 @@ final class AnimateInProgressObserver: ObservableObject {
         AnimateSyncDiagnostics.addObserverBreadcrumb(observer: diagnosticsObserverName, message: "observer_started")
 
         do {
-            let updates = try momentsObserver.observeAnimateVideos(ownerUserId: ownerUserId).values
+            let updates = try videosObserver.observeAnimateVideos(ownerUserId: ownerUserId).values
 
             momentsTask = Task { [weak self] in
                 do {

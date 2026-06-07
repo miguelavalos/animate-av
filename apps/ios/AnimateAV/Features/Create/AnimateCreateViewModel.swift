@@ -47,7 +47,7 @@ final class AnimateCreateViewModel: ObservableObject {
     @Published var selectedCreationStyle = AnimateVideoCreationStyle.launchStyles[0]
     @Published var selectedMusicPreset = AnimateVideoCreationStyle.launchStyles[0].defaultMusic
     @Published var form = AnimateVideoSetupForm(template: AnimateVideoTemplate.launchTemplates[0])
-    @Published private(set) var isCreatingMoment = false
+    @Published private(set) var isCreatingVideo = false
     @Published private(set) var isContinuingMoment = false
     @Published var isLocalMomentStarted = false
     @Published private(set) var workflowActiveMomentId: String?
@@ -402,7 +402,7 @@ final class AnimateCreateViewModel: ObservableObject {
         hasUserLookOverride = false
     }
 
-    func continueMoment(_ moment: AnimateVideo, focus: AnimateContinuationFocus = .moment) {
+    func continueVideo(_ moment: AnimateVideo, focus: AnimateContinuationFocus = .moment) {
         cancelOperations()
         isContinuingMoment = true
         isLocalMomentStarted = false
@@ -415,7 +415,7 @@ final class AnimateCreateViewModel: ObservableObject {
             form = continuedForm
         }
 
-        videoCreationWorkflow?.continueMoment(moment)
+        videoCreationWorkflow?.continueVideo(moment)
     }
 
     func consumePendingFocus() {
@@ -534,7 +534,7 @@ final class AnimateCreateViewModel: ObservableObject {
         isLocalMomentStarted = false
         pendingFocus = nil
         continuationFocusHint = nil
-        videoCreationWorkflow?.resetMomentSetup(force: force)
+        videoCreationWorkflow?.resetVideoSetup(force: force)
         mediaUploadWorkflow?.reset(force: force)
         storyWorkflow?.reset(force: force)
         finalRenderWorkflow?.reset(force: force)
@@ -849,7 +849,7 @@ extension AnimateCreateViewModel {
     func applyVideoCreationState(_ state: AnimateCreateVideoCreationState) {
         guard !usesCreateUITestFixture else { return }
         let previousActiveMomentId = workflowActiveMomentId
-        isCreatingMoment = state.isCreatingMoment
+        isCreatingVideo = state.isCreatingVideo
         workflowActiveMomentId = state.activeMomentId
         setupErrorMessage = state.setupErrorMessage
 

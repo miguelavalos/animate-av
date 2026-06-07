@@ -3,15 +3,15 @@ import OSLog
 
 @MainActor
 final class AnimateVideoCreationWorkflow: ObservableObject {
-    @Published private(set) var isCreatingMoment = false
+    @Published private(set) var isCreatingVideo = false
     @Published private(set) var activeMomentId: String?
     @Published private(set) var errorMessage: String?
 
     private let currentUserProvider: any AnimateCurrentUserProviding
     private let authTokenProvider: any AnimateAuthTokenProviding
     private let creditBalanceProvider: any AnimateCreditBalanceProviding
-    private let momentCreator: any MomentsCreating
-    private let momentDeleter: any MomentsDeleting
+    private let videoCreator: any AnimateVideoCreating
+    private let videoDeleter: any AnimateVideoDeleting
     private let workspaceObserver: any AnimateActiveWorkspaceObserving
     private var workflowGeneration = WorkflowGeneration()
     private let logger = Logger(subsystem: "com.avalsys.animateav", category: "moment-creation")
@@ -20,15 +20,15 @@ final class AnimateVideoCreationWorkflow: ObservableObject {
         currentUserProvider: any AnimateCurrentUserProviding,
         authTokenProvider: any AnimateAuthTokenProviding,
         creditBalanceProvider: any AnimateCreditBalanceProviding,
-        momentCreator: any MomentsCreating,
-        momentDeleter: any MomentsDeleting,
+        videoCreator: any AnimateVideoCreating,
+        videoDeleter: any AnimateVideoDeleting,
         workspaceObserver: any AnimateActiveWorkspaceObserving
     ) {
         self.currentUserProvider = currentUserProvider
         self.authTokenProvider = authTokenProvider
         self.creditBalanceProvider = creditBalanceProvider
-        self.momentCreator = momentCreator
-        self.momentDeleter = momentDeleter
+        self.videoCreator = videoCreator
+        self.videoDeleter = videoDeleter
         self.workspaceObserver = workspaceObserver
     }
 
@@ -41,7 +41,7 @@ final class AnimateVideoCreationWorkflow: ObservableObject {
     }
 
     var isConfigured: Bool {
-        momentCreator.isConfigured
+        videoCreator.isConfigured
     }
 
     func canAfford(_ template: AnimateVideoTemplate) -> Bool {
@@ -52,8 +52,8 @@ final class AnimateVideoCreationWorkflow: ObservableObject {
         AnimateCreditGate.spendPlan(for: template.creditCost, balance: balance)
     }
 
-    func createMoment(form: AnimateVideoSetupForm) async -> String? {
-        guard !isCreatingMoment else { return nil }
+    func createVideo(form: AnimateVideoSetupForm) async -> String? {
+        guard !isCreatingVideo else { return nil }
         guard let ownerUserId = currentUserProvider.currentUserId else {
             errorMessage = L10n.string("workflow.moment.signInStart")
             return nil
@@ -64,33 +64,33 @@ final class AnimateVideoCreationWorkflow: ObservableObject {
         }
 
         let availability = AnimateVideoSetupRules.availability(form: form, balance: balance)
-        guard availability.canCreateMoment else {
-            errorMessage = createMomentBlockMessage(availability)
+        guard availability.canCreateVideo else {
+            errorMessage = createVideoBlockMessage(availability)
             return nil
         }
 
         let generation = workflowGeneration.begin()
-        isCreatingMoment = true
+        isCreatingVideo = true
         errorMessage = nil
 
         do {
-            let momentId = try await momentCreator.createMoment(bearerToken: bearerToken, form: form)
+            let momentId = try await videoCreator.createVideo(bearerToken: bearerToken, form: form)
             guard workflowGeneration.isCurrent(generation) else { return nil }
             activeMomentId = momentId
             workspaceObserver.observeWorkspace(ownerUserId: ownerUserId, momentId: momentId)
-            isCreatingMoment = false
+            isCreatingVideo = false
             return momentId
         } catch {
             guard workflowGeneration.isCurrent(generation) else { return nil }
             logger.error("Moment creation failed reason=\(String(describing: error), privacy: .public)")
             errorMessage = error.localizedDescription
-            isCreatingMoment = false
+            isCreatingVideo = false
             return nil
         }
     }
 
-    func updateMomentSetup(momentId: String, form: AnimateVideoSetupForm) async -> Bool {
-        guard !isCreatingMoment else { return false }
+    func updateVideoSetup(momentId: String, form: AnimateVideoSetupForm) async -> Bool {
+        guard !isCreatingVideo else { return false }
         guard currentUserProvider.currentUserId != nil else {
             errorMessage = L10n.string("workflow.moment.signInContinue")
             return false
@@ -101,54 +101,54 @@ final class AnimateVideoCreationWorkflow: ObservableObject {
         }
 
         let availability = AnimateVideoSetupRules.availability(form: form, balance: balance)
-        guard availability.canCreateMoment else {
-            errorMessage = createMomentBlockMessage(availability)
+        guard availability.canCreateVideo else {
+            errorMessage = createVideoBlockMessage(availability)
             return false
         }
 
-        isCreatingMoment = true
+        isCreatingVideo = true
         errorMessage = nil
 
         do {
-            try await momentCreator.updateMomentSetup(
+            try await videoCreator.updateVideoSetup(
                 bearerToken: bearerToken,
                 momentId: momentId,
                 form: form
             )
-            isCreatingMoment = false
+            isCreatingVideo = false
             return true
         } catch {
             logger.error("Moment setup update failed reason=\(String(describing: error), privacy: .public)")
             errorMessage = error.localizedDescription
-            isCreatingMoment = false
+            isCreatingVideo = false
             return false
         }
     }
 
-    func continueMoment(_ moment: AnimateVideo) {
+    func continueVideo(_ moment: AnimateVideo) {
         guard let ownerUserId = currentUserProvider.currentUserId else {
             errorMessage = L10n.string("workflow.moment.signInContinue")
             return
         }
 
         workflowGeneration.advance()
-        isCreatingMoment = false
+        isCreatingVideo = false
         activeMomentId = moment.id
         errorMessage = nil
         workspaceObserver.observeWorkspace(ownerUserId: ownerUserId, momentId: moment.id)
     }
 
-    func resetMomentSetup(force: Bool = false) {
-        guard force || !isCreatingMoment else { return }
+    func resetVideoSetup(force: Bool = false) {
+        guard force || !isCreatingVideo else { return }
         workflowGeneration.advance()
-        isCreatingMoment = false
+        isCreatingVideo = false
         activeMomentId = nil
         errorMessage = nil
         workspaceObserver.clearWorkspace()
     }
 
-    func discardActiveMoment(momentId momentIdOverride: String? = nil) async -> Bool {
-        guard !isCreatingMoment else { return false }
+    func discardActiveVideo(momentId momentIdOverride: String? = nil) async -> Bool {
+        guard !isCreatingVideo else { return false }
         guard currentUserProvider.currentUserId != nil else {
             errorMessage = L10n.string("workflow.moment.signInDiscard")
             return false
@@ -160,25 +160,25 @@ final class AnimateVideoCreationWorkflow: ObservableObject {
         guard let momentId = momentIdOverride ?? activeMomentId else { return true }
 
         let generation = workflowGeneration.begin()
-        isCreatingMoment = true
+        isCreatingVideo = true
         errorMessage = nil
 
         do {
-            try await momentDeleter.deleteMoment(bearerToken: bearerToken, momentId: momentId)
+            try await videoDeleter.deleteVideo(bearerToken: bearerToken, momentId: momentId)
             guard workflowGeneration.isCurrent(generation) else { return false }
-            isCreatingMoment = false
+            isCreatingVideo = false
             self.activeMomentId = nil
             workspaceObserver.clearWorkspace()
             return true
         } catch {
             guard workflowGeneration.isCurrent(generation) else { return false }
             errorMessage = error.localizedDescription
-            isCreatingMoment = false
+            isCreatingVideo = false
             return false
         }
     }
 
-    private func createMomentBlockMessage(_ availability: AnimateVideoSetupRules.Availability) -> String {
+    private func createVideoBlockMessage(_ availability: AnimateVideoSetupRules.Availability) -> String {
         AnimateVideoSetupRules.availabilityMessage(availability) ?? L10n.string("workflow.moment.setupNotReady")
     }
 }

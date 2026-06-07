@@ -47,7 +47,7 @@ struct AnimateAviScreen: View {
         } content: {
             AnimateAviGuidanceContent(
                 presentation: presentation,
-                momentsSummary: viewModel.momentsSummary,
+                videosSummary: viewModel.videosSummary,
                 creditBalance: viewModel.creditBalance,
                 creditBalanceLoadState: viewModel.creditBalanceLoadState,
                 isSignedIn: viewModel.isSignedIn,
@@ -61,7 +61,7 @@ struct AnimateAviScreen: View {
 
 private struct AnimateAviGuidanceContent: View {
     let presentation: AnimateAviPresentation
-    let momentsSummary: AnimateInProgressSummary
+    let videosSummary: AnimateInProgressSummary
     let creditBalance: AnimateCreditBalance
     let creditBalanceLoadState: AnimateCreditBalanceLoadState
     let isSignedIn: Bool
@@ -80,7 +80,7 @@ private struct AnimateAviGuidanceContent: View {
             workflowFocusTitle: presentation.workflowFocusTitle,
             workflowFocusMessage: presentation.workflowFocusMessage,
             workflowFocusSystemImage: presentation.workflowFocusSystemImage,
-            momentsSummary: momentsSummary,
+            videosSummary: videosSummary,
             creditBalance: creditBalance,
             creditBalanceLoadState: creditBalanceLoadState
         )

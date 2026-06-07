@@ -3,7 +3,7 @@ import Foundation
 
 @MainActor
 final class AnimateHomeViewModel: ObservableObject {
-    @Published private(set) var momentsSummary = AnimateInProgressSummary()
+    @Published private(set) var videosSummary = AnimateInProgressSummary()
     @Published private(set) var isSignedIn = false
     @Published private(set) var displayName: String?
     @Published private(set) var creditBalance = AnimateCreditBalance.empty
@@ -18,8 +18,8 @@ final class AnimateHomeViewModel: ObservableObject {
         summaryProvider.inProgressSummaryPublisher
             .removeDuplicates()
             .receive(on: DispatchQueue.main)
-            .sink { [weak self] momentsSummary in
-                self?.momentsSummary = momentsSummary
+            .sink { [weak self] videosSummary in
+                self?.videosSummary = videosSummary
             }
             .store(in: &momentsCancellables)
     }

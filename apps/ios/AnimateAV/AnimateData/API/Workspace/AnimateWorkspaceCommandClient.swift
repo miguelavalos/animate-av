@@ -9,7 +9,7 @@ struct AnimateWorkspaceCommandClient {
         URL(string: baseURLString.trimmingCharacters(in: .whitespacesAndNewlines)) != nil
     }
 
-    func createMoment(bearerToken: String, form: AnimateVideoSetupForm) async throws -> String {
+    func createVideo(bearerToken: String, form: AnimateVideoSetupForm) async throws -> String {
         let response: AnimateWorkspaceCommandResponse = try await send(
             path: ["workspace", "moments"],
             method: "POST",
@@ -19,7 +19,7 @@ struct AnimateWorkspaceCommandClient {
         return response.momentId
     }
 
-    func updateMomentSetup(bearerToken: String, momentId: String, form: AnimateVideoSetupForm) async throws {
+    func updateVideoSetup(bearerToken: String, momentId: String, form: AnimateVideoSetupForm) async throws {
         let _: AnimateWorkspaceCommandResponse = try await send(
             path: ["workspace", "moments", momentId, "setup"],
             method: "PATCH",
@@ -37,7 +37,7 @@ struct AnimateWorkspaceCommandClient {
         )
     }
 
-    func deleteMoment(bearerToken: String, momentId: String) async throws {
+    func deleteVideo(bearerToken: String, momentId: String) async throws {
         let _: AnimateWorkspaceCommandResponse = try await send(
             path: ["workspace", "moments", momentId],
             method: "DELETE",

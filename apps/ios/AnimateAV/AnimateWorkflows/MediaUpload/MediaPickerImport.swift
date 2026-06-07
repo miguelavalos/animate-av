@@ -60,7 +60,7 @@ enum MediaPickerImport {
         for (index, candidate) in candidates.enumerated() {
             let media = try await loadLibraryAsset(candidate.asset, sortOrder: Int(candidate.source.sortOrder))
             if let image = UIImage(data: media.data) {
-                MomentsLocalMediaThumbnailCache.store(
+                AnimateLocalMediaThumbnailCache.store(
                     image,
                     mediaAssetId: candidate.source.id,
                     platformMediaAssetId: candidate.source.platformMediaAssetId

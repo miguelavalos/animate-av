@@ -569,7 +569,7 @@ struct AnimateProfileScreen: View {
         isClearingLocalData = true
         createViewModel.clearSessionState()
         inProgressViewModel.clearSelection()
-        MomentsLocalMediaThumbnailCache.clearAll()
+        AnimateLocalMediaThumbnailCache.clearAll()
         isClearingLocalData = false
     }
 

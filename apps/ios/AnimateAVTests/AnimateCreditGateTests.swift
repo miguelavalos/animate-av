@@ -97,11 +97,11 @@ final class AnimateCreditGateTests: XCTestCase {
     func testSetupFormRequiresOccasionBeforeCreate() {
         var form = AnimateVideoSetupForm(template: .birthdayMessage)
 
-        XCTAssertTrue(form.canCreateMoment)
+        XCTAssertTrue(form.canCreateVideo)
 
         form.occasion = "  "
 
-        XCTAssertFalse(form.canCreateMoment)
+        XCTAssertFalse(form.canCreateVideo)
     }
 
     func testSetupAvailabilityAllowsSetupWithoutCredits() {
@@ -113,7 +113,7 @@ final class AnimateCreditGateTests: XCTestCase {
             balance: .empty
         )
 
-        XCTAssertTrue(availability.canCreateMoment)
+        XCTAssertTrue(availability.canCreateVideo)
         XCTAssertNil(AnimateVideoSetupRules.availabilityMessage(availability))
     }
 

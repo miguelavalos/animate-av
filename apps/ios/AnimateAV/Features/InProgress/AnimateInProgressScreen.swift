@@ -10,7 +10,7 @@ struct AnimateInProgressScreen: View {
     @SceneStorage("animate.inProgress.selectedAssetKind") private var selectedAssetKindRaw = AnimateInProgressAssetKind.videos.rawValue
     let balance: AnimateCreditBalance
     let creditBalanceLoadState: AnimateCreditBalanceLoadState
-    let continueMoment: (AnimateContinuationRequest) -> Void
+    let continueVideo: (AnimateContinuationRequest) -> Void
     let startMoment: () -> Void
     let startSignInFlow: () -> Void
     let openCredits: () -> Void
@@ -19,7 +19,7 @@ struct AnimateInProgressScreen: View {
     private var presentation: AnimateInProgressPresentation {
         AnimateInProgressPresentation.make(
             isSignedIn: viewModel.isSignedIn,
-            momentsSummary: viewModel.videoMomentsSummary,
+            videosSummary: viewModel.videoMomentsSummary,
             momentPendingDeletion: momentPendingDeletion
         )
     }
@@ -27,7 +27,7 @@ struct AnimateInProgressScreen: View {
     private var imagesPresentation: AnimateInProgressPresentation {
         AnimateInProgressPresentation.make(
             isSignedIn: viewModel.isSignedIn,
-            momentsSummary: viewModel.imageMomentsSummary,
+            videosSummary: viewModel.imageMomentsSummary,
             momentPendingDeletion: nil
         )
     }
@@ -35,7 +35,7 @@ struct AnimateInProgressScreen: View {
     init(
         balance: AnimateCreditBalance = .empty,
         creditBalanceLoadState: AnimateCreditBalanceLoadState = .loaded,
-        continueMoment: @escaping (AnimateContinuationRequest) -> Void = { _ in },
+        continueVideo: @escaping (AnimateContinuationRequest) -> Void = { _ in },
         startMoment: @escaping () -> Void = {},
         startSignInFlow: @escaping () -> Void = {},
         openCredits: @escaping () -> Void = {},
@@ -43,7 +43,7 @@ struct AnimateInProgressScreen: View {
     ) {
         self.balance = balance
         self.creditBalanceLoadState = creditBalanceLoadState
-        self.continueMoment = continueMoment
+        self.continueVideo = continueVideo
         self.startMoment = startMoment
         self.startSignInFlow = startSignInFlow
         self.openCredits = openCredits
@@ -69,15 +69,15 @@ struct AnimateInProgressScreen: View {
                     presentation: presentation,
                     balance: balance,
                     creditBalanceLoadState: creditBalanceLoadState,
-                    momentsSummary: viewModel.videoMomentsSummary,
+                    videosSummary: viewModel.videoMomentsSummary,
                     selectedMomentId: viewModel.selectedMomentId,
                     isLoadingAnimateWorkspace: viewModel.isLoadingAnimateWorkspace,
                     activeWorkspace: viewModel.activeWorkspace,
-                    isDeletingMoment: viewModel.isDeletingMoment,
+                    isDeletingVideo: viewModel.isDeletingVideo,
                     statusMessage: viewModel.statusMessage,
                     localMediaForMoment: localMediaForMoment(_:),
                     selectMoment: viewModel.selectMoment,
-                    continueMoment: continueMoment,
+                    continueVideo: continueVideo,
                     requestRenameMoment: { momentPendingRename = $0 },
                     startMoment: startMoment,
                     startSignInFlow: startSignInFlow,
@@ -87,18 +87,18 @@ struct AnimateInProgressScreen: View {
             case .images:
                 AnimateInProgressImagesCard(
                     presentation: imagesPresentation,
-                    momentsSummary: viewModel.imageMomentsSummary,
+                    videosSummary: viewModel.imageMomentsSummary,
                     startSignInFlow: startSignInFlow,
                     startImages: startMoment
                 )
             }
         }
         .confirmationDialog(
-            L10n.string("inProgress.deleteMoment.title"),
+            L10n.string("inProgress.deleteVideo.title"),
             isPresented: deletionConfirmationPresented,
             titleVisibility: .visible
         ) {
-            Button(L10n.string("inProgress.deleteMoment.button"), role: .destructive) {
+            Button(L10n.string("inProgress.deleteVideo.button"), role: .destructive) {
                 confirmVideoDeletion()
             }
             Button(L10n.string("common.cancel"), role: .cancel) {
@@ -109,7 +109,7 @@ struct AnimateInProgressScreen: View {
         }
         .sheet(item: $momentPendingRename) { moment in
             AnimateInProgressRenameSheet(moment: moment) { title in
-                viewModel.renameMoment(moment, title: title)
+                viewModel.renameVideo(moment, title: title)
             }
             .presentationDetents([.height(230)])
         }
@@ -142,7 +142,7 @@ struct AnimateInProgressScreen: View {
             if createViewModel.activeMomentId == momentPendingDeletion.id {
                 createViewModel.clearSessionState()
             }
-            viewModel.deleteMoment(momentPendingDeletion)
+            viewModel.deleteVideo(momentPendingDeletion)
         }
         momentPendingDeletion = nil
     }
@@ -157,7 +157,7 @@ struct AnimateInProgressScreen: View {
         }
 
         guard !createViewModel.selectedMedia.isEmpty,
-              viewModel.momentsSummary.latestAnimateVideo?.id == moment.id,
+              viewModel.videosSummary.latestAnimateVideo?.id == moment.id,
               viewModel.videoMomentsSummary.inProgressCount == 1 else {
             return []
         }
@@ -216,7 +216,7 @@ private struct AnimateInProgressAssetKindPill: View {
 
 private struct AnimateInProgressImagesCard: View {
     let presentation: AnimateInProgressPresentation
-    let momentsSummary: AnimateInProgressSummary
+    let videosSummary: AnimateInProgressSummary
     let startSignInFlow: () -> Void
     let startImages: () -> Void
 
@@ -236,7 +236,7 @@ private struct AnimateInProgressImagesCard: View {
                 AnimateInProgressImagesEmptyState(startImages: startImages)
             case .available:
                 AnimateInProgressList(
-                    momentsSummary: momentsSummary,
+                    videosSummary: videosSummary,
                     selectedMomentId: nil,
                     selectMoment: { _ in }
                 )

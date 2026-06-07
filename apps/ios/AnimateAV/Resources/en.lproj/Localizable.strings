@@ -329,8 +329,8 @@
 "home.action.openInProgress.detail.hasMoments" = "Finish the cartoons already in motion.";
 "home.action.openInProgress.title" = "Open In Progress";
 "home.avi.addMedia.detail" = "Add one photo and Avi will start the cartoon magic.";
-"home.avi.createMoment.detail" = "Pick a photo to turn into a tiny animated scene.";
-"home.avi.createMoment.title" = "Make a cartoon video";
+"home.avi.createVideo.detail" = "Pick a photo to turn into a tiny animated scene.";
+"home.avi.createVideo.title" = "Make a cartoon video";
 "home.avi.creating.detail" = "Avi is sketching the motion, voice, and style.";
 "home.avi.creating.title" = "Avi is animating";
 "home.avi.currentMoment.title" = "Current video";
@@ -339,7 +339,7 @@
 "home.avi.selected.detail" = "%d %@ selected. Time to pick the cartoon style.";
 "home.avi.signIn.detail" = "Connect your account so Avi can save the cartoon fun.";
 "home.avi.signIn.title" = "Sign in to create";
-"home.aviBrief.continueMoment" = "Continue %@ from the next unfinished step.";
+"home.aviBrief.continueVideo" = "Continue %@ from the next unfinished step.";
 "home.aviBrief.firstMemory" = "Start with one photo and let Avi make it move.";
 "home.aviBrief.openInProgress" = "Open In Progress and finish the next cartoon step.";
 "home.aviBrief.signIn" = "Sign in so Avi can keep your videos, images, and Credits together.";
@@ -384,11 +384,11 @@
 "inProgress.credits.needed" = "Credits are needed before final video creation.";
 "inProgress.credits.ready" = "Credits are ready for final video creation.";
 "inProgress.card.mediaCount" = "%d photo";
-"inProgress.deleteMoment.button" = "Delete video";
-"inProgress.deleteMoment.deleting" = "Deleting video...";
-"inProgress.deleteMoment.message" = "This removes %@, including photo records and generated video files that belong to it.";
-"inProgress.deleteMoment.shortButton" = "Delete video";
-"inProgress.deleteMoment.title" = "Delete video?";
+"inProgress.deleteVideo.button" = "Delete video";
+"inProgress.deleteVideo.deleting" = "Deleting video...";
+"inProgress.deleteVideo.message" = "This removes %@, including photo records and generated video files that belong to it.";
+"inProgress.deleteVideo.shortButton" = "Delete video";
+"inProgress.deleteVideo.title" = "Delete video?";
 "inProgress.empty.create.detail" = "Choose one photo, then come back here while Avi works.";
 "inProgress.empty.create.title" = "Make the first cartoon";
 "inProgress.empty.inProgress.detail" = "Cartoons that need a tap will appear here.";

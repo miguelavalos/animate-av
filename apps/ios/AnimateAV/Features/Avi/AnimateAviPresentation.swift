@@ -8,20 +8,20 @@ struct AnimateAviPresentation: Equatable {
 
     static func make(
         isSignedIn: Bool,
-        momentsSummary: AnimateInProgressSummary,
+        videosSummary: AnimateInProgressSummary,
         creditBalance: AnimateCreditBalance,
         creditBalanceLoadState: AnimateCreditBalanceLoadState = .loaded
     ) -> AnimateAviPresentation {
         AnimateAviPresentation(
             workflowFocusTitle: workflowFocusTitle(
                 isSignedIn: isSignedIn,
-                momentsSummary: momentsSummary
+                videosSummary: videosSummary
             ),
             workflowFocusMessage: workflowFocusMessage(
                 isSignedIn: isSignedIn,
-                momentsSummary: momentsSummary
+                videosSummary: videosSummary
             ),
-            workflowFocusSystemImage: workflowFocusSystemImage(momentsSummary: momentsSummary),
+            workflowFocusSystemImage: workflowFocusSystemImage(videosSummary: videosSummary),
             creditGuidanceMessage: creditGuidanceMessage(
                 isSignedIn: isSignedIn,
                 creditBalance: creditBalance,
@@ -32,32 +32,32 @@ struct AnimateAviPresentation: Equatable {
 
     private static func workflowFocusTitle(
         isSignedIn: Bool,
-        momentsSummary: AnimateInProgressSummary
+        videosSummary: AnimateInProgressSummary
     ) -> String {
         guard isSignedIn else { return L10n.string("avi.focus.signIn.title") }
-        if momentsSummary.inProgressCount > 0 { return L10n.string("avi.focus.activeWork.title") }
-        if momentsSummary.finishedCount > 0 { return L10n.string("avi.focus.nextMemory.title") }
+        if videosSummary.inProgressCount > 0 { return L10n.string("avi.focus.activeWork.title") }
+        if videosSummary.finishedCount > 0 { return L10n.string("avi.focus.nextMemory.title") }
         return L10n.string("avi.focus.firstMemory.title")
     }
 
     private static func workflowFocusMessage(
         isSignedIn: Bool,
-        momentsSummary: AnimateInProgressSummary
+        videosSummary: AnimateInProgressSummary
     ) -> String {
         guard isSignedIn else {
             return L10n.string("avi.focus.signIn.message")
         }
-        if momentsSummary.inProgressCount > 0 {
-            return L10n.string("avi.focus.inProgress.message", momentsSummary.inProgressCount, inProgressMomentLabel(momentsSummary))
+        if videosSummary.inProgressCount > 0 {
+            return L10n.string("avi.focus.inProgress.message", videosSummary.inProgressCount, inProgressMomentLabel(videosSummary))
         }
-        if momentsSummary.finishedCount > 0 {
+        if videosSummary.finishedCount > 0 {
             return L10n.string("avi.focus.finished.message")
         }
         return L10n.string("avi.focus.empty.message")
     }
 
-    private static func workflowFocusSystemImage(momentsSummary: AnimateInProgressSummary) -> String {
-        momentsSummary.inProgressCount > 0 ? "clock.badge.checkmark" : "sparkles"
+    private static func workflowFocusSystemImage(videosSummary: AnimateInProgressSummary) -> String {
+        videosSummary.inProgressCount > 0 ? "clock.badge.checkmark" : "sparkles"
     }
 
     private static func creditGuidanceMessage(
@@ -77,7 +77,7 @@ struct AnimateAviPresentation: Equatable {
         return L10n.string("avi.credits.available.message", AnimateCreditCopy.countTitle(creditBalance.spendable))
     }
 
-    private static func inProgressMomentLabel(_ momentsSummary: AnimateInProgressSummary) -> String {
-        momentsSummary.inProgressCount == 1 ? L10n.string("moment.noun.one") : L10n.string("moment.noun.other")
+    private static func inProgressMomentLabel(_ videosSummary: AnimateInProgressSummary) -> String {
+        videosSummary.inProgressCount == 1 ? L10n.string("moment.noun.one") : L10n.string("moment.noun.other")
     }
 }

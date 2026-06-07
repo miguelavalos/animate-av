@@ -3,7 +3,7 @@ extension AnimateCreateViewModel {
         AnimateCreateWorkflowPresentation.make(
             activeMomentId: activeMomentId,
             isSignedIn: isSignedIn,
-            isCreatingMoment: isCreatingMoment,
+            isCreatingVideo: isCreatingVideo,
             hasAnimateWorkspace: hasAnimateWorkspace,
             hasUnsavedLocalMoment: hasLocalAnimateWorkspace,
             template: form.template,

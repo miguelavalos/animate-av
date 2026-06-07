@@ -327,8 +327,8 @@
 "home.action.openInProgress.detail.hasMoments" = "Acaba els cartoons que ja estan en marxa.";
 "home.action.openInProgress.title" = "Obre En curs";
 "home.avi.addMedia.detail" = "Afegeix una foto i l’Avi començarà la màgia cartoon.";
-"home.avi.createMoment.detail" = "Tria una foto per convertir-la en una mini escena animada.";
-"home.avi.createMoment.title" = "Fer un vídeo cartoon";
+"home.avi.createVideo.detail" = "Tria una foto per convertir-la en una mini escena animada.";
+"home.avi.createVideo.title" = "Fer un vídeo cartoon";
 "home.avi.creating.detail" = "L’Avi està dibuixant el moviment, la veu i l’estil.";
 "home.avi.creating.title" = "L’Avi està animant";
 "home.avi.currentMoment.title" = "Vídeo actual";
@@ -337,7 +337,7 @@
 "home.avi.selected.detail" = "%d %@ seleccionats. Ara toca triar l’estil cartoon.";
 "home.avi.signIn.detail" = "Connecta el compte perquè l’Avi guardi la diversió animada.";
 "home.avi.signIn.title" = "Inicia sessió per crear";
-"home.aviBrief.continueMoment" = "Continua %@ des de la propera etapa pendent.";
+"home.aviBrief.continueVideo" = "Continua %@ des de la propera etapa pendent.";
 "home.aviBrief.firstMemory" = "Comença amb una foto i deixa que l’Avi la posi en moviment.";
 "home.aviBrief.openInProgress" = "Obre En curs i acaba el següent pas cartoon.";
 "home.aviBrief.signIn" = "Inicia sessió perquè l’Avi mantingui junts vídeos, imatges i crèdits.";
@@ -382,11 +382,11 @@
 "inProgress.credits.needed" = "Calen crèdits abans de crear el vídeo final.";
 "inProgress.credits.ready" = "Els crèdits estan a punt per crear el vídeo final.";
 "inProgress.card.mediaCount" = "%d foto";
-"inProgress.deleteMoment.button" = "Elimina el vídeo";
-"inProgress.deleteMoment.deleting" = "Eliminant el vídeo...";
-"inProgress.deleteMoment.message" = "Això elimina %@, inclosos els registres de foto i els fitxers de vídeo generats que hi pertanyen.";
-"inProgress.deleteMoment.shortButton" = "Elimina el vídeo";
-"inProgress.deleteMoment.title" = "Vols eliminar el vídeo?";
+"inProgress.deleteVideo.button" = "Elimina el vídeo";
+"inProgress.deleteVideo.deleting" = "Eliminant el vídeo...";
+"inProgress.deleteVideo.message" = "Això elimina %@, inclosos els registres de foto i els fitxers de vídeo generats que hi pertanyen.";
+"inProgress.deleteVideo.shortButton" = "Elimina el vídeo";
+"inProgress.deleteVideo.title" = "Vols eliminar el vídeo?";
 "inProgress.empty.create.detail" = "Tria una foto i torna aquí mentre Avi treballa.";
 "inProgress.empty.create.title" = "Fer el primer cartoon";
 "inProgress.empty.inProgress.detail" = "Els cartoons que necessitin un toc apareixeran aquí.";

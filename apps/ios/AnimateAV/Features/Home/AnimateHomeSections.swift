@@ -94,7 +94,7 @@ struct AnimateHomeSignInCard: View {
 
 struct AnimateHomeMomentStatusCard: View {
     let isSignedIn: Bool
-    let momentsSummary: AnimateInProgressSummary
+    let videosSummary: AnimateInProgressSummary
     let presentation: AnimateHomePresentation
     let openInProgress: () -> Void
 
@@ -103,7 +103,7 @@ struct AnimateHomeMomentStatusCard: View {
             title: L10n.string("library.inProgressAndGallery.title"),
             detail: presentation.momentStatusDetail
         ) {
-            if let latestMoment = momentsSummary.latestMoment {
+            if let latestMoment = videosSummary.latestMoment {
                 AnimateHomeLatestMomentRow(
                     title: latestMoment.title,
                     detail: AnimateVideoFormatting.compactDetail(for: latestMoment),
@@ -122,13 +122,13 @@ struct AnimateHomeMomentStatusCard: View {
             AVAppShellMetric(
                 id: "in-progress",
                 title: L10n.string("inProgress.title"),
-                value: "\(momentsSummary.inProgressCount)",
+                value: "\(videosSummary.inProgressCount)",
                 systemImage: "clock"
             ),
             AVAppShellMetric(
                 id: "finished",
                 title: L10n.string("library.finished.title"),
-                value: "\(momentsSummary.finishedCount)",
+                value: "\(videosSummary.finishedCount)",
                 systemImage: "checkmark.circle"
             )
         ]
@@ -137,7 +137,7 @@ struct AnimateHomeMomentStatusCard: View {
 
 struct AnimateHomeNextActionsCard: View {
     let presentation: AnimateHomePresentation
-    let continueMoment: (AnimateContinuationRequest) -> Void
+    let continueVideo: (AnimateContinuationRequest) -> Void
     let startMoment: () -> Void
     let selectTab: (AnimateRootTab) -> Void
 
@@ -181,7 +181,7 @@ struct AnimateHomeNextActionsCard: View {
 
     private func continueLatestMoment() {
         if let request = presentation.latestInProgressContinuationRequest {
-            continueMoment(request)
+            continueVideo(request)
         }
     }
 }

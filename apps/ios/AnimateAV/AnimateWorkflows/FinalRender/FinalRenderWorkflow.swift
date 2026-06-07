@@ -98,7 +98,7 @@ final class FinalRenderWorkflow: WorkspaceObservingWorkflow {
             videoQuote = nil
             statusMessage = error.localizedDescription
         } catch {
-            MomentsWorkflowDiagnostics.capture(
+            AnimateWorkflowDiagnostics.capture(
                 error,
                 feature: "animate.final_render",
                 operation: "quote_video",
@@ -133,7 +133,7 @@ final class FinalRenderWorkflow: WorkspaceObservingWorkflow {
         isGenerating = true
         renderPlan = nil
         statusMessage = L10n.string("workflow.final.preparing")
-        MomentsWorkflowDiagnostics.addBreadcrumb(
+        AnimateWorkflowDiagnostics.addBreadcrumb(
             feature: "animate.final_render",
             operation: "prepare_plan",
             data: [
@@ -176,7 +176,7 @@ final class FinalRenderWorkflow: WorkspaceObservingWorkflow {
         } catch let error as AnimateAPIError {
             guard isCurrentWorkflowGeneration(generation) else { return }
             logger.error("Final render plan API error code=\(error.code, privacy: .public) message=\(error.message, privacy: .public) momentId=\(momentId, privacy: .public)")
-            MomentsWorkflowDiagnostics.capture(
+            AnimateWorkflowDiagnostics.capture(
                 error,
                 feature: "animate.final_render",
                 operation: "prepare_plan",
@@ -190,7 +190,7 @@ final class FinalRenderWorkflow: WorkspaceObservingWorkflow {
             statusMessage = error.localizedDescription
         } catch {
             guard isCurrentWorkflowGeneration(generation) else { return }
-            MomentsWorkflowDiagnostics.capture(
+            AnimateWorkflowDiagnostics.capture(
                 error,
                 feature: "animate.final_render",
                 operation: "prepare_plan",
@@ -243,7 +243,7 @@ final class FinalRenderWorkflow: WorkspaceObservingWorkflow {
         let generation = beginWorkflowGeneration()
         isGenerating = true
         statusMessage = L10n.string("workflow.final.creatingVideo")
-        MomentsWorkflowDiagnostics.addBreadcrumb(
+        AnimateWorkflowDiagnostics.addBreadcrumb(
             feature: "animate.final_render",
             operation: "confirm",
             data: [
@@ -282,7 +282,7 @@ final class FinalRenderWorkflow: WorkspaceObservingWorkflow {
         } catch let error as AnimateAPIError {
             guard isCurrentWorkflowGeneration(generation) else { return }
             logger.error("Final render API error code=\(error.code, privacy: .public) message=\(error.message, privacy: .public) momentId=\(momentId, privacy: .public)")
-            MomentsWorkflowDiagnostics.capture(
+            AnimateWorkflowDiagnostics.capture(
                 error,
                 feature: "animate.final_render",
                 operation: "confirm",
@@ -299,7 +299,7 @@ final class FinalRenderWorkflow: WorkspaceObservingWorkflow {
             statusMessage = error.localizedDescription
         } catch {
             guard isCurrentWorkflowGeneration(generation) else { return }
-            MomentsWorkflowDiagnostics.capture(
+            AnimateWorkflowDiagnostics.capture(
                 error,
                 feature: "animate.final_render",
                 operation: "confirm",
@@ -581,7 +581,7 @@ final class FinalRenderWorkflow: WorkspaceObservingWorkflow {
 
         do {
             statusMessage = L10n.string("workflow.final.savingToGallery")
-            MomentsWorkflowDiagnostics.addBreadcrumb(
+            AnimateWorkflowDiagnostics.addBreadcrumb(
                 feature: "animate.final_render",
                 operation: "download",
                 data: [
@@ -606,7 +606,7 @@ final class FinalRenderWorkflow: WorkspaceObservingWorkflow {
             canRetryFinalVideoDownload = false
             statusMessage = L10n.string("workflow.final.savedLocal")
         } catch {
-            MomentsWorkflowDiagnostics.capture(
+            AnimateWorkflowDiagnostics.capture(
                 error,
                 feature: "animate.final_render",
                 operation: "download",

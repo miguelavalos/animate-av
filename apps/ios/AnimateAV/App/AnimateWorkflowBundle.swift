@@ -13,21 +13,21 @@ struct AnimateWorkflowBundle {
     init(
         accountController: AccountController,
         momentsRepository: AnimateRepository,
-        momentsObserver: AnimateInProgressObserver,
+        videosObserver: AnimateInProgressObserver,
         workspaceObserver: AnimateWorkspaceObserver,
         clients: MomentsWorkflowClients
     ) {
         videoDeletion = AnimateVideoDeletionWorkflow(
             currentUserProvider: accountController,
             authTokenProvider: accountController,
-            momentDeleter: clients.workspaceCommands
+            videoDeleter: clients.workspaceCommands
         )
         momentWorkspaceSelection = AnimateWorkspaceSelectionWorkflow(workspaceObserver: workspaceObserver)
         inProgressMoments = AnimateVideosWorkflow(
-            momentsObserver: momentsObserver,
+            videosObserver: videosObserver,
             workspaceSelectionWorkflow: momentWorkspaceSelection,
             videoDeletionWorkflow: videoDeletion,
-            momentTitleUpdater: clients.workspaceCommands,
+            videoTitleUpdater: clients.workspaceCommands,
             currentUserProvider: accountController,
             authTokenProvider: accountController
         )
@@ -35,8 +35,8 @@ struct AnimateWorkflowBundle {
             currentUserProvider: accountController,
             authTokenProvider: accountController,
             creditBalanceProvider: accountController,
-            momentCreator: clients.workspaceCommands,
-            momentDeleter: clients.workspaceCommands,
+            videoCreator: clients.workspaceCommands,
+            videoDeleter: clients.workspaceCommands,
             workspaceObserver: workspaceObserver
         )
         mediaUpload = MediaUploadWorkflow(

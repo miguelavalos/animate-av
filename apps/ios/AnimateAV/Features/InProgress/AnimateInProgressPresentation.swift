@@ -6,15 +6,15 @@ struct AnimateInProgressPresentation: Equatable {
 
     static func make(
         isSignedIn: Bool,
-        momentsSummary: AnimateInProgressSummary,
+        videosSummary: AnimateInProgressSummary,
         momentPendingDeletion: AnimateVideo?
     ) -> AnimateInProgressPresentation {
         AnimateInProgressPresentation(
             availability: AnimateInProgressAvailability.make(
                 isSignedIn: isSignedIn,
-                momentsSummary: momentsSummary
+                videosSummary: videosSummary
             ),
-            deletionMessage: L10n.string("inProgress.deleteMoment.message", momentPendingDeletion?.title ?? L10n.string("moment.this"))
+            deletionMessage: L10n.string("inProgress.deleteVideo.message", momentPendingDeletion?.title ?? L10n.string("moment.this"))
         )
     }
 }
@@ -26,7 +26,7 @@ enum AnimateInProgressAvailability: Equatable {
 
     static func make(
         isSignedIn: Bool,
-        momentsSummary: AnimateInProgressSummary
+        videosSummary: AnimateInProgressSummary
     ) -> AnimateInProgressAvailability {
         if !isSignedIn {
             return .signedOut(
@@ -38,7 +38,7 @@ enum AnimateInProgressAvailability: Equatable {
             )
         }
 
-        if !momentsSummary.hasMoments {
+        if !videosSummary.hasMoments {
             return .empty(
                 AnimateInProgressUnavailablePresentation(
                     systemImage: "rectangle.stack.badge.plus",

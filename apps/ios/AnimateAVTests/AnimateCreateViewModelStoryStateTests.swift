@@ -296,7 +296,7 @@ final class AnimateCreateViewModelStoryStateTests: XCTestCase {
 
         viewModel.applyVideoCreationState(
             AnimateCreateVideoCreationState(
-                isCreatingMoment: false,
+                isCreatingVideo: false,
                 activeMomentId: "moment-1",
                 setupErrorMessage: nil
             )
@@ -345,7 +345,7 @@ final class AnimateCreateViewModelStoryStateTests: XCTestCase {
 
         viewModel.applyVideoCreationState(
             AnimateCreateVideoCreationState(
-                isCreatingMoment: false,
+                isCreatingVideo: false,
                 activeMomentId: "moment-1",
                 setupErrorMessage: nil
             )
@@ -423,7 +423,7 @@ final class AnimateCreateViewModelStoryStateTests: XCTestCase {
 
         viewModel.applyVideoCreationState(
             AnimateCreateVideoCreationState(
-                isCreatingMoment: false,
+                isCreatingVideo: false,
                 activeMomentId: "moment-1",
                 setupErrorMessage: nil
             )
@@ -578,7 +578,7 @@ final class AnimateCreateViewModelStoryStateTests: XCTestCase {
         )
         viewModel.applyVideoCreationState(
             AnimateCreateVideoCreationState(
-                isCreatingMoment: false,
+                isCreatingVideo: false,
                 activeMomentId: "moment-1",
                 setupErrorMessage: nil
             )
@@ -690,7 +690,7 @@ final class AnimateCreateViewModelStoryStateTests: XCTestCase {
         let media = makeBackendMedia()
         viewModel.applyVideoCreationState(
             AnimateCreateVideoCreationState(
-                isCreatingMoment: false,
+                isCreatingVideo: false,
                 activeMomentId: momentId,
                 setupErrorMessage: nil
             )
@@ -759,8 +759,8 @@ private final class AnimateVideoCreationFailureHarness:
     AnimateCurrentUserProviding,
     AnimateAuthTokenProviding,
     AnimateCreditBalanceProviding,
-    MomentsCreating,
-    MomentsDeleting,
+    AnimateVideoCreating,
+    AnimateVideoDeleting,
     AnimateActiveWorkspaceObserving
 {
     let createAttemptExpectation = XCTestExpectation(description: "Moment creation attempted")
@@ -784,8 +784,8 @@ private final class AnimateVideoCreationFailureHarness:
             currentUserProvider: self,
             authTokenProvider: self,
             creditBalanceProvider: self,
-            momentCreator: self,
-            momentDeleter: self,
+            videoCreator: self,
+            videoDeleter: self,
             workspaceObserver: self
         )
     }
@@ -865,14 +865,14 @@ private final class AnimateVideoCreationFailureHarness:
         "token-1"
     }
 
-    func createMoment(bearerToken: String, form: AnimateVideoSetupForm) async throws -> String {
+    func createVideo(bearerToken: String, form: AnimateVideoSetupForm) async throws -> String {
         createAttemptExpectation.fulfill()
         throw creationError
     }
 
-    func updateMomentSetup(bearerToken: String, momentId: String, form: AnimateVideoSetupForm) async throws {}
+    func updateVideoSetup(bearerToken: String, momentId: String, form: AnimateVideoSetupForm) async throws {}
 
-    func deleteMoment(bearerToken: String, momentId: String) async throws {}
+    func deleteVideo(bearerToken: String, momentId: String) async throws {}
 
     func observeWorkspace(ownerUserId: String?, momentId: String?) {}
 

@@ -35,29 +35,29 @@ struct AnimateInProgressNextActionRow: View {
 
 struct AnimateInProgressContinueButton: View {
     let action: AnimateNextAction
-    let continueMoment: () -> Void
+    let continueVideo: () -> Void
 
     var body: some View {
         AVAppShellPrimaryButton(
             action.primaryButtonTitle,
             systemImage: "arrow.right.circle",
-            action: continueMoment
+            action: continueVideo
         )
     }
 }
 
 struct AnimateInProgressDeleteButton: View {
-    let isDeletingMoment: Bool
+    let isDeletingVideo: Bool
     let requestDeleteMoment: () -> Void
 
     var body: some View {
         Button(role: .destructive) {
             requestDeleteMoment()
         } label: {
-            Label(isDeletingMoment ? L10n.string("inProgress.deleteMoment.deleting") : L10n.string("inProgress.deleteMoment.shortButton"), systemImage: "trash")
+            Label(isDeletingVideo ? L10n.string("inProgress.deleteVideo.deleting") : L10n.string("inProgress.deleteVideo.shortButton"), systemImage: "trash")
                 .frame(maxWidth: .infinity)
         }
         .buttonStyle(.bordered)
-        .disabled(isDeletingMoment)
+        .disabled(isDeletingVideo)
     }
 }

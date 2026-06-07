@@ -1,7 +1,7 @@
 import AVDiagnosticsFoundation
 import Foundation
 
-enum MomentsWorkflowDiagnostics {
+enum AnimateWorkflowDiagnostics {
     static func addBreadcrumb(feature: String, operation: String, data: [String: String] = [:]) {
         var breadcrumbData = data
         breadcrumbData["operation"] = operation

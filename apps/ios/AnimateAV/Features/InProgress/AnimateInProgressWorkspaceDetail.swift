@@ -2,8 +2,8 @@ import SwiftUI
 
 struct AnimateInProgressWorkspaceDetail: View {
     let workspace: AnimateWorkspace
-    let isDeletingMoment: Bool
-    let continueMoment: (AnimateContinuationRequest) -> Void
+    let isDeletingVideo: Bool
+    let continueVideo: (AnimateContinuationRequest) -> Void
     let requestDeleteMoment: (AnimateVideo) -> Void
     private var presentation: AnimateInProgressWorkspaceDetailPresentation {
         AnimateInProgressWorkspaceDetailPresentation(workspace: workspace)
@@ -25,10 +25,10 @@ struct AnimateInProgressWorkspaceDetail: View {
             AnimateInProgressStorySection(storyScenes: workspace.storyScenes)
             AnimateInProgressRenderJobsSection(renderJobs: workspace.renderJobs)
             AnimateInProgressContinueButton(action: presentation.nextAction) {
-                continueMoment(presentation.continuationRequest)
+                continueVideo(presentation.continuationRequest)
             }
             if workspace.activeFinalRenderJob == nil {
-                AnimateInProgressDeleteButton(isDeletingMoment: isDeletingMoment) {
+                AnimateInProgressDeleteButton(isDeletingVideo: isDeletingVideo) {
                     requestDeleteMoment(workspace.moment)
                 }
             }

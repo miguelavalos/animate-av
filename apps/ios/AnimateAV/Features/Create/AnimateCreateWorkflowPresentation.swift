@@ -3,7 +3,7 @@ import Foundation
 struct AnimateCreateWorkflowPresentation: Equatable {
     var activeMomentId: String?
     var isSignedIn = false
-    var isCreatingMoment = false
+    var isCreatingVideo = false
     var hasAnimateWorkspace = false
     var hasUnsavedLocalMoment = false
     var template: AnimateVideoTemplate
@@ -54,7 +54,7 @@ struct AnimateCreateWorkflowPresentation: Equatable {
     }
 
     var showsBlockingPreparation: Bool {
-        isCreatingMoment
+        isCreatingVideo
             || mediaSummary.isImporting
             || storySummary.isPlanning
             || finalRenderSummary.isGenerating
@@ -103,7 +103,7 @@ struct AnimateCreateWorkflowPresentation: Equatable {
     static func make(
         activeMomentId: String?,
         isSignedIn: Bool,
-        isCreatingMoment: Bool,
+        isCreatingVideo: Bool,
         hasAnimateWorkspace: Bool,
         hasUnsavedLocalMoment: Bool,
         template: AnimateVideoTemplate,
@@ -121,7 +121,7 @@ struct AnimateCreateWorkflowPresentation: Equatable {
         AnimateCreateWorkflowPresentation(
             activeMomentId: activeMomentId,
             isSignedIn: isSignedIn,
-            isCreatingMoment: isCreatingMoment,
+            isCreatingVideo: isCreatingVideo,
             hasAnimateWorkspace: hasAnimateWorkspace,
             hasUnsavedLocalMoment: hasUnsavedLocalMoment,
             template: template,

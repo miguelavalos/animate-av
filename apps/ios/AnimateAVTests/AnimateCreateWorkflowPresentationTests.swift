@@ -226,7 +226,7 @@ final class AnimateCreateWorkflowPresentationTests: XCTestCase {
         let presentation = AnimateCreateWorkflowPresentation.make(
             activeMomentId: "moment-1",
             isSignedIn: true,
-            isCreatingMoment: false,
+            isCreatingVideo: false,
             hasAnimateWorkspace: true,
             hasUnsavedLocalMoment: false,
             template: .birthdayMessage,
@@ -264,7 +264,7 @@ final class AnimateCreateWorkflowPresentationTests: XCTestCase {
         let presentation = AnimateCreateWorkflowPresentation.make(
             activeMomentId: nil,
             isSignedIn: true,
-            isCreatingMoment: false,
+            isCreatingVideo: false,
             hasAnimateWorkspace: true,
             hasUnsavedLocalMoment: true,
             template: .birthdayMessage,
@@ -296,7 +296,7 @@ final class AnimateCreateWorkflowPresentationTests: XCTestCase {
         let presentation = AnimateCreateWorkflowPresentation.make(
             activeMomentId: nil,
             isSignedIn: true,
-            isCreatingMoment: false,
+            isCreatingVideo: false,
             hasAnimateWorkspace: false,
             hasUnsavedLocalMoment: true,
             template: .birthdayMessage,

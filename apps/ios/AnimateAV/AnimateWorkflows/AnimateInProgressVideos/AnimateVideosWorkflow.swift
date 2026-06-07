@@ -3,14 +3,14 @@ import Foundation
 
 @MainActor
 final class AnimateVideosWorkflow: ObservableObject {
-    @Published private(set) var momentsSummary = AnimateInProgressSummary()
-    @Published private(set) var isDeletingMoment = false
+    @Published private(set) var videosSummary = AnimateInProgressSummary()
+    @Published private(set) var isDeletingVideo = false
     @Published private(set) var errorMessage: String?
 
-    private let momentsObserver: any AnimateInProgressListProviding
+    private let videosObserver: any AnimateInProgressListProviding
     private let workspaceSelectionWorkflow: AnimateWorkspaceSelectionWorkflow
     private let videoDeletionWorkflow: AnimateVideoDeletionWorkflow
-    private let momentTitleUpdater: any MomentsTitleUpdating
+    private let videoTitleUpdater: any AnimateVideoTitleUpdating
     private let currentUserProvider: any AnimateCurrentUserProviding
     private let authTokenProvider: any AnimateAuthTokenProviding
     private var currentOwnerUserId: String?
@@ -18,38 +18,38 @@ final class AnimateVideosWorkflow: ObservableObject {
     private var cancellables = Set<AnyCancellable>()
 
     init(
-        momentsObserver: any AnimateInProgressListProviding,
+        videosObserver: any AnimateInProgressListProviding,
         workspaceSelectionWorkflow: AnimateWorkspaceSelectionWorkflow,
         videoDeletionWorkflow: AnimateVideoDeletionWorkflow,
-        momentTitleUpdater: any MomentsTitleUpdating,
+        videoTitleUpdater: any AnimateVideoTitleUpdating,
         currentUserProvider: any AnimateCurrentUserProviding,
         authTokenProvider: any AnimateAuthTokenProviding
     ) {
-        self.momentsObserver = momentsObserver
+        self.videosObserver = videosObserver
         self.workspaceSelectionWorkflow = workspaceSelectionWorkflow
         self.videoDeletionWorkflow = videoDeletionWorkflow
-        self.momentTitleUpdater = momentTitleUpdater
+        self.videoTitleUpdater = videoTitleUpdater
         self.currentUserProvider = currentUserProvider
         self.authTokenProvider = authTokenProvider
 
-        momentsObserver.momentsPublisher
+        videosObserver.momentsPublisher
             .receive(on: DispatchQueue.main)
             .sink { [weak self] moments in
                 self?.apply(moments)
             }
             .store(in: &cancellables)
 
-        momentsObserver.momentsErrorPublisher
+        videosObserver.momentsErrorPublisher
             .receive(on: DispatchQueue.main)
             .sink { [weak self] message in
-                self?.applyMomentListError(message)
+                self?.applyVideoListError(message)
             }
             .store(in: &cancellables)
 
-        videoDeletionWorkflow.isDeletingMomentPublisher
+        videoDeletionWorkflow.isDeletingVideoPublisher
             .receive(on: DispatchQueue.main)
             .sink { [weak self] isDeleting in
-                self?.isDeletingMoment = isDeleting
+                self?.isDeletingVideo = isDeleting
             }
             .store(in: &cancellables)
 
@@ -70,10 +70,10 @@ final class AnimateVideosWorkflow: ObservableObject {
 
     func observeAnimateVideos(ownerUserId: String?) {
         currentOwnerUserId = ownerUserId
-        momentsSummary = AnimateInProgressSummary()
+        videosSummary = AnimateInProgressSummary()
         errorMessage = nil
-        clearActiveMoment()
-        momentsObserver.observeAnimateVideos(ownerUserId: ownerUserId)
+        clearActiveVideo()
+        videosObserver.observeAnimateVideos(ownerUserId: ownerUserId)
     }
 
     func observeAnimateWorkspace(ownerUserId: String?, momentId: String?) {
@@ -87,10 +87,10 @@ final class AnimateVideosWorkflow: ObservableObject {
     }
 
     func clearAnimateWorkspace() {
-        clearActiveMoment()
+        clearActiveVideo()
     }
 
-    func renameMoment(_ moment: AnimateVideo, title: String) async -> Bool {
+    func renameVideo(_ moment: AnimateVideo, title: String) async -> Bool {
         let trimmedTitle = title.trimmingCharacters(in: .whitespacesAndNewlines)
         guard !trimmedTitle.isEmpty else { return false }
         let previousTitle = optimisticMomentTitles[moment.id]
@@ -108,7 +108,7 @@ final class AnimateVideosWorkflow: ObservableObject {
                 errorMessage = L10n.string("inProgress.rename.failed")
                 return false
             }
-            try await momentTitleUpdater.updateMomentTitle(
+            try await videoTitleUpdater.updateMomentTitle(
                 bearerToken: bearerToken,
                 momentId: moment.id,
                 title: trimmedTitle
@@ -122,13 +122,13 @@ final class AnimateVideosWorkflow: ObservableObject {
         }
     }
 
-    func deleteMoment(_ moment: AnimateVideo) async -> Bool {
+    func deleteVideo(_ moment: AnimateVideo) async -> Bool {
         errorMessage = nil
-        let didDelete = await videoDeletionWorkflow.deleteMoment(moment)
+        let didDelete = await videoDeletionWorkflow.deleteVideo(moment)
         guard didDelete else { return false }
 
         if workspaceSelectionWorkflow.activeMoment?.id == moment.id {
-            clearActiveMoment()
+            clearActiveVideo()
         }
         observeAnimateVideos(ownerUserId: currentOwnerUserId)
         return true
@@ -143,14 +143,14 @@ final class AnimateVideosWorkflow: ObservableObject {
             }
             return moment.renamed(title)
         }
-        momentsSummary = AnimateInProgressSummary.make(from: renamedMoments)
+        videosSummary = AnimateInProgressSummary.make(from: renamedMoments)
     }
 
     private func applyOptimisticTitle(momentId: String, title: String) {
-        let moments = momentsSummary.moments.map { moment in
+        let moments = videosSummary.moments.map { moment in
             moment.id == momentId ? moment.renamed(title) : moment
         }
-        momentsSummary = AnimateInProgressSummary.make(from: moments)
+        videosSummary = AnimateInProgressSummary.make(from: moments)
     }
 
     private func restoreOptimisticTitle(momentId: String, previousTitle: String?) {
@@ -163,7 +163,7 @@ final class AnimateVideosWorkflow: ObservableObject {
         optimisticMomentTitles[momentId] = nil
     }
 
-    private func applyMomentListError(_ message: String?) {
+    private func applyVideoListError(_ message: String?) {
         guard let message else { return }
         errorMessage = message
     }
@@ -173,7 +173,7 @@ final class AnimateVideosWorkflow: ObservableObject {
         errorMessage = message
     }
 
-    private func clearActiveMoment() {
+    private func clearActiveVideo() {
         workspaceSelectionWorkflow.clearAnimateWorkspace()
     }
 
@@ -181,11 +181,11 @@ final class AnimateVideosWorkflow: ObservableObject {
 
 extension AnimateVideosWorkflow: AnimateVideosViewing {
     var inProgressSummaryPublisher: AnyPublisher<AnimateInProgressSummary, Never> {
-        $momentsSummary.eraseToAnyPublisher()
+        $videosSummary.eraseToAnyPublisher()
     }
 
-    var activeMomentPublisher: AnyPublisher<AnimateVideo?, Never> {
-        workspaceSelectionWorkflow.activeMomentPublisher
+    var activeVideoPublisher: AnyPublisher<AnimateVideo?, Never> {
+        workspaceSelectionWorkflow.activeVideoPublisher
     }
 
     var activeWorkspacePublisher: AnyPublisher<AnimateWorkspace?, Never> {
@@ -196,8 +196,8 @@ extension AnimateVideosWorkflow: AnimateVideosViewing {
         workspaceSelectionWorkflow.isLoadingAnimateWorkspacePublisher
     }
 
-    var isDeletingMomentPublisher: AnyPublisher<Bool, Never> {
-        $isDeletingMoment.eraseToAnyPublisher()
+    var isDeletingVideoPublisher: AnyPublisher<Bool, Never> {
+        $isDeletingVideo.eraseToAnyPublisher()
     }
 
     var inProgressErrorMessagePublisher: AnyPublisher<String?, Never> {

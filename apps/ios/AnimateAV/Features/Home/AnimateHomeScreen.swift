@@ -15,13 +15,13 @@ struct AnimateHomeScreen: View {
     let retryCredits: () -> Void
     let selectTab: (AnimateRootTab) -> Void
     let startMoment: () -> Void
-    let continueMoment: (AnimateContinuationRequest) -> Void
-    private var momentsSummary: AnimateInProgressSummary { viewModel.momentsSummary }
+    let continueVideo: (AnimateContinuationRequest) -> Void
+    private var videosSummary: AnimateInProgressSummary { viewModel.videosSummary }
     private var presentation: AnimateHomePresentation {
         AnimateHomePresentation.make(
             isSignedIn: viewModel.isSignedIn,
             displayName: viewModel.displayName,
-            momentsSummary: momentsSummary
+            videosSummary: videosSummary
         )
     }
 
@@ -33,7 +33,7 @@ struct AnimateHomeScreen: View {
         retryCredits: @escaping () -> Void,
         selectTab: @escaping (AnimateRootTab) -> Void,
         startMoment: @escaping () -> Void,
-        continueMoment: @escaping (AnimateContinuationRequest) -> Void
+        continueVideo: @escaping (AnimateContinuationRequest) -> Void
     ) {
         self.openSettings = openSettings
         self.openAccount = openAccount
@@ -42,7 +42,7 @@ struct AnimateHomeScreen: View {
         self.retryCredits = retryCredits
         self.selectTab = selectTab
         self.startMoment = startMoment
-        self.continueMoment = continueMoment
+        self.continueVideo = continueVideo
     }
 
     var body: some View {
@@ -82,14 +82,14 @@ struct AnimateHomeScreen: View {
 
             AnimateHomeMomentStatusCard(
                 isSignedIn: viewModel.isSignedIn,
-                momentsSummary: momentsSummary,
+                videosSummary: videosSummary,
                 presentation: presentation,
                 openInProgress: { selectTab(.inProgress) }
             )
 
             AnimateHomeNextActionsCard(
                 presentation: presentation,
-                continueMoment: continueMoment,
+                continueVideo: continueVideo,
                 startMoment: startMoment,
                 selectTab: selectTab
             )
@@ -109,7 +109,7 @@ struct AnimateHomeScreen: View {
             }
             return L10n.string("home.avi.currentMoment.title")
         }
-        return L10n.string("home.avi.createMoment.title")
+        return L10n.string("home.avi.createVideo.title")
     }
 
     private var aviContextDetail: String {
@@ -129,7 +129,7 @@ struct AnimateHomeScreen: View {
             }
             return L10n.string("home.avi.addMedia.detail")
         }
-        return L10n.string("home.avi.createMoment.detail")
+        return L10n.string("home.avi.createVideo.detail")
     }
 
     private var aviContextButtonTitle: String {

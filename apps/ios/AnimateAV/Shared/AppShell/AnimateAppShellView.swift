@@ -123,8 +123,8 @@ struct AnimateAppShellView: View {
                     retryCredits: retryCreditBalance,
                     selectTab: selectRootTab,
                     startMoment: startOrContinueMoment,
-                    continueMoment: { request in
-                        createViewModel.continueMoment(request.moment, focus: request.focus)
+                    continueVideo: { request in
+                        createViewModel.continueVideo(request.moment, focus: request.focus)
                         selectRootTab(.create)
                     }
                 )
@@ -140,8 +140,8 @@ struct AnimateAppShellView: View {
                 AnimateInProgressScreen(
                     balance: accountController.creditBalance,
                     creditBalanceLoadState: accountController.creditBalanceLoadState,
-                    continueMoment: { request in
-                        createViewModel.continueMoment(request.moment, focus: request.focus)
+                    continueVideo: { request in
+                        createViewModel.continueVideo(request.moment, focus: request.focus)
                         selectedTab = .create
                     },
                     startMoment: {
@@ -223,8 +223,8 @@ struct AnimateAppShellView: View {
             return
         }
 
-        if let activeMoment = inProgressViewModel.momentsSummary.latestAnimateVideo {
-            createViewModel.continueMoment(activeMoment)
+        if let activeMoment = inProgressViewModel.videosSummary.latestAnimateVideo {
+            createViewModel.continueVideo(activeMoment)
             selectRootTab(.create)
             return
         }

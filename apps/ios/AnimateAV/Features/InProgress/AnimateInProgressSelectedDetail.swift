@@ -4,8 +4,8 @@ struct AnimateInProgressSelectedDetail: View {
     let selectedMomentId: String?
     let isLoadingAnimateWorkspace: Bool
     let activeWorkspace: AnimateWorkspace?
-    let isDeletingMoment: Bool
-    let continueMoment: (AnimateContinuationRequest) -> Void
+    let isDeletingVideo: Bool
+    let continueVideo: (AnimateContinuationRequest) -> Void
     let requestDeleteMoment: (AnimateVideo) -> Void
 
     var body: some View {
@@ -18,8 +18,8 @@ struct AnimateInProgressSelectedDetail: View {
                 .padding(.vertical, 8)
             AnimateInProgressWorkspaceDetail(
                 workspace: activeWorkspace,
-                isDeletingMoment: isDeletingMoment,
-                continueMoment: continueMoment,
+                isDeletingVideo: isDeletingVideo,
+                continueVideo: continueVideo,
                 requestDeleteMoment: requestDeleteMoment
             )
         }

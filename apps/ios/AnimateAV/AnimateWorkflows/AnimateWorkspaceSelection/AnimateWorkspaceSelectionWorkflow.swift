@@ -29,7 +29,7 @@ final class AnimateWorkspaceSelectionWorkflow: ObservableObject {
             .store(in: &cancellables)
     }
 
-    var activeMomentPublisher: AnyPublisher<AnimateVideo?, Never> {
+    var activeVideoPublisher: AnyPublisher<AnimateVideo?, Never> {
         $activeMoment.eraseToAnyPublisher()
     }
 

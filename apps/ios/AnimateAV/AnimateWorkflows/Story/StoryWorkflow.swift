@@ -70,7 +70,7 @@ final class StoryWorkflow: WorkspaceObservingWorkflow {
         let generation = beginWorkflowGeneration()
         isPlanning = true
         statusMessage = nil
-        MomentsWorkflowDiagnostics.addBreadcrumb(
+        AnimateWorkflowDiagnostics.addBreadcrumb(
             feature: "animate.story",
             operation: "generate_plan",
             data: [
@@ -96,7 +96,7 @@ final class StoryWorkflow: WorkspaceObservingWorkflow {
         } catch let error as StoryWorkflowError {
             guard isCurrentWorkflowGeneration(generation) else { return false }
             logger.error("Story plan workflow failed momentId=\(momentId, privacy: .public) reason=\(error.localizedDescription, privacy: .public)")
-            MomentsWorkflowDiagnostics.capture(
+            AnimateWorkflowDiagnostics.capture(
                 error,
                 feature: "animate.story",
                 operation: "generate_plan",
@@ -112,7 +112,7 @@ final class StoryWorkflow: WorkspaceObservingWorkflow {
         } catch let error as LocalizedError {
             guard isCurrentWorkflowGeneration(generation) else { return false }
             logger.error("Story plan request failed momentId=\(momentId, privacy: .public) error=\(String(describing: error), privacy: .public)")
-            MomentsWorkflowDiagnostics.capture(
+            AnimateWorkflowDiagnostics.capture(
                 error,
                 feature: "animate.story",
                 operation: "generate_plan",
@@ -128,7 +128,7 @@ final class StoryWorkflow: WorkspaceObservingWorkflow {
         } catch {
             guard isCurrentWorkflowGeneration(generation) else { return false }
             logger.error("Story plan failed momentId=\(momentId, privacy: .public) error=\(String(describing: error), privacy: .public)")
-            MomentsWorkflowDiagnostics.capture(
+            AnimateWorkflowDiagnostics.capture(
                 error,
                 feature: "animate.story",
                 operation: "generate_plan",

@@ -477,7 +477,7 @@ struct AnimateCreateBlockingPreparationView: View {
     }
 
     private var mode: PreparationMode {
-        if presentation.isCreatingMoment {
+        if presentation.isCreatingVideo {
             return .prepareMoment
         }
         if isPreparingFinalPlan {

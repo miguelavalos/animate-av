@@ -6,13 +6,13 @@ final class AnimateGalleryObserver: ObservableObject {
     @Published private(set) var moments: [AnimateArtifact] = []
     @Published private(set) var errorMessage: String?
 
-    private let momentsObserver: any AnimateGalleryObserving
+    private let videosObserver: any AnimateGalleryObserving
     private var momentsTask: Task<Void, Never>?
     private var observationGeneration = 0
     private let diagnosticsObserverName = "gallery"
 
     init(momentsRepository: any AnimateGalleryObserving = AnimateRepository()) {
-        momentsObserver = momentsRepository
+        videosObserver = momentsRepository
     }
 
     var galleryMomentsPublisher: AnyPublisher<[AnimateArtifact], Never> {
@@ -34,7 +34,7 @@ final class AnimateGalleryObserver: ObservableObject {
         AnimateSyncDiagnostics.addObserverBreadcrumb(observer: diagnosticsObserverName, message: "observer_started")
 
         do {
-            let updates = try momentsObserver.observeGalleryMoments(ownerUserId: ownerUserId).values
+            let updates = try videosObserver.observeGalleryMoments(ownerUserId: ownerUserId).values
 
             momentsTask = Task { [weak self] in
                 do {

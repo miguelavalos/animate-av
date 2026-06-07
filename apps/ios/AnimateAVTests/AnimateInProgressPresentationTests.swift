@@ -5,7 +5,7 @@ final class AnimateInProgressPresentationTests: XCTestCase {
     func testSignedOutAvailabilityExplainsAccountRequirement() {
         let presentation = AnimateInProgressPresentation.make(
             isSignedIn: false,
-            momentsSummary: AnimateInProgressSummary(),
+            videosSummary: AnimateInProgressSummary(),
             momentPendingDeletion: nil
         )
 
@@ -24,7 +24,7 @@ final class AnimateInProgressPresentationTests: XCTestCase {
     func testEmptySignedInAvailabilityExplainsCreateFirstState() {
         let presentation = AnimateInProgressPresentation.make(
             isSignedIn: true,
-            momentsSummary: AnimateInProgressSummary(),
+            videosSummary: AnimateInProgressSummary(),
             momentPendingDeletion: nil
         )
 
@@ -43,7 +43,7 @@ final class AnimateInProgressPresentationTests: XCTestCase {
     func testVideoAvailabilityIsAvailableWhenSignedInWithVideos() {
         let presentation = AnimateInProgressPresentation.make(
             isSignedIn: true,
-            momentsSummary: AnimateInProgressSummary.make(from: [
+            videosSummary: AnimateInProgressSummary.make(from: [
                 makeMoment(id: "moment-1")
             ]),
             momentPendingDeletion: nil
@@ -55,13 +55,13 @@ final class AnimateInProgressPresentationTests: XCTestCase {
     func testDeletionMessageUsesPendingVideoTitleOrFallback() {
         let fallback = AnimateInProgressPresentation.make(
             isSignedIn: true,
-            momentsSummary: AnimateInProgressSummary(),
+            videosSummary: AnimateInProgressSummary(),
             momentPendingDeletion: nil
         )
         let moment = makeMoment(id: "moment-1", title: "Family Weekend")
         let titled = AnimateInProgressPresentation.make(
             isSignedIn: true,
-            momentsSummary: AnimateInProgressSummary(),
+            videosSummary: AnimateInProgressSummary(),
             momentPendingDeletion: moment
         )
 

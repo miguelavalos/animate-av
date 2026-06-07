@@ -45,7 +45,7 @@ extension AnimateCreateViewModel {
         }
 
         runOperation {
-            let discarded = await videoCreationWorkflow.discardActiveMoment(momentId: self.activeMomentId)
+            let discarded = await videoCreationWorkflow.discardActiveVideo(momentId: self.activeMomentId)
             if discarded {
                 self.resetActiveMoment(force: true)
             } else if let message = videoCreationWorkflow.errorMessage {
@@ -97,7 +97,7 @@ extension AnimateCreateViewModel {
             if let activeMomentId = self.activeMomentId {
                 momentId = activeMomentId
             } else if let videoCreationWorkflow = self.videoCreationWorkflow {
-                momentId = await videoCreationWorkflow.createMoment(form: form)
+                momentId = await videoCreationWorkflow.createVideo(form: form)
                 if momentId != nil {
                     self.isLocalMomentStarted = false
                 }
@@ -270,7 +270,7 @@ extension AnimateCreateViewModel {
         guard let videoCreationWorkflow else {
             return nil
         }
-        let momentId = await videoCreationWorkflow.createMoment(form: form)
+        let momentId = await videoCreationWorkflow.createVideo(form: form)
         if momentId != nil {
             isLocalMomentStarted = false
         }
@@ -280,7 +280,7 @@ extension AnimateCreateViewModel {
     private func persistSetupEditsIfNeeded(momentId: String, form: AnimateVideoSetupForm) async -> Bool {
         guard hasPendingLocalSetupEdits else { return true }
         guard let videoCreationWorkflow else { return false }
-        return await videoCreationWorkflow.updateMomentSetup(momentId: momentId, form: form)
+        return await videoCreationWorkflow.updateVideoSetup(momentId: momentId, form: form)
     }
 
     private func prepareStoryIfNeeded(

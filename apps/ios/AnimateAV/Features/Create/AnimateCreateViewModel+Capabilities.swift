@@ -8,7 +8,7 @@ extension AnimateCreateViewModel {
     }
 
     var isBusy: Bool {
-        isCreatingMoment
+        isCreatingVideo
             || isImportingMedia
             || isPlanningStory
             || isGeneratingFinalRender

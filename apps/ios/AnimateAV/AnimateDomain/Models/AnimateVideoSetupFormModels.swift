@@ -73,7 +73,7 @@ struct AnimateVideoSetupForm: Equatable {
         return trimmedRecipient.isEmpty ? momentTitle : "\(momentTitle) for \(trimmedRecipient)"
     }
 
-    var canCreateMoment: Bool {
+    var canCreateVideo: Bool {
         !occasion.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty
     }
 
@@ -120,7 +120,7 @@ enum AnimateVideoSetupRules {
     }
 
     struct Availability {
-        let canCreateMoment: Bool
+        let canCreateVideo: Bool
         let blockReason: BlockReason?
     }
 
@@ -129,10 +129,10 @@ enum AnimateVideoSetupRules {
         balance: AnimateCreditBalance
     ) -> Availability {
         guard !form.occasion.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty else {
-            return Availability(canCreateMoment: false, blockReason: .missingOccasion)
+            return Availability(canCreateVideo: false, blockReason: .missingOccasion)
         }
 
-        return Availability(canCreateMoment: true, blockReason: nil)
+        return Availability(canCreateVideo: true, blockReason: nil)
     }
 
     static func availabilityMessage(_ availability: Availability) -> String? {
