@@ -34,18 +34,17 @@ struct MomentsRemoteClient {
         .eraseToAnyPublisher()
     }
 
-    func observeGalleryMoments(ownerUserId: String) throws -> AnyPublisher<[InProgressMoment], Error> {
+    func observeGalleryMoments(ownerUserId: String) throws -> AnyPublisher<[MomentArtifact], Error> {
         let client = try requireClient()
         let realtimeSessionId = try realtimeSessionStore.sessionId(for: ownerUserId)
 
         return client.subscribe(
-            to: "moments:listMoments",
+            to: "animate:listGalleryArtifacts",
             with: [
                 "ownerUserId": ownerUserId,
-                "realtimeSessionId": realtimeSessionId,
-                "collection": "gallery"
+                "realtimeSessionId": realtimeSessionId
             ],
-            yielding: [InProgressMoment].self
+            yielding: [MomentArtifact].self
         )
         .mapError { $0 as Error }
         .eraseToAnyPublisher()

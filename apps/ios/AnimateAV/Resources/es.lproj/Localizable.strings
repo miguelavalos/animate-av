@@ -1057,3 +1057,10 @@
 "create.images.action.queued" = "%d generaciones de imagen en cola.";
 "create.images.action.tooManyLooks" = "Elige menos looks";
 "create.images.action.backendPending" = "Generación backend pendiente";
+"gallery.video.defaultTitle" = "Video Animate";
+"gallery.image.defaultTitle" = "Imagen con estilo";
+"gallery.image.download" = "Descargar imagen";
+"gallery.image.downloaded" = "Imagen descargada";
+"gallery.image.downloadAvailable" = "Descarga disponible";
+"gallery.image.downloadUnavailable" = "Descarga no disponible";
+"gallery.image.downloadFailed" = "No se pudo descargar la imagen";

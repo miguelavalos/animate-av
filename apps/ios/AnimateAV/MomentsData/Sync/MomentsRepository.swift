@@ -22,7 +22,7 @@ struct MomentsRepository {
         try remoteClient.observeInProgressMoments(ownerUserId: ownerUserId)
     }
 
-    func observeGalleryMoments(ownerUserId: String) throws -> AnyPublisher<[InProgressMoment], Error> {
+    func observeGalleryMoments(ownerUserId: String) throws -> AnyPublisher<[MomentArtifact], Error> {
         try remoteClient.observeGalleryMoments(ownerUserId: ownerUserId)
     }
 

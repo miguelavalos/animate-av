@@ -1048,3 +1048,10 @@
 "create.images.action.queued" = "%d generacions d’imatge en cua.";
 "create.images.action.tooManyLooks" = "Tria menys looks";
 "create.images.action.backendPending" = "Generació backend pendent";
+"gallery.video.defaultTitle" = "Vídeo Animate";
+"gallery.image.defaultTitle" = "Imatge amb estil";
+"gallery.image.download" = "Baixar imatge";
+"gallery.image.downloaded" = "Imatge baixada";
+"gallery.image.downloadAvailable" = "Baixada disponible";
+"gallery.image.downloadUnavailable" = "Baixada no disponible";
+"gallery.image.downloadFailed" = "No s'ha pogut baixar la imatge";

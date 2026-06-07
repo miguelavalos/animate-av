@@ -4,6 +4,7 @@ import Foundation
 @MainActor
 final class MomentsGalleryViewModel: ObservableObject {
     @Published private(set) var videos: [MomentsGalleryVideoPresentation] = []
+    @Published private(set) var images: [MomentsGalleryImagePresentation] = []
     @Published private(set) var statusMessage: String?
 
     private var galleryCancellables = Set<AnyCancellable>()
@@ -11,7 +12,8 @@ final class MomentsGalleryViewModel: ObservableObject {
     private let galleryMomentsProvider: (any GalleryMomentsListProviding)?
     private let authTokenProvider: (any MomentsAuthTokenProviding)?
     private let finalRenderClient: MomentsFinalRenderClient?
-    private var remoteMoments: [InProgressMoment] = []
+    private var remoteArtifacts: [MomentArtifact] = []
+    private var downloadedImageURLs: [String: URL] = [:]
 
     init(
         galleryStore: any MomentsGalleryStoring = MomentsGalleryStore(),
@@ -31,9 +33,10 @@ final class MomentsGalleryViewModel: ObservableObject {
             }
             .store(in: &galleryCancellables)
         galleryMomentsProvider?.galleryMomentsPublisher
-            .sink { [weak self] moments in
-                self?.remoteMoments = moments
+            .sink { [weak self] artifacts in
+                self?.remoteArtifacts = artifacts
                 self?.refreshVideos()
+                self?.refreshImages()
             }
             .store(in: &galleryCancellables)
         galleryMomentsProvider?.galleryMomentsErrorPublisher
@@ -47,9 +50,9 @@ final class MomentsGalleryViewModel: ObservableObject {
         let localRecords = galleryStore.loadRecords()
         var presentations: [MomentsGalleryVideoPresentation] = localRecords.map { record in
             let localFileExists = galleryStore.localFileExists(for: record)
-            let remoteArtifact = remoteMoments
-                .first { $0.id == record.momentId || $0.finalExport?.id == record.artifactId || $0.finalExport?.workflowArtifactId == record.artifactId }?
-                .finalExport
+            let remoteArtifact = remoteArtifacts.first {
+                $0.id == record.artifactId || $0.workflowArtifactId == record.artifactId
+            }
             return MomentsGalleryVideoPresentation(
                 record: record,
                 localFileURL: galleryStore.localFileURL(for: record),
@@ -58,21 +61,19 @@ final class MomentsGalleryViewModel: ObservableObject {
             )
         }
 
-        for moment in remoteMoments {
-            guard let artifact = moment.finalExport else { continue }
+        for artifact in remoteArtifacts where artifact.kind == "final_export" || artifact.kind == "final_video" {
             let artifactId = artifact.workflowArtifactId ?? artifact.id
             let alreadyPresented = presentations.contains { presentation in
                 presentation.record.artifactId == artifactId
                     || presentation.record.artifactId == artifact.id
-                    || presentation.record.momentId == moment.id
             }
             guard !alreadyPresented else { continue }
 
             let record = MomentsGalleryVideoRecord(
                 id: artifactId,
-                momentId: moment.id,
+                momentId: artifactId,
                 artifactId: artifactId,
-                title: moment.title,
+                title: L10n.string("gallery.video.defaultTitle"),
                 r2Key: artifact.r2Key,
                 localRelativePath: "Videos/\(artifactId).mp4",
                 createdAt: artifact.createdAt
@@ -88,6 +89,19 @@ final class MomentsGalleryViewModel: ObservableObject {
         }
 
         videos = presentations.sorted { $0.record.createdAt > $1.record.createdAt }
+    }
+
+    func refreshImages() {
+        images = remoteArtifacts
+            .filter { $0.kind == "generated_image" }
+            .map { artifact in
+                let artifactId = artifact.workflowArtifactId ?? artifact.id
+                return MomentsGalleryImagePresentation(
+                    artifact: artifact,
+                    localFileURL: downloadedImageURLs[artifactId]
+                )
+            }
+            .sorted { $0.artifact.createdAt > $1.artifact.createdAt }
     }
 
     func deleteVideo(_ video: MomentsGalleryVideoPresentation) {
@@ -139,6 +153,40 @@ final class MomentsGalleryViewModel: ObservableObject {
                 self?.refreshVideos()
             } catch {
                 self?.statusMessage = L10n.string("gallery.video.downloadFailed")
+            }
+        }
+    }
+
+    func downloadImage(_ image: MomentsGalleryImagePresentation) {
+        guard image.canDownload else { return }
+        guard let authTokenProvider,
+              let finalRenderClient
+        else {
+            statusMessage = L10n.string("gallery.image.downloadUnavailable")
+            return
+        }
+
+        Task { [weak self] in
+            do {
+                guard let bearerToken = try await authTokenProvider.currentBearerToken() else {
+                    self?.statusMessage = L10n.string("workflow.final.signInAgainSaveLocal")
+                    return
+                }
+                let artifactId = image.artifact.workflowArtifactId ?? image.artifact.id
+                let download = try await finalRenderClient.prepareImageArtifactDownload(
+                    artifactId: artifactId,
+                    bearerToken: bearerToken
+                )
+                let temporaryFileURL = try await finalRenderClient.downloadFinalArtifact(from: download)
+                let localURL = FileManager.default.temporaryDirectory
+                    .appendingPathComponent("\(artifactId).jpg")
+                try? FileManager.default.removeItem(at: localURL)
+                try FileManager.default.moveItem(at: temporaryFileURL, to: localURL)
+                self?.downloadedImageURLs[artifactId] = localURL
+                self?.statusMessage = L10n.string("gallery.image.downloaded")
+                self?.refreshImages()
+            } catch {
+                self?.statusMessage = L10n.string("gallery.image.downloadFailed")
             }
         }
     }

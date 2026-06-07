@@ -73,3 +73,23 @@ enum MomentsGalleryVideoAvailability: String, Equatable {
     case downloadUnavailable
     case remoteMetadataOnly
 }
+
+struct MomentsGalleryImagePresentation: Identifiable, Equatable {
+    let artifact: MomentArtifact
+    let localFileURL: URL?
+
+    var id: String { artifact.workflowArtifactId ?? artifact.id }
+    var title: String { L10n.string("gallery.image.defaultTitle") }
+    var canDownload: Bool {
+        artifact.status == "available"
+            && artifact.expiresAt > Date().timeIntervalSince1970 * 1000
+    }
+    var availabilityTitle: String {
+        if localFileURL != nil {
+            return L10n.string("gallery.image.downloaded")
+        }
+        return canDownload
+            ? L10n.string("gallery.image.downloadAvailable")
+            : L10n.string("gallery.image.downloadUnavailable")
+    }
+}

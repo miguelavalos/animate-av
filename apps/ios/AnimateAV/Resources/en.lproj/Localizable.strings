@@ -1057,3 +1057,10 @@
 "create.images.action.queued" = "%d image generations queued.";
 "create.images.action.tooManyLooks" = "Choose fewer looks";
 "create.images.action.backendPending" = "Backend generation pending";
+"gallery.video.defaultTitle" = "Animate video";
+"gallery.image.defaultTitle" = "Stylized image";
+"gallery.image.download" = "Download image";
+"gallery.image.downloaded" = "Image downloaded";
+"gallery.image.downloadAvailable" = "Download available";
+"gallery.image.downloadUnavailable" = "Download unavailable";
+"gallery.image.downloadFailed" = "Image download failed";

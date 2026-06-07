@@ -216,6 +216,41 @@ struct MomentsFinalRenderClient {
         return try JSONDecoder().decode(MomentsArtifactDownloadResponse.self, from: data)
     }
 
+    func prepareImageArtifactDownload(
+        artifactId: String,
+        bearerToken: String
+    ) async throws -> MomentsArtifactDownloadResponse {
+        guard let baseURL = URL(string: baseURLString.trimmingCharacters(in: .whitespacesAndNewlines)) else {
+            throw MomentsFinalRenderError.apiNotConfigured
+        }
+
+        let endpoint = baseURL
+            .appendingPathComponent("v1")
+            .appendingPathComponent("apps")
+            .appendingPathComponent("animateav")
+            .appendingPathComponent("images")
+            .appendingPathComponent("artifacts")
+            .appendingPathComponent(artifactId)
+            .appendingPathComponent("download")
+
+        var request = URLRequest(url: endpoint)
+        request.httpMethod = "POST"
+        request.setValue("Bearer \(bearerToken)", forHTTPHeaderField: "Authorization")
+
+        let (data, response) = try await retryPolicy.run {
+            try await session.data(for: request)
+        }
+        guard let httpResponse = response as? HTTPURLResponse, 200..<300 ~= httpResponse.statusCode else {
+            throw MomentsAPIError.decode(
+                from: data,
+                fallbackCode: "animate_image_artifact_download_failed",
+                fallbackMessage: MomentsFinalRenderError.downloadPreparationFailed.localizedDescription
+            )
+        }
+
+        return try JSONDecoder().decode(MomentsArtifactDownloadResponse.self, from: data)
+    }
+
     func downloadFinalArtifact(from response: MomentsArtifactDownloadResponse) async throws -> URL {
         guard let downloadURL = URL(string: response.downloadUrl) else {
             throw MomentsFinalRenderError.downloadPreparationFailed

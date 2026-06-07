@@ -65,11 +65,24 @@ struct MomentsGalleryScreen: View {
                     }
                 }
             case .images:
-                MomentsGalleryEmptyState(
-                    systemImage: "photo.stack.fill",
-                    title: L10n.string("gallery.images.empty.title"),
-                    detail: L10n.string("gallery.images.empty.detail")
-                )
+                if viewModel.images.isEmpty {
+                    MomentsGalleryEmptyState(
+                        systemImage: "photo.stack.fill",
+                        title: L10n.string("gallery.images.empty.title"),
+                        detail: L10n.string("gallery.images.empty.detail")
+                    )
+                } else {
+                    LazyVStack(spacing: 12) {
+                        ForEach(viewModel.images) { image in
+                            MomentsGalleryImageRow(
+                                image: image,
+                                downloadImage: {
+                                    viewModel.downloadImage(image)
+                                }
+                            )
+                        }
+                    }
+                }
             }
         }
         .confirmationDialog(
@@ -113,6 +126,108 @@ struct MomentsGalleryScreen: View {
             viewModel.deleteVideo(videoPendingDeletion)
         }
         videoPendingDeletion = nil
+    }
+}
+
+private struct MomentsGalleryImageRow: View {
+    let image: MomentsGalleryImagePresentation
+    let downloadImage: () -> Void
+
+    var body: some View {
+        VStack(alignment: .leading, spacing: 12) {
+            ZStack {
+                MomentsGalleryImageThumbnail(url: image.localFileURL)
+                    .frame(height: 220)
+                    .clipShape(RoundedRectangle(cornerRadius: 22, style: .continuous))
+
+                VStack {
+                    HStack {
+                        Text(image.availabilityTitle)
+                            .font(.system(size: 12, weight: .black))
+                            .foregroundStyle(.white)
+                            .padding(.horizontal, 11)
+                            .padding(.vertical, 7)
+                            .background(.black.opacity(0.28), in: Capsule())
+
+                        Spacer(minLength: 0)
+
+                        if let localFileURL = image.localFileURL {
+                            ShareLink(item: localFileURL) {
+                                Image(systemName: "square.and.arrow.up")
+                                    .font(.system(size: 15, weight: .black))
+                                    .foregroundStyle(AVBrandColor.textPrimary)
+                                    .frame(width: 42, height: 42)
+                                    .background(.white.opacity(0.92), in: Circle())
+                            }
+                        }
+                    }
+
+                    Spacer(minLength: 0)
+
+                    HStack {
+                        VStack(alignment: .leading, spacing: 4) {
+                            Text(image.title)
+                                .font(.system(size: 22, weight: .black))
+                                .foregroundStyle(.white)
+
+                            Text(MomentsMomentFormatting.galleryDate(image.artifact.createdAt))
+                                .font(.system(size: 13, weight: .bold))
+                                .foregroundStyle(.white.opacity(0.82))
+                        }
+
+                        Spacer(minLength: 0)
+                    }
+                }
+                .padding(14)
+            }
+
+            if image.localFileURL == nil, image.canDownload {
+                Button(action: downloadImage) {
+                    Label(L10n.string("gallery.image.download"), systemImage: "arrow.down.circle.fill")
+                        .font(.system(size: 14, weight: .black))
+                        .frame(maxWidth: .infinity)
+                }
+                .buttonStyle(.borderedProminent)
+            }
+        }
+        .padding(8)
+        .background(
+            RoundedRectangle(cornerRadius: 28, style: .continuous)
+                .fill(AVBrandColor.elevatedSurface)
+        )
+        .overlay(
+            RoundedRectangle(cornerRadius: 28, style: .continuous)
+                .stroke(AVBrandColor.borderSubtle.opacity(0.55), lineWidth: 1)
+        )
+        .shadow(color: AVBrandColor.ink.opacity(0.05), radius: 18, x: 0, y: 10)
+    }
+}
+
+private struct MomentsGalleryImageThumbnail: View {
+    let url: URL?
+
+    var body: some View {
+        ZStack {
+            LinearGradient(
+                colors: [
+                    AVBrandColor.accent.opacity(0.18),
+                    AVBrandColor.accent.opacity(0.06),
+                    AVBrandColor.neutral100
+                ],
+                startPoint: .topLeading,
+                endPoint: .bottomTrailing
+            )
+
+            if let url, let uiImage = UIImage(contentsOfFile: url.path) {
+                Image(uiImage: uiImage)
+                    .resizable()
+                    .scaledToFill()
+            } else {
+                Image(systemName: "photo.fill")
+                    .font(.system(size: 42, weight: .black))
+                    .foregroundStyle(AVBrandColor.accent.opacity(0.70))
+            }
+        }
     }
 }
 

@@ -3,7 +3,7 @@ import Foundation
 
 @MainActor
 final class GalleryMomentsObserver: ObservableObject {
-    @Published private(set) var moments: [InProgressMoment] = []
+    @Published private(set) var moments: [MomentArtifact] = []
     @Published private(set) var errorMessage: String?
 
     private let momentsObserver: any GalleryMomentsObserving
@@ -15,7 +15,7 @@ final class GalleryMomentsObserver: ObservableObject {
         momentsObserver = momentsRepository
     }
 
-    var galleryMomentsPublisher: AnyPublisher<[InProgressMoment], Never> {
+    var galleryMomentsPublisher: AnyPublisher<[MomentArtifact], Never> {
         $moments.eraseToAnyPublisher()
     }
 

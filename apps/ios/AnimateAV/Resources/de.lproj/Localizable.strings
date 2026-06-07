@@ -1050,3 +1050,10 @@
 "create.images.action.queued" = "%d Bildgenerierungen eingereiht.";
 "create.images.action.tooManyLooks" = "Wähle weniger Looks";
 "create.images.action.backendPending" = "Backend-Generierung ausstehend";
+"gallery.video.defaultTitle" = "Animate-Video";
+"gallery.image.defaultTitle" = "Stilisiertes Bild";
+"gallery.image.download" = "Bild laden";
+"gallery.image.downloaded" = "Bild geladen";
+"gallery.image.downloadAvailable" = "Download verfügbar";
+"gallery.image.downloadUnavailable" = "Download nicht verfügbar";
+"gallery.image.downloadFailed" = "Bild konnte nicht geladen werden";

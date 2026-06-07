@@ -143,7 +143,7 @@ struct MomentsArtifactDownloadRequest: Encodable {
 
 struct MomentsArtifactDownloadResponse: Decodable, Equatable {
     let appId: String
-    let momentId: String
+    let momentId: String?
     let artifactId: String
     let artifactKind: String
     let downloadUrl: String

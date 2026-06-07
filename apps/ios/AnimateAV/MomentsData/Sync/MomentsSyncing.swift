@@ -25,7 +25,7 @@ protocol InProgressMomentsObserving {
 
 @MainActor
 protocol GalleryMomentsObserving {
-    func observeGalleryMoments(ownerUserId: String) throws -> AnyPublisher<[InProgressMoment], Error>
+    func observeGalleryMoments(ownerUserId: String) throws -> AnyPublisher<[MomentArtifact], Error>
 }
 
 @MainActor
@@ -39,7 +39,7 @@ protocol InProgressMomentsListProviding {
 
 @MainActor
 protocol GalleryMomentsListProviding {
-    var galleryMomentsPublisher: AnyPublisher<[InProgressMoment], Never> { get }
+    var galleryMomentsPublisher: AnyPublisher<[MomentArtifact], Never> { get }
     var galleryMomentsErrorPublisher: AnyPublisher<String?, Never> { get }
 
     func observeGalleryMoments(ownerUserId: String?)

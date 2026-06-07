@@ -1048,3 +1048,10 @@
 "create.images.action.queued" = "%d générations d’image en file.";
 "create.images.action.tooManyLooks" = "Choisis moins de looks";
 "create.images.action.backendPending" = "Génération backend en attente";
+"gallery.video.defaultTitle" = "Vidéo Animate";
+"gallery.image.defaultTitle" = "Image stylisée";
+"gallery.image.download" = "Télécharger l'image";
+"gallery.image.downloaded" = "Image téléchargée";
+"gallery.image.downloadAvailable" = "Téléchargement disponible";
+"gallery.image.downloadUnavailable" = "Téléchargement indisponible";
+"gallery.image.downloadFailed" = "Échec du téléchargement de l'image";
