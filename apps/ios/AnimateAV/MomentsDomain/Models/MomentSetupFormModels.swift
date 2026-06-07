@@ -93,7 +93,7 @@ struct MomentSetupForm: Equatable {
             tempo: MomentSetupTempo(rawValue: moment.tempo ?? "") ?? .balanced,
             details: moment.details ?? ""
         )
-        form.creationMode = MomentCreationMode(rawValue: moment.creationMode) ?? .quick
+        form.creationMode = .quick
         form.look = MomentLook(rawValue: moment.look) ?? .cartoon
         form.theme = MomentCreationStyleID(rawValue: moment.theme) ?? .celebration
         form.duration = MomentDuration(rawValue: moment.duration) ?? .short

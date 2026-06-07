@@ -98,13 +98,13 @@
 /* Synced fallback keys from English pending native translation */
 "common.back" = "Enrere";
 "common.soon" = "Aviat";
-"create.aviDirection.changedDirection" = "Has canviat la direcció a %@. Avi havia suggerit %@ per a aquesta selecció.";
-"create.aviDirection.changedMusic" = "Avi ha triat %@ per a aquesta selecció. Has canviat l'ànim.";
-"create.aviDirection.defaultMessage" = "Digues a Avi què importa, o deixa-ho tot automàtic.";
-"create.aviDirection.title" = "Direcció d’Avi";
+"create.aviDirection.changedDirection" = "Has canviat el tema a %@. Avi havia triat %@ per a aquesta imatge.";
+"create.aviDirection.changedMusic" = "Avi ha triat %@ per a aquesta imatge. Has canviat la veu.";
+"create.aviDirection.defaultMessage" = "Avi pot triar la configuració automàticament. Ajusta qualsevol fila si vols més control.";
+"create.aviDirection.title" = "Configuració d’Avi";
 "create.aviDirection.undoSuggestion" = "Desfés el suggeriment d’Avi";
 "create.aviDirection.useSuggestion" = "Usa el suggeriment d’Avi";
-"create.aviDirection.usingSuggestion" = "Avi ha triat %@ per a aquesta selecció. Pots canviar la direcció o afegir una nota.";
+"create.aviDirection.usingSuggestion" = "Avi ha triat %@ per a aquesta imatge. Pots canviar l’estil, la veu o el missatge.";
 "create.duration.auto.subtitle" = "Avi tria el rang que encaixa.";
 "create.duration.auto.title" = "Auto";
 "create.duration.extended.subtitle" = "Més escenes i pauses.";
@@ -153,9 +153,9 @@
 "create.selector.mood.calm.detail" = "Suau, més lent i discret.";
 "create.selector.mood.cinematic.detail" = "Ritme més dramàtic i amb atmosfera.";
 "create.selector.mood.fun.detail" = "Energia juganera per moments compartits.";
-"create.selector.mood.intro.detail" = "Tria la direcció emocional que Avi usarà per ritme i to.";
-"create.selector.mood.intro.title" = "L’ànim guia l’edició";
-"create.selector.mood.title" = "Triar ànim";
+"create.selector.mood.intro.detail" = "Tria com s’ha de sentir el missatge parlat i l’audio.";
+"create.selector.mood.intro.title" = "La veu guia el vídeo";
+"create.selector.mood.title" = "Triar veu";
 "create.selector.mood.upbeat.detail" = "Ràpid, lluminós i viu.";
 "create.selector.mood.warm.detail" = "Càlid, proper i personal.";
 "create.selector.theme.accessibility" = "Tema %@";
@@ -609,7 +609,7 @@
 "create.final.creating" = "Creant final...";
 "create.final.video" = "Vídeo";
 "create.final.videoReady" = "Vídeo final a punt";
-"create.guide.title" = "Guiar Avi";
+"create.guide.title" = "Configuració d’Avi";
 "create.status.checking" = "Comprovant...";
 "create.status.refreshing" = "Actualitzant...";
 "create.action.notNow" = "Ara no";
@@ -869,8 +869,8 @@
 "create.media.action.adding" = "Adding media...";
 "create.media.action.add" = "Add Photos or Clips";
 "create.media.selectedCount" = "%d seleccionats";
-"create.media.selection.tooFew" = "Add %d more %@.";
-"create.media.selection.tooMany" = "Avi farà servir primer les millors fotos i clips.";
+"create.media.selection.tooFew" = "Afegeix %d %@ més.";
+"create.media.selection.tooMany" = "Fes servir una sola imatge font per als vídeos d’Animate AV.";
 "create.media.asset.singular" = "photo or clip";
 "create.media.asset.plural" = "photos or clips";
 "create.story.action.preparing" = "Preparing story...";

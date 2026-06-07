@@ -102,7 +102,6 @@ enum MomentLook: String, CaseIterable, Identifiable, Codable {
 
 enum MomentCreationMode: String, CaseIterable, Identifiable, Codable {
     case quick
-    case planned
 
     var id: String { rawValue }
 }

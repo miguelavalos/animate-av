@@ -98,13 +98,13 @@
 /* Create flow setup selectors */
 "common.back" = "Back";
 "common.soon" = "Soon";
-"create.aviDirection.changedDirection" = "You changed the direction to %@. Avi originally suggested %@ for this selection.";
-"create.aviDirection.changedMusic" = "Avi picked %@ for this selection. You changed the mood.";
-"create.aviDirection.defaultMessage" = "Tell Avi what matters most, or leave everything automatic.";
-"create.aviDirection.title" = "Avi direction";
+"create.aviDirection.changedDirection" = "You changed the theme to %@. Avi originally picked %@ for this image.";
+"create.aviDirection.changedMusic" = "Avi picked %@ for this image. You changed the voice.";
+"create.aviDirection.defaultMessage" = "Avi can pick the setup automatically. Adjust any row if you want more control.";
+"create.aviDirection.title" = "Avi setup";
 "create.aviDirection.undoSuggestion" = "Undo Avi suggestion";
 "create.aviDirection.useSuggestion" = "Use Avi suggestion";
-"create.aviDirection.usingSuggestion" = "Avi picked %@ for this selection. You can change the direction or add a note.";
+"create.aviDirection.usingSuggestion" = "Avi picked %@ for this image. You can change the look, voice, or message.";
 "create.duration.auto.subtitle" = "Avi chooses the best range.";
 "create.duration.auto.title" = "Auto";
 "create.duration.extended.subtitle" = "The longest V1 animation.";
@@ -153,9 +153,9 @@
 "create.selector.mood.calm.detail" = "Gentle, slower, and understated.";
 "create.selector.mood.cinematic.detail" = "More dramatic pacing and atmosphere.";
 "create.selector.mood.fun.detail" = "Playful energy for shared moments.";
-"create.selector.mood.intro.detail" = "Pick the emotional direction Avi should use for pacing and tone.";
-"create.selector.mood.intro.title" = "Mood guides the edit";
-"create.selector.mood.title" = "Choose mood";
+"create.selector.mood.intro.detail" = "Pick how the spoken message and audio should feel.";
+"create.selector.mood.intro.title" = "Voice guides the video";
+"create.selector.mood.title" = "Choose voice";
 "create.selector.mood.upbeat.detail" = "Fast, bright, and lively.";
 "create.selector.mood.warm.detail" = "Soft, close, and personal.";
 "create.selector.theme.accessibility" = "%@ theme";
@@ -611,7 +611,7 @@
 "create.final.creating" = "Creating final...";
 "create.final.video" = "Video";
 "create.final.videoReady" = "Final video ready";
-"create.guide.title" = "Guide Avi";
+"create.guide.title" = "Avi setup";
 "create.status.checking" = "Checking...";
 "create.status.refreshing" = "Refreshing...";
 "create.action.notNow" = "Not now";

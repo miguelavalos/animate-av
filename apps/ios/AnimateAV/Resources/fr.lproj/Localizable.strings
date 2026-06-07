@@ -98,13 +98,13 @@
 /* Synced fallback keys from English pending native translation */
 "common.back" = "Retour";
 "common.soon" = "Bientôt";
-"create.aviDirection.changedDirection" = "Tu as changé la direction en %@. Avi avait proposé %@ pour cette sélection.";
-"create.aviDirection.changedMusic" = "Avi a choisi %@ pour cette sélection. Tu as changé l'ambiance.";
-"create.aviDirection.defaultMessage" = "Dis à Avi ce qui compte, ou laisse tout automatique.";
-"create.aviDirection.title" = "Direction Avi";
+"create.aviDirection.changedDirection" = "Tu as changé le thème en %@. Avi avait choisi %@ pour cette image.";
+"create.aviDirection.changedMusic" = "Avi a choisi %@ pour cette image. Tu as changé la voix.";
+"create.aviDirection.defaultMessage" = "Avi peut choisir la configuration automatiquement. Ajuste une ligne si tu veux plus de contrôle.";
+"create.aviDirection.title" = "Configuration Avi";
 "create.aviDirection.undoSuggestion" = "Annuler la suggestion Avi";
 "create.aviDirection.useSuggestion" = "Utiliser la suggestion Avi";
-"create.aviDirection.usingSuggestion" = "Avi a choisi %@ pour cette sélection. Tu peux changer la direction ou ajouter une note.";
+"create.aviDirection.usingSuggestion" = "Avi a choisi %@ pour cette image. Tu peux changer le style, la voix ou le message.";
 "create.duration.auto.subtitle" = "Avi choisit la plage adaptée.";
 "create.duration.auto.title" = "Auto";
 "create.duration.extended.subtitle" = "Plus de scènes et de pauses.";
@@ -153,9 +153,9 @@
 "create.selector.mood.calm.detail" = "Doux, plus lent et discret.";
 "create.selector.mood.cinematic.detail" = "Rythme plus dramatique et atmosphère marquée.";
 "create.selector.mood.fun.detail" = "Énergie joueuse pour les moments partagés.";
-"create.selector.mood.intro.detail" = "Choisis la direction émotionnelle qu’Avi doit utiliser pour le rythme et le ton.";
-"create.selector.mood.intro.title" = "L’ambiance guide le montage";
-"create.selector.mood.title" = "Choisir l’ambiance";
+"create.selector.mood.intro.detail" = "Choisis le ressenti du message parlé et de l’audio.";
+"create.selector.mood.intro.title" = "La voix guide la vidéo";
+"create.selector.mood.title" = "Choisir la voix";
 "create.selector.mood.upbeat.detail" = "Rapide, lumineux et vivant.";
 "create.selector.mood.warm.detail" = "Chaleureux, proche et personnel.";
 "create.selector.theme.accessibility" = "Thème %@";
@@ -609,7 +609,7 @@
 "create.final.creating" = "Création finale...";
 "create.final.video" = "Vidéo";
 "create.final.videoReady" = "Vidéo finale prête";
-"create.guide.title" = "Guider Avi";
+"create.guide.title" = "Configuration Avi";
 "create.status.checking" = "Vérification...";
 "create.status.refreshing" = "Actualisation...";
 "create.action.notNow" = "Pas maintenant";
@@ -869,8 +869,8 @@
 "create.media.action.adding" = "Adding media...";
 "create.media.action.add" = "Add Photos or Clips";
 "create.media.selectedCount" = "%d sélectionnés";
-"create.media.selection.tooFew" = "Add %d more %@.";
-"create.media.selection.tooMany" = "Avi utilisera d’abord les meilleures photos et clips.";
+"create.media.selection.tooFew" = "Ajoute encore %d %@.";
+"create.media.selection.tooMany" = "Utilise une seule image source pour les vidéos Animate AV.";
 "create.media.asset.singular" = "photo or clip";
 "create.media.asset.plural" = "photos or clips";
 "create.story.action.preparing" = "Preparing story...";
