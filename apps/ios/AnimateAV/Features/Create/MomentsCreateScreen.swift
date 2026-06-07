@@ -5,7 +5,7 @@ import SwiftUI
 struct MomentsCreateScreen: View {
     @EnvironmentObject private var viewModel: MomentsCreateViewModel
     @EnvironmentObject private var newMomentStartController: MomentsNewMomentStartController
-    @State private var selectedAssetKind: MomentsCreateAssetKind = .video
+    @SceneStorage("animate.create.selectedAssetKind") private var selectedAssetKindRaw = MomentsCreateAssetKind.video.rawValue
     @State private var pickerItems: [PhotosPickerItem] = []
     @State private var showsAutomaticPhotoPicker = false
     @State private var handledAutomaticPhotoPickerRequest = 0
@@ -32,7 +32,7 @@ struct MomentsCreateScreen: View {
 
     var body: some View {
         VStack(alignment: .leading, spacing: 12) {
-            MomentsCreateAssetKindPicker(selectedAssetKind: $selectedAssetKind)
+            MomentsCreateAssetKindPicker(selectedAssetKind: selectedAssetKindBinding)
 
             switch selectedAssetKind {
             case .video:
@@ -125,6 +125,17 @@ struct MomentsCreateScreen: View {
         1
     }
 
+    private var selectedAssetKind: MomentsCreateAssetKind {
+        MomentsCreateAssetKind(rawValue: selectedAssetKindRaw) ?? .video
+    }
+
+    private var selectedAssetKindBinding: Binding<MomentsCreateAssetKind> {
+        Binding(
+            get: { selectedAssetKind },
+            set: { selectedAssetKindRaw = $0.rawValue }
+        )
+    }
+
     private func redirectEmptyCreateIfNeeded() {
         guard selectedAssetKind == .video,
               !viewModel.workflowPresentation.showsMediaFirstWorkspace,
@@ -150,12 +161,47 @@ private struct MomentsCreateAssetKindPicker: View {
     @Binding var selectedAssetKind: MomentsCreateAssetKind
 
     var body: some View {
-        Picker(L10n.string("create.assetKind.accessibility"), selection: $selectedAssetKind) {
+        HStack(spacing: 8) {
             ForEach(MomentsCreateAssetKind.allCases) { kind in
-                Text(kind.title).tag(kind)
+                Button {
+                    selectedAssetKind = kind
+                } label: {
+                    MomentsCreateAssetKindPill(
+                        title: kind.title,
+                        isSelected: selectedAssetKind == kind
+                    )
+                }
+                .buttonStyle(.plain)
+                .accessibilityAddTraits(selectedAssetKind == kind ? .isSelected : [])
             }
         }
-        .pickerStyle(.segmented)
+        .accessibilityElement(children: .contain)
+        .accessibilityLabel(L10n.string("create.assetKind.accessibility"))
+    }
+}
+
+private struct MomentsCreateAssetKindPill: View {
+    let title: String
+    let isSelected: Bool
+
+    var body: some View {
+        Text(title)
+            .font(.system(size: 14, weight: .black))
+            .frame(maxWidth: .infinity)
+            .frame(height: 38)
+            .foregroundStyle(isSelected ? .white : MomentsTheme.textPrimary)
+            .background(background)
+            .overlay(border)
+    }
+
+    private var background: some View {
+        RoundedRectangle(cornerRadius: 14, style: .continuous)
+            .fill(isSelected ? MomentsTheme.highlight : Color(.secondarySystemGroupedBackground))
+    }
+
+    private var border: some View {
+        RoundedRectangle(cornerRadius: 14, style: .continuous)
+            .stroke(MomentsTheme.highlight.opacity(isSelected ? 0 : 0.18), lineWidth: 1)
     }
 }
 
