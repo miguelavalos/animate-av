@@ -33,9 +33,9 @@ final class AccountController: ObservableObject {
         userDefaults: UserDefaults = .standard
     ) {
         self.service = service
-        self.accountProfileClient = accountProfileClient ?? MomentsAccountProfileClient(baseURLString: AppConfig.momentsAPIBaseURL)
-        self.balanceClient = balanceClient ?? MomentsCreditBalanceClient(baseURLString: AppConfig.momentsAPIBaseURL)
-        self.promoCodeClient = promoCodeClient ?? MomentsPromoCodeClient(baseURLString: AppConfig.momentsAPIBaseURL)
+        self.accountProfileClient = accountProfileClient ?? MomentsAccountProfileClient(baseURLString: AppConfig.animateAPIBaseURL)
+        self.balanceClient = balanceClient ?? MomentsCreditBalanceClient(baseURLString: AppConfig.animateAPIBaseURL)
+        self.promoCodeClient = promoCodeClient ?? MomentsPromoCodeClient(baseURLString: AppConfig.animateAPIBaseURL)
         self.purchaseService = purchaseService
         self.userDefaults = userDefaults
         self.user = Self.lastKnownAccountUser(from: userDefaults)

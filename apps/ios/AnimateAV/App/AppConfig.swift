@@ -34,11 +34,11 @@ enum AppConfig {
         configuredString(for: "ANIMATEAV_REVENUECAT_MONTHLY_PACKAGE_ID", fallback: "$rc_monthly")
     }
 
-    static var momentsConvexURL: String {
+    static var animateConvexURL: String {
         Bundle.main.object(forInfoDictionaryKey: "ANIMATEAV_CONVEX_URL") as? String ?? ""
     }
 
-    static var momentsAPIBaseURL: String {
+    static var animateAPIBaseURL: String {
         Bundle.main.object(forInfoDictionaryKey: "ACCOUNTAV_API_BASE_URL") as? String ?? ""
     }
 

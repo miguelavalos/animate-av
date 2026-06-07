@@ -7,7 +7,7 @@ struct MomentsRepository {
 
     @MainActor
     init() {
-        self.init(deploymentURL: AppConfig.momentsConvexURL)
+        self.init(deploymentURL: AppConfig.animateConvexURL)
     }
 
     init(deploymentURL: String) {

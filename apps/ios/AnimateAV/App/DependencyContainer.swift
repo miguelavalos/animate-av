@@ -30,7 +30,7 @@ final class MomentsDependencyContainer: ObservableObject {
         galleryMomentsObserver: GalleryMomentsObserver? = nil,
         workspaceObserver: MomentsWorkspaceObserver? = nil
     ) {
-        let clients = MomentsWorkflowClients(baseURLString: AppConfig.momentsAPIBaseURL)
+        let clients = MomentsWorkflowClients(baseURLString: AppConfig.animateAPIBaseURL)
         self.accountController = accountController
         let resolvedMomentsObserver = momentsObserver ?? InProgressMomentsObserver(momentsRepository: momentsRepository)
         let resolvedGalleryMomentsObserver = galleryMomentsObserver ?? GalleryMomentsObserver(momentsRepository: momentsRepository)
