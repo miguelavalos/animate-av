@@ -1042,6 +1042,8 @@
 "create.images.balance.packAvailable" = "%d Credits available. You can convert 1 Credit into 50 image generations.";
 "create.images.balance.packOffer" = "Get %d image generations for %d Credit.";
 "create.images.balance.buyPack" = "Get %d for %d Credit";
+"create.images.balance.buyingPack" = "Getting image generations";
+"create.images.balance.packPurchased" = "%d image generations added for %d Credit.";
 "create.images.balance.empty" = "Add Credits to unlock image generation packs.";
 "create.images.balance.loading" = "Checking Credits before image generation.";
 "create.images.balance.offline" = "Connect to check image generation availability.";

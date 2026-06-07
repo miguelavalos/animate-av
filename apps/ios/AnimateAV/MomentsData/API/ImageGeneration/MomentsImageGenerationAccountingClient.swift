@@ -80,11 +80,52 @@ struct MomentsImageGenerationAccountingClient {
 
         return try JSONDecoder().decode(AnimateImageGenerationStartResponse.self, from: data)
     }
+
+    func purchasePack(
+        idempotencyKey: String,
+        bearerToken: String
+    ) async throws -> AnimateImageGenerationPackPurchaseResponse {
+        guard let baseURL = URL(string: baseURLString.trimmingCharacters(in: .whitespacesAndNewlines)) else {
+            throw MomentsImageGenerationAccountingError.apiNotConfigured
+        }
+
+        let endpoint = baseURL
+            .appendingPathComponent("v1")
+            .appendingPathComponent("apps")
+            .appendingPathComponent("animateav")
+            .appendingPathComponent("images")
+            .appendingPathComponent("packs")
+            .appendingPathComponent("purchase")
+        let body = AnimateImageGenerationPackPurchaseRequest(idempotencyKey: idempotencyKey)
+
+        var request = URLRequest(url: endpoint)
+        request.httpMethod = "POST"
+        request.setValue("application/json", forHTTPHeaderField: "Content-Type")
+        request.setValue("Bearer \(bearerToken)", forHTTPHeaderField: "Authorization")
+        request.httpBody = try JSONEncoder().encode(body)
+
+        let (data, response) = try await retryPolicy.run {
+            try await session.data(for: request)
+        }
+        guard let httpResponse = response as? HTTPURLResponse, 200..<300 ~= httpResponse.statusCode else {
+            throw MomentsAPIError.decode(
+                from: data,
+                fallbackCode: "animate_image_pack_purchase_failed",
+                fallbackMessage: MomentsImageGenerationAccountingError.packPurchaseFailed.localizedDescription
+            )
+        }
+
+        return try JSONDecoder().decode(AnimateImageGenerationPackPurchaseResponse.self, from: data)
+    }
 }
 
 struct AnimateImageGenerationStartRequest: Encodable, Equatable {
     let sourceImageLocalIdentifier: String
     let looks: [String]
+    let idempotencyKey: String
+}
+
+struct AnimateImageGenerationPackPurchaseRequest: Encodable, Equatable {
     let idempotencyKey: String
 }
 
@@ -138,11 +179,41 @@ struct AnimateImageGenerationReservation: Decodable, Equatable {
     let purchasedReserved: Int
 }
 
+struct AnimateImageGenerationPackPurchaseResponse: Decodable, Equatable {
+    let appId: String
+    let outputKind: String
+    let monthlyProAllowance: AnimateImageGenerationMonthlyAllowance
+    let purchasedImages: AnimateImageGenerationPurchasedImages
+    let availableImages: Int
+    let packOffer: AnimateImageGenerationPackOffer
+    let purchase: AnimateImageGenerationPackPurchase
+
+    var availability: AnimateImageGenerationAvailabilityResponse {
+        AnimateImageGenerationAvailabilityResponse(
+            appId: appId,
+            outputKind: outputKind,
+            monthlyProAllowance: monthlyProAllowance,
+            purchasedImages: purchasedImages,
+            availableImages: availableImages,
+            packOffer: packOffer
+        )
+    }
+}
+
+struct AnimateImageGenerationPackPurchase: Decodable, Equatable {
+    let creditReservationId: String
+    let creditCost: Int
+    let imageGenerationsAdded: Int
+    let idempotencyKey: String
+    let createdAt: String
+}
+
 enum MomentsImageGenerationAccountingError: LocalizedError {
     case apiNotConfigured
     case signInRequired
     case availabilityFailed
     case startFailed
+    case packPurchaseFailed
 
     var errorDescription: String? {
         switch self {
@@ -150,6 +221,7 @@ enum MomentsImageGenerationAccountingError: LocalizedError {
         case .signInRequired: "Sign in to load image generation balance."
         case .availabilityFailed: "Avi could not load image generation balance."
         case .startFailed: "Avi could not start image generation."
+        case .packPurchaseFailed: "Avi could not get image generations."
         }
     }
 }

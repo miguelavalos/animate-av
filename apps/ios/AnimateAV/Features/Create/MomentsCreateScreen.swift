@@ -50,9 +50,11 @@ struct MomentsCreateScreen: View {
                     imageGenerationAvailability: viewModel.imageGenerationAvailability,
                     isLoadingImageGenerationAvailability: viewModel.isLoadingImageGenerationAvailability,
                     isStartingImageGeneration: viewModel.isStartingImageGeneration,
+                    isPurchasingImageGenerationPack: viewModel.isPurchasingImageGenerationPack,
                     imageGenerationAvailabilityMessage: viewModel.imageGenerationAvailabilityMessage,
                     refreshImageGenerationAvailability: viewModel.refreshImageGenerationAvailability,
                     startImageGeneration: viewModel.startImageGeneration,
+                    purchaseImageGenerationPack: viewModel.purchaseImageGenerationPack,
                     openCredits: openCredits
                 )
             }

@@ -71,6 +71,7 @@ final class MomentsCreateViewModel: ObservableObject {
     @Published private(set) var imageGenerationAvailability: AnimateImageGenerationAvailabilityResponse?
     @Published private(set) var isLoadingImageGenerationAvailability = false
     @Published private(set) var isStartingImageGeneration = false
+    @Published private(set) var isPurchasingImageGenerationPack = false
     @Published private(set) var imageGenerationAvailabilityMessage: String?
     @Published private(set) var pendingGalleryVideo: MomentsGalleryVideoRecord?
     @Published private(set) var canRetryFinalVideoDownload = false
@@ -245,6 +246,7 @@ final class MomentsCreateViewModel: ObservableObject {
         imageGenerationAvailabilityMessage = nil
         isLoadingImageGenerationAvailability = false
         isStartingImageGeneration = false
+        isPurchasingImageGenerationPack = false
     }
 
     func refreshImageGenerationAvailability() {
@@ -323,6 +325,51 @@ final class MomentsCreateViewModel: ObservableObject {
                 await MainActor.run {
                     self?.imageGenerationAvailabilityMessage = error.localizedDescription
                     self?.isStartingImageGeneration = false
+                }
+            }
+        }
+    }
+
+    func purchaseImageGenerationPack() {
+        guard !isPurchasingImageGenerationPack else { return }
+        guard let availability = imageGenerationAvailability,
+              availability.packOffer.userCanPurchase
+        else {
+            imageGenerationAvailabilityMessage = L10n.string("create.images.balance.empty")
+            return
+        }
+        guard let authTokenProvider,
+              let imageGenerationAccountingClient,
+              imageGenerationAccountingClient.isConfigured
+        else {
+            imageGenerationAvailabilityMessage = MomentsImageGenerationAccountingError.apiNotConfigured.localizedDescription
+            return
+        }
+
+        isPurchasingImageGenerationPack = true
+        imageGenerationAvailabilityMessage = nil
+        Task { [weak self, authTokenProvider, imageGenerationAccountingClient] in
+            do {
+                guard let bearerToken = try await authTokenProvider.currentBearerToken() else {
+                    throw MomentsImageGenerationAccountingError.signInRequired
+                }
+                let response = try await imageGenerationAccountingClient.purchasePack(
+                    idempotencyKey: "animate-image-pack-\(UUID().uuidString)",
+                    bearerToken: bearerToken
+                )
+                await MainActor.run {
+                    self?.imageGenerationAvailability = response.availability
+                    self?.imageGenerationAvailabilityMessage = L10n.string(
+                        "create.images.balance.packPurchased",
+                        response.purchase.imageGenerationsAdded,
+                        response.purchase.creditCost
+                    )
+                    self?.isPurchasingImageGenerationPack = false
+                }
+            } catch {
+                await MainActor.run {
+                    self?.imageGenerationAvailabilityMessage = error.localizedDescription
+                    self?.isPurchasingImageGenerationPack = false
                 }
             }
         }

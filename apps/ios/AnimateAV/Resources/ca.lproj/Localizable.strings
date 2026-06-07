@@ -1033,6 +1033,8 @@
 "create.images.balance.packAvailable" = "%d Credits disponibles. Pots convertir 1 Credit en 50 generacions d’imatge.";
 "create.images.balance.packOffer" = "Aconsegueix %d generacions d’imatge per %d Credit.";
 "create.images.balance.buyPack" = "Aconseguir %d per %d Credit";
+"create.images.balance.buyingPack" = "Aconseguint generacions d’imatge";
+"create.images.balance.packPurchased" = "%d generacions d’imatge afegides per %d Credit.";
 "create.images.balance.empty" = "Afegeix Credits per activar paquets de generació d’imatges.";
 "create.images.balance.loading" = "Comprovant Credits abans de generar imatges.";
 "create.images.balance.offline" = "Connecta’t per comprovar la disponibilitat d’imatges.";

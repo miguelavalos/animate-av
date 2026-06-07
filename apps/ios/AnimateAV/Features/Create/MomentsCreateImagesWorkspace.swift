@@ -49,9 +49,11 @@ struct MomentsCreateImagesWorkspace: View {
     let imageGenerationAvailability: AnimateImageGenerationAvailabilityResponse?
     let isLoadingImageGenerationAvailability: Bool
     let isStartingImageGeneration: Bool
+    let isPurchasingImageGenerationPack: Bool
     let imageGenerationAvailabilityMessage: String?
     let refreshImageGenerationAvailability: () -> Void
     let startImageGeneration: (String?, [String]) -> Void
+    let purchaseImageGenerationPack: () -> Void
     let openCredits: () -> Void
 
     @State private var pickerItem: PhotosPickerItem?
@@ -91,7 +93,9 @@ struct MomentsCreateImagesWorkspace: View {
                     creditBalanceLoadState: creditBalanceLoadState,
                     imageGenerationAvailability: imageGenerationAvailability,
                     isLoadingImageGenerationAvailability: isLoadingImageGenerationAvailability,
+                    isPurchasingImageGenerationPack: isPurchasingImageGenerationPack,
                     imageGenerationAvailabilityMessage: imageGenerationAvailabilityMessage,
+                    purchaseImageGenerationPack: purchaseImageGenerationPack,
                     openCredits: openCredits
                 )
 
@@ -339,7 +343,9 @@ private struct MomentsCreateImagesBalanceCard: View {
     let creditBalanceLoadState: MomentsCreditBalanceLoadState
     let imageGenerationAvailability: AnimateImageGenerationAvailabilityResponse?
     let isLoadingImageGenerationAvailability: Bool
+    let isPurchasingImageGenerationPack: Bool
     let imageGenerationAvailabilityMessage: String?
+    let purchaseImageGenerationPack: () -> Void
     let openCredits: () -> Void
 
     var body: some View {
@@ -363,12 +369,17 @@ private struct MomentsCreateImagesBalanceCard: View {
 
             Spacer(minLength: 8)
 
-            if shouldShowAddCredits {
-                Button(addCreditsTitle) {
-                    openCredits()
+            if shouldShowBalanceAction {
+                Button(balanceActionTitle) {
+                    if canPurchasePack {
+                        purchaseImageGenerationPack()
+                    } else {
+                        openCredits()
+                    }
                 }
                 .font(.system(size: 13, weight: .black))
                 .buttonStyle(.bordered)
+                .disabled(isPurchasingImageGenerationPack)
             }
         }
         .padding(16)
@@ -409,7 +420,7 @@ private struct MomentsCreateImagesBalanceCard: View {
         }
     }
 
-    private var shouldShowAddCredits: Bool {
+    private var shouldShowBalanceAction: Bool {
         guard let availability = imageGenerationAvailability else {
             return spendableCredits <= 0
         }
@@ -417,14 +428,26 @@ private struct MomentsCreateImagesBalanceCard: View {
         return availability.availableImages <= 0
     }
 
-    private var addCreditsTitle: String {
+    private var balanceActionTitle: String {
+        if isPurchasingImageGenerationPack {
+            return L10n.string("create.images.balance.buyingPack")
+        }
+        if canPurchasePack,
+           let offer = imageGenerationAvailability?.packOffer {
+            return L10n.string("create.images.balance.buyPack", offer.imageGenerations, offer.creditCost)
+        }
+
+        return L10n.string("create.images.balance.add")
+    }
+
+    private var canPurchasePack: Bool {
         guard let offer = imageGenerationAvailability?.packOffer,
               offer.userCanPurchase
         else {
-            return L10n.string("create.images.balance.add")
+            return false
         }
 
-        return L10n.string("create.images.balance.buyPack", offer.imageGenerations, offer.creditCost)
+        return true
     }
 
     private func availabilityDetail(_ availability: AnimateImageGenerationAvailabilityResponse) -> String {

@@ -688,6 +688,58 @@ final class MomentsAPIClientTests: XCTestCase {
         XCTAssertEqual(response.availability.availableImages, 49)
     }
 
+    func testImageGenerationPackPurchaseUsesBackendOwnedEndpoint() async throws {
+        let session = makeMockSession(
+            json: """
+            {
+              "appId": "animateav",
+              "outputKind": "image",
+              "monthlyProAllowance": {
+                "included": false,
+                "period": "2026-06",
+                "allowance": 0,
+                "used": 0,
+                "remaining": 0
+              },
+              "purchasedImages": {
+                "balance": 50
+              },
+              "availableImages": 50,
+              "packOffer": {
+                "enabled": true,
+                "creditCost": 1,
+                "imageGenerations": 50,
+                "userCanPurchase": false,
+                "blocker": "already_available"
+              },
+              "purchase": {
+                "creditReservationId": "credit-reservation-1",
+                "creditCost": 1,
+                "imageGenerationsAdded": 50,
+                "idempotencyKey": "pack-key-1",
+                "createdAt": "2026-06-07T12:00:00.000Z"
+              }
+            }
+            """
+        )
+        let client = MomentsImageGenerationAccountingClient(baseURLString: accountAPIBaseURL, session: session)
+
+        let response = try await client.purchasePack(
+            idempotencyKey: "pack-key-1",
+            bearerToken: "token-1"
+        )
+
+        XCTAssertEqual(MomentsURLProtocolMock.lastRequest?.url?.absoluteString, "\(accountAPIBaseURL)/v1/apps/animateav/images/packs/purchase")
+        XCTAssertEqual(MomentsURLProtocolMock.lastRequest?.httpMethod, "POST")
+        XCTAssertEqual(MomentsURLProtocolMock.lastRequest?.value(forHTTPHeaderField: "Authorization"), "Bearer token-1")
+        let body = try XCTUnwrap(MomentsURLProtocolMock.lastRequestBody)
+        let json = try XCTUnwrap(JSONSerialization.jsonObject(with: body) as? [String: Any])
+        XCTAssertEqual(json["idempotencyKey"] as? String, "pack-key-1")
+        XCTAssertEqual(response.purchase.imageGenerationsAdded, 50)
+        XCTAssertEqual(response.purchase.creditCost, 1)
+        XCTAssertEqual(response.availability.availableImages, 50)
+    }
+
     func testPrepareFinalArtifactDownloadAcceptsPublicSafeResponseWithoutR2Key() async throws {
         let session = makeMockSession(
             json: """
