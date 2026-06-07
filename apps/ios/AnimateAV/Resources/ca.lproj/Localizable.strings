@@ -1000,3 +1000,13 @@
 "library.mode.inProgress" = "In Progress";
 "library.mode.gallery" = "Gallery";
 "moment.workspace.detailTitle" = "Detall del vídeo";
+"gallery.assetKind.accessibility" = "Tipus de recurs de galeria";
+"gallery.assetKind.videos" = "Vídeos";
+"gallery.assetKind.images" = "Imatges";
+"gallery.images.empty.title" = "Encara no hi ha imatges desades";
+"gallery.images.empty.detail" = "Les imatges estilitzades apareixeran aquí després de generar-se i desar-se.";
+"inProgress.assetKind.accessibility" = "Tipus de recurs en curs";
+"inProgress.assetKind.videos" = "Vídeos";
+"inProgress.assetKind.images" = "Imatges";
+"inProgress.images.empty.title" = "No hi ha imatges en curs";
+"inProgress.images.empty.detail" = "Les generacions d’imatges estilitzades que necessitin acció apareixeran aquí.";

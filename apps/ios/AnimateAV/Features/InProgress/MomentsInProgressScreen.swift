@@ -1,4 +1,5 @@
 import AVAppShellFoundation
+import AVBrandFoundation
 import SwiftUI
 
 struct MomentsInProgressScreen: View {
@@ -6,6 +7,7 @@ struct MomentsInProgressScreen: View {
     @EnvironmentObject private var createViewModel: MomentsCreateViewModel
     @State private var momentPendingDeletion: InProgressMoment?
     @State private var momentPendingRename: InProgressMoment?
+    @State private var selectedAssetKind: MomentsInProgressAssetKind = .videos
     let balance: MomentsCreditBalance
     let creditBalanceLoadState: MomentsCreditBalanceLoadState
     let continueMoment: (MomentsContinuationRequest) -> Void
@@ -44,32 +46,44 @@ struct MomentsInProgressScreen: View {
         AVAppShellScrollableScreenScaffold {
             MomentsTheme.shellBackground
         } content: {
-            if createViewModel.hasLocalMomentWorkspace {
-                MomentsCurrentCreationCard(
-                    selectedCount: createViewModel.mediaSelectedCount,
-                    continueCreation: startMoment
-                )
+            Picker(L10n.string("inProgress.assetKind.accessibility"), selection: $selectedAssetKind) {
+                ForEach(MomentsInProgressAssetKind.allCases) { kind in
+                    Text(kind.title).tag(kind)
+                }
             }
+            .pickerStyle(.segmented)
 
-            MomentsInProgressCard(
-                presentation: presentation,
-                balance: balance,
-                creditBalanceLoadState: creditBalanceLoadState,
-                momentsSummary: viewModel.momentsSummary,
-                selectedMomentId: viewModel.selectedMomentId,
-                isLoadingMomentWorkspace: viewModel.isLoadingMomentWorkspace,
-                activeWorkspace: viewModel.activeWorkspace,
-                isDeletingMoment: viewModel.isDeletingMoment,
-                statusMessage: viewModel.statusMessage,
-                localMediaForMoment: localMediaForMoment(_:),
-                selectMoment: viewModel.selectMoment,
-                continueMoment: continueMoment,
-                requestRenameMoment: { momentPendingRename = $0 },
-                startMoment: startMoment,
-                startSignInFlow: startSignInFlow,
-                openCredits: openCredits,
-                retryCredits: retryCredits
-            )
+            switch selectedAssetKind {
+            case .videos:
+                if createViewModel.hasLocalMomentWorkspace {
+                    MomentsCurrentCreationCard(
+                        selectedCount: createViewModel.mediaSelectedCount,
+                        continueCreation: startMoment
+                    )
+                }
+
+                MomentsInProgressCard(
+                    presentation: presentation,
+                    balance: balance,
+                    creditBalanceLoadState: creditBalanceLoadState,
+                    momentsSummary: viewModel.momentsSummary,
+                    selectedMomentId: viewModel.selectedMomentId,
+                    isLoadingMomentWorkspace: viewModel.isLoadingMomentWorkspace,
+                    activeWorkspace: viewModel.activeWorkspace,
+                    isDeletingMoment: viewModel.isDeletingMoment,
+                    statusMessage: viewModel.statusMessage,
+                    localMediaForMoment: localMediaForMoment(_:),
+                    selectMoment: viewModel.selectMoment,
+                    continueMoment: continueMoment,
+                    requestRenameMoment: { momentPendingRename = $0 },
+                    startMoment: startMoment,
+                    startSignInFlow: startSignInFlow,
+                    openCredits: openCredits,
+                    retryCredits: retryCredits
+                )
+            case .images:
+                MomentsInProgressImagesEmptyState()
+            }
         }
         .confirmationDialog(
             L10n.string("inProgress.deleteMoment.title"),
@@ -130,6 +144,56 @@ struct MomentsInProgressScreen: View {
         }
 
         return createViewModel.selectedMedia
+    }
+}
+
+private enum MomentsInProgressAssetKind: String, CaseIterable, Identifiable {
+    case videos
+    case images
+
+    var id: String { rawValue }
+
+    var title: String {
+        switch self {
+        case .videos:
+            L10n.string("inProgress.assetKind.videos")
+        case .images:
+            L10n.string("inProgress.assetKind.images")
+        }
+    }
+}
+
+private struct MomentsInProgressImagesEmptyState: View {
+    var body: some View {
+        VStack(alignment: .center, spacing: 14) {
+            Image(systemName: "photo.badge.clock")
+                .font(.system(size: 34, weight: .bold))
+                .foregroundStyle(AVBrandColor.accent)
+                .frame(width: 74, height: 74)
+                .background(Circle().fill(AVBrandColor.accent.opacity(0.10)))
+
+            VStack(spacing: 6) {
+                Text(L10n.string("inProgress.images.empty.title"))
+                    .font(.system(size: 20, weight: .black))
+                    .foregroundStyle(AVBrandColor.textPrimary)
+
+                Text(L10n.string("inProgress.images.empty.detail"))
+                    .font(AVBrandTypography.body)
+                    .foregroundStyle(AVBrandColor.textSecondary)
+                    .multilineTextAlignment(.center)
+                    .fixedSize(horizontal: false, vertical: true)
+            }
+        }
+        .padding(24)
+        .frame(maxWidth: .infinity)
+        .background(
+            RoundedRectangle(cornerRadius: AVBrandRadius.card, style: .continuous)
+                .fill(AVBrandColor.elevatedSurface)
+        )
+        .overlay(
+            RoundedRectangle(cornerRadius: AVBrandRadius.card, style: .continuous)
+                .stroke(AVBrandColor.borderSubtle.opacity(0.55), lineWidth: 1)
+        )
     }
 }
 

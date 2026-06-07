@@ -1000,3 +1000,13 @@
 "library.mode.inProgress" = "In Progress";
 "library.mode.gallery" = "Gallery";
 "moment.workspace.detailTitle" = "Détail de la vidéo";
+"gallery.assetKind.accessibility" = "Type de ressource de galerie";
+"gallery.assetKind.videos" = "Vidéos";
+"gallery.assetKind.images" = "Images";
+"gallery.images.empty.title" = "Aucune image enregistrée";
+"gallery.images.empty.detail" = "Les images stylisées apparaîtront ici après génération et enregistrement.";
+"inProgress.assetKind.accessibility" = "Type de ressource en cours";
+"inProgress.assetKind.videos" = "Vidéos";
+"inProgress.assetKind.images" = "Images";
+"inProgress.images.empty.title" = "Aucune image en cours";
+"inProgress.images.empty.detail" = "Les générations d’images stylisées nécessitant une action apparaîtront ici.";

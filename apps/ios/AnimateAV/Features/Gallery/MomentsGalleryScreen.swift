@@ -9,6 +9,7 @@ struct MomentsGalleryScreen: View {
     @State private var videoPendingDeletion: MomentsGalleryVideoPresentation?
     @State private var selectedVideo: MomentsGalleryVideoPlayerItem?
     @State private var videoPendingRename: MomentsGalleryVideoPresentation?
+    @State private var selectedAssetKind: MomentsGalleryAssetKind = .videos
 
     var body: some View {
         AVAppShellScrollableScreenScaffold {
@@ -25,30 +26,50 @@ struct MomentsGalleryScreen: View {
             }
             .frame(maxWidth: .infinity, alignment: .leading)
 
-            if viewModel.videos.isEmpty {
-                MomentsGalleryEmptyState()
-            } else {
-                LazyVStack(spacing: 12) {
-                    ForEach(viewModel.videos) { video in
-                        MomentsGalleryVideoRow(
-                            video: video,
-                            openVideo: {
-                                if video.isLocalFileAvailable {
-                                    selectedVideo = MomentsGalleryVideoPlayerItem(video: video)
+            Picker(L10n.string("gallery.assetKind.accessibility"), selection: $selectedAssetKind) {
+                ForEach(MomentsGalleryAssetKind.allCases) { kind in
+                    Text(kind.title).tag(kind)
+                }
+            }
+            .pickerStyle(.segmented)
+
+            switch selectedAssetKind {
+            case .videos:
+                if viewModel.videos.isEmpty {
+                    MomentsGalleryEmptyState(
+                        systemImage: "play.square.stack.fill",
+                        title: L10n.string("gallery.empty.title"),
+                        detail: L10n.string("gallery.empty.detail")
+                    )
+                } else {
+                    LazyVStack(spacing: 12) {
+                        ForEach(viewModel.videos) { video in
+                            MomentsGalleryVideoRow(
+                                video: video,
+                                openVideo: {
+                                    if video.isLocalFileAvailable {
+                                        selectedVideo = MomentsGalleryVideoPlayerItem(video: video)
+                                    }
+                                },
+                                downloadVideo: {
+                                    viewModel.redownloadVideo(video)
+                                },
+                                renameVideo: {
+                                    videoPendingRename = video
+                                },
+                                deleteVideo: {
+                                    videoPendingDeletion = video
                                 }
-                            },
-                            downloadVideo: {
-                                viewModel.redownloadVideo(video)
-                            },
-                            renameVideo: {
-                                videoPendingRename = video
-                            },
-                            deleteVideo: {
-                                videoPendingDeletion = video
-                            }
-                        )
+                            )
+                        }
                     }
                 }
+            case .images:
+                MomentsGalleryEmptyState(
+                    systemImage: "photo.stack.fill",
+                    title: L10n.string("gallery.images.empty.title"),
+                    detail: L10n.string("gallery.images.empty.detail")
+                )
             }
         }
         .confirmationDialog(
@@ -95,21 +116,41 @@ struct MomentsGalleryScreen: View {
     }
 }
 
+private enum MomentsGalleryAssetKind: String, CaseIterable, Identifiable {
+    case videos
+    case images
+
+    var id: String { rawValue }
+
+    var title: String {
+        switch self {
+        case .videos:
+            L10n.string("gallery.assetKind.videos")
+        case .images:
+            L10n.string("gallery.assetKind.images")
+        }
+    }
+}
+
 private struct MomentsGalleryEmptyState: View {
+    let systemImage: String
+    let title: String
+    let detail: String
+
     var body: some View {
         VStack(alignment: .center, spacing: 14) {
-            Image(systemName: "play.square.stack.fill")
+            Image(systemName: systemImage)
                 .font(.system(size: 34, weight: .bold))
                 .foregroundStyle(AVBrandColor.accent)
                 .frame(width: 74, height: 74)
                 .background(Circle().fill(AVBrandColor.accent.opacity(0.10)))
 
             VStack(spacing: 6) {
-                Text(L10n.string("gallery.empty.title"))
+                Text(title)
                     .font(.system(size: 20, weight: .black))
                     .foregroundStyle(AVBrandColor.textPrimary)
 
-                Text(L10n.string("gallery.empty.detail"))
+                Text(detail)
                     .font(AVBrandTypography.body)
                     .foregroundStyle(AVBrandColor.textSecondary)
                     .multilineTextAlignment(.center)

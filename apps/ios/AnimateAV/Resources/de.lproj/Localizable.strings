@@ -1002,3 +1002,13 @@
 "library.mode.inProgress" = "In Progress";
 "library.mode.gallery" = "Gallery";
 "moment.workspace.detailTitle" = "Videodetail";
+"gallery.assetKind.accessibility" = "Galerie-Medientyp";
+"gallery.assetKind.videos" = "Videos";
+"gallery.assetKind.images" = "Bilder";
+"gallery.images.empty.title" = "Noch keine gespeicherten Bilder";
+"gallery.images.empty.detail" = "Stilisierte Bilder erscheinen hier, nachdem sie erstellt und gespeichert wurden.";
+"inProgress.assetKind.accessibility" = "Medientyp in Arbeit";
+"inProgress.assetKind.videos" = "Videos";
+"inProgress.assetKind.images" = "Bilder";
+"inProgress.images.empty.title" = "Keine Bilder in Arbeit";
+"inProgress.images.empty.detail" = "Stilisierte Bildgenerierungen, die eine Aktion brauchen, erscheinen hier.";
