@@ -355,7 +355,7 @@
 "home.aviBrief.openInProgress" = "Open In Progress and continue the next unfinished step.";
 "home.aviBrief.signIn" = "Sign in to create videos, save videos, and keep Credits with your account.";
 "home.header.subtitle" = "Create private animated videos and stylized images from one photo.";
-"home.header.title" = "Animate Studio";
+"home.header.title" = "Animate AV";
 "home.nextActions.detail" = "Start a video, continue active work, or open guidance.";
 "home.nextActions.title" = "Next actions";
 "home.momentStatus.empty" = "No synced videos yet.";

@@ -256,7 +256,7 @@
 "home.aviBrief.openInProgress" = "Open In Progress and continue the next unfinished step.";
 "home.aviBrief.signIn" = "Melde dich an, um Videos zu erstellen, Videos zu speichern und Credits im Konto zu behalten.";
 "home.header.subtitle" = "Erstelle private animierte Videos und stilisierte Bilder aus einem Foto.";
-"home.header.title" = "Erinnerungsstudio";
+"home.header.title" = "Animate AV";
 "home.nextActions.detail" = "Starte einen Moment, setze aktive Arbeit fort oder öffne die Hilfe.";
 "home.nextActions.title" = "Nächste Aktionen";
 "home.momentStatus.empty" = "Noch keine synchronisierten Videos.";
@@ -952,7 +952,7 @@
 "create.workflowContent.scenesReady" = "%d scenes ready";
 "create.workflowContent.prepareStoryFirst" = "Bereite zuerst das Video vor";
 "create.workflowContent.preparedBeforeVideo" = "Vorbereitet, bevor Credits verwendet werden";
-"create.workflowContent.removeMark" = "Remove Animate AV mark";
+"create.workflowContent.removeMark" = "Animate AV Markierung entfernen";
 "create.workflowContent.addCreditsForVersion" = "Add %@ to create this version.";
 "create.workflowContent.noMarkWithPro" = "No mark with Pro";
 "create.workflowContent.noMarkSelected" = "No mark selected";

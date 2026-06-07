@@ -353,7 +353,7 @@
 "home.aviBrief.openInProgress" = "Open In Progress and continue the next unfinished step.";
 "home.aviBrief.signIn" = "Inicia sessió per crear vídeos, desar vídeos i mantenir els crèdits al compte.";
 "home.header.subtitle" = "Crea vídeos animats privats i imatges amb estil a partir d’una foto.";
-"home.header.title" = "Estudi de records";
+"home.header.title" = "Animate AV";
 "home.nextActions.detail" = "Comença un Moment, continua feina activa o obre la guia.";
 "home.nextActions.title" = "Accions següents";
 "home.momentStatus.empty" = "Encara no hi ha vídeos sincronitzats.";
@@ -950,7 +950,7 @@
 "create.workflowContent.scenesReady" = "%d scenes ready";
 "create.workflowContent.prepareStoryFirst" = "Prepara el vídeo primer";
 "create.workflowContent.preparedBeforeVideo" = "Preparat abans d'usar crèdits";
-"create.workflowContent.removeMark" = "Remove Animate AV mark";
+"create.workflowContent.removeMark" = "Treure marca d’Animate AV";
 "create.workflowContent.addCreditsForVersion" = "Add %@ to create this version.";
 "create.workflowContent.noMarkWithPro" = "No mark with Pro";
 "create.workflowContent.noMarkSelected" = "No mark selected";
