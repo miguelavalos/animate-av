@@ -13,11 +13,11 @@
 "profile.actions.signOut" = "Se déconnecter";
 "profile.help.privacy.detail" = "Découvrez comment Animate AV gère vos données.";
 "profile.help.privacy.title" = "Politique de confidentialité";
-"profile.help.opensource.detail" = "Animate AV est maintenu comme un Moment open source indépendant.";
+"profile.help.opensource.detail" = "Animate AV est maintenu comme une app open source indépendante.";
 "profile.help.opensource.title" = "Projet open source";
 "profile.help.sourceCode.detail" = "Consultez le dépôt, les issues et les règles de contribution.";
 "profile.help.sourceCode.title" = "Code source";
-"profile.help.subtitle" = "Ouvrez ici les liens du Moment, l'assistance, la confidentialité et les conditions.";
+"profile.help.subtitle" = "Ouvrez ici les liens de l'app, l'assistance, la confidentialité et les conditions.";
 "profile.help.support.detail" = "Ouvrir l'assistance Animate AV.";
 "profile.help.support.title" = "Contacter l'assistance";
 "profile.help.terms.detail" = "Consultez les conditions applicables à Animate AV.";
@@ -169,7 +169,7 @@
 "create.theme.eventRecap.subtitle" = "Temps forts rapides.";
 "create.theme.eventRecap.title" = "Récap événement";
 "create.theme.familyMoments.subtitle" = "Doux et quotidien.";
-"create.theme.familyMoments.title" = "Moments en famille";
+"create.theme.familyMoments.title" = "Quotidien";
 "create.theme.favoritePeople.subtitle" = "Proche et tendre.";
 "create.theme.favoritePeople.title" = "Personnes favorites";
 "create.theme.milestone.subtitle" = "Un souvenir clair avant/après.";
@@ -487,7 +487,7 @@
 "app.onboarding.skip" = "IGNORER";
 "app.onboarding.subtitle" = "Transforme une photo préférée en vidéo animée stylisée avec son.";
 "app.onboarding.title" = "Créer des films de souvenirs";
-"app.settings.subtitle" = "Gère %@, les crédits, la confidentialité des Moments et les liens d'aide.";
+"app.settings.subtitle" = "Gère %@, les crédits, la confidentialité de l'app et les liens d'aide.";
 "app.splash.status" = "Préparation du studio";
 "app.splash.tagline" = "Films de souvenirs privés";
 "common.close" = "Fermer";
@@ -675,7 +675,7 @@
 "recovery.mediaUploadUnavailable" = "L’envoi de la photo n’est pas encore prêt. Ta photo reste sur cet appareil ; réessaie dans un instant.";
 "recovery.mediaStorySaveFailure" = "Impossible d’enregistrer la photo pour la vidéo. Ta photo reste sur cet appareil ; réessaie ou choisis une autre image.";
 "recovery.mediaVideoSaveFailure" = "Impossible d’enregistrer les médias pour créer la vidéo. Tes photos et vidéos restent sur cet appareil ; réessaie ou choisis d’autres éléments.";
-"recovery.storyStartFailure" = "Impossible de lancer ce Moment pour cette histoire. Aucun crédit de vidéo finale n’a été utilisé. Réessaie.";
+"recovery.storyStartFailure" = "Impossible de lancer cette vidéo pour cette histoire. Aucun crédit n’a été utilisé. Réessaie.";
 "recovery.storyFailure" = "Avi n’a pas pu préparer l’histoire maintenant. Aucun crédit de vidéo finale n’a été utilisé. Réessaie.";
 "recovery.renderStartFailure" = "Impossible de lancer la création de la vidéo. Aucun crédit de vidéo finale n’a été utilisé. Réessaie dans un instant.";
 "recovery.renderRefreshFailure" = "Impossible d’actualiser le statut de la vidéo. Les crédits ne sont finalisés que lorsque la vidéo est prête. Réessaie.";

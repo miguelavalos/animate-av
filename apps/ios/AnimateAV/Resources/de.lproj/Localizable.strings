@@ -13,11 +13,11 @@
 "profile.actions.signOut" = "Abmelden";
 "profile.help.privacy.detail" = "Erfahre, wie Animate AV mit deinen Daten umgeht.";
 "profile.help.privacy.title" = "Datenschutzerklärung";
-"profile.help.opensource.detail" = "Animate AV wird als unabhängiges Open-Source-Moment gepflegt.";
-"profile.help.opensource.title" = "Open-Source-Moment";
+"profile.help.opensource.detail" = "Animate AV wird als unabhängige Open-Source-App gepflegt.";
+"profile.help.opensource.title" = "Open-Source-App";
 "profile.help.sourceCode.detail" = "Sieh dir Repository, Issues und Hinweise zum Mitwirken an.";
 "profile.help.sourceCode.title" = "Quellcode";
-"profile.help.subtitle" = "Öffne hier Momentlinks, Support, Datenschutz und Nutzungsbedingungen.";
+"profile.help.subtitle" = "Öffne hier App-Links, Support, Datenschutz und Nutzungsbedingungen.";
 "profile.help.support.detail" = "Animate AV Support öffnen.";
 "profile.help.support.title" = "Support kontaktieren";
 "profile.help.terms.detail" = "Prüfe die für Animate AV geltenden Bedingungen.";
@@ -132,7 +132,7 @@
 "avi.prepare.media.detail" = "Wähle ein Foto, auf dem das Hauptmotiv gut zu sehen ist.";
 "avi.prepare.media.title" = "Klares Foto verwenden";
 "avi.prepare.occasion.detail" = "Geburtstage, Danke, Witze, Reisen und kleine Überraschungen funktionieren sehr gut.";
-"avi.prepare.occasion.title" = "Moment wählen";
+"avi.prepare.occasion.title" = "Anlass wählen";
 "avi.prepare.story.detail" = "Forme den Cartoon, bevor Credits ausgegeben werden.";
 "avi.prepare.story.title" = "Cartoon formen";
 "avi.prepare.title" = "Cartoon-Video machen";
@@ -352,7 +352,7 @@
 "create.music.calm.title" = "Ruhig";
 "create.music.cinematic.subtitle" = "Dramatisches Tempo und Atmosphäre.";
 "create.music.cinematic.title" = "Filmisch";
-"create.music.fun.subtitle" = "Verspielte Energie für gemeinsame Momente.";
+"create.music.fun.subtitle" = "Verspielte Energie für gemeinsame Szenen.";
 "create.music.fun.title" = "Fröhlich";
 "create.music.upbeat.subtitle" = "Schnell, hell und lebendig.";
 "create.music.upbeat.title" = "Lebhaft";
@@ -370,7 +370,7 @@
 "create.selector.look.title" = "Look wählen";
 "create.selector.voice.calm.detail" = "Sanft, langsamer und zurückhaltend.";
 "create.selector.voice.cinematic.detail" = "Dramatischeres Tempo und mehr Atmosphäre.";
-"create.selector.voice.fun.detail" = "Verspielte Energie für gemeinsame Momente.";
+"create.selector.voice.fun.detail" = "Verspielte Energie für gemeinsame Szenen.";
 "create.selector.voice.intro.detail" = "Wähle, wie gesprochene Nachricht und Audio wirken sollen.";
 "create.selector.voice.intro.title" = "Die Stimme führt das Video";
 "create.selector.voice.title" = "Stimme wählen";
@@ -378,8 +378,8 @@
 "create.selector.voice.warm.detail" = "Warm, nah und persönlich.";
 "create.selector.theme.accessibility" = "%@ theme";
 "create.selector.theme.accessibilitySoon" = "%@ theme, coming soon";
-"create.selector.theme.intro.detail" = "Wähle, wofür das kleine Video ist. Avi stimmt Witz, Gruß oder süßen Moment darauf ab.";
-"create.selector.theme.intro.title" = "Moment wählen";
+"create.selector.theme.intro.detail" = "Wähle, wofür das kleine Video ist. Avi stimmt Witz, Gruß oder kleine Szene darauf ab.";
+"create.selector.theme.intro.title" = "Anlass wählen";
 "create.selector.theme.title" = "Thema wählen";
 "create.tempo.balanced.title" = "Ausgewogen";
 "create.tempo.gentle.title" = "Sanft";
@@ -387,7 +387,7 @@
 "create.template.celebration.summary" = "Ein heller kleiner Gruß aus einem Foto.";
 "create.template.celebration.title" = "Feier";
 "create.template.duration" = "%d sec";
-"create.template.eventRecap.summary" = "Ein schneller Cartoon-Moment aus einem Foto.";
+"create.template.eventRecap.summary" = "Ein schneller Cartoon aus einem Foto.";
 "create.template.eventRecap.title" = "Event-Rückblick";
 "create.template.mediaRange" = "%d Foto";
 "create.template.softRoast.summary" = "Ein längerer verspielter Cartoon aus einem Foto.";
@@ -399,7 +399,7 @@
 "create.theme.eventRecap.subtitle" = "Schnelle Highlights.";
 "create.theme.eventRecap.title" = "Event-Rückblick";
 "create.theme.familyMoments.subtitle" = "Sanft und vertraut.";
-"create.theme.familyMoments.title" = "Familienmomente";
+"create.theme.familyMoments.title" = "Alltag";
 "create.theme.favoritePeople.subtitle" = "Nah und liebevoll.";
 "create.theme.favoritePeople.title" = "Lieblingsmenschen";
 "create.theme.milestone.subtitle" = "Vorher und nachher.";
@@ -489,7 +489,7 @@
 "app.onboarding.skip" = "VORLÄUFIG ÜBERSPRINGEN";
 "app.onboarding.subtitle" = "Verwandle ein Lieblingsfoto in ein stilisiertes animiertes Video mit Ton.";
 "app.onboarding.title" = "Erinnerungsvideos erstellen";
-"app.settings.subtitle" = "Verwalte %@, Credits, Momentprivatsphäre und Supportlinks.";
+"app.settings.subtitle" = "Verwalte %@, Credits, App-Datenschutz und Supportlinks.";
 "app.splash.status" = "Studio wird vorbereitet";
 "app.splash.tagline" = "Private Erinnerungsvideos";
 "common.close" = "Schließen";
