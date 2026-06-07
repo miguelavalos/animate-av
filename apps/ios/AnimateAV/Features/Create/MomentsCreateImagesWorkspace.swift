@@ -52,12 +52,13 @@ struct MomentsCreateImagesWorkspace: View {
     let isPurchasingImageGenerationPack: Bool
     let imageGenerationAvailabilityMessage: String?
     let refreshImageGenerationAvailability: () -> Void
-    let startImageGeneration: (String?, [String]) -> Void
+    let startImageGeneration: (String?, Data?, Int?, Int?, [String]) -> Void
     let purchaseImageGenerationPack: () -> Void
     let openCredits: () -> Void
 
     @State private var pickerItem: PhotosPickerItem?
     @State private var selectedImage: UIImage?
+    @State private var selectedImageData: Data?
     @State private var selectedSourceImageLocalIdentifier: String?
     @State private var selectedLooks: Set<MomentsCreateImageLook> = [.cartoon]
     @State private var isLoadingImage = false
@@ -66,6 +67,7 @@ struct MomentsCreateImagesWorkspace: View {
 
     private var canSubmit: Bool {
         selectedImage != nil
+            && selectedImageData != nil
             && selectedSourceImageLocalIdentifier != nil
             && !selectedLooks.isEmpty
             && imageGenerationAvailability?.availableImages ?? 0 >= selectedLooks.count
@@ -102,6 +104,9 @@ struct MomentsCreateImagesWorkspace: View {
                 Button {
                     startImageGeneration(
                         selectedSourceImageLocalIdentifier,
+                        selectedImageData,
+                        selectedImage.map { Int($0.size.width * $0.scale) },
+                        selectedImage.map { Int($0.size.height * $0.scale) },
                         selectedLooks.map(\.rawValue).sorted()
                     )
                 } label: {
@@ -150,8 +155,10 @@ struct MomentsCreateImagesWorkspace: View {
         Task {
             let data = try? await item.loadTransferable(type: Data.self)
             let image = data.flatMap(UIImage.init(data:))
+            let uploadData = image?.jpegData(compressionQuality: 0.95)
             await MainActor.run {
                 selectedImage = image
+                selectedImageData = uploadData
                 isLoadingImage = false
             }
         }

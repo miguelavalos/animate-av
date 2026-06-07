@@ -281,11 +281,21 @@ final class MomentsCreateViewModel: ObservableObject {
         }
     }
 
-    func startImageGeneration(sourceImageLocalIdentifier: String?, looks: [String]) {
+    func startImageGeneration(
+        sourceImageLocalIdentifier: String?,
+        imageData: Data?,
+        width: Int?,
+        height: Int?,
+        looks: [String]
+    ) {
         guard !isStartingImageGeneration else { return }
         guard let sourceImageLocalIdentifier = sourceImageLocalIdentifier?.trimmingCharacters(in: .whitespacesAndNewlines),
               !sourceImageLocalIdentifier.isEmpty
         else {
+            imageGenerationAvailabilityMessage = L10n.string("create.images.action.needsImage")
+            return
+        }
+        guard let imageData, !imageData.isEmpty else {
             imageGenerationAvailabilityMessage = L10n.string("create.images.action.needsImage")
             return
         }
@@ -310,8 +320,25 @@ final class MomentsCreateViewModel: ObservableObject {
                 guard let bearerToken = try await authTokenProvider.currentBearerToken() else {
                     throw MomentsImageGenerationAccountingError.signInRequired
                 }
+                let sha256 = SHA256.hash(data: imageData)
+                    .map { String(format: "%02x", $0) }
+                    .joined()
+                let preparedUpload = try await imageGenerationAccountingClient.prepareSourceImageUpload(
+                    sourceLocalIdentifier: sourceImageLocalIdentifier,
+                    originalFilename: "animate-source.jpg",
+                    contentType: "image/jpeg",
+                    byteSize: imageData.count,
+                    sha256: sha256,
+                    width: width,
+                    height: height,
+                    bearerToken: bearerToken
+                )
+                let uploadedSource = try await imageGenerationAccountingClient.uploadSourceImage(
+                    data: imageData,
+                    preparedUpload: preparedUpload
+                )
                 let response = try await imageGenerationAccountingClient.startGeneration(
-                    sourceImageLocalIdentifier: sourceImageLocalIdentifier,
+                    sourceImageUploadId: uploadedSource.sourceImageUploadId,
                     looks: looks,
                     idempotencyKey: "animate-images-\(UUID().uuidString)",
                     bearerToken: bearerToken

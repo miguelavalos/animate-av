@@ -40,7 +40,7 @@ struct MomentsImageGenerationAccountingClient {
     }
 
     func startGeneration(
-        sourceImageLocalIdentifier: String,
+        sourceImageUploadId: String,
         looks: [String],
         idempotencyKey: String,
         bearerToken: String
@@ -56,7 +56,7 @@ struct MomentsImageGenerationAccountingClient {
             .appendingPathComponent("images")
             .appendingPathComponent("generations")
         let body = AnimateImageGenerationStartRequest(
-            sourceImageLocalIdentifier: sourceImageLocalIdentifier,
+            sourceImageUploadId: sourceImageUploadId,
             looks: looks,
             idempotencyKey: idempotencyKey
         )
@@ -79,6 +79,88 @@ struct MomentsImageGenerationAccountingClient {
         }
 
         return try JSONDecoder().decode(AnimateImageGenerationStartResponse.self, from: data)
+    }
+
+    func prepareSourceImageUpload(
+        sourceLocalIdentifier: String,
+        originalFilename: String,
+        contentType: String,
+        byteSize: Int,
+        sha256: String,
+        width: Int?,
+        height: Int?,
+        bearerToken: String
+    ) async throws -> AnimateSourceImagePreparedUpload {
+        guard let baseURL = URL(string: baseURLString.trimmingCharacters(in: .whitespacesAndNewlines)) else {
+            throw MomentsImageGenerationAccountingError.apiNotConfigured
+        }
+
+        let endpoint = baseURL
+            .appendingPathComponent("v1")
+            .appendingPathComponent("apps")
+            .appendingPathComponent("animateav")
+            .appendingPathComponent("images")
+            .appendingPathComponent("source-uploads")
+            .appendingPathComponent("prepare")
+        let body = AnimateSourceImagePrepareUploadRequest(
+            sourceLocalIdentifier: sourceLocalIdentifier,
+            originalFilename: originalFilename,
+            contentType: contentType,
+            byteSize: byteSize,
+            sha256: sha256,
+            width: width,
+            height: height
+        )
+
+        var request = URLRequest(url: endpoint)
+        request.httpMethod = "POST"
+        request.setValue("application/json", forHTTPHeaderField: "Content-Type")
+        request.setValue("Bearer \(bearerToken)", forHTTPHeaderField: "Authorization")
+        request.httpBody = try JSONEncoder().encode(body)
+
+        let (data, response) = try await retryPolicy.run {
+            try await session.data(for: request)
+        }
+        guard let httpResponse = response as? HTTPURLResponse, 200..<300 ~= httpResponse.statusCode else {
+            throw MomentsAPIError.decode(
+                from: data,
+                fallbackCode: "animate_source_image_prepare_failed",
+                fallbackMessage: MomentsImageGenerationAccountingError.sourceUploadFailed.localizedDescription
+            )
+        }
+
+        return try JSONDecoder().decode(AnimateSourceImagePreparedUpload.self, from: data)
+    }
+
+    func uploadSourceImage(
+        data: Data,
+        preparedUpload: AnimateSourceImagePreparedUpload
+    ) async throws -> AnimateSourceImageUploadCompletion {
+        guard let uploadUrl = preparedUpload.uploadUrl,
+              let endpoint = URL(string: uploadUrl)
+        else {
+            throw MomentsImageGenerationAccountingError.sourceUploadFailed
+        }
+
+        var request = URLRequest(url: endpoint)
+        request.httpMethod = preparedUpload.method
+        preparedUpload.headers.forEach { key, value in
+            request.setValue(value, forHTTPHeaderField: key)
+        }
+        request.httpBody = data
+
+        let (responseData, response) = try await retryPolicy.run {
+            try await session.data(for: request)
+        }
+        guard let httpResponse = response as? HTTPURLResponse, 200..<300 ~= httpResponse.statusCode else {
+            throw MomentsAPIError.decode(
+                from: responseData,
+                fallbackCode: "animate_source_image_upload_failed",
+                fallbackMessage: MomentsImageGenerationAccountingError.sourceUploadFailed.localizedDescription
+            )
+        }
+
+        return try JSONDecoder().decode(AnimateSourceImageUploadCompletion.self, from: responseData)
     }
 
     func purchasePack(
@@ -120,9 +202,43 @@ struct MomentsImageGenerationAccountingClient {
 }
 
 struct AnimateImageGenerationStartRequest: Encodable, Equatable {
-    let sourceImageLocalIdentifier: String
+    let sourceImageUploadId: String
     let looks: [String]
     let idempotencyKey: String
+}
+
+struct AnimateSourceImagePrepareUploadRequest: Encodable, Equatable {
+    let sourceLocalIdentifier: String
+    let originalFilename: String
+    let contentType: String
+    let byteSize: Int
+    let sha256: String
+    let width: Int?
+    let height: Int?
+}
+
+struct AnimateSourceImagePreparedUpload: Decodable, Equatable {
+    let appId: String
+    let sourceImageUploadId: String
+    let uploadId: String
+    let uploadUrl: String?
+    let method: String
+    let headers: [String: String]
+    let expiresAt: String
+    let generatedAt: String
+}
+
+struct AnimateSourceImageUploadCompletion: Decodable, Equatable {
+    let appId: String
+    let sourceImageUploadId: String
+    let uploadId: String
+    let sourceLocalIdentifier: String
+    let contentType: String
+    let width: Int?
+    let height: Int?
+    let status: String
+    let uploadedAt: String
+    let bytesReceived: Int
 }
 
 struct AnimateImageGenerationPackPurchaseRequest: Encodable, Equatable {
@@ -160,6 +276,7 @@ struct AnimateImageGenerationPackOffer: Decodable, Equatable {
 
 struct AnimateImageGenerationStartResponse: Decodable, Equatable {
     let appId: String
+    let sourceImageUploadId: String
     let sourceImageLocalIdentifier: String
     let jobs: [AnimateImageGenerationStartedJob]
     let availability: AnimateImageGenerationAvailabilityResponse
@@ -213,6 +330,7 @@ enum MomentsImageGenerationAccountingError: LocalizedError {
     case signInRequired
     case availabilityFailed
     case startFailed
+    case sourceUploadFailed
     case packPurchaseFailed
 
     var errorDescription: String? {
@@ -221,6 +339,7 @@ enum MomentsImageGenerationAccountingError: LocalizedError {
         case .signInRequired: "Sign in to load image generation balance."
         case .availabilityFailed: "Avi could not load image generation balance."
         case .startFailed: "Avi could not start image generation."
+        case .sourceUploadFailed: "Avi could not upload the source image."
         case .packPurchaseFailed: "Avi could not get image generations."
         }
     }

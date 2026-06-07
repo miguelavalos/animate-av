@@ -628,6 +628,7 @@ final class MomentsAPIClientTests: XCTestCase {
             json: """
             {
               "appId": "animateav",
+              "sourceImageUploadId": "source-upload-1",
               "sourceImageLocalIdentifier": "local-photo-1",
               "jobs": [
                 {
@@ -670,7 +671,7 @@ final class MomentsAPIClientTests: XCTestCase {
         let client = MomentsImageGenerationAccountingClient(baseURLString: accountAPIBaseURL, session: session)
 
         let response = try await client.startGeneration(
-            sourceImageLocalIdentifier: "local-photo-1",
+            sourceImageUploadId: "source-upload-1",
             looks: ["cartoon"],
             idempotencyKey: "start-key-1",
             bearerToken: "token-1"
@@ -681,11 +682,90 @@ final class MomentsAPIClientTests: XCTestCase {
         XCTAssertEqual(MomentsURLProtocolMock.lastRequest?.value(forHTTPHeaderField: "Authorization"), "Bearer token-1")
         let body = try XCTUnwrap(MomentsURLProtocolMock.lastRequestBody)
         let json = try XCTUnwrap(JSONSerialization.jsonObject(with: body) as? [String: Any])
-        XCTAssertEqual(json["sourceImageLocalIdentifier"] as? String, "local-photo-1")
+        XCTAssertEqual(json["sourceImageUploadId"] as? String, "source-upload-1")
         XCTAssertEqual(json["looks"] as? [String], ["cartoon"])
         XCTAssertEqual(json["idempotencyKey"] as? String, "start-key-1")
+        XCTAssertEqual(response.sourceImageUploadId, "source-upload-1")
         XCTAssertEqual(response.jobs.first?.imageJobId, "convex-image-job-1")
         XCTAssertEqual(response.availability.availableImages, 49)
+    }
+
+    func testSourceImagePrepareUploadUsesBackendOwnedEndpoint() async throws {
+        let session = makeMockSession(
+            json: """
+            {
+              "appId": "animateav",
+              "sourceImageUploadId": "source-upload-1",
+              "uploadId": "source-upload-1",
+              "uploadUrl": "https://api.example.test/v1/apps/animateav/images/source-uploads/source-upload-1",
+              "method": "PUT",
+              "headers": { "Content-Type": "image/jpeg" },
+              "expiresAt": "2026-06-08T12:00:00.000Z",
+              "generatedAt": "2026-06-07T12:00:00.000Z"
+            }
+            """
+        )
+        let client = MomentsImageGenerationAccountingClient(baseURLString: accountAPIBaseURL, session: session)
+
+        let prepared = try await client.prepareSourceImageUpload(
+            sourceLocalIdentifier: "local-photo-1",
+            originalFilename: "animate-source.jpg",
+            contentType: "image/jpeg",
+            byteSize: 4,
+            sha256: "0000000000000000000000000000000000000000000000000000000000000000",
+            width: 100,
+            height: 200,
+            bearerToken: "token-1"
+        )
+
+        XCTAssertEqual(MomentsURLProtocolMock.lastRequest?.url?.absoluteString, "\(accountAPIBaseURL)/v1/apps/animateav/images/source-uploads/prepare")
+        XCTAssertEqual(MomentsURLProtocolMock.lastRequest?.httpMethod, "POST")
+        XCTAssertEqual(MomentsURLProtocolMock.lastRequest?.value(forHTTPHeaderField: "Authorization"), "Bearer token-1")
+        let body = try XCTUnwrap(MomentsURLProtocolMock.lastRequestBody)
+        let json = try XCTUnwrap(JSONSerialization.jsonObject(with: body) as? [String: Any])
+        XCTAssertEqual(json["sourceLocalIdentifier"] as? String, "local-photo-1")
+        XCTAssertEqual(json["contentType"] as? String, "image/jpeg")
+        XCTAssertEqual(json["byteSize"] as? Int, 4)
+        XCTAssertEqual(prepared.sourceImageUploadId, "source-upload-1")
+    }
+
+    func testSourceImageUploadUsesPreparedUploadEndpoint() async throws {
+        let session = makeMockSession(
+            json: """
+            {
+              "appId": "animateav",
+              "sourceImageUploadId": "source-upload-1",
+              "uploadId": "source-upload-1",
+              "sourceLocalIdentifier": "local-photo-1",
+              "contentType": "image/jpeg",
+              "width": 100,
+              "height": 200,
+              "status": "uploaded",
+              "uploadedAt": "2026-06-07T12:00:00.000Z",
+              "bytesReceived": 4
+            }
+            """
+        )
+        let client = MomentsImageGenerationAccountingClient(baseURLString: accountAPIBaseURL, session: session)
+        let prepared = AnimateSourceImagePreparedUpload(
+            appId: "animateav",
+            sourceImageUploadId: "source-upload-1",
+            uploadId: "source-upload-1",
+            uploadUrl: "\(accountAPIBaseURL)/v1/apps/animateav/images/source-uploads/source-upload-1",
+            method: "PUT",
+            headers: ["Content-Type": "image/jpeg"],
+            expiresAt: "2026-06-08T12:00:00.000Z",
+            generatedAt: "2026-06-07T12:00:00.000Z"
+        )
+
+        let uploaded = try await client.uploadSourceImage(data: Data([1, 2, 3, 4]), preparedUpload: prepared)
+
+        XCTAssertEqual(MomentsURLProtocolMock.lastRequest?.url?.absoluteString, "\(accountAPIBaseURL)/v1/apps/animateav/images/source-uploads/source-upload-1")
+        XCTAssertEqual(MomentsURLProtocolMock.lastRequest?.httpMethod, "PUT")
+        XCTAssertEqual(MomentsURLProtocolMock.lastRequest?.value(forHTTPHeaderField: "Content-Type"), "image/jpeg")
+        XCTAssertEqual(MomentsURLProtocolMock.lastRequestBody, Data([1, 2, 3, 4]))
+        XCTAssertEqual(uploaded.sourceImageUploadId, "source-upload-1")
+        XCTAssertEqual(uploaded.bytesReceived, 4)
     }
 
     func testImageGenerationPackPurchaseUsesBackendOwnedEndpoint() async throws {
