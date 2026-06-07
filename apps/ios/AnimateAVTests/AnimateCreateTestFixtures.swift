@@ -1,7 +1,7 @@
 import Foundation
 @testable import AnimateAV
 
-enum MomentsCreateTestFixtures {
+enum AnimateCreateTestFixtures {
     static func makeMoment(
         id: String,
         template: MomentTemplateID = .birthdayMessage,

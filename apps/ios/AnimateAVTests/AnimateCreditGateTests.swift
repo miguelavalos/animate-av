@@ -1,7 +1,7 @@
 import XCTest
 @testable import AnimateAV
 
-final class MomentsCreditGateTests: XCTestCase {
+final class AnimateCreditGateTests: XCTestCase {
     func testPurchaseCatalogRequiresAllPaywallProducts() {
         XCTAssertFalse(MomentsPurchaseCatalog.empty.hasRequiredPaywallProducts)
 
@@ -117,7 +117,7 @@ final class MomentsCreditGateTests: XCTestCase {
         XCTAssertNil(MomentSetupRules.availabilityMessage(availability))
     }
 
-    func testContinuingSetupFormUsesMomentFieldsAndFallbacks() {
+    func testContinuingSetupFormUsesVideoFieldsAndFallbacks() {
         let moment = InProgressMoment(
             id: "moment-1",
             template: .birthdayMessage,

@@ -1,22 +1,22 @@
 import XCTest
 @testable import AnimateAV
 
-final class MomentsMediaDeduplicatorTests: XCTestCase {
+final class AnimateMediaDeduplicatorTests: XCTestCase {
     func testSkipsMediaAlreadySelectedBySourceIdentifier() {
         let existing = [
-            MomentsCreateTestFixtures.makeSelectedMedia(
+            AnimateCreateTestFixtures.makeSelectedMedia(
                 id: "00000000-0000-0000-0000-000000000001",
                 sourceLocalIdentifier: "asset-1",
                 sha256: "hash-1"
             )
         ]
         let imported = [
-            MomentsCreateTestFixtures.makeSelectedMedia(
+            AnimateCreateTestFixtures.makeSelectedMedia(
                 id: "00000000-0000-0000-0000-000000000002",
                 sourceLocalIdentifier: "asset-1",
                 sha256: "hash-2"
             ),
-            MomentsCreateTestFixtures.makeSelectedMedia(
+            AnimateCreateTestFixtures.makeSelectedMedia(
                 id: "00000000-0000-0000-0000-000000000003",
                 sourceLocalIdentifier: "asset-3",
                 sha256: "hash-3"
@@ -30,19 +30,19 @@ final class MomentsMediaDeduplicatorTests: XCTestCase {
 
     func testSkipsMediaAlreadySelectedByContentHash() {
         let existing = [
-            MomentsCreateTestFixtures.makeSelectedMedia(
+            AnimateCreateTestFixtures.makeSelectedMedia(
                 id: "00000000-0000-0000-0000-000000000001",
                 sourceLocalIdentifier: "asset-1",
                 sha256: "hash-1"
             )
         ]
         let imported = [
-            MomentsCreateTestFixtures.makeSelectedMedia(
+            AnimateCreateTestFixtures.makeSelectedMedia(
                 id: "00000000-0000-0000-0000-000000000002",
                 sourceLocalIdentifier: "asset-2",
                 sha256: "hash-1"
             ),
-            MomentsCreateTestFixtures.makeSelectedMedia(
+            AnimateCreateTestFixtures.makeSelectedMedia(
                 id: "00000000-0000-0000-0000-000000000003",
                 sourceLocalIdentifier: "asset-3",
                 sha256: "hash-3"
@@ -56,17 +56,17 @@ final class MomentsMediaDeduplicatorTests: XCTestCase {
 
     func testSkipsDuplicatesWithinSameImportBatch() {
         let imported = [
-            MomentsCreateTestFixtures.makeSelectedMedia(
+            AnimateCreateTestFixtures.makeSelectedMedia(
                 id: "00000000-0000-0000-0000-000000000001",
                 sourceLocalIdentifier: "asset-1",
                 sha256: "hash-1"
             ),
-            MomentsCreateTestFixtures.makeSelectedMedia(
+            AnimateCreateTestFixtures.makeSelectedMedia(
                 id: "00000000-0000-0000-0000-000000000002",
                 sourceLocalIdentifier: "asset-1",
                 sha256: "hash-2"
             ),
-            MomentsCreateTestFixtures.makeSelectedMedia(
+            AnimateCreateTestFixtures.makeSelectedMedia(
                 id: "00000000-0000-0000-0000-000000000003",
                 sourceLocalIdentifier: "asset-3",
                 sha256: "hash-1"

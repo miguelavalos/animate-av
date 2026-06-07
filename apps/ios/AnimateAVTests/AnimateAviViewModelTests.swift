@@ -3,7 +3,7 @@ import XCTest
 @testable import AnimateAV
 
 @MainActor
-final class MomentsAviViewModelTests: XCTestCase {
+final class AnimateAviViewModelTests: XCTestCase {
     func testSignedOutGuidanceAsksForAuthentication() {
         let presentation = MomentsAviPresentation.make(
             isSignedIn: false,
@@ -16,7 +16,7 @@ final class MomentsAviViewModelTests: XCTestCase {
         XCTAssertEqual(presentation.creditGuidanceMessage, "Credits appear here after sign in.")
     }
 
-    func testActiveMomentsDriveWorkflowFocus() {
+    func testActiveVideosDriveWorkflowFocus() {
         let presentation = MomentsAviPresentation.make(
             isSignedIn: true,
             momentsSummary: InProgressMomentsSummary.make(from: [

@@ -2,7 +2,7 @@ import XCTest
 @testable import AnimateAV
 
 @MainActor
-final class MomentsCreateWorkflowPresentationTests: XCTestCase {
+final class AnimateCreateWorkflowPresentationTests: XCTestCase {
     func testPrimaryActionDoesNotRequestCreditsWhenPreparedPlanCostIsCovered() {
         let presentation = MomentsCreatePrimaryActionPresentation(
             workflow: MomentsCreateWorkflowPresentation(
@@ -12,12 +12,12 @@ final class MomentsCreateWorkflowPresentationTests: XCTestCase {
                 template: .birthdayMessage,
                 balance: MomentsCreditBalance(proMonthly: 0, promotional: 1, purchased: 0),
                 mediaSummary: MomentsCreateMediaSummary(
-                    selectedMedia: [MomentsCreateTestFixtures.makeSelectedMedia(id: "00000000-0000-0000-0000-000000000001")]
+                    selectedMedia: [AnimateCreateTestFixtures.makeSelectedMedia(id: "00000000-0000-0000-0000-000000000001")]
                 ),
                 storySummary: MomentsCreateStorySummary(),
                 finalRenderSummary: MomentsCreateFinalRenderSummary(
                     creditCost: 1,
-                    renderPlan: MomentsCreateTestFixtures.makeRenderPlan(totalCreditCost: 1)
+                    renderPlan: AnimateCreateTestFixtures.makeRenderPlan(totalCreditCost: 1)
                 ),
                 canPrepareFinalRenderPlan: true,
                 canGenerateFinalRender: true
@@ -38,7 +38,7 @@ final class MomentsCreateWorkflowPresentationTests: XCTestCase {
                 template: .birthdayMessage,
                 balance: MomentsCreditBalance(proMonthly: 0, promotional: 1, purchased: 0),
                 mediaSummary: MomentsCreateMediaSummary(
-                    selectedMedia: [MomentsCreateTestFixtures.makeSelectedMedia(id: "00000000-0000-0000-0000-000000000001")]
+                    selectedMedia: [AnimateCreateTestFixtures.makeSelectedMedia(id: "00000000-0000-0000-0000-000000000001")]
                 ),
                 storySummary: MomentsCreateStorySummary(),
                 finalRenderSummary: MomentsCreateFinalRenderSummary(
@@ -53,7 +53,7 @@ final class MomentsCreateWorkflowPresentationTests: XCTestCase {
         XCTAssertEqual(presentation.statusMessage, "Creating final video.")
     }
 
-    func testWorkflowPresentationHidesWorkflowCardsWithoutMoment() {
+    func testWorkflowPresentationHidesWorkflowCardsWithoutVideo() {
         let presentation = MomentsCreateWorkflowPresentation(
             activeMomentId: nil,
             template: .birthdayMessage,
@@ -67,7 +67,7 @@ final class MomentsCreateWorkflowPresentationTests: XCTestCase {
     }
 
     func testWorkflowPresentationLocksEditingDuringActiveFinalRender() {
-        let activeFinalJob = MomentsCreateTestFixtures.makeRenderJob(
+        let activeFinalJob = AnimateCreateTestFixtures.makeRenderJob(
             id: "final-job",
             kind: "final",
             status: "running",
@@ -87,7 +87,7 @@ final class MomentsCreateWorkflowPresentationTests: XCTestCase {
     }
 
     func testLockedFinalRenderMediaCountUsesJobCountAfterLocalSelectionReloadsEmpty() {
-        let activeFinalJob = MomentsCreateTestFixtures.makeRenderJob(
+        let activeFinalJob = AnimateCreateTestFixtures.makeRenderJob(
             id: "final-job",
             kind: "final",
             status: "running",
@@ -111,7 +111,7 @@ final class MomentsCreateWorkflowPresentationTests: XCTestCase {
     }
 
     func testLockedFinalRenderCostUsesConfirmedPlanCost() {
-        let activeFinalJob = MomentsCreateTestFixtures.makeRenderJob(
+        let activeFinalJob = AnimateCreateTestFixtures.makeRenderJob(
             id: "final-job",
             kind: "final",
             status: "running",
@@ -119,7 +119,7 @@ final class MomentsCreateWorkflowPresentationTests: XCTestCase {
             plannedAssetCount: 6,
             usedAssetCount: 6
         )
-        let oneCreditPlan = MomentsCreateTestFixtures.makeRenderPlan(
+        let oneCreditPlan = AnimateCreateTestFixtures.makeRenderPlan(
             totalCreditCost: 1,
             minimumDurationMs: 8_000,
             targetDurationMs: 15_000,
@@ -146,7 +146,7 @@ final class MomentsCreateWorkflowPresentationTests: XCTestCase {
     }
 
     func testWorkflowPresentationAllowsEditingWhenFinalRenderAllowsSetupChanges() {
-        let editableFinalJob = MomentsCreateTestFixtures.makeRenderJob(
+        let editableFinalJob = AnimateCreateTestFixtures.makeRenderJob(
             id: "final-job",
             kind: "final",
             status: "running",
@@ -165,17 +165,17 @@ final class MomentsCreateWorkflowPresentationTests: XCTestCase {
         XCTAssertFalse(presentation.isFinalRenderEditingLocked)
     }
 
-    func testWorkflowPresentationCarriesWorkflowStateForActiveMoment() {
-        let finalExport = MomentsCreateTestFixtures.makeArtifact(id: "final-1", kind: "final_export")
-        let latestFinalJob = MomentsCreateTestFixtures.makeRenderJob(id: "final-job", kind: "final", status: "queued")
+    func testWorkflowPresentationCarriesWorkflowStateForActiveVideo() {
+        let finalExport = AnimateCreateTestFixtures.makeArtifact(id: "final-1", kind: "final_export")
+        let latestFinalJob = AnimateCreateTestFixtures.makeRenderJob(id: "final-job", kind: "final", status: "queued")
         let mediaSummary = MomentsCreateMediaSummary(
             selectedMedia: [],
-            syncedMediaAssets: [MomentsCreateTestFixtures.makeMediaAsset(id: "media-1")],
+            syncedMediaAssets: [AnimateCreateTestFixtures.makeMediaAsset(id: "media-1")],
             isImporting: true,
             statusMessage: "Importing media."
         )
         let storySummary = MomentsCreateStorySummary(
-            savedScenes: [MomentsCreateTestFixtures.makeScene(id: "scene-1")],
+            savedScenes: [AnimateCreateTestFixtures.makeScene(id: "scene-1")],
             generatedScenes: [],
             isPlanning: true,
             statusMessage: "Planning story."
@@ -260,7 +260,7 @@ final class MomentsCreateWorkflowPresentationTests: XCTestCase {
         XCTAssertEqual(presentation.storyAvailabilityMessage, "Prepare story.")
     }
 
-    func testWorkflowPresentationCarriesUnsavedLocalMomentContainmentState() {
+    func testWorkflowPresentationCarriesUnsavedLocalVideoContainmentState() {
         let presentation = MomentsCreateWorkflowPresentation.make(
             activeMomentId: nil,
             isSignedIn: true,
@@ -274,7 +274,7 @@ final class MomentsCreateWorkflowPresentationTests: XCTestCase {
             occasionTitle: "Birthday",
             balance: .empty,
             mediaSummary: MomentsCreateMediaSummary(
-                selectedMedia: [MomentsCreateTestFixtures.makeSelectedMedia(id: "00000000-0000-0000-0000-000000000001")]
+                selectedMedia: [AnimateCreateTestFixtures.makeSelectedMedia(id: "00000000-0000-0000-0000-000000000001")]
             ),
             storySummary: MomentsCreateStorySummary(),
             finalRenderSummary: MomentsCreateFinalRenderSummary(),
@@ -292,7 +292,7 @@ final class MomentsCreateWorkflowPresentationTests: XCTestCase {
         XCTAssertTrue(presentation.showsMediaFirstWorkspace)
     }
 
-    func testWorkflowPresentationShowsMediaChoiceForEmptyLocalMoment() {
+    func testWorkflowPresentationShowsMediaChoiceForEmptyLocalVideo() {
         let presentation = MomentsCreateWorkflowPresentation.make(
             activeMomentId: nil,
             isSignedIn: true,
@@ -348,8 +348,8 @@ final class MomentsCreateWorkflowPresentationTests: XCTestCase {
     func testStorySummaryBuildsPresentedScenesFromSavedScenes() {
         let summary = MomentsCreateStorySummary(
             savedScenes: [
-                MomentsCreateTestFixtures.makeScene(id: "scene-2", sceneIndex: 1, caption: "Show the trip highlights."),
-                MomentsCreateTestFixtures.makeScene(id: "scene-1", sceneIndex: 0, caption: "Open with the arrival.")
+                AnimateCreateTestFixtures.makeScene(id: "scene-2", sceneIndex: 1, caption: "Show the trip highlights."),
+                AnimateCreateTestFixtures.makeScene(id: "scene-1", sceneIndex: 0, caption: "Open with the arrival.")
             ]
         )
 
@@ -362,16 +362,16 @@ final class MomentsCreateWorkflowPresentationTests: XCTestCase {
         let presentation = MomentsCreateVideoDirectionPresentation(
             mediaSummary: MomentsCreateMediaSummary(
                 selectedMedia: [
-                    MomentsCreateTestFixtures.makeSelectedMedia(id: "00000000-0000-0000-0000-000000000001"),
-                    MomentsCreateTestFixtures.makeSelectedMedia(id: "00000000-0000-0000-0000-000000000002")
+                    AnimateCreateTestFixtures.makeSelectedMedia(id: "00000000-0000-0000-0000-000000000001"),
+                    AnimateCreateTestFixtures.makeSelectedMedia(id: "00000000-0000-0000-0000-000000000002")
                 ]
             ),
             storySummary: MomentsCreateStorySummary(
                 savedScenes: [
-                    MomentsCreateTestFixtures.makeScene(id: "scene-1", sceneIndex: 0),
-                    MomentsCreateTestFixtures.makeScene(id: "scene-2", sceneIndex: 1),
-                    MomentsCreateTestFixtures.makeScene(id: "scene-3", sceneIndex: 2),
-                    MomentsCreateTestFixtures.makeScene(id: "scene-4", sceneIndex: 3)
+                    AnimateCreateTestFixtures.makeScene(id: "scene-1", sceneIndex: 0),
+                    AnimateCreateTestFixtures.makeScene(id: "scene-2", sceneIndex: 1),
+                    AnimateCreateTestFixtures.makeScene(id: "scene-3", sceneIndex: 2),
+                    AnimateCreateTestFixtures.makeScene(id: "scene-4", sceneIndex: 3)
                 ]
             ),
             selectedDuration: .auto,
@@ -395,10 +395,10 @@ final class MomentsCreateWorkflowPresentationTests: XCTestCase {
     func testVideoDirectionPresentationKeepsFinalPathNonBlockingWhenImproveIsUnavailable() {
         let presentation = MomentsCreateVideoDirectionPresentation(
             mediaSummary: MomentsCreateMediaSummary(
-                selectedMedia: [MomentsCreateTestFixtures.makeSelectedMedia(id: "00000000-0000-0000-0000-000000000001")]
+                selectedMedia: [AnimateCreateTestFixtures.makeSelectedMedia(id: "00000000-0000-0000-0000-000000000001")]
             ),
             storySummary: MomentsCreateStorySummary(
-                savedScenes: [MomentsCreateTestFixtures.makeScene(id: "scene-1")]
+                savedScenes: [AnimateCreateTestFixtures.makeScene(id: "scene-1")]
             ),
             selectedDuration: .auto,
             canRefreshStory: false,
@@ -417,7 +417,7 @@ final class MomentsCreateWorkflowPresentationTests: XCTestCase {
     func testVideoDirectionPresentationFormatsPendingAndUnavailableStates() {
         var presentation = MomentsCreateVideoDirectionPresentation(
             mediaSummary: MomentsCreateMediaSummary(
-                selectedMedia: [MomentsCreateTestFixtures.makeSelectedMedia(id: "00000000-0000-0000-0000-000000000001")]
+                selectedMedia: [AnimateCreateTestFixtures.makeSelectedMedia(id: "00000000-0000-0000-0000-000000000001")]
             ),
             storySummary: MomentsCreateStorySummary(),
             selectedDuration: .auto,
@@ -442,10 +442,10 @@ final class MomentsCreateWorkflowPresentationTests: XCTestCase {
             activeMomentId: "moment-1",
             template: .birthdayMessage,
             summary: MomentsCreateMediaSummary(
-                selectedMedia: [MomentsCreateTestFixtures.makeSelectedMedia(id: "00000000-0000-0000-0000-000000000001")],
+                selectedMedia: [AnimateCreateTestFixtures.makeSelectedMedia(id: "00000000-0000-0000-0000-000000000001")],
                 syncedMediaAssets: [
-                    MomentsCreateTestFixtures.makeMediaAsset(id: "second", sortOrder: 1),
-                    MomentsCreateTestFixtures.makeMediaAsset(id: "first", sortOrder: 0)
+                    AnimateCreateTestFixtures.makeMediaAsset(id: "second", sortOrder: 1),
+                    AnimateCreateTestFixtures.makeMediaAsset(id: "first", sortOrder: 0)
                 ],
                 isImporting: true,
                 statusMessage: "Importing."
@@ -470,8 +470,8 @@ final class MomentsCreateWorkflowPresentationTests: XCTestCase {
             template: .birthdayMessage,
             summary: MomentsCreateMediaSummary(
                 selectedMedia: [
-                    MomentsCreateTestFixtures.makeSelectedMedia(id: "00000000-0000-0000-0000-000000000001"),
-                    MomentsCreateTestFixtures.makeSelectedMedia(id: "00000000-0000-0000-0000-000000000002")
+                    AnimateCreateTestFixtures.makeSelectedMedia(id: "00000000-0000-0000-0000-000000000001"),
+                    AnimateCreateTestFixtures.makeSelectedMedia(id: "00000000-0000-0000-0000-000000000002")
                 ]
             )
         )
@@ -483,8 +483,8 @@ final class MomentsCreateWorkflowPresentationTests: XCTestCase {
         let presentation = MomentsCreateStoryPresentation(
             summary: MomentsCreateStorySummary(
                 savedScenes: [
-                    MomentsCreateTestFixtures.makeScene(id: "scene-2", sceneIndex: 1),
-                    MomentsCreateTestFixtures.makeScene(id: "scene-1", sceneIndex: 0)
+                    AnimateCreateTestFixtures.makeScene(id: "scene-2", sceneIndex: 1),
+                    AnimateCreateTestFixtures.makeScene(id: "scene-1", sceneIndex: 0)
                 ],
                 generatedScenes: [],
                 isPlanning: true,
@@ -517,7 +517,7 @@ final class MomentsCreateWorkflowPresentationTests: XCTestCase {
         let ready = MomentsCreateFinalVideoActionPresentation(
             summary: MomentsCreateFinalRenderSummary(
                 creditCost: 2,
-                renderPlan: MomentsCreateTestFixtures.makeRenderPlan()
+                renderPlan: AnimateCreateTestFixtures.makeRenderPlan()
             ),
             template: .birthdayMessage,
             balance: MomentsCreditBalance(proMonthly: 0, promotional: 3, purchased: 0),
@@ -543,7 +543,7 @@ final class MomentsCreateWorkflowPresentationTests: XCTestCase {
             appId: "animateav",
             momentId: "moment-1",
             planId: "plan-1",
-            plan: MomentsCreateTestFixtures.makeRenderPlan().plan,
+            plan: AnimateCreateTestFixtures.makeRenderPlan().plan,
             canCreateVideo: false,
             createVideoBlockers: ["provider_adapter_unavailable"],
             generatedAt: "2026-06-02T00:00:00Z"
@@ -555,7 +555,7 @@ final class MomentsCreateWorkflowPresentationTests: XCTestCase {
             template: .birthdayMessage,
             balance: MomentsCreditBalance(proMonthly: 0, promotional: 3, purchased: 0),
             mediaSummary: MomentsCreateMediaSummary(
-                selectedMedia: [MomentsCreateTestFixtures.makeSelectedMedia(id: "00000000-0000-0000-0000-000000000001")]
+                selectedMedia: [AnimateCreateTestFixtures.makeSelectedMedia(id: "00000000-0000-0000-0000-000000000001")]
             ),
             storySummary: MomentsCreateStorySummary(),
             finalRenderSummary: MomentsCreateFinalRenderSummary(
@@ -577,7 +577,7 @@ final class MomentsCreateWorkflowPresentationTests: XCTestCase {
     }
 
     func testPrimaryActionPresentationShowsRetryForRecoverableFinalRenderFailure() {
-        let failedJob = MomentsCreateTestFixtures.makeRenderJob(
+        let failedJob = AnimateCreateTestFixtures.makeRenderJob(
             id: "final-job",
             kind: "final",
             status: "failed",
@@ -591,7 +591,7 @@ final class MomentsCreateWorkflowPresentationTests: XCTestCase {
             template: .birthdayMessage,
             balance: MomentsCreditBalance(proMonthly: 0, promotional: 3, purchased: 0),
             mediaSummary: MomentsCreateMediaSummary(
-                selectedMedia: [MomentsCreateTestFixtures.makeSelectedMedia(id: "00000000-0000-0000-0000-000000000001")]
+                selectedMedia: [AnimateCreateTestFixtures.makeSelectedMedia(id: "00000000-0000-0000-0000-000000000001")]
             ),
             storySummary: MomentsCreateStorySummary(),
             finalRenderSummary: MomentsCreateFinalRenderSummary(latestFinalJob: failedJob),
@@ -615,7 +615,7 @@ final class MomentsCreateWorkflowPresentationTests: XCTestCase {
                 template: .birthdayMessage,
                 balance: MomentsCreditBalance(proMonthly: 0, promotional: 2, purchased: 0),
                 mediaSummary: MomentsCreateMediaSummary(
-                    selectedMedia: [MomentsCreateTestFixtures.makeSelectedMedia(id: "00000000-0000-0000-0000-000000000001")],
+                    selectedMedia: [AnimateCreateTestFixtures.makeSelectedMedia(id: "00000000-0000-0000-0000-000000000001")],
                     isImporting: true,
                     statusMessage: "Uploading media for video creation."
                 ),
@@ -644,7 +644,7 @@ final class MomentsCreateWorkflowPresentationTests: XCTestCase {
                 template: .birthdayMessage,
                 balance: MomentsCreditBalance(proMonthly: 0, promotional: 2, purchased: 0),
                 mediaSummary: MomentsCreateMediaSummary(
-                    selectedMedia: [MomentsCreateTestFixtures.makeSelectedMedia(id: "00000000-0000-0000-0000-000000000001")]
+                    selectedMedia: [AnimateCreateTestFixtures.makeSelectedMedia(id: "00000000-0000-0000-0000-000000000001")]
                 ),
                 storySummary: MomentsCreateStorySummary(),
                 finalRenderSummary: MomentsCreateFinalRenderSummary(creditCost: 2),
@@ -669,14 +669,14 @@ final class MomentsCreateWorkflowPresentationTests: XCTestCase {
                 template: .birthdayMessage,
                 balance: MomentsCreditBalance(proMonthly: 0, promotional: 3, purchased: 0),
                 mediaSummary: MomentsCreateMediaSummary(
-                    syncedMediaAssets: [MomentsCreateTestFixtures.makeMediaAsset(id: "media-1")]
+                    syncedMediaAssets: [AnimateCreateTestFixtures.makeMediaAsset(id: "media-1")]
                 ),
                 storySummary: MomentsCreateStorySummary(
-                    savedScenes: [MomentsCreateTestFixtures.makeScene(id: "scene-1")]
+                    savedScenes: [AnimateCreateTestFixtures.makeScene(id: "scene-1")]
                 ),
                 finalRenderSummary: MomentsCreateFinalRenderSummary(
                     creditCost: 2,
-                    renderPlan: MomentsCreateTestFixtures.makeRenderPlan()
+                    renderPlan: AnimateCreateTestFixtures.makeRenderPlan()
                 ),
                 canPlanStory: false,
                 canPrepareFinalRenderPlan: false,
@@ -702,14 +702,14 @@ final class MomentsCreateWorkflowPresentationTests: XCTestCase {
                 template: .birthdayMessage,
                 balance: MomentsCreditBalance(proMonthly: 0, promotional: 0, purchased: 0),
                 mediaSummary: MomentsCreateMediaSummary(
-                    syncedMediaAssets: [MomentsCreateTestFixtures.makeMediaAsset(id: "media-1")]
+                    syncedMediaAssets: [AnimateCreateTestFixtures.makeMediaAsset(id: "media-1")]
                 ),
                 storySummary: MomentsCreateStorySummary(
-                    savedScenes: [MomentsCreateTestFixtures.makeScene(id: "scene-1")]
+                    savedScenes: [AnimateCreateTestFixtures.makeScene(id: "scene-1")]
                 ),
                 finalRenderSummary: MomentsCreateFinalRenderSummary(
                     creditCost: 2,
-                    renderPlan: MomentsCreateTestFixtures.makeRenderPlan(
+                    renderPlan: AnimateCreateTestFixtures.makeRenderPlan(
                         canCreateVideo: false,
                         createVideoBlockers: ["insufficient_credits"]
                     )
@@ -736,14 +736,14 @@ final class MomentsCreateWorkflowPresentationTests: XCTestCase {
                 template: .birthdayMessage,
                 balance: MomentsCreditBalance(proMonthly: 0, promotional: 5, purchased: 0),
                 mediaSummary: MomentsCreateMediaSummary(
-                    syncedMediaAssets: [MomentsCreateTestFixtures.makeMediaAsset(id: "media-1")]
+                    syncedMediaAssets: [AnimateCreateTestFixtures.makeMediaAsset(id: "media-1")]
                 ),
                 storySummary: MomentsCreateStorySummary(
-                    savedScenes: [MomentsCreateTestFixtures.makeScene(id: "scene-1")]
+                    savedScenes: [AnimateCreateTestFixtures.makeScene(id: "scene-1")]
                 ),
                 finalRenderSummary: MomentsCreateFinalRenderSummary(
                     creditCost: 1,
-                    renderPlan: MomentsCreateTestFixtures.makeRenderPlan(
+                    renderPlan: AnimateCreateTestFixtures.makeRenderPlan(
                         canCreateVideo: false,
                         totalCreditCost: 1,
                         createVideoBlockers: ["provider_adapter_unavailable", "insufficient_credits"]
@@ -771,14 +771,14 @@ final class MomentsCreateWorkflowPresentationTests: XCTestCase {
                 template: .birthdayMessage,
                 balance: MomentsCreditBalance(proMonthly: 0, promotional: 3, purchased: 0),
                 mediaSummary: MomentsCreateMediaSummary(
-                    syncedMediaAssets: [MomentsCreateTestFixtures.makeMediaAsset(id: "media-1")]
+                    syncedMediaAssets: [AnimateCreateTestFixtures.makeMediaAsset(id: "media-1")]
                 ),
                 storySummary: MomentsCreateStorySummary(
-                    savedScenes: [MomentsCreateTestFixtures.makeScene(id: "scene-1")]
+                    savedScenes: [AnimateCreateTestFixtures.makeScene(id: "scene-1")]
                 ),
                 finalRenderSummary: MomentsCreateFinalRenderSummary(
                     creditCost: 2,
-                    renderPlan: MomentsCreateTestFixtures.makeRenderPlan(),
+                    renderPlan: AnimateCreateTestFixtures.makeRenderPlan(),
                     statusMessage: "The video plan changed. Review the latest plan before creating the video."
                 ),
                 canPlanStory: false,
@@ -797,7 +797,7 @@ final class MomentsCreateWorkflowPresentationTests: XCTestCase {
     }
 
     func testRealtimeRenderPresentationFormatsActivePhaseAndProgress() {
-        let job = MomentsCreateTestFixtures.makeRenderJob(
+        let job = AnimateCreateTestFixtures.makeRenderJob(
             id: "final-job",
             kind: "final",
             status: "running",
@@ -818,7 +818,7 @@ final class MomentsCreateWorkflowPresentationTests: XCTestCase {
     }
 
     func testRealtimeRenderPresentationFormatsFailedStatus() {
-        let job = MomentsCreateTestFixtures.makeRenderJob(
+        let job = AnimateCreateTestFixtures.makeRenderJob(
             id: "final-job",
             kind: "final",
             status: "failed",
@@ -839,7 +839,7 @@ final class MomentsCreateWorkflowPresentationTests: XCTestCase {
     }
 
     func testRealtimeRenderPresentationUsesSafeFailedUserMessage() {
-        let job = MomentsCreateTestFixtures.makeRenderJob(
+        let job = AnimateCreateTestFixtures.makeRenderJob(
             id: "final-job",
             kind: "final",
             status: "failed",

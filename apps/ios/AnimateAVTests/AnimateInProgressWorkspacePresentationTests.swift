@@ -1,7 +1,7 @@
 import XCTest
 @testable import AnimateAV
 
-final class MomentsInProgressWorkspacePresentationTests: XCTestCase {
+final class AnimateInProgressWorkspacePresentationTests: XCTestCase {
     func testWorkspaceDetailPresentationFormatsTitleActionAndContinuationRequest() {
         let workspace = makeWorkspace(
             moment: makeMoment(title: "Family Weekend"),
@@ -118,7 +118,7 @@ final class MomentsInProgressWorkspacePresentationTests: XCTestCase {
 
     func testSharedMediaItemsPreferLocalSelectionAndSortSyncedMedia() {
         let localMedia = [
-            MomentsCreateTestFixtures.makeSelectedMedia(id: "00000000-0000-0000-0000-000000000001")
+            AnimateCreateTestFixtures.makeSelectedMedia(id: "00000000-0000-0000-0000-000000000001")
         ]
         let syncedMedia = [
             makeMediaAsset(id: "second", kind: "video", sortOrder: 1, selected: false, moderationStatus: "pending"),

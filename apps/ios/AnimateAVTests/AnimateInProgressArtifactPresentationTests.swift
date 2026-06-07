@@ -1,7 +1,7 @@
 import XCTest
 @testable import AnimateAV
 
-final class MomentsInProgressArtifactPresentationTests: XCTestCase {
+final class AnimateInProgressArtifactPresentationTests: XCTestCase {
     func testRenderJobsSectionPresentationFormatsTitleEmptyStateAndJobs() {
         let presentation = MomentsInProgressRenderJobsSectionPresentation(renderJobs: [
             makeRenderJob(id: "old", kind: "final", status: "queued", updatedAt: 10),

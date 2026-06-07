@@ -1,7 +1,7 @@
 import XCTest
 @testable import AnimateAV
 
-final class MomentsInProgressPresentationTests: XCTestCase {
+final class AnimateInProgressPresentationTests: XCTestCase {
     func testSignedOutAvailabilityExplainsAccountRequirement() {
         let presentation = MomentsInProgressPresentation.make(
             isSignedIn: false,
@@ -40,7 +40,7 @@ final class MomentsInProgressPresentationTests: XCTestCase {
         )
     }
 
-    func testMomentsAvailabilityIsAvailableWhenSignedInWithMoments() {
+    func testVideoAvailabilityIsAvailableWhenSignedInWithVideos() {
         let presentation = MomentsInProgressPresentation.make(
             isSignedIn: true,
             momentsSummary: InProgressMomentsSummary.make(from: [
@@ -52,7 +52,7 @@ final class MomentsInProgressPresentationTests: XCTestCase {
         XCTAssertEqual(presentation.availability, .available)
     }
 
-    func testDeletionMessageUsesPendingMomentTitleOrFallback() {
+    func testDeletionMessageUsesPendingVideoTitleOrFallback() {
         let fallback = MomentsInProgressPresentation.make(
             isSignedIn: true,
             momentsSummary: InProgressMomentsSummary(),

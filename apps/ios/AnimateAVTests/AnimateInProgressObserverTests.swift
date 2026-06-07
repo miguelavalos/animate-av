@@ -3,8 +3,8 @@ import XCTest
 @testable import AnimateAV
 
 @MainActor
-final class InProgressMomentsObserverTests: XCTestCase {
-    func testMomentsObserverPublishesMomentUpdates() async throws {
+final class AnimateInProgressObserverTests: XCTestCase {
+    func testInProgressObserverPublishesVideoUpdates() async throws {
         let repository = MockMomentsRepository()
         let observer = InProgressMomentsObserver(momentsRepository: repository)
 
@@ -18,7 +18,7 @@ final class InProgressMomentsObserverTests: XCTestCase {
         XCTAssertEqual(repository.observedOwnerUserIds, ["user-1"])
     }
 
-    func testMomentsObserverClearsStateWhenOwnerIsMissing() async {
+    func testInProgressObserverClearsStateWhenOwnerIsMissing() async {
         let repository = MockMomentsRepository()
         let observer = InProgressMomentsObserver(momentsRepository: repository)
 
@@ -33,7 +33,7 @@ final class InProgressMomentsObserverTests: XCTestCase {
         XCTAssertEqual(repository.observedOwnerUserIds, ["user-1"])
     }
 
-    func testMomentsObserverPublishesObservationErrors() {
+    func testInProgressObserverPublishesObservationErrors() {
         let repository = MockMomentsRepository(momentsError: TestObservationError.moments)
         let observer = InProgressMomentsObserver(momentsRepository: repository)
 
@@ -43,7 +43,7 @@ final class InProgressMomentsObserverTests: XCTestCase {
         XCTAssertEqual(observer.errorMessage, TestObservationError.moments.localizedDescription)
     }
 
-    func testMomentsObserverIgnoresStaleMomentUpdatesAfterChangingOwner() async {
+    func testInProgressObserverIgnoresStaleVideoUpdatesAfterChangingOwner() async {
         let repository = MockMomentsRepository()
         let observer = InProgressMomentsObserver(momentsRepository: repository)
 
@@ -108,7 +108,7 @@ final class InProgressMomentsObserverTests: XCTestCase {
         XCTAssertEqual(observer.errorMessage, TestObservationError.workspace.localizedDescription)
     }
 
-    func testWorkspaceObserverIgnoresStaleWorkspaceUpdatesAfterChangingMoment() async {
+    func testWorkspaceObserverIgnoresStaleWorkspaceUpdatesAfterChangingVideo() async {
         let repository = MockWorkspaceRepository()
         let observer = MomentsWorkspaceObserver(momentsRepository: repository)
 

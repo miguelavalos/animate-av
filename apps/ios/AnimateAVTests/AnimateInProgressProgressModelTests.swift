@@ -1,8 +1,8 @@
 import XCTest
 @testable import AnimateAV
 
-final class MomentsInProgressProgressModelTests: XCTestCase {
-    func testEmptyWorkspaceMarksMomentCreatedAndRemainingStepsWaiting() {
+final class AnimateInProgressProgressModelTests: XCTestCase {
+    func testEmptyWorkspaceMarksVideoCreatedAndRemainingStepsWaiting() {
         let model = MomentsInProgressProgressModel(workspace: makeWorkspace())
 
         XCTAssertEqual(model.phases.map(\.title), ["Video", "Photo", "Direction", "Create Video"])

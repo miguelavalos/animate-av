@@ -2,7 +2,7 @@ import XCTest
 @testable import AnimateAV
 
 @MainActor
-final class MomentsRepositoryTests: XCTestCase {
+final class AnimateRepositoryTests: XCTestCase {
     func testRepositoryIsNotConfiguredWithoutDeploymentURL() {
         let repository = MomentsRepository(deploymentURL: "  ")
 

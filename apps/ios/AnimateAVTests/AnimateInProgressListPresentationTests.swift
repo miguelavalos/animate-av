@@ -1,8 +1,8 @@
 import XCTest
 @testable import AnimateAV
 
-final class MomentsInProgressListPresentationTests: XCTestCase {
-    func testSummaryPillsUseMomentsSummaryCounts() {
+final class AnimateInProgressListPresentationTests: XCTestCase {
+    func testSummaryPillsUseVideoSummaryCounts() {
         let presentation = MomentsInProgressListPresentation.make(
             momentsSummary: InProgressMomentsSummary.make(from: [
                 makeMoment(id: "active", status: "story_ready", updatedAt: 20),
@@ -31,7 +31,7 @@ final class MomentsInProgressListPresentationTests: XCTestCase {
         XCTAssertEqual(presentation.groups[1].rows.map(\.id), ["done"])
     }
 
-    func testRowPresentationFormatsMomentMetadataAndSelection() {
+    func testRowPresentationFormatsVideoMetadataAndSelection() {
         let moment = makeMoment(
             id: "moment-1",
             status: "story_ready",

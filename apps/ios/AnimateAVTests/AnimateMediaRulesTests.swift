@@ -3,7 +3,7 @@ import AVMediaAnalysisFoundation
 import XCTest
 @testable import AnimateAV
 
-final class MomentsMediaRulesTests: XCTestCase {
+final class AnimateMediaRulesTests: XCTestCase {
     func testSelectedCountUsesSyncedMediaWhenLocalSelectionIsEmpty() {
         let syncedMedia = [
             makeSyncedMedia(id: "media-1", selected: true),

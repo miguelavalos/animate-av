@@ -1,8 +1,8 @@
 import XCTest
 @testable import AnimateAV
 
-final class MomentStatusRulesTests: XCTestCase {
-    func testGroupsCompletedMomentsAsFinished() {
+final class AnimateStatusRulesTests: XCTestCase {
+    func testGroupsCompletedVideosAsFinished() {
         let plan = makeMoment(id: "in_progress", status: "in_progress", updatedAt: 10)
         let story = makeMoment(id: "story", status: "story_ready", updatedAt: 20)
         let completed = makeMoment(id: "completed", status: "gallery_ready", updatedAt: 30)
@@ -13,7 +13,7 @@ final class MomentStatusRulesTests: XCTestCase {
         XCTAssertEqual(groups.finished.map(\.id), ["completed"])
     }
 
-    func testGroupsSortMomentsByLatestUpdateWithinEachSection() {
+    func testGroupsSortVideosByLatestUpdateWithinEachSection() {
         let olderInProgress = makeMoment(id: "older-plan", status: "in_progress", updatedAt: 10)
         let newerInProgress = makeMoment(id: "newer-plan", status: "story_ready", updatedAt: 30)
         let olderFinished = makeMoment(id: "older-finished", status: "gallery_ready", updatedAt: 20)
@@ -30,7 +30,7 @@ final class MomentStatusRulesTests: XCTestCase {
         XCTAssertEqual(groups.finished.map(\.id), ["newer-finished", "older-finished"])
     }
 
-    func testListSummaryCountsAndLatestMomentUseMomentRules() {
+    func testListSummaryCountsAndLatestVideoUseStatusRules() {
         let oldest = makeMoment(id: "oldest", status: "gallery_ready", updatedAt: 10)
         let newest = makeMoment(id: "newest", status: "story_ready", updatedAt: 30)
         let middle = makeMoment(id: "middle", status: "gallery_ready", updatedAt: 20)
@@ -71,7 +71,7 @@ final class MomentStatusRulesTests: XCTestCase {
         XCTAssertEqual(summary.latestInProgressContinuationRequest?.focus, .moment)
     }
 
-    func testEmptyListSummaryHasNoMoments() {
+    func testEmptyListSummaryHasNoVideos() {
         let summary = InProgressMomentsSummary.make(from: [])
 
         XCTAssertEqual(summary.momentCount, 0)

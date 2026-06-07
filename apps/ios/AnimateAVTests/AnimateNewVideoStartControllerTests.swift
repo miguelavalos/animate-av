@@ -1,13 +1,13 @@
 import XCTest
 @testable import AnimateAV
 
-final class MomentsNewMomentStartControllerTests: XCTestCase {
+final class AnimateNewVideoStartControllerTests: XCTestCase {
     private var userDefaults: UserDefaults!
     private var userDefaultsSuiteName: String!
 
     override func setUp() {
         super.setUp()
-        userDefaultsSuiteName = "MomentsNewMomentStartControllerTests.\(UUID().uuidString)"
+        userDefaultsSuiteName = "AnimateNewVideoStartControllerTests.\(UUID().uuidString)"
         userDefaults = UserDefaults(suiteName: userDefaultsSuiteName)
         userDefaults.removePersistentDomain(forName: userDefaultsSuiteName)
     }

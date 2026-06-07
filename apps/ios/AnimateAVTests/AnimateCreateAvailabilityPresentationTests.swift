@@ -2,7 +2,7 @@ import XCTest
 @testable import AnimateAV
 
 @MainActor
-final class MomentsCreateAvailabilityPresentationTests: XCTestCase {
+final class AnimateCreateAvailabilityPresentationTests: XCTestCase {
     func testWorkflowAvailabilityBuilderCarriesCapabilitiesAndMessages() {
         let availability = MomentsCreateWorkflowAvailability.make(
             canAddMedia: true,
@@ -45,7 +45,7 @@ final class MomentsCreateAvailabilityPresentationTests: XCTestCase {
         XCTAssertFalse(capability.canRefreshFinalRenderStatus)
     }
 
-    func testWorkflowCapabilityFactoryBlocksMediaWithoutSlotsOrMoment() {
+    func testWorkflowCapabilityFactoryBlocksMediaWithoutSlotsOrVideo() {
         let withoutSlots = MomentsCreateWorkflowCapabilityFactory.make(
             activeMomentId: "moment-1",
             isSignedIn: true,
@@ -151,7 +151,7 @@ final class MomentsCreateAvailabilityPresentationTests: XCTestCase {
                 isFinalRenderAvailable: true,
                 isFinalRenderGenerating: false,
                 isFinalRenderConfigured: true,
-                moment: MomentsCreateTestFixtures.makeMoment(id: "moment-1"),
+                moment: AnimateCreateTestFixtures.makeMoment(id: "moment-1"),
                 template: .birthdayMessage,
                 balance: MomentsCreditBalance(proMonthly: 4, promotional: 0, purchased: 0)
             ),
@@ -166,7 +166,7 @@ final class MomentsCreateAvailabilityPresentationTests: XCTestCase {
                 isFinalRenderAvailable: true,
                 isFinalRenderGenerating: false,
                 isFinalRenderConfigured: true,
-                moment: MomentsCreateTestFixtures.makeMoment(id: "moment-1", status: "story_ready"),
+                moment: AnimateCreateTestFixtures.makeMoment(id: "moment-1", status: "story_ready"),
                 template: .birthdayMessage,
                 balance: .empty,
                 creditBalanceLoadState: .loading
@@ -182,7 +182,7 @@ final class MomentsCreateAvailabilityPresentationTests: XCTestCase {
                 isFinalRenderAvailable: true,
                 isFinalRenderGenerating: false,
                 isFinalRenderConfigured: true,
-                moment: MomentsCreateTestFixtures.makeMoment(id: "moment-1", status: "story_ready"),
+                moment: AnimateCreateTestFixtures.makeMoment(id: "moment-1", status: "story_ready"),
                 template: .birthdayMessage,
                 balance: .empty,
                 creditBalanceLoadState: .offline

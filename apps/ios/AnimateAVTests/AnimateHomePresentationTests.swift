@@ -1,8 +1,8 @@
 import XCTest
 @testable import AnimateAV
 
-final class MomentsHomePresentationTests: XCTestCase {
-    func testSignedOutStateRequiresAccountAndDisablesMomentActions() {
+final class AnimateHomePresentationTests: XCTestCase {
+    func testSignedOutStateRequiresAccountAndDisablesVideoActions() {
         let presentation = MomentsHomePresentation.make(
             isSignedIn: false,
             displayName: nil,
@@ -38,7 +38,7 @@ final class MomentsHomePresentationTests: XCTestCase {
         )
     }
 
-    func testLatestInProgressMomentAddsContinuationAction() {
+    func testLatestInProgressVideoAddsContinuationAction() {
         let moment = makeMoment(id: "latest-plan", status: "story_ready", updatedAt: 20)
         let presentation = MomentsHomePresentation.make(
             isSignedIn: true,
@@ -57,7 +57,7 @@ final class MomentsHomePresentationTests: XCTestCase {
         XCTAssertEqual(presentation.latestInProgressContinuationRequest?.focus, .moment)
     }
 
-    func testMomentCountDrivesStatusAndReviewDetail() {
+    func testVideoCountDrivesStatusAndReviewDetail() {
         let presentation = MomentsHomePresentation.make(
             isSignedIn: true,
             displayName: nil,
@@ -77,7 +77,7 @@ final class MomentsHomePresentationTests: XCTestCase {
         )
     }
 
-    func testSingleMomentUsesSingularMomentCopy() {
+    func testSingleVideoUsesSingularVideoCopy() {
         let presentation = MomentsHomePresentation.make(
             isSignedIn: true,
             displayName: nil,

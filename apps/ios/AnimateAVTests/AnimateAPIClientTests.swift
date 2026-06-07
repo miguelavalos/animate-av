@@ -2,9 +2,9 @@ import Foundation
 import XCTest
 @testable import AnimateAV
 
-final class MomentsAPIClientTests: XCTestCase {
+final class AnimateAPIClientTests: XCTestCase {
     override func tearDown() {
-        MomentsURLProtocolMock.reset()
+        AnimateURLProtocolMock.reset()
         super.tearDown()
     }
 
@@ -41,12 +41,12 @@ final class MomentsAPIClientTests: XCTestCase {
 
         _ = try await client.prepareUpload(momentId: "moment-1", bearerToken: "token-1", media: media)
 
-        XCTAssertEqual(MomentsURLProtocolMock.lastRequest?.url?.absoluteString, "\(accountAPIBaseURL)/v1/apps/animateav/media/prepare-upload")
-        XCTAssertEqual(MomentsURLProtocolMock.lastRequest?.value(forHTTPHeaderField: "Authorization"), "Bearer token-1")
+        XCTAssertEqual(AnimateURLProtocolMock.lastRequest?.url?.absoluteString, "\(accountAPIBaseURL)/v1/apps/animateav/media/prepare-upload")
+        XCTAssertEqual(AnimateURLProtocolMock.lastRequest?.value(forHTTPHeaderField: "Authorization"), "Bearer token-1")
     }
 
     func testPrepareUploadRetriesTransientNetworkLoss() async throws {
-        MomentsURLProtocolMock.failuresBeforeSuccess = 1
+        AnimateURLProtocolMock.failuresBeforeSuccess = 1
         let session = makeMockSession(
             json: """
             {
@@ -83,7 +83,7 @@ final class MomentsAPIClientTests: XCTestCase {
 
         _ = try await client.prepareUpload(momentId: "moment-1", bearerToken: "token-1", media: media)
 
-        XCTAssertEqual(MomentsURLProtocolMock.requestCount, 2)
+        XCTAssertEqual(AnimateURLProtocolMock.requestCount, 2)
     }
 
     func testUploadUsesPreparedURLAndHeaders() async throws {
@@ -122,10 +122,10 @@ final class MomentsAPIClientTests: XCTestCase {
 
         _ = try await client.upload(media: media, preparedUpload: prepared)
 
-        XCTAssertEqual(MomentsURLProtocolMock.lastRequest?.url?.absoluteString, uploadURL.absoluteString)
-        XCTAssertEqual(MomentsURLProtocolMock.lastRequest?.httpMethod, "PUT")
-        XCTAssertNil(MomentsURLProtocolMock.lastRequest?.value(forHTTPHeaderField: "Authorization"))
-        XCTAssertEqual(MomentsURLProtocolMock.lastRequest?.value(forHTTPHeaderField: "x-appsav-moments-moment-id"), "moment-1")
+        XCTAssertEqual(AnimateURLProtocolMock.lastRequest?.url?.absoluteString, uploadURL.absoluteString)
+        XCTAssertEqual(AnimateURLProtocolMock.lastRequest?.httpMethod, "PUT")
+        XCTAssertNil(AnimateURLProtocolMock.lastRequest?.value(forHTTPHeaderField: "Authorization"))
+        XCTAssertEqual(AnimateURLProtocolMock.lastRequest?.value(forHTTPHeaderField: "x-appsav-moments-moment-id"), "moment-1")
     }
 
     func testUploadWithoutSignedURLFailsBeforeSavingMedia() async throws {
@@ -161,7 +161,7 @@ final class MomentsAPIClientTests: XCTestCase {
             _ = try await client.upload(media: media, preparedUpload: prepared)
             XCTFail("Expected missing upload URL to fail.")
         } catch MomentsUploadError.signedUploadUnavailable {
-            XCTAssertEqual(MomentsURLProtocolMock.requestCount, 0)
+            XCTAssertEqual(AnimateURLProtocolMock.requestCount, 0)
         } catch {
             XCTFail("Unexpected error: \(error)")
         }
@@ -203,13 +203,13 @@ final class MomentsAPIClientTests: XCTestCase {
 
         _ = try await client.upload(media: media, preparedUpload: prepared)
 
-        XCTAssertEqual(MomentsURLProtocolMock.requestCount, 2)
-        XCTAssertEqual(MomentsURLProtocolMock.lastRequest?.url?.absoluteString, completionURL.absoluteString)
-        XCTAssertEqual(MomentsURLProtocolMock.lastRequest?.httpMethod, "POST")
+        XCTAssertEqual(AnimateURLProtocolMock.requestCount, 2)
+        XCTAssertEqual(AnimateURLProtocolMock.lastRequest?.url?.absoluteString, completionURL.absoluteString)
+        XCTAssertEqual(AnimateURLProtocolMock.lastRequest?.httpMethod, "POST")
     }
 
     func testUploadRetriesTransientNetworkLoss() async throws {
-        MomentsURLProtocolMock.failuresBeforeSuccess = 1
+        AnimateURLProtocolMock.failuresBeforeSuccess = 1
         let session = makeMockSession(json: uploadCompletionJSON)
         let client = MomentsUploadClient(
             baseURLString: accountAPIBaseURL,
@@ -245,7 +245,7 @@ final class MomentsAPIClientTests: XCTestCase {
 
         _ = try await client.upload(media: media, preparedUpload: prepared)
 
-        XCTAssertEqual(MomentsURLProtocolMock.requestCount, 2)
+        XCTAssertEqual(AnimateURLProtocolMock.requestCount, 2)
     }
 
     func testStoryUsesSharedAccountAPIBaseURL() async throws {
@@ -278,12 +278,12 @@ final class MomentsAPIClientTests: XCTestCase {
             mediaAssets: []
         )
 
-        XCTAssertEqual(MomentsURLProtocolMock.lastRequest?.url?.absoluteString, "\(accountAPIBaseURL)/v1/apps/animateav/story/plans")
-        XCTAssertEqual(MomentsURLProtocolMock.lastRequest?.value(forHTTPHeaderField: "Authorization"), "Bearer token-1")
+        XCTAssertEqual(AnimateURLProtocolMock.lastRequest?.url?.absoluteString, "\(accountAPIBaseURL)/v1/apps/animateav/story/plans")
+        XCTAssertEqual(AnimateURLProtocolMock.lastRequest?.value(forHTTPHeaderField: "Authorization"), "Bearer token-1")
     }
 
     func testStoryRetriesTransientNetworkLoss() async throws {
-        MomentsURLProtocolMock.failuresBeforeSuccess = 1
+        AnimateURLProtocolMock.failuresBeforeSuccess = 1
         let session = makeMockSession(
             json: """
             {
@@ -317,7 +317,7 @@ final class MomentsAPIClientTests: XCTestCase {
             mediaAssets: []
         )
 
-        XCTAssertEqual(MomentsURLProtocolMock.requestCount, 2)
+        XCTAssertEqual(AnimateURLProtocolMock.requestCount, 2)
     }
 
     func testPrepareRenderPlanSendsContractSafePayload() async throws {
@@ -378,9 +378,9 @@ final class MomentsAPIClientTests: XCTestCase {
             generatedImageArtifactId: " "
         )
 
-        XCTAssertEqual(MomentsURLProtocolMock.lastRequest?.url?.absoluteString, "\(accountAPIBaseURL)/v1/apps/animateav/renders/plan")
-        XCTAssertEqual(MomentsURLProtocolMock.lastRequest?.httpMethod, "POST")
-        let body = try XCTUnwrap(MomentsURLProtocolMock.lastRequestBody)
+        XCTAssertEqual(AnimateURLProtocolMock.lastRequest?.url?.absoluteString, "\(accountAPIBaseURL)/v1/apps/animateav/renders/plan")
+        XCTAssertEqual(AnimateURLProtocolMock.lastRequest?.httpMethod, "POST")
+        let body = try XCTUnwrap(AnimateURLProtocolMock.lastRequestBody)
         let json = try XCTUnwrap(JSONSerialization.jsonObject(with: body) as? [String: Any])
         XCTAssertEqual(json["appId"] as? String, "animateav")
         XCTAssertNil(json["occasion"])
@@ -445,7 +445,7 @@ final class MomentsAPIClientTests: XCTestCase {
             selectedSourceLocalIdentifiers: ["photo-1"]
         )
 
-        let body = try XCTUnwrap(MomentsURLProtocolMock.lastRequestBody)
+        let body = try XCTUnwrap(AnimateURLProtocolMock.lastRequestBody)
         let json = try XCTUnwrap(JSONSerialization.jsonObject(with: body) as? [String: Any])
         XCTAssertEqual(json["occasion"] as? String, "Birthday")
         XCTAssertEqual(json["details"] as? String, "Happy birthday, Ana. Your photo turns into a watercolor celebration.")
@@ -531,13 +531,13 @@ final class MomentsAPIClientTests: XCTestCase {
             renderOptionId: "standard_moment"
         )
 
-        XCTAssertEqual(MomentsURLProtocolMock.lastRequest?.url?.absoluteString, "\(accountAPIBaseURL)/v1/apps/animateav/renders/final/confirm")
-        XCTAssertEqual(MomentsURLProtocolMock.lastRequest?.httpMethod, "POST")
-        XCTAssertEqual(MomentsURLProtocolMock.lastRequest?.value(forHTTPHeaderField: "Authorization"), "Bearer token-1")
+        XCTAssertEqual(AnimateURLProtocolMock.lastRequest?.url?.absoluteString, "\(accountAPIBaseURL)/v1/apps/animateav/renders/final/confirm")
+        XCTAssertEqual(AnimateURLProtocolMock.lastRequest?.httpMethod, "POST")
+        XCTAssertEqual(AnimateURLProtocolMock.lastRequest?.value(forHTTPHeaderField: "Authorization"), "Bearer token-1")
         XCTAssertEqual(confirmation.reservation.id, "reservation-1")
         XCTAssertEqual(confirmation.workflow.renderJobId, "render-1")
         XCTAssertEqual(confirmation.renderPlan.plan.totalCreditCost, 2)
-        let body = try XCTUnwrap(MomentsURLProtocolMock.lastRequestBody)
+        let body = try XCTUnwrap(AnimateURLProtocolMock.lastRequestBody)
         let json = try XCTUnwrap(JSONSerialization.jsonObject(with: body) as? [String: Any])
         XCTAssertEqual(json["sourceImageUploadId"] as? String, "source-upload-1")
         XCTAssertNil(json["generatedImageArtifactId"])
@@ -576,10 +576,10 @@ final class MomentsAPIClientTests: XCTestCase {
             bearerToken: "token-1"
         )
 
-        XCTAssertEqual(MomentsURLProtocolMock.lastRequest?.url?.absoluteString, "\(accountAPIBaseURL)/v1/apps/animateav/video/quotes")
-        XCTAssertEqual(MomentsURLProtocolMock.lastRequest?.httpMethod, "POST")
-        XCTAssertEqual(MomentsURLProtocolMock.lastRequest?.value(forHTTPHeaderField: "Authorization"), "Bearer token-1")
-        let body = try XCTUnwrap(MomentsURLProtocolMock.lastRequestBody)
+        XCTAssertEqual(AnimateURLProtocolMock.lastRequest?.url?.absoluteString, "\(accountAPIBaseURL)/v1/apps/animateav/video/quotes")
+        XCTAssertEqual(AnimateURLProtocolMock.lastRequest?.httpMethod, "POST")
+        XCTAssertEqual(AnimateURLProtocolMock.lastRequest?.value(forHTTPHeaderField: "Authorization"), "Bearer token-1")
+        let body = try XCTUnwrap(AnimateURLProtocolMock.lastRequestBody)
         let json = try XCTUnwrap(JSONSerialization.jsonObject(with: body) as? [String: Any])
         XCTAssertEqual(json["appId"] as? String, "animateav")
         XCTAssertNil(json["duration"])
@@ -623,9 +623,9 @@ final class MomentsAPIClientTests: XCTestCase {
 
         let availability = try await client.fetchAvailability(bearerToken: "token-1")
 
-        XCTAssertEqual(MomentsURLProtocolMock.lastRequest?.url?.absoluteString, "\(accountAPIBaseURL)/v1/apps/animateav/images/availability")
-        XCTAssertEqual(MomentsURLProtocolMock.lastRequest?.httpMethod, "GET")
-        XCTAssertEqual(MomentsURLProtocolMock.lastRequest?.value(forHTTPHeaderField: "Authorization"), "Bearer token-1")
+        XCTAssertEqual(AnimateURLProtocolMock.lastRequest?.url?.absoluteString, "\(accountAPIBaseURL)/v1/apps/animateav/images/availability")
+        XCTAssertEqual(AnimateURLProtocolMock.lastRequest?.httpMethod, "GET")
+        XCTAssertEqual(AnimateURLProtocolMock.lastRequest?.value(forHTTPHeaderField: "Authorization"), "Bearer token-1")
         XCTAssertEqual(availability.availableImages, 125)
         XCTAssertEqual(availability.monthlyProAllowance.remaining, 75)
         XCTAssertEqual(availability.purchasedImages.balance, 50)
@@ -687,10 +687,10 @@ final class MomentsAPIClientTests: XCTestCase {
             bearerToken: "token-1"
         )
 
-        XCTAssertEqual(MomentsURLProtocolMock.lastRequest?.url?.absoluteString, "\(accountAPIBaseURL)/v1/apps/animateav/images/generations")
-        XCTAssertEqual(MomentsURLProtocolMock.lastRequest?.httpMethod, "POST")
-        XCTAssertEqual(MomentsURLProtocolMock.lastRequest?.value(forHTTPHeaderField: "Authorization"), "Bearer token-1")
-        let body = try XCTUnwrap(MomentsURLProtocolMock.lastRequestBody)
+        XCTAssertEqual(AnimateURLProtocolMock.lastRequest?.url?.absoluteString, "\(accountAPIBaseURL)/v1/apps/animateav/images/generations")
+        XCTAssertEqual(AnimateURLProtocolMock.lastRequest?.httpMethod, "POST")
+        XCTAssertEqual(AnimateURLProtocolMock.lastRequest?.value(forHTTPHeaderField: "Authorization"), "Bearer token-1")
+        let body = try XCTUnwrap(AnimateURLProtocolMock.lastRequestBody)
         let json = try XCTUnwrap(JSONSerialization.jsonObject(with: body) as? [String: Any])
         XCTAssertEqual(json["sourceImageUploadId"] as? String, "source-upload-1")
         XCTAssertEqual(json["looks"] as? [String], ["cartoon"])
@@ -728,10 +728,10 @@ final class MomentsAPIClientTests: XCTestCase {
             bearerToken: "token-1"
         )
 
-        XCTAssertEqual(MomentsURLProtocolMock.lastRequest?.url?.absoluteString, "\(accountAPIBaseURL)/v1/apps/animateav/images/source-uploads/prepare")
-        XCTAssertEqual(MomentsURLProtocolMock.lastRequest?.httpMethod, "POST")
-        XCTAssertEqual(MomentsURLProtocolMock.lastRequest?.value(forHTTPHeaderField: "Authorization"), "Bearer token-1")
-        let body = try XCTUnwrap(MomentsURLProtocolMock.lastRequestBody)
+        XCTAssertEqual(AnimateURLProtocolMock.lastRequest?.url?.absoluteString, "\(accountAPIBaseURL)/v1/apps/animateav/images/source-uploads/prepare")
+        XCTAssertEqual(AnimateURLProtocolMock.lastRequest?.httpMethod, "POST")
+        XCTAssertEqual(AnimateURLProtocolMock.lastRequest?.value(forHTTPHeaderField: "Authorization"), "Bearer token-1")
+        let body = try XCTUnwrap(AnimateURLProtocolMock.lastRequestBody)
         let json = try XCTUnwrap(JSONSerialization.jsonObject(with: body) as? [String: Any])
         XCTAssertEqual(json["sourceLocalIdentifier"] as? String, "local-photo-1")
         XCTAssertEqual(json["contentType"] as? String, "image/jpeg")
@@ -770,10 +770,10 @@ final class MomentsAPIClientTests: XCTestCase {
 
         let uploaded = try await client.uploadSourceImage(data: Data([1, 2, 3, 4]), preparedUpload: prepared)
 
-        XCTAssertEqual(MomentsURLProtocolMock.lastRequest?.url?.absoluteString, "\(accountAPIBaseURL)/v1/apps/animateav/images/source-uploads/source-upload-1")
-        XCTAssertEqual(MomentsURLProtocolMock.lastRequest?.httpMethod, "PUT")
-        XCTAssertEqual(MomentsURLProtocolMock.lastRequest?.value(forHTTPHeaderField: "Content-Type"), "image/jpeg")
-        XCTAssertEqual(MomentsURLProtocolMock.lastRequestBody, Data([1, 2, 3, 4]))
+        XCTAssertEqual(AnimateURLProtocolMock.lastRequest?.url?.absoluteString, "\(accountAPIBaseURL)/v1/apps/animateav/images/source-uploads/source-upload-1")
+        XCTAssertEqual(AnimateURLProtocolMock.lastRequest?.httpMethod, "PUT")
+        XCTAssertEqual(AnimateURLProtocolMock.lastRequest?.value(forHTTPHeaderField: "Content-Type"), "image/jpeg")
+        XCTAssertEqual(AnimateURLProtocolMock.lastRequestBody, Data([1, 2, 3, 4]))
         XCTAssertEqual(uploaded.sourceImageUploadId, "source-upload-1")
         XCTAssertEqual(uploaded.bytesReceived, 4)
     }
@@ -819,10 +819,10 @@ final class MomentsAPIClientTests: XCTestCase {
             bearerToken: "token-1"
         )
 
-        XCTAssertEqual(MomentsURLProtocolMock.lastRequest?.url?.absoluteString, "\(accountAPIBaseURL)/v1/apps/animateav/images/packs/purchase")
-        XCTAssertEqual(MomentsURLProtocolMock.lastRequest?.httpMethod, "POST")
-        XCTAssertEqual(MomentsURLProtocolMock.lastRequest?.value(forHTTPHeaderField: "Authorization"), "Bearer token-1")
-        let body = try XCTUnwrap(MomentsURLProtocolMock.lastRequestBody)
+        XCTAssertEqual(AnimateURLProtocolMock.lastRequest?.url?.absoluteString, "\(accountAPIBaseURL)/v1/apps/animateav/images/packs/purchase")
+        XCTAssertEqual(AnimateURLProtocolMock.lastRequest?.httpMethod, "POST")
+        XCTAssertEqual(AnimateURLProtocolMock.lastRequest?.value(forHTTPHeaderField: "Authorization"), "Bearer token-1")
+        let body = try XCTUnwrap(AnimateURLProtocolMock.lastRequestBody)
         let json = try XCTUnwrap(JSONSerialization.jsonObject(with: body) as? [String: Any])
         XCTAssertEqual(json["idempotencyKey"] as? String, "pack-key-1")
         XCTAssertEqual(response.purchase.imageGenerationsAdded, 50)
@@ -854,9 +854,9 @@ final class MomentsAPIClientTests: XCTestCase {
             bearerToken: "token-1"
         )
 
-        XCTAssertEqual(MomentsURLProtocolMock.lastRequest?.url?.absoluteString, "\(accountAPIBaseURL)/v1/apps/animateav/artifacts/artifact-1/download")
-        XCTAssertEqual(MomentsURLProtocolMock.lastRequest?.httpMethod, "POST")
-        XCTAssertEqual(MomentsURLProtocolMock.lastRequest?.value(forHTTPHeaderField: "Authorization"), "Bearer token-1")
+        XCTAssertEqual(AnimateURLProtocolMock.lastRequest?.url?.absoluteString, "\(accountAPIBaseURL)/v1/apps/animateav/artifacts/artifact-1/download")
+        XCTAssertEqual(AnimateURLProtocolMock.lastRequest?.httpMethod, "POST")
+        XCTAssertEqual(AnimateURLProtocolMock.lastRequest?.value(forHTTPHeaderField: "Authorization"), "Bearer token-1")
         XCTAssertNil(response.r2Key)
         XCTAssertEqual(response.artifactKind, "final_export")
     }
@@ -885,9 +885,9 @@ final class MomentsAPIClientTests: XCTestCase {
 
         let status = try await client.fetchStatus(renderJobId: "render-1", bearerToken: "token-1")
 
-        XCTAssertEqual(MomentsURLProtocolMock.lastRequest?.url?.absoluteString, "\(accountAPIBaseURL)/v1/apps/animateav/renders/render-1/status")
-        XCTAssertEqual(MomentsURLProtocolMock.lastRequest?.httpMethod, "GET")
-        XCTAssertEqual(MomentsURLProtocolMock.lastRequest?.value(forHTTPHeaderField: "Authorization"), "Bearer token-1")
+        XCTAssertEqual(AnimateURLProtocolMock.lastRequest?.url?.absoluteString, "\(accountAPIBaseURL)/v1/apps/animateav/renders/render-1/status")
+        XCTAssertEqual(AnimateURLProtocolMock.lastRequest?.httpMethod, "GET")
+        XCTAssertEqual(AnimateURLProtocolMock.lastRequest?.value(forHTTPHeaderField: "Authorization"), "Bearer token-1")
         XCTAssertEqual(status.status, "running")
         XCTAssertEqual(status.progressPercent, 25)
     }
@@ -938,9 +938,9 @@ final class MomentsAPIClientTests: XCTestCase {
 
         let balance = try await client.fetchBalance(bearerToken: "token-1")
 
-        XCTAssertEqual(MomentsURLProtocolMock.lastRequest?.url?.absoluteString, "\(accountAPIBaseURL)/v1/apps/animateav/credits/balance")
-        XCTAssertEqual(MomentsURLProtocolMock.lastRequest?.httpMethod, "GET")
-        XCTAssertEqual(MomentsURLProtocolMock.lastRequest?.value(forHTTPHeaderField: "Authorization"), "Bearer token-1")
+        XCTAssertEqual(AnimateURLProtocolMock.lastRequest?.url?.absoluteString, "\(accountAPIBaseURL)/v1/apps/animateav/credits/balance")
+        XCTAssertEqual(AnimateURLProtocolMock.lastRequest?.httpMethod, "GET")
+        XCTAssertEqual(AnimateURLProtocolMock.lastRequest?.value(forHTTPHeaderField: "Authorization"), "Bearer token-1")
         XCTAssertEqual(balance, MomentsCreditBalance(proMonthly: 0, promotional: 10, purchased: 0, availableCredits: 10))
     }
 
@@ -978,9 +978,9 @@ final class MomentsAPIClientTests: XCTestCase {
 
         let response = try await client.redeem(code: "MOMENTS-DEMO-2026", bearerToken: "token-1")
 
-        XCTAssertEqual(MomentsURLProtocolMock.lastRequest?.url?.absoluteString, "\(accountAPIBaseURL)/v1/apps/animateav/credits/promotions/redeem")
-        XCTAssertEqual(MomentsURLProtocolMock.lastRequest?.httpMethod, "POST")
-        XCTAssertEqual(MomentsURLProtocolMock.lastRequest?.value(forHTTPHeaderField: "Authorization"), "Bearer token-1")
+        XCTAssertEqual(AnimateURLProtocolMock.lastRequest?.url?.absoluteString, "\(accountAPIBaseURL)/v1/apps/animateav/credits/promotions/redeem")
+        XCTAssertEqual(AnimateURLProtocolMock.lastRequest?.httpMethod, "POST")
+        XCTAssertEqual(AnimateURLProtocolMock.lastRequest?.value(forHTTPHeaderField: "Authorization"), "Bearer token-1")
         XCTAssertEqual(response.creditsGranted, 5)
         XCTAssertEqual(response.balance, MomentsCreditBalance(proMonthly: 0, promotional: 5, purchased: 0, availableCredits: 5))
     }
@@ -1005,15 +1005,15 @@ final class MomentsAPIClientTests: XCTestCase {
     }
 
     private func makeMockSession(statusCode: Int = 200, json: String) -> URLSession {
-        MomentsURLProtocolMock.statusCode = statusCode
-        MomentsURLProtocolMock.responseData = Data(json.utf8)
+        AnimateURLProtocolMock.statusCode = statusCode
+        AnimateURLProtocolMock.responseData = Data(json.utf8)
         let configuration = URLSessionConfiguration.ephemeral
-        configuration.protocolClasses = [MomentsURLProtocolMock.self]
+        configuration.protocolClasses = [AnimateURLProtocolMock.self]
         return URLSession(configuration: configuration)
     }
 }
 
-private final class MomentsURLProtocolMock: URLProtocol {
+private final class AnimateURLProtocolMock: URLProtocol {
     nonisolated(unsafe) static var statusCode = 200
     nonisolated(unsafe) static var responseData = Data()
     nonisolated(unsafe) static var lastRequest: URLRequest?
