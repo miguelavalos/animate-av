@@ -22,6 +22,7 @@ struct InProgressMoment: Identifiable, Decodable, Equatable {
     let mediaCount: Int
     let mediaPreview: [MomentMediaAsset]
     let finalExport: MomentArtifact?
+    let assetKind: String
 
     init(
         id: String,
@@ -44,7 +45,8 @@ struct InProgressMoment: Identifiable, Decodable, Equatable {
         updatedAt: Double,
         mediaCount: Int = 0,
         mediaPreview: [MomentMediaAsset] = [],
-        finalExport: MomentArtifact? = nil
+        finalExport: MomentArtifact? = nil,
+        assetKind: String = "video"
     ) {
         self.id = id
         self.template = template
@@ -67,6 +69,7 @@ struct InProgressMoment: Identifiable, Decodable, Equatable {
         self.mediaCount = mediaCount
         self.mediaPreview = mediaPreview
         self.finalExport = finalExport
+        self.assetKind = assetKind
     }
 
     func renamed(_ title: String) -> InProgressMoment {
@@ -91,7 +94,8 @@ struct InProgressMoment: Identifiable, Decodable, Equatable {
             updatedAt: updatedAt,
             mediaCount: mediaCount,
             mediaPreview: mediaPreview,
-            finalExport: finalExport
+            finalExport: finalExport,
+            assetKind: assetKind
         )
     }
 
@@ -117,6 +121,7 @@ struct InProgressMoment: Identifiable, Decodable, Equatable {
         case mediaCount
         case mediaPreview
         case finalExport
+        case assetKind
     }
 
     init(from decoder: Decoder) throws {
@@ -145,5 +150,6 @@ struct InProgressMoment: Identifiable, Decodable, Equatable {
         mediaPreview = try container.decodeIfPresent([MomentMediaAsset].self, forKey: .mediaPreview) ?? []
         mediaCount = try container.decodeIfPresent(Int.self, forKey: .mediaCount) ?? mediaPreview.count
         finalExport = try container.decodeIfPresent(MomentArtifact.self, forKey: .finalExport)
+        assetKind = try container.decodeIfPresent(String.self, forKey: .assetKind) ?? "video"
     }
 }

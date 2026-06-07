@@ -19,8 +19,16 @@ struct MomentsInProgressScreen: View {
     private var presentation: MomentsInProgressPresentation {
         MomentsInProgressPresentation.make(
             isSignedIn: viewModel.isSignedIn,
-            momentsSummary: viewModel.momentsSummary,
+            momentsSummary: viewModel.videoMomentsSummary,
             momentPendingDeletion: momentPendingDeletion
+        )
+    }
+
+    private var imagesPresentation: MomentsInProgressPresentation {
+        MomentsInProgressPresentation.make(
+            isSignedIn: viewModel.isSignedIn,
+            momentsSummary: viewModel.imageMomentsSummary,
+            momentPendingDeletion: nil
         )
     }
 
@@ -66,7 +74,7 @@ struct MomentsInProgressScreen: View {
                     presentation: presentation,
                     balance: balance,
                     creditBalanceLoadState: creditBalanceLoadState,
-                    momentsSummary: viewModel.momentsSummary,
+                    momentsSummary: viewModel.videoMomentsSummary,
                     selectedMomentId: viewModel.selectedMomentId,
                     isLoadingMomentWorkspace: viewModel.isLoadingMomentWorkspace,
                     activeWorkspace: viewModel.activeWorkspace,
@@ -82,7 +90,12 @@ struct MomentsInProgressScreen: View {
                     retryCredits: retryCredits
                 )
             case .images:
-                MomentsInProgressImagesEmptyState()
+                MomentsInProgressImagesCard(
+                    presentation: imagesPresentation,
+                    momentsSummary: viewModel.imageMomentsSummary,
+                    startSignInFlow: startSignInFlow,
+                    startImages: startMoment
+                )
             }
         }
         .confirmationDialog(
@@ -139,11 +152,42 @@ struct MomentsInProgressScreen: View {
 
         guard !createViewModel.selectedMedia.isEmpty,
               viewModel.momentsSummary.latestInProgressMoment?.id == moment.id,
-              viewModel.momentsSummary.inProgressCount == 1 else {
+              viewModel.videoMomentsSummary.inProgressCount == 1 else {
             return []
         }
 
         return createViewModel.selectedMedia
+    }
+}
+
+private struct MomentsInProgressImagesCard: View {
+    let presentation: MomentsInProgressPresentation
+    let momentsSummary: InProgressMomentsSummary
+    let startSignInFlow: () -> Void
+    let startImages: () -> Void
+
+    var body: some View {
+        AVAppShellCard {
+            switch presentation.availability {
+            case let .signedOut(unavailable):
+                MomentsInProgressInlineEmptyState(
+                    systemImage: unavailable.systemImage,
+                    title: unavailable.title,
+                    message: unavailable.message,
+                    actionTitle: L10n.string("common.signIn"),
+                    actionSystemImage: "person.crop.circle.fill",
+                    action: startSignInFlow
+                )
+            case .empty:
+                MomentsInProgressImagesEmptyState(startImages: startImages)
+            case .available:
+                MomentsInProgressList(
+                    momentsSummary: momentsSummary,
+                    selectedMomentId: nil,
+                    selectMoment: { _ in }
+                )
+            }
+        }
     }
 }
 
@@ -164,6 +208,8 @@ private enum MomentsInProgressAssetKind: String, CaseIterable, Identifiable {
 }
 
 private struct MomentsInProgressImagesEmptyState: View {
+    let startImages: () -> Void
+
     var body: some View {
         VStack(alignment: .center, spacing: 14) {
             Image(systemName: "photo.badge.clock")
@@ -183,6 +229,12 @@ private struct MomentsInProgressImagesEmptyState: View {
                     .multilineTextAlignment(.center)
                     .fixedSize(horizontal: false, vertical: true)
             }
+
+            Button(action: startImages) {
+                Label(L10n.string("create.images.action.start"), systemImage: "photo.badge.plus")
+                    .font(.system(size: 14, weight: .black))
+            }
+            .buttonStyle(.borderedProminent)
         }
         .padding(24)
         .frame(maxWidth: .infinity)

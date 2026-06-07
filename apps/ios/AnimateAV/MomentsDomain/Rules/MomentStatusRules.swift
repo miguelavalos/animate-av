@@ -6,7 +6,7 @@ enum MomentStatusRules {
     }
 
     static func isFinishedStatus(_ status: String) -> Bool {
-        status == "gallery_ready"
+        status == "gallery_ready" || status == "completed"
     }
 
     static func group(_ moments: [InProgressMoment]) -> InProgressMomentGroups {

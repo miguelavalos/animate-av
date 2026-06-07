@@ -34,6 +34,14 @@ struct InProgressMomentsSummary: Equatable {
         latestInProgressMoment.map { MomentsContinuationRequest(moment: $0) }
     }
 
+    var videoSummary: InProgressMomentsSummary {
+        Self.make(from: moments.filter { $0.assetKind == "video" })
+    }
+
+    var imageSummary: InProgressMomentsSummary {
+        Self.make(from: moments.filter { $0.assetKind == "image" })
+    }
+
     static func make(from moments: [InProgressMoment]) -> InProgressMomentsSummary {
         InProgressMomentsSummary(
             moments: moments,

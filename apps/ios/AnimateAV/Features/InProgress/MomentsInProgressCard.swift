@@ -396,7 +396,7 @@ private struct MomentsInProgressMomentPill: View {
     }
 }
 
-private struct MomentsInProgressInlineEmptyState: View {
+struct MomentsInProgressInlineEmptyState: View {
     let systemImage: String
     let title: String
     let message: String

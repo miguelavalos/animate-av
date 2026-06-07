@@ -44,6 +44,20 @@ final class MomentStatusRulesTests: XCTestCase {
         XCTAssertTrue(summary.hasMoments)
     }
 
+    func testListSummarySeparatesAnimateVideoAndImageJobs() {
+        let video = makeMoment(id: "video", status: "running", updatedAt: 10, assetKind: "video")
+        let image = makeMoment(id: "image", status: "running", updatedAt: 20, assetKind: "image")
+        let completedImage = makeMoment(id: "completed-image", status: "completed", updatedAt: 30, assetKind: "image")
+
+        let summary = InProgressMomentsSummary.make(from: [video, image, completedImage])
+
+        XCTAssertEqual(summary.videoSummary.moments.map(\.id), ["video"])
+        XCTAssertEqual(summary.videoSummary.inProgressCount, 1)
+        XCTAssertEqual(summary.imageSummary.moments.map(\.id), ["image", "completed-image"])
+        XCTAssertEqual(summary.imageSummary.inProgressCount, 1)
+        XCTAssertEqual(summary.imageSummary.finishedCount, 1)
+    }
+
     func testListSummaryExposesLatestInProgressContinuationRequest() {
         let olderInProgress = makeMoment(id: "older-plan", status: "in_progress", updatedAt: 10)
         let newestFinished = makeMoment(id: "newest-finished", status: "gallery_ready", updatedAt: 30)
@@ -142,7 +156,8 @@ final class MomentStatusRulesTests: XCTestCase {
     private func makeMoment(
         id: String,
         status: String,
-        updatedAt: Double
+        updatedAt: Double,
+        assetKind: String = "video"
     ) -> InProgressMoment {
         InProgressMoment(
             id: id,
@@ -155,7 +170,8 @@ final class MomentStatusRulesTests: XCTestCase {
             details: nil,
             durationSeconds: 30,
             creditCost: 2,
-            updatedAt: updatedAt
+            updatedAt: updatedAt,
+            assetKind: assetKind
         )
     }
 

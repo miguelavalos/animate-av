@@ -14,6 +14,14 @@ final class MomentsInProgressViewModel: ObservableObject {
     @Published private(set) var isDeletingMoment = false
     @Published private(set) var statusMessage: String?
 
+    var videoMomentsSummary: InProgressMomentsSummary {
+        momentsSummary.videoSummary
+    }
+
+    var imageMomentsSummary: InProgressMomentsSummary {
+        momentsSummary.imageSummary
+    }
+
     private var workflow: (any InProgressMomentsViewing)?
     private var workflowCancellables = Set<AnyCancellable>()
     private var accountCancellables = Set<AnyCancellable>()
