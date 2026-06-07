@@ -19,7 +19,7 @@ final class MediaUploadWorkflow: WorkspaceObservingWorkflow {
     init(
         currentUserProvider: any AnimateCurrentUserProviding,
         authTokenProvider: any AnimateAuthTokenProviding,
-        workspaceObserver: any MomentsActiveWorkspaceObserving,
+        workspaceObserver: any AnimateActiveWorkspaceObserving,
         uploadClient: AnimateUploadClient
     ) {
         self.currentUserProvider = currentUserProvider

@@ -31,7 +31,7 @@ final class FinalRenderWorkflow: WorkspaceObservingWorkflow {
         currentUserProvider: any AnimateCurrentUserProviding,
         authTokenProvider: any AnimateAuthTokenProviding,
         creditBalanceProvider: any AnimateCreditBalanceProviding,
-        workspaceObserver: any MomentsActiveWorkspaceObserving,
+        workspaceObserver: any AnimateActiveWorkspaceObserving,
         finalRenderClient: AnimateFinalRenderClient,
         videoQuoteClient: AnimateVideoQuoteClient? = nil,
         imageGenerationAccountingClient: AnimateImageGenerationAccountingClient? = nil,

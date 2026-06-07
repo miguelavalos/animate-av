@@ -21,7 +21,7 @@ final class AnimateRealtimeSessionStore {
 
     func sessionId(for ownerUserId: String) throws -> String {
         guard self.ownerUserId == ownerUserId, let realtimeSessionId else {
-            throw MomentsSyncError.notConfigured
+            throw AnimateSyncError.notConfigured
         }
 
         return realtimeSessionId

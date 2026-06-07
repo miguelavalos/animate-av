@@ -2,16 +2,16 @@ import Combine
 import Foundation
 
 @MainActor
-final class InProgressMomentsObserver: ObservableObject {
+final class AnimateInProgressObserver: ObservableObject {
     @Published private(set) var moments: [InProgressMoment] = []
     @Published private(set) var errorMessage: String?
 
-    private let momentsObserver: any InProgressMomentsObserving
+    private let momentsObserver: any AnimateInProgressObserving
     private var momentsTask: Task<Void, Never>?
     private var observationGeneration = 0
     private let diagnosticsObserverName = "in_progress"
 
-    init(momentsRepository: any InProgressMomentsObserving = MomentsRepository()) {
+    init(momentsRepository: any AnimateInProgressObserving = AnimateRepository()) {
         momentsObserver = momentsRepository
     }
 
@@ -31,7 +31,7 @@ final class InProgressMomentsObserver: ObservableObject {
         errorMessage = nil
 
         guard let ownerUserId else { return }
-        MomentsSyncDiagnostics.addObserverBreadcrumb(observer: diagnosticsObserverName, message: "observer_started")
+        AnimateSyncDiagnostics.addObserverBreadcrumb(observer: diagnosticsObserverName, message: "observer_started")
 
         do {
             let updates = try momentsObserver.observeInProgressMoments(ownerUserId: ownerUserId).values
@@ -48,7 +48,7 @@ final class InProgressMomentsObserver: ObservableObject {
                 } catch {
                     await MainActor.run {
                         guard self?.observationGeneration == generation else { return }
-                        MomentsSyncDiagnostics.captureObserverError(error, observer: self?.diagnosticsObserverName ?? "in_progress")
+                        AnimateSyncDiagnostics.captureObserverError(error, observer: self?.diagnosticsObserverName ?? "in_progress")
                         self?.moments = []
                         self?.errorMessage = error.localizedDescription
                     }
@@ -56,7 +56,7 @@ final class InProgressMomentsObserver: ObservableObject {
             }
         } catch {
             guard observationGeneration == generation else { return }
-            MomentsSyncDiagnostics.captureObserverError(error, observer: diagnosticsObserverName)
+            AnimateSyncDiagnostics.captureObserverError(error, observer: diagnosticsObserverName)
             moments = []
             errorMessage = error.localizedDescription
         }
@@ -74,4 +74,4 @@ final class InProgressMomentsObserver: ObservableObject {
     }
 }
 
-extension InProgressMomentsObserver: InProgressMomentsListProviding {}
+extension AnimateInProgressObserver: AnimateInProgressListProviding {}

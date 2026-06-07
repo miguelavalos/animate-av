@@ -3,9 +3,9 @@ import Foundation
 @MainActor
 final class MomentsDependencyContainer: ObservableObject {
     let accountController: AccountController
-    let momentsObserver: InProgressMomentsObserver
-    let galleryMomentsObserver: GalleryMomentsObserver
-    let workspaceObserver: MomentsWorkspaceObserver
+    let momentsObserver: AnimateInProgressObserver
+    let galleryMomentsObserver: AnimateGalleryObserver
+    let workspaceObserver: AnimateWorkspaceObserver
     let momentDeletionWorkflow: MomentDeletionWorkflow
     let momentWorkspaceSelectionWorkflow: MomentWorkspaceSelectionWorkflow
     let inProgressMomentsWorkflow: InProgressMomentsWorkflow
@@ -25,18 +25,18 @@ final class MomentsDependencyContainer: ObservableObject {
 
     init(
         accountController: AccountController = AccountController(),
-        momentsRepository: MomentsRepository = MomentsRepository(),
-        momentsObserver: InProgressMomentsObserver? = nil,
-        galleryMomentsObserver: GalleryMomentsObserver? = nil,
-        workspaceObserver: MomentsWorkspaceObserver? = nil
+        momentsRepository: AnimateRepository = AnimateRepository(),
+        momentsObserver: AnimateInProgressObserver? = nil,
+        galleryMomentsObserver: AnimateGalleryObserver? = nil,
+        workspaceObserver: AnimateWorkspaceObserver? = nil
     ) {
         let clients = MomentsWorkflowClients(baseURLString: AppConfig.animateAPIBaseURL)
         self.accountController = accountController
-        let resolvedMomentsObserver = momentsObserver ?? InProgressMomentsObserver(momentsRepository: momentsRepository)
-        let resolvedGalleryMomentsObserver = galleryMomentsObserver ?? GalleryMomentsObserver(momentsRepository: momentsRepository)
-        let resolvedWorkspaceObserver = workspaceObserver ?? MomentsWorkspaceObserver(momentsRepository: momentsRepository)
+        let resolvedMomentsObserver = momentsObserver ?? AnimateInProgressObserver(momentsRepository: momentsRepository)
+        let resolvedAnimateGalleryObserver = galleryMomentsObserver ?? AnimateGalleryObserver(momentsRepository: momentsRepository)
+        let resolvedWorkspaceObserver = workspaceObserver ?? AnimateWorkspaceObserver(momentsRepository: momentsRepository)
         self.momentsObserver = resolvedMomentsObserver
-        self.galleryMomentsObserver = resolvedGalleryMomentsObserver
+        self.galleryMomentsObserver = resolvedAnimateGalleryObserver
         self.workspaceObserver = resolvedWorkspaceObserver
         let workflows = AnimateWorkflowBundle(
             accountController: accountController,
@@ -57,7 +57,7 @@ final class MomentsDependencyContainer: ObservableObject {
         let viewModels = AnimateViewModelBundle(
             accountController: accountController,
             workflows: workflows,
-            galleryMomentsProvider: resolvedGalleryMomentsObserver,
+            galleryMomentsProvider: resolvedAnimateGalleryObserver,
             authTokenProvider: accountController,
             imageGenerationAccountingClient: clients.imageGenerationAccounting,
             finalRenderClient: clients.finalRender

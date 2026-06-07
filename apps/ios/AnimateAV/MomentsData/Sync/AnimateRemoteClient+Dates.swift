@@ -1,6 +1,6 @@
 import Foundation
 
-extension MomentsRemoteClient {
+extension AnimateRemoteClient {
     func milliseconds(from date: Date) -> Double {
         date.timeIntervalSince1970 * 1000
     }

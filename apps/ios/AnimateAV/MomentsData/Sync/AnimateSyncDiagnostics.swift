@@ -1,7 +1,7 @@
 import AVDiagnosticsFoundation
 import Foundation
 
-enum MomentsSyncDiagnostics {
+enum AnimateSyncDiagnostics {
     static func addObserverBreadcrumb(observer: String, message: String) {
         AVDiagnostics.addBreadcrumb(
             AVDiagnosticsBreadcrumb(
@@ -30,7 +30,7 @@ enum MomentsSyncDiagnostics {
     }
 
     private static func diagnosticsErrorCode(for error: Error) -> String {
-        if let syncError = error as? MomentsSyncError {
+        if let syncError = error as? AnimateSyncError {
             return String(describing: syncError)
         }
         return String(describing: type(of: error))

@@ -3,7 +3,7 @@ import Combine
 import Foundation
 
 @MainActor
-struct MomentsRemoteClient {
+struct AnimateRemoteClient {
     private let client: ConvexClient?
     private let realtimeSessionStore: AnimateRealtimeSessionStore
 
@@ -188,7 +188,7 @@ struct MomentsRemoteClient {
 
     func requireClient() throws -> ConvexClient {
         guard let client else {
-            throw MomentsSyncError.notConfigured
+            throw AnimateSyncError.notConfigured
         }
 
         return client

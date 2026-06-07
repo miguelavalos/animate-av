@@ -1,6 +1,6 @@
 import Foundation
 
-enum MomentsSyncError: LocalizedError {
+enum AnimateSyncError: LocalizedError {
     case notConfigured
     case invalidForm
     case missingRenderJob

@@ -15,7 +15,7 @@ final class StoryWorkflow: WorkspaceObservingWorkflow {
     init(
         currentUserProvider: any AnimateCurrentUserProviding,
         authTokenProvider: any AnimateAuthTokenProviding,
-        workspaceObserver: any MomentsActiveWorkspaceObserving,
+        workspaceObserver: any AnimateActiveWorkspaceObserving,
         storyClient: AnimateStoryClient
     ) {
         self.currentUserProvider = currentUserProvider

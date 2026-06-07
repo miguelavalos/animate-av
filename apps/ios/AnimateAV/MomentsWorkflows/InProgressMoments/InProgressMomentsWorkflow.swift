@@ -7,7 +7,7 @@ final class InProgressMomentsWorkflow: ObservableObject {
     @Published private(set) var isDeletingMoment = false
     @Published private(set) var errorMessage: String?
 
-    private let momentsObserver: any InProgressMomentsListProviding
+    private let momentsObserver: any AnimateInProgressListProviding
     private let workspaceSelectionWorkflow: MomentWorkspaceSelectionWorkflow
     private let momentDeletionWorkflow: MomentDeletionWorkflow
     private let momentTitleUpdater: any MomentsTitleUpdating
@@ -18,7 +18,7 @@ final class InProgressMomentsWorkflow: ObservableObject {
     private var cancellables = Set<AnyCancellable>()
 
     init(
-        momentsObserver: any InProgressMomentsListProviding,
+        momentsObserver: any AnimateInProgressListProviding,
         workspaceSelectionWorkflow: MomentWorkspaceSelectionWorkflow,
         momentDeletionWorkflow: MomentDeletionWorkflow,
         momentTitleUpdater: any MomentsTitleUpdating,

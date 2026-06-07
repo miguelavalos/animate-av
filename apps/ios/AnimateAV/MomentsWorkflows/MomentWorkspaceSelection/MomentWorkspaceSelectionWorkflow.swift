@@ -8,10 +8,10 @@ final class MomentWorkspaceSelectionWorkflow: ObservableObject {
     @Published private(set) var isLoadingMomentWorkspace = false
     @Published private(set) var errorMessage: String?
 
-    private let workspaceObserver: any MomentsActiveWorkspaceObserving
+    private let workspaceObserver: any AnimateActiveWorkspaceObserving
     private var cancellables = Set<AnyCancellable>()
 
-    init(workspaceObserver: any MomentsActiveWorkspaceObserving) {
+    init(workspaceObserver: any AnimateActiveWorkspaceObserving) {
         self.workspaceObserver = workspaceObserver
 
         workspaceObserver.activeWorkspacePublisher

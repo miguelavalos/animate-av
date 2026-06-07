@@ -641,7 +641,7 @@ final class AnimateCreateViewModelStoryStateTests: XCTestCase {
     }
 
     func testGenerateStoryShowsImmediateVideoCreationError() async {
-        let harness = MomentCreationFailureHarness(error: MomentsSyncError.notConfigured)
+        let harness = MomentCreationFailureHarness(error: AnimateSyncError.notConfigured)
         let viewModel = AnimateCreateViewModel()
         viewModel.bind(
             accountStateProvider: harness,
@@ -679,7 +679,7 @@ final class AnimateCreateViewModelStoryStateTests: XCTestCase {
         await fulfillment(of: [harness.createAttemptExpectation], timeout: 1)
         await waitForStoryStatusMessage(in: viewModel)
 
-        XCTAssertEqual(viewModel.storySummary.statusMessage, MomentsSyncError.notConfigured.localizedDescription)
+        XCTAssertEqual(viewModel.storySummary.statusMessage, AnimateSyncError.notConfigured.localizedDescription)
     }
 
     @discardableResult
@@ -761,7 +761,7 @@ private final class MomentCreationFailureHarness:
     AnimateCreditBalanceProviding,
     MomentsCreating,
     MomentsDeleting,
-    MomentsActiveWorkspaceObserving
+    AnimateActiveWorkspaceObserving
 {
     let createAttemptExpectation = XCTestExpectation(description: "Moment creation attempted")
     private let creationError: Error

@@ -12,7 +12,7 @@ final class MomentCreationWorkflow: ObservableObject {
     private let creditBalanceProvider: any AnimateCreditBalanceProviding
     private let momentCreator: any MomentsCreating
     private let momentDeleter: any MomentsDeleting
-    private let workspaceObserver: any MomentsActiveWorkspaceObserving
+    private let workspaceObserver: any AnimateActiveWorkspaceObserving
     private var workflowGeneration = WorkflowGeneration()
     private let logger = Logger(subsystem: "com.avalsys.animateav", category: "moment-creation")
 
@@ -22,7 +22,7 @@ final class MomentCreationWorkflow: ObservableObject {
         creditBalanceProvider: any AnimateCreditBalanceProviding,
         momentCreator: any MomentsCreating,
         momentDeleter: any MomentsDeleting,
-        workspaceObserver: any MomentsActiveWorkspaceObserving
+        workspaceObserver: any AnimateActiveWorkspaceObserving
     ) {
         self.currentUserProvider = currentUserProvider
         self.authTokenProvider = authTokenProvider

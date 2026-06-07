@@ -2,8 +2,8 @@ import Combine
 import Foundation
 
 @MainActor
-struct MomentsRepository {
-    let remoteClient: MomentsRemoteClient
+struct AnimateRepository {
+    let remoteClient: AnimateRemoteClient
 
     @MainActor
     init() {
@@ -11,7 +11,7 @@ struct MomentsRepository {
     }
 
     init(deploymentURL: String) {
-        remoteClient = MomentsRemoteClient(deploymentURL: deploymentURL)
+        remoteClient = AnimateRemoteClient(deploymentURL: deploymentURL)
     }
 
     var isConfigured: Bool {

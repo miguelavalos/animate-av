@@ -19,17 +19,17 @@ protocol MomentsTitleUpdating {
 }
 
 @MainActor
-protocol InProgressMomentsObserving {
+protocol AnimateInProgressObserving {
     func observeInProgressMoments(ownerUserId: String) throws -> AnyPublisher<[InProgressMoment], Error>
 }
 
 @MainActor
-protocol GalleryMomentsObserving {
+protocol AnimateGalleryObserving {
     func observeGalleryMoments(ownerUserId: String) throws -> AnyPublisher<[MomentArtifact], Error>
 }
 
 @MainActor
-protocol InProgressMomentsListProviding {
+protocol AnimateInProgressListProviding {
     var momentsPublisher: AnyPublisher<[InProgressMoment], Never> { get }
     var momentsErrorPublisher: AnyPublisher<String?, Never> { get }
 
@@ -38,7 +38,7 @@ protocol InProgressMomentsListProviding {
 }
 
 @MainActor
-protocol GalleryMomentsListProviding {
+protocol AnimateGalleryListProviding {
     var galleryMomentsPublisher: AnyPublisher<[MomentArtifact], Never> { get }
     var galleryMomentsErrorPublisher: AnyPublisher<String?, Never> { get }
 
@@ -47,7 +47,7 @@ protocol GalleryMomentsListProviding {
 }
 
 @MainActor
-protocol MomentWorkspaceObserving {
+protocol AnimateWorkspaceObserving {
     func observeMomentWorkspace(
         ownerUserId: String,
         momentId: String
@@ -55,7 +55,7 @@ protocol MomentWorkspaceObserving {
 }
 
 @MainActor
-protocol MomentsActiveWorkspaceObserving {
+protocol AnimateActiveWorkspaceObserving {
     var activeWorkspacePublisher: AnyPublisher<MomentWorkspace?, Never> { get }
     var workspaceErrorPublisher: AnyPublisher<String?, Never> { get }
 
@@ -63,9 +63,9 @@ protocol MomentsActiveWorkspaceObserving {
     func clearWorkspace()
 }
 
-extension MomentsRepository:
-    InProgressMomentsObserving,
-    GalleryMomentsObserving,
-    MomentWorkspaceObserving {}
+extension AnimateRepository:
+    AnimateInProgressObserving,
+    AnimateGalleryObserving,
+    AnimateWorkspaceObserving {}
 
 extension AnimateWorkspaceCommandClient: MomentsCreating, MomentsDeleting, MomentsTitleUpdating {}

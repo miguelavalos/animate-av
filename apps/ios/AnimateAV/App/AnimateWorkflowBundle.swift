@@ -12,9 +12,9 @@ struct AnimateWorkflowBundle {
 
     init(
         accountController: AccountController,
-        momentsRepository: MomentsRepository,
-        momentsObserver: InProgressMomentsObserver,
-        workspaceObserver: MomentsWorkspaceObserver,
+        momentsRepository: AnimateRepository,
+        momentsObserver: AnimateInProgressObserver,
+        workspaceObserver: AnimateWorkspaceObserver,
         clients: MomentsWorkflowClients
     ) {
         momentDeletion = MomentDeletionWorkflow(

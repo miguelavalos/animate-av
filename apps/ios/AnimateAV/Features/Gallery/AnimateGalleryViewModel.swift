@@ -9,7 +9,7 @@ final class AnimateGalleryViewModel: ObservableObject {
 
     private var galleryCancellables = Set<AnyCancellable>()
     private let galleryStore: any AnimateGalleryStoring
-    private let galleryMomentsProvider: (any GalleryMomentsListProviding)?
+    private let galleryMomentsProvider: (any AnimateGalleryListProviding)?
     private let authTokenProvider: (any AnimateAuthTokenProviding)?
     private let finalRenderClient: AnimateFinalRenderClient?
     private var remoteArtifacts: [MomentArtifact] = []
@@ -17,7 +17,7 @@ final class AnimateGalleryViewModel: ObservableObject {
 
     init(
         galleryStore: any AnimateGalleryStoring = AnimateGalleryStore(),
-        galleryMomentsProvider: (any GalleryMomentsListProviding)? = nil,
+        galleryMomentsProvider: (any AnimateGalleryListProviding)? = nil,
         authTokenProvider: (any AnimateAuthTokenProviding)? = nil,
         finalRenderClient: AnimateFinalRenderClient? = nil
     ) {

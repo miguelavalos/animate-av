@@ -5,12 +5,12 @@ import Foundation
 class WorkspaceObservingWorkflow: ObservableObject {
     @Published private(set) var activeWorkspace: MomentWorkspace?
 
-    let workspaceObserver: any MomentsActiveWorkspaceObserving
+    let workspaceObserver: any AnimateActiveWorkspaceObserving
 
     private var cancellables = Set<AnyCancellable>()
     private var workflowGeneration = WorkflowGeneration()
 
-    init(workspaceObserver: any MomentsActiveWorkspaceObserving) {
+    init(workspaceObserver: any AnimateActiveWorkspaceObserving) {
         self.workspaceObserver = workspaceObserver
 
         workspaceObserver.activeWorkspacePublisher

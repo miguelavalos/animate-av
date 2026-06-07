@@ -4,36 +4,36 @@ import XCTest
 @MainActor
 final class AnimateRepositoryTests: XCTestCase {
     func testRepositoryIsNotConfiguredWithoutDeploymentURL() {
-        let repository = MomentsRepository(deploymentURL: "  ")
+        let repository = AnimateRepository(deploymentURL: "  ")
 
         XCTAssertFalse(repository.isConfigured)
     }
 
     func testRepositoryIsConfiguredWithDeploymentURL() {
-        let repository = MomentsRepository(deploymentURL: "https://animate-av.convex.cloud")
+        let repository = AnimateRepository(deploymentURL: "https://animate-av.convex.cloud")
 
         XCTAssertTrue(repository.isConfigured)
     }
 
     func testObserveInProgressThrowsNotConfiguredWhenConvexIsNotConfigured() {
-        let repository = MomentsRepository(deploymentURL: "")
+        let repository = AnimateRepository(deploymentURL: "")
 
         do {
             _ = try repository.observeInProgressMoments(ownerUserId: "user-1")
             XCTFail("Expected not configured error")
         } catch {
-            XCTAssertEqual(error as? MomentsSyncError, .notConfigured)
+            XCTAssertEqual(error as? AnimateSyncError, .notConfigured)
         }
     }
 
     func testObserveGalleryThrowsNotConfiguredWhenConvexIsNotConfigured() {
-        let repository = MomentsRepository(deploymentURL: "")
+        let repository = AnimateRepository(deploymentURL: "")
 
         do {
             _ = try repository.observeGalleryMoments(ownerUserId: "user-1")
             XCTFail("Expected not configured error")
         } catch {
-            XCTAssertEqual(error as? MomentsSyncError, .notConfigured)
+            XCTAssertEqual(error as? AnimateSyncError, .notConfigured)
         }
     }
 }
