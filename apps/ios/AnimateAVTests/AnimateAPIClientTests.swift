@@ -974,7 +974,7 @@ final class AnimateAPIClientTests: XCTestCase {
             }
             """
         )
-        let client = MomentsPromoCodeClient(baseURLString: accountAPIBaseURL, session: session)
+        let client = AnimatePromoCodeClient(baseURLString: accountAPIBaseURL, session: session)
 
         let response = try await client.redeem(code: "MOMENTS-DEMO-2026", bearerToken: "token-1")
 

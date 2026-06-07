@@ -19,7 +19,7 @@ final class AccountController: ObservableObject {
     private let service: AVAccountService
     private let accountProfileClient: MomentsAccountProfileClient
     private let balanceClient: AnimateCreditBalanceClient
-    private let promoCodeClient: MomentsPromoCodeClient
+    private let promoCodeClient: AnimatePromoCodeClient
     private let purchaseService: AnimatePurchaseServicing
     private let userDefaults: UserDefaults
     private let lastKnownAccountUserKey = "animateav.account.lastKnownUser"
@@ -28,14 +28,14 @@ final class AccountController: ObservableObject {
         service: AVAccountService = DefaultAVAccountService(),
         accountProfileClient: MomentsAccountProfileClient? = nil,
         balanceClient: AnimateCreditBalanceClient? = nil,
-        promoCodeClient: MomentsPromoCodeClient? = nil,
+        promoCodeClient: AnimatePromoCodeClient? = nil,
         purchaseService: AnimatePurchaseServicing = RevenueCatAnimatePurchaseService(),
         userDefaults: UserDefaults = .standard
     ) {
         self.service = service
         self.accountProfileClient = accountProfileClient ?? MomentsAccountProfileClient(baseURLString: AppConfig.animateAPIBaseURL)
         self.balanceClient = balanceClient ?? AnimateCreditBalanceClient(baseURLString: AppConfig.animateAPIBaseURL)
-        self.promoCodeClient = promoCodeClient ?? MomentsPromoCodeClient(baseURLString: AppConfig.animateAPIBaseURL)
+        self.promoCodeClient = promoCodeClient ?? AnimatePromoCodeClient(baseURLString: AppConfig.animateAPIBaseURL)
         self.purchaseService = purchaseService
         self.userDefaults = userDefaults
         self.user = Self.lastKnownAccountUser(from: userDefaults)
@@ -458,11 +458,11 @@ private struct AnimateCreditBalanceResponse: Decodable {
     }
 }
 
-struct MomentsPromoCodeClient {
+struct AnimatePromoCodeClient {
     var baseURLString: String
     var session: URLSession = .shared
 
-    func redeem(code: String, bearerToken: String) async throws -> MomentsPromoCodeRedemptionResponse {
+    func redeem(code: String, bearerToken: String) async throws -> AnimatePromoCodeRedemptionResponse {
         guard let url = URL(string: "\(baseURLString)/v1/apps/animateav/credits/promotions/redeem") else {
             throw MomentsAPIError(code: "invalid_moments_api_url", message: L10n.string("access.apiURLMissing"))
         }
@@ -471,7 +471,7 @@ struct MomentsPromoCodeClient {
         request.httpMethod = "POST"
         request.setValue("Bearer \(bearerToken)", forHTTPHeaderField: "Authorization")
         request.setValue("application/json", forHTTPHeaderField: "Content-Type")
-        request.httpBody = try JSONEncoder().encode(MomentsPromoCodeRedeemRequest(code: code))
+        request.httpBody = try JSONEncoder().encode(AnimatePromoCodeRedeemRequest(code: code))
 
         let (data, response) = try await session.data(for: request)
         if let httpResponse = response as? HTTPURLResponse, !(200..<300).contains(httpResponse.statusCode) {
@@ -482,15 +482,15 @@ struct MomentsPromoCodeClient {
             )
         }
 
-        return try JSONDecoder().decode(MomentsPromoCodeRedemptionResponse.self, from: data)
+        return try JSONDecoder().decode(AnimatePromoCodeRedemptionResponse.self, from: data)
     }
 }
 
-private struct MomentsPromoCodeRedeemRequest: Encodable {
+private struct AnimatePromoCodeRedeemRequest: Encodable {
     let code: String
 }
 
-struct MomentsPromoCodeRedemptionResponse: Decodable {
+struct AnimatePromoCodeRedemptionResponse: Decodable {
     let creditsGranted: Int
     let balance: AnimateCreditBalance
 
