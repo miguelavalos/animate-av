@@ -5,6 +5,7 @@ import SwiftUI
 struct MomentsCreateScreen: View {
     @EnvironmentObject private var viewModel: MomentsCreateViewModel
     @EnvironmentObject private var newMomentStartController: MomentsNewMomentStartController
+    @State private var selectedAssetKind: MomentsCreateAssetKind = .video
     @State private var pickerItems: [PhotosPickerItem] = []
     @State private var showsAutomaticPhotoPicker = false
     @State private var handledAutomaticPhotoPickerRequest = 0
@@ -30,13 +31,26 @@ struct MomentsCreateScreen: View {
     }
 
     var body: some View {
-        MomentsCreateWorkflowContent(
-            viewModel: viewModel,
-            pickerItems: $pickerItems,
-            startSignInFlow: startSignInFlow,
-            openCredits: openCredits,
-            finishFinalVideoToGallery: finishFinalVideoToGallery
-        )
+        VStack(alignment: .leading, spacing: 12) {
+            MomentsCreateAssetKindPicker(selectedAssetKind: $selectedAssetKind)
+
+            switch selectedAssetKind {
+            case .video:
+                MomentsCreateWorkflowContent(
+                    viewModel: viewModel,
+                    pickerItems: $pickerItems,
+                    startSignInFlow: startSignInFlow,
+                    openCredits: openCredits,
+                    finishFinalVideoToGallery: finishFinalVideoToGallery
+                )
+            case .images:
+                MomentsCreateImagesWorkspace(
+                    balance: viewModel.balance,
+                    creditBalanceLoadState: viewModel.creditBalanceLoadState,
+                    openCredits: openCredits
+                )
+            }
+        }
         .background(MomentsTheme.shellBackground.ignoresSafeArea())
         .safeAreaPadding(.horizontal, 20)
         .safeAreaPadding(.top, 12)
@@ -104,7 +118,8 @@ struct MomentsCreateScreen: View {
     }
 
     private func redirectEmptyCreateIfNeeded() {
-        guard !viewModel.workflowPresentation.showsMediaFirstWorkspace,
+        guard selectedAssetKind == .video,
+              !viewModel.workflowPresentation.showsMediaFirstWorkspace,
               !viewModel.isContinuingMoment
         else { return }
         cancelCreation()
@@ -119,6 +134,35 @@ struct MomentsCreateScreen: View {
         Task { @MainActor in
             try? await Task.sleep(nanoseconds: 350_000_000)
             showsAutomaticPhotoPicker = true
+        }
+    }
+}
+
+private struct MomentsCreateAssetKindPicker: View {
+    @Binding var selectedAssetKind: MomentsCreateAssetKind
+
+    var body: some View {
+        Picker(L10n.string("create.assetKind.accessibility"), selection: $selectedAssetKind) {
+            ForEach(MomentsCreateAssetKind.allCases) { kind in
+                Text(kind.title).tag(kind)
+            }
+        }
+        .pickerStyle(.segmented)
+    }
+}
+
+private enum MomentsCreateAssetKind: String, CaseIterable, Identifiable {
+    case video
+    case images
+
+    var id: String { rawValue }
+
+    var title: String {
+        switch self {
+        case .video:
+            L10n.string("create.assetKind.video")
+        case .images:
+            L10n.string("create.assetKind.images")
         }
     }
 }
