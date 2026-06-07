@@ -5,11 +5,11 @@ final class MomentsInProgressProgressModelTests: XCTestCase {
     func testEmptyWorkspaceMarksMomentCreatedAndRemainingStepsWaiting() {
         let model = MomentsInProgressProgressModel(workspace: makeWorkspace())
 
-        XCTAssertEqual(model.phases.map(\.title), ["Video", "Source image", "Direction", "Create Video"])
+        XCTAssertEqual(model.phases.map(\.title), ["Video", "Photo", "Direction", "Create Video"])
         XCTAssertEqual(model.phases.map(\.state), [.complete, .waiting, .waiting, .waiting])
         XCTAssertEqual(model.phases.map(\.detail), [
             "In Progress",
-            "No source image yet",
+            "No photo yet",
             "Not ready",
             "Not created"
         ])

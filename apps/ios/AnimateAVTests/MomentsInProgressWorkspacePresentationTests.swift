@@ -110,9 +110,9 @@ final class MomentsInProgressWorkspacePresentationTests: XCTestCase {
             makeMediaAsset(id: "first", kind: "image", sortOrder: 0, selected: true, moderationStatus: "approved")
         ])
 
-        XCTAssertEqual(presentation.title, "Source image")
+        XCTAssertEqual(presentation.title, "Photo")
         XCTAssertEqual(presentation.emptySystemImage, "photo.badge.plus")
-        XCTAssertEqual(presentation.emptyMessage, "No source image is attached to this video yet. Add one image from Create to prepare the video.")
+        XCTAssertEqual(presentation.emptyMessage, "No photo is attached to this video yet. Add one image from Create to prepare the video.")
         XCTAssertEqual(presentation.mediaAssets.map(\.id), ["first", "second"])
     }
 
@@ -141,7 +141,7 @@ final class MomentsInProgressWorkspacePresentationTests: XCTestCase {
 
         XCTAssertEqual(presentation.title, "Direction")
         XCTAssertEqual(presentation.emptySystemImage, "text.bubble")
-        XCTAssertEqual(presentation.emptyMessage, "Prepare the video after this source image is ready.")
+        XCTAssertEqual(presentation.emptyMessage, "Prepare the video after this photo is ready.")
         XCTAssertEqual(presentation.storyScenes.map(\.id), ["scene-1", "scene-2"])
     }
 

@@ -833,7 +833,8 @@
 "create.render.phase.preparing" = "Preparando";
 "create.render.phase.uploading" = "Subiendo";
 "create.render.phase.composing" = "Componiendo";
-"create.render.phase.creating" = "Video creationizando";
+"create.render.phase.rendering" = "Animando";
+"create.render.phase.creating" = "Creando";
 "create.render.phase.saving" = "Guardando";
 "create.render.detail.preparing" = "Avi está preparando el video.";
 "create.render.detail.uploading" = "Avi está enviando la imagen para crear el video.";

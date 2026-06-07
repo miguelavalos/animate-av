@@ -140,10 +140,10 @@ enum MomentsStoryRules {
         case .missingMedia:
             return missingMediaMessage
         case .tooFewSelectedMedia(let missingCount):
-            let label = missingCount == 1 ? "source image" : "source images"
+            let label = missingCount == 1 ? "photo" : "photos"
             return "Add \(missingCount) more \(label) before preparing the video."
         case .tooManySelectedMedia(let extraCount):
-            let label = extraCount == 1 ? "source image" : "source images"
+            let label = extraCount == 1 ? "photo" : "photos"
             return "Remove \(extraCount) \(label) before preparing the video."
         }
     }

@@ -34,7 +34,7 @@ final class MomentsInProgressPresentationTests: XCTestCase {
                 MomentsInProgressUnavailablePresentation(
                     systemImage: "rectangle.stack.badge.plus",
                     title: "Nothing here yet",
-                    message: "Active videos appear in In Progress. Finished videos appear in Gallery."
+                    message: "Active cartoons appear in In Progress. Finished ones appear in Gallery."
                 )
             )
         )
@@ -67,11 +67,11 @@ final class MomentsInProgressPresentationTests: XCTestCase {
 
         XCTAssertEqual(
             fallback.deletionMessage,
-            "This removes this video, including source-image records and generated video files that belong to it."
+            "This removes this video, including photo records and generated video files that belong to it."
         )
         XCTAssertEqual(
             titled.deletionMessage,
-            "This removes Family Weekend, including source-image records and generated video files that belong to it."
+            "This removes Family Weekend, including photo records and generated video files that belong to it."
         )
     }
 

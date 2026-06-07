@@ -826,6 +826,7 @@
 "create.render.phase.preparing" = "Preparant";
 "create.render.phase.uploading" = "Pujant";
 "create.render.phase.composing" = "Composant";
+"create.render.phase.rendering" = "Animant";
 "create.render.phase.creating" = "Creant";
 "create.render.phase.saving" = "Desant";
 "create.render.detail.preparing" = "Avi està preparant el vídeo.";

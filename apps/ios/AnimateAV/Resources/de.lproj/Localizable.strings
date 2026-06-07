@@ -828,6 +828,7 @@
 "create.render.phase.preparing" = "Vorbereiten";
 "create.render.phase.uploading" = "Hochladen";
 "create.render.phase.composing" = "Zusammenstellen";
+"create.render.phase.rendering" = "Animieren";
 "create.render.phase.creating" = "Erstellen";
 "create.render.phase.saving" = "Speichern";
 "create.render.detail.preparing" = "Avi bereitet das Video vor.";

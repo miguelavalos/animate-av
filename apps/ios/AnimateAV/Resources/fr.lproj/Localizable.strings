@@ -826,6 +826,7 @@
 "create.render.phase.preparing" = "Préparation";
 "create.render.phase.uploading" = "Envoi";
 "create.render.phase.composing" = "Composition";
+"create.render.phase.rendering" = "Animation";
 "create.render.phase.creating" = "Création";
 "create.render.phase.saving" = "Enregistrement";
 "create.render.detail.preparing" = "Avi prépare la vidéo.";

@@ -29,12 +29,12 @@ final class MomentsHomePresentationTests: XCTestCase {
 
         XCTAssertEqual(presentation.accountTitle, "Account connected")
         XCTAssertEqual(presentation.accountDetail, "Signed in as Ava.")
-        XCTAssertEqual(presentation.momentStatusDetail, "No synced videos yet.")
+        XCTAssertEqual(presentation.momentStatusDetail, "No cartoon videos yet.")
         XCTAssertTrue(presentation.createAction.isProminent)
         XCTAssertFalse(presentation.createAction.isDisabled)
         XCTAssertEqual(
             presentation.openInProgressAction.detail,
-            "Videos appear after you start one."
+            "Half-made cartoons will show up here."
         )
     }
 
@@ -69,11 +69,11 @@ final class MomentsHomePresentationTests: XCTestCase {
 
         XCTAssertEqual(
             presentation.momentStatusDetail,
-            "2 synced videos tracked across the current account."
+            "2 videos ready in your cartoon shelf."
         )
         XCTAssertEqual(
             presentation.openInProgressAction.detail,
-            "Continue videos that still need action."
+            "Finish the cartoons already in motion."
         )
     }
 
@@ -88,11 +88,11 @@ final class MomentsHomePresentationTests: XCTestCase {
 
         XCTAssertEqual(
             presentation.momentStatusDetail,
-            "1 synced video tracked across the current account."
+            "1 video ready in your cartoon shelf."
         )
         XCTAssertEqual(
             presentation.openInProgressAction.detail,
-            "Continue videos that still need action."
+            "Finish the cartoons already in motion."
         )
     }
 

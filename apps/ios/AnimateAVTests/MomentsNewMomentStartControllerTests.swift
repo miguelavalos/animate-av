@@ -25,17 +25,16 @@ final class MomentsNewMomentStartControllerTests: XCTestCase {
         XCTAssertEqual(controller.currentPreference, .photosOrClips)
     }
 
-    func testSelectPersistsPreference() {
-        let controller = MomentsNewMomentStartController(userDefaults: userDefaults)
-
-        controller.select(.album)
-
-        let reloaded = MomentsNewMomentStartController(userDefaults: userDefaults)
-        XCTAssertEqual(reloaded.currentPreference, .album)
-    }
-
     func testInvalidStoredPreferenceFallsBackToPhotosOrClips() {
         userDefaults.set("unexpected", forKey: "animateav.newMomentStartPreference")
+
+        let controller = MomentsNewMomentStartController(userDefaults: userDefaults)
+
+        XCTAssertEqual(controller.currentPreference, .photosOrClips)
+    }
+
+    func testInheritedAlbumPreferenceFallsBackToPhotosOrClips() {
+        userDefaults.set("album", forKey: "animateav.newMomentStartPreference")
 
         let controller = MomentsNewMomentStartController(userDefaults: userDefaults)
 

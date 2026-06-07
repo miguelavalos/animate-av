@@ -358,7 +358,7 @@
 "moment.noun.other" = "videos";
 "moment.this" = "this video";
 "moment.kind.story" = "Direction";
-"moment.nextAction.addMedia.button" = "Add Source Image in Create";
+"moment.nextAction.addMedia.button" = "Add Photo in Create";
 "moment.nextAction.addMedia.message" = "Continue in Create and add one photo before preparing the video.";
 "moment.nextAction.addMedia.title" = "Add photo";
 "moment.nextAction.createVideo.button" = "Create Video in Create";
@@ -833,6 +833,7 @@
 "create.render.phase.preparing" = "Preparing";
 "create.render.phase.uploading" = "Uploading";
 "create.render.phase.composing" = "Composing";
+"create.render.phase.rendering" = "Rendering";
 "create.render.phase.creating" = "Creating";
 "create.render.phase.saving" = "Saving";
 "create.render.detail.preparing" = "Avi is getting the video ready.";
@@ -847,7 +848,7 @@
 "create.availability.media.removeOne" = "Remove 1 photo.";
 "create.availability.media.removeMany" = "Use only 1 photo.";
 "create.media.action.adding" = "Adding media...";
-"create.media.action.add" = "Add Source Image";
+"create.media.action.add" = "Add photo";
 "create.media.selectedCount" = "%d selected";
 "create.media.selection.tooFew" = "Add %d more %@.";
 "create.media.selection.tooMany" = "Use one photo for Animate AV videos.";

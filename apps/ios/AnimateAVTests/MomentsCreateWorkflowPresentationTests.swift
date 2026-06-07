@@ -374,7 +374,7 @@ final class MomentsCreateWorkflowPresentationTests: XCTestCase {
                     MomentsCreateTestFixtures.makeScene(id: "scene-4", sceneIndex: 3)
                 ]
             ),
-            selectedDuration: .standard,
+            selectedDuration: .auto,
             canRefreshStory: true
         )
 
@@ -400,7 +400,7 @@ final class MomentsCreateWorkflowPresentationTests: XCTestCase {
             storySummary: MomentsCreateStorySummary(
                 savedScenes: [MomentsCreateTestFixtures.makeScene(id: "scene-1")]
             ),
-            selectedDuration: .standard,
+            selectedDuration: .auto,
             canRefreshStory: false,
             availabilityMessage: "Improve with Avi is cooling down."
         )
@@ -420,7 +420,7 @@ final class MomentsCreateWorkflowPresentationTests: XCTestCase {
                 selectedMedia: [MomentsCreateTestFixtures.makeSelectedMedia(id: "00000000-0000-0000-0000-000000000001")]
             ),
             storySummary: MomentsCreateStorySummary(),
-            selectedDuration: .standard,
+            selectedDuration: .auto,
             canRefreshStory: true
         )
 
@@ -476,7 +476,7 @@ final class MomentsCreateWorkflowPresentationTests: XCTestCase {
             )
         )
 
-        XCTAssertEqual(presentation.selectionMessage, "Use one source image for Animate AV videos.")
+        XCTAssertEqual(presentation.selectionMessage, "Use one photo for Animate AV videos.")
     }
 
     func testStoryPresentationFormatsPreparationStateAndSortsSavedScenes() {
@@ -495,7 +495,7 @@ final class MomentsCreateWorkflowPresentationTests: XCTestCase {
         )
 
         XCTAssertEqual(presentation.planButtonTitle, "Preparing video...")
-        XCTAssertEqual(presentation.emptyMessage, "Avi can prepare the animation plan from your source image.")
+        XCTAssertEqual(presentation.emptyMessage, "Avi can prepare the animation plan from your photo.")
         XCTAssertEqual(presentation.savedScenes.map(\.id), ["scene-1", "scene-2"])
         XCTAssertTrue(presentation.canPlanStory)
         XCTAssertEqual(presentation.availabilityMessage, "Ready.")
@@ -511,7 +511,7 @@ final class MomentsCreateWorkflowPresentationTests: XCTestCase {
         XCTAssertFalse(planning.hasRenderPlan)
         XCTAssertEqual(planning.primaryTitle, "Check credits")
         XCTAssertEqual(planning.primaryIconName, "creditcard.fill")
-        XCTAssertEqual(planning.creditPolicyMessage, "Avi checks the source image and credits before creating the final video.")
+        XCTAssertEqual(planning.creditPolicyMessage, "Avi checks the photo and credits before animating.")
         XCTAssertTrue(planning.canAffordSelectedCost)
 
         let ready = MomentsCreateFinalVideoActionPresentation(
@@ -572,7 +572,7 @@ final class MomentsCreateWorkflowPresentationTests: XCTestCase {
         XCTAssertEqual(presentation.buttonIconName, "arrow.clockwise")
         XCTAssertEqual(
             presentation.statusMessage,
-            "Avi could not prepare video creation. Try again, or adjust the source image and options."
+            "Avi could not prep the cartoon. Try again, or adjust the photo and options."
         )
     }
 
@@ -856,15 +856,15 @@ final class MomentsCreateWorkflowPresentationTests: XCTestCase {
     func testRecoveryCopyCoversMediaAndStoryFailurePaths() {
         XCTAssertEqual(
             MomentsRecoveryCopy.mediaImportFailure(),
-            "Couldn’t add that source image. Your photo is still on this device; try again or choose a different image."
+            "Couldn’t add that photo. It is still on this device; try again or choose a different image."
         )
         XCTAssertEqual(
             MomentsRecoveryCopy.mediaUploadUnavailable(),
-            "Source image upload is not ready yet. Your photo is still on this device; please try again in a moment."
+            "Photo upload is not ready yet. Your photo is still on this device; please try again in a moment."
         )
         XCTAssertEqual(
             MomentsRecoveryCopy.mediaStorySaveFailure(),
-            "Couldn’t save the source image for the video. Your photo is still on this device; try again or choose a different image."
+            "Couldn’t save the photo for the video. Your photo is still on this device; try again or choose a different image."
         )
         XCTAssertEqual(
             MomentsRecoveryCopy.storyStartFailure(),

@@ -92,9 +92,9 @@ final class MomentStatusRulesTests: XCTestCase {
     func testNextActionAsksForMediaWhenWorkspaceHasNoMedia() {
         let action = MomentStatusRules.nextAction(for: makeWorkspace())
 
-        XCTAssertEqual(action.title, "Add source image")
+        XCTAssertEqual(action.title, "Add photo")
         XCTAssertEqual(action.systemImage, "photo.badge.plus")
-        XCTAssertEqual(action.primaryButtonTitle, "Add Source Image in Create")
+        XCTAssertEqual(action.primaryButtonTitle, "Add Photo in Create")
         XCTAssertEqual(action.continuationFocus, .media)
     }
 

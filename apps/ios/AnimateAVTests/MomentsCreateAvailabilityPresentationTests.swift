@@ -75,8 +75,8 @@ final class MomentsCreateAvailabilityPresentationTests: XCTestCase {
 
     func testAvailabilityCopyUsesSingularAndPluralCreditMessages() {
         XCTAssertEqual(MomentsCreateAvailabilityCopy.momentSignInRequired, "Sign in before starting a video.")
-        XCTAssertEqual(MomentsCreateAvailabilityCopy.mediaTemplateFull, "Avi has the source image for this video.")
-        XCTAssertEqual(MomentsCreateAvailabilityCopy.storyMissingMedia, "Add one source image before preparing the video.")
+        XCTAssertEqual(MomentsCreateAvailabilityCopy.mediaTemplateFull, "Avi has the photo for this video.")
+        XCTAssertEqual(MomentsCreateAvailabilityCopy.storyMissingMedia, "Add one photo before preparing the video.")
         XCTAssertEqual(
             MomentsCreateAvailabilityCopy.finalRenderMissingWorkspace,
             "Wait for this video to sync before creating the final video."
@@ -128,7 +128,7 @@ final class MomentsCreateAvailabilityPresentationTests: XCTestCase {
                 selectedMediaCount: 0,
                 template: .birthdayMessage
             ),
-            "Add 1 more source image before preparing the video."
+            "Add 1 more photo before preparing the video."
         )
         XCTAssertNil(
             MomentsCreateAvailabilityMessageFactory.story(

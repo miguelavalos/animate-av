@@ -26,7 +26,7 @@ final class MomentsAviViewModelTests: XCTestCase {
             creditBalance: .empty
         )
 
-        XCTAssertEqual(presentation.workflowFocusTitle, "Active work")
+        XCTAssertEqual(presentation.workflowFocusTitle, "Cartoons in motion")
         XCTAssertTrue(presentation.workflowFocusMessage.contains("1 video in In Progress"))
         XCTAssertEqual(presentation.workflowFocusSystemImage, "clock.badge.checkmark")
     }
@@ -72,7 +72,7 @@ final class MomentsAviViewModelTests: XCTestCase {
             creditBalanceLoadState: .loading
         )
 
-        XCTAssertEqual(presentation.creditGuidanceMessage, "Loading your video credit balance.")
+        XCTAssertEqual(presentation.creditGuidanceMessage, "Loading your credit balance.")
     }
 
     func testOfflineCreditsExplainNetworkState() {
@@ -106,7 +106,7 @@ final class MomentsAviViewModelTests: XCTestCase {
             ])
         )
 
-        XCTAssertEqual(viewModel.presentation.workflowFocusTitle, "Active work")
+        XCTAssertEqual(viewModel.presentation.workflowFocusTitle, "Cartoons in motion")
         XCTAssertTrue(viewModel.presentation.creditGuidanceMessage.contains("1 credit available"))
     }
 

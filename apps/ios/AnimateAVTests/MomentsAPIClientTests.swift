@@ -120,7 +120,7 @@ final class MomentsAPIClientTests: XCTestCase {
             generatedAt: "2026-05-16T16:00:00Z"
         )
 
-        try await client.upload(media: media, preparedUpload: prepared)
+        _ = try await client.upload(media: media, preparedUpload: prepared)
 
         XCTAssertEqual(MomentsURLProtocolMock.lastRequest?.url?.absoluteString, uploadURL.absoluteString)
         XCTAssertEqual(MomentsURLProtocolMock.lastRequest?.httpMethod, "PUT")
@@ -158,7 +158,7 @@ final class MomentsAPIClientTests: XCTestCase {
         )
 
         do {
-            try await client.upload(media: media, preparedUpload: prepared)
+            _ = try await client.upload(media: media, preparedUpload: prepared)
             XCTFail("Expected missing upload URL to fail.")
         } catch MomentsUploadError.signedUploadUnavailable {
             XCTAssertEqual(MomentsURLProtocolMock.requestCount, 0)
@@ -201,7 +201,7 @@ final class MomentsAPIClientTests: XCTestCase {
             generatedAt: "2026-05-16T16:00:00Z"
         )
 
-        try await client.upload(media: media, preparedUpload: prepared)
+        _ = try await client.upload(media: media, preparedUpload: prepared)
 
         XCTAssertEqual(MomentsURLProtocolMock.requestCount, 2)
         XCTAssertEqual(MomentsURLProtocolMock.lastRequest?.url?.absoluteString, completionURL.absoluteString)
@@ -243,7 +243,7 @@ final class MomentsAPIClientTests: XCTestCase {
             generatedAt: "2026-05-16T16:00:00Z"
         )
 
-        try await client.upload(media: media, preparedUpload: prepared)
+        _ = try await client.upload(media: media, preparedUpload: prepared)
 
         XCTAssertEqual(MomentsURLProtocolMock.requestCount, 2)
     }
@@ -361,7 +361,7 @@ final class MomentsAPIClientTests: XCTestCase {
         form.theme = .travel
         form.look = .cartoon
         form.tone = .cinematic
-        form.duration = .short
+        form.duration = .auto
         form.mediaUse = .aviPick
         form.occasion = "   "
         form.details = ""
