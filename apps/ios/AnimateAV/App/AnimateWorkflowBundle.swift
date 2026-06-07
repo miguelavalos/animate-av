@@ -2,10 +2,10 @@ import Foundation
 
 @MainActor
 struct AnimateWorkflowBundle {
-    let momentDeletion: MomentDeletionWorkflow
+    let videoDeletion: AnimateVideoDeletionWorkflow
     let momentWorkspaceSelection: AnimateWorkspaceSelectionWorkflow
     let inProgressMoments: AnimateVideosWorkflow
-    let momentCreation: AnimateVideoCreationWorkflow
+    let videoCreation: AnimateVideoCreationWorkflow
     let mediaUpload: MediaUploadWorkflow
     let story: StoryWorkflow
     let finalRender: FinalRenderWorkflow
@@ -17,7 +17,7 @@ struct AnimateWorkflowBundle {
         workspaceObserver: AnimateWorkspaceObserver,
         clients: MomentsWorkflowClients
     ) {
-        momentDeletion = MomentDeletionWorkflow(
+        videoDeletion = AnimateVideoDeletionWorkflow(
             currentUserProvider: accountController,
             authTokenProvider: accountController,
             momentDeleter: clients.workspaceCommands
@@ -26,12 +26,12 @@ struct AnimateWorkflowBundle {
         inProgressMoments = AnimateVideosWorkflow(
             momentsObserver: momentsObserver,
             workspaceSelectionWorkflow: momentWorkspaceSelection,
-            momentDeletionWorkflow: momentDeletion,
+            videoDeletionWorkflow: videoDeletion,
             momentTitleUpdater: clients.workspaceCommands,
             currentUserProvider: accountController,
             authTokenProvider: accountController
         )
-        momentCreation = AnimateVideoCreationWorkflow(
+        videoCreation = AnimateVideoCreationWorkflow(
             currentUserProvider: accountController,
             authTokenProvider: accountController,
             creditBalanceProvider: accountController,

@@ -3,7 +3,7 @@ extension AnimateCreateViewModel {
         AnimateCreateAvailabilityMessageFactory.setup(
             isSetupLocked: isSetupLocked,
             isSignedIn: isSignedIn,
-            isMomentCreationConfigured: momentCreationWorkflow?.isConfigured ?? false,
+            isVideoCreationConfigured: videoCreationWorkflow?.isConfigured ?? false,
             setupFormAvailability: setupFormAvailability
         )
     }

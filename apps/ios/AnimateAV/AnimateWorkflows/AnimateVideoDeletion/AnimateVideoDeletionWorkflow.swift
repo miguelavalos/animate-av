@@ -2,7 +2,7 @@ import Combine
 import Foundation
 
 @MainActor
-final class MomentDeletionWorkflow: ObservableObject {
+final class AnimateVideoDeletionWorkflow: ObservableObject {
     @Published private(set) var isDeletingMoment = false
     @Published private(set) var errorMessage: String?
 

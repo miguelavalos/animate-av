@@ -83,7 +83,7 @@ final class AnimateCreateViewModel: ObservableObject {
     @Published private(set) var continuationFocusHint: AnimateContinuationFocus?
     @Published var mediaPickerOpenRequest = 0
 
-    private(set) var momentCreationWorkflow: AnimateVideoCreationWorkflow?
+    private(set) var videoCreationWorkflow: AnimateVideoCreationWorkflow?
     private(set) var mediaUploadWorkflow: MediaUploadWorkflow?
     private(set) var storyWorkflow: StoryWorkflow?
     private(set) var finalRenderWorkflow: FinalRenderWorkflow?
@@ -151,7 +151,7 @@ final class AnimateCreateViewModel: ObservableObject {
 
     func bind(
         accountStateProvider: any AnimateAccountStateProviding,
-        momentCreationWorkflow: AnimateVideoCreationWorkflow,
+        videoCreationWorkflow: AnimateVideoCreationWorkflow,
         mediaUploadWorkflow: MediaUploadWorkflow,
         storyWorkflow: StoryWorkflow,
         finalRenderWorkflow: FinalRenderWorkflow,
@@ -159,17 +159,17 @@ final class AnimateCreateViewModel: ObservableObject {
         imageGenerationAccountingClient: AnimateImageGenerationAccountingClient
     ) {
         cancelOperations()
-        self.momentCreationWorkflow = momentCreationWorkflow
+        self.videoCreationWorkflow = videoCreationWorkflow
         self.mediaUploadWorkflow = mediaUploadWorkflow
         self.storyWorkflow = storyWorkflow
         self.finalRenderWorkflow = finalRenderWorkflow
         self.authTokenProvider = authTokenProvider
         self.imageGenerationAccountingClient = imageGenerationAccountingClient
-        templates = momentCreationWorkflow.launchTemplates
+        templates = videoCreationWorkflow.launchTemplates
         creationStyles = AnimateVideoCreationStyle.launchStyles
         selectedCreationStyle = AnimateVideoCreationStyle.launchStyles[0]
         selectedMusicPreset = selectedCreationStyle.defaultMusic
-        form = AnimateVideoSetupForm(template: momentCreationWorkflow.launchTemplates[0])
+        form = AnimateVideoSetupForm(template: videoCreationWorkflow.launchTemplates[0])
         canUndoAutoStyleSuggestion = false
         autoStyleUndoSelection = nil
         applyStyleDefaults(selectedCreationStyle)
@@ -177,7 +177,7 @@ final class AnimateCreateViewModel: ObservableObject {
 
         bindWorkflowState(
             accountStateProvider: accountStateProvider,
-            momentCreationWorkflow: momentCreationWorkflow,
+            videoCreationWorkflow: videoCreationWorkflow,
             mediaUploadWorkflow: mediaUploadWorkflow,
             storyWorkflow: storyWorkflow,
             finalRenderWorkflow: finalRenderWorkflow
@@ -394,7 +394,7 @@ final class AnimateCreateViewModel: ObservableObject {
         }
     }
 
-    func prepareNewMomentCreation() {
+    func prepareNewVideoCreation() {
         isContinuingMoment = false
         continuationFocusHint = nil
         isLocalMomentStarted = false
@@ -415,7 +415,7 @@ final class AnimateCreateViewModel: ObservableObject {
             form = continuedForm
         }
 
-        momentCreationWorkflow?.continueMoment(moment)
+        videoCreationWorkflow?.continueMoment(moment)
     }
 
     func consumePendingFocus() {
@@ -534,7 +534,7 @@ final class AnimateCreateViewModel: ObservableObject {
         isLocalMomentStarted = false
         pendingFocus = nil
         continuationFocusHint = nil
-        momentCreationWorkflow?.resetMomentSetup(force: force)
+        videoCreationWorkflow?.resetMomentSetup(force: force)
         mediaUploadWorkflow?.reset(force: force)
         storyWorkflow?.reset(force: force)
         finalRenderWorkflow?.reset(force: force)
@@ -846,7 +846,7 @@ extension AnimateCreateViewModel {
         updateFinalRenderStatusMessage(nil)
     }
 
-    func applyMomentCreationState(_ state: AnimateCreateMomentCreationState) {
+    func applyVideoCreationState(_ state: AnimateCreateVideoCreationState) {
         guard !usesCreateUITestFixture else { return }
         let previousActiveMomentId = workflowActiveMomentId
         isCreatingMoment = state.isCreatingMoment

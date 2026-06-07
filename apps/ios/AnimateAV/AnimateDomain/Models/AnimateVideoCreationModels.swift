@@ -217,7 +217,7 @@ struct AnimateVideoCreationStyle: Identifiable, Equatable {
             id: .familyMoments,
             title: L10n.string("create.theme.familyMoments.title"),
             subtitle: L10n.string("create.theme.familyMoments.subtitle"),
-            assetName: "StyleFamilyMoments",
+            assetName: "StyleFamilyCartoon",
             template: .birthdayMessage,
             defaultMusic: .warm,
             allowedMusic: [.warm, .fun, .cinematic, .calm],

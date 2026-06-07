@@ -6,10 +6,10 @@ final class MomentsDependencyContainer: ObservableObject {
     let momentsObserver: AnimateInProgressObserver
     let galleryMomentsObserver: AnimateGalleryObserver
     let workspaceObserver: AnimateWorkspaceObserver
-    let momentDeletionWorkflow: MomentDeletionWorkflow
+    let videoDeletionWorkflow: AnimateVideoDeletionWorkflow
     let momentWorkspaceSelectionWorkflow: AnimateWorkspaceSelectionWorkflow
     let inProgressMomentsWorkflow: AnimateVideosWorkflow
-    let momentCreationWorkflow: AnimateVideoCreationWorkflow
+    let videoCreationWorkflow: AnimateVideoCreationWorkflow
     let mediaUploadWorkflow: MediaUploadWorkflow
     let storyWorkflow: StoryWorkflow
     let finalRenderWorkflow: FinalRenderWorkflow
@@ -45,10 +45,10 @@ final class MomentsDependencyContainer: ObservableObject {
             workspaceObserver: resolvedWorkspaceObserver,
             clients: clients
         )
-        self.momentDeletionWorkflow = workflows.momentDeletion
+        self.videoDeletionWorkflow = workflows.videoDeletion
         self.momentWorkspaceSelectionWorkflow = workflows.momentWorkspaceSelection
         self.inProgressMomentsWorkflow = workflows.inProgressMoments
-        self.momentCreationWorkflow = workflows.momentCreation
+        self.videoCreationWorkflow = workflows.videoCreation
         self.mediaUploadWorkflow = workflows.mediaUpload
         self.storyWorkflow = workflows.story
         self.finalRenderWorkflow = workflows.finalRender

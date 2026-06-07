@@ -99,10 +99,10 @@ struct AnimateInProgressScreen: View {
             titleVisibility: .visible
         ) {
             Button(L10n.string("inProgress.deleteMoment.button"), role: .destructive) {
-                confirmMomentDeletion()
+                confirmVideoDeletion()
             }
             Button(L10n.string("common.cancel"), role: .cancel) {
-                cancelMomentDeletion()
+                cancelVideoDeletion()
             }
         } message: {
             Text(presentation.deletionMessage)
@@ -137,7 +137,7 @@ struct AnimateInProgressScreen: View {
         )
     }
 
-    private func confirmMomentDeletion() {
+    private func confirmVideoDeletion() {
         if let momentPendingDeletion {
             if createViewModel.activeMomentId == momentPendingDeletion.id {
                 createViewModel.clearSessionState()
@@ -147,7 +147,7 @@ struct AnimateInProgressScreen: View {
         momentPendingDeletion = nil
     }
 
-    private func cancelMomentDeletion() {
+    private func cancelVideoDeletion() {
         momentPendingDeletion = nil
     }
 

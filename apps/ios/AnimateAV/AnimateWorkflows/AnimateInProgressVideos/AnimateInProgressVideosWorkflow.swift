@@ -9,7 +9,7 @@ final class AnimateVideosWorkflow: ObservableObject {
 
     private let momentsObserver: any AnimateInProgressListProviding
     private let workspaceSelectionWorkflow: AnimateWorkspaceSelectionWorkflow
-    private let momentDeletionWorkflow: MomentDeletionWorkflow
+    private let videoDeletionWorkflow: AnimateVideoDeletionWorkflow
     private let momentTitleUpdater: any MomentsTitleUpdating
     private let currentUserProvider: any AnimateCurrentUserProviding
     private let authTokenProvider: any AnimateAuthTokenProviding
@@ -20,14 +20,14 @@ final class AnimateVideosWorkflow: ObservableObject {
     init(
         momentsObserver: any AnimateInProgressListProviding,
         workspaceSelectionWorkflow: AnimateWorkspaceSelectionWorkflow,
-        momentDeletionWorkflow: MomentDeletionWorkflow,
+        videoDeletionWorkflow: AnimateVideoDeletionWorkflow,
         momentTitleUpdater: any MomentsTitleUpdating,
         currentUserProvider: any AnimateCurrentUserProviding,
         authTokenProvider: any AnimateAuthTokenProviding
     ) {
         self.momentsObserver = momentsObserver
         self.workspaceSelectionWorkflow = workspaceSelectionWorkflow
-        self.momentDeletionWorkflow = momentDeletionWorkflow
+        self.videoDeletionWorkflow = videoDeletionWorkflow
         self.momentTitleUpdater = momentTitleUpdater
         self.currentUserProvider = currentUserProvider
         self.authTokenProvider = authTokenProvider
@@ -46,17 +46,17 @@ final class AnimateVideosWorkflow: ObservableObject {
             }
             .store(in: &cancellables)
 
-        momentDeletionWorkflow.isDeletingMomentPublisher
+        videoDeletionWorkflow.isDeletingMomentPublisher
             .receive(on: DispatchQueue.main)
             .sink { [weak self] isDeleting in
                 self?.isDeletingMoment = isDeleting
             }
             .store(in: &cancellables)
 
-        momentDeletionWorkflow.deletionErrorPublisher
+        videoDeletionWorkflow.deletionErrorPublisher
             .receive(on: DispatchQueue.main)
             .sink { [weak self] message in
-                self?.applyMomentDeletionError(message)
+                self?.applyVideoDeletionError(message)
             }
             .store(in: &cancellables)
 
@@ -124,7 +124,7 @@ final class AnimateVideosWorkflow: ObservableObject {
 
     func deleteMoment(_ moment: AnimateVideo) async -> Bool {
         errorMessage = nil
-        let didDelete = await momentDeletionWorkflow.deleteMoment(moment)
+        let didDelete = await videoDeletionWorkflow.deleteMoment(moment)
         guard didDelete else { return false }
 
         if workspaceSelectionWorkflow.activeMoment?.id == moment.id {
@@ -168,7 +168,7 @@ final class AnimateVideosWorkflow: ObservableObject {
         errorMessage = message
     }
 
-    private func applyMomentDeletionError(_ message: String?) {
+    private func applyVideoDeletionError(_ message: String?) {
         guard let message else { return }
         errorMessage = message
     }

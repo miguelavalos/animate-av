@@ -294,8 +294,8 @@ final class AnimateCreateViewModelStoryStateTests: XCTestCase {
             id: "00000000-0000-0000-0000-000000000001"
         )
 
-        viewModel.applyMomentCreationState(
-            AnimateCreateMomentCreationState(
+        viewModel.applyVideoCreationState(
+            AnimateCreateVideoCreationState(
                 isCreatingMoment: false,
                 activeMomentId: "moment-1",
                 setupErrorMessage: nil
@@ -343,8 +343,8 @@ final class AnimateCreateViewModelStoryStateTests: XCTestCase {
             sourceLocalIdentifier: "local-asset-1"
         )
 
-        viewModel.applyMomentCreationState(
-            AnimateCreateMomentCreationState(
+        viewModel.applyVideoCreationState(
+            AnimateCreateVideoCreationState(
                 isCreatingMoment: false,
                 activeMomentId: "moment-1",
                 setupErrorMessage: nil
@@ -421,8 +421,8 @@ final class AnimateCreateViewModelStoryStateTests: XCTestCase {
             persistedMedia: [makeStoryMedia(from: backendMedia)]
         )
 
-        viewModel.applyMomentCreationState(
-            AnimateCreateMomentCreationState(
+        viewModel.applyVideoCreationState(
+            AnimateCreateVideoCreationState(
                 isCreatingMoment: false,
                 activeMomentId: "moment-1",
                 setupErrorMessage: nil
@@ -576,8 +576,8 @@ final class AnimateCreateViewModelStoryStateTests: XCTestCase {
             id: "00000000-0000-0000-0000-000000000001",
             sourceLocalIdentifier: "local-asset-1"
         )
-        viewModel.applyMomentCreationState(
-            AnimateCreateMomentCreationState(
+        viewModel.applyVideoCreationState(
+            AnimateCreateVideoCreationState(
                 isCreatingMoment: false,
                 activeMomentId: "moment-1",
                 setupErrorMessage: nil
@@ -645,7 +645,7 @@ final class AnimateCreateViewModelStoryStateTests: XCTestCase {
         let viewModel = AnimateCreateViewModel()
         viewModel.bind(
             accountStateProvider: harness,
-            momentCreationWorkflow: harness.momentCreationWorkflow,
+            videoCreationWorkflow: harness.videoCreationWorkflow,
             mediaUploadWorkflow: harness.mediaUploadWorkflow,
             storyWorkflow: harness.storyWorkflow,
             finalRenderWorkflow: harness.finalRenderWorkflow,
@@ -688,8 +688,8 @@ final class AnimateCreateViewModelStoryStateTests: XCTestCase {
         momentId: String = "moment-1"
     ) -> (media: AnimateMediaAsset, signature: String) {
         let media = makeBackendMedia()
-        viewModel.applyMomentCreationState(
-            AnimateCreateMomentCreationState(
+        viewModel.applyVideoCreationState(
+            AnimateCreateVideoCreationState(
                 isCreatingMoment: false,
                 activeMomentId: momentId,
                 setupErrorMessage: nil
@@ -779,7 +779,7 @@ private final class AnimateVideoCreationFailureHarness:
         creationError = error
     }
 
-    var momentCreationWorkflow: AnimateVideoCreationWorkflow {
+    var videoCreationWorkflow: AnimateVideoCreationWorkflow {
         AnimateVideoCreationWorkflow(
             currentUserProvider: self,
             authTokenProvider: self,

@@ -30,7 +30,7 @@ struct AnimateViewModelBundle {
         home.bind(accountStateProvider: accountController)
         create.bind(
             accountStateProvider: accountController,
-            momentCreationWorkflow: workflows.momentCreation,
+            videoCreationWorkflow: workflows.videoCreation,
             mediaUploadWorkflow: workflows.mediaUpload,
             storyWorkflow: workflows.story,
             finalRenderWorkflow: workflows.finalRender,

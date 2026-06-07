@@ -6,7 +6,7 @@ struct AnimateCreateAccountState {
     let creditBalanceLoadState: AnimateCreditBalanceLoadState
 }
 
-struct AnimateCreateMomentCreationState {
+struct AnimateCreateVideoCreationState {
     let isCreatingMoment: Bool
     let activeMomentId: String?
     let setupErrorMessage: String?

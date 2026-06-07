@@ -4,12 +4,12 @@ enum AnimateCreateAvailabilityMessageFactory {
     static func setup(
         isSetupLocked: Bool,
         isSignedIn: Bool,
-        isMomentCreationConfigured: Bool,
+        isVideoCreationConfigured: Bool,
         setupFormAvailability: AnimateVideoSetupRules.Availability
     ) -> String? {
         if isSetupLocked { return nil }
         if !isSignedIn { return AnimateCreateAvailabilityCopy.momentSignInRequired }
-        if !isMomentCreationConfigured { return AnimateCreateAvailabilityCopy.momentSyncNotConfigured }
+        if !isVideoCreationConfigured { return AnimateCreateAvailabilityCopy.momentSyncNotConfigured }
         return AnimateVideoSetupRules.availabilityMessage(setupFormAvailability)
     }
 

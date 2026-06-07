@@ -4,13 +4,13 @@ import Foundation
 extension AnimateCreateViewModel {
     func bindWorkflowState(
         accountStateProvider: any AnimateAccountStateProviding,
-        momentCreationWorkflow: AnimateVideoCreationWorkflow,
+        videoCreationWorkflow: AnimateVideoCreationWorkflow,
         mediaUploadWorkflow: MediaUploadWorkflow,
         storyWorkflow: StoryWorkflow,
         finalRenderWorkflow: FinalRenderWorkflow
     ) {
         bindAccount(accountStateProvider)
-        bindMomentCreation(momentCreationWorkflow)
+        bindVideoCreation(videoCreationWorkflow)
         bindMediaUpload(mediaUploadWorkflow)
         bindStory(storyWorkflow)
         bindFinalRender(finalRenderWorkflow)
@@ -35,7 +35,7 @@ extension AnimateCreateViewModel {
             .store(in: &cancellables)
     }
 
-    private func bindMomentCreation(_ workflow: AnimateVideoCreationWorkflow) {
+    private func bindVideoCreation(_ workflow: AnimateVideoCreationWorkflow) {
         Publishers.CombineLatest3(
             workflow.$isCreatingMoment,
             workflow.$activeMomentId,
@@ -43,8 +43,8 @@ extension AnimateCreateViewModel {
         )
             .receive(on: DispatchQueue.main)
             .sink { [weak self] isCreatingMoment, activeMomentId, setupErrorMessage in
-                self?.applyMomentCreationState(
-                    AnimateCreateMomentCreationState(
+                self?.applyVideoCreationState(
+                    AnimateCreateVideoCreationState(
                         isCreatingMoment: isCreatingMoment,
                         activeMomentId: activeMomentId,
                         setupErrorMessage: setupErrorMessage
