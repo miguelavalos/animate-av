@@ -11,8 +11,8 @@ final class InProgressMomentsWorkflow: ObservableObject {
     private let workspaceSelectionWorkflow: MomentWorkspaceSelectionWorkflow
     private let momentDeletionWorkflow: MomentDeletionWorkflow
     private let momentTitleUpdater: any MomentsTitleUpdating
-    private let currentUserProvider: any MomentsCurrentUserProviding
-    private let authTokenProvider: any MomentsAuthTokenProviding
+    private let currentUserProvider: any AnimateCurrentUserProviding
+    private let authTokenProvider: any AnimateAuthTokenProviding
     private var currentOwnerUserId: String?
     private var optimisticMomentTitles: [String: String] = [:]
     private var cancellables = Set<AnyCancellable>()
@@ -22,8 +22,8 @@ final class InProgressMomentsWorkflow: ObservableObject {
         workspaceSelectionWorkflow: MomentWorkspaceSelectionWorkflow,
         momentDeletionWorkflow: MomentDeletionWorkflow,
         momentTitleUpdater: any MomentsTitleUpdating,
-        currentUserProvider: any MomentsCurrentUserProviding,
-        authTokenProvider: any MomentsAuthTokenProviding
+        currentUserProvider: any AnimateCurrentUserProviding,
+        authTokenProvider: any AnimateAuthTokenProviding
     ) {
         self.momentsObserver = momentsObserver
         self.workspaceSelectionWorkflow = workspaceSelectionWorkflow

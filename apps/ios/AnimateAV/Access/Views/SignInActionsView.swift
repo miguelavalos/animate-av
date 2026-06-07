@@ -1,7 +1,7 @@
 import AVSettingsFoundation
 import SwiftUI
 
-struct SignInActionsView<AuthenticationController>: View where AuthenticationController: ObservableObject & MomentsAuthenticationControlling {
+struct SignInActionsView<AuthenticationController>: View where AuthenticationController: ObservableObject & AnimateAuthenticationControlling {
     @ObservedObject var authenticationController: AuthenticationController
     @StateObject private var signInCoordinator = AVAuthSignInCoordinator()
 

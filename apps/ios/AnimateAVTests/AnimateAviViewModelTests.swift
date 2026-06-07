@@ -135,7 +135,7 @@ private final class AviMomentsSummaryProvider: InProgressMomentsSummaryProviding
     }
 }
 
-private final class AviAccountStateProvider: MomentsAccountStateProviding {
+private final class AviAccountStateProvider: AnimateAccountStateProviding {
     let isSignedIn = CurrentValueSubject<Bool, Never>(false)
     let currentUserId = CurrentValueSubject<String?, Never>(nil)
     let displayName = CurrentValueSubject<String?, Never>(nil)

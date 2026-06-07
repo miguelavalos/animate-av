@@ -15,8 +15,8 @@ final class FinalRenderWorkflow: WorkspaceObservingWorkflow {
 
     private var latestFinalJobMomentId: String?
 
-    private let currentUserProvider: any MomentsCurrentUserProviding
-    private let authTokenProvider: any MomentsAuthTokenProviding
+    private let currentUserProvider: any AnimateCurrentUserProviding
+    private let authTokenProvider: any AnimateAuthTokenProviding
     private let creditBalanceProvider: any AnimateCreditBalanceProviding
     private let finalRenderClient: MomentsFinalRenderClient
     private let videoQuoteClient: MomentsVideoQuoteClient
@@ -28,8 +28,8 @@ final class FinalRenderWorkflow: WorkspaceObservingWorkflow {
     private var preparedVideoSourceUpload: PreparedVideoSourceUpload?
 
     init(
-        currentUserProvider: any MomentsCurrentUserProviding,
-        authTokenProvider: any MomentsAuthTokenProviding,
+        currentUserProvider: any AnimateCurrentUserProviding,
+        authTokenProvider: any AnimateAuthTokenProviding,
         creditBalanceProvider: any AnimateCreditBalanceProviding,
         workspaceObserver: any MomentsActiveWorkspaceObserving,
         finalRenderClient: MomentsFinalRenderClient,

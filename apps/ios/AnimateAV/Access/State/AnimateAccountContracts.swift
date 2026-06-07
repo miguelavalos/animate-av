@@ -2,12 +2,12 @@ import Combine
 import Foundation
 
 @MainActor
-protocol MomentsCurrentUserProviding: AnyObject {
+protocol AnimateCurrentUserProviding: AnyObject {
     var currentUserId: String? { get }
 }
 
 @MainActor
-protocol MomentsAuthTokenProviding: AnyObject {
+protocol AnimateAuthTokenProviding: AnyObject {
     func currentBearerToken() async throws -> String?
 }
 
@@ -19,7 +19,7 @@ protocol AnimateCreditBalanceProviding: AnyObject {
 }
 
 @MainActor
-protocol MomentsAccountStateProviding: AnyObject {
+protocol AnimateAccountStateProviding: AnyObject {
     var isSignedInPublisher: AnyPublisher<Bool, Never> { get }
     var currentUserIdPublisher: AnyPublisher<String?, Never> { get }
     var displayNamePublisher: AnyPublisher<String?, Never> { get }
@@ -28,7 +28,7 @@ protocol MomentsAccountStateProviding: AnyObject {
 }
 
 @MainActor
-protocol MomentsAuthenticationControlling: AnyObject {
+protocol AnimateAuthenticationControlling: AnyObject {
     var isAuthenticationBusy: Bool { get }
     var isAuthenticationAvailable: Bool { get }
 

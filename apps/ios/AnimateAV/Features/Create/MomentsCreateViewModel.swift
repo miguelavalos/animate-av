@@ -87,7 +87,7 @@ final class MomentsCreateViewModel: ObservableObject {
     private(set) var mediaUploadWorkflow: MediaUploadWorkflow?
     private(set) var storyWorkflow: StoryWorkflow?
     private(set) var finalRenderWorkflow: FinalRenderWorkflow?
-    private var authTokenProvider: (any MomentsAuthTokenProviding)?
+    private var authTokenProvider: (any AnimateAuthTokenProviding)?
     private var imageGenerationAccountingClient: MomentsImageGenerationAccountingClient?
     let operationRunner = MomentsCreateOperationRunner()
     var cancellables = Set<AnyCancellable>()
@@ -150,12 +150,12 @@ final class MomentsCreateViewModel: ObservableObject {
     }
 
     func bind(
-        accountStateProvider: any MomentsAccountStateProviding,
+        accountStateProvider: any AnimateAccountStateProviding,
         momentCreationWorkflow: MomentCreationWorkflow,
         mediaUploadWorkflow: MediaUploadWorkflow,
         storyWorkflow: StoryWorkflow,
         finalRenderWorkflow: FinalRenderWorkflow,
-        authTokenProvider: any MomentsAuthTokenProviding,
+        authTokenProvider: any AnimateAuthTokenProviding,
         imageGenerationAccountingClient: MomentsImageGenerationAccountingClient
     ) {
         cancelOperations()

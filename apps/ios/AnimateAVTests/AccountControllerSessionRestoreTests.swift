@@ -221,8 +221,8 @@ final class AccountControllerSessionRestoreTests: XCTestCase {
         XCTAssertTrue(controller.isAccountSessionTemporarilyUnavailable)
     }
 
-    private func accountProfileClient() -> MomentsAccountProfileClient {
-        MomentsAccountProfileClient(baseURLString: "https://account.example.test", session: urlProtocolSession())
+    private func accountProfileClient() -> AnimateAccountProfileClient {
+        AnimateAccountProfileClient(baseURLString: "https://account.example.test", session: urlProtocolSession())
     }
 
     private func balanceClient() -> AnimateCreditBalanceClient {

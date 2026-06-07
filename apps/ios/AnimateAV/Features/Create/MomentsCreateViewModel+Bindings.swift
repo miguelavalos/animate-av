@@ -3,7 +3,7 @@ import Foundation
 
 extension MomentsCreateViewModel {
     func bindWorkflowState(
-        accountStateProvider: any MomentsAccountStateProviding,
+        accountStateProvider: any AnimateAccountStateProviding,
         momentCreationWorkflow: MomentCreationWorkflow,
         mediaUploadWorkflow: MediaUploadWorkflow,
         storyWorkflow: StoryWorkflow,
@@ -16,7 +16,7 @@ extension MomentsCreateViewModel {
         bindFinalRender(finalRenderWorkflow)
     }
 
-    private func bindAccount(_ accountStateProvider: any MomentsAccountStateProviding) {
+    private func bindAccount(_ accountStateProvider: any AnimateAccountStateProviding) {
         Publishers.CombineLatest3(
             accountStateProvider.isSignedInPublisher,
             accountStateProvider.creditBalancePublisher,

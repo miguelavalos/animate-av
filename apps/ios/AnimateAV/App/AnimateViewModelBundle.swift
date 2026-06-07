@@ -12,7 +12,7 @@ struct AnimateViewModelBundle {
         accountController: AccountController,
         workflows: AnimateWorkflowBundle,
         galleryMomentsProvider: any GalleryMomentsListProviding,
-        authTokenProvider: any MomentsAuthTokenProviding,
+        authTokenProvider: any AnimateAuthTokenProviding,
         imageGenerationAccountingClient: MomentsImageGenerationAccountingClient,
         finalRenderClient: MomentsFinalRenderClient
     ) {

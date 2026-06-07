@@ -7,14 +7,14 @@ final class StoryWorkflow: WorkspaceObservingWorkflow {
     @Published private(set) var isPlanning = false
     @Published private(set) var statusMessage: String?
 
-    private let currentUserProvider: any MomentsCurrentUserProviding
-    private let authTokenProvider: any MomentsAuthTokenProviding
+    private let currentUserProvider: any AnimateCurrentUserProviding
+    private let authTokenProvider: any AnimateAuthTokenProviding
     private let storyClient: MomentsStoryClient
     private let logger = Logger(subsystem: "com.avalsys.animateav", category: "story")
 
     init(
-        currentUserProvider: any MomentsCurrentUserProviding,
-        authTokenProvider: any MomentsAuthTokenProviding,
+        currentUserProvider: any AnimateCurrentUserProviding,
+        authTokenProvider: any AnimateAuthTokenProviding,
         workspaceObserver: any MomentsActiveWorkspaceObserving,
         storyClient: MomentsStoryClient
     ) {

@@ -17,7 +17,7 @@ final class AccountController: ObservableObject {
     @Published var errorMessage: String?
 
     private let service: AVAccountService
-    private let accountProfileClient: MomentsAccountProfileClient
+    private let accountProfileClient: AnimateAccountProfileClient
     private let balanceClient: AnimateCreditBalanceClient
     private let promoCodeClient: AnimatePromoCodeClient
     private let purchaseService: AnimatePurchaseServicing
@@ -26,14 +26,14 @@ final class AccountController: ObservableObject {
 
     init(
         service: AVAccountService = DefaultAVAccountService(),
-        accountProfileClient: MomentsAccountProfileClient? = nil,
+        accountProfileClient: AnimateAccountProfileClient? = nil,
         balanceClient: AnimateCreditBalanceClient? = nil,
         promoCodeClient: AnimatePromoCodeClient? = nil,
         purchaseService: AnimatePurchaseServicing = RevenueCatAnimatePurchaseService(),
         userDefaults: UserDefaults = .standard
     ) {
         self.service = service
-        self.accountProfileClient = accountProfileClient ?? MomentsAccountProfileClient(baseURLString: AppConfig.animateAPIBaseURL)
+        self.accountProfileClient = accountProfileClient ?? AnimateAccountProfileClient(baseURLString: AppConfig.animateAPIBaseURL)
         self.balanceClient = balanceClient ?? AnimateCreditBalanceClient(baseURLString: AppConfig.animateAPIBaseURL)
         self.promoCodeClient = promoCodeClient ?? AnimatePromoCodeClient(baseURLString: AppConfig.animateAPIBaseURL)
         self.purchaseService = purchaseService
@@ -350,7 +350,7 @@ private struct MomentsLastKnownAccountUser: Codable {
     }
 }
 
-struct MomentsAccountProfileClient {
+struct AnimateAccountProfileClient {
     var baseURLString: String
     var session: URLSession = .shared
 
@@ -372,7 +372,7 @@ struct MomentsAccountProfileClient {
             )
         }
 
-        let decoded = try JSONDecoder().decode(MomentsAccountProfileResponse.self, from: data)
+        let decoded = try JSONDecoder().decode(AnimateAccountProfileResponse.self, from: data)
         return AccountAVUser(
             id: decoded.user.id,
             displayName: decoded.user.displayName ?? L10n.string("account.displayName.user"),
@@ -381,7 +381,7 @@ struct MomentsAccountProfileClient {
     }
 }
 
-private struct MomentsAccountProfileResponse: Decodable {
+private struct AnimateAccountProfileResponse: Decodable {
     let user: User
 
     struct User: Decodable {
@@ -525,7 +525,7 @@ struct AnimatePromoCodeRedemptionResponse: Decodable {
     }
 }
 
-extension AccountController: MomentsCurrentUserProviding, MomentsAuthTokenProviding, AnimateCreditBalanceProviding, MomentsAccountStateProviding, MomentsAuthenticationControlling {
+extension AccountController: AnimateCurrentUserProviding, AnimateAuthTokenProviding, AnimateCreditBalanceProviding, AnimateAccountStateProviding, AnimateAuthenticationControlling {
     var currentUserId: String? {
         user?.id
     }

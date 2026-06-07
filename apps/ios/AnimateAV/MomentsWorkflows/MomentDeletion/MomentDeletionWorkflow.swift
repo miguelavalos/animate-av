@@ -6,14 +6,14 @@ final class MomentDeletionWorkflow: ObservableObject {
     @Published private(set) var isDeletingMoment = false
     @Published private(set) var errorMessage: String?
 
-    private let currentUserProvider: any MomentsCurrentUserProviding
-    private let authTokenProvider: any MomentsAuthTokenProviding
+    private let currentUserProvider: any AnimateCurrentUserProviding
+    private let authTokenProvider: any AnimateAuthTokenProviding
     private let momentDeleter: any MomentsDeleting
     private var deletionGeneration = 0
 
     init(
-        currentUserProvider: any MomentsCurrentUserProviding,
-        authTokenProvider: any MomentsAuthTokenProviding,
+        currentUserProvider: any AnimateCurrentUserProviding,
+        authTokenProvider: any AnimateAuthTokenProviding,
         momentDeleter: any MomentsDeleting
     ) {
         self.currentUserProvider = currentUserProvider

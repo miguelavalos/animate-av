@@ -80,7 +80,7 @@ final class MomentsInProgressViewModel: ObservableObject {
             .store(in: &workflowCancellables)
     }
 
-    func bind(accountStateProvider: any MomentsAccountStateProviding) {
+    func bind(accountStateProvider: any AnimateAccountStateProviding) {
         accountCancellables.removeAll()
 
         Publishers.CombineLatest(

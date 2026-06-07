@@ -24,7 +24,7 @@ final class AnimateHomeViewModel: ObservableObject {
             .store(in: &momentsCancellables)
     }
 
-    func bind(accountStateProvider: any MomentsAccountStateProviding) {
+    func bind(accountStateProvider: any AnimateAccountStateProviding) {
         accountCancellables.removeAll()
 
         Publishers.CombineLatest4(

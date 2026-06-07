@@ -7,8 +7,8 @@ final class MomentCreationWorkflow: ObservableObject {
     @Published private(set) var activeMomentId: String?
     @Published private(set) var errorMessage: String?
 
-    private let currentUserProvider: any MomentsCurrentUserProviding
-    private let authTokenProvider: any MomentsAuthTokenProviding
+    private let currentUserProvider: any AnimateCurrentUserProviding
+    private let authTokenProvider: any AnimateAuthTokenProviding
     private let creditBalanceProvider: any AnimateCreditBalanceProviding
     private let momentCreator: any MomentsCreating
     private let momentDeleter: any MomentsDeleting
@@ -17,8 +17,8 @@ final class MomentCreationWorkflow: ObservableObject {
     private let logger = Logger(subsystem: "com.avalsys.animateav", category: "moment-creation")
 
     init(
-        currentUserProvider: any MomentsCurrentUserProviding,
-        authTokenProvider: any MomentsAuthTokenProviding,
+        currentUserProvider: any AnimateCurrentUserProviding,
+        authTokenProvider: any AnimateAuthTokenProviding,
         creditBalanceProvider: any AnimateCreditBalanceProviding,
         momentCreator: any MomentsCreating,
         momentDeleter: any MomentsDeleting,

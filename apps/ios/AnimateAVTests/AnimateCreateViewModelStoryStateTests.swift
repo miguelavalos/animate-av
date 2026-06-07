@@ -755,9 +755,9 @@ final class AnimateCreateViewModelStoryStateTests: XCTestCase {
 
 @MainActor
 private final class MomentCreationFailureHarness:
-    MomentsAccountStateProviding,
-    MomentsCurrentUserProviding,
-    MomentsAuthTokenProviding,
+    AnimateAccountStateProviding,
+    AnimateCurrentUserProviding,
+    AnimateAuthTokenProviding,
     AnimateCreditBalanceProviding,
     MomentsCreating,
     MomentsDeleting,

@@ -10,7 +10,7 @@ final class MomentsGalleryViewModel: ObservableObject {
     private var galleryCancellables = Set<AnyCancellable>()
     private let galleryStore: any MomentsGalleryStoring
     private let galleryMomentsProvider: (any GalleryMomentsListProviding)?
-    private let authTokenProvider: (any MomentsAuthTokenProviding)?
+    private let authTokenProvider: (any AnimateAuthTokenProviding)?
     private let finalRenderClient: MomentsFinalRenderClient?
     private var remoteArtifacts: [MomentArtifact] = []
     private var downloadedImageURLs: [String: URL] = [:]
@@ -18,7 +18,7 @@ final class MomentsGalleryViewModel: ObservableObject {
     init(
         galleryStore: any MomentsGalleryStoring = MomentsGalleryStore(),
         galleryMomentsProvider: (any GalleryMomentsListProviding)? = nil,
-        authTokenProvider: (any MomentsAuthTokenProviding)? = nil,
+        authTokenProvider: (any AnimateAuthTokenProviding)? = nil,
         finalRenderClient: MomentsFinalRenderClient? = nil
     ) {
         self.galleryStore = galleryStore
