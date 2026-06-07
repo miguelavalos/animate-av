@@ -75,7 +75,7 @@ final class MomentsCreateAvailabilityPresentationTests: XCTestCase {
 
     func testAvailabilityCopyUsesSingularAndPluralCreditMessages() {
         XCTAssertEqual(MomentsCreateAvailabilityCopy.momentSignInRequired, "Sign in before starting a video.")
-        XCTAssertEqual(MomentsCreateAvailabilityCopy.mediaTemplateFull, "Avi has enough media for this video.")
+        XCTAssertEqual(MomentsCreateAvailabilityCopy.mediaTemplateFull, "Avi has the source image for this video.")
         XCTAssertEqual(MomentsCreateAvailabilityCopy.storyMissingMedia, "Add one source image before preparing the video.")
         XCTAssertEqual(
             MomentsCreateAvailabilityCopy.finalRenderMissingWorkspace,

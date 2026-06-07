@@ -47,6 +47,10 @@ struct MomentsCreateScreen: View {
                 MomentsCreateImagesWorkspace(
                     balance: viewModel.balance,
                     creditBalanceLoadState: viewModel.creditBalanceLoadState,
+                    imageGenerationAvailability: viewModel.imageGenerationAvailability,
+                    isLoadingImageGenerationAvailability: viewModel.isLoadingImageGenerationAvailability,
+                    imageGenerationAvailabilityMessage: viewModel.imageGenerationAvailabilityMessage,
+                    refreshImageGenerationAvailability: viewModel.refreshImageGenerationAvailability,
                     openCredits: openCredits
                 )
             }

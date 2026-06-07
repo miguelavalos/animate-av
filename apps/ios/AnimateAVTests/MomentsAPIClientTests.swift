@@ -582,6 +582,47 @@ final class MomentsAPIClientTests: XCTestCase {
         XCTAssertEqual(quote.branding.reason, "branding_removal_purchased")
     }
 
+    func testImageGenerationAvailabilityUsesBackendOwnedEndpoint() async throws {
+        let session = makeMockSession(
+            json: """
+            {
+              "appId": "animateav",
+              "outputKind": "image",
+              "monthlyProAllowance": {
+                "included": true,
+                "period": "2026-06",
+                "allowance": 100,
+                "used": 25,
+                "remaining": 75
+              },
+              "purchasedImages": {
+                "balance": 50
+              },
+              "availableImages": 125,
+              "packOffer": {
+                "enabled": true,
+                "creditCost": 1,
+                "imageGenerations": 50,
+                "userCanPurchase": true,
+                "blocker": null
+              }
+            }
+            """
+        )
+        let client = MomentsImageGenerationAccountingClient(baseURLString: accountAPIBaseURL, session: session)
+
+        let availability = try await client.fetchAvailability(bearerToken: "token-1")
+
+        XCTAssertEqual(MomentsURLProtocolMock.lastRequest?.url?.absoluteString, "\(accountAPIBaseURL)/v1/apps/animateav/images/availability")
+        XCTAssertEqual(MomentsURLProtocolMock.lastRequest?.httpMethod, "GET")
+        XCTAssertEqual(MomentsURLProtocolMock.lastRequest?.value(forHTTPHeaderField: "Authorization"), "Bearer token-1")
+        XCTAssertEqual(availability.availableImages, 125)
+        XCTAssertEqual(availability.monthlyProAllowance.remaining, 75)
+        XCTAssertEqual(availability.purchasedImages.balance, 50)
+        XCTAssertEqual(availability.packOffer.creditCost, 1)
+        XCTAssertEqual(availability.packOffer.imageGenerations, 50)
+    }
+
     func testPrepareFinalArtifactDownloadAcceptsPublicSafeResponseWithoutR2Key() async throws {
         let session = makeMockSession(
             json: """

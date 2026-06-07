@@ -46,6 +46,10 @@ private enum MomentsCreateImageLook: String, CaseIterable, Identifiable {
 struct MomentsCreateImagesWorkspace: View {
     let balance: MomentsCreditBalance
     let creditBalanceLoadState: MomentsCreditBalanceLoadState
+    let imageGenerationAvailability: AnimateImageGenerationAvailabilityResponse?
+    let isLoadingImageGenerationAvailability: Bool
+    let imageGenerationAvailabilityMessage: String?
+    let refreshImageGenerationAvailability: () -> Void
     let openCredits: () -> Void
 
     @State private var pickerItem: PhotosPickerItem?
@@ -78,6 +82,9 @@ struct MomentsCreateImagesWorkspace: View {
                 MomentsCreateImagesBalanceCard(
                     spendableCredits: balance.spendable,
                     creditBalanceLoadState: creditBalanceLoadState,
+                    imageGenerationAvailability: imageGenerationAvailability,
+                    isLoadingImageGenerationAvailability: isLoadingImageGenerationAvailability,
+                    imageGenerationAvailabilityMessage: imageGenerationAvailabilityMessage,
                     openCredits: openCredits
                 )
 
@@ -99,6 +106,9 @@ struct MomentsCreateImagesWorkspace: View {
         }
         .onChange(of: pickerItem) { _, item in
             loadImage(from: item)
+        }
+        .task {
+            refreshImageGenerationAvailability()
         }
     }
 
@@ -309,6 +319,9 @@ private struct MomentsCreateImageLookTile: View {
 private struct MomentsCreateImagesBalanceCard: View {
     let spendableCredits: Int
     let creditBalanceLoadState: MomentsCreditBalanceLoadState
+    let imageGenerationAvailability: AnimateImageGenerationAvailabilityResponse?
+    let isLoadingImageGenerationAvailability: Bool
+    let imageGenerationAvailabilityMessage: String?
     let openCredits: () -> Void
 
     var body: some View {
@@ -327,12 +340,13 @@ private struct MomentsCreateImagesBalanceCard: View {
                 Text(balanceDetail)
                     .font(AVBrandTypography.caption)
                     .foregroundStyle(AVBrandColor.textSecondary)
+                    .fixedSize(horizontal: false, vertical: true)
             }
 
             Spacer(minLength: 8)
 
-            if spendableCredits <= 0 {
-                Button(L10n.string("create.images.balance.add")) {
+            if shouldShowAddCredits {
+                Button(addCreditsTitle) {
                     openCredits()
                 }
                 .font(.system(size: 13, weight: .black))
@@ -351,7 +365,17 @@ private struct MomentsCreateImagesBalanceCard: View {
     }
 
     private var balanceDetail: String {
-        switch creditBalanceLoadState {
+        if isLoadingImageGenerationAvailability {
+            return L10n.string("create.images.balance.loading")
+        }
+        if let imageGenerationAvailability {
+            return availabilityDetail(imageGenerationAvailability)
+        }
+        if let imageGenerationAvailabilityMessage {
+            return imageGenerationAvailabilityMessage
+        }
+
+        return switch creditBalanceLoadState {
         case .loading:
             L10n.string("create.images.balance.loading")
         case .offline:
@@ -362,8 +386,47 @@ private struct MomentsCreateImagesBalanceCard: View {
             L10n.string("create.images.balance.signIn")
         case .loaded:
             spendableCredits > 0
-                ? L10n.string("create.images.balance.available", spendableCredits)
+                ? L10n.string("create.images.balance.packAvailable", spendableCredits)
                 : L10n.string("create.images.balance.empty")
         }
+    }
+
+    private var shouldShowAddCredits: Bool {
+        guard let availability = imageGenerationAvailability else {
+            return spendableCredits <= 0
+        }
+
+        return availability.availableImages <= 0
+    }
+
+    private var addCreditsTitle: String {
+        guard let offer = imageGenerationAvailability?.packOffer,
+              offer.userCanPurchase
+        else {
+            return L10n.string("create.images.balance.add")
+        }
+
+        return L10n.string("create.images.balance.buyPack", offer.imageGenerations, offer.creditCost)
+    }
+
+    private func availabilityDetail(_ availability: AnimateImageGenerationAvailabilityResponse) -> String {
+        if availability.availableImages > 0 {
+            return L10n.string(
+                "create.images.balance.available",
+                availability.availableImages,
+                availability.monthlyProAllowance.remaining,
+                availability.purchasedImages.balance
+            )
+        }
+
+        if availability.packOffer.userCanPurchase {
+            return L10n.string(
+                "create.images.balance.packOffer",
+                availability.packOffer.imageGenerations,
+                availability.packOffer.creditCost
+            )
+        }
+
+        return L10n.string("create.images.balance.empty")
     }
 }

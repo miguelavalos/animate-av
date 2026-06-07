@@ -68,6 +68,9 @@ final class MomentsCreateViewModel: ObservableObject {
     @Published private(set) var latestFinalJob: MomentRenderJob?
     @Published private(set) var renderPlan: MomentsRenderPlanResponse?
     @Published private(set) var videoQuote: AnimateVideoQuoteResponse?
+    @Published private(set) var imageGenerationAvailability: AnimateImageGenerationAvailabilityResponse?
+    @Published private(set) var isLoadingImageGenerationAvailability = false
+    @Published private(set) var imageGenerationAvailabilityMessage: String?
     @Published private(set) var pendingGalleryVideo: MomentsGalleryVideoRecord?
     @Published private(set) var canRetryFinalVideoDownload = false
     @Published private(set) var finalRenderStatusMessage: String?
@@ -83,6 +86,8 @@ final class MomentsCreateViewModel: ObservableObject {
     private(set) var mediaUploadWorkflow: MediaUploadWorkflow?
     private(set) var storyWorkflow: StoryWorkflow?
     private(set) var finalRenderWorkflow: FinalRenderWorkflow?
+    private var authTokenProvider: (any MomentsAuthTokenProviding)?
+    private var imageGenerationAccountingClient: MomentsImageGenerationAccountingClient?
     let operationRunner = MomentsCreateOperationRunner()
     var cancellables = Set<AnyCancellable>()
     private var autoStyleMediaSignature: String?
@@ -148,13 +153,17 @@ final class MomentsCreateViewModel: ObservableObject {
         momentCreationWorkflow: MomentCreationWorkflow,
         mediaUploadWorkflow: MediaUploadWorkflow,
         storyWorkflow: StoryWorkflow,
-        finalRenderWorkflow: FinalRenderWorkflow
+        finalRenderWorkflow: FinalRenderWorkflow,
+        authTokenProvider: any MomentsAuthTokenProviding,
+        imageGenerationAccountingClient: MomentsImageGenerationAccountingClient
     ) {
         cancelOperations()
         self.momentCreationWorkflow = momentCreationWorkflow
         self.mediaUploadWorkflow = mediaUploadWorkflow
         self.storyWorkflow = storyWorkflow
         self.finalRenderWorkflow = finalRenderWorkflow
+        self.authTokenProvider = authTokenProvider
+        self.imageGenerationAccountingClient = imageGenerationAccountingClient
         templates = momentCreationWorkflow.launchTemplates
         creationStyles = MomentCreationStyle.launchStyles
         selectedCreationStyle = MomentCreationStyle.launchStyles[0]
@@ -231,6 +240,41 @@ final class MomentsCreateViewModel: ObservableObject {
 
     func clearSessionState() {
         resetActiveMoment(force: true)
+        imageGenerationAvailability = nil
+        imageGenerationAvailabilityMessage = nil
+        isLoadingImageGenerationAvailability = false
+    }
+
+    func refreshImageGenerationAvailability() {
+        guard !isLoadingImageGenerationAvailability else { return }
+        guard let authTokenProvider,
+              let imageGenerationAccountingClient,
+              imageGenerationAccountingClient.isConfigured
+        else {
+            imageGenerationAvailabilityMessage = MomentsImageGenerationAccountingError.apiNotConfigured.localizedDescription
+            return
+        }
+
+        isLoadingImageGenerationAvailability = true
+        imageGenerationAvailabilityMessage = nil
+        Task { [weak self, authTokenProvider, imageGenerationAccountingClient] in
+            do {
+                guard let bearerToken = try await authTokenProvider.currentBearerToken() else {
+                    throw MomentsImageGenerationAccountingError.signInRequired
+                }
+                let availability = try await imageGenerationAccountingClient.fetchAvailability(bearerToken: bearerToken)
+                await MainActor.run {
+                    self?.imageGenerationAvailability = availability
+                    self?.imageGenerationAvailabilityMessage = nil
+                    self?.isLoadingImageGenerationAvailability = false
+                }
+            } catch {
+                await MainActor.run {
+                    self?.imageGenerationAvailabilityMessage = error.localizedDescription
+                    self?.isLoadingImageGenerationAvailability = false
+                }
+            }
+        }
     }
 
     func prepareNewMomentCreation() {

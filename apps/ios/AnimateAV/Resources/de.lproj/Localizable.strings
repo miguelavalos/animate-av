@@ -1031,7 +1031,10 @@
 "create.images.look.comic" = "Comic";
 "create.images.look.clay" = "3D";
 "create.images.balance.title" = "Bildgenerierungen";
-"create.images.balance.available" = "%d Credits verfügbar. Das Backend bestätigt Generierungen vor dem Start.";
+"create.images.balance.available" = "%d Bildgenerierungen verfügbar: %d monatliche Pro und %d gekaufte.";
+"create.images.balance.packAvailable" = "%d Credits verfügbar. Du kannst 1 Credit in 50 Bildgenerierungen umwandeln.";
+"create.images.balance.packOffer" = "Erhalte %d Bildgenerierungen für %d Credit.";
+"create.images.balance.buyPack" = "%d für %d Credit holen";
 "create.images.balance.empty" = "Füge Credits hinzu, um Bildgenerierungspakete zu aktivieren.";
 "create.images.balance.loading" = "Credits werden vor der Bildgenerierung geprüft.";
 "create.images.balance.offline" = "Verbinde dich, um Bildverfügbarkeit zu prüfen.";

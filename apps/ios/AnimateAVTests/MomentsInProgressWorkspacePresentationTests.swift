@@ -92,7 +92,7 @@ final class MomentsInProgressWorkspacePresentationTests: XCTestCase {
         )
 
         XCTAssertEqual(presentation.tiles.map(\.title), ["Status", "Final", "Latest job"])
-        XCTAssertEqual(presentation.tiles.map(\.value), ["Plan ready", "Available", "Final · Failed"])
+        XCTAssertEqual(presentation.tiles.map(\.value), ["Direction ready", "Available", "Final · Failed"])
         XCTAssertEqual(presentation.tiles.map(\.systemImage), ["circle.dashed", "video.fill", "gearshape.2"])
     }
 
@@ -110,7 +110,7 @@ final class MomentsInProgressWorkspacePresentationTests: XCTestCase {
             makeMediaAsset(id: "first", kind: "image", sortOrder: 0, selected: true, moderationStatus: "approved")
         ])
 
-        XCTAssertEqual(presentation.title, "Media")
+        XCTAssertEqual(presentation.title, "Source image")
         XCTAssertEqual(presentation.emptySystemImage, "photo.badge.plus")
         XCTAssertEqual(presentation.emptyMessage, "No source image is attached to this video yet. Add one image from Create to prepare the video.")
         XCTAssertEqual(presentation.mediaAssets.map(\.id), ["first", "second"])
@@ -139,7 +139,7 @@ final class MomentsInProgressWorkspacePresentationTests: XCTestCase {
             makeScene(id: "scene-1", sceneIndex: 0, caption: "Opening beat")
         ])
 
-        XCTAssertEqual(presentation.title, "Plan")
+        XCTAssertEqual(presentation.title, "Direction")
         XCTAssertEqual(presentation.emptySystemImage, "text.bubble")
         XCTAssertEqual(presentation.emptyMessage, "Prepare the video after this source image is ready.")
         XCTAssertEqual(presentation.storyScenes.map(\.id), ["scene-1", "scene-2"])

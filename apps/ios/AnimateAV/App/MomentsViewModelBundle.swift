@@ -13,6 +13,7 @@ struct MomentsViewModelBundle {
         workflows: MomentsWorkflowBundle,
         galleryMomentsProvider: any GalleryMomentsListProviding,
         authTokenProvider: any MomentsAuthTokenProviding,
+        imageGenerationAccountingClient: MomentsImageGenerationAccountingClient,
         finalRenderClient: MomentsFinalRenderClient
     ) {
         home = MomentsHomeViewModel()
@@ -32,7 +33,9 @@ struct MomentsViewModelBundle {
             momentCreationWorkflow: workflows.momentCreation,
             mediaUploadWorkflow: workflows.mediaUpload,
             storyWorkflow: workflows.story,
-            finalRenderWorkflow: workflows.finalRender
+            finalRenderWorkflow: workflows.finalRender,
+            authTokenProvider: authTokenProvider,
+            imageGenerationAccountingClient: imageGenerationAccountingClient
         )
         inProgress.bind(to: workflows.inProgressMoments)
         inProgress.bind(accountStateProvider: accountController)

@@ -70,7 +70,7 @@ final class MomentStatusRulesTests: XCTestCase {
     }
 
     func testDisplayHelpersFormatBackendValuesForUI() {
-        XCTAssertEqual(MomentStatusRules.displayTitle(for: "story_ready"), "Plan ready")
+        XCTAssertEqual(MomentStatusRules.displayTitle(for: "story_ready"), "Direction ready")
         XCTAssertEqual(MomentStatusRules.displayKind("final"), "Final")
         XCTAssertEqual(MomentStatusRules.displayKind("final_export"), "Final Export")
     }

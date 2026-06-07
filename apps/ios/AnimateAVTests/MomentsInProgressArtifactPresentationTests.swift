@@ -10,7 +10,7 @@ final class MomentsInProgressArtifactPresentationTests: XCTestCase {
 
         XCTAssertEqual(presentation.title, "Video activity")
         XCTAssertEqual(presentation.emptySystemImage, "gearshape.2")
-        XCTAssertEqual(presentation.emptyMessage, "Plan and video creation will appear here.")
+        XCTAssertEqual(presentation.emptyMessage, "Direction and video creation will appear here.")
         XCTAssertEqual(presentation.jobs.map(\.id), ["new", "old"])
     }
 
@@ -25,7 +25,7 @@ final class MomentsInProgressArtifactPresentationTests: XCTestCase {
 
         XCTAssertEqual(finalExport.title, "Final video")
         XCTAssertEqual(finalExport.emptySystemImage, "video.fill")
-        XCTAssertEqual(finalExport.emptyMessage, "Create the final video after preparing the plan.")
+        XCTAssertEqual(finalExport.emptyMessage, "Create the final video after preparing the direction.")
         XCTAssertEqual(finalExport.artifact?.storageKey, "animateav/final-1.mp4")
     }
 

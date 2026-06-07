@@ -68,6 +68,7 @@ struct MomentsWorkflowClients {
     let upload: MomentsUploadClient
     let story: MomentsStoryClient
     let videoQuote: MomentsVideoQuoteClient
+    let imageGenerationAccounting: MomentsImageGenerationAccountingClient
     let finalRender: MomentsFinalRenderClient
 
     init(baseURLString: String) {
@@ -76,6 +77,7 @@ struct MomentsWorkflowClients {
         upload = MomentsUploadClient(baseURLString: baseURLString, session: Self.makeUploadSession())
         story = MomentsStoryClient(baseURLString: baseURLString)
         videoQuote = MomentsVideoQuoteClient(baseURLString: baseURLString)
+        imageGenerationAccounting = MomentsImageGenerationAccountingClient(baseURLString: baseURLString)
         finalRender = MomentsFinalRenderClient(baseURLString: baseURLString)
     }
 

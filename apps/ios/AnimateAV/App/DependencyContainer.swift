@@ -59,6 +59,7 @@ final class MomentsDependencyContainer: ObservableObject {
             workflows: workflows,
             galleryMomentsProvider: resolvedGalleryMomentsObserver,
             authTokenProvider: accountController,
+            imageGenerationAccountingClient: clients.imageGenerationAccounting,
             finalRenderClient: clients.finalRender
         )
         self.homeViewModel = viewModels.home

@@ -658,7 +658,9 @@ final class MomentsCreateViewModelStoryStateTests: XCTestCase {
             momentCreationWorkflow: harness.momentCreationWorkflow,
             mediaUploadWorkflow: harness.mediaUploadWorkflow,
             storyWorkflow: harness.storyWorkflow,
-            finalRenderWorkflow: harness.finalRenderWorkflow
+            finalRenderWorkflow: harness.finalRenderWorkflow,
+            authTokenProvider: harness,
+            imageGenerationAccountingClient: MomentsImageGenerationAccountingClient(baseURLString: "https://api.example.test")
         )
         await Task.yield()
         await Task.yield()
