@@ -1,6 +1,6 @@
 import Foundation
 
-struct MomentsGalleryVideoRecord: Identifiable, Codable, Equatable {
+struct AnimateGalleryVideoRecord: Identifiable, Codable, Equatable {
     let id: String
     let momentId: String
     let artifactId: String
@@ -27,8 +27,8 @@ struct MomentsGalleryVideoRecord: Identifiable, Codable, Equatable {
         self.createdAt = createdAt
     }
 
-    func renamed(_ title: String) -> MomentsGalleryVideoRecord {
-        MomentsGalleryVideoRecord(
+    func renamed(_ title: String) -> AnimateGalleryVideoRecord {
+        AnimateGalleryVideoRecord(
             id: id,
             momentId: momentId,
             artifactId: artifactId,
@@ -40,10 +40,10 @@ struct MomentsGalleryVideoRecord: Identifiable, Codable, Equatable {
     }
 }
 
-struct MomentsGalleryVideoPresentation: Identifiable, Equatable {
-    let record: MomentsGalleryVideoRecord
+struct AnimateGalleryVideoPresentation: Identifiable, Equatable {
+    let record: AnimateGalleryVideoRecord
     let localFileURL: URL?
-    let availability: MomentsGalleryVideoAvailability
+    let availability: AnimateGalleryVideoAvailability
     let remoteArtifact: MomentArtifact?
 
     var id: String { record.id }
@@ -66,7 +66,7 @@ struct MomentsGalleryVideoPresentation: Identifiable, Equatable {
     }
 }
 
-enum MomentsGalleryVideoAvailability: String, Equatable {
+enum AnimateGalleryVideoAvailability: String, Equatable {
     case savedOnDevice
     case localFileMissing
     case downloadAvailable
@@ -74,7 +74,7 @@ enum MomentsGalleryVideoAvailability: String, Equatable {
     case remoteMetadataOnly
 }
 
-struct MomentsGalleryImagePresentation: Identifiable, Equatable {
+struct AnimateGalleryImagePresentation: Identifiable, Equatable {
     let artifact: MomentArtifact
     let localFileURL: URL?
 

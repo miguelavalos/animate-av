@@ -1,10 +1,10 @@
 import Foundation
 
-protocol MomentsGalleryStoring {
-    func loadRecords() -> [MomentsGalleryVideoRecord]
-    func saveRecords(_ records: [MomentsGalleryVideoRecord])
-    func localFileExists(for record: MomentsGalleryVideoRecord) -> Bool
-    func localFileURL(for record: MomentsGalleryVideoRecord) -> URL
+protocol AnimateGalleryStoring {
+    func loadRecords() -> [AnimateGalleryVideoRecord]
+    func saveRecords(_ records: [AnimateGalleryVideoRecord])
+    func localFileExists(for record: AnimateGalleryVideoRecord) -> Bool
+    func localFileURL(for record: AnimateGalleryVideoRecord) -> URL
     func contains(artifactId: String) -> Bool
     func saveDownloadedVideo(
         temporaryFileURL: URL,
@@ -13,14 +13,14 @@ protocol MomentsGalleryStoring {
         title: String,
         r2Key: String,
         createdAt: Date
-    ) throws -> MomentsGalleryVideoRecord
-    func addRecord(_ record: MomentsGalleryVideoRecord)
-    func renameRecord(_ record: MomentsGalleryVideoRecord, title: String)
-    func deleteRecord(_ record: MomentsGalleryVideoRecord, deleteLocalFile: Bool)
+    ) throws -> AnimateGalleryVideoRecord
+    func addRecord(_ record: AnimateGalleryVideoRecord)
+    func renameRecord(_ record: AnimateGalleryVideoRecord, title: String)
+    func deleteRecord(_ record: AnimateGalleryVideoRecord, deleteLocalFile: Bool)
 }
 
-struct MomentsGalleryStore: MomentsGalleryStoring {
-    static let didChangeNotification = Notification.Name("MomentsGalleryStoreDidChange")
+struct AnimateGalleryStore: AnimateGalleryStoring {
+    static let didChangeNotification = Notification.Name("AnimateGalleryStoreDidChange")
 
     private let fileManager: FileManager
     private let baseDirectory: URL
@@ -33,12 +33,12 @@ struct MomentsGalleryStore: MomentsGalleryStoring {
         self.baseDirectory = baseDirectory ?? Self.defaultBaseDirectory(fileManager: fileManager)
     }
 
-    func loadRecords() -> [MomentsGalleryVideoRecord] {
+    func loadRecords() -> [AnimateGalleryVideoRecord] {
         guard let data = try? Data(contentsOf: recordsURL) else { return [] }
-        return (try? JSONDecoder().decode([MomentsGalleryVideoRecord].self, from: data)) ?? []
+        return (try? JSONDecoder().decode([AnimateGalleryVideoRecord].self, from: data)) ?? []
     }
 
-    func saveRecords(_ records: [MomentsGalleryVideoRecord]) {
+    func saveRecords(_ records: [AnimateGalleryVideoRecord]) {
         do {
             try fileManager.createDirectory(
                 at: baseDirectory,
@@ -52,11 +52,11 @@ struct MomentsGalleryStore: MomentsGalleryStoring {
         }
     }
 
-    func localFileExists(for record: MomentsGalleryVideoRecord) -> Bool {
+    func localFileExists(for record: AnimateGalleryVideoRecord) -> Bool {
         fileManager.fileExists(atPath: localFileURL(for: record).path)
     }
 
-    func localFileURL(for record: MomentsGalleryVideoRecord) -> URL {
+    func localFileURL(for record: AnimateGalleryVideoRecord) -> URL {
         baseDirectory.appendingPathComponent(record.localRelativePath)
     }
 
@@ -71,7 +71,7 @@ struct MomentsGalleryStore: MomentsGalleryStoring {
         title: String,
         r2Key: String,
         createdAt: Date = Date()
-    ) throws -> MomentsGalleryVideoRecord {
+    ) throws -> AnimateGalleryVideoRecord {
         try fileManager.createDirectory(
             at: videosDirectory,
             withIntermediateDirectories: true
@@ -83,7 +83,7 @@ struct MomentsGalleryStore: MomentsGalleryStoring {
         }
         try fileManager.moveItem(at: temporaryFileURL, to: destinationURL)
 
-        let record = MomentsGalleryVideoRecord(
+        let record = AnimateGalleryVideoRecord(
             id: artifactId,
             momentId: momentId,
             artifactId: artifactId,
@@ -95,12 +95,12 @@ struct MomentsGalleryStore: MomentsGalleryStoring {
         return record
     }
 
-    func addRecord(_ record: MomentsGalleryVideoRecord) {
+    func addRecord(_ record: AnimateGalleryVideoRecord) {
         let remainingRecords = loadRecords().filter { $0.artifactId != record.artifactId }
         saveRecords([record] + remainingRecords)
     }
 
-    func renameRecord(_ record: MomentsGalleryVideoRecord, title: String) {
+    func renameRecord(_ record: AnimateGalleryVideoRecord, title: String) {
         let trimmedTitle = title.trimmingCharacters(in: .whitespacesAndNewlines)
         guard !trimmedTitle.isEmpty else { return }
 
@@ -109,7 +109,7 @@ struct MomentsGalleryStore: MomentsGalleryStoring {
         })
     }
 
-    func deleteRecord(_ record: MomentsGalleryVideoRecord, deleteLocalFile: Bool = true) {
+    func deleteRecord(_ record: AnimateGalleryVideoRecord, deleteLocalFile: Bool = true) {
         let remainingRecords = loadRecords().filter { $0.id != record.id }
         if deleteLocalFile {
             try? fileManager.removeItem(at: localFileURL(for: record))

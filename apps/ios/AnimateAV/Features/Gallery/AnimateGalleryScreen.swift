@@ -4,12 +4,12 @@ import AVFoundation
 import AVKit
 import SwiftUI
 
-struct MomentsGalleryScreen: View {
-    @EnvironmentObject private var viewModel: MomentsGalleryViewModel
-    @State private var videoPendingDeletion: MomentsGalleryVideoPresentation?
-    @State private var selectedVideo: MomentsGalleryVideoPlayerItem?
-    @State private var videoPendingRename: MomentsGalleryVideoPresentation?
-    @SceneStorage("animate.gallery.selectedAssetKind") private var selectedAssetKindRaw = MomentsGalleryAssetKind.videos.rawValue
+struct AnimateGalleryScreen: View {
+    @EnvironmentObject private var viewModel: AnimateGalleryViewModel
+    @State private var videoPendingDeletion: AnimateGalleryVideoPresentation?
+    @State private var selectedVideo: AnimateGalleryVideoPlayerItem?
+    @State private var videoPendingRename: AnimateGalleryVideoPresentation?
+    @SceneStorage("animate.gallery.selectedAssetKind") private var selectedAssetKindRaw = AnimateGalleryAssetKind.videos.rawValue
 
     var body: some View {
         AVAppShellScrollableScreenScaffold {
@@ -26,12 +26,12 @@ struct MomentsGalleryScreen: View {
             }
             .frame(maxWidth: .infinity, alignment: .leading)
 
-            MomentsGalleryAssetKindPicker(selectedAssetKind: selectedAssetKindBinding)
+            AnimateGalleryAssetKindPicker(selectedAssetKind: selectedAssetKindBinding)
 
             switch selectedAssetKind {
             case .videos:
                 if viewModel.videos.isEmpty {
-                    MomentsGalleryEmptyState(
+                    AnimateGalleryEmptyState(
                         systemImage: "play.square.stack.fill",
                         title: L10n.string("gallery.empty.title"),
                         detail: L10n.string("gallery.empty.detail")
@@ -39,11 +39,11 @@ struct MomentsGalleryScreen: View {
                 } else {
                     LazyVStack(spacing: 12) {
                         ForEach(viewModel.videos) { video in
-                            MomentsGalleryVideoRow(
+                            AnimateGalleryVideoRow(
                                 video: video,
                                 openVideo: {
                                     if video.isLocalFileAvailable {
-                                        selectedVideo = MomentsGalleryVideoPlayerItem(video: video)
+                                        selectedVideo = AnimateGalleryVideoPlayerItem(video: video)
                                     }
                                 },
                                 downloadVideo: {
@@ -61,7 +61,7 @@ struct MomentsGalleryScreen: View {
                 }
             case .images:
                 if viewModel.images.isEmpty {
-                    MomentsGalleryEmptyState(
+                    AnimateGalleryEmptyState(
                         systemImage: "photo.stack.fill",
                         title: L10n.string("gallery.images.empty.title"),
                         detail: L10n.string("gallery.images.empty.detail")
@@ -69,7 +69,7 @@ struct MomentsGalleryScreen: View {
                 } else {
                     LazyVStack(spacing: 12) {
                         ForEach(viewModel.images) { image in
-                            MomentsGalleryImageRow(
+                            AnimateGalleryImageRow(
                                 image: image,
                                 downloadImage: {
                                     viewModel.downloadImage(image)
@@ -95,10 +95,10 @@ struct MomentsGalleryScreen: View {
             Text(L10n.string("gallery.delete.message"))
         }
         .sheet(item: $selectedVideo) { item in
-            MomentsGalleryVideoPlayerSheet(item: item)
+            AnimateGalleryVideoPlayerSheet(item: item)
         }
         .sheet(item: $videoPendingRename) { video in
-            MomentsGalleryRenameSheet(video: video) { title in
+            AnimateGalleryRenameSheet(video: video) { title in
                 viewModel.renameVideo(video, title: title)
             }
             .presentationDetents([.height(230)])
@@ -116,11 +116,11 @@ struct MomentsGalleryScreen: View {
         )
     }
 
-    private var selectedAssetKind: MomentsGalleryAssetKind {
-        MomentsGalleryAssetKind(rawValue: selectedAssetKindRaw) ?? .videos
+    private var selectedAssetKind: AnimateGalleryAssetKind {
+        AnimateGalleryAssetKind(rawValue: selectedAssetKindRaw) ?? .videos
     }
 
-    private var selectedAssetKindBinding: Binding<MomentsGalleryAssetKind> {
+    private var selectedAssetKindBinding: Binding<AnimateGalleryAssetKind> {
         Binding(
             get: { selectedAssetKind },
             set: { selectedAssetKindRaw = $0.rawValue }
@@ -135,16 +135,16 @@ struct MomentsGalleryScreen: View {
     }
 }
 
-private struct MomentsGalleryAssetKindPicker: View {
-    @Binding var selectedAssetKind: MomentsGalleryAssetKind
+private struct AnimateGalleryAssetKindPicker: View {
+    @Binding var selectedAssetKind: AnimateGalleryAssetKind
 
     var body: some View {
         HStack(spacing: 8) {
-            ForEach(MomentsGalleryAssetKind.allCases) { kind in
+            ForEach(AnimateGalleryAssetKind.allCases) { kind in
                 Button {
                     selectedAssetKind = kind
                 } label: {
-                    MomentsGalleryAssetKindPill(
+                    AnimateGalleryAssetKindPill(
                         title: kind.title,
                         isSelected: selectedAssetKind == kind
                     )
@@ -158,7 +158,7 @@ private struct MomentsGalleryAssetKindPicker: View {
     }
 }
 
-private struct MomentsGalleryAssetKindPill: View {
+private struct AnimateGalleryAssetKindPill: View {
     let title: String
     let isSelected: Bool
 
@@ -183,14 +183,14 @@ private struct MomentsGalleryAssetKindPill: View {
     }
 }
 
-private struct MomentsGalleryImageRow: View {
-    let image: MomentsGalleryImagePresentation
+private struct AnimateGalleryImageRow: View {
+    let image: AnimateGalleryImagePresentation
     let downloadImage: () -> Void
 
     var body: some View {
         VStack(alignment: .leading, spacing: 12) {
             ZStack {
-                MomentsGalleryImageThumbnail(url: image.localFileURL)
+                AnimateGalleryImageThumbnail(url: image.localFileURL)
                     .frame(height: 220)
                     .clipShape(RoundedRectangle(cornerRadius: 22, style: .continuous))
 
@@ -257,7 +257,7 @@ private struct MomentsGalleryImageRow: View {
     }
 }
 
-private struct MomentsGalleryImageThumbnail: View {
+private struct AnimateGalleryImageThumbnail: View {
     let url: URL?
 
     var body: some View {
@@ -285,7 +285,7 @@ private struct MomentsGalleryImageThumbnail: View {
     }
 }
 
-private enum MomentsGalleryAssetKind: String, CaseIterable, Identifiable {
+private enum AnimateGalleryAssetKind: String, CaseIterable, Identifiable {
     case videos
     case images
 
@@ -301,7 +301,7 @@ private enum MomentsGalleryAssetKind: String, CaseIterable, Identifiable {
     }
 }
 
-private struct MomentsGalleryEmptyState: View {
+private struct AnimateGalleryEmptyState: View {
     let systemImage: String
     let title: String
     let detail: String
@@ -339,8 +339,8 @@ private struct MomentsGalleryEmptyState: View {
     }
 }
 
-private struct MomentsGalleryVideoRow: View {
-    let video: MomentsGalleryVideoPresentation
+private struct AnimateGalleryVideoRow: View {
+    let video: AnimateGalleryVideoPresentation
     let openVideo: () -> Void
     let downloadVideo: () -> Void
     let renameVideo: () -> Void
@@ -350,7 +350,7 @@ private struct MomentsGalleryVideoRow: View {
         VStack(alignment: .leading, spacing: 12) {
             Button(action: openVideo) {
                 ZStack {
-                    MomentsGalleryVideoThumbnail(url: video.localFileURL, isAvailable: video.isLocalFileAvailable)
+                    AnimateGalleryVideoThumbnail(url: video.localFileURL, isAvailable: video.isLocalFileAvailable)
                         .frame(height: 176)
                         .clipShape(RoundedRectangle(cornerRadius: 22, style: .continuous))
 
@@ -378,7 +378,7 @@ private struct MomentsGalleryVideoRow: View {
 
                             Spacer(minLength: 0)
 
-                            MomentsGalleryVideoMenu(
+                            AnimateGalleryVideoMenu(
                                 video: video,
                                 downloadVideo: downloadVideo,
                                 renameVideo: renameVideo,
@@ -441,8 +441,8 @@ private struct MomentsGalleryVideoRow: View {
     }
 }
 
-private struct MomentsGalleryVideoMenu: View {
-    let video: MomentsGalleryVideoPresentation
+private struct AnimateGalleryVideoMenu: View {
+    let video: AnimateGalleryVideoPresentation
     let downloadVideo: () -> Void
     let renameVideo: () -> Void
     let deleteVideo: () -> Void
@@ -478,7 +478,7 @@ private struct MomentsGalleryVideoMenu: View {
     }
 }
 
-private struct MomentsGalleryVideoThumbnail: View {
+private struct AnimateGalleryVideoThumbnail: View {
     let url: URL?
     let isAvailable: Bool
     @State private var image: UIImage?
@@ -524,13 +524,13 @@ private struct MomentsGalleryVideoThumbnail: View {
     }
 }
 
-private struct MomentsGalleryRenameSheet: View {
-    let video: MomentsGalleryVideoPresentation
+private struct AnimateGalleryRenameSheet: View {
+    let video: AnimateGalleryVideoPresentation
     let save: (String) -> Void
     @Environment(\.dismiss) private var dismiss
     @State private var title: String
 
-    init(video: MomentsGalleryVideoPresentation, save: @escaping (String) -> Void) {
+    init(video: AnimateGalleryVideoPresentation, save: @escaping (String) -> Void) {
         self.video = video
         self.save = save
         _title = State(initialValue: video.title)
@@ -563,20 +563,20 @@ private struct MomentsGalleryRenameSheet: View {
     }
 }
 
-private struct MomentsGalleryVideoPlayerItem: Identifiable {
+private struct AnimateGalleryVideoPlayerItem: Identifiable {
     let id: String
     let title: String
     let url: URL
 
-    init(video: MomentsGalleryVideoPresentation) {
+    init(video: AnimateGalleryVideoPresentation) {
         id = video.id
         title = video.title
         url = video.localFileURL ?? URL(fileURLWithPath: "/dev/null")
     }
 }
 
-private struct MomentsGalleryVideoPlayerSheet: View {
-    let item: MomentsGalleryVideoPlayerItem
+private struct AnimateGalleryVideoPlayerSheet: View {
+    let item: AnimateGalleryVideoPlayerItem
     @Environment(\.dismiss) private var dismiss
 
     var body: some View {

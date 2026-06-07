@@ -141,7 +141,7 @@ struct MomentsCreateFinalRenderSummary: Equatable {
     var renderPlan: MomentsRenderPlanResponse?
     var videoQuote: AnimateVideoQuoteResponse?
     var finalExport: MomentArtifact?
-    var pendingGalleryVideo: MomentsGalleryVideoRecord?
+    var pendingGalleryVideo: AnimateGalleryVideoRecord?
     var canRetryFinalVideoDownload = false
     var latestFinalJob: MomentRenderJob?
     var isGenerating = false

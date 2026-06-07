@@ -2,13 +2,13 @@ import Combine
 import Foundation
 
 @MainActor
-final class MomentsGalleryViewModel: ObservableObject {
-    @Published private(set) var videos: [MomentsGalleryVideoPresentation] = []
-    @Published private(set) var images: [MomentsGalleryImagePresentation] = []
+final class AnimateGalleryViewModel: ObservableObject {
+    @Published private(set) var videos: [AnimateGalleryVideoPresentation] = []
+    @Published private(set) var images: [AnimateGalleryImagePresentation] = []
     @Published private(set) var statusMessage: String?
 
     private var galleryCancellables = Set<AnyCancellable>()
-    private let galleryStore: any MomentsGalleryStoring
+    private let galleryStore: any AnimateGalleryStoring
     private let galleryMomentsProvider: (any GalleryMomentsListProviding)?
     private let authTokenProvider: (any AnimateAuthTokenProviding)?
     private let finalRenderClient: MomentsFinalRenderClient?
@@ -16,7 +16,7 @@ final class MomentsGalleryViewModel: ObservableObject {
     private var downloadedImageURLs: [String: URL] = [:]
 
     init(
-        galleryStore: any MomentsGalleryStoring = MomentsGalleryStore(),
+        galleryStore: any AnimateGalleryStoring = AnimateGalleryStore(),
         galleryMomentsProvider: (any GalleryMomentsListProviding)? = nil,
         authTokenProvider: (any AnimateAuthTokenProviding)? = nil,
         finalRenderClient: MomentsFinalRenderClient? = nil
@@ -26,7 +26,7 @@ final class MomentsGalleryViewModel: ObservableObject {
         self.authTokenProvider = authTokenProvider
         self.finalRenderClient = finalRenderClient
         refreshVideos()
-        NotificationCenter.default.publisher(for: MomentsGalleryStore.didChangeNotification)
+        NotificationCenter.default.publisher(for: AnimateGalleryStore.didChangeNotification)
             .receive(on: DispatchQueue.main)
             .sink { [weak self] _ in
                 self?.refreshVideos()
@@ -48,12 +48,12 @@ final class MomentsGalleryViewModel: ObservableObject {
 
     func refreshVideos() {
         let localRecords = galleryStore.loadRecords()
-        var presentations: [MomentsGalleryVideoPresentation] = localRecords.map { record in
+        var presentations: [AnimateGalleryVideoPresentation] = localRecords.map { record in
             let localFileExists = galleryStore.localFileExists(for: record)
             let remoteArtifact = remoteArtifacts.first {
                 $0.id == record.artifactId || $0.workflowArtifactId == record.artifactId
             }
-            return MomentsGalleryVideoPresentation(
+            return AnimateGalleryVideoPresentation(
                 record: record,
                 localFileURL: galleryStore.localFileURL(for: record),
                 availability: localFileExists ? .savedOnDevice : availabilityForMissingLocalFile(remoteArtifact: remoteArtifact),
@@ -69,7 +69,7 @@ final class MomentsGalleryViewModel: ObservableObject {
             }
             guard !alreadyPresented else { continue }
 
-            let record = MomentsGalleryVideoRecord(
+            let record = AnimateGalleryVideoRecord(
                 id: artifactId,
                 momentId: artifactId,
                 artifactId: artifactId,
@@ -79,7 +79,7 @@ final class MomentsGalleryViewModel: ObservableObject {
                 createdAt: artifact.createdAt
             )
             presentations.append(
-                MomentsGalleryVideoPresentation(
+                AnimateGalleryVideoPresentation(
                     record: record,
                     localFileURL: nil,
                     availability: availabilityForRemoteOnlyArtifact(artifact),
@@ -96,7 +96,7 @@ final class MomentsGalleryViewModel: ObservableObject {
             .filter { $0.kind == "generated_image" }
             .map { artifact in
                 let artifactId = artifact.workflowArtifactId ?? artifact.id
-                return MomentsGalleryImagePresentation(
+                return AnimateGalleryImagePresentation(
                     artifact: artifact,
                     localFileURL: downloadedImageURLs[artifactId]
                 )
@@ -104,18 +104,18 @@ final class MomentsGalleryViewModel: ObservableObject {
             .sorted { $0.artifact.createdAt > $1.artifact.createdAt }
     }
 
-    func deleteVideo(_ video: MomentsGalleryVideoPresentation) {
+    func deleteVideo(_ video: AnimateGalleryVideoPresentation) {
         galleryStore.deleteRecord(video.record, deleteLocalFile: true)
         refreshVideos()
     }
 
-    func renameVideo(_ video: MomentsGalleryVideoPresentation, title: String) {
+    func renameVideo(_ video: AnimateGalleryVideoPresentation, title: String) {
         guard video.localFileURL != nil else { return }
         galleryStore.renameRecord(video.record, title: title)
         refreshVideos()
     }
 
-    func redownloadVideo(_ video: MomentsGalleryVideoPresentation) {
+    func redownloadVideo(_ video: AnimateGalleryVideoPresentation) {
         guard video.canDownload else { return }
         guard let remoteArtifact = video.remoteArtifact,
               let authTokenProvider,
@@ -157,7 +157,7 @@ final class MomentsGalleryViewModel: ObservableObject {
         }
     }
 
-    func downloadImage(_ image: MomentsGalleryImagePresentation) {
+    func downloadImage(_ image: AnimateGalleryImagePresentation) {
         guard image.canDownload else { return }
         guard let authTokenProvider,
               let finalRenderClient
@@ -191,12 +191,12 @@ final class MomentsGalleryViewModel: ObservableObject {
         }
     }
 
-    private func availabilityForMissingLocalFile(remoteArtifact: MomentArtifact?) -> MomentsGalleryVideoAvailability {
+    private func availabilityForMissingLocalFile(remoteArtifact: MomentArtifact?) -> AnimateGalleryVideoAvailability {
         guard let remoteArtifact else { return .localFileMissing }
         return availabilityForRemoteOnlyArtifact(remoteArtifact)
     }
 
-    private func availabilityForRemoteOnlyArtifact(_ artifact: MomentArtifact) -> MomentsGalleryVideoAvailability {
+    private func availabilityForRemoteOnlyArtifact(_ artifact: MomentArtifact) -> AnimateGalleryVideoAvailability {
         guard artifact.status == "available" else { return .downloadUnavailable }
         guard artifact.expiresAt > Date().timeIntervalSince1970 * 1000 else { return .downloadUnavailable }
         return .downloadAvailable

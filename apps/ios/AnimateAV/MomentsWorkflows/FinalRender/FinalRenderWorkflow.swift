@@ -9,7 +9,7 @@ final class FinalRenderWorkflow: WorkspaceObservingWorkflow {
     @Published private(set) var renderPlan: MomentsRenderPlanResponse?
     @Published private(set) var videoQuote: AnimateVideoQuoteResponse?
     @Published private(set) var isGenerating = false
-    @Published private(set) var pendingGalleryVideo: MomentsGalleryVideoRecord?
+    @Published private(set) var pendingGalleryVideo: AnimateGalleryVideoRecord?
     @Published private(set) var canRetryFinalVideoDownload = false
     @Published private(set) var statusMessage: String?
 
@@ -21,7 +21,7 @@ final class FinalRenderWorkflow: WorkspaceObservingWorkflow {
     private let finalRenderClient: MomentsFinalRenderClient
     private let videoQuoteClient: MomentsVideoQuoteClient
     private let imageGenerationAccountingClient: MomentsImageGenerationAccountingClient?
-    private let galleryStore: any MomentsGalleryStoring
+    private let galleryStore: any AnimateGalleryStoring
     private let logger = Logger(subsystem: "com.avalsys.animateav", category: "final-render")
     private var downloadingArtifactIds = Set<String>()
     private var lastCreditRefreshKey: String?
@@ -35,7 +35,7 @@ final class FinalRenderWorkflow: WorkspaceObservingWorkflow {
         finalRenderClient: MomentsFinalRenderClient,
         videoQuoteClient: MomentsVideoQuoteClient? = nil,
         imageGenerationAccountingClient: MomentsImageGenerationAccountingClient? = nil,
-        galleryStore: any MomentsGalleryStoring = MomentsGalleryStore()
+        galleryStore: any AnimateGalleryStoring = AnimateGalleryStore()
     ) {
         self.currentUserProvider = currentUserProvider
         self.authTokenProvider = authTokenProvider

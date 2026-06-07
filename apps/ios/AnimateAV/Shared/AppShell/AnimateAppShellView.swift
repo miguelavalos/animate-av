@@ -10,7 +10,7 @@ struct AnimateAppShellView: View {
     @EnvironmentObject private var accountController: AccountController
     @EnvironmentObject private var createViewModel: MomentsCreateViewModel
     @EnvironmentObject private var inProgressViewModel: AnimateInProgressViewModel
-    @EnvironmentObject private var galleryViewModel: MomentsGalleryViewModel
+    @EnvironmentObject private var galleryViewModel: AnimateGalleryViewModel
     @EnvironmentObject private var aviViewModel: AnimateAviViewModel
     @EnvironmentObject private var newVideoStartController: AnimateNewVideoStartController
     @Environment(\.avCommonAppExperience) private var appExperience
@@ -152,7 +152,7 @@ struct AnimateAppShellView: View {
                     retryCredits: retryCreditBalance
                 )
             case .gallery:
-                MomentsGalleryScreen()
+                AnimateGalleryScreen()
                     .environmentObject(galleryViewModel)
             case .avi:
                 AnimateAviScreen(

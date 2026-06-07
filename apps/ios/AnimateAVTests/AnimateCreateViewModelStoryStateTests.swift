@@ -47,7 +47,7 @@ final class AnimateCreateViewModelStoryStateTests: XCTestCase {
     func testClearingFinalSessionAfterGalleryMoveRemovesDownloadState() {
         let viewModel = MomentsCreateViewModel()
         let finalExport = AnimateCreateTestFixtures.makeArtifact(id: "artifact-1", kind: "final_export")
-        let galleryVideo = MomentsGalleryVideoRecord(
+        let galleryVideo = AnimateGalleryVideoRecord(
             id: "artifact-1",
             momentId: "moment-1",
             artifactId: "artifact-1",
@@ -886,11 +886,11 @@ private final class MomentCreationFailureHarness:
 
 }
 
-private struct TestGalleryStore: MomentsGalleryStoring {
-    func loadRecords() -> [MomentsGalleryVideoRecord] { [] }
-    func saveRecords(_ records: [MomentsGalleryVideoRecord]) {}
-    func localFileExists(for record: MomentsGalleryVideoRecord) -> Bool { false }
-    func localFileURL(for record: MomentsGalleryVideoRecord) -> URL { URL(fileURLWithPath: "/tmp/\(record.id).mp4") }
+private struct TestGalleryStore: AnimateGalleryStoring {
+    func loadRecords() -> [AnimateGalleryVideoRecord] { [] }
+    func saveRecords(_ records: [AnimateGalleryVideoRecord]) {}
+    func localFileExists(for record: AnimateGalleryVideoRecord) -> Bool { false }
+    func localFileURL(for record: AnimateGalleryVideoRecord) -> URL { URL(fileURLWithPath: "/tmp/\(record.id).mp4") }
     func contains(artifactId: String) -> Bool { false }
     func saveDownloadedVideo(
         temporaryFileURL: URL,
@@ -899,8 +899,8 @@ private struct TestGalleryStore: MomentsGalleryStoring {
         title: String,
         r2Key: String,
         createdAt: Date
-    ) throws -> MomentsGalleryVideoRecord {
-        MomentsGalleryVideoRecord(
+    ) throws -> AnimateGalleryVideoRecord {
+        AnimateGalleryVideoRecord(
             id: artifactId,
             momentId: momentId,
             artifactId: artifactId,
@@ -910,7 +910,7 @@ private struct TestGalleryStore: MomentsGalleryStoring {
             createdAt: createdAt.timeIntervalSince1970 * 1000
         )
     }
-    func addRecord(_ record: MomentsGalleryVideoRecord) {}
-    func renameRecord(_ record: MomentsGalleryVideoRecord, title: String) {}
-    func deleteRecord(_ record: MomentsGalleryVideoRecord, deleteLocalFile: Bool) {}
+    func addRecord(_ record: AnimateGalleryVideoRecord) {}
+    func renameRecord(_ record: AnimateGalleryVideoRecord, title: String) {}
+    func deleteRecord(_ record: AnimateGalleryVideoRecord, deleteLocalFile: Bool) {}
 }

@@ -73,7 +73,7 @@ final class MomentsCreateViewModel: ObservableObject {
     @Published private(set) var isStartingImageGeneration = false
     @Published private(set) var isPurchasingImageGenerationPack = false
     @Published private(set) var imageGenerationAvailabilityMessage: String?
-    @Published private(set) var pendingGalleryVideo: MomentsGalleryVideoRecord?
+    @Published private(set) var pendingGalleryVideo: AnimateGalleryVideoRecord?
     @Published private(set) var canRetryFinalVideoDownload = false
     @Published private(set) var finalRenderStatusMessage: String?
     @Published private(set) var isGeneratingFinalRender = false
