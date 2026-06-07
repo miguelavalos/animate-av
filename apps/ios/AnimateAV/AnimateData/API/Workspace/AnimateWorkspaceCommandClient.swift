@@ -53,7 +53,7 @@ struct AnimateWorkspaceCommandClient {
         body: Body
     ) async throws -> Response {
         guard var endpoint = URL(string: baseURLString.trimmingCharacters(in: .whitespacesAndNewlines)) else {
-            throw AnimateAPIError(code: "moments_workspace_not_configured", message: "Moments workspace commands are not configured.")
+            throw AnimateAPIError(code: "moments_workspace_not_configured", message: "Animate workspace commands are not configured.")
         }
 
         endpoint.appendPathComponent("v1")
@@ -76,7 +76,7 @@ struct AnimateWorkspaceCommandClient {
             throw AnimateAPIError.decode(
                 from: data,
                 fallbackCode: "moments_workspace_command_failed",
-                fallbackMessage: "Moment update failed."
+                fallbackMessage: "Video update failed."
             )
         }
 

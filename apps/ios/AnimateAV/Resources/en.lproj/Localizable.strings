@@ -779,8 +779,8 @@
 "purchase.error.offeringUnavailable" = "Purchases are not available right now. Try again later.";
 "purchase.error.productUnavailable" = "This product is not available right now. Try again later.";
 "workflow.moment.signInStart" = "Sign in before starting a video.";
-"workflow.moment.signInContinue" = "Sign in before continuing a moment.";
-"workflow.moment.signInDiscard" = "Sign in before discarding a moment.";
+"workflow.moment.signInContinue" = "Sign in before continuing a video.";
+"workflow.moment.signInDiscard" = "Sign in before discarding a video.";
 "workflow.moment.setupNotReady" = "Setup is not ready to create.";
 "workflow.media.templateFull" = "Avi has the photo for this video.";
 "workflow.media.noNewMedia" = "No new image added.";

@@ -13,11 +13,11 @@
 "profile.actions.signOut" = "Tancar sessió";
 "profile.help.privacy.detail" = "Consulta com Animate AV gestiona les teves dades.";
 "profile.help.privacy.title" = "Política de privacitat";
-"profile.help.opensource.detail" = "Animate AV es manté com un Moment open-source i independent.";
+"profile.help.opensource.detail" = "Animate AV es manté com una app open-source i independent.";
 "profile.help.opensource.title" = "Projecte open-source";
 "profile.help.sourceCode.detail" = "Consulta el repositori, les incidències i com contribuir.";
 "profile.help.sourceCode.title" = "Codi font";
-"profile.help.subtitle" = "Obre des d'aquí els enllaços del Moment, suport, privacitat i termes.";
+"profile.help.subtitle" = "Obre des d'aquí els enllaços d'Animate AV, suport, privacitat i termes.";
 "profile.help.support.detail" = "Obre el suport de Animate AV.";
 "profile.help.support.title" = "Contactar amb suport";
 "profile.help.terms.detail" = "Revisa els termes aplicables a Animate AV.";
