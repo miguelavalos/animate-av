@@ -2,7 +2,7 @@ import AVSettingsFoundation
 import SwiftUI
 import os
 
-struct MomentsAuthOnboardingView: View {
+struct AnimateAuthOnboardingView: View {
     @Binding var authOptionsArePresented: Bool
     let accountIsAvailable: Bool
     let onContinueWithApple: () async throws -> Void
@@ -21,7 +21,7 @@ struct MomentsAuthOnboardingView: View {
             brandWidth: 160,
             ctaCompanionOffset: CGSize(width: -2, height: -112),
             authPanel: {
-                MomentsAuthOptionsPanel(
+                AnimateAuthOptionsPanel(
                     accountIsAvailable: accountIsAvailable,
                     activeProvider: signInCoordinator.activeProvider,
                     onAppleTap: startAppleSignIn,
@@ -79,7 +79,7 @@ struct MomentsAuthOnboardingView: View {
     }
 }
 
-private struct MomentsAuthOptionsPanel: View {
+private struct AnimateAuthOptionsPanel: View {
     let accountIsAvailable: Bool
     let activeProvider: AVAuthProvider?
     let onAppleTap: () -> Void

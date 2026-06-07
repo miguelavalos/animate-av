@@ -22,7 +22,7 @@ struct MomentsAppBootstrapView: View {
             if shouldShowInitialSplash {
                 AnimateAVSplashView()
             } else if shouldShowOnboarding {
-                MomentsAuthOnboardingView(
+                AnimateAuthOnboardingView(
                     authOptionsArePresented: $authOptionsArePresented,
                     accountIsAvailable: dependencies.accountController.isAccountAvailable,
                     onContinueWithApple: startAppleSignIn,
