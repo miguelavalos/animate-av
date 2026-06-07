@@ -6,7 +6,7 @@ import XCTest
 final class AnimateInProgressObserverTests: XCTestCase {
     func testInProgressObserverPublishesVideoUpdates() async throws {
         let repository = MockAnimateRepository()
-        let observer = AnimateInProgressObserver(momentsRepository: repository)
+        let observer = AnimateInProgressObserver(animateRepository: repository)
 
         observer.observeAnimateVideos(ownerUserId: "user-1")
         let moment = makeMoment(id: "moment-1")
@@ -20,7 +20,7 @@ final class AnimateInProgressObserverTests: XCTestCase {
 
     func testInProgressObserverClearsStateWhenOwnerIsMissing() async {
         let repository = MockAnimateRepository()
-        let observer = AnimateInProgressObserver(momentsRepository: repository)
+        let observer = AnimateInProgressObserver(animateRepository: repository)
 
         observer.observeAnimateVideos(ownerUserId: "user-1")
         repository.sendMoments([makeMoment(id: "moment-1")])
@@ -35,7 +35,7 @@ final class AnimateInProgressObserverTests: XCTestCase {
 
     func testInProgressObserverPublishesObservationErrors() {
         let repository = MockAnimateRepository(momentsError: TestObservationError.moments)
-        let observer = AnimateInProgressObserver(momentsRepository: repository)
+        let observer = AnimateInProgressObserver(animateRepository: repository)
 
         observer.observeAnimateVideos(ownerUserId: "user-1")
 
@@ -45,7 +45,7 @@ final class AnimateInProgressObserverTests: XCTestCase {
 
     func testInProgressObserverIgnoresStaleVideoUpdatesAfterChangingOwner() async {
         let repository = MockAnimateRepository()
-        let observer = AnimateInProgressObserver(momentsRepository: repository)
+        let observer = AnimateInProgressObserver(animateRepository: repository)
 
         observer.observeAnimateVideos(ownerUserId: "user-1")
         let firstSubject = repository.momentsSubjects[0]
@@ -67,7 +67,7 @@ final class AnimateInProgressObserverTests: XCTestCase {
 
     func testWorkspaceObserverPublishesWorkspaceUpdates() async throws {
         let repository = MockWorkspaceRepository()
-        let observer = AnimateWorkspaceObserver(momentsRepository: repository)
+        let observer = AnimateWorkspaceObserver(animateRepository: repository)
 
         observer.observeWorkspace(ownerUserId: "user-1", momentId: "moment-1")
         let workspace = makeWorkspace(moment: makeMoment(id: "moment-1"))
@@ -83,7 +83,7 @@ final class AnimateInProgressObserverTests: XCTestCase {
 
     func testWorkspaceObserverClearsStateWhenRequestIsIncomplete() async {
         let repository = MockWorkspaceRepository()
-        let observer = AnimateWorkspaceObserver(momentsRepository: repository)
+        let observer = AnimateWorkspaceObserver(animateRepository: repository)
 
         observer.observeWorkspace(ownerUserId: "user-1", momentId: "moment-1")
         repository.sendWorkspace(makeWorkspace(moment: makeMoment(id: "moment-1")))
@@ -100,7 +100,7 @@ final class AnimateInProgressObserverTests: XCTestCase {
 
     func testWorkspaceObserverPublishesObservationErrors() {
         let repository = MockWorkspaceRepository(workspaceError: TestObservationError.workspace)
-        let observer = AnimateWorkspaceObserver(momentsRepository: repository)
+        let observer = AnimateWorkspaceObserver(animateRepository: repository)
 
         observer.observeWorkspace(ownerUserId: "user-1", momentId: "moment-1")
 
@@ -110,7 +110,7 @@ final class AnimateInProgressObserverTests: XCTestCase {
 
     func testWorkspaceObserverIgnoresStaleWorkspaceUpdatesAfterChangingVideo() async {
         let repository = MockWorkspaceRepository()
-        let observer = AnimateWorkspaceObserver(momentsRepository: repository)
+        let observer = AnimateWorkspaceObserver(animateRepository: repository)
 
         observer.observeWorkspace(ownerUserId: "user-1", momentId: "moment-1")
         let firstSubject = repository.workspaceSubjects[0]

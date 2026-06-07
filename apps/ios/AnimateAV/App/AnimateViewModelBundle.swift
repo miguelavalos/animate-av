@@ -26,7 +26,7 @@ struct AnimateViewModelBundle {
         )
         avi = AnimateAviViewModel()
 
-        home.bind(to: workflows.inProgressMoments)
+        home.bind(to: workflows.videosWorkflow)
         home.bind(accountStateProvider: accountController)
         create.bind(
             accountStateProvider: accountController,
@@ -37,9 +37,9 @@ struct AnimateViewModelBundle {
             authTokenProvider: authTokenProvider,
             imageGenerationAccountingClient: imageGenerationAccountingClient
         )
-        inProgress.bind(to: workflows.inProgressMoments)
+        inProgress.bind(to: workflows.videosWorkflow)
         inProgress.bind(accountStateProvider: accountController)
-        avi.bind(to: workflows.inProgressMoments)
+        avi.bind(to: workflows.videosWorkflow)
         avi.bind(accountStateProvider: accountController)
     }
 }

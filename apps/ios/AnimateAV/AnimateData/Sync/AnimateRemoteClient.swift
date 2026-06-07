@@ -150,7 +150,7 @@ struct AnimateRemoteClient {
         }
     }
 
-    func observeGalleryMoments(ownerUserId: String) throws -> AnyPublisher<[AnimateArtifact], Error> {
+    func observeGalleryArtifacts(ownerUserId: String) throws -> AnyPublisher<[AnimateArtifact], Error> {
         let client = try requireClient()
         let realtimeSessionId = try realtimeSessionStore.sessionId(for: ownerUserId)
 

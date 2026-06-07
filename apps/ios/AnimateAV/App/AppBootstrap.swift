@@ -45,7 +45,7 @@ struct MomentsAppBootstrapView: View {
             }
         }
         .environmentObject(dependencies.accountController)
-        .environmentObject(dependencies.inProgressMomentsWorkflow)
+        .environmentObject(dependencies.videosWorkflow)
         .environmentObject(dependencies.homeViewModel)
         .environmentObject(dependencies.createViewModel)
         .environmentObject(dependencies.inProgressViewModel)

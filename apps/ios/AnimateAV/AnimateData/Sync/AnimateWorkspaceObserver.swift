@@ -11,8 +11,8 @@ final class AnimateWorkspaceObserver: ObservableObject {
     private var observationGeneration = 0
     private let diagnosticsObserverName = "workspace"
 
-    init(momentsRepository: any AnimateWorkspaceObserving = AnimateRepository()) {
-        workspaceObserver = momentsRepository
+    init(animateRepository: any AnimateWorkspaceObserving = AnimateRepository()) {
+        workspaceObserver = animateRepository
     }
 
     var activeWorkspacePublisher: AnyPublisher<AnimateWorkspace?, Never> {

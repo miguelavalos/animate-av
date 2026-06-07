@@ -22,8 +22,8 @@ struct AnimateRepository {
         try remoteClient.observeAnimateVideos(ownerUserId: ownerUserId)
     }
 
-    func observeGalleryMoments(ownerUserId: String) throws -> AnyPublisher<[AnimateArtifact], Error> {
-        try remoteClient.observeGalleryMoments(ownerUserId: ownerUserId)
+    func observeGalleryArtifacts(ownerUserId: String) throws -> AnyPublisher<[AnimateArtifact], Error> {
+        try remoteClient.observeGalleryArtifacts(ownerUserId: ownerUserId)
     }
 
     func observeAnimateWorkspace(

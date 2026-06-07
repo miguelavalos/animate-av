@@ -25,7 +25,7 @@ protocol AnimateInProgressObserving {
 
 @MainActor
 protocol AnimateGalleryObserving {
-    func observeGalleryMoments(ownerUserId: String) throws -> AnyPublisher<[AnimateArtifact], Error>
+    func observeGalleryArtifacts(ownerUserId: String) throws -> AnyPublisher<[AnimateArtifact], Error>
 }
 
 @MainActor
@@ -42,7 +42,7 @@ protocol AnimateGalleryListProviding {
     var galleryMomentsPublisher: AnyPublisher<[AnimateArtifact], Never> { get }
     var galleryMomentsErrorPublisher: AnyPublisher<String?, Never> { get }
 
-    func observeGalleryMoments(ownerUserId: String?)
+    func observeGalleryArtifacts(ownerUserId: String?)
     func clearGalleryMoments()
 }
 

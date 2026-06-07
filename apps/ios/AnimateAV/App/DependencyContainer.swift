@@ -4,11 +4,11 @@ import Foundation
 final class MomentsDependencyContainer: ObservableObject {
     let accountController: AccountController
     let videosObserver: AnimateInProgressObserver
-    let galleryMomentsObserver: AnimateGalleryObserver
+    let galleryObserver: AnimateGalleryObserver
     let workspaceObserver: AnimateWorkspaceObserver
     let videoDeletionWorkflow: AnimateVideoDeletionWorkflow
     let momentWorkspaceSelectionWorkflow: AnimateWorkspaceSelectionWorkflow
-    let inProgressMomentsWorkflow: AnimateVideosWorkflow
+    let videosWorkflow: AnimateVideosWorkflow
     let videoCreationWorkflow: AnimateVideoCreationWorkflow
     let mediaUploadWorkflow: MediaUploadWorkflow
     let storyWorkflow: StoryWorkflow
@@ -25,29 +25,29 @@ final class MomentsDependencyContainer: ObservableObject {
 
     init(
         accountController: AccountController = AccountController(),
-        momentsRepository: AnimateRepository = AnimateRepository(),
+        animateRepository: AnimateRepository = AnimateRepository(),
         videosObserver: AnimateInProgressObserver? = nil,
-        galleryMomentsObserver: AnimateGalleryObserver? = nil,
+        galleryObserver: AnimateGalleryObserver? = nil,
         workspaceObserver: AnimateWorkspaceObserver? = nil
     ) {
         let clients = MomentsWorkflowClients(baseURLString: AppConfig.animateAPIBaseURL)
         self.accountController = accountController
-        let resolvedMomentsObserver = videosObserver ?? AnimateInProgressObserver(momentsRepository: momentsRepository)
-        let resolvedAnimateGalleryObserver = galleryMomentsObserver ?? AnimateGalleryObserver(momentsRepository: momentsRepository)
-        let resolvedWorkspaceObserver = workspaceObserver ?? AnimateWorkspaceObserver(momentsRepository: momentsRepository)
-        self.videosObserver = resolvedMomentsObserver
-        self.galleryMomentsObserver = resolvedAnimateGalleryObserver
+        let resolvedVideosObserver = videosObserver ?? AnimateInProgressObserver(animateRepository: animateRepository)
+        let resolvedGalleryObserver = galleryObserver ?? AnimateGalleryObserver(animateRepository: animateRepository)
+        let resolvedWorkspaceObserver = workspaceObserver ?? AnimateWorkspaceObserver(animateRepository: animateRepository)
+        self.videosObserver = resolvedVideosObserver
+        self.galleryObserver = resolvedGalleryObserver
         self.workspaceObserver = resolvedWorkspaceObserver
         let workflows = AnimateWorkflowBundle(
             accountController: accountController,
-            momentsRepository: momentsRepository,
-            videosObserver: resolvedMomentsObserver,
+            animateRepository: animateRepository,
+            videosObserver: resolvedVideosObserver,
             workspaceObserver: resolvedWorkspaceObserver,
             clients: clients
         )
         self.videoDeletionWorkflow = workflows.videoDeletion
         self.momentWorkspaceSelectionWorkflow = workflows.momentWorkspaceSelection
-        self.inProgressMomentsWorkflow = workflows.inProgressMoments
+        self.videosWorkflow = workflows.videosWorkflow
         self.videoCreationWorkflow = workflows.videoCreation
         self.mediaUploadWorkflow = workflows.mediaUpload
         self.storyWorkflow = workflows.story
@@ -57,7 +57,7 @@ final class MomentsDependencyContainer: ObservableObject {
         let viewModels = AnimateViewModelBundle(
             accountController: accountController,
             workflows: workflows,
-            galleryMomentsProvider: resolvedAnimateGalleryObserver,
+            galleryMomentsProvider: resolvedGalleryObserver,
             authTokenProvider: accountController,
             imageGenerationAccountingClient: clients.imageGenerationAccounting,
             finalRenderClient: clients.finalRender
@@ -75,8 +75,8 @@ final class MomentsDependencyContainer: ObservableObject {
         observedOwnerUserId = nextObservedOwnerUserId
         realtimeSessionTask?.cancel()
         realtimeSessionStore.clear()
-        inProgressMomentsWorkflow.observeAnimateVideos(ownerUserId: nil)
-        galleryMomentsObserver.observeGalleryMoments(ownerUserId: nil)
+        videosWorkflow.observeAnimateVideos(ownerUserId: nil)
+        galleryObserver.observeGalleryArtifacts(ownerUserId: nil)
         inProgressViewModel.clearSelection()
         createViewModel.clearSessionState()
         applyUITestFixturesIfNeeded()
@@ -90,8 +90,8 @@ final class MomentsDependencyContainer: ObservableObject {
             await MainActor.run {
                 guard self?.observedOwnerUserId == .observed(ownerUserId) else { return }
                 self?.realtimeSessionStore.update(ownerUserId: ownerUserId, realtimeSessionId: realtimeSessionId)
-                self?.inProgressMomentsWorkflow.observeAnimateVideos(ownerUserId: ownerUserId)
-                self?.galleryMomentsObserver.observeGalleryMoments(ownerUserId: ownerUserId)
+                self?.videosWorkflow.observeAnimateVideos(ownerUserId: ownerUserId)
+                self?.galleryObserver.observeGalleryArtifacts(ownerUserId: ownerUserId)
             }
         }
     }

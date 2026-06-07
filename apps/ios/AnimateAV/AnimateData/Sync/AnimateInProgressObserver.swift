@@ -11,8 +11,8 @@ final class AnimateInProgressObserver: ObservableObject {
     private var observationGeneration = 0
     private let diagnosticsObserverName = "in_progress"
 
-    init(momentsRepository: any AnimateInProgressObserving = AnimateRepository()) {
-        videosObserver = momentsRepository
+    init(animateRepository: any AnimateInProgressObserving = AnimateRepository()) {
+        videosObserver = animateRepository
     }
 
     var momentsPublisher: AnyPublisher<[AnimateVideo], Never> {

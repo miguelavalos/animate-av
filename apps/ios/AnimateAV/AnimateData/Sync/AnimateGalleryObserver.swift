@@ -11,8 +11,8 @@ final class AnimateGalleryObserver: ObservableObject {
     private var observationGeneration = 0
     private let diagnosticsObserverName = "gallery"
 
-    init(momentsRepository: any AnimateGalleryObserving = AnimateRepository()) {
-        videosObserver = momentsRepository
+    init(animateRepository: any AnimateGalleryObserving = AnimateRepository()) {
+        videosObserver = animateRepository
     }
 
     var galleryMomentsPublisher: AnyPublisher<[AnimateArtifact], Never> {
@@ -23,7 +23,7 @@ final class AnimateGalleryObserver: ObservableObject {
         $errorMessage.eraseToAnyPublisher()
     }
 
-    func observeGalleryMoments(ownerUserId: String?) {
+    func observeGalleryArtifacts(ownerUserId: String?) {
         observationGeneration += 1
         let generation = observationGeneration
         momentsTask?.cancel()
@@ -34,7 +34,7 @@ final class AnimateGalleryObserver: ObservableObject {
         AnimateSyncDiagnostics.addObserverBreadcrumb(observer: diagnosticsObserverName, message: "observer_started")
 
         do {
-            let updates = try videosObserver.observeGalleryMoments(ownerUserId: ownerUserId).values
+            let updates = try videosObserver.observeGalleryArtifacts(ownerUserId: ownerUserId).values
 
             momentsTask = Task { [weak self] in
                 do {
