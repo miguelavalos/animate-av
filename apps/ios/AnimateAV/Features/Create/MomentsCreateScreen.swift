@@ -122,7 +122,7 @@ struct MomentsCreateScreen: View {
     }
 
     private var automaticPhotoPickerSelectionLimit: Int {
-        max(1, viewModel.workflowPresentation.mediaSummary.remainingSlots(template: viewModel.form.template))
+        1
     }
 
     private func redirectEmptyCreateIfNeeded() {

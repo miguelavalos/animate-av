@@ -171,7 +171,7 @@ private struct MomentsCreateMediaFirstWorkspace: View {
         .photosPicker(
             isPresented: $showsCompactPhotoPicker,
             selection: $pickerItems,
-            maxSelectionCount: mediaPresentation.remainingSlots,
+            maxSelectionCount: 1,
             matching: .images
         )
         .onChange(of: pickerItems) { _, newItems in
@@ -192,7 +192,7 @@ private struct MomentsCreateMediaFirstWorkspace: View {
                     presentCompactPhotoPicker()
                 },
                 chooseAlbum: {
-                    presentCompactAlbumPicker()
+                    presentCompactPhotoPicker()
                 }
             )
         }
