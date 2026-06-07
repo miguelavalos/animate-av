@@ -14,7 +14,7 @@ enum AnimateAppExperience {
         AVCommonAppExperience(
             identity: appIdentity,
             legalLinks: legalLinks,
-            brandPalette: MomentsTheme.brandPalette,
+            brandPalette: AnimateTheme.brandPalette,
             visualAssets: visualAssets,
             splashTagline: L10n.string("app.splash.tagline"),
             splashStatus: L10n.string("app.splash.status"),

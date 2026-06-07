@@ -70,7 +70,7 @@ struct MomentsCreateArtifactStatusCard: View {
                 )
                 AVAppShellMetadataItem(
                     title: L10n.string("create.renderRows.expires"),
-                    value: MomentsDateFormatting.formattedDate(milliseconds: artifact.expiresAt)
+                    value: AnimateDateFormatting.formattedDate(milliseconds: artifact.expiresAt)
                 )
             }
 

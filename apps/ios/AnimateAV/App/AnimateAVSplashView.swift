@@ -10,5 +10,5 @@ struct AnimateAVSplashView: View {
 
 #Preview {
     AnimateAVSplashView()
-        .avBrandPalette(MomentsTheme.brandPalette)
+        .avBrandPalette(AnimateTheme.brandPalette)
 }

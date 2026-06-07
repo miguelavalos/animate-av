@@ -453,7 +453,7 @@ struct MomentsCreateBlockingPreparationView: View {
             Spacer(minLength: 120)
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
-        .background(MomentsTheme.shellBackground.ignoresSafeArea())
+        .background(AnimateTheme.shellBackground.ignoresSafeArea())
         .transition(.opacity.combined(with: .scale(scale: 0.98)))
         .onAppear {
             withAnimation(.easeInOut(duration: 1.05).repeatForever(autoreverses: true)) {
@@ -630,7 +630,7 @@ private struct MomentsCreateFinalVideoReadyScene: View {
             Spacer(minLength: 120)
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
-        .background(MomentsTheme.shellBackground.ignoresSafeArea())
+        .background(AnimateTheme.shellBackground.ignoresSafeArea())
         .transition(.opacity.combined(with: .scale(scale: 0.98)))
         .onAppear {
             withAnimation(.easeInOut(duration: 1.05).repeatForever(autoreverses: true)) {
@@ -719,7 +719,7 @@ private struct MomentsCreateFinalVideoRecoveryScene: View {
             Spacer(minLength: 100)
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
-        .background(MomentsTheme.shellBackground.ignoresSafeArea())
+        .background(AnimateTheme.shellBackground.ignoresSafeArea())
         .accessibilityElement(children: .contain)
     }
 
@@ -1660,7 +1660,7 @@ private struct MomentsCreateFinalVideoConfirmationSheet: View {
                 .padding(.top, 18)
                 .padding(.bottom, 18)
         }
-        .presentationBackground(MomentsTheme.shellBackground)
+        .presentationBackground(AnimateTheme.shellBackground)
     }
 
     private var sheetContent: some View {
@@ -2484,7 +2484,7 @@ private struct MomentsCreateAviNoteEditorPage: View {
             .padding(.horizontal, 20)
             .padding(.bottom, 96)
         }
-        .background(MomentsTheme.shellBackground.ignoresSafeArea())
+        .background(AnimateTheme.shellBackground.ignoresSafeArea())
         .navigationBarBackButtonHidden(true)
         .toolbar(.hidden, for: .navigationBar)
     }
@@ -2636,7 +2636,7 @@ private struct MomentsCreateLookChooserPage: View {
             .padding(.horizontal, 20)
             .padding(.bottom, 96)
         }
-        .background(MomentsTheme.shellBackground.ignoresSafeArea())
+        .background(AnimateTheme.shellBackground.ignoresSafeArea())
         .navigationBarBackButtonHidden(true)
         .toolbar(.hidden, for: .navigationBar)
     }
@@ -2856,7 +2856,7 @@ private struct MomentsCreateVisualOptionChooserPage<Content: View>: View {
             .padding(.horizontal, 20)
             .padding(.bottom, 96)
         }
-        .background(MomentsTheme.shellBackground.ignoresSafeArea())
+        .background(AnimateTheme.shellBackground.ignoresSafeArea())
         .navigationBarBackButtonHidden(true)
         .toolbar(.hidden, for: .navigationBar)
     }
@@ -3015,7 +3015,7 @@ private struct MomentsCreateThemeChooserPage: View {
             .padding(.horizontal, 20)
             .padding(.bottom, 96)
         }
-        .background(MomentsTheme.shellBackground.ignoresSafeArea())
+        .background(AnimateTheme.shellBackground.ignoresSafeArea())
         .navigationBarBackButtonHidden(true)
         .toolbar(.hidden, for: .navigationBar)
     }

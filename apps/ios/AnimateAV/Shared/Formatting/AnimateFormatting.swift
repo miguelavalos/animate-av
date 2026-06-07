@@ -1,19 +1,19 @@
 import Foundation
 
-enum MomentsDateFormatting {
+enum AnimateDateFormatting {
     static func formattedDate(milliseconds: Double) -> String {
         let date = Date(timeIntervalSince1970: milliseconds / 1000)
         return date.formatted(date: .abbreviated, time: .omitted)
     }
 }
 
-enum MomentsMomentFormatting {
+enum AnimateVideoFormatting {
     static func updatedAt(_ moment: InProgressMoment) -> String {
-        "Updated \(MomentsDateFormatting.formattedDate(milliseconds: moment.updatedAt))"
+        "Updated \(AnimateDateFormatting.formattedDate(milliseconds: moment.updatedAt))"
     }
 
     static func galleryDate(_ milliseconds: Double) -> String {
-        "Saved \(MomentsDateFormatting.formattedDate(milliseconds: milliseconds))"
+        "Saved \(AnimateDateFormatting.formattedDate(milliseconds: milliseconds))"
     }
 
     static func storyUsage(_ moment: InProgressMoment) -> String {
@@ -51,7 +51,7 @@ enum MomentsMomentFormatting {
             parts.append("Watermarked")
         }
 
-        parts.append("Expires \(MomentsDateFormatting.formattedDate(milliseconds: artifact.expiresAt))")
+        parts.append("Expires \(AnimateDateFormatting.formattedDate(milliseconds: artifact.expiresAt))")
         return parts.joined(separator: " · ")
     }
 }

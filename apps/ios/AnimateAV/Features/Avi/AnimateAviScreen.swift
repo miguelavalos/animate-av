@@ -35,7 +35,7 @@ struct AnimateAviScreen: View {
             status: L10n.string("avi.status"),
             headerAccessibilityIdentifier: "animate.avi.header",
             landingContent: landingContent,
-            backgroundStyle: AnyShapeStyle(MomentsTheme.shellBackground)
+            backgroundStyle: AnyShapeStyle(AnimateTheme.shellBackground)
         ) {
             EmptyView()
         } heroAvatar: {

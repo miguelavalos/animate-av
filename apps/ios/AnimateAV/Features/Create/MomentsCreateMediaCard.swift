@@ -135,7 +135,7 @@ struct MomentsCreateMediaManagerSheet: View {
 
     var body: some View {
         gridView
-        .background(MomentsTheme.shellBackground.ignoresSafeArea())
+        .background(AnimateTheme.shellBackground.ignoresSafeArea())
         .navigationBarBackButtonHidden(true)
         .toolbar(.hidden, for: .navigationBar)
         .onAppear {
@@ -516,7 +516,7 @@ private struct MomentsCreateManageableMediaTile: View {
                 AVBrandColor.ink.opacity(0.12)
                 Image(systemName: media.kind == "video" ? "video.fill" : "photo.fill")
                     .font(.system(size: 24, weight: .semibold))
-                    .foregroundStyle(MomentsTheme.highlight)
+                    .foregroundStyle(AnimateTheme.highlight)
             }
             .frame(width: mediaFrame.width, height: mediaFrame.height)
         }
@@ -744,7 +744,7 @@ private struct MomentsCreateMediaReorderRow: View {
                 AVBrandColor.neutral100
                 Image(systemName: media.kind == "video" ? "video.fill" : "photo.fill")
                     .font(.system(size: 22, weight: .semibold))
-                    .foregroundStyle(MomentsTheme.highlight)
+                    .foregroundStyle(AnimateTheme.highlight)
             }
         }
     }

@@ -47,7 +47,7 @@ struct AnimateHomeScreen: View {
 
     var body: some View {
         AVAppShellScrollableScreenScaffold {
-            MomentsTheme.shellBackground
+            AnimateTheme.shellBackground
         } content: {
             AVAppShellHomeHeader(
                 title: L10n.string("home.header.title"),

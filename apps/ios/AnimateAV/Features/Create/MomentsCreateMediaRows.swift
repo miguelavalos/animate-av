@@ -185,7 +185,7 @@ struct MomentsSharedMediaFallbackThumbnail: View {
             AVBrandColor.neutral100
             Image(systemName: kind == "video" ? "video.fill" : "photo.fill")
                 .font(.system(size: size == nil ? 24 : 18, weight: .semibold))
-                .foregroundStyle(MomentsTheme.highlight)
+                .foregroundStyle(AnimateTheme.highlight)
         }
         .frame(width: size, height: size)
     }
@@ -257,7 +257,7 @@ struct MomentsCreateMediaThumbnailTile: View {
                 AVBrandColor.neutral100
                 Image(systemName: media.kind == "video" ? "video.fill" : "photo.fill")
                     .font(.system(size: 24, weight: .semibold))
-                    .foregroundStyle(MomentsTheme.highlight)
+                    .foregroundStyle(AnimateTheme.highlight)
             }
         }
     }
@@ -308,7 +308,7 @@ struct MomentsCreateMediaDetailSheet: View {
                 AVBrandColor.neutral100
                 Image(systemName: media.kind == "video" ? "video.fill" : "photo.fill")
                     .font(.system(size: 44, weight: .semibold))
-                    .foregroundStyle(MomentsTheme.highlight)
+                    .foregroundStyle(AnimateTheme.highlight)
             }
             .frame(maxWidth: .infinity)
             .aspectRatio(1.25, contentMode: .fit)
@@ -331,7 +331,7 @@ struct MomentsCreateSyncedMediaThumbnailTile: View {
 
             Image(systemName: "checkmark.circle.fill")
                 .font(.system(size: 16, weight: .bold))
-                .foregroundStyle(.white, MomentsTheme.highlight)
+                .foregroundStyle(.white, AnimateTheme.highlight)
                 .padding(7)
         }
         .aspectRatio(1, contentMode: .fit)
@@ -359,7 +359,7 @@ struct MomentsCreateSyncedMediaThumbnailImage: View {
                 AVBrandColor.neutral100
                 Image(systemName: media.kind == "video" ? "video.fill" : "photo.fill")
                     .font(.system(size: size == nil ? 24 : 20, weight: .semibold))
-                    .foregroundStyle(MomentsTheme.highlight)
+                    .foregroundStyle(AnimateTheme.highlight)
             }
         }
         .frame(width: size, height: size)
@@ -415,11 +415,11 @@ struct MomentsCreateSyncedMediaRow: View {
     var body: some View {
         AVAppShellInfoRow(
             title: "\(MomentStatusRules.displayKind(media.kind)) \(Int(media.sortOrder) + 1)",
-            detail: MomentsMomentFormatting.mediaAssetDetail(media),
+            detail: AnimateVideoFormatting.mediaAssetDetail(media),
             systemImage: media.kind == "video" ? "video.fill" : "photo.fill"
         ) {
             Image(systemName: "checkmark.circle.fill")
-                .foregroundStyle(MomentsTheme.highlight)
+                .foregroundStyle(AnimateTheme.highlight)
                 .font(.system(size: 18, weight: .semibold))
         }
     }

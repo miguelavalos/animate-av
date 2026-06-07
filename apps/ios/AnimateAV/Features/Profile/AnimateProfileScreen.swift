@@ -26,7 +26,7 @@ struct AnimateProfileScreen: View {
         AVSettingsProfileScreenScaffold(
             title: screenTitle,
             subtitle: screenSubtitle,
-            backgroundStyle: AnyShapeStyle(MomentsTheme.shellBackground),
+            backgroundStyle: AnyShapeStyle(AnimateTheme.shellBackground),
             showsTopSafeAreaShield: true
         ) {
             AVAppShellConfiguredBrandHeader(
@@ -385,7 +385,7 @@ struct AnimateProfileScreen: View {
 
                 Image(systemName: "chevron.up.chevron.down")
                     .font(.system(size: 14, weight: .semibold))
-                    .foregroundStyle(MomentsTheme.highlight)
+                    .foregroundStyle(AnimateTheme.highlight)
             }
             .padding(.horizontal, 16)
             .padding(.vertical, 14)
@@ -434,7 +434,7 @@ struct AnimateProfileScreen: View {
             HStack(spacing: 12) {
                 Image(systemName: newVideoStartController.currentPreference.systemImage)
                     .font(.system(size: 16, weight: .semibold))
-                    .foregroundStyle(MomentsTheme.highlight)
+                    .foregroundStyle(AnimateTheme.highlight)
                     .frame(width: 22)
 
                 VStack(alignment: .leading, spacing: 3) {
@@ -452,7 +452,7 @@ struct AnimateProfileScreen: View {
 
                 Image(systemName: "chevron.up.chevron.down")
                     .font(.system(size: 14, weight: .semibold))
-                    .foregroundStyle(MomentsTheme.highlight)
+                    .foregroundStyle(AnimateTheme.highlight)
             }
             .padding(.horizontal, 16)
             .padding(.vertical, 14)
@@ -588,7 +588,7 @@ private struct MomentsLocalDataMaintenanceSheet: View {
 
     var body: some View {
         AVSettingsSheetScaffold(
-            backgroundStyle: AnyShapeStyle(MomentsTheme.shellBackground),
+            backgroundStyle: AnyShapeStyle(AnimateTheme.shellBackground),
             closeTitle: L10n.string("profile.local.sheet.close"),
             onClose: { dismiss() }
         ) {

@@ -49,7 +49,7 @@ final class AnimateInProgressWorkspacePresentationTests: XCTestCase {
         )
 
         XCTAssertEqual(presentation.title, "Family Weekend")
-        XCTAssertEqual(presentation.updatedAtTitle, "Updated \(MomentsDateFormatting.formattedDate(milliseconds: 1_781_592_000_000))")
+        XCTAssertEqual(presentation.updatedAtTitle, "Updated \(AnimateDateFormatting.formattedDate(milliseconds: 1_781_592_000_000))")
         XCTAssertEqual(presentation.countsTitle, "1 media item · 1 scene · 1 job")
     }
 

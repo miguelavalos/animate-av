@@ -20,7 +20,7 @@ struct AnimateHomePresentation {
         let latestInProgressAction = latestInProgressMoment.map {
             AnimateHomeAction(
                 title: L10n.string("home.action.continueLatest.title"),
-                detail: MomentsMomentFormatting.compactDetail(for: $0, includeTitle: true),
+                detail: AnimateVideoFormatting.compactDetail(for: $0, includeTitle: true),
                 systemImage: "arrow.right.circle",
                 isProminent: true
             )

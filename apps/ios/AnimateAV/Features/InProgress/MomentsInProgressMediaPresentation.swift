@@ -21,7 +21,7 @@ struct MomentsInProgressMediaAssetPresentation: Identifiable, Equatable {
         id = mediaAsset.id
         systemImage = mediaAsset.kind == "video" ? "video" : "photo"
         title = "\(MomentStatusRules.displayKind(mediaAsset.kind)) \(Int(mediaAsset.sortOrder) + 1)"
-        detail = MomentsMomentFormatting.mediaAssetDetail(mediaAsset)
+        detail = AnimateVideoFormatting.mediaAssetDetail(mediaAsset)
     }
 
     static func sorted(_ mediaAssets: [MomentMediaAsset]) -> [MomentsInProgressMediaAssetPresentation] {

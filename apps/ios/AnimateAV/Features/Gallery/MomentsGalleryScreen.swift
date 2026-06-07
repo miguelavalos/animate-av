@@ -13,7 +13,7 @@ struct MomentsGalleryScreen: View {
 
     var body: some View {
         AVAppShellScrollableScreenScaffold {
-            MomentsTheme.shellBackground
+            AnimateTheme.shellBackground
         } content: {
             VStack(alignment: .leading, spacing: 10) {
                 Text(L10n.string("gallery.title"))
@@ -224,7 +224,7 @@ private struct MomentsGalleryImageRow: View {
                                 .font(.system(size: 22, weight: .black))
                                 .foregroundStyle(.white)
 
-                            Text(MomentsMomentFormatting.galleryDate(image.artifact.createdAt))
+                            Text(AnimateVideoFormatting.galleryDate(image.artifact.createdAt))
                                 .font(.system(size: 13, weight: .bold))
                                 .foregroundStyle(.white.opacity(0.82))
                         }
@@ -395,7 +395,7 @@ private struct MomentsGalleryVideoRow: View {
                                     .foregroundStyle(.white)
                                     .lineLimit(2)
 
-                                Text(MomentsMomentFormatting.galleryDate(video.record.createdAt))
+                                Text(AnimateVideoFormatting.galleryDate(video.record.createdAt))
                                     .font(.system(size: 13, weight: .bold))
                                     .foregroundStyle(.white.opacity(0.82))
                             }

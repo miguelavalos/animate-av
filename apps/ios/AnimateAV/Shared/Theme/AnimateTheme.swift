@@ -1,7 +1,7 @@
 import AVBrandFoundation
 import SwiftUI
 
-enum MomentsTheme {
+enum AnimateTheme {
     static let brandPalette = AVBrandPalette()
 
     static let brandBlack = AVBrandColor.ink

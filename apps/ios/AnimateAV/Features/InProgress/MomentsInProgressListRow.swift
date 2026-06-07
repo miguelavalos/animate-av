@@ -24,14 +24,14 @@ struct MomentsInProgressListRow: View {
                     HStack(spacing: 8) {
                         Text(row.statusTitle)
                             .font(.caption2.weight(.semibold))
-                            .foregroundStyle(MomentsTheme.highlight)
+                            .foregroundStyle(AnimateTheme.highlight)
                     }
                 }
 
                 Spacer()
 
                 Image(systemName: row.accessorySystemImage)
-                    .foregroundStyle(row.isSelected ? MomentsTheme.highlight : .secondary)
+                    .foregroundStyle(row.isSelected ? AnimateTheme.highlight : .secondary)
             }
             .frame(maxWidth: .infinity, alignment: .leading)
             .padding(.vertical, 4)

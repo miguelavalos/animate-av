@@ -317,7 +317,7 @@ private struct MomentsInProgressMomentCard: View {
                         )
                         MomentsInProgressMomentPill(
                             systemImage: iconName,
-                            text: MomentsMomentFormatting.updatedAt(moment)
+                            text: AnimateVideoFormatting.updatedAt(moment)
                         )
                     }
                 }

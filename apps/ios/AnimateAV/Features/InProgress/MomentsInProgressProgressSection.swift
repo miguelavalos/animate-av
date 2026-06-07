@@ -34,7 +34,7 @@ private struct MomentsInProgressProgressRow: View {
 private extension MomentsInProgressProgressState {
     var tint: Color {
         switch self {
-        case .complete: MomentsTheme.highlight
+        case .complete: AnimateTheme.highlight
         case .active: .secondary
         case .waiting: .secondary.opacity(0.7)
         case .failed: .red

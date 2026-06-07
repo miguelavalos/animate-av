@@ -7,7 +7,7 @@ struct MomentsInProgressListSummaryPill: View {
         VStack(alignment: .leading, spacing: 4) {
             Image(systemName: pill.systemImage)
                 .font(.caption.weight(.semibold))
-                .foregroundStyle(MomentsTheme.highlight)
+                .foregroundStyle(AnimateTheme.highlight)
             Text("\(pill.value)")
                 .font(.subheadline.weight(.semibold))
             Text(pill.title)
@@ -18,7 +18,7 @@ struct MomentsInProgressListSummaryPill: View {
         }
         .frame(maxWidth: .infinity, minHeight: 62, alignment: .topLeading)
         .padding(10)
-        .background(MomentsTheme.highlight.opacity(0.08), in: RoundedRectangle(cornerRadius: 8))
+        .background(AnimateTheme.highlight.opacity(0.08), in: RoundedRectangle(cornerRadius: 8))
     }
 }
 

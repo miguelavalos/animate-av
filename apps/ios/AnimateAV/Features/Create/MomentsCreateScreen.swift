@@ -59,7 +59,7 @@ struct MomentsCreateScreen: View {
                 )
             }
         }
-        .background(MomentsTheme.shellBackground.ignoresSafeArea())
+        .background(AnimateTheme.shellBackground.ignoresSafeArea())
         .safeAreaPadding(.horizontal, 20)
         .safeAreaPadding(.top, 12)
         .safeAreaPadding(.bottom, bottomSafeAreaPadding)
@@ -189,19 +189,19 @@ private struct MomentsCreateAssetKindPill: View {
             .font(.system(size: 14, weight: .black))
             .frame(maxWidth: .infinity)
             .frame(height: 38)
-            .foregroundStyle(isSelected ? .white : MomentsTheme.textPrimary)
+            .foregroundStyle(isSelected ? .white : AnimateTheme.textPrimary)
             .background(background)
             .overlay(border)
     }
 
     private var background: some View {
         RoundedRectangle(cornerRadius: 14, style: .continuous)
-            .fill(isSelected ? MomentsTheme.highlight : Color(.secondarySystemGroupedBackground))
+            .fill(isSelected ? AnimateTheme.highlight : Color(.secondarySystemGroupedBackground))
     }
 
     private var border: some View {
         RoundedRectangle(cornerRadius: 14, style: .continuous)
-            .stroke(MomentsTheme.highlight.opacity(isSelected ? 0 : 0.18), lineWidth: 1)
+            .stroke(AnimateTheme.highlight.opacity(isSelected ? 0 : 0.18), lineWidth: 1)
     }
 }
 

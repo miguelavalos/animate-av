@@ -52,7 +52,7 @@ struct MomentsInProgressScreen: View {
 
     var body: some View {
         AVAppShellScrollableScreenScaffold {
-            MomentsTheme.shellBackground
+            AnimateTheme.shellBackground
         } content: {
             MomentsInProgressAssetKindPicker(selectedAssetKind: selectedAssetKindBinding)
 

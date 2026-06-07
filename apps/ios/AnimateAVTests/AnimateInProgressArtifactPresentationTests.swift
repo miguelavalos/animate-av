@@ -56,7 +56,7 @@ final class AnimateInProgressArtifactPresentationTests: XCTestCase {
 
         XCTAssertEqual(presentation.kindTitle, "Final Export")
         XCTAssertEqual(presentation.watermarkTitle, "None")
-        XCTAssertEqual(presentation.expiresAtTitle, MomentsDateFormatting.formattedDate(milliseconds: 1_781_592_000_000))
+        XCTAssertEqual(presentation.expiresAtTitle, AnimateDateFormatting.formattedDate(milliseconds: 1_781_592_000_000))
         XCTAssertEqual(presentation.actionDetail, "Your finished video is ready to save or share.")
     }
 

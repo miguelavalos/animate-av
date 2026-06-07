@@ -6,7 +6,7 @@ struct MomentsInProgressStatusMarker: View {
     var body: some View {
         Image(systemName: row.statusSystemImage)
             .font(.subheadline)
-            .foregroundStyle(row.isFinished ? MomentsTheme.highlight : .secondary)
+            .foregroundStyle(row.isFinished ? AnimateTheme.highlight : .secondary)
             .frame(width: 20)
     }
 }

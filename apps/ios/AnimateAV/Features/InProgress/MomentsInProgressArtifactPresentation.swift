@@ -39,7 +39,7 @@ struct MomentsInProgressArtifactPresentation: Equatable {
         status = artifact.status
         kindTitle = MomentStatusRules.displayKind(artifact.kind)
         watermarkTitle = artifact.hasWatermark == true ? L10n.string("moment.artifact.included") : L10n.string("moment.artifact.none")
-        expiresAtTitle = MomentsDateFormatting.formattedDate(milliseconds: artifact.expiresAt)
+        expiresAtTitle = AnimateDateFormatting.formattedDate(milliseconds: artifact.expiresAt)
         storageKey = artifact.r2Key
         actionDetail = MomentsRecoveryCopy.artifactActionDetail(kind: artifact.kind, status: artifact.status)
     }
@@ -68,8 +68,8 @@ struct MomentsInProgressRenderJobPresentation: Identifiable, Equatable {
         kindTitle = MomentStatusRules.displayKind(renderJob.kind)
         providerTitle = renderJob.provider == nil ? L10n.string("moment.job.notRecorded") : L10n.string("moment.job.recorded")
         modelTitle = renderJob.model == nil ? L10n.string("moment.job.notRecorded") : L10n.string("moment.job.configured")
-        createdAtTitle = MomentsDateFormatting.formattedDate(milliseconds: renderJob.createdAt)
-        updatedAtTitle = MomentsDateFormatting.formattedDate(milliseconds: renderJob.updatedAt)
+        createdAtTitle = AnimateDateFormatting.formattedDate(milliseconds: renderJob.createdAt)
+        updatedAtTitle = AnimateDateFormatting.formattedDate(milliseconds: renderJob.updatedAt)
         workflowRunId = renderJob.workflowRunId
         providerRequestId = renderJob.providerRequestId
         errorCode = renderJob.errorCode

@@ -54,7 +54,7 @@ struct AnimateCreditsPaywallView: View {
                 .padding(.top, 18)
                 .padding(.bottom, 24)
             }
-            .background(MomentsTheme.shellBackground.ignoresSafeArea())
+            .background(AnimateTheme.shellBackground.ignoresSafeArea())
             .navigationTitle(L10n.string("credits.title"))
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {

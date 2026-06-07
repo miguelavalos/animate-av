@@ -80,14 +80,14 @@ struct MomentsInProgressListRowPresentation: Identifiable, Equatable {
         self.metadata = [
             MomentsInProgressListMetadataPresentation(
                 systemImage: "clock",
-                text: MomentsMomentFormatting.updatedAt(moment)
+                text: AnimateVideoFormatting.updatedAt(moment)
             ),
             MomentsInProgressListMetadataPresentation(
                 systemImage: "text.bubble",
-                text: MomentsMomentFormatting.storyUsage(moment)
+                text: AnimateVideoFormatting.storyUsage(moment)
             )
         ]
-        self.statusTitle = MomentsMomentFormatting.statusTitle(moment)
+        self.statusTitle = AnimateVideoFormatting.statusTitle(moment)
         self.accessorySystemImage = isSelected ? "chevron.up.circle.fill" : "chevron.right.circle"
         self.isSelected = isSelected
     }

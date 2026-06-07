@@ -106,7 +106,7 @@ struct AnimateHomeMomentStatusCard: View {
             if let latestMoment = momentsSummary.latestMoment {
                 AnimateHomeLatestMomentRow(
                     title: latestMoment.title,
-                    detail: MomentsMomentFormatting.compactDetail(for: latestMoment),
+                    detail: AnimateVideoFormatting.compactDetail(for: latestMoment),
                     openMoment: openInProgress
                 )
             } else if isSignedIn {

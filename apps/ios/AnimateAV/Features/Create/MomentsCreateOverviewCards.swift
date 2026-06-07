@@ -24,9 +24,9 @@ struct MomentsCreateActiveMomentCard: View {
             AVAppShellCard {
                 AVAppShellInfoRow(
                     title: activeMoment.title,
-                    detail: MomentsMomentFormatting.updatedAt(activeMoment),
+                    detail: AnimateVideoFormatting.updatedAt(activeMoment),
                     systemImage: "rectangle.stack",
-                    eyebrow: MomentsMomentFormatting.statusTitle(activeMoment)
+                    eyebrow: AnimateVideoFormatting.statusTitle(activeMoment)
                 )
             }
         }
