@@ -1,20 +1,24 @@
 # Animate AV Canonical Asset Handoff
 
-Status: required before adding final App Store icon, splash, AV monogram usage,
-Avi artwork, or framed screenshot assets to this public repo.
+Status: required before adding or changing final App Store icon, launch logo,
+splash, onboarding, AV monogram usage, Avi artwork, or framed screenshot assets
+in this public repo.
 
 Do not use this document to approve generated, approximate, or exploratory
 artwork. It is a handoff record for already-approved canonical assets.
 
 ## Current Status
 
-No approved canonical Animate AV asset package is recorded for this public iOS
-repo yet. Do not import placeholder Animate AV logo, mark, concept, or icon
-files from private brand working folders as final App Store assets.
+Animate AV follows the shared Apps AV first-run branding pattern:
 
-The current implementation should keep using code-level brand tokens and
-system-symbol Avi placeholders until a reviewed asset package is approved and
-recorded here.
+```text
+native launch logo + icon -> product splash with Avi -> onboarding
+```
+
+Any public PR that adds or replaces final runtime assets must record the exact
+approved package below. Do not import exploratory Animate AV logo, mark,
+concept, or icon files from private brand working folders as final App Store
+assets without updating this handoff.
 
 ## Asset Package
 
@@ -47,6 +51,14 @@ Notes:
 ## Required Rules
 
 - [ ] App icon source is approved for Animate AV.
+- [ ] Native launch logo source is approved for Animate AV.
+- [ ] Splash artwork source is approved for Animate AV.
+- [ ] Onboarding artwork source is approved for Animate AV.
+- [ ] Splash artwork shows Avi as a useful assistant, not as the app icon.
+- [ ] Onboarding artwork does not duplicate Avi when Avi is already rendered
+  near the primary call-to-action.
+- [ ] Splash and onboarding artwork integrate with the app background without
+  visible rectangular canvas edges.
 - [ ] Any embedded AV mark uses the canonical AVALSYS monogram.
 - [ ] AV mark is small and secondary, not the primary product icon.
 - [ ] Avi is not used as the app icon, product logo, or wordmark.
@@ -63,6 +75,11 @@ Before opening the asset PR:
 
 - [ ] Compare app icon at small home-screen sizes.
 - [ ] Compare App Store icon at full resolution.
+- [ ] Clean-install the app and verify native launch, splash, and onboarding
+  appear in order.
+- [ ] Confirm native launch shows Animate AV logo plus icon, not copied branding
+  from another Apps AV app.
+- [ ] Confirm splash and onboarding use product-specific Animate AV artwork.
 - [ ] Confirm dark/light appearance where relevant.
 - [ ] Confirm Reduce Transparency/Increase Contrast do not break app UI around
   the asset.

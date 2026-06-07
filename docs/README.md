@@ -30,20 +30,41 @@ handoff values belong in the private AVALSYS suite.
 
 ## Current Public Product Shape
 
-V1 is a signed-in memory-video workflow:
+V1 is a signed-in one-photo animation workflow:
 
 ```text
-Choose moments -> edit options -> Create video -> confirm credits -> final render -> local download -> Gallery
+Choose source photo -> choose style, message, and duration -> confirm credits -> generate animated video -> local download -> Gallery
 ```
 
-The public client should not describe a generated preview step, a Story Review
-balance, model/provider choices, generated audio, captions, subtitles, text
-overlays, or permanent cloud video storage as v1 features.
+The public client may also expose image generation from a source photo as a
+separate Images workflow. Generated images are visible user assets and may be
+downloaded, shared, or used as video input when the signed backend supports that
+state.
 
-Backend-backed in-progress Moments and finished Gallery metadata may recover
-after sign-in. Local video files remain device-local availability: a Gallery
-item can exist while its video file is missing on the current device, and
-redownload is offered only when the backend reports an available final artifact.
+The public client should not describe a generated video preview step,
+model/provider choices, generated audio options, captions, subtitles, text
+overlays, or permanent cloud media storage as v1 features. Video output always
+has backend-generated audio in v1; the user does not upload or edit audio.
+
+Backend-backed in-progress video/image state and finished Gallery metadata may
+recover after sign-in. Local media files remain device-local availability: a
+Gallery item can exist while its video or image file is missing on the current
+device, and redownload is offered only when the backend reports an available
+artifact.
+
+## Branding And First Run
+
+Animate AV follows the shared Apps AV first-run sequence:
+
+```text
+native launch logo + icon -> product splash with Avi -> onboarding
+```
+
+The native launch frame uses the approved Animate AV logo lockup with the
+Animate icon/mark. The splash uses product-specific generated artwork where Avi
+acts as the assistant for turning a source photo into an animated result.
+Onboarding may reuse the same concept, but should not duplicate Avi in the
+background when Avi is already shown near the primary call-to-action.
 
 The public client must treat realtime state as read-only synced product state.
 User actions go through authenticated backend commands; owner-scoped realtime

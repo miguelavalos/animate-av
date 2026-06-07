@@ -21,19 +21,36 @@ tooling.
 
 ## Client Scope
 
-The iOS app is the local media selection, editing, realtime display, download,
-and local Gallery surface. Backend services own final-render planning, credit
-costs, provider routing, render status, artifacts, and credit commit/release.
+The iOS app is the local source-photo selection, setup, realtime display,
+download, sharing, and local Gallery surface. Backend services own quote
+planning, credit costs, provider routing, generation status, artifacts, and
+credit commit/release.
 
 Current v1 flow:
 
 ```text
-Choose moments -> edit options -> Create video -> confirm credits -> final render -> local download -> Gallery
+Choose source photo -> choose style, message, and duration -> confirm credits -> generate animated video -> local download -> Gallery
 ```
 
-Do not add public preview, Story Review balance, generated audio, captions,
-subtitles, text overlays, provider/model selection, or cloud Gallery recovery
-as v1 client features.
+Images are a separate v1 workflow: choose one source photo, generate a stylized
+image, then download/share it or use it as video input when synced state allows.
+
+Do not add a public video preview/review step, generated audio controls,
+captions, subtitles, text overlays, provider/model selection, or cloud media
+storage as v1 client features.
+
+## First Run Branding
+
+The expected first-run sequence is:
+
+```text
+native launch logo + icon -> product splash with Avi -> onboarding
+```
+
+Verify this on a clean simulator install after changing launch assets,
+storyboard/plist configuration, splash art, onboarding art, or shell bootstrap
+timing. The native launch frame must show Animate AV branding, not copied
+branding from another Apps AV product.
 
 Do not commit:
 

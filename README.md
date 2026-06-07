@@ -4,8 +4,8 @@
 
 Open-source frontend app repository for Animate AV.
 
-Animate AV helps people turn one source photo into a short animated video or a
-stylized image.
+Animate AV helps people start from one source photo and create either a short
+animated video or a stylized image.
 This public repository contains the iOS client code, public setup docs, support
 policy, security policy, and client-side checks that are safe to publish.
 

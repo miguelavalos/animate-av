@@ -8,27 +8,32 @@ runtime configuration.
 
 ## Backend-Owned Workflows
 
-Final video creation is backend-owned. The iOS app sends user intent and renders
-the state returned by the configured backend/realtime layer.
+Video and image generation are backend-owned. The iOS app sends user intent and
+renders the state returned by the configured backend/realtime layer.
 
 The current v1 user flow is:
 
 ```text
-Choose moments -> edit options -> Create video -> confirm credits -> final render -> local download -> Gallery
+Choose source photo -> choose style, message, and duration -> confirm credits -> generate animated video -> local download -> Gallery
 ```
 
-There is no public generated preview step and no separate Story Review currency
-in v1. Story preparation is internal planning support for final render.
+Images use the same ownership model with a simpler output: choose one source
+photo, generate a stylized image, then download/share it or use it as video
+input when synced state allows.
+
+There is no public generated video preview/review step and no separate image
+credit currency in v1. Any intermediate styled image created inside the direct
+video flow is internal backend workflow state, not a user review surface.
 
 The iOS app must not:
 
-- calculate final video credit cost;
+- calculate video or image credit cost;
 - calculate final provider route, provider capability, or final duration;
-- call Convex mutations for backend-owned Moment, media, story, render,
-  artifact, Gallery, or workflow state;
-- create or persist final render jobs as local authority;
-- update final render job status;
-- attach final render artifacts;
+- call Convex mutations for backend-owned video jobs, image jobs, media,
+  artifacts, Gallery, accounting, or workflow state;
+- create or persist generation jobs as local authority;
+- update generation job status;
+- attach generation artifacts;
 - poll backend status endpoints for normal product UI;
 - treat a locally supplied owner id as sufficient authorization for realtime
   reads;
@@ -38,30 +43,30 @@ The iOS app may:
 
 - collect user media choices and setup options;
 - show local editing affordances before final confirmation;
-- request an official backend render plan;
-- confirm the selected backend render plan;
+- request an official backend quote/plan;
+- confirm the selected backend quote/plan;
 - ask the authenticated backend for a realtime session before starting
   owner-scoped subscriptions;
-- subscribe to synced workspace state and render progress, failure, and final
+- subscribe to synced workspace state and generation progress, failure, and final
   artifact availability after that realtime session is available;
 - download the completed final artifact to local device storage;
-- move the downloaded final video into Gallery and clear the active
-  Create draft/session;
+- move the downloaded final video or image into Gallery and clear the active
+  draft/session;
 - render recovered Gallery metadata separately from current-device file
   availability;
 - show a temporary local loading state while waiting for synced state to arrive.
 
 ## UI Rule
 
-After final video confirmation, editing must lock from synced workflow state
-until the final render reaches a terminal state. The user should see exactly one
+After video or image confirmation, editing must lock from synced workflow state
+until the generation reaches a terminal state. The user should see exactly one
 clear status: waiting, creating, failed, or ready.
 
-When the final video is ready, v1 shows only the download/finish path. After
-finish, the Create screen closes and Gallery shows the newest finished video
-first. A Gallery item may be remote metadata only until the final video exists
-on the current device. The v1 client must not offer final-video versions or
-"create another version" from the completed state.
+When the final artifact is ready, v1 shows only the download/finish path. After
+finish, the creation screen closes and Gallery shows the newest finished item
+first. A Gallery item may be remote metadata only until the final video or image
+exists on the current device. The v1 client must not offer final-video versions
+or "create another version" from the completed state.
 
 ## Local Availability Rule
 
@@ -69,16 +74,18 @@ Signed-in product state and local file availability are different things.
 
 The iOS app must:
 
-- keep backend-backed Moments visible after sign-in when synced state exists;
-- keep Gallery metadata visible when the local final video file is missing;
-- show whether a video is saved on this device, downloadable, unavailable, or
+- keep backend-backed video/image state visible after sign-in when synced state
+  exists;
+- keep Gallery metadata visible when the local final media file is missing;
+- show whether media is saved on this device, downloadable, unavailable, or
   missing locally;
-- block playback/share when no local video file exists;
-- validate required Photos assets before final-render actions that need local
+- block playback/share when no local media file exists;
+- validate required Photos assets before generation actions that need local
   source media.
 
-If the app appears to need a timer or manual status loop for final video
-creation, stop and review the private architecture contract before adding code.
+If the app appears to need a timer or manual status loop for normal video or
+image creation state, stop and review the private architecture contract before
+adding code.
 
 ## Realtime Subscription Rule
 
@@ -99,9 +106,10 @@ fallback that subscribes with only an owner id.
 
 ## V1 Media Rule
 
-V1 final videos are animated one-photo videos with audio. The client must not present
-generated audio, narration, voiceover, voice cloning, music, captions,
-subtitles, text overlays, or user audio uploads as available v1 features.
+V1 final videos are animated one-photo videos with backend-generated audio. The
+client must not present audio controls, narration, voiceover, voice cloning,
+music, captions, subtitles, text overlays, or user audio uploads as available v1
+features.
 
 ## Public Documentation Boundary
 
