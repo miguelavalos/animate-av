@@ -5,7 +5,7 @@ import XCTest
 @MainActor
 final class AnimateAviViewModelTests: XCTestCase {
     func testSignedOutGuidanceAsksForAuthentication() {
-        let presentation = MomentsAviPresentation.make(
+        let presentation = AnimateAviPresentation.make(
             isSignedIn: false,
             momentsSummary: InProgressMomentsSummary(),
             creditBalance: .empty
@@ -17,7 +17,7 @@ final class AnimateAviViewModelTests: XCTestCase {
     }
 
     func testActiveVideosDriveWorkflowFocus() {
-        let presentation = MomentsAviPresentation.make(
+        let presentation = AnimateAviPresentation.make(
             isSignedIn: true,
             momentsSummary: InProgressMomentsSummary.make(from: [
                 makeMoment(id: "active-1", status: "story_ready", updatedAt: 20),
@@ -32,7 +32,7 @@ final class AnimateAviViewModelTests: XCTestCase {
     }
 
     func testCreditGuidanceUsesSpendableBalance() {
-        let presentation = MomentsAviPresentation.make(
+        let presentation = AnimateAviPresentation.make(
             isSignedIn: true,
             momentsSummary: InProgressMomentsSummary(),
             creditBalance: AnimateCreditBalance(proMonthly: 2, promotional: 1, purchased: 3)
@@ -42,7 +42,7 @@ final class AnimateAviViewModelTests: XCTestCase {
     }
 
     func testCreditGuidanceUsesSingularSpendableCredit() {
-        let presentation = MomentsAviPresentation.make(
+        let presentation = AnimateAviPresentation.make(
             isSignedIn: true,
             momentsSummary: InProgressMomentsSummary(),
             creditBalance: AnimateCreditBalance(proMonthly: 1, promotional: 0, purchased: 0)
@@ -52,7 +52,7 @@ final class AnimateAviViewModelTests: XCTestCase {
     }
 
     func testZeroCreditsExplainFinalExportRequirement() {
-        let presentation = MomentsAviPresentation.make(
+        let presentation = AnimateAviPresentation.make(
             isSignedIn: true,
             momentsSummary: InProgressMomentsSummary(),
             creditBalance: .empty
@@ -65,7 +65,7 @@ final class AnimateAviViewModelTests: XCTestCase {
     }
 
     func testLoadingCreditsDoNotReadAsZeroCredits() {
-        let presentation = MomentsAviPresentation.make(
+        let presentation = AnimateAviPresentation.make(
             isSignedIn: true,
             momentsSummary: InProgressMomentsSummary(),
             creditBalance: .empty,
@@ -76,7 +76,7 @@ final class AnimateAviViewModelTests: XCTestCase {
     }
 
     func testOfflineCreditsExplainNetworkState() {
-        let presentation = MomentsAviPresentation.make(
+        let presentation = AnimateAviPresentation.make(
             isSignedIn: true,
             momentsSummary: InProgressMomentsSummary(),
             creditBalance: .empty,
@@ -92,7 +92,7 @@ final class AnimateAviViewModelTests: XCTestCase {
     func testViewModelExposesPresentationFromBoundState() {
         let summaryProvider = AviMomentsSummaryProvider()
         let accountProvider = AviAccountStateProvider()
-        let viewModel = MomentsAviViewModel()
+        let viewModel = AnimateAviViewModel()
         viewModel.bind(to: summaryProvider)
         viewModel.bind(accountStateProvider: accountProvider)
 

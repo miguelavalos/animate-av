@@ -3,14 +3,14 @@ import AVAppShellFoundation
 import AVSettingsFoundation
 import SwiftUI
 
-struct MomentsAviScreen: View {
+struct AnimateAviScreen: View {
     let selectTab: (AnimateRootTab) -> Void
     let startMoment: () -> Void
     let startSignInFlow: () -> Void
     @Environment(\.avCommonAppExperience) private var appExperience
-    @EnvironmentObject private var viewModel: MomentsAviViewModel
+    @EnvironmentObject private var viewModel: AnimateAviViewModel
 
-    private var presentation: MomentsAviPresentation {
+    private var presentation: AnimateAviPresentation {
         viewModel.presentation
     }
 
@@ -45,7 +45,7 @@ struct MomentsAviScreen: View {
                 .frame(width: 82, height: 82)
                 .accessibilityLabel("Avi")
         } content: {
-            MomentsAviGuidanceContent(
+            AnimateAviGuidanceContent(
                 presentation: presentation,
                 momentsSummary: viewModel.momentsSummary,
                 creditBalance: viewModel.creditBalance,
@@ -59,8 +59,8 @@ struct MomentsAviScreen: View {
     }
 }
 
-private struct MomentsAviGuidanceContent: View {
-    let presentation: MomentsAviPresentation
+private struct AnimateAviGuidanceContent: View {
+    let presentation: AnimateAviPresentation
     let momentsSummary: InProgressMomentsSummary
     let creditBalance: AnimateCreditBalance
     let creditBalanceLoadState: AnimateCreditBalanceLoadState
@@ -71,12 +71,12 @@ private struct MomentsAviGuidanceContent: View {
 
     var body: some View {
         if !isSignedIn {
-            MomentsAviSignInCard(startSignInFlow: startSignInFlow)
+            AnimateAviSignInCard(startSignInFlow: startSignInFlow)
         }
 
-        MomentsAviPreparationCard(openCreate: startMoment)
+        AnimateAviPreparationCard(openCreate: startMoment)
 
-        MomentsAviCurrentFocusCard(
+        AnimateAviCurrentFocusCard(
             workflowFocusTitle: presentation.workflowFocusTitle,
             workflowFocusMessage: presentation.workflowFocusMessage,
             workflowFocusSystemImage: presentation.workflowFocusSystemImage,
@@ -85,17 +85,17 @@ private struct MomentsAviGuidanceContent: View {
             creditBalanceLoadState: creditBalanceLoadState
         )
 
-        MomentsAviCreditGuidanceCard(message: presentation.creditGuidanceMessage)
+        AnimateAviCreditGuidanceCard(message: presentation.creditGuidanceMessage)
 
-        MomentsAviHelpCard()
+        AnimateAviHelpCard()
 
-        MomentsAviLibraryGuidanceCard {
+        AnimateAviLibraryGuidanceCard {
             selectTab(.gallery)
         }
     }
 }
 
-private struct MomentsAviSignInCard: View {
+private struct AnimateAviSignInCard: View {
     let startSignInFlow: () -> Void
 
     var body: some View {

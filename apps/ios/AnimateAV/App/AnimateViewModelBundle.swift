@@ -6,7 +6,7 @@ struct AnimateViewModelBundle {
     let create: MomentsCreateViewModel
     let inProgress: MomentsInProgressViewModel
     let gallery: MomentsGalleryViewModel
-    let avi: MomentsAviViewModel
+    let avi: AnimateAviViewModel
 
     init(
         accountController: AccountController,
@@ -24,7 +24,7 @@ struct AnimateViewModelBundle {
             authTokenProvider: authTokenProvider,
             finalRenderClient: finalRenderClient
         )
-        avi = MomentsAviViewModel()
+        avi = AnimateAviViewModel()
 
         home.bind(to: workflows.inProgressMoments)
         home.bind(accountStateProvider: accountController)

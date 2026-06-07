@@ -17,7 +17,7 @@ final class MomentsDependencyContainer: ObservableObject {
     let createViewModel: MomentsCreateViewModel
     let inProgressViewModel: MomentsInProgressViewModel
     let galleryViewModel: MomentsGalleryViewModel
-    let aviViewModel: MomentsAviViewModel
+    let aviViewModel: AnimateAviViewModel
     private let realtimeSessionClient: MomentsRealtimeSessionClient
     private let realtimeSessionStore: MomentsRealtimeSessionStore
     private var realtimeSessionTask: Task<Void, Never>?

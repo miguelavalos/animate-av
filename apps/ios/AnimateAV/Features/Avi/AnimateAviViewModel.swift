@@ -2,7 +2,7 @@ import Combine
 import Foundation
 
 @MainActor
-final class MomentsAviViewModel: ObservableObject {
+final class AnimateAviViewModel: ObservableObject {
     @Published private(set) var momentsSummary = InProgressMomentsSummary()
     @Published private(set) var isSignedIn = false
     @Published private(set) var creditBalance = AnimateCreditBalance.empty
@@ -11,8 +11,8 @@ final class MomentsAviViewModel: ObservableObject {
     private var momentsCancellables = Set<AnyCancellable>()
     private var accountCancellables = Set<AnyCancellable>()
 
-    var presentation: MomentsAviPresentation {
-        MomentsAviPresentation.make(
+    var presentation: AnimateAviPresentation {
+        AnimateAviPresentation.make(
             isSignedIn: isSignedIn,
             momentsSummary: momentsSummary,
             creditBalance: creditBalance,

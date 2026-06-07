@@ -1,7 +1,7 @@
 import AVAviFoundation
 import SwiftUI
 
-struct MomentsAviCurrentFocusCard: View {
+struct AnimateAviCurrentFocusCard: View {
     let workflowFocusTitle: String
     let workflowFocusMessage: String
     let workflowFocusSystemImage: String
@@ -49,7 +49,7 @@ struct MomentsAviCurrentFocusCard: View {
     }
 }
 
-struct MomentsAviCreditGuidanceCard: View {
+struct AnimateAviCreditGuidanceCard: View {
     let message: String
 
     var body: some View {

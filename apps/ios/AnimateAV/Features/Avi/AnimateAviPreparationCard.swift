@@ -1,7 +1,7 @@
 import AVAviFoundation
 import SwiftUI
 
-struct MomentsAviPreparationCard: View {
+struct AnimateAviPreparationCard: View {
     let openCreate: () -> Void
 
     var body: some View {

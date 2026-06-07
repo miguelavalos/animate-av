@@ -11,7 +11,7 @@ struct AnimateAppShellView: View {
     @EnvironmentObject private var createViewModel: MomentsCreateViewModel
     @EnvironmentObject private var inProgressViewModel: MomentsInProgressViewModel
     @EnvironmentObject private var galleryViewModel: MomentsGalleryViewModel
-    @EnvironmentObject private var aviViewModel: MomentsAviViewModel
+    @EnvironmentObject private var aviViewModel: AnimateAviViewModel
     @EnvironmentObject private var newVideoStartController: AnimateNewVideoStartController
     @Environment(\.avCommonAppExperience) private var appExperience
     @State private var chromeItem: AVAppShellChromeItem?
@@ -155,7 +155,7 @@ struct AnimateAppShellView: View {
                 MomentsGalleryScreen()
                     .environmentObject(galleryViewModel)
             case .avi:
-                MomentsAviScreen(
+                AnimateAviScreen(
                     selectTab: selectRootTab,
                     startMoment: startOrContinueMoment,
                     startSignInFlow: startSignInFlow

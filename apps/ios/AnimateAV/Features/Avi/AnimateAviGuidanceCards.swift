@@ -1,7 +1,7 @@
 import AVAviFoundation
 import SwiftUI
 
-struct MomentsAviHelpCard: View {
+struct AnimateAviHelpCard: View {
     var body: some View {
         AVAviGuidanceCard(
             title: L10n.string("avi.help.title"),
@@ -26,7 +26,7 @@ struct MomentsAviHelpCard: View {
     }
 }
 
-struct MomentsAviLibraryGuidanceCard: View {
+struct AnimateAviLibraryGuidanceCard: View {
     let openGallery: () -> Void
 
     var body: some View {

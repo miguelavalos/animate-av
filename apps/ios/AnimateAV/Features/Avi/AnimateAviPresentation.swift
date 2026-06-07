@@ -1,6 +1,6 @@
 import Foundation
 
-struct MomentsAviPresentation: Equatable {
+struct AnimateAviPresentation: Equatable {
     let workflowFocusTitle: String
     let workflowFocusMessage: String
     let workflowFocusSystemImage: String
@@ -11,8 +11,8 @@ struct MomentsAviPresentation: Equatable {
         momentsSummary: InProgressMomentsSummary,
         creditBalance: AnimateCreditBalance,
         creditBalanceLoadState: AnimateCreditBalanceLoadState = .loaded
-    ) -> MomentsAviPresentation {
-        MomentsAviPresentation(
+    ) -> AnimateAviPresentation {
+        AnimateAviPresentation(
             workflowFocusTitle: workflowFocusTitle(
                 isSignedIn: isSignedIn,
                 momentsSummary: momentsSummary
