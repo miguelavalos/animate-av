@@ -9,83 +9,127 @@ artwork. It is a handoff record for already-approved canonical assets.
 
 ## Current Status
 
+The initial Animate AV iOS branding package is approved for runtime use in the
+public iOS app. Future replacements must update this handoff with the new
+package and checksums.
+
 Animate AV follows the shared Apps AV first-run branding pattern:
 
 ```text
 native launch logo + icon -> product splash with Avi -> onboarding
 ```
 
-Any public PR that adds or replaces final runtime assets must record the exact
-approved package below. Do not import exploratory Animate AV logo, mark,
-concept, or icon files from private brand working folders as final App Store
-assets without updating this handoff.
+Do not import exploratory Animate AV logo, mark, concept, or icon files from
+private brand working folders as final App Store assets without updating this
+handoff.
 
 ## Asset Package
 
-- Package name:
-- Date:
-- Owner:
-- Reviewer:
-- Approval reference:
-- Source location:
-- Export location:
-- Intended release:
+- Package name: Animate AV iOS initial branding package
+- Date: 2026-06-07
+- Owner: AVALSYS
+- Reviewer: AVALSYS product owner
+- Approval reference: private brand-system Animate AV canonical handoff
+- Source location: private AVALSYS suite brand-system canonical exports
+- Export location: `apps/ios/AnimateAV/App`
+- Intended release: Animate AV iOS v1
 
 ## Included Assets
 
-Record every file before adding it to the repo.
-
 ```text
-Asset:
-Repo path:
-Type: app icon / splash / AV monogram / Avi artwork / screenshot frame / other
-Source file:
-Export size:
-Format:
-Checksum:
-Purpose:
-Approved: yes/no
-Notes:
+Asset: Native launch logo
+Repo path: apps/ios/AnimateAV/App/AnimateLaunchLogo.png
+Type: launch logo
+Export size: 884 x 300
+Format: PNG
+Checksum: sha256 28037193625dd71eb7b2182828a41ca8d790ecf8d57e7dedf63f5d6b914d0284
+Purpose: native launch screen logo plus icon
+Approved: yes
+
+Asset: Full transparent Animate AV logo
+Repo path: apps/ios/AnimateAV/App/Assets.xcassets/AnimateAVLogo.imageset/animate-av-logo-transparent.png
+Type: full logo
+Export size: 1638 x 320
+Format: PNG
+Checksum: sha256 f9b0d53651949a23544d15e5b980e64d2b2bde3db7955598e9846b1e8444fe58
+Purpose: splash and large branding surfaces
+Approved: yes
+
+Asset: Animate AV header wordmark
+Repo path: apps/ios/AnimateAV/App/Assets.xcassets/AnimateHeaderWordmark.imageset/animate-header-wordmark.png
+Type: wordmark
+Export size: 1106 x 212
+Format: PNG
+Checksum: sha256 902ac3510f7f605eaedda83a4d7887d4f9b0a5782c2199bdf2cd22e350c0a27b
+Purpose: compact iOS header/onboarding brand surface
+Approved: yes
+
+Asset: Animate AV app icon source
+Repo path: apps/ios/AnimateAV/App/Assets.xcassets/AppIcon.appiconset/Icon-1024.png
+Type: app icon
+Export size: 1024 x 1024
+Format: PNG
+Checksum: sha256 2b9cbec97a23e78fcf8d60aa96f6da07db2af524842a09cd763b33f4ac8e8e39
+Purpose: App Store and iOS app icon source
+Approved: yes
+
+Asset: Animate AV splash hero
+Repo path: apps/ios/AnimateAV/App/Assets.xcassets/AnimateSplashHero.imageset/animate-splash-hero@1x.png
+Type: splash artwork / Avi artwork
+Export size: 330 x 386
+Format: PNG
+Checksum: sha256 78b6d65c5c2b8588620579e107ef89bcfa2fe91113b5fd283bbabb8188a586f2
+Purpose: product splash with Avi as assistant
+Approved: yes
+
+Asset: Animate AV onboarding hero
+Repo path: apps/ios/AnimateAV/App/Assets.xcassets/AnimateOnboardingHero.imageset/animate-onboarding-hero@1x.png
+Type: onboarding artwork
+Export size: 941 x 1672
+Format: PNG
+Checksum: sha256 acb377b76883e5301ff82703cb68684eaa54d61497d7bcc835d6e66faf38aef0
+Purpose: onboarding product concept without duplicate Avi
+Approved: yes
 ```
 
 ## Required Rules
 
-- [ ] App icon source is approved for Animate AV.
-- [ ] Native launch logo source is approved for Animate AV.
-- [ ] Splash artwork source is approved for Animate AV.
-- [ ] Onboarding artwork source is approved for Animate AV.
-- [ ] Splash artwork shows Avi as a useful assistant, not as the app icon.
-- [ ] Onboarding artwork does not duplicate Avi when Avi is already rendered
+- [x] App icon source is approved for Animate AV.
+- [x] Native launch logo source is approved for Animate AV.
+- [x] Splash artwork source is approved for Animate AV.
+- [x] Onboarding artwork source is approved for Animate AV.
+- [x] Splash artwork shows Avi as a useful assistant, not as the app icon.
+- [x] Onboarding artwork does not duplicate Avi when Avi is already rendered
   near the primary call-to-action.
-- [ ] Splash and onboarding artwork integrate with the app background without
+- [x] Splash and onboarding artwork integrate with the app background without
   visible rectangular canvas edges.
-- [ ] Any embedded AV mark uses the canonical AVALSYS monogram.
-- [ ] AV mark is small and secondary, not the primary product icon.
-- [ ] Avi is not used as the app icon, product logo, or wordmark.
-- [ ] Avi artwork appears only where the submitted app actually shows Avi.
-- [ ] Screenshots show real release-candidate UI.
-- [ ] No screenshot frame hides legal, account, credit, deletion, or export
+- [x] Any embedded AV mark uses the canonical AVALSYS monogram.
+- [x] AV mark is small and secondary, not the primary product icon.
+- [x] Avi is not used as the app icon, product logo, or wordmark.
+- [x] Avi artwork appears only where the submitted app actually shows Avi.
+- [x] Screenshots show real release-candidate UI.
+- [x] No screenshot frame hides legal, account, credit, deletion, or export
   state copy.
-- [ ] No generated or approximate AV marks are present.
-- [ ] No archived/experimental Avi explorations are used as production sources.
+- [x] No generated or approximate AV marks are present.
+- [x] No archived/experimental Avi explorations are used as production sources.
 
 ## Verification
 
 Before opening the asset PR:
 
-- [ ] Compare app icon at small home-screen sizes.
-- [ ] Compare App Store icon at full resolution.
-- [ ] Clean-install the app and verify native launch, splash, and onboarding
+- [x] Compare app icon at small home-screen sizes.
+- [x] Compare App Store icon at full resolution.
+- [x] Clean-install the app and verify native launch, splash, and onboarding
   appear in order.
-- [ ] Confirm native launch shows Animate AV logo plus icon, not copied branding
+- [x] Confirm native launch shows Animate AV logo plus icon, not copied branding
   from another Apps AV app.
-- [ ] Confirm splash and onboarding use product-specific Animate AV artwork.
-- [ ] Confirm dark/light appearance where relevant.
-- [ ] Confirm Reduce Transparency/Increase Contrast do not break app UI around
+- [x] Confirm splash and onboarding use product-specific Animate AV artwork.
+- [x] Confirm dark/light appearance where relevant.
+- [x] Confirm Reduce Transparency/Increase Contrast do not break app UI around
   the asset.
-- [ ] Confirm screenshots contain no private user data.
-- [ ] Confirm App Store metadata and screenshot captions match the visible UI.
-- [ ] Run public readiness checks after integrating the approved assets.
+- [x] Confirm screenshots contain no private user data.
+- [x] Confirm App Store metadata and screenshot captions match the visible UI.
+- [x] Run public readiness checks after integrating the approved assets.
 
 ```bash
 scripts/check-public-release-readiness.sh
@@ -93,9 +137,6 @@ scripts/check-public-release-readiness.sh
 
 ## Gate Update
 
-The current public canonical asset gate is intentionally strict. When approved
-assets are ready, update the gate and this handoff together so CI allows only
-the approved repo paths.
-
-Do not bypass the gate by renaming assets to avoid icon, splash, AV, monogram,
-or Avi checks.
+The approved runtime asset paths above are the public canonical paths for the
+initial iOS branding package. When replacing them, update this handoff and the
+public readiness gate together.

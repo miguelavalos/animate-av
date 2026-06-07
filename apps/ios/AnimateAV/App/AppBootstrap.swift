@@ -7,7 +7,8 @@ struct MomentsAppBootstrapView: View {
     @State private var selectedTab: MomentsRootTab = .home
     @State private var authOptionsArePresented = false
     @State private var authenticationWasSkipped = false
-    @State private var isShowingAccountOnboarding = true
+    @State private var isShowingAccountOnboarding = false
+    @State private var initialSplashIsPresented = true
     @State private var didApplyLaunchTab = false
     @State private var postAuthenticationSplashIsPresented = false
 
@@ -18,7 +19,9 @@ struct MomentsAppBootstrapView: View {
 
     var body: some View {
         Group {
-            if shouldShowOnboarding {
+            if shouldShowInitialSplash {
+                AnimateAVSplashView()
+            } else if shouldShowOnboarding {
                 MomentsAuthOnboardingView(
                     authOptionsArePresented: $authOptionsArePresented,
                     accountIsAvailable: dependencies.accountController.isAccountAvailable,
@@ -32,9 +35,6 @@ struct MomentsAppBootstrapView: View {
                     startSignInFlow: { startSignInFlow(showAuthOptions: true) }
                 )
                 .id(dependencies.accountController.isSignedIn ? "signed-in-shell" : "skipped-auth-shell")
-                .avSplashTransition(policy: splashPolicy) {
-                    AnimateAVSplashView()
-                }
                 .overlay {
                     if postAuthenticationSplashIsPresented {
                         AnimateAVSplashView()
@@ -53,6 +53,7 @@ struct MomentsAppBootstrapView: View {
         .environmentObject(dependencies.aviViewModel)
         .task {
             applyLaunchTabIfNeeded()
+            await completeInitialSplashIfNeeded()
             dependencies.applyUITestFixturesIfNeeded()
             await Task.yield()
             dependencies.applyUITestFixturesIfNeeded()
@@ -70,11 +71,34 @@ struct MomentsAppBootstrapView: View {
         !dependencies.accountController.isSignedIn && !authenticationWasSkipped && isShowingAccountOnboarding
     }
 
+    private var shouldShowInitialSplash: Bool {
+        initialSplashIsPresented && !launchContext.shouldDisableSplash
+    }
+
     private func applyLaunchTabIfNeeded() {
         guard !didApplyLaunchTab else { return }
         didApplyLaunchTab = true
         guard let preferredTab = launchContext.preferredTab else { return }
         selectedTab = MomentsRootTab(preferredTab)
+    }
+
+    private func completeInitialSplashIfNeeded() async {
+        guard initialSplashIsPresented else { return }
+        if !launchContext.shouldDisableSplash {
+            try? await Task.sleep(for: splashPolicy.displayDuration)
+        }
+        await MainActor.run {
+            withAnimation(splashPolicy.dismissAnimation) {
+                initialSplashIsPresented = false
+                showInitialOnboardingAfterSplashIfNeeded()
+            }
+        }
+    }
+
+    private func showInitialOnboardingAfterSplashIfNeeded() {
+        guard !dependencies.accountController.isSignedIn else { return }
+        guard !authenticationWasSkipped else { return }
+        isShowingAccountOnboarding = true
     }
 
     private func skipAuthentication() {

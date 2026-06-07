@@ -61,6 +61,7 @@
 		5065F70F1670DC4B60BD67FE /* MomentsStoryClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73240BBE7A26909A56725DB1 /* MomentsStoryClient.swift */; };
 		50F399607CC61E09116F4349 /* MomentsCreateAvailabilityPresentationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9A2D2E20528929C346A726B6 /* MomentsCreateAvailabilityPresentationTests.swift */; };
 		515394ED3F547FEB93DF5B0E /* MomentsInProgressPresentation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89F2BB67F1C1A3CF0012C800 /* MomentsInProgressPresentation.swift */; };
+		522ED518BC7F4EAF9EEAAFB0 /* AnimateLaunchLogo.png in Resources */ = {isa = PBXBuildFile; fileRef = 35A4D44D62AFB09DF0EB855D /* AnimateLaunchLogo.png */; };
 		5293999ECF73EE2F1827478A /* AVAviFoundation in Frameworks */ = {isa = PBXBuildFile; productRef = 95797BA820D7E6F7A01EF3B1 /* AVAviFoundation */; };
 		52CA0EE85F7EC0F31A90EB7D /* MomentsInProgressListRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 811493A532A4A2AF9FFA53AB /* MomentsInProgressListRow.swift */; };
 		53038948A5A442D3FB605072 /* MomentsCreateScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2634FAC1ACA1D3BC416F306A /* MomentsCreateScreen.swift */; };
@@ -105,6 +106,7 @@
 		95377A915F57567CEAF87179 /* MomentsHomePresentationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 342A57F7C4A63B23B31F06F2 /* MomentsHomePresentationTests.swift */; };
 		96A473CC138D21B35A17537A /* MomentsInProgressWorkspacePresentation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6C090C40F7F9D78E268B08BC /* MomentsInProgressWorkspacePresentation.swift */; };
 		96ED7828C0ED9A81FA91FF0B /* MomentSetupFormModels.swift in Sources */ = {isa = PBXBuildFile; fileRef = 87C0A8D12AC726BEB3EA8650 /* MomentSetupFormModels.swift */; };
+		9943A148B0D040B2EB93C263 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 98C635FA97FC6673CD774829 /* LaunchScreen.storyboard */; };
 		99826ED6660DC0C74A5DC606 /* MomentsGalleryVideoRecord.swift in Sources */ = {isa = PBXBuildFile; fileRef = 611CB407E381FF1B67B9DFB4 /* MomentsGalleryVideoRecord.swift */; };
 		9B3FE2460234066A9F70F506 /* MomentsMediaUploadDiagnostics.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8AEAFDF6288BA9A42F18D3FA /* MomentsMediaUploadDiagnostics.swift */; };
 		9CAAC864E1A9919B07353066 /* MomentsInProgressDetailComponents.swift in Sources */ = {isa = PBXBuildFile; fileRef = B188E704B2AD685AD4300FB7 /* MomentsInProgressDetailComponents.swift */; };
@@ -247,6 +249,7 @@
 		33E3C83BC8F8E531320E281F /* MomentsTheme.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MomentsTheme.swift; sourceTree = "<group>"; };
 		342A57F7C4A63B23B31F06F2 /* MomentsHomePresentationTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MomentsHomePresentationTests.swift; sourceTree = "<group>"; };
 		348ACE1258B85551346ABDBD /* MomentArtifact.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MomentArtifact.swift; sourceTree = "<group>"; };
+		35A4D44D62AFB09DF0EB855D /* AnimateLaunchLogo.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = AnimateLaunchLogo.png; sourceTree = "<group>"; };
 		35CF65D27C449407D71413CD /* MomentsWorkspaceCommandClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MomentsWorkspaceCommandClient.swift; sourceTree = "<group>"; };
 		398394AD9022E987405E65E5 /* MomentsInProgressWorkspaceSections.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MomentsInProgressWorkspaceSections.swift; sourceTree = "<group>"; };
 		39AD823468FA12F2E369742C /* MomentsWorkflowDiagnostics.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MomentsWorkflowDiagnostics.swift; sourceTree = "<group>"; };
@@ -331,6 +334,7 @@
 		955B03CF582923D0473F8D91 /* account-av */ = {isa = PBXFileReference; lastKnownFileType = folder; name = "account-av"; path = "../../../account-av"; sourceTree = SOURCE_ROOT; };
 		95AD07D99C0447126FA87F66 /* MomentsInProgressPresentationTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MomentsInProgressPresentationTests.swift; sourceTree = "<group>"; };
 		9884911251E812A45F843913 /* MomentsAppExperience.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MomentsAppExperience.swift; sourceTree = "<group>"; };
+		98C635FA97FC6673CD774829 /* LaunchScreen.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = LaunchScreen.storyboard; sourceTree = "<group>"; };
 		9A0EE2C460302DF513FBF9C7 /* MomentsAviViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MomentsAviViewModel.swift; sourceTree = "<group>"; };
 		9A2D2E20528929C346A726B6 /* MomentsCreateAvailabilityPresentationTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MomentsCreateAvailabilityPresentationTests.swift; sourceTree = "<group>"; };
 		9E6A7EAB76A35BEFE3F2699C /* MomentsAviScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MomentsAviScreen.swift; sourceTree = "<group>"; };
@@ -434,11 +438,13 @@
 				0917EB7C9358131BFF364B41 /* AnimateAV.entitlements */,
 				B3B81C0C7359119782FDDBD1 /* AnimateAVApp.swift */,
 				AE1DC055C0739B41C971804E /* AnimateAVSplashView.swift */,
+				35A4D44D62AFB09DF0EB855D /* AnimateLaunchLogo.png */,
 				55BA167F7BDCE70C049B8882 /* AppBootstrap.swift */,
 				04AD4EE734FA6F692092C44E /* AppConfig.swift */,
 				1EDC22B88D5F7BEA5633FB34 /* Assets.xcassets */,
 				721A782AE8ED97A7C47D9FAC /* DependencyContainer.swift */,
 				84DABB9A37EEEE7E49EF549E /* Info.plist */,
+				98C635FA97FC6673CD774829 /* LaunchScreen.storyboard */,
 				9884911251E812A45F843913 /* MomentsAppExperience.swift */,
 				918CB83B67E85DCA0EDE417A /* MomentsLaunchContext.swift */,
 				85BAD1FCD6BE2B6BEAEFBB96 /* MomentsViewModelBundle.swift */,
@@ -1096,7 +1102,9 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				522ED518BC7F4EAF9EEAAFB0 /* AnimateLaunchLogo.png in Resources */,
 				AF00269BC40F20ABE345FBEB /* Assets.xcassets in Resources */,
+				9943A148B0D040B2EB93C263 /* LaunchScreen.storyboard in Resources */,
 				DA6701458783567337171287 /* Localizable.strings in Resources */,
 				1073D526AC87B83CC4870605 /* PrivacyInfo.xcprivacy in Resources */,
 			);

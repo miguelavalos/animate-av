@@ -7,7 +7,7 @@
           "value": "light"
         }
       ],
-      "filename": "moments-header-wordmark.png",
+      "filename": "animate-header-wordmark.png",
       "idiom": "universal",
       "scale": "1x"
     },
@@ -18,7 +18,7 @@
           "value": "dark"
         }
       ],
-      "filename": "moments-header-wordmark-dark.png",
+      "filename": "animate-header-wordmark-dark.png",
       "idiom": "universal",
       "scale": "1x"
     }

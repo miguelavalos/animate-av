@@ -221,9 +221,9 @@
 "avi.currentFocus.title" = "Current focus";
 "avi.focus.empty.message" = "Start in Create with one occasion and a tight media set.";
 "avi.focus.finished.message" = "Finished videos appear in Gallery after they are saved on this device. Start a new video when the next image is ready.";
-"avi.focus.firstMemory.title" = "Create the first memory";
+"avi.focus.firstMemory.title" = "Create the first video";
 "avi.focus.inProgress.message" = "%d %@ in In Progress. Continue the next unfinished step.";
-"avi.focus.nextMemory.title" = "Start the next memory";
+"avi.focus.nextMemory.title" = "Start the next video";
 "avi.focus.activeWork.title" = "Active work";
 "avi.focus.signIn.message" = "Avi guidance unlocks after sign in because videos and Credits are tied to the account.";
 "avi.focus.signIn.title" = "Sign in first";
@@ -280,7 +280,7 @@
 "credits.availableNow.detail" = "%@ ready for final videos.";
 "credits.availableNow.title" = "Available now";
 "credits.countTitle" = "%d %@";
-"credits.get.detail" = "Add credits before creating your next memory film.";
+"credits.get.detail" = "Add credits before creating your next animated video.";
 "credits.get.title" = "Get credits";
 "credits.home.none" = "No credits available yet.";
 "credits.home.ready" = "Ready to spend on private animated videos.";
@@ -348,7 +348,7 @@
 "home.action.create.detail" = "Choose one source image to start.";
 "home.action.create.title" = "Create a video";
 "home.action.guidance.detail" = "Get help choosing, shaping, and creating.";
-"home.action.guidance.title" = "Get moment guidance";
+"home.action.guidance.title" = "Get Animate guidance";
 "home.action.openInProgress.detail.empty" = "Videos appear after you start one.";
 "home.action.openInProgress.detail.hasMoments" = "Continue videos that still need action.";
 "home.action.openInProgress.title" = "Open In Progress";
@@ -361,10 +361,10 @@
 "home.avi.preparing.detail" = "Avi is preparing your video plan.";
 "home.avi.preparing.title" = "Avi is preparing";
 "home.avi.selected.detail" = "%d %@ selected. Continue to create your video.";
-"home.avi.signIn.detail" = "Connect your account to create animated videos and final videos.";
+"home.avi.signIn.detail" = "Connect your account to create stylized animated videos.";
 "home.avi.signIn.title" = "Sign in to create";
 "home.aviBrief.continueMoment" = "Continue %@ from the next unfinished step.";
-"home.aviBrief.firstMemory" = "Plan the first memory film before adding media.";
+"home.aviBrief.firstMemory" = "Plan the first animated video before adding a source image.";
 "home.aviBrief.openInProgress" = "Open In Progress and continue the next unfinished step.";
 "home.aviBrief.signIn" = "Sign in to create videos, save videos, and keep Credits with your account.";
 "home.header.subtitle" = "Create private animated videos and stylized images from one photo.";
@@ -404,7 +404,7 @@
 "inProgress.avi.momentInProgress.message" = "%@ needs the next step: setup, video creation, or download.";
 "inProgress.avi.momentInProgress.title" = "Video in progress";
 "inProgress.avi.ready.message" = "Start a new video and choose the source image you want to use.";
-"inProgress.avi.ready.title" = "Ready to make a memory";
+"inProgress.avi.ready.title" = "Ready to make a video";
 "inProgress.credits.needed" = "Credits are needed before final video creation.";
 "inProgress.credits.ready" = "Credits are ready for final video creation.";
 "inProgress.card.mediaCount" = "%d media";
@@ -511,9 +511,9 @@
 "app.account.subtitle" = "Manage sign-in, %@ identity, credits, and account safety.";
 "app.onboarding.signIn" = "SIGN IN";
 "app.onboarding.skip" = "SKIP FOR NOW";
-"app.onboarding.subtitle" = "Turn one source photo into private animated videos and stylized images.";
-"app.onboarding.title" = "Make animated videos";
-"app.settings.subtitle" = "Manage %@, credits, moment privacy, and support links.";
+"app.onboarding.subtitle" = "Turn a favorite photo into a stylized animated video with sound.";
+"app.onboarding.title" = "Bring a photo to life";
+"app.settings.subtitle" = "Manage %@, credits, video privacy, and support links.";
 "app.splash.status" = "Preparing your studio";
 "app.splash.tagline" = "Private animated videos";
 "common.close" = "Close";
