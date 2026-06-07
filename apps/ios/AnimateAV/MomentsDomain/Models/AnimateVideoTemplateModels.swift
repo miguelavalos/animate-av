@@ -1,6 +1,6 @@
 import Foundation
 
-enum MomentTemplateID: String, CaseIterable, Identifiable, Codable {
+enum AnimateVideoTemplateID: String, CaseIterable, Identifiable, Codable {
     case birthdayMessage = "birthday"
     case partyRecap = "eventRecap"
     case softRoast = "softRoast"
@@ -8,8 +8,8 @@ enum MomentTemplateID: String, CaseIterable, Identifiable, Codable {
     var id: String { rawValue }
 }
 
-struct MomentTemplate: Identifiable, Equatable {
-    let id: MomentTemplateID
+struct AnimateVideoTemplate: Identifiable, Equatable {
+    let id: AnimateVideoTemplateID
     let title: String
     let durationSeconds: Int
     let creditCost: Int
@@ -25,8 +25,8 @@ struct MomentTemplate: Identifiable, Equatable {
         L10n.string("create.template.mediaRange", minimumAssets)
     }
 
-    static var birthdayMessage: MomentTemplate {
-        MomentTemplate(
+    static var birthdayMessage: AnimateVideoTemplate {
+        AnimateVideoTemplate(
         id: .birthdayMessage,
         title: L10n.string("create.template.celebration.title"),
         durationSeconds: 5,
@@ -37,8 +37,8 @@ struct MomentTemplate: Identifiable, Equatable {
         )
     }
 
-    static var partyRecap: MomentTemplate {
-        MomentTemplate(
+    static var partyRecap: AnimateVideoTemplate {
+        AnimateVideoTemplate(
         id: .partyRecap,
         title: L10n.string("create.template.eventRecap.title"),
         durationSeconds: 10,
@@ -49,8 +49,8 @@ struct MomentTemplate: Identifiable, Equatable {
         )
     }
 
-    static var softRoast: MomentTemplate {
-        MomentTemplate(
+    static var softRoast: AnimateVideoTemplate {
+        AnimateVideoTemplate(
         id: .softRoast,
         title: L10n.string("create.template.softRoast.title"),
         durationSeconds: 15,
@@ -61,7 +61,7 @@ struct MomentTemplate: Identifiable, Equatable {
         )
     }
 
-    static var launchTemplates: [MomentTemplate] { [
+    static var launchTemplates: [AnimateVideoTemplate] { [
         birthdayMessage,
         partyRecap,
         softRoast

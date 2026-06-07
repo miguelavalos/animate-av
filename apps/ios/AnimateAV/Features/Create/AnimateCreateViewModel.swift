@@ -42,31 +42,31 @@ final class AnimateCreateViewModel: ObservableObject {
     @Published private(set) var isSignedIn = false
     @Published private(set) var balance = AnimateCreditBalance.empty
     @Published private(set) var creditBalanceLoadState = AnimateCreditBalanceLoadState.signedOut
-    @Published private(set) var templates = MomentTemplate.launchTemplates
-    @Published private(set) var creationStyles = MomentCreationStyle.launchStyles
-    @Published var selectedCreationStyle = MomentCreationStyle.launchStyles[0]
-    @Published var selectedMusicPreset = MomentCreationStyle.launchStyles[0].defaultMusic
-    @Published var form = MomentSetupForm(template: MomentTemplate.launchTemplates[0])
+    @Published private(set) var templates = AnimateVideoTemplate.launchTemplates
+    @Published private(set) var creationStyles = AnimateVideoCreationStyle.launchStyles
+    @Published var selectedCreationStyle = AnimateVideoCreationStyle.launchStyles[0]
+    @Published var selectedMusicPreset = AnimateVideoCreationStyle.launchStyles[0].defaultMusic
+    @Published var form = AnimateVideoSetupForm(template: AnimateVideoTemplate.launchTemplates[0])
     @Published private(set) var isCreatingMoment = false
     @Published private(set) var isContinuingMoment = false
     @Published var isLocalMomentStarted = false
     @Published private(set) var workflowActiveMomentId: String?
     @Published private(set) var setupErrorMessage: String?
-    @Published private(set) var selectedMedia: [MomentsSelectedMedia] = []
+    @Published private(set) var selectedMedia: [AnimateSelectedMedia] = []
     @Published private(set) var mediaStatusMessage: String?
     @Published private(set) var isImportingMedia = false
-    @Published private(set) var mediaImportProgress: MomentsMediaImportProgress?
-    @Published private(set) var autoStyleSuggestion: MomentsMediaAutoStyleSuggestion?
+    @Published private(set) var mediaImportProgress: AnimateMediaImportProgress?
+    @Published private(set) var autoStyleSuggestion: AnimateMediaAutoStyleSuggestion?
     @Published private(set) var canUndoAutoStyleSuggestion = false
-    @Published private(set) var savedScenes: [MomentStoryScene] = []
+    @Published private(set) var savedScenes: [AnimateStoryScene] = []
     @Published private(set) var generatedScenes: [AnimateStorySceneResponse] = []
     @Published private(set) var storyStatusMessage: String?
     @Published private(set) var isPlanningStory = false
     @Published var isPreparingStory = false
-    @Published private(set) var activeWorkspace: MomentWorkspace?
-    @Published private(set) var finalExport: MomentArtifact?
-    @Published private(set) var latestFinalJob: MomentRenderJob?
-    @Published private(set) var renderPlan: MomentsRenderPlanResponse?
+    @Published private(set) var activeWorkspace: AnimateWorkspace?
+    @Published private(set) var finalExport: AnimateArtifact?
+    @Published private(set) var latestFinalJob: AnimateRenderJob?
+    @Published private(set) var renderPlan: AnimateRenderPlanResponse?
     @Published private(set) var videoQuote: AnimateVideoQuoteResponse?
     @Published private(set) var imageGenerationAvailability: AnimateImageGenerationAvailabilityResponse?
     @Published private(set) var isLoadingImageGenerationAvailability = false
@@ -79,11 +79,11 @@ final class AnimateCreateViewModel: ObservableObject {
     @Published private(set) var isGeneratingFinalRender = false
     @Published private(set) var isPreparingFinalPlan = false
     @Published private(set) var finalVideoCommandState = MomentsFinalVideoCommandState.idle
-    @Published var pendingFocus: MomentsContinuationFocus?
-    @Published private(set) var continuationFocusHint: MomentsContinuationFocus?
+    @Published var pendingFocus: AnimateContinuationFocus?
+    @Published private(set) var continuationFocusHint: AnimateContinuationFocus?
     @Published var mediaPickerOpenRequest = 0
 
-    private(set) var momentCreationWorkflow: MomentCreationWorkflow?
+    private(set) var momentCreationWorkflow: AnimateVideoCreationWorkflow?
     private(set) var mediaUploadWorkflow: MediaUploadWorkflow?
     private(set) var storyWorkflow: StoryWorkflow?
     private(set) var finalRenderWorkflow: FinalRenderWorkflow?
@@ -99,9 +99,9 @@ final class AnimateCreateViewModel: ObservableObject {
     private var hasLocalSetupEdits = false
     private var hasUserStyleOverride = false
     private var hasUserLookOverride = false
-    private var autoStyleUndoSelection: (style: MomentCreationStyle, musicPreset: MomentMusicPreset, form: MomentSetupForm)?
+    private var autoStyleUndoSelection: (style: AnimateVideoCreationStyle, musicPreset: AnimateVideoMusicPreset, form: AnimateVideoSetupForm)?
 
-    var activeMoment: InProgressMoment? {
+    var activeMoment: AnimateVideo? {
         if let fixtureMode = activeUITestFixtureMode {
             return AnimateCreateUITestFixtures.moment(for: fixtureMode)
         }
@@ -113,7 +113,7 @@ final class AnimateCreateViewModel: ObservableObject {
         activeMoment?.id ?? workflowActiveMomentId
     }
 
-    var hasMomentWorkspace: Bool {
+    var hasAnimateWorkspace: Bool {
         activeMomentId != nil || isLocalMomentStarted
     }
 
@@ -129,7 +129,7 @@ final class AnimateCreateViewModel: ObservableObject {
             || renderPlan != nil
     }
 
-    var hasLocalMomentWorkspace: Bool {
+    var hasLocalAnimateWorkspace: Bool {
         activeMomentId == nil && isLocalMomentStarted
     }
 
@@ -151,7 +151,7 @@ final class AnimateCreateViewModel: ObservableObject {
 
     func bind(
         accountStateProvider: any AnimateAccountStateProviding,
-        momentCreationWorkflow: MomentCreationWorkflow,
+        momentCreationWorkflow: AnimateVideoCreationWorkflow,
         mediaUploadWorkflow: MediaUploadWorkflow,
         storyWorkflow: StoryWorkflow,
         finalRenderWorkflow: FinalRenderWorkflow,
@@ -166,10 +166,10 @@ final class AnimateCreateViewModel: ObservableObject {
         self.authTokenProvider = authTokenProvider
         self.imageGenerationAccountingClient = imageGenerationAccountingClient
         templates = momentCreationWorkflow.launchTemplates
-        creationStyles = MomentCreationStyle.launchStyles
-        selectedCreationStyle = MomentCreationStyle.launchStyles[0]
+        creationStyles = AnimateVideoCreationStyle.launchStyles
+        selectedCreationStyle = AnimateVideoCreationStyle.launchStyles[0]
         selectedMusicPreset = selectedCreationStyle.defaultMusic
-        form = MomentSetupForm(template: momentCreationWorkflow.launchTemplates[0])
+        form = AnimateVideoSetupForm(template: momentCreationWorkflow.launchTemplates[0])
         canUndoAutoStyleSuggestion = false
         autoStyleUndoSelection = nil
         applyStyleDefaults(selectedCreationStyle)
@@ -184,7 +184,7 @@ final class AnimateCreateViewModel: ObservableObject {
         )
     }
 
-    func selectCreationStyle(_ style: MomentCreationStyle) {
+    func selectCreationStyle(_ style: AnimateVideoCreationStyle) {
         guard style.isEnabled else { return }
         guard canEditCreationOptions else { return }
         selectedCreationStyle = style
@@ -196,13 +196,13 @@ final class AnimateCreateViewModel: ObservableObject {
         markLocalSetupEdited()
     }
 
-    func selectMusicPreset(_ preset: MomentMusicPreset) {
+    func selectMusicPreset(_ preset: AnimateVideoMusicPreset) {
         guard selectedCreationStyle.allowedMusic.contains(preset) else { return }
         hasUserStyleOverride = true
         canUndoAutoStyleSuggestion = false
         autoStyleUndoSelection = nil
         selectedMusicPreset = preset
-        form.tone = MomentSetupTone(musicPreset: preset)
+        form.tone = AnimateVideoSetupTone(musicPreset: preset)
         markLocalSetupEdited()
     }
 
@@ -216,7 +216,7 @@ final class AnimateCreateViewModel: ObservableObject {
         hasUserStyleOverride = false
         canUndoAutoStyleSuggestion = true
         applyStyleDefaults(suggestedStyle, preserveUserOverrides: true)
-        form.tone = MomentSetupTone(musicPreset: suggestion.musicPreset)
+        form.tone = AnimateVideoSetupTone(musicPreset: suggestion.musicPreset)
         markLocalSetupEdited()
     }
 
@@ -402,7 +402,7 @@ final class AnimateCreateViewModel: ObservableObject {
         hasUserLookOverride = false
     }
 
-    func continueMoment(_ moment: InProgressMoment, focus: MomentsContinuationFocus = .moment) {
+    func continueMoment(_ moment: AnimateVideo, focus: AnimateContinuationFocus = .moment) {
         cancelOperations()
         isContinuingMoment = true
         isLocalMomentStarted = false
@@ -411,7 +411,7 @@ final class AnimateCreateViewModel: ObservableObject {
         pendingFocus = focus
         continuationFocusHint = focus
 
-        if let continuedForm = MomentSetupForm.continuing(moment: moment, templates: templates) {
+        if let continuedForm = AnimateVideoSetupForm.continuing(moment: moment, templates: templates) {
             form = continuedForm
         }
 
@@ -434,13 +434,13 @@ final class AnimateCreateViewModel: ObservableObject {
         guard let fixtureMode = activeUITestFixtureMode else { return }
 
         let workspace = AnimateCreateUITestFixtures.workspace(for: fixtureMode)
-        let template = templates.first(where: { $0.id == workspace.moment.template }) ?? MomentTemplate.birthdayMessage
-        form = MomentSetupForm(
+        let template = templates.first(where: { $0.id == workspace.moment.template }) ?? AnimateVideoTemplate.birthdayMessage
+        form = AnimateVideoSetupForm(
             template: template,
             occasion: workspace.moment.occasion ?? "Birthday",
             recipient: "Ava",
-            tone: MomentSetupTone(rawValue: workspace.moment.tone ?? "") ?? .warm,
-            tempo: MomentSetupTempo(rawValue: workspace.moment.tempo ?? "") ?? .balanced,
+            tone: AnimateVideoSetupTone(rawValue: workspace.moment.tone ?? "") ?? .warm,
+            tempo: AnimateVideoSetupTempo(rawValue: workspace.moment.tempo ?? "") ?? .balanced,
             details: workspace.moment.details ?? ""
         )
         isSignedIn = true
@@ -486,22 +486,22 @@ final class AnimateCreateViewModel: ObservableObject {
         continuationFocusHint = .moment
     }
 
-    var effectiveActiveWorkspace: MomentWorkspace? {
+    var effectiveActiveWorkspace: AnimateWorkspace? {
         if let fixtureMode = activeUITestFixtureMode {
             return AnimateCreateUITestFixtures.workspace(for: fixtureMode)
         }
         return activeWorkspace
     }
 
-    var effectiveSelectedMedia: [MomentsSelectedMedia] {
+    var effectiveSelectedMedia: [AnimateSelectedMedia] {
         usesCreateUITestFixture ? AnimateCreateUITestFixtures.selectedMedia : selectedMedia
     }
 
-    var effectiveSavedScenes: [MomentStoryScene] {
+    var effectiveSavedScenes: [AnimateStoryScene] {
         effectiveActiveWorkspace?.storyScenes ?? savedScenes
     }
 
-    var effectiveFinalExport: MomentArtifact? {
+    var effectiveFinalExport: AnimateArtifact? {
         effectiveActiveWorkspace?.latestArtifact(kind: "final_export") ?? finalExport
     }
 
@@ -516,7 +516,7 @@ final class AnimateCreateViewModel: ObservableObject {
         return true
     }
 
-    var effectiveLatestFinalJob: MomentRenderJob? {
+    var effectiveLatestFinalJob: AnimateRenderJob? {
         effectiveActiveWorkspace?.latestRenderJob(kind: "final") ?? latestFinalJob
     }
 
@@ -541,9 +541,9 @@ final class AnimateCreateViewModel: ObservableObject {
         clearWorkflowSnapshots()
 
         if let firstTemplate = templates.first {
-            form = MomentSetupForm(template: firstTemplate)
+            form = AnimateVideoSetupForm(template: firstTemplate)
         }
-        selectedCreationStyle = creationStyles.first ?? MomentCreationStyle.launchStyles[0]
+        selectedCreationStyle = creationStyles.first ?? AnimateVideoCreationStyle.launchStyles[0]
         selectedMusicPreset = selectedCreationStyle.defaultMusic
         autoStyleSuggestion = nil
         canUndoAutoStyleSuggestion = false
@@ -583,7 +583,7 @@ final class AnimateCreateViewModel: ObservableObject {
         finalVideoCommandState = .idle
     }
 
-    private func applyStyleDefaults(_ style: MomentCreationStyle, preserveUserOverrides: Bool = false) {
+    private func applyStyleDefaults(_ style: AnimateVideoCreationStyle, preserveUserOverrides: Bool = false) {
         let currentLook = form.look
         form.template = style.template
         form.theme = style.id
@@ -651,17 +651,17 @@ final class AnimateCreateViewModel: ObservableObject {
         ].joined(separator: "|")
     }
 
-    func effectiveFinalRenderForm() -> MomentSetupForm {
+    func effectiveFinalRenderForm() -> AnimateVideoSetupForm {
         var finalForm = form
         finalForm.duration = .auto
         return finalForm
     }
 
-    var currentRenderPlan: MomentsRenderPlanResponse? {
+    var currentRenderPlan: AnimateRenderPlanResponse? {
         currentRenderPlan(removesWatermark: false)
     }
 
-    func currentRenderPlan(removesWatermark: Bool) -> MomentsRenderPlanResponse? {
+    func currentRenderPlan(removesWatermark: Bool) -> AnimateRenderPlanResponse? {
         guard let renderPlan else { return nil }
         guard renderPlanInputSignature == currentFinalRenderInputSignature(
             momentId: renderPlan.momentId,
@@ -676,7 +676,7 @@ final class AnimateCreateViewModel: ObservableObject {
         confirmableRenderPlan(momentId: momentId) != nil
     }
 
-    func confirmableRenderPlan(momentId: String) -> MomentsRenderPlanResponse? {
+    func confirmableRenderPlan(momentId: String) -> AnimateRenderPlanResponse? {
         guard let renderPlan else { return nil }
         guard renderPlan.momentId == momentId, renderPlan.canCreateVideo else { return nil }
         return renderPlan
@@ -712,7 +712,7 @@ final class AnimateCreateViewModel: ObservableObject {
         finalRenderWorkflow?.clearRenderPlan()
     }
 
-    func selectLook(_ look: MomentLook) {
+    func selectLook(_ look: AnimateVideoLook) {
         form.look = look
         hasUserLookOverride = true
         markLocalSetupEdited()
@@ -750,7 +750,7 @@ final class AnimateCreateViewModel: ObservableObject {
             .filter(\.selected)
             .sorted { $0.sortOrder < $1.sortOrder }
         if !localMedia.isEmpty {
-            let syncedMediaBySourceIdentifier = (effectiveActiveWorkspace?.mediaAssets ?? []).reduce(into: [String: MomentMediaAsset]()) {
+            let syncedMediaBySourceIdentifier = (effectiveActiveWorkspace?.mediaAssets ?? []).reduce(into: [String: AnimateMediaAsset]()) {
                 guard let sourceIdentifier = $1.platformMediaAssetId else { return }
                 $0[sourceIdentifier] = $1
             }
@@ -920,10 +920,10 @@ extension AnimateCreateViewModel {
         reconcileFinalVideoCommandState(with: state)
     }
 
-    private func syncFormWithActiveWorkspace(_ workspace: MomentWorkspace?) {
+    private func syncFormWithActiveWorkspace(_ workspace: AnimateWorkspace?) {
         guard let moment = workspace?.moment else { return }
         guard moment.id == activeMomentId else { return }
-        guard let continuedForm = MomentSetupForm.continuing(moment: moment, templates: templates) else { return }
+        guard let continuedForm = AnimateVideoSetupForm.continuing(moment: moment, templates: templates) else { return }
         if hasLocalSetupEdits {
             if continuedForm.matchesPersistedSetup(of: form) {
                 hasLocalSetupEdits = false
@@ -962,13 +962,13 @@ extension AnimateCreateViewModel {
         }
     }
 
-    private func updateAutoStyleSuggestion(for media: [MomentsSelectedMedia]) {
+    private func updateAutoStyleSuggestion(for media: [AnimateSelectedMedia]) {
         guard canEditCreationOptions else { return }
         guard !storySummary.hasScenes || hasExplicitMediaEditsAfterPreparedStory else { return }
         let signature = mediaSignature(media)
         guard signature != autoStyleMediaSignature else { return }
         autoStyleMediaSignature = signature
-        guard let suggestion = MomentsMediaAutoStyleSuggester.suggest(
+        guard let suggestion = AnimateMediaAutoStyleSuggester.suggest(
             media: media,
             styles: creationStyles
         ) else {
@@ -985,10 +985,10 @@ extension AnimateCreateViewModel {
         selectedCreationStyle = suggestedStyle
         selectedMusicPreset = suggestion.musicPreset
         applyStyleDefaults(suggestedStyle)
-        form.tone = MomentSetupTone(musicPreset: suggestion.musicPreset)
+        form.tone = AnimateVideoSetupTone(musicPreset: suggestion.musicPreset)
     }
 
-    private func mediaSignature(_ media: [MomentsSelectedMedia]) -> String {
+    private func mediaSignature(_ media: [AnimateSelectedMedia]) -> String {
         media
             .map { "\($0.id.uuidString):\($0.sha256):\($0.sortOrder)" }
             .joined(separator: "|")
@@ -1012,7 +1012,7 @@ extension AnimateCreateViewModel {
 
     private func normalizedFinalRenderStatusMessage(
         _ message: String?,
-        latestFinalJob: MomentRenderJob?
+        latestFinalJob: AnimateRenderJob?
     ) -> String? {
         guard let message,
               Self.isUserFacingErrorMessage(message),

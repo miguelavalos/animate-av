@@ -2,13 +2,13 @@ import Combine
 import Foundation
 
 @MainActor
-final class InProgressMomentsWorkflow: ObservableObject {
-    @Published private(set) var momentsSummary = InProgressMomentsSummary()
+final class AnimateVideosWorkflow: ObservableObject {
+    @Published private(set) var momentsSummary = AnimateInProgressSummary()
     @Published private(set) var isDeletingMoment = false
     @Published private(set) var errorMessage: String?
 
     private let momentsObserver: any AnimateInProgressListProviding
-    private let workspaceSelectionWorkflow: MomentWorkspaceSelectionWorkflow
+    private let workspaceSelectionWorkflow: AnimateWorkspaceSelectionWorkflow
     private let momentDeletionWorkflow: MomentDeletionWorkflow
     private let momentTitleUpdater: any MomentsTitleUpdating
     private let currentUserProvider: any AnimateCurrentUserProviding
@@ -19,7 +19,7 @@ final class InProgressMomentsWorkflow: ObservableObject {
 
     init(
         momentsObserver: any AnimateInProgressListProviding,
-        workspaceSelectionWorkflow: MomentWorkspaceSelectionWorkflow,
+        workspaceSelectionWorkflow: AnimateWorkspaceSelectionWorkflow,
         momentDeletionWorkflow: MomentDeletionWorkflow,
         momentTitleUpdater: any MomentsTitleUpdating,
         currentUserProvider: any AnimateCurrentUserProviding,
@@ -68,17 +68,17 @@ final class InProgressMomentsWorkflow: ObservableObject {
             .store(in: &cancellables)
     }
 
-    func observeInProgressMoments(ownerUserId: String?) {
+    func observeAnimateVideos(ownerUserId: String?) {
         currentOwnerUserId = ownerUserId
-        momentsSummary = InProgressMomentsSummary()
+        momentsSummary = AnimateInProgressSummary()
         errorMessage = nil
         clearActiveMoment()
-        momentsObserver.observeInProgressMoments(ownerUserId: ownerUserId)
+        momentsObserver.observeAnimateVideos(ownerUserId: ownerUserId)
     }
 
-    func observeMomentWorkspace(ownerUserId: String?, momentId: String?) {
+    func observeAnimateWorkspace(ownerUserId: String?, momentId: String?) {
         errorMessage = nil
-        workspaceSelectionWorkflow.observeMomentWorkspace(ownerUserId: ownerUserId, momentId: momentId)
+        workspaceSelectionWorkflow.observeAnimateWorkspace(ownerUserId: ownerUserId, momentId: momentId)
     }
 
     private func applyWorkspaceError(_ message: String?) {
@@ -86,11 +86,11 @@ final class InProgressMomentsWorkflow: ObservableObject {
         errorMessage = message
     }
 
-    func clearMomentWorkspace() {
+    func clearAnimateWorkspace() {
         clearActiveMoment()
     }
 
-    func renameMoment(_ moment: InProgressMoment, title: String) async -> Bool {
+    func renameMoment(_ moment: AnimateVideo, title: String) async -> Bool {
         let trimmedTitle = title.trimmingCharacters(in: .whitespacesAndNewlines)
         guard !trimmedTitle.isEmpty else { return false }
         let previousTitle = optimisticMomentTitles[moment.id]
@@ -122,7 +122,7 @@ final class InProgressMomentsWorkflow: ObservableObject {
         }
     }
 
-    func deleteMoment(_ moment: InProgressMoment) async -> Bool {
+    func deleteMoment(_ moment: AnimateVideo) async -> Bool {
         errorMessage = nil
         let didDelete = await momentDeletionWorkflow.deleteMoment(moment)
         guard didDelete else { return false }
@@ -130,11 +130,11 @@ final class InProgressMomentsWorkflow: ObservableObject {
         if workspaceSelectionWorkflow.activeMoment?.id == moment.id {
             clearActiveMoment()
         }
-        observeInProgressMoments(ownerUserId: currentOwnerUserId)
+        observeAnimateVideos(ownerUserId: currentOwnerUserId)
         return true
     }
 
-    private func apply(_ moments: [InProgressMoment]) {
+    private func apply(_ moments: [AnimateVideo]) {
         let renamedMoments = moments.map { moment in
             guard let title = optimisticMomentTitles[moment.id] else { return moment }
             if moment.title == title {
@@ -143,14 +143,14 @@ final class InProgressMomentsWorkflow: ObservableObject {
             }
             return moment.renamed(title)
         }
-        momentsSummary = InProgressMomentsSummary.make(from: renamedMoments)
+        momentsSummary = AnimateInProgressSummary.make(from: renamedMoments)
     }
 
     private func applyOptimisticTitle(momentId: String, title: String) {
         let moments = momentsSummary.moments.map { moment in
             moment.id == momentId ? moment.renamed(title) : moment
         }
-        momentsSummary = InProgressMomentsSummary.make(from: moments)
+        momentsSummary = AnimateInProgressSummary.make(from: moments)
     }
 
     private func restoreOptimisticTitle(momentId: String, previousTitle: String?) {
@@ -174,26 +174,26 @@ final class InProgressMomentsWorkflow: ObservableObject {
     }
 
     private func clearActiveMoment() {
-        workspaceSelectionWorkflow.clearMomentWorkspace()
+        workspaceSelectionWorkflow.clearAnimateWorkspace()
     }
 
 }
 
-extension InProgressMomentsWorkflow: InProgressMomentsViewing {
-    var inProgressSummaryPublisher: AnyPublisher<InProgressMomentsSummary, Never> {
+extension AnimateVideosWorkflow: AnimateVideosViewing {
+    var inProgressSummaryPublisher: AnyPublisher<AnimateInProgressSummary, Never> {
         $momentsSummary.eraseToAnyPublisher()
     }
 
-    var activeMomentPublisher: AnyPublisher<InProgressMoment?, Never> {
+    var activeMomentPublisher: AnyPublisher<AnimateVideo?, Never> {
         workspaceSelectionWorkflow.activeMomentPublisher
     }
 
-    var activeWorkspacePublisher: AnyPublisher<MomentWorkspace?, Never> {
+    var activeWorkspacePublisher: AnyPublisher<AnimateWorkspace?, Never> {
         workspaceSelectionWorkflow.activeWorkspacePublisher
     }
 
-    var isLoadingMomentWorkspacePublisher: AnyPublisher<Bool, Never> {
-        workspaceSelectionWorkflow.isLoadingMomentWorkspacePublisher
+    var isLoadingAnimateWorkspacePublisher: AnyPublisher<Bool, Never> {
+        workspaceSelectionWorkflow.isLoadingAnimateWorkspacePublisher
     }
 
     var isDeletingMomentPublisher: AnyPublisher<Bool, Never> {

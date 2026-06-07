@@ -5,24 +5,24 @@ enum AnimateCreateWorkflowCapabilityFactory {
     static func make(
         activeMomentId: String?,
         isSignedIn: Bool,
-        hasMomentWorkspace: Bool,
+        hasAnimateWorkspace: Bool,
         isImportingMedia: Bool,
         mediaRemainingSlots: Int,
         storyWorkflow: StoryWorkflow?,
         finalRenderWorkflow: FinalRenderWorkflow?,
         creditBalanceLoadState: AnimateCreditBalanceLoadState = .loaded,
-        template: MomentTemplate,
+        template: AnimateVideoTemplate,
         selectedMediaCount: Int
     ) -> AnimateCreateWorkflowCapability {
         AnimateCreateWorkflowCapability(
             canAddMedia: canAddMedia(
-                hasMomentWorkspace: hasMomentWorkspace,
+                hasAnimateWorkspace: hasAnimateWorkspace,
                 isImportingMedia: isImportingMedia,
                 mediaRemainingSlots: mediaRemainingSlots
             ),
             canPlanStory: canPlanStory(
                 isSignedIn: isSignedIn,
-                hasMomentWorkspace: hasMomentWorkspace,
+                hasAnimateWorkspace: hasAnimateWorkspace,
                 storyWorkflow: storyWorkflow,
                 template: template,
                 selectedMediaCount: selectedMediaCount
@@ -42,27 +42,27 @@ enum AnimateCreateWorkflowCapabilityFactory {
     }
 
     private static func canAddMedia(
-        hasMomentWorkspace: Bool,
+        hasAnimateWorkspace: Bool,
         isImportingMedia: Bool,
         mediaRemainingSlots: Int
     ) -> Bool {
-        hasMomentWorkspace
+        hasAnimateWorkspace
             && !isImportingMedia
             && mediaRemainingSlots > 0
     }
 
     private static func canPlanStory(
         isSignedIn: Bool,
-        hasMomentWorkspace: Bool,
+        hasAnimateWorkspace: Bool,
         storyWorkflow: StoryWorkflow?,
-        template: MomentTemplate,
+        template: AnimateVideoTemplate,
         selectedMediaCount: Int
     ) -> Bool {
         guard isSignedIn else { return false }
-        guard let storyWorkflow, hasMomentWorkspace else { return false }
+        guard let storyWorkflow, hasAnimateWorkspace else { return false }
         return storyWorkflow.isConfigured
             && !storyWorkflow.isPlanning
-            && MomentsMediaRules.availability(template: template, selectedCount: selectedMediaCount).canUseSelection
+            && AnimateMediaRules.availability(template: template, selectedCount: selectedMediaCount).canUseSelection
     }
 
     private static func canPrepareFinalRenderPlan(
@@ -77,7 +77,7 @@ enum AnimateCreateWorkflowCapabilityFactory {
         activeMomentId: String?,
         finalRenderWorkflow: FinalRenderWorkflow?,
         creditBalanceLoadState: AnimateCreditBalanceLoadState,
-        template: MomentTemplate
+        template: AnimateVideoTemplate
     ) -> Bool {
         guard let finalRenderWorkflow, activeMomentId != nil else { return false }
         guard creditBalanceLoadState.hasLoadedBalance else { return false }

@@ -2,7 +2,7 @@ import AVAppShellFoundation
 import SwiftUI
 
 struct AnimateInProgressWorkspaceSummary: View {
-    let workspace: MomentWorkspace
+    let workspace: AnimateWorkspace
     private var presentation: AnimateInProgressWorkspaceSummaryPresentation {
         AnimateInProgressWorkspaceSummaryPresentation(workspace: workspace)
     }

@@ -3,7 +3,7 @@ import SwiftUI
 
 struct AnimateInProgressListGroup: View {
     let group: AnimateInProgressListGroupPresentation
-    let selectMoment: (InProgressMoment) -> Void
+    let selectMoment: (AnimateVideo) -> Void
 
     var body: some View {
         VStack(alignment: .leading, spacing: 10) {

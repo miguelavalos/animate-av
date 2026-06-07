@@ -5,7 +5,7 @@ final class AnimateInProgressPresentationTests: XCTestCase {
     func testSignedOutAvailabilityExplainsAccountRequirement() {
         let presentation = AnimateInProgressPresentation.make(
             isSignedIn: false,
-            momentsSummary: InProgressMomentsSummary(),
+            momentsSummary: AnimateInProgressSummary(),
             momentPendingDeletion: nil
         )
 
@@ -24,7 +24,7 @@ final class AnimateInProgressPresentationTests: XCTestCase {
     func testEmptySignedInAvailabilityExplainsCreateFirstState() {
         let presentation = AnimateInProgressPresentation.make(
             isSignedIn: true,
-            momentsSummary: InProgressMomentsSummary(),
+            momentsSummary: AnimateInProgressSummary(),
             momentPendingDeletion: nil
         )
 
@@ -43,7 +43,7 @@ final class AnimateInProgressPresentationTests: XCTestCase {
     func testVideoAvailabilityIsAvailableWhenSignedInWithVideos() {
         let presentation = AnimateInProgressPresentation.make(
             isSignedIn: true,
-            momentsSummary: InProgressMomentsSummary.make(from: [
+            momentsSummary: AnimateInProgressSummary.make(from: [
                 makeMoment(id: "moment-1")
             ]),
             momentPendingDeletion: nil
@@ -55,13 +55,13 @@ final class AnimateInProgressPresentationTests: XCTestCase {
     func testDeletionMessageUsesPendingVideoTitleOrFallback() {
         let fallback = AnimateInProgressPresentation.make(
             isSignedIn: true,
-            momentsSummary: InProgressMomentsSummary(),
+            momentsSummary: AnimateInProgressSummary(),
             momentPendingDeletion: nil
         )
         let moment = makeMoment(id: "moment-1", title: "Family Weekend")
         let titled = AnimateInProgressPresentation.make(
             isSignedIn: true,
-            momentsSummary: InProgressMomentsSummary(),
+            momentsSummary: AnimateInProgressSummary(),
             momentPendingDeletion: moment
         )
 
@@ -80,8 +80,8 @@ final class AnimateInProgressPresentationTests: XCTestCase {
         title: String? = nil,
         status: String = "in_progress",
         updatedAt: Double = 10
-    ) -> InProgressMoment {
-        InProgressMoment(
+    ) -> AnimateVideo {
+        AnimateVideo(
             id: id,
             template: .birthdayMessage,
             status: status,

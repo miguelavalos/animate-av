@@ -17,7 +17,7 @@ struct AnimateRemoteClient {
         client != nil
     }
 
-    func observeInProgressMoments(ownerUserId: String) throws -> AnyPublisher<[InProgressMoment], Error> {
+    func observeAnimateVideos(ownerUserId: String) throws -> AnyPublisher<[AnimateVideo], Error> {
         let client = try requireClient()
         let realtimeSessionId = try realtimeSessionStore.sessionId(for: ownerUserId)
 
@@ -69,8 +69,8 @@ struct AnimateRemoteClient {
         let totalCreditCost: Double?
         let updatedAt: Double
 
-        var inProgressMoment: InProgressMoment {
-            InProgressMoment(
+        var inProgressMoment: AnimateVideo {
+            AnimateVideo(
                 id: id,
                 template: .birthdayMessage,
                 creationMode: "video",
@@ -116,8 +116,8 @@ struct AnimateRemoteClient {
         let look: String?
         let updatedAt: Double
 
-        var inProgressMoment: InProgressMoment {
-            InProgressMoment(
+        var inProgressMoment: AnimateVideo {
+            AnimateVideo(
                 id: id,
                 template: .birthdayMessage,
                 creationMode: "image",
@@ -150,7 +150,7 @@ struct AnimateRemoteClient {
         }
     }
 
-    func observeGalleryMoments(ownerUserId: String) throws -> AnyPublisher<[MomentArtifact], Error> {
+    func observeGalleryMoments(ownerUserId: String) throws -> AnyPublisher<[AnimateArtifact], Error> {
         let client = try requireClient()
         let realtimeSessionId = try realtimeSessionStore.sessionId(for: ownerUserId)
 
@@ -160,27 +160,27 @@ struct AnimateRemoteClient {
                 "ownerUserId": ownerUserId,
                 "realtimeSessionId": realtimeSessionId
             ],
-            yielding: [MomentArtifact].self
+            yielding: [AnimateArtifact].self
         )
         .mapError { $0 as Error }
         .eraseToAnyPublisher()
     }
 
-    func observeMomentWorkspace(
+    func observeAnimateWorkspace(
         ownerUserId: String,
         momentId: String
-    ) throws -> AnyPublisher<MomentWorkspace?, Error> {
+    ) throws -> AnyPublisher<AnimateWorkspace?, Error> {
         let client = try requireClient()
         let realtimeSessionId = try realtimeSessionStore.sessionId(for: ownerUserId)
 
         return client.subscribe(
-            to: "moments:getMomentWorkspace",
+            to: "moments:getAnimateWorkspace",
             with: [
                 "ownerUserId": ownerUserId,
                 "realtimeSessionId": realtimeSessionId,
                 "momentId": momentId
             ],
-            yielding: MomentWorkspace?.self
+            yielding: AnimateWorkspace?.self
         )
         .mapError { $0 as Error }
         .eraseToAnyPublisher()

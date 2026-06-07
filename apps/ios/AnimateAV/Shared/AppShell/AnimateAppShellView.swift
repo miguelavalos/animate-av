@@ -191,7 +191,7 @@ struct AnimateAppShellView: View {
         chromeItem == nil
             && accountController.isSignedIn
             && [.inProgress, .gallery].contains(selectedTab)
-            && !createViewModel.hasLocalMomentWorkspace
+            && !createViewModel.hasLocalAnimateWorkspace
     }
 
     private var hasAviActiveContext: Bool {
@@ -213,17 +213,17 @@ struct AnimateAppShellView: View {
     }
 
     private func startOrContinueMoment() {
-        if createViewModel.hasLocalMomentWorkspace {
+        if createViewModel.hasLocalAnimateWorkspace {
             selectRootTab(.create)
             return
         }
 
-        if createViewModel.hasMomentWorkspace {
+        if createViewModel.hasAnimateWorkspace {
             selectRootTab(.create)
             return
         }
 
-        if let activeMoment = inProgressViewModel.momentsSummary.latestInProgressMoment {
+        if let activeMoment = inProgressViewModel.momentsSummary.latestAnimateVideo {
             createViewModel.continueMoment(activeMoment)
             selectRootTab(.create)
             return
@@ -233,7 +233,7 @@ struct AnimateAppShellView: View {
     }
 
     private func startFloatingMomentAction() {
-        if createViewModel.hasLocalMomentWorkspace {
+        if createViewModel.hasLocalAnimateWorkspace {
             selectRootTab(.create)
             return
         }

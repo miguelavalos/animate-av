@@ -3,7 +3,7 @@ import Foundation
 
 @MainActor
 final class AnimateHomeViewModel: ObservableObject {
-    @Published private(set) var momentsSummary = InProgressMomentsSummary()
+    @Published private(set) var momentsSummary = AnimateInProgressSummary()
     @Published private(set) var isSignedIn = false
     @Published private(set) var displayName: String?
     @Published private(set) var creditBalance = AnimateCreditBalance.empty
@@ -12,7 +12,7 @@ final class AnimateHomeViewModel: ObservableObject {
     private var momentsCancellables = Set<AnyCancellable>()
     private var accountCancellables = Set<AnyCancellable>()
 
-    func bind(to summaryProvider: any InProgressMomentsSummaryProviding) {
+    func bind(to summaryProvider: any AnimateInProgressSummaryProviding) {
         momentsCancellables.removeAll()
 
         summaryProvider.inProgressSummaryPublisher

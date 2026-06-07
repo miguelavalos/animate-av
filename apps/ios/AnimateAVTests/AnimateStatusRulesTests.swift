@@ -7,7 +7,7 @@ final class AnimateStatusRulesTests: XCTestCase {
         let story = makeMoment(id: "story", status: "story_ready", updatedAt: 20)
         let completed = makeMoment(id: "completed", status: "gallery_ready", updatedAt: 30)
 
-        let groups = MomentStatusRules.group([plan, story, completed])
+        let groups = AnimateStatusRules.group([plan, story, completed])
 
         XCTAssertEqual(groups.inProgress.map(\.id), ["story", "in_progress"])
         XCTAssertEqual(groups.finished.map(\.id), ["completed"])
@@ -19,7 +19,7 @@ final class AnimateStatusRulesTests: XCTestCase {
         let olderFinished = makeMoment(id: "older-finished", status: "gallery_ready", updatedAt: 20)
         let newerFinished = makeMoment(id: "newer-finished", status: "gallery_ready", updatedAt: 40)
 
-        let groups = MomentStatusRules.group([
+        let groups = AnimateStatusRules.group([
             olderInProgress,
             olderFinished,
             newerInProgress,
@@ -35,7 +35,7 @@ final class AnimateStatusRulesTests: XCTestCase {
         let newest = makeMoment(id: "newest", status: "story_ready", updatedAt: 30)
         let middle = makeMoment(id: "middle", status: "gallery_ready", updatedAt: 20)
 
-        let summary = InProgressMomentsSummary.make(from: [oldest, newest, middle])
+        let summary = AnimateInProgressSummary.make(from: [oldest, newest, middle])
 
         XCTAssertEqual(summary.momentCount, 3)
         XCTAssertEqual(summary.inProgressCount, 1)
@@ -49,7 +49,7 @@ final class AnimateStatusRulesTests: XCTestCase {
         let image = makeMoment(id: "image", status: "running", updatedAt: 20, assetKind: "image")
         let completedImage = makeMoment(id: "completed-image", status: "completed", updatedAt: 30, assetKind: "image")
 
-        let summary = InProgressMomentsSummary.make(from: [video, image, completedImage])
+        let summary = AnimateInProgressSummary.make(from: [video, image, completedImage])
 
         XCTAssertEqual(summary.videoSummary.moments.map(\.id), ["video"])
         XCTAssertEqual(summary.videoSummary.inProgressCount, 1)
@@ -63,34 +63,34 @@ final class AnimateStatusRulesTests: XCTestCase {
         let newestFinished = makeMoment(id: "newest-finished", status: "gallery_ready", updatedAt: 30)
         let latestInProgress = makeMoment(id: "latest-plan", status: "story_ready", updatedAt: 20)
 
-        let summary = InProgressMomentsSummary.make(from: [olderInProgress, newestFinished, latestInProgress])
+        let summary = AnimateInProgressSummary.make(from: [olderInProgress, newestFinished, latestInProgress])
 
         XCTAssertEqual(summary.latestMoment?.id, "newest-finished")
-        XCTAssertEqual(summary.latestInProgressMoment?.id, "latest-plan")
+        XCTAssertEqual(summary.latestAnimateVideo?.id, "latest-plan")
         XCTAssertEqual(summary.latestInProgressContinuationRequest?.moment.id, "latest-plan")
         XCTAssertEqual(summary.latestInProgressContinuationRequest?.focus, .moment)
     }
 
     func testEmptyListSummaryHasNoVideos() {
-        let summary = InProgressMomentsSummary.make(from: [])
+        let summary = AnimateInProgressSummary.make(from: [])
 
         XCTAssertEqual(summary.momentCount, 0)
         XCTAssertEqual(summary.inProgressCount, 0)
         XCTAssertEqual(summary.finishedCount, 0)
         XCTAssertNil(summary.latestMoment)
-        XCTAssertNil(summary.latestInProgressMoment)
+        XCTAssertNil(summary.latestAnimateVideo)
         XCTAssertNil(summary.latestInProgressContinuationRequest)
         XCTAssertFalse(summary.hasMoments)
     }
 
     func testDisplayHelpersFormatBackendValuesForUI() {
-        XCTAssertEqual(MomentStatusRules.displayTitle(for: "story_ready"), "Direction ready")
-        XCTAssertEqual(MomentStatusRules.displayKind("final"), "Final")
-        XCTAssertEqual(MomentStatusRules.displayKind("final_export"), "Final Export")
+        XCTAssertEqual(AnimateStatusRules.displayTitle(for: "story_ready"), "Direction ready")
+        XCTAssertEqual(AnimateStatusRules.displayKind("final"), "Final")
+        XCTAssertEqual(AnimateStatusRules.displayKind("final_export"), "Final Export")
     }
 
     func testNextActionAsksForMediaWhenWorkspaceHasNoMedia() {
-        let action = MomentStatusRules.nextAction(for: makeWorkspace())
+        let action = AnimateStatusRules.nextAction(for: makeWorkspace())
 
         XCTAssertEqual(action.title, "Add photo")
         XCTAssertEqual(action.systemImage, "photo.badge.plus")
@@ -99,7 +99,7 @@ final class AnimateStatusRulesTests: XCTestCase {
     }
 
     func testNextActionAsksForStoryWhenMediaExistsWithoutScenes() {
-        let action = MomentStatusRules.nextAction(for: makeWorkspace(mediaAssets: [makeMediaAsset()]))
+        let action = AnimateStatusRules.nextAction(for: makeWorkspace(mediaAssets: [makeMediaAsset()]))
 
         XCTAssertEqual(action.title, "Prepare video")
         XCTAssertEqual(action.systemImage, "text.bubble")
@@ -108,7 +108,7 @@ final class AnimateStatusRulesTests: XCTestCase {
     }
 
     func testNextActionAsksForFinalWhenStoryExistsWithoutFinalArtifact() {
-        let action = MomentStatusRules.nextAction(
+        let action = AnimateStatusRules.nextAction(
             for: makeWorkspace(
                 mediaAssets: [makeMediaAsset()],
                 storyScenes: [makeStoryScene()]
@@ -122,7 +122,7 @@ final class AnimateStatusRulesTests: XCTestCase {
     }
 
     func testNextActionMarksFinishedWhenFinalExportIsAvailable() {
-        let action = MomentStatusRules.nextAction(
+        let action = AnimateStatusRules.nextAction(
             for: makeWorkspace(
                 mediaAssets: [makeMediaAsset()],
                 storyScenes: [makeStoryScene()],
@@ -139,7 +139,7 @@ final class AnimateStatusRulesTests: XCTestCase {
     }
 
     func testNextActionPrioritizesFailedRenderJobs() {
-        let action = MomentStatusRules.nextAction(
+        let action = AnimateStatusRules.nextAction(
             for: makeWorkspace(
                 mediaAssets: [makeMediaAsset()],
                 storyScenes: [makeStoryScene()],
@@ -158,8 +158,8 @@ final class AnimateStatusRulesTests: XCTestCase {
         status: String,
         updatedAt: Double,
         assetKind: String = "video"
-    ) -> InProgressMoment {
-        InProgressMoment(
+    ) -> AnimateVideo {
+        AnimateVideo(
             id: id,
             template: .birthdayMessage,
             status: status,
@@ -176,12 +176,12 @@ final class AnimateStatusRulesTests: XCTestCase {
     }
 
     private func makeWorkspace(
-        mediaAssets: [MomentMediaAsset] = [],
-        storyScenes: [MomentStoryScene] = [],
-        renderJobs: [MomentRenderJob] = [],
-        artifacts: [MomentArtifact] = []
-    ) -> MomentWorkspace {
-        MomentWorkspace(
+        mediaAssets: [AnimateMediaAsset] = [],
+        storyScenes: [AnimateStoryScene] = [],
+        renderJobs: [AnimateRenderJob] = [],
+        artifacts: [AnimateArtifact] = []
+    ) -> AnimateWorkspace {
+        AnimateWorkspace(
             moment: makeMoment(id: "moment-1", status: "in_progress", updatedAt: 10),
             mediaAssets: mediaAssets,
             storyScenes: storyScenes,
@@ -190,8 +190,8 @@ final class AnimateStatusRulesTests: XCTestCase {
         )
     }
 
-    private func makeMediaAsset() -> MomentMediaAsset {
-        MomentMediaAsset(
+    private func makeMediaAsset() -> AnimateMediaAsset {
+        AnimateMediaAsset(
             id: "media-1",
             platformMediaAssetId: "platform-media-1",
             uploadId: "upload-1",
@@ -204,8 +204,8 @@ final class AnimateStatusRulesTests: XCTestCase {
         )
     }
 
-    private func makeStoryScene() -> MomentStoryScene {
-        MomentStoryScene(
+    private func makeStoryScene() -> AnimateStoryScene {
+        AnimateStoryScene(
             id: "scene-1",
             sceneIndex: 0,
             mediaAssetIds: ["media-1"],
@@ -218,8 +218,8 @@ final class AnimateStatusRulesTests: XCTestCase {
         )
     }
 
-    private func makeArtifact(kind: String) -> MomentArtifact {
-        MomentArtifact(
+    private func makeArtifact(kind: String) -> AnimateArtifact {
+        AnimateArtifact(
             id: "\(kind)-1",
             kind: kind,
             r2Key: "animateav/user/moment/\(kind).mp4",
@@ -229,8 +229,8 @@ final class AnimateStatusRulesTests: XCTestCase {
         )
     }
 
-    private func makeRenderJob(kind: String, status: String) -> MomentRenderJob {
-        MomentRenderJob(
+    private func makeRenderJob(kind: String, status: String) -> AnimateRenderJob {
+        AnimateRenderJob(
             id: "\(kind)-job-1",
             kind: kind,
             status: status,

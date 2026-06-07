@@ -1,19 +1,19 @@
 import AVMediaAnalysisFoundation
 import Foundation
 
-struct MomentsMediaAutoStyleSuggestion: Equatable {
-    let styleID: MomentCreationStyleID
-    let musicPreset: MomentMusicPreset
+struct AnimateMediaAutoStyleSuggestion: Equatable {
+    let styleID: AnimateVideoCreationStyleID
+    let musicPreset: AnimateVideoMusicPreset
     let confidence: Double
     let reason: String
-    let metrics: MomentsMediaAutoStyleMetrics
+    let metrics: AnimateMediaAutoStyleMetrics
 
     var confidenceTitle: String {
         "\(Int((confidence * 100).rounded()))%"
     }
 }
 
-struct MomentsMediaAutoStyleMetrics: Equatable {
+struct AnimateMediaAutoStyleMetrics: Equatable {
     let mediaCount: Int
     let photoCount: Int
     let videoCount: Int
@@ -35,11 +35,11 @@ struct MomentsMediaAutoStyleMetrics: Equatable {
     }
 }
 
-enum MomentsMediaAutoStyleSuggester {
+enum AnimateMediaAutoStyleSuggester {
     static func suggest(
-        media: [MomentsSelectedMedia],
-        styles: [MomentCreationStyle]
-    ) -> MomentsMediaAutoStyleSuggestion? {
+        media: [AnimateSelectedMedia],
+        styles: [AnimateVideoCreationStyle]
+    ) -> AnimateMediaAutoStyleSuggestion? {
         guard !media.isEmpty else { return nil }
 
         let photoCount = media.filter { $0.kind == "photo" }.count
@@ -54,7 +54,7 @@ enum MomentsMediaAutoStyleSuggester {
         let sceneryAssetCount = analyses.filter { $0.sceneRole == .scenery }.count
         let screenshotCount = analyses.filter(\.isLikelyScreenshot).count
         let averageQualityScore = average(analyses.map(\.qualityScore))
-        let metrics = MomentsMediaAutoStyleMetrics(
+        let metrics = AnimateMediaAutoStyleMetrics(
             mediaCount: media.count,
             photoCount: photoCount,
             videoCount: videoCount,
@@ -73,7 +73,7 @@ enum MomentsMediaAutoStyleSuggester {
         )
 
         let dateSpan = dateSpanSeconds(datedMedia)
-        let candidate: (MomentCreationStyleID, MomentMusicPreset, Double, String)
+        let candidate: (AnimateVideoCreationStyleID, AnimateVideoMusicPreset, Double, String)
 
         if containsAny(filenames, keywords: ["birthday", "cumple", "anni", "bday"]) {
             candidate = (.birthday, .warm, 0.72, "Filename hints look like a birthday set.")
@@ -102,7 +102,7 @@ enum MomentsMediaAutoStyleSuggester {
         }
 
         let music = style.allowedMusic.contains(candidate.1) ? candidate.1 : style.defaultMusic
-        return MomentsMediaAutoStyleSuggestion(
+        return AnimateMediaAutoStyleSuggestion(
             styleID: style.id,
             musicPreset: music,
             confidence: candidate.2,

@@ -6,7 +6,7 @@ final class AnimateHomePresentationTests: XCTestCase {
         let presentation = AnimateHomePresentation.make(
             isSignedIn: false,
             displayName: nil,
-            momentsSummary: InProgressMomentsSummary()
+            momentsSummary: AnimateInProgressSummary()
         )
 
         XCTAssertEqual(presentation.accountTitle, "Account required")
@@ -24,7 +24,7 @@ final class AnimateHomePresentationTests: XCTestCase {
         let presentation = AnimateHomePresentation.make(
             isSignedIn: true,
             displayName: "Ava",
-            momentsSummary: InProgressMomentsSummary()
+            momentsSummary: AnimateInProgressSummary()
         )
 
         XCTAssertEqual(presentation.accountTitle, "Account connected")
@@ -43,7 +43,7 @@ final class AnimateHomePresentationTests: XCTestCase {
         let presentation = AnimateHomePresentation.make(
             isSignedIn: true,
             displayName: nil,
-            momentsSummary: InProgressMomentsSummary.make(from: [
+            momentsSummary: AnimateInProgressSummary.make(from: [
                 makeMoment(id: "finished", status: "gallery_ready", updatedAt: 30),
                 moment
             ])
@@ -61,7 +61,7 @@ final class AnimateHomePresentationTests: XCTestCase {
         let presentation = AnimateHomePresentation.make(
             isSignedIn: true,
             displayName: nil,
-            momentsSummary: InProgressMomentsSummary.make(from: [
+            momentsSummary: AnimateInProgressSummary.make(from: [
                 makeMoment(id: "one", status: "in_progress", updatedAt: 10),
                 makeMoment(id: "two", status: "gallery_ready", updatedAt: 20)
             ])
@@ -81,7 +81,7 @@ final class AnimateHomePresentationTests: XCTestCase {
         let presentation = AnimateHomePresentation.make(
             isSignedIn: true,
             displayName: nil,
-            momentsSummary: InProgressMomentsSummary.make(from: [
+            momentsSummary: AnimateInProgressSummary.make(from: [
                 makeMoment(id: "one", status: "in_progress", updatedAt: 10)
             ])
         )
@@ -96,8 +96,8 @@ final class AnimateHomePresentationTests: XCTestCase {
         )
     }
 
-    private func makeMoment(id: String, status: String, updatedAt: Double) -> InProgressMoment {
-        InProgressMoment(
+    private func makeMoment(id: String, status: String, updatedAt: Double) -> AnimateVideo {
+        AnimateVideo(
             id: id,
             template: .birthdayMessage,
             status: status,

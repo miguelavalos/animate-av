@@ -2,7 +2,7 @@ import AVAppShellFoundation
 import SwiftUI
 
 struct AnimateInProgressRenderJobsSection: View {
-    let renderJobs: [MomentRenderJob]
+    let renderJobs: [AnimateRenderJob]
 
     private var presentation: AnimateInProgressRenderJobsSectionPresentation {
         AnimateInProgressRenderJobsSectionPresentation(renderJobs: renderJobs)
@@ -27,7 +27,7 @@ struct AnimateInProgressRenderJobsSection: View {
 }
 
 struct AnimateInProgressFinalExportSection: View {
-    let artifacts: [MomentArtifact]
+    let artifacts: [AnimateArtifact]
 
     private var presentation: AnimateInProgressArtifactSectionPresentation {
         AnimateInProgressArtifactSectionPresentation.finalExport(artifacts: artifacts)

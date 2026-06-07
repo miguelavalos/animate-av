@@ -3,7 +3,7 @@ import Foundation
 
 @MainActor
 final class AnimateWorkspaceObserver: ObservableObject {
-    @Published private(set) var activeWorkspace: MomentWorkspace?
+    @Published private(set) var activeWorkspace: AnimateWorkspace?
     @Published private(set) var errorMessage: String?
 
     private let workspaceObserver: any AnimateWorkspaceObserving
@@ -15,7 +15,7 @@ final class AnimateWorkspaceObserver: ObservableObject {
         workspaceObserver = momentsRepository
     }
 
-    var activeWorkspacePublisher: AnyPublisher<MomentWorkspace?, Never> {
+    var activeWorkspacePublisher: AnyPublisher<AnimateWorkspace?, Never> {
         $activeWorkspace.eraseToAnyPublisher()
     }
 
@@ -34,7 +34,7 @@ final class AnimateWorkspaceObserver: ObservableObject {
         AnimateSyncDiagnostics.addObserverBreadcrumb(observer: diagnosticsObserverName, message: "observer_started")
 
         do {
-            let updates = try workspaceObserver.observeMomentWorkspace(
+            let updates = try workspaceObserver.observeAnimateWorkspace(
                 ownerUserId: ownerUserId,
                 momentId: momentId
             )

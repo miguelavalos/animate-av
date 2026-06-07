@@ -17,7 +17,7 @@ struct AnimateCreateIntroCard: View {
 }
 
 struct AnimateCreateActiveMomentCard: View {
-    let activeMoment: InProgressMoment?
+    let activeMoment: AnimateVideo?
 
     var body: some View {
         if let activeMoment {
@@ -34,7 +34,7 @@ struct AnimateCreateActiveMomentCard: View {
 }
 
 struct AnimateCreateContinuationHintCard: View {
-    let focus: MomentsContinuationFocus?
+    let focus: AnimateContinuationFocus?
     let dismiss: () -> Void
 
     var body: some View {
@@ -118,7 +118,7 @@ struct MomentsCurrentCreationCard: View {
     }
 }
 
-private extension MomentsContinuationFocus {
+private extension AnimateContinuationFocus {
     var title: String {
         switch self {
         case .moment:

@@ -28,7 +28,7 @@ final class StoryWorkflow: WorkspaceObservingWorkflow {
         storyClient.isConfigured
     }
 
-    func canPlan(template: MomentTemplate) -> Bool {
+    func canPlan(template: AnimateVideoTemplate) -> Bool {
         return currentUserProvider.currentUserId != nil
             && isConfigured
             && AnimateStoryRules.availability(
@@ -40,8 +40,8 @@ final class StoryWorkflow: WorkspaceObservingWorkflow {
 
     func generatePlan(
         momentId: String,
-        form: MomentSetupForm,
-        selectedMedia: [MomentsSelectedMedia],
+        form: AnimateVideoSetupForm,
+        selectedMedia: [AnimateSelectedMedia],
         persistedMedia: [AnimateStoryMedia]? = nil
     ) async -> Bool {
         guard let ownerUserId = currentUserProvider.currentUserId else {
@@ -58,7 +58,7 @@ final class StoryWorkflow: WorkspaceObservingWorkflow {
         }
 
         let media = persistedMedia ?? storyMedia(from: selectedMedia, fallbackMediaAssets: activeWorkspace?.mediaAssets)
-        let availability = MomentsMediaRules.availability(
+        let availability = AnimateMediaRules.availability(
             template: form.template,
             selectedCount: media.filter(\.selected).count
         )
@@ -122,7 +122,7 @@ final class StoryWorkflow: WorkspaceObservingWorkflow {
                     "total_count": String(media.count),
                 ]
             )
-            statusMessage = MomentsRecoveryCopy.storyFailure()
+            statusMessage = AnimateRecoveryCopy.storyFailure()
             isPlanning = false
             return false
         } catch {
@@ -138,7 +138,7 @@ final class StoryWorkflow: WorkspaceObservingWorkflow {
                     "total_count": String(media.count),
                 ]
             )
-            statusMessage = MomentsRecoveryCopy.storyFailure()
+            statusMessage = AnimateRecoveryCopy.storyFailure()
             isPlanning = false
             return false
         }
@@ -158,8 +158,8 @@ final class StoryWorkflow: WorkspaceObservingWorkflow {
     }
 
     private func storyMedia(
-        from selectedMedia: [MomentsSelectedMedia],
-        fallbackMediaAssets: [MomentMediaAsset]?
+        from selectedMedia: [AnimateSelectedMedia],
+        fallbackMediaAssets: [AnimateMediaAsset]?
     ) -> [AnimateStoryMedia] {
         if !selectedMedia.isEmpty {
             return selectedMedia
@@ -204,7 +204,7 @@ final class StoryWorkflow: WorkspaceObservingWorkflow {
         }
     }
 
-    private func generateBlockMessage(_ availability: MomentsMediaRules.Availability) -> String {
+    private func generateBlockMessage(_ availability: AnimateMediaRules.Availability) -> String {
         switch availability.blockReason {
         case nil:
             return L10n.string("create.story.status.ready")

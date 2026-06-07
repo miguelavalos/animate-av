@@ -1,6 +1,6 @@
 import Foundation
 
-struct MomentRenderJob: Identifiable, Decodable, Equatable {
+struct AnimateRenderJob: Identifiable, Decodable, Equatable {
     let id: String
     let kind: String
     let status: String

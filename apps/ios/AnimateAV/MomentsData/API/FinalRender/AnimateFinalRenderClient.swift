@@ -57,14 +57,14 @@ struct AnimateFinalRenderClient {
     func prepareRenderPlan(
         momentId: String,
         bearerToken: String,
-        template: MomentTemplate,
-        creationStyle: MomentCreationStyleID?,
-        form: MomentSetupForm,
+        template: AnimateVideoTemplate,
+        creationStyle: AnimateVideoCreationStyleID?,
+        form: AnimateVideoSetupForm,
         removesWatermark: Bool,
         selectedSourceLocalIdentifiers: [String],
         sourceImageUploadId: String? = nil,
         generatedImageArtifactId: String? = nil
-    ) async throws -> MomentsRenderPlanResponse {
+    ) async throws -> AnimateRenderPlanResponse {
         guard let baseURL = URL(string: baseURLString.trimmingCharacters(in: .whitespacesAndNewlines)) else {
             throw AnimateFinalRenderError.apiNotConfigured
         }
@@ -76,7 +76,7 @@ struct AnimateFinalRenderClient {
             .appendingPathComponent("renders")
             .appendingPathComponent("plan")
         let messageFields = Self.videoMessageFields(form)
-        let body = MomentsRenderPlanRequest(
+        let body = AnimateRenderPlanRequest(
             momentId: momentId,
             creationMode: form.creationMode.rawValue,
             look: form.look.rawValue,
@@ -113,22 +113,22 @@ struct AnimateFinalRenderClient {
             )
         }
 
-        return try JSONDecoder().decode(MomentsRenderPlanResponse.self, from: data)
+        return try JSONDecoder().decode(AnimateRenderPlanResponse.self, from: data)
     }
 
     func confirmFinalRender(
         momentId: String,
         bearerToken: String,
-        template: MomentTemplate,
-        creationStyle: MomentCreationStyleID?,
-        form: MomentSetupForm,
+        template: AnimateVideoTemplate,
+        creationStyle: AnimateVideoCreationStyleID?,
+        form: AnimateVideoSetupForm,
         removesWatermark: Bool,
         selectedSourceLocalIdentifiers: [String],
         sourceImageUploadId: String? = nil,
         generatedImageArtifactId: String? = nil,
         planId: String,
         renderOptionId: String?
-    ) async throws -> MomentsConfirmFinalRenderResponse {
+    ) async throws -> AnimateConfirmFinalRenderResponse {
         guard let baseURL = URL(string: baseURLString.trimmingCharacters(in: .whitespacesAndNewlines)) else {
             throw AnimateFinalRenderError.apiNotConfigured
         }
@@ -141,7 +141,7 @@ struct AnimateFinalRenderClient {
             .appendingPathComponent("final")
             .appendingPathComponent("confirm")
         let messageFields = Self.videoMessageFields(form)
-        let body = MomentsConfirmFinalRenderRequest(
+        let body = AnimateConfirmFinalRenderRequest(
             momentId: momentId,
             creationMode: form.creationMode.rawValue,
             look: form.look.rawValue,
@@ -180,14 +180,14 @@ struct AnimateFinalRenderClient {
             )
         }
 
-        return try JSONDecoder().decode(MomentsConfirmFinalRenderResponse.self, from: data)
+        return try JSONDecoder().decode(AnimateConfirmFinalRenderResponse.self, from: data)
     }
 
     func prepareFinalArtifactDownload(
         momentId: String,
         artifactId: String,
         bearerToken: String
-    ) async throws -> MomentsArtifactDownloadResponse {
+    ) async throws -> AnimateArtifactDownloadResponse {
         guard let baseURL = URL(string: baseURLString.trimmingCharacters(in: .whitespacesAndNewlines)) else {
             throw AnimateFinalRenderError.apiNotConfigured
         }
@@ -199,7 +199,7 @@ struct AnimateFinalRenderClient {
             .appendingPathComponent("artifacts")
             .appendingPathComponent(artifactId)
             .appendingPathComponent("download")
-        let body = MomentsArtifactDownloadRequest(
+        let body = AnimateArtifactDownloadRequest(
             momentId: momentId,
             artifactId: artifactId
         )
@@ -221,13 +221,13 @@ struct AnimateFinalRenderClient {
             )
         }
 
-        return try JSONDecoder().decode(MomentsArtifactDownloadResponse.self, from: data)
+        return try JSONDecoder().decode(AnimateArtifactDownloadResponse.self, from: data)
     }
 
     func prepareImageArtifactDownload(
         artifactId: String,
         bearerToken: String
-    ) async throws -> MomentsArtifactDownloadResponse {
+    ) async throws -> AnimateArtifactDownloadResponse {
         guard let baseURL = URL(string: baseURLString.trimmingCharacters(in: .whitespacesAndNewlines)) else {
             throw AnimateFinalRenderError.apiNotConfigured
         }
@@ -256,10 +256,10 @@ struct AnimateFinalRenderClient {
             )
         }
 
-        return try JSONDecoder().decode(MomentsArtifactDownloadResponse.self, from: data)
+        return try JSONDecoder().decode(AnimateArtifactDownloadResponse.self, from: data)
     }
 
-    func downloadFinalArtifact(from response: MomentsArtifactDownloadResponse) async throws -> URL {
+    func downloadFinalArtifact(from response: AnimateArtifactDownloadResponse) async throws -> URL {
         guard let downloadURL = URL(string: response.downloadUrl) else {
             throw AnimateFinalRenderError.downloadPreparationFailed
         }
@@ -288,7 +288,7 @@ struct AnimateFinalRenderClient {
         return trimmed
     }
 
-    private static func videoMessageFields(_ form: MomentSetupForm) -> (message: String?, script: String?) {
+    private static func videoMessageFields(_ form: AnimateVideoSetupForm) -> (message: String?, script: String?) {
         if let script = nonBlankOptional(form.details) {
             return (message: nil, script: script)
         }

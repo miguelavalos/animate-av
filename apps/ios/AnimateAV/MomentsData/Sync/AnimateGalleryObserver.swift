@@ -3,7 +3,7 @@ import Foundation
 
 @MainActor
 final class AnimateGalleryObserver: ObservableObject {
-    @Published private(set) var moments: [MomentArtifact] = []
+    @Published private(set) var moments: [AnimateArtifact] = []
     @Published private(set) var errorMessage: String?
 
     private let momentsObserver: any AnimateGalleryObserving
@@ -15,7 +15,7 @@ final class AnimateGalleryObserver: ObservableObject {
         momentsObserver = momentsRepository
     }
 
-    var galleryMomentsPublisher: AnyPublisher<[MomentArtifact], Never> {
+    var galleryMomentsPublisher: AnyPublisher<[AnimateArtifact], Never> {
         $moments.eraseToAnyPublisher()
     }
 

@@ -2,20 +2,20 @@ import Combine
 import Foundation
 
 @MainActor
-protocol InProgressMomentsSummaryProviding: AnyObject {
-    var inProgressSummaryPublisher: AnyPublisher<InProgressMomentsSummary, Never> { get }
+protocol AnimateInProgressSummaryProviding: AnyObject {
+    var inProgressSummaryPublisher: AnyPublisher<AnimateInProgressSummary, Never> { get }
 }
 
 @MainActor
-protocol InProgressMomentsViewing: InProgressMomentsSummaryProviding {
-    var activeMomentPublisher: AnyPublisher<InProgressMoment?, Never> { get }
-    var activeWorkspacePublisher: AnyPublisher<MomentWorkspace?, Never> { get }
-    var isLoadingMomentWorkspacePublisher: AnyPublisher<Bool, Never> { get }
+protocol AnimateVideosViewing: AnimateInProgressSummaryProviding {
+    var activeMomentPublisher: AnyPublisher<AnimateVideo?, Never> { get }
+    var activeWorkspacePublisher: AnyPublisher<AnimateWorkspace?, Never> { get }
+    var isLoadingAnimateWorkspacePublisher: AnyPublisher<Bool, Never> { get }
     var isDeletingMomentPublisher: AnyPublisher<Bool, Never> { get }
     var inProgressErrorMessagePublisher: AnyPublisher<String?, Never> { get }
 
-    func observeMomentWorkspace(ownerUserId: String?, momentId: String?)
-    func clearMomentWorkspace()
-    func renameMoment(_ moment: InProgressMoment, title: String) async -> Bool
-    func deleteMoment(_ moment: InProgressMoment) async -> Bool
+    func observeAnimateWorkspace(ownerUserId: String?, momentId: String?)
+    func clearAnimateWorkspace()
+    func renameMoment(_ moment: AnimateVideo, title: String) async -> Bool
+    func deleteMoment(_ moment: AnimateVideo) async -> Bool
 }

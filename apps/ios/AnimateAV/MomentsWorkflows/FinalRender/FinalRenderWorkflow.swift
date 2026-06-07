@@ -4,9 +4,9 @@ import Photos
 
 @MainActor
 final class FinalRenderWorkflow: WorkspaceObservingWorkflow {
-    @Published private(set) var finalExport: MomentArtifact?
-    @Published private(set) var latestFinalJob: MomentRenderJob?
-    @Published private(set) var renderPlan: MomentsRenderPlanResponse?
+    @Published private(set) var finalExport: AnimateArtifact?
+    @Published private(set) var latestFinalJob: AnimateRenderJob?
+    @Published private(set) var renderPlan: AnimateRenderPlanResponse?
     @Published private(set) var videoQuote: AnimateVideoQuoteResponse?
     @Published private(set) var isGenerating = false
     @Published private(set) var pendingGalleryVideo: AnimateGalleryVideoRecord?
@@ -47,7 +47,7 @@ final class FinalRenderWorkflow: WorkspaceObservingWorkflow {
         super.init(workspaceObserver: workspaceObserver)
     }
 
-    override func workspaceDidChange(_ workspace: MomentWorkspace?) {
+    override func workspaceDidChange(_ workspace: AnimateWorkspace?) {
         finalExport = workspace?.latestArtifact(kind: "final_export")
         let momentId = workspace?.moment.id
         if let workspaceFinalJob = workspace?.latestRenderJob(kind: "final") {
@@ -65,7 +65,7 @@ final class FinalRenderWorkflow: WorkspaceObservingWorkflow {
         finalRenderClient.isConfigured
     }
 
-    func canGenerate(template: MomentTemplate) -> Bool {
+    func canGenerate(template: AnimateVideoTemplate) -> Bool {
         guard activeWorkspace?.moment != nil else { return false }
         return currentUserProvider.currentUserId != nil
             && isConfigured
@@ -80,7 +80,7 @@ final class FinalRenderWorkflow: WorkspaceObservingWorkflow {
     }
 
     func quoteVideo(
-        form: MomentSetupForm,
+        form: AnimateVideoSetupForm,
         removesWatermark: Bool = false
     ) async {
         guard let bearerToken = await validatedBearerTokenForFinalRender() else { return }
@@ -116,10 +116,10 @@ final class FinalRenderWorkflow: WorkspaceObservingWorkflow {
 
     func prepareFinalRenderPlan(
         momentId: String,
-        template: MomentTemplate,
-        creationStyle: MomentCreationStyleID?,
-        form: MomentSetupForm,
-        selectedMedia: [MomentsSelectedMedia],
+        template: AnimateVideoTemplate,
+        creationStyle: AnimateVideoCreationStyleID?,
+        form: AnimateVideoSetupForm,
+        selectedMedia: [AnimateSelectedMedia],
         removesWatermark: Bool = false
     ) async {
         guard let bearerToken = await validatedBearerTokenForFinalRender() else { return }
@@ -201,7 +201,7 @@ final class FinalRenderWorkflow: WorkspaceObservingWorkflow {
                 ]
             )
             renderPlan = nil
-            statusMessage = MomentsRecoveryCopy.renderStartFailure()
+            statusMessage = AnimateRecoveryCopy.renderStartFailure()
         }
 
         guard isCurrentWorkflowGeneration(generation) else { return }
@@ -210,10 +210,10 @@ final class FinalRenderWorkflow: WorkspaceObservingWorkflow {
 
     func confirmPreparedFinalRender(
         momentId: String,
-        template: MomentTemplate,
-        creationStyle: MomentCreationStyleID?,
-        form: MomentSetupForm,
-        selectedMedia: [MomentsSelectedMedia],
+        template: AnimateVideoTemplate,
+        creationStyle: AnimateVideoCreationStyleID?,
+        form: AnimateVideoSetupForm,
+        selectedMedia: [AnimateSelectedMedia],
         removesWatermark: Bool = false
     ) async {
         guard let ownerUserId = currentUserProvider.currentUserId else {
@@ -310,14 +310,14 @@ final class FinalRenderWorkflow: WorkspaceObservingWorkflow {
                     "removes_watermark": String(removesWatermark),
                 ]
             )
-            statusMessage = MomentsRecoveryCopy.renderStartFailure()
+            statusMessage = AnimateRecoveryCopy.renderStartFailure()
         }
 
         guard isCurrentWorkflowGeneration(generation) else { return }
         isGenerating = false
     }
 
-    private func refreshCreditBalanceIfTerminalStateChanged(workspace: MomentWorkspace?) {
+    private func refreshCreditBalanceIfTerminalStateChanged(workspace: AnimateWorkspace?) {
         guard let workspace else {
             lastCreditRefreshKey = nil
             return
@@ -355,13 +355,13 @@ final class FinalRenderWorkflow: WorkspaceObservingWorkflow {
     private func prepareRenderPlanWithUploadVisibilityRetry(
         momentId: String,
         bearerToken: String,
-        template: MomentTemplate,
-        creationStyle: MomentCreationStyleID?,
-        form: MomentSetupForm,
+        template: AnimateVideoTemplate,
+        creationStyle: AnimateVideoCreationStyleID?,
+        form: AnimateVideoSetupForm,
         removesWatermark: Bool,
         selectedSourceLocalIdentifiers: [String],
         sourceImageUploadId: String?
-    ) async throws -> MomentsRenderPlanResponse {
+    ) async throws -> AnimateRenderPlanResponse {
         var attempt = 0
 
         while true {
@@ -384,7 +384,7 @@ final class FinalRenderWorkflow: WorkspaceObservingWorkflow {
     }
 
     private func prepareVideoSourceUploadIfNeeded(
-        selectedMedia: [MomentsSelectedMedia],
+        selectedMedia: [AnimateSelectedMedia],
         bearerToken: String
     ) async throws -> String? {
         guard let client = imageGenerationAccountingClient,
@@ -425,7 +425,7 @@ final class FinalRenderWorkflow: WorkspaceObservingWorkflow {
         return uploadedSource.sourceImageUploadId
     }
 
-    func selectedSourceLocalIdentifiersForFinalRender(from selectedMedia: [MomentsSelectedMedia]) -> [String] {
+    func selectedSourceLocalIdentifiersForFinalRender(from selectedMedia: [AnimateSelectedMedia]) -> [String] {
         selectedSourceLocalIdentifiersForFinalRender(
             from: selectedMedia,
             workspaceMedia: activeWorkspace?.mediaAssets ?? []
@@ -433,8 +433,8 @@ final class FinalRenderWorkflow: WorkspaceObservingWorkflow {
     }
 
     func selectedSourceLocalIdentifiersForFinalRender(
-        from selectedMedia: [MomentsSelectedMedia],
-        workspaceMedia: [MomentMediaAsset]
+        from selectedMedia: [AnimateSelectedMedia],
+        workspaceMedia: [AnimateMediaAsset]
     ) -> [String] {
         let localSelection = selectedMedia
             .filter(\.selected)
@@ -463,7 +463,7 @@ final class FinalRenderWorkflow: WorkspaceObservingWorkflow {
         return trimmed
     }
 
-    private func validateRecoveredSourceMediaAvailable(selectedMedia: [MomentsSelectedMedia]) -> Bool {
+    private func validateRecoveredSourceMediaAvailable(selectedMedia: [AnimateSelectedMedia]) -> Bool {
         guard selectedMedia.isEmpty else { return true }
         let sourceIdentifiers = selectedSourceLocalIdentifiersForFinalRender(
             from: selectedMedia,
@@ -490,7 +490,7 @@ final class FinalRenderWorkflow: WorkspaceObservingWorkflow {
     }
 
     static func needsRenderPlanForFinalRender(
-        renderPlan: MomentsRenderPlanResponse?,
+        renderPlan: AnimateRenderPlanResponse?,
         momentId: String,
         removesWatermark: Bool
     ) -> Bool {
@@ -507,7 +507,7 @@ final class FinalRenderWorkflow: WorkspaceObservingWorkflow {
         statusMessage = nil
     }
 
-    func usePreparedRenderPlan(_ plan: MomentsRenderPlanResponse) {
+    func usePreparedRenderPlan(_ plan: AnimateRenderPlanResponse) {
         guard !isGenerating else { return }
         renderPlan = plan
     }
@@ -549,7 +549,7 @@ final class FinalRenderWorkflow: WorkspaceObservingWorkflow {
         }
     }
 
-    private func scheduleLocalGalleryDownloadIfNeeded(workspace: MomentWorkspace?) {
+    private func scheduleLocalGalleryDownloadIfNeeded(workspace: AnimateWorkspace?) {
         guard
             let workspace,
             let artifact = workspace.latestArtifact(kind: "final_export"),
@@ -569,8 +569,8 @@ final class FinalRenderWorkflow: WorkspaceObservingWorkflow {
     }
 
     private func downloadFinalExportToGallery(
-        workspace: MomentWorkspace,
-        artifact: MomentArtifact
+        workspace: AnimateWorkspace,
+        artifact: AnimateArtifact
     ) async {
         defer { downloadingArtifactIds.remove(artifact.id) }
 
@@ -620,7 +620,7 @@ final class FinalRenderWorkflow: WorkspaceObservingWorkflow {
         }
     }
 
-    func finalDownloadArtifactId(for artifact: MomentArtifact) -> String {
+    func finalDownloadArtifactId(for artifact: AnimateArtifact) -> String {
         artifact.workflowArtifactId ?? artifact.id
     }
 
@@ -661,7 +661,7 @@ final class FinalRenderWorkflow: WorkspaceObservingWorkflow {
         ) ?? L10n.string("workflow.final.notReady")
     }
 
-    private static func videoMessageFields(_ form: MomentSetupForm) -> (message: String?, script: String?) {
+    private static func videoMessageFields(_ form: AnimateVideoSetupForm) -> (message: String?, script: String?) {
         if let script = nonBlankOptional(form.details) {
             return (message: nil, script: script)
         }

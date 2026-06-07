@@ -12,7 +12,7 @@ struct AnimateUploadClient: Sendable {
         URL(string: baseURLString.trimmingCharacters(in: .whitespacesAndNewlines)) != nil
     }
 
-    func prepareUpload(momentId: String, bearerToken: String, media: MomentsSelectedMedia) async throws -> AnimatePreparedUpload {
+    func prepareUpload(momentId: String, bearerToken: String, media: AnimateSelectedMedia) async throws -> AnimatePreparedUpload {
         guard let baseURL = URL(string: baseURLString.trimmingCharacters(in: .whitespacesAndNewlines)) else {
             throw AnimateUploadError.apiNotConfigured
         }
@@ -51,7 +51,7 @@ struct AnimateUploadClient: Sendable {
         }
     }
 
-    func upload(media: MomentsSelectedMedia, preparedUpload: AnimatePreparedUpload) async throws -> AnimateUploadCompletion {
+    func upload(media: AnimateSelectedMedia, preparedUpload: AnimatePreparedUpload) async throws -> AnimateUploadCompletion {
         guard let uploadURL = preparedUpload.uploadUrl else {
             throw AnimateUploadError.signedUploadUnavailable
         }
@@ -84,7 +84,7 @@ struct AnimateUploadClient: Sendable {
         }
     }
 
-    private func completeUpload(uploadId: String, completionUrl: URL, media: MomentsSelectedMedia) async throws -> AnimateUploadCompletion {
+    private func completeUpload(uploadId: String, completionUrl: URL, media: AnimateSelectedMedia) async throws -> AnimateUploadCompletion {
         var request = URLRequest(url: completionUrl)
         request.httpMethod = "POST"
         request.timeoutInterval = 20
@@ -162,7 +162,7 @@ private struct AnimateUploadCompletionIntent: Encodable {
     let sortOrder: Int
     let selected: Bool
 
-    init(media: MomentsSelectedMedia) {
+    init(media: AnimateSelectedMedia) {
         sortOrder = media.sortOrder
         selected = media.selected
     }
@@ -206,7 +206,7 @@ private struct AnimatePrepareUploadRequest: Encodable {
     let byteSize: Int
     let sha256: String
 
-    init(momentId: String, media: MomentsSelectedMedia) {
+    init(momentId: String, media: AnimateSelectedMedia) {
         self.momentId = momentId
         mediaKind = media.kind
         sourceLocalIdentifier = media.sourceLocalIdentifier

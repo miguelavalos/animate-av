@@ -5,21 +5,21 @@ enum AnimateCreateAvailabilityMessageFactory {
         isSetupLocked: Bool,
         isSignedIn: Bool,
         isMomentCreationConfigured: Bool,
-        setupFormAvailability: MomentSetupRules.Availability
+        setupFormAvailability: AnimateVideoSetupRules.Availability
     ) -> String? {
         if isSetupLocked { return nil }
         if !isSignedIn { return AnimateCreateAvailabilityCopy.momentSignInRequired }
         if !isMomentCreationConfigured { return AnimateCreateAvailabilityCopy.momentSyncNotConfigured }
-        return MomentSetupRules.availabilityMessage(setupFormAvailability)
+        return AnimateVideoSetupRules.availabilityMessage(setupFormAvailability)
     }
 
     static func media(
-        hasMomentWorkspace: Bool,
+        hasAnimateWorkspace: Bool,
         isImportingMedia: Bool,
         isMediaUploadConfigured: Bool,
         mediaRemainingSlots: Int
     ) -> String? {
-        if !hasMomentWorkspace { return AnimateCreateAvailabilityCopy.mediaMissingMoment }
+        if !hasAnimateWorkspace { return AnimateCreateAvailabilityCopy.mediaMissingMoment }
         if isImportingMedia { return nil }
         if !isMediaUploadConfigured { return AnimateCreateAvailabilityCopy.mediaUploadNotConfigured }
         if mediaRemainingSlots == 0 { return AnimateCreateAvailabilityCopy.mediaTemplateFull }
@@ -28,24 +28,24 @@ enum AnimateCreateAvailabilityMessageFactory {
 
     static func story(
         isSignedIn: Bool,
-        hasMomentWorkspace: Bool,
+        hasAnimateWorkspace: Bool,
         isStoryPlanning: Bool,
         isStoryAvailable: Bool,
         isStoryConfigured: Bool,
-        mediaAssets: [MomentMediaAsset]?,
+        mediaAssets: [AnimateMediaAsset]?,
         selectedMediaCount: Int,
-        template: MomentTemplate
+        template: AnimateVideoTemplate
     ) -> String? {
         guard isSignedIn else { return AnimateCreateAvailabilityCopy.storySignInRequired }
-        guard hasMomentWorkspace else { return AnimateCreateAvailabilityCopy.storyMissingMoment }
+        guard hasAnimateWorkspace else { return AnimateCreateAvailabilityCopy.storyMissingMoment }
         guard isStoryAvailable else { return AnimateCreateAvailabilityCopy.storyUnavailable }
         if isStoryPlanning { return nil }
         if !isStoryConfigured { return AnimateCreateAvailabilityCopy.storyNotConfigured }
 
         if selectedMediaCount > 0 {
-            let availability = MomentsMediaRules.availability(template: template, selectedCount: selectedMediaCount)
+            let availability = AnimateMediaRules.availability(template: template, selectedCount: selectedMediaCount)
             guard !availability.canUseSelection else { return nil }
-            return MomentsMediaRules.selectionMessage(
+            return AnimateMediaRules.selectionMessage(
                 availability,
                 tooFewMessage: { missingCount in
                     missingCount == 1
@@ -74,8 +74,8 @@ enum AnimateCreateAvailabilityMessageFactory {
         isFinalRenderAvailable: Bool,
         isFinalRenderGenerating: Bool,
         isFinalRenderConfigured: Bool,
-        moment: InProgressMoment?,
-        template: MomentTemplate,
+        moment: AnimateVideo?,
+        template: AnimateVideoTemplate,
         balance: AnimateCreditBalance,
         creditBalanceLoadState: AnimateCreditBalanceLoadState = .loaded
     ) -> String? {
@@ -100,7 +100,7 @@ enum AnimateCreateAvailabilityMessageFactory {
         )
     }
 
-    private static func missingCredits(template: MomentTemplate, balance: AnimateCreditBalance) -> Int {
+    private static func missingCredits(template: AnimateVideoTemplate, balance: AnimateCreditBalance) -> Int {
         max(template.creditCost - balance.spendable, 0)
     }
 }

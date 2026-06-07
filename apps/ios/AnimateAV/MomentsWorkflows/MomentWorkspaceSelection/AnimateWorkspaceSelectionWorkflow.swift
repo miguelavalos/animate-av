@@ -2,10 +2,10 @@ import Combine
 import Foundation
 
 @MainActor
-final class MomentWorkspaceSelectionWorkflow: ObservableObject {
-    @Published private(set) var activeMoment: InProgressMoment?
-    @Published private(set) var activeWorkspace: MomentWorkspace?
-    @Published private(set) var isLoadingMomentWorkspace = false
+final class AnimateWorkspaceSelectionWorkflow: ObservableObject {
+    @Published private(set) var activeMoment: AnimateVideo?
+    @Published private(set) var activeWorkspace: AnimateWorkspace?
+    @Published private(set) var isLoadingAnimateWorkspace = false
     @Published private(set) var errorMessage: String?
 
     private let workspaceObserver: any AnimateActiveWorkspaceObserving
@@ -29,26 +29,26 @@ final class MomentWorkspaceSelectionWorkflow: ObservableObject {
             .store(in: &cancellables)
     }
 
-    var activeMomentPublisher: AnyPublisher<InProgressMoment?, Never> {
+    var activeMomentPublisher: AnyPublisher<AnimateVideo?, Never> {
         $activeMoment.eraseToAnyPublisher()
     }
 
-    var activeWorkspacePublisher: AnyPublisher<MomentWorkspace?, Never> {
+    var activeWorkspacePublisher: AnyPublisher<AnimateWorkspace?, Never> {
         $activeWorkspace.eraseToAnyPublisher()
     }
 
-    var isLoadingMomentWorkspacePublisher: AnyPublisher<Bool, Never> {
-        $isLoadingMomentWorkspace.eraseToAnyPublisher()
+    var isLoadingAnimateWorkspacePublisher: AnyPublisher<Bool, Never> {
+        $isLoadingAnimateWorkspace.eraseToAnyPublisher()
     }
 
     var workspaceErrorPublisher: AnyPublisher<String?, Never> {
         $errorMessage.eraseToAnyPublisher()
     }
 
-    func observeMomentWorkspace(ownerUserId: String?, momentId: String?) {
+    func observeAnimateWorkspace(ownerUserId: String?, momentId: String?) {
         activeMoment = nil
         activeWorkspace = nil
-        isLoadingMomentWorkspace = false
+        isLoadingAnimateWorkspace = false
         errorMessage = nil
 
         guard let ownerUserId, let momentId else {
@@ -57,25 +57,25 @@ final class MomentWorkspaceSelectionWorkflow: ObservableObject {
         }
 
         workspaceObserver.observeWorkspace(ownerUserId: ownerUserId, momentId: momentId)
-        isLoadingMomentWorkspace = true
+        isLoadingAnimateWorkspace = true
     }
 
-    func clearMomentWorkspace() {
+    func clearAnimateWorkspace() {
         workspaceObserver.clearWorkspace()
         activeMoment = nil
         activeWorkspace = nil
-        isLoadingMomentWorkspace = false
+        isLoadingAnimateWorkspace = false
     }
 
-    private func apply(workspace: MomentWorkspace?) {
+    private func apply(workspace: AnimateWorkspace?) {
         activeWorkspace = workspace
         activeMoment = workspace?.moment
-        isLoadingMomentWorkspace = false
+        isLoadingAnimateWorkspace = false
     }
 
     private func applyWorkspaceError(_ message: String?) {
         guard let message else { return }
         errorMessage = message
-        isLoadingMomentWorkspace = false
+        isLoadingAnimateWorkspace = false
     }
 }

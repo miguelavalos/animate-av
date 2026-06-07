@@ -1,6 +1,6 @@
 import Foundation
 
-enum MomentSetupTone: String, CaseIterable, Identifiable {
+enum AnimateVideoSetupTone: String, CaseIterable, Identifiable {
     case warm
     case playful
     case cinematic
@@ -20,7 +20,7 @@ enum MomentSetupTone: String, CaseIterable, Identifiable {
     }
 }
 
-enum MomentSetupTempo: String, CaseIterable, Identifiable {
+enum AnimateVideoSetupTempo: String, CaseIterable, Identifiable {
     case gentle
     case balanced
     case upbeat
@@ -36,8 +36,8 @@ enum MomentSetupTempo: String, CaseIterable, Identifiable {
     }
 }
 
-extension MomentSetupTone {
-    init(musicPreset: MomentMusicPreset) {
+extension AnimateVideoSetupTone {
+    init(musicPreset: AnimateVideoMusicPreset) {
         switch musicPreset {
         case .warm:
             self = .warm
@@ -53,17 +53,17 @@ extension MomentSetupTone {
     }
 }
 
-struct MomentSetupForm: Equatable {
-    var creationMode: MomentCreationMode = .quick
-    var look: MomentLook = .cartoon
-    var theme: MomentCreationStyleID = .celebration
-    var duration: MomentDuration = .auto
-    var mediaUse: MomentMediaUse = .aviPick
-    var template: MomentTemplate
+struct AnimateVideoSetupForm: Equatable {
+    var creationMode: AnimateVideoCreationMode = .quick
+    var look: AnimateVideoLook = .cartoon
+    var theme: AnimateVideoCreationStyleID = .celebration
+    var duration: AnimateVideoDuration = .auto
+    var mediaUse: AnimateVideoMediaUse = .aviPick
+    var template: AnimateVideoTemplate
     var occasion = "Birthday"
     var recipient = ""
-    var tone: MomentSetupTone = .warm
-    var tempo: MomentSetupTempo = .balanced
+    var tone: AnimateVideoSetupTone = .warm
+    var tempo: AnimateVideoSetupTempo = .balanced
     var details = ""
 
     var title: String {
@@ -78,30 +78,30 @@ struct MomentSetupForm: Equatable {
     }
 
     static func continuing(
-        moment: InProgressMoment,
-        templates: [MomentTemplate]
-    ) -> MomentSetupForm? {
+        moment: AnimateVideo,
+        templates: [AnimateVideoTemplate]
+    ) -> AnimateVideoSetupForm? {
         guard let template = templates.first(where: { $0.id == moment.template }) else {
             return nil
         }
 
-        var form = MomentSetupForm(
+        var form = AnimateVideoSetupForm(
             template: template,
             occasion: moment.occasion ?? "",
             recipient: "",
-            tone: MomentSetupTone(rawValue: moment.mood ?? moment.tone ?? "") ?? .warm,
-            tempo: MomentSetupTempo(rawValue: moment.tempo ?? "") ?? .balanced,
+            tone: AnimateVideoSetupTone(rawValue: moment.mood ?? moment.tone ?? "") ?? .warm,
+            tempo: AnimateVideoSetupTempo(rawValue: moment.tempo ?? "") ?? .balanced,
             details: moment.details ?? ""
         )
         form.creationMode = .quick
-        form.look = MomentLook(rawValue: moment.look) ?? .cartoon
-        form.theme = MomentCreationStyleID(rawValue: moment.theme) ?? .celebration
-        form.duration = MomentDuration(rawValue: moment.duration) ?? .auto
-        form.mediaUse = MomentMediaUse(rawValue: moment.mediaUse) ?? .aviPick
+        form.look = AnimateVideoLook(rawValue: moment.look) ?? .cartoon
+        form.theme = AnimateVideoCreationStyleID(rawValue: moment.theme) ?? .celebration
+        form.duration = AnimateVideoDuration(rawValue: moment.duration) ?? .auto
+        form.mediaUse = AnimateVideoMediaUse(rawValue: moment.mediaUse) ?? .aviPick
         return form
     }
 
-    func matchesPersistedSetup(of other: MomentSetupForm) -> Bool {
+    func matchesPersistedSetup(of other: AnimateVideoSetupForm) -> Bool {
         creationMode == other.creationMode
             && look == other.look
             && theme == other.theme
@@ -114,7 +114,7 @@ struct MomentSetupForm: Equatable {
     }
 }
 
-enum MomentSetupRules {
+enum AnimateVideoSetupRules {
     enum BlockReason {
         case missingOccasion
     }
@@ -125,7 +125,7 @@ enum MomentSetupRules {
     }
 
     static func availability(
-        form: MomentSetupForm,
+        form: AnimateVideoSetupForm,
         balance: AnimateCreditBalance
     ) -> Availability {
         guard !form.occasion.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty else {

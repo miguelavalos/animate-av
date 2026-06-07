@@ -1,6 +1,6 @@
 import Foundation
 
-enum MomentMusicPreset: String, CaseIterable, Identifiable {
+enum AnimateVideoMusicPreset: String, CaseIterable, Identifiable {
     case warm
     case fun
     case cinematic
@@ -40,7 +40,7 @@ enum MomentMusicPreset: String, CaseIterable, Identifiable {
     }
 }
 
-enum MomentLook: String, CaseIterable, Identifiable, Codable {
+enum AnimateVideoLook: String, CaseIterable, Identifiable, Codable {
     case anime
     case cartoon
     case comic
@@ -48,7 +48,7 @@ enum MomentLook: String, CaseIterable, Identifiable, Codable {
 
     var id: String { rawValue }
 
-    static var selectorOrder: [MomentLook] {
+    static var selectorOrder: [AnimateVideoLook] {
         [.cartoon, .anime, .comic, .clay]
     }
 
@@ -90,20 +90,20 @@ enum MomentLook: String, CaseIterable, Identifiable, Codable {
 
 }
 
-enum MomentCreationMode: String, CaseIterable, Identifiable, Codable {
+enum AnimateVideoCreationMode: String, CaseIterable, Identifiable, Codable {
     case quick
 
     var id: String { rawValue }
 }
 
-enum MomentMediaUse: String, CaseIterable, Identifiable, Codable {
+enum AnimateVideoMediaUse: String, CaseIterable, Identifiable, Codable {
     case aviPick
     case useAll
 
     var id: String { rawValue }
 }
 
-enum MomentDuration: String, CaseIterable, Identifiable, Codable {
+enum AnimateVideoDuration: String, CaseIterable, Identifiable, Codable {
     case auto
 
     var id: String { rawValue }
@@ -121,7 +121,7 @@ enum MomentDuration: String, CaseIterable, Identifiable, Codable {
     }
 }
 
-enum MomentCreationStyleID: String, CaseIterable, Identifiable {
+enum AnimateVideoCreationStyleID: String, CaseIterable, Identifiable {
     case celebration
     case eventRecap
     case travel
@@ -134,16 +134,16 @@ enum MomentCreationStyleID: String, CaseIterable, Identifiable {
     var id: String { rawValue }
 }
 
-struct MomentCreationStyle: Identifiable, Equatable {
-    let id: MomentCreationStyleID
+struct AnimateVideoCreationStyle: Identifiable, Equatable {
+    let id: AnimateVideoCreationStyleID
     let title: String
     let subtitle: String
     let assetName: String
-    let template: MomentTemplate
-    let defaultMusic: MomentMusicPreset
-    let allowedMusic: [MomentMusicPreset]
-    let tone: MomentSetupTone
-    let tempo: MomentSetupTempo
+    let template: AnimateVideoTemplate
+    let defaultMusic: AnimateVideoMusicPreset
+    let allowedMusic: [AnimateVideoMusicPreset]
+    let tone: AnimateVideoSetupTone
+    let tempo: AnimateVideoSetupTempo
     let isEnabled: Bool
 
     var durationSeconds: Int { 15 }
@@ -152,8 +152,8 @@ struct MomentCreationStyle: Identifiable, Equatable {
     var recommendedAssets: ClosedRange<Int> { 1...1 }
     var maximumAssets: Int { 1 }
 
-    static var launchStyles: [MomentCreationStyle] { [
-        MomentCreationStyle(
+    static var launchStyles: [AnimateVideoCreationStyle] { [
+        AnimateVideoCreationStyle(
             id: .celebration,
             title: L10n.string("create.theme.celebration.title"),
             subtitle: L10n.string("create.theme.celebration.subtitle"),
@@ -165,7 +165,7 @@ struct MomentCreationStyle: Identifiable, Equatable {
             tempo: .balanced,
             isEnabled: true
         ),
-        MomentCreationStyle(
+        AnimateVideoCreationStyle(
             id: .eventRecap,
             title: L10n.string("create.theme.eventRecap.title"),
             subtitle: L10n.string("create.theme.eventRecap.subtitle"),
@@ -177,7 +177,7 @@ struct MomentCreationStyle: Identifiable, Equatable {
             tempo: .upbeat,
             isEnabled: true
         ),
-        MomentCreationStyle(
+        AnimateVideoCreationStyle(
             id: .travel,
             title: L10n.string("create.theme.travel.title"),
             subtitle: L10n.string("create.theme.travel.subtitle"),
@@ -189,7 +189,7 @@ struct MomentCreationStyle: Identifiable, Equatable {
             tempo: .gentle,
             isEnabled: true
         ),
-        MomentCreationStyle(
+        AnimateVideoCreationStyle(
             id: .favoritePeople,
             title: L10n.string("create.theme.favoritePeople.title"),
             subtitle: L10n.string("create.theme.favoritePeople.subtitle"),
@@ -201,7 +201,7 @@ struct MomentCreationStyle: Identifiable, Equatable {
             tempo: .gentle,
             isEnabled: true
         ),
-        MomentCreationStyle(
+        AnimateVideoCreationStyle(
             id: .birthday,
             title: L10n.string("create.theme.birthday.title"),
             subtitle: L10n.string("create.theme.birthday.subtitle"),
@@ -213,7 +213,7 @@ struct MomentCreationStyle: Identifiable, Equatable {
             tempo: .balanced,
             isEnabled: true
         ),
-        MomentCreationStyle(
+        AnimateVideoCreationStyle(
             id: .familyMoments,
             title: L10n.string("create.theme.familyMoments.title"),
             subtitle: L10n.string("create.theme.familyMoments.subtitle"),
@@ -225,7 +225,7 @@ struct MomentCreationStyle: Identifiable, Equatable {
             tempo: .gentle,
             isEnabled: true
         ),
-        MomentCreationStyle(
+        AnimateVideoCreationStyle(
             id: .softRoast,
             title: L10n.string("create.theme.softRoast.title"),
             subtitle: L10n.string("create.theme.softRoast.subtitle"),
@@ -237,7 +237,7 @@ struct MomentCreationStyle: Identifiable, Equatable {
             tempo: .upbeat,
             isEnabled: true
         ),
-        MomentCreationStyle(
+        AnimateVideoCreationStyle(
             id: .milestone,
             title: L10n.string("create.theme.milestone.title"),
             subtitle: L10n.string("create.theme.milestone.subtitle"),

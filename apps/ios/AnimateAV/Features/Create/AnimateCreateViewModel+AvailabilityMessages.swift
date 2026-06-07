@@ -10,7 +10,7 @@ extension AnimateCreateViewModel {
 
     var mediaAvailabilityMessage: String? {
         AnimateCreateAvailabilityMessageFactory.media(
-            hasMomentWorkspace: hasMomentWorkspace,
+            hasAnimateWorkspace: hasAnimateWorkspace,
             isImportingMedia: isImportingMedia,
             isMediaUploadConfigured: mediaUploadWorkflow?.isConfigured ?? false,
             mediaRemainingSlots: mediaRemainingSlots
@@ -20,7 +20,7 @@ extension AnimateCreateViewModel {
     var storyAvailabilityMessage: String? {
         AnimateCreateAvailabilityMessageFactory.story(
             isSignedIn: isSignedIn,
-            hasMomentWorkspace: hasMomentWorkspace,
+            hasAnimateWorkspace: hasAnimateWorkspace,
             isStoryPlanning: storyWorkflow?.isPlanning ?? false,
             isStoryAvailable: storyWorkflow != nil,
             isStoryConfigured: storyWorkflow?.isConfigured ?? false,
@@ -43,8 +43,8 @@ extension AnimateCreateViewModel {
         )
     }
 
-    var setupFormAvailability: MomentSetupRules.Availability {
-        MomentSetupRules.availability(form: form, balance: balance)
+    var setupFormAvailability: AnimateVideoSetupRules.Availability {
+        AnimateVideoSetupRules.availability(form: form, balance: balance)
     }
 
 }

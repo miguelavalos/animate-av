@@ -8,7 +8,7 @@ final class AnimateCreateWorkflowPresentationTests: XCTestCase {
             workflow: AnimateCreateWorkflowPresentation(
                 activeMomentId: "moment-1",
                 isSignedIn: true,
-                hasMomentWorkspace: true,
+                hasAnimateWorkspace: true,
                 template: .birthdayMessage,
                 balance: AnimateCreditBalance(proMonthly: 0, promotional: 1, purchased: 0),
                 mediaSummary: AnimateCreateMediaSummary(
@@ -34,7 +34,7 @@ final class AnimateCreateWorkflowPresentationTests: XCTestCase {
             workflow: AnimateCreateWorkflowPresentation(
                 activeMomentId: "moment-1",
                 isSignedIn: true,
-                hasMomentWorkspace: true,
+                hasAnimateWorkspace: true,
                 template: .birthdayMessage,
                 balance: AnimateCreditBalance(proMonthly: 0, promotional: 1, purchased: 0),
                 mediaSummary: AnimateCreateMediaSummary(
@@ -75,7 +75,7 @@ final class AnimateCreateWorkflowPresentationTests: XCTestCase {
         )
         let presentation = AnimateCreateWorkflowPresentation(
             activeMomentId: "moment-1",
-            hasMomentWorkspace: true,
+            hasAnimateWorkspace: true,
             template: .birthdayMessage,
             balance: .empty,
             mediaSummary: AnimateCreateMediaSummary(),
@@ -98,7 +98,7 @@ final class AnimateCreateWorkflowPresentationTests: XCTestCase {
         )
         let presentation = AnimateCreateWorkflowPresentation(
             activeMomentId: "moment-1",
-            hasMomentWorkspace: true,
+            hasAnimateWorkspace: true,
             template: .birthdayMessage,
             balance: .empty,
             mediaSummary: AnimateCreateMediaSummary(),
@@ -128,7 +128,7 @@ final class AnimateCreateWorkflowPresentationTests: XCTestCase {
         )
         let presentation = AnimateCreateWorkflowPresentation(
             activeMomentId: "moment-1",
-            hasMomentWorkspace: true,
+            hasAnimateWorkspace: true,
             template: .birthdayMessage,
             balance: .empty,
             mediaSummary: AnimateCreateMediaSummary(),
@@ -154,7 +154,7 @@ final class AnimateCreateWorkflowPresentationTests: XCTestCase {
         )
         let presentation = AnimateCreateWorkflowPresentation(
             activeMomentId: "moment-1",
-            hasMomentWorkspace: true,
+            hasAnimateWorkspace: true,
             template: .birthdayMessage,
             balance: .empty,
             mediaSummary: AnimateCreateMediaSummary(),
@@ -190,7 +190,7 @@ final class AnimateCreateWorkflowPresentationTests: XCTestCase {
 
         let presentation = AnimateCreateWorkflowPresentation(
             activeMomentId: "moment-1",
-            hasMomentWorkspace: true,
+            hasAnimateWorkspace: true,
             template: .birthdayMessage,
             balance: AnimateCreditBalance(proMonthly: 0, promotional: 2, purchased: 0),
             mediaSummary: mediaSummary,
@@ -227,7 +227,7 @@ final class AnimateCreateWorkflowPresentationTests: XCTestCase {
             activeMomentId: "moment-1",
             isSignedIn: true,
             isCreatingMoment: false,
-            hasMomentWorkspace: true,
+            hasAnimateWorkspace: true,
             hasUnsavedLocalMoment: false,
             template: .birthdayMessage,
             creationStyleTitle: "Birthday Story",
@@ -265,7 +265,7 @@ final class AnimateCreateWorkflowPresentationTests: XCTestCase {
             activeMomentId: nil,
             isSignedIn: true,
             isCreatingMoment: false,
-            hasMomentWorkspace: true,
+            hasAnimateWorkspace: true,
             hasUnsavedLocalMoment: true,
             template: .birthdayMessage,
             creationStyleTitle: "Birthday Story",
@@ -297,7 +297,7 @@ final class AnimateCreateWorkflowPresentationTests: XCTestCase {
             activeMomentId: nil,
             isSignedIn: true,
             isCreatingMoment: false,
-            hasMomentWorkspace: false,
+            hasAnimateWorkspace: false,
             hasUnsavedLocalMoment: true,
             template: .birthdayMessage,
             creationStyleTitle: "Birthday Story",
@@ -539,7 +539,7 @@ final class AnimateCreateWorkflowPresentationTests: XCTestCase {
     }
 
     func testPrimaryActionPresentationAllowsRetryForUnavailableFinalProviderPlan() {
-        let unavailablePlan = MomentsRenderPlanResponse(
+        let unavailablePlan = AnimateRenderPlanResponse(
             appId: "animateav",
             momentId: "moment-1",
             planId: "plan-1",
@@ -551,7 +551,7 @@ final class AnimateCreateWorkflowPresentationTests: XCTestCase {
         let workflow = AnimateCreateWorkflowPresentation(
             activeMomentId: "moment-1",
             isSignedIn: true,
-            hasMomentWorkspace: true,
+            hasAnimateWorkspace: true,
             template: .birthdayMessage,
             balance: AnimateCreditBalance(proMonthly: 0, promotional: 3, purchased: 0),
             mediaSummary: AnimateCreateMediaSummary(
@@ -587,7 +587,7 @@ final class AnimateCreateWorkflowPresentationTests: XCTestCase {
         let workflow = AnimateCreateWorkflowPresentation(
             activeMomentId: "moment-1",
             isSignedIn: true,
-            hasMomentWorkspace: true,
+            hasAnimateWorkspace: true,
             template: .birthdayMessage,
             balance: AnimateCreditBalance(proMonthly: 0, promotional: 3, purchased: 0),
             mediaSummary: AnimateCreateMediaSummary(
@@ -611,7 +611,7 @@ final class AnimateCreateWorkflowPresentationTests: XCTestCase {
             workflow: AnimateCreateWorkflowPresentation(
                 activeMomentId: "moment-1",
                 isSignedIn: true,
-                hasMomentWorkspace: true,
+                hasAnimateWorkspace: true,
                 template: .birthdayMessage,
                 balance: AnimateCreditBalance(proMonthly: 0, promotional: 2, purchased: 0),
                 mediaSummary: AnimateCreateMediaSummary(
@@ -640,7 +640,7 @@ final class AnimateCreateWorkflowPresentationTests: XCTestCase {
             workflow: AnimateCreateWorkflowPresentation(
                 activeMomentId: "moment-1",
                 isSignedIn: true,
-                hasMomentWorkspace: true,
+                hasAnimateWorkspace: true,
                 template: .birthdayMessage,
                 balance: AnimateCreditBalance(proMonthly: 0, promotional: 2, purchased: 0),
                 mediaSummary: AnimateCreateMediaSummary(
@@ -665,7 +665,7 @@ final class AnimateCreateWorkflowPresentationTests: XCTestCase {
             workflow: AnimateCreateWorkflowPresentation(
                 activeMomentId: "moment-1",
                 isSignedIn: true,
-                hasMomentWorkspace: true,
+                hasAnimateWorkspace: true,
                 template: .birthdayMessage,
                 balance: AnimateCreditBalance(proMonthly: 0, promotional: 3, purchased: 0),
                 mediaSummary: AnimateCreateMediaSummary(
@@ -698,7 +698,7 @@ final class AnimateCreateWorkflowPresentationTests: XCTestCase {
             workflow: AnimateCreateWorkflowPresentation(
                 activeMomentId: "moment-1",
                 isSignedIn: true,
-                hasMomentWorkspace: true,
+                hasAnimateWorkspace: true,
                 template: .birthdayMessage,
                 balance: AnimateCreditBalance(proMonthly: 0, promotional: 0, purchased: 0),
                 mediaSummary: AnimateCreateMediaSummary(
@@ -732,7 +732,7 @@ final class AnimateCreateWorkflowPresentationTests: XCTestCase {
             workflow: AnimateCreateWorkflowPresentation(
                 activeMomentId: "moment-1",
                 isSignedIn: true,
-                hasMomentWorkspace: true,
+                hasAnimateWorkspace: true,
                 template: .birthdayMessage,
                 balance: AnimateCreditBalance(proMonthly: 0, promotional: 5, purchased: 0),
                 mediaSummary: AnimateCreateMediaSummary(
@@ -767,7 +767,7 @@ final class AnimateCreateWorkflowPresentationTests: XCTestCase {
             workflow: AnimateCreateWorkflowPresentation(
                 activeMomentId: "moment-1",
                 isSignedIn: true,
-                hasMomentWorkspace: true,
+                hasAnimateWorkspace: true,
                 template: .birthdayMessage,
                 balance: AnimateCreditBalance(proMonthly: 0, promotional: 3, purchased: 0),
                 mediaSummary: AnimateCreateMediaSummary(
@@ -807,7 +807,7 @@ final class AnimateCreateWorkflowPresentationTests: XCTestCase {
             canEditSetup: false
         )
 
-        let presentation = MomentsRenderRealtimePresentation(renderJob: job)
+        let presentation = AnimateRenderRealtimePresentation(renderJob: job)
 
         XCTAssertEqual(presentation.title, "Rendering")
         XCTAssertEqual(presentation.detail, "Rendering your video.")
@@ -826,7 +826,7 @@ final class AnimateCreateWorkflowPresentationTests: XCTestCase {
             errorMessage: "fal provider request failed with upstream trace id abc123"
         )
 
-        let presentation = MomentsRenderRealtimePresentation(renderJob: job)
+        let presentation = AnimateRenderRealtimePresentation(renderJob: job)
 
         XCTAssertEqual(presentation.title, "Needs attention")
         XCTAssertEqual(
@@ -848,30 +848,30 @@ final class AnimateCreateWorkflowPresentationTests: XCTestCase {
             errorMessage: "provider stack trace"
         )
 
-        let presentation = MomentsRenderRealtimePresentation(renderJob: job)
+        let presentation = AnimateRenderRealtimePresentation(renderJob: job)
 
         XCTAssertEqual(presentation.detail, "We couldn’t finish this video. No credits were charged.")
     }
 
     func testRecoveryCopyCoversMediaAndStoryFailurePaths() {
         XCTAssertEqual(
-            MomentsRecoveryCopy.mediaImportFailure(),
+            AnimateRecoveryCopy.mediaImportFailure(),
             "Couldn’t add that photo. It is still on this device; try again or choose a different image."
         )
         XCTAssertEqual(
-            MomentsRecoveryCopy.mediaUploadUnavailable(),
+            AnimateRecoveryCopy.mediaUploadUnavailable(),
             "Photo upload is not ready yet. Your photo is still on this device; please try again in a moment."
         )
         XCTAssertEqual(
-            MomentsRecoveryCopy.mediaStorySaveFailure(),
+            AnimateRecoveryCopy.mediaStorySaveFailure(),
             "Couldn’t save the photo for the video. Your photo is still on this device; try again or choose a different image."
         )
         XCTAssertEqual(
-            MomentsRecoveryCopy.storyStartFailure(),
+            AnimateRecoveryCopy.storyStartFailure(),
             "Couldn’t start this video. No Credits were used. Please try again."
         )
         XCTAssertEqual(
-            MomentsRecoveryCopy.storyFailure(),
+            AnimateRecoveryCopy.storyFailure(),
             "Avi couldn’t prepare the video right now. No Credits were used. Please try again."
         )
     }

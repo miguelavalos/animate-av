@@ -12,7 +12,7 @@ final class AnimateGalleryViewModel: ObservableObject {
     private let galleryMomentsProvider: (any AnimateGalleryListProviding)?
     private let authTokenProvider: (any AnimateAuthTokenProviding)?
     private let finalRenderClient: AnimateFinalRenderClient?
-    private var remoteArtifacts: [MomentArtifact] = []
+    private var remoteArtifacts: [AnimateArtifact] = []
     private var downloadedImageURLs: [String: URL] = [:]
 
     init(
@@ -191,12 +191,12 @@ final class AnimateGalleryViewModel: ObservableObject {
         }
     }
 
-    private func availabilityForMissingLocalFile(remoteArtifact: MomentArtifact?) -> AnimateGalleryVideoAvailability {
+    private func availabilityForMissingLocalFile(remoteArtifact: AnimateArtifact?) -> AnimateGalleryVideoAvailability {
         guard let remoteArtifact else { return .localFileMissing }
         return availabilityForRemoteOnlyArtifact(remoteArtifact)
     }
 
-    private func availabilityForRemoteOnlyArtifact(_ artifact: MomentArtifact) -> AnimateGalleryVideoAvailability {
+    private func availabilityForRemoteOnlyArtifact(_ artifact: AnimateArtifact) -> AnimateGalleryVideoAvailability {
         guard artifact.status == "available" else { return .downloadUnavailable }
         guard artifact.expiresAt > Date().timeIntervalSince1970 * 1000 else { return .downloadUnavailable }
         return .downloadAvailable

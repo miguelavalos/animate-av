@@ -1,6 +1,6 @@
 import Foundation
 
-struct MomentMediaAsset: Identifiable, Decodable, Equatable {
+struct AnimateMediaAsset: Identifiable, Decodable, Equatable {
     let id: String
     let platformMediaAssetId: String?
     let uploadId: String?

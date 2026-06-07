@@ -2,7 +2,7 @@ import Foundation
 
 struct AnimateCreateMediaPresentation: Equatable {
     var activeMomentId: String?
-    var template: MomentTemplate
+    var template: AnimateVideoTemplate
     var summary: AnimateCreateMediaSummary
     var canAddMedia = false
     var availabilityMessage: String?
@@ -20,15 +20,15 @@ struct AnimateCreateMediaPresentation: Equatable {
     }
 
     var selectionMessage: String {
-        MomentsMediaRules.selectionMessage(
-            MomentsMediaRules.availability(template: template, selectedCount: summary.selectedCount),
+        AnimateMediaRules.selectionMessage(
+            AnimateMediaRules.availability(template: template, selectedCount: summary.selectedCount),
             readyMessage: "",
             tooFewMessage: { L10n.string("create.media.selection.tooFew", $0, Self.mediaAssetLabel($0)) },
             tooManyMessage: { _ in L10n.string("create.media.selection.tooMany") }
         )
     }
 
-    var syncedMediaAssets: [MomentMediaAsset] {
+    var syncedMediaAssets: [AnimateMediaAsset] {
         summary.syncedMediaAssets.sorted { $0.sortOrder < $1.sortOrder }
     }
 
@@ -52,7 +52,7 @@ struct AnimateCreateStoryPresentation: Equatable {
             : L10n.string("create.story.empty.needsMedia")
     }
 
-    var savedScenes: [MomentStoryScene] {
+    var savedScenes: [AnimateStoryScene] {
         summary.savedScenes.sorted { $0.sceneIndex < $1.sceneIndex }
     }
 }
@@ -60,8 +60,8 @@ struct AnimateCreateStoryPresentation: Equatable {
 struct AnimateCreateVideoDirectionPresentation: Equatable {
     var mediaSummary: AnimateCreateMediaSummary
     var storySummary: AnimateCreateStorySummary
-    var selectedDuration: MomentDuration
-    var renderPlan: MomentsRenderPlan?
+    var selectedDuration: AnimateVideoDuration
+    var renderPlan: AnimateRenderPlan?
     var canRefreshStory = false
     var availabilityMessage: String?
 

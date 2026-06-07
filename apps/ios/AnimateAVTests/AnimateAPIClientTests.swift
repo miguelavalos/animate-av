@@ -25,7 +25,7 @@ final class AnimateAPIClientTests: XCTestCase {
             """
         )
         let client = AnimateUploadClient(baseURLString: accountAPIBaseURL, session: session)
-        let media = MomentsSelectedMedia(
+        let media = AnimateSelectedMedia(
             id: UUID(uuidString: "00000000-0000-0000-0000-000000000001")!,
             sourceLocalIdentifier: "local-1",
             originalFilename: "photo.jpg",
@@ -67,7 +67,7 @@ final class AnimateAPIClientTests: XCTestCase {
             session: session,
             networkRetryPolicy: AnimateNetworkRetryPolicy(maximumRetries: 1, baseDelayNanoseconds: 1)
         )
-        let media = MomentsSelectedMedia(
+        let media = AnimateSelectedMedia(
             id: UUID(uuidString: "00000000-0000-0000-0000-000000000011")!,
             sourceLocalIdentifier: "local-1",
             originalFilename: "photo.jpg",
@@ -90,7 +90,7 @@ final class AnimateAPIClientTests: XCTestCase {
         let session = makeMockSession(json: uploadCompletionJSON)
         let client = AnimateUploadClient(baseURLString: accountAPIBaseURL, session: session)
         let uploadURL = URL(string: "\(accountAPIBaseURL)/v1/apps/animateav/uploads/upload-1")!
-        let media = MomentsSelectedMedia(
+        let media = AnimateSelectedMedia(
             id: UUID(uuidString: "00000000-0000-0000-0000-000000000002")!,
             sourceLocalIdentifier: "local-1",
             originalFilename: "photo.jpg",
@@ -131,7 +131,7 @@ final class AnimateAPIClientTests: XCTestCase {
     func testUploadWithoutSignedURLFailsBeforeSavingMedia() async throws {
         let session = makeMockSession(json: "{}")
         let client = AnimateUploadClient(baseURLString: accountAPIBaseURL, session: session)
-        let media = MomentsSelectedMedia(
+        let media = AnimateSelectedMedia(
             id: UUID(uuidString: "00000000-0000-0000-0000-000000000012")!,
             sourceLocalIdentifier: "local-1",
             originalFilename: "photo.jpg",
@@ -172,7 +172,7 @@ final class AnimateAPIClientTests: XCTestCase {
         let client = AnimateUploadClient(baseURLString: accountAPIBaseURL, session: session)
         let uploadURL = URL(string: "https://account-1.r2.cloudflarestorage.com/appsav-assets-preview/animateav/user/moment/source/media-1?X-Amz-Signature=test")!
         let completionURL = URL(string: "\(accountAPIBaseURL)/v1/apps/animateav/uploads/upload-1/complete")!
-        let media = MomentsSelectedMedia(
+        let media = AnimateSelectedMedia(
             id: UUID(uuidString: "00000000-0000-0000-0000-000000000010")!,
             sourceLocalIdentifier: "local-1",
             originalFilename: "photo.jpg",
@@ -217,7 +217,7 @@ final class AnimateAPIClientTests: XCTestCase {
             uploadRetryPolicy: AnimateUploadRetryPolicy(maximumRetries: 1, baseDelayNanoseconds: 1)
         )
         let uploadURL = URL(string: "\(accountAPIBaseURL)/v1/apps/animateav/uploads/upload-1")!
-        let media = MomentsSelectedMedia(
+        let media = AnimateSelectedMedia(
             id: UUID(uuidString: "00000000-0000-0000-0000-000000000003")!,
             sourceLocalIdentifier: "local-1",
             originalFilename: "photo.jpg",
@@ -274,7 +274,7 @@ final class AnimateAPIClientTests: XCTestCase {
             momentId: "moment-1",
             ownerUserId: "user-1",
             bearerToken: "token-1",
-            form: MomentSetupForm(template: .birthdayMessage),
+            form: AnimateVideoSetupForm(template: .birthdayMessage),
             mediaAssets: []
         )
 
@@ -313,7 +313,7 @@ final class AnimateAPIClientTests: XCTestCase {
             momentId: "moment-1",
             ownerUserId: "user-1",
             bearerToken: "token-1",
-            form: MomentSetupForm(template: .birthdayMessage),
+            form: AnimateVideoSetupForm(template: .birthdayMessage),
             mediaAssets: []
         )
 
@@ -357,7 +357,7 @@ final class AnimateAPIClientTests: XCTestCase {
             """
         )
         let client = AnimateFinalRenderClient(baseURLString: accountAPIBaseURL, session: session)
-        var form = MomentSetupForm(template: .partyRecap)
+        var form = AnimateVideoSetupForm(template: .partyRecap)
         form.theme = .travel
         form.look = .cartoon
         form.tone = .cinematic
@@ -429,7 +429,7 @@ final class AnimateAPIClientTests: XCTestCase {
             """
         )
         let client = AnimateFinalRenderClient(baseURLString: accountAPIBaseURL, session: session)
-        var form = MomentSetupForm(template: .birthdayMessage)
+        var form = AnimateVideoSetupForm(template: .birthdayMessage)
         form.theme = .celebration
         form.look = .cartoon
         form.occasion = "Birthday"
@@ -522,7 +522,7 @@ final class AnimateAPIClientTests: XCTestCase {
             bearerToken: "token-1",
             template: .birthdayMessage,
             creationStyle: nil,
-            form: MomentSetupForm(template: .birthdayMessage),
+            form: AnimateVideoSetupForm(template: .birthdayMessage),
             removesWatermark: false,
             selectedSourceLocalIdentifiers: ["local-1", "local-2"],
             sourceImageUploadId: "source-upload-1",

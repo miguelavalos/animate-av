@@ -13,8 +13,8 @@ struct AnimateStoryClient {
         momentId: String,
         ownerUserId: String,
         bearerToken: String,
-        form: MomentSetupForm,
-        mediaAssets: [MomentMediaAsset]
+        form: AnimateVideoSetupForm,
+        mediaAssets: [AnimateMediaAsset]
     ) async throws -> AnimateStoryResponse {
         let selectedMedia = mediaAssets
             .filter(\.selected)
@@ -42,7 +42,7 @@ struct AnimateStoryClient {
         momentId: String,
         ownerUserId: String,
         bearerToken: String,
-        form: MomentSetupForm,
+        form: AnimateVideoSetupForm,
         selectedMedia: [AnimateStoryMedia]
     ) async throws -> AnimateStoryResponse {
         guard let baseURL = URL(string: baseURLString.trimmingCharacters(in: .whitespacesAndNewlines)) else {

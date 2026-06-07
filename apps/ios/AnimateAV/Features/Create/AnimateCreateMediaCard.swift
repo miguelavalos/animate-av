@@ -116,18 +116,18 @@ private struct AnimateCreateMediaChoiceAction: View {
 }
 
 struct AnimateCreateMediaManagerSheet: View {
-    let selectedMedia: [MomentsSelectedMedia]
-    let syncedMediaAssets: [MomentMediaAsset]
+    let selectedMedia: [AnimateSelectedMedia]
+    let syncedMediaAssets: [AnimateMediaAsset]
     let canAddMedia: Bool
     let isImporting: Bool
-    let importProgress: MomentsMediaImportProgress?
-    let removeMedia: (MomentsSelectedMedia) -> Void
+    let importProgress: AnimateMediaImportProgress?
+    let removeMedia: (AnimateSelectedMedia) -> Void
     let restoreLocalMediaForEditing: () -> Void
     let chooseManually: () -> Void
 
     @Environment(\.dismiss) private var dismiss
-    @State private var workingMedia: [MomentsSelectedMedia] = []
-    @State private var zoomedMedia: MomentsSelectedMedia?
+    @State private var workingMedia: [AnimateSelectedMedia] = []
+    @State private var zoomedMedia: AnimateSelectedMedia?
 
     private let columns = [
         GridItem(.adaptive(minimum: 106, maximum: 106), spacing: 16)
@@ -297,7 +297,7 @@ private struct AnimateCreateMediaEmptyState: View {
 }
 
 private struct AnimateCreateSyncedMediaEditorTile: View {
-    let media: MomentMediaAsset
+    let media: AnimateMediaAsset
     let index: Int
 
     var body: some View {
@@ -352,7 +352,7 @@ private struct AnimateCreateSyncedMediaEditorTile: View {
 
 private struct AnimateCreateMediaImportProgressCard: View {
     let selectedCount: Int
-    let progress: MomentsMediaImportProgress?
+    let progress: AnimateMediaImportProgress?
 
     var body: some View {
         AVAppShellCard {
@@ -423,7 +423,7 @@ private struct AnimateCreateMediaImportProgressCard: View {
 }
 
 private struct AnimateCreateManageableMediaTile: View {
-    let media: MomentsSelectedMedia
+    let media: AnimateSelectedMedia
     let index: Int
     let isImporting: Bool
     let zoom: () -> Void
@@ -524,7 +524,7 @@ private struct AnimateCreateManageableMediaTile: View {
 }
 
 private struct AnimateCreateMediaZoomView: View {
-    let media: MomentsSelectedMedia
+    let media: AnimateSelectedMedia
     let dismiss: () -> Void
 
     @State private var scale: CGFloat = 1
@@ -696,7 +696,7 @@ private struct AnimateCreateEditorAviPanel: View {
 }
 
 private struct AnimateCreateMediaReorderRow: View {
-    let media: MomentsSelectedMedia
+    let media: AnimateSelectedMedia
     let index: Int
 
     var body: some View {
@@ -751,7 +751,7 @@ private struct AnimateCreateMediaReorderRow: View {
 }
 
 private struct AnimateCreateSyncedMediaSection: View {
-    let mediaAssets: [MomentMediaAsset]
+    let mediaAssets: [AnimateMediaAsset]
 
     private let columns = [
         GridItem(.adaptive(minimum: 72), spacing: 8)

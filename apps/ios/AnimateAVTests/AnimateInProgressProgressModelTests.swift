@@ -39,12 +39,12 @@ final class AnimateInProgressProgressModelTests: XCTestCase {
     }
 
     private func makeWorkspace(
-        mediaAssets: [MomentMediaAsset] = [],
-        storyScenes: [MomentStoryScene] = [],
-        renderJobs: [MomentRenderJob] = [],
-        artifacts: [MomentArtifact] = []
-    ) -> MomentWorkspace {
-        MomentWorkspace(
+        mediaAssets: [AnimateMediaAsset] = [],
+        storyScenes: [AnimateStoryScene] = [],
+        renderJobs: [AnimateRenderJob] = [],
+        artifacts: [AnimateArtifact] = []
+    ) -> AnimateWorkspace {
+        AnimateWorkspace(
             moment: makeMoment(id: "moment-1", status: "in_progress", updatedAt: 10),
             mediaAssets: mediaAssets,
             storyScenes: storyScenes,
@@ -53,8 +53,8 @@ final class AnimateInProgressProgressModelTests: XCTestCase {
         )
     }
 
-    private func makeMoment(id: String, status: String, updatedAt: Double) -> InProgressMoment {
-        InProgressMoment(
+    private func makeMoment(id: String, status: String, updatedAt: Double) -> AnimateVideo {
+        AnimateVideo(
             id: id,
             template: .birthdayMessage,
             status: status,
@@ -69,8 +69,8 @@ final class AnimateInProgressProgressModelTests: XCTestCase {
         )
     }
 
-    private func makeArtifact(kind: String, status: String) -> MomentArtifact {
-        MomentArtifact(
+    private func makeArtifact(kind: String, status: String) -> AnimateArtifact {
+        AnimateArtifact(
             id: "\(kind)-1",
             kind: kind,
             r2Key: "animateav/user/moment/\(kind).mp4",
@@ -80,8 +80,8 @@ final class AnimateInProgressProgressModelTests: XCTestCase {
         )
     }
 
-    private func makeRenderJob(kind: String, status: String) -> MomentRenderJob {
-        MomentRenderJob(
+    private func makeRenderJob(kind: String, status: String) -> AnimateRenderJob {
+        AnimateRenderJob(
             id: "\(kind)-job-1",
             kind: kind,
             status: status,

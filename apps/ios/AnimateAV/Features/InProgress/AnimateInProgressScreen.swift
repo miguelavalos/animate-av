@@ -5,12 +5,12 @@ import SwiftUI
 struct AnimateInProgressScreen: View {
     @EnvironmentObject private var viewModel: AnimateInProgressViewModel
     @EnvironmentObject private var createViewModel: AnimateCreateViewModel
-    @State private var momentPendingDeletion: InProgressMoment?
-    @State private var momentPendingRename: InProgressMoment?
+    @State private var momentPendingDeletion: AnimateVideo?
+    @State private var momentPendingRename: AnimateVideo?
     @SceneStorage("animate.inProgress.selectedAssetKind") private var selectedAssetKindRaw = AnimateInProgressAssetKind.videos.rawValue
     let balance: AnimateCreditBalance
     let creditBalanceLoadState: AnimateCreditBalanceLoadState
-    let continueMoment: (MomentsContinuationRequest) -> Void
+    let continueMoment: (AnimateContinuationRequest) -> Void
     let startMoment: () -> Void
     let startSignInFlow: () -> Void
     let openCredits: () -> Void
@@ -35,7 +35,7 @@ struct AnimateInProgressScreen: View {
     init(
         balance: AnimateCreditBalance = .empty,
         creditBalanceLoadState: AnimateCreditBalanceLoadState = .loaded,
-        continueMoment: @escaping (MomentsContinuationRequest) -> Void = { _ in },
+        continueMoment: @escaping (AnimateContinuationRequest) -> Void = { _ in },
         startMoment: @escaping () -> Void = {},
         startSignInFlow: @escaping () -> Void = {},
         openCredits: @escaping () -> Void = {},
@@ -58,7 +58,7 @@ struct AnimateInProgressScreen: View {
 
             switch selectedAssetKind {
             case .videos:
-                if createViewModel.hasLocalMomentWorkspace {
+                if createViewModel.hasLocalAnimateWorkspace {
                     MomentsCurrentCreationCard(
                         selectedCount: createViewModel.mediaSelectedCount,
                         continueCreation: startMoment
@@ -71,7 +71,7 @@ struct AnimateInProgressScreen: View {
                     creditBalanceLoadState: creditBalanceLoadState,
                     momentsSummary: viewModel.videoMomentsSummary,
                     selectedMomentId: viewModel.selectedMomentId,
-                    isLoadingMomentWorkspace: viewModel.isLoadingMomentWorkspace,
+                    isLoadingAnimateWorkspace: viewModel.isLoadingAnimateWorkspace,
                     activeWorkspace: viewModel.activeWorkspace,
                     isDeletingMoment: viewModel.isDeletingMoment,
                     statusMessage: viewModel.statusMessage,
@@ -151,13 +151,13 @@ struct AnimateInProgressScreen: View {
         momentPendingDeletion = nil
     }
 
-    private func localMediaForMoment(_ moment: InProgressMoment) -> [MomentsSelectedMedia] {
+    private func localMediaForMoment(_ moment: AnimateVideo) -> [AnimateSelectedMedia] {
         if createViewModel.activeMomentId == moment.id {
             return createViewModel.selectedMedia
         }
 
         guard !createViewModel.selectedMedia.isEmpty,
-              viewModel.momentsSummary.latestInProgressMoment?.id == moment.id,
+              viewModel.momentsSummary.latestAnimateVideo?.id == moment.id,
               viewModel.videoMomentsSummary.inProgressCount == 1 else {
             return []
         }
@@ -216,7 +216,7 @@ private struct AnimateInProgressAssetKindPill: View {
 
 private struct AnimateInProgressImagesCard: View {
     let presentation: AnimateInProgressPresentation
-    let momentsSummary: InProgressMomentsSummary
+    let momentsSummary: AnimateInProgressSummary
     let startSignInFlow: () -> Void
     let startImages: () -> Void
 
@@ -304,12 +304,12 @@ private struct AnimateInProgressImagesEmptyState: View {
 }
 
 private struct AnimateInProgressRenameSheet: View {
-    let moment: InProgressMoment
+    let moment: AnimateVideo
     let save: (String) -> Void
     @Environment(\.dismiss) private var dismiss
     @State private var title: String
 
-    init(moment: InProgressMoment, save: @escaping (String) -> Void) {
+    init(moment: AnimateVideo, save: @escaping (String) -> Void) {
         self.moment = moment
         self.save = save
         _title = State(initialValue: moment.title)

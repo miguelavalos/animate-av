@@ -23,7 +23,7 @@ final class AnimateMediaDeduplicatorTests: XCTestCase {
             )
         ]
 
-        let unique = MomentsMediaDeduplicator.uniqueNewMedia(existing: existing, imported: imported)
+        let unique = AnimateMediaDeduplicator.uniqueNewMedia(existing: existing, imported: imported)
 
         XCTAssertEqual(unique.map(\.sourceLocalIdentifier), ["asset-3"])
     }
@@ -49,7 +49,7 @@ final class AnimateMediaDeduplicatorTests: XCTestCase {
             )
         ]
 
-        let unique = MomentsMediaDeduplicator.uniqueNewMedia(existing: existing, imported: imported)
+        let unique = AnimateMediaDeduplicator.uniqueNewMedia(existing: existing, imported: imported)
 
         XCTAssertEqual(unique.map(\.sourceLocalIdentifier), ["asset-3"])
     }
@@ -73,7 +73,7 @@ final class AnimateMediaDeduplicatorTests: XCTestCase {
             )
         ]
 
-        let unique = MomentsMediaDeduplicator.uniqueNewMedia(existing: [], imported: imported)
+        let unique = AnimateMediaDeduplicator.uniqueNewMedia(existing: [], imported: imported)
 
         XCTAssertEqual(unique.map(\.sourceLocalIdentifier), ["asset-1"])
     }

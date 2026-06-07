@@ -2,7 +2,7 @@ import Foundation
 
 struct AnimateCreateFinalVideoActionPresentation: Equatable {
     var summary: AnimateCreateFinalRenderSummary
-    var template: MomentTemplate
+    var template: AnimateVideoTemplate
     var balance: AnimateCreditBalance
     var removesWatermark = false
 

@@ -2,11 +2,11 @@ import AVAppShellFoundation
 import SwiftUI
 
 struct AnimateCreateRenderJobStatusRow: View {
-    let renderJob: MomentRenderJob
+    let renderJob: AnimateRenderJob
 
     var body: some View {
         AVAppShellInfoRow(
-            title: MomentStatusRules.displayTitle(for: renderJob.status),
+            title: AnimateStatusRules.displayTitle(for: renderJob.status),
             detail: detail,
             systemImage: systemImage,
             eyebrow: L10n.string("create.renderRows.renderJob")
@@ -15,7 +15,7 @@ struct AnimateCreateRenderJobStatusRow: View {
 
     private var detail: String {
         if renderJob.status == "failed" {
-            return MomentsRecoveryCopy.failedRenderDetail(
+            return AnimateRecoveryCopy.failedRenderDetail(
                 userMessage: renderJob.userMessage,
                 errorMessage: renderJob.errorMessage
             )
@@ -44,7 +44,7 @@ struct AnimateCreateRenderJobStatusRow: View {
 struct AnimateCreateArtifactStatusCard: View {
     let title: String
     let systemImage: String
-    let artifact: MomentArtifact
+    let artifact: AnimateArtifact
     let detail: String?
 
     var body: some View {

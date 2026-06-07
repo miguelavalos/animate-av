@@ -130,8 +130,8 @@ final class AnimateInProgressArtifactPresentationTests: XCTestCase {
         status: String,
         hasWatermark: Bool = false,
         expiresAt: Double = 1_781_592_000_000
-    ) -> MomentArtifact {
-        MomentArtifact(
+    ) -> AnimateArtifact {
+        AnimateArtifact(
             id: id,
             kind: kind,
             r2Key: "animateav/\(id).mp4",
@@ -150,8 +150,8 @@ final class AnimateInProgressArtifactPresentationTests: XCTestCase {
         model: String? = "mock-model",
         userMessage: String? = nil,
         errorMessage: String? = nil
-    ) -> MomentRenderJob {
-        MomentRenderJob(
+    ) -> AnimateRenderJob {
+        AnimateRenderJob(
             id: id,
             kind: kind,
             status: status,

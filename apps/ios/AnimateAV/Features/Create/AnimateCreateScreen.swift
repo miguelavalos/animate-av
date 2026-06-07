@@ -227,7 +227,7 @@ enum AnimateCreateSection: Hashable {
     case story
     case finalRender
 
-    init(focus: MomentsContinuationFocus) {
+    init(focus: AnimateContinuationFocus) {
         switch focus {
         case .moment:
             self = .moment

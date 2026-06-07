@@ -6,7 +6,7 @@ struct AnimateInProgressRenderJobsSectionPresentation: Equatable {
     let emptyMessage = L10n.string("moment.activity.empty")
     let jobs: [AnimateInProgressRenderJobPresentation]
 
-    init(renderJobs: [MomentRenderJob]) {
+    init(renderJobs: [AnimateRenderJob]) {
         jobs = AnimateInProgressRenderJobPresentation.sorted(renderJobs)
     }
 }
@@ -17,7 +17,7 @@ struct AnimateInProgressArtifactSectionPresentation: Equatable {
     let emptyMessage: String
     let artifact: AnimateInProgressArtifactPresentation?
 
-    static func finalExport(artifacts: [MomentArtifact]) -> AnimateInProgressArtifactSectionPresentation {
+    static func finalExport(artifacts: [AnimateArtifact]) -> AnimateInProgressArtifactSectionPresentation {
         AnimateInProgressArtifactSectionPresentation(
             title: L10n.string("moment.artifact.final.title"),
             emptySystemImage: "video.fill",
@@ -35,16 +35,16 @@ struct AnimateInProgressArtifactPresentation: Equatable {
     let storageKey: String
     let actionDetail: String
 
-    init(artifact: MomentArtifact) {
+    init(artifact: AnimateArtifact) {
         status = artifact.status
-        kindTitle = MomentStatusRules.displayKind(artifact.kind)
+        kindTitle = AnimateStatusRules.displayKind(artifact.kind)
         watermarkTitle = artifact.hasWatermark == true ? L10n.string("moment.artifact.included") : L10n.string("moment.artifact.none")
         expiresAtTitle = AnimateDateFormatting.formattedDate(milliseconds: artifact.expiresAt)
         storageKey = artifact.r2Key
-        actionDetail = MomentsRecoveryCopy.artifactActionDetail(kind: artifact.kind, status: artifact.status)
+        actionDetail = AnimateRecoveryCopy.artifactActionDetail(kind: artifact.kind, status: artifact.status)
     }
 
-    static func finalExport(in artifacts: [MomentArtifact]) -> AnimateInProgressArtifactPresentation? {
+    static func finalExport(in artifacts: [AnimateArtifact]) -> AnimateInProgressArtifactPresentation? {
         artifacts.last { $0.kind == "final_export" }.map(AnimateInProgressArtifactPresentation.init)
     }
 }
@@ -62,10 +62,10 @@ struct AnimateInProgressRenderJobPresentation: Identifiable, Equatable {
     let errorCode: String?
     let errorMessage: String?
 
-    init(renderJob: MomentRenderJob) {
+    init(renderJob: AnimateRenderJob) {
         id = renderJob.id
         status = renderJob.status
-        kindTitle = MomentStatusRules.displayKind(renderJob.kind)
+        kindTitle = AnimateStatusRules.displayKind(renderJob.kind)
         providerTitle = renderJob.provider == nil ? L10n.string("moment.job.notRecorded") : L10n.string("moment.job.recorded")
         modelTitle = renderJob.model == nil ? L10n.string("moment.job.notRecorded") : L10n.string("moment.job.configured")
         createdAtTitle = AnimateDateFormatting.formattedDate(milliseconds: renderJob.createdAt)
@@ -74,14 +74,14 @@ struct AnimateInProgressRenderJobPresentation: Identifiable, Equatable {
         providerRequestId = renderJob.providerRequestId
         errorCode = renderJob.errorCode
         errorMessage = renderJob.status == "failed"
-            ? MomentsRecoveryCopy.failedRenderDetail(
+            ? AnimateRecoveryCopy.failedRenderDetail(
                 userMessage: renderJob.userMessage,
                 errorMessage: renderJob.errorMessage
             )
             : renderJob.errorMessage
     }
 
-    static func sorted(_ renderJobs: [MomentRenderJob]) -> [AnimateInProgressRenderJobPresentation] {
+    static func sorted(_ renderJobs: [AnimateRenderJob]) -> [AnimateInProgressRenderJobPresentation] {
         renderJobs
             .sorted { $0.updatedAt > $1.updatedAt }
             .map(AnimateInProgressRenderJobPresentation.init)

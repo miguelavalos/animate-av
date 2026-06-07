@@ -8,7 +8,7 @@ final class AnimateInProgressObserverTests: XCTestCase {
         let repository = MockAnimateRepository()
         let observer = AnimateInProgressObserver(momentsRepository: repository)
 
-        observer.observeInProgressMoments(ownerUserId: "user-1")
+        observer.observeAnimateVideos(ownerUserId: "user-1")
         let moment = makeMoment(id: "moment-1")
         repository.sendMoments([moment])
         await waitUntil { observer.moments == [moment] }
@@ -22,11 +22,11 @@ final class AnimateInProgressObserverTests: XCTestCase {
         let repository = MockAnimateRepository()
         let observer = AnimateInProgressObserver(momentsRepository: repository)
 
-        observer.observeInProgressMoments(ownerUserId: "user-1")
+        observer.observeAnimateVideos(ownerUserId: "user-1")
         repository.sendMoments([makeMoment(id: "moment-1")])
         await waitUntil { !observer.moments.isEmpty }
 
-        observer.observeInProgressMoments(ownerUserId: nil)
+        observer.observeAnimateVideos(ownerUserId: nil)
 
         XCTAssertTrue(observer.moments.isEmpty)
         XCTAssertNil(observer.errorMessage)
@@ -37,7 +37,7 @@ final class AnimateInProgressObserverTests: XCTestCase {
         let repository = MockAnimateRepository(momentsError: TestObservationError.moments)
         let observer = AnimateInProgressObserver(momentsRepository: repository)
 
-        observer.observeInProgressMoments(ownerUserId: "user-1")
+        observer.observeAnimateVideos(ownerUserId: "user-1")
 
         XCTAssertTrue(observer.moments.isEmpty)
         XCTAssertEqual(observer.errorMessage, TestObservationError.moments.localizedDescription)
@@ -47,13 +47,13 @@ final class AnimateInProgressObserverTests: XCTestCase {
         let repository = MockAnimateRepository()
         let observer = AnimateInProgressObserver(momentsRepository: repository)
 
-        observer.observeInProgressMoments(ownerUserId: "user-1")
+        observer.observeAnimateVideos(ownerUserId: "user-1")
         let firstSubject = repository.momentsSubjects[0]
         let firstMoment = makeMoment(id: "moment-1")
         firstSubject.send([firstMoment])
         await waitUntil { observer.moments == [firstMoment] }
 
-        observer.observeInProgressMoments(ownerUserId: "user-2")
+        observer.observeAnimateVideos(ownerUserId: "user-2")
         let secondMoment = makeMoment(id: "moment-2")
         repository.sendMoments([secondMoment])
         await waitUntil { observer.moments == [secondMoment] }
@@ -146,8 +146,8 @@ final class AnimateInProgressObserverTests: XCTestCase {
         }
     }
 
-    private func makeWorkspace(moment: InProgressMoment) -> MomentWorkspace {
-        MomentWorkspace(
+    private func makeWorkspace(moment: AnimateVideo) -> AnimateWorkspace {
+        AnimateWorkspace(
             moment: moment,
             mediaAssets: [],
             storyScenes: [],
@@ -156,8 +156,8 @@ final class AnimateInProgressObserverTests: XCTestCase {
         )
     }
 
-    private func makeMoment(id: String) -> InProgressMoment {
-        InProgressMoment(
+    private func makeMoment(id: String) -> AnimateVideo {
+        AnimateVideo(
             id: id,
             template: .birthdayMessage,
             status: "in_progress",
@@ -175,7 +175,7 @@ final class AnimateInProgressObserverTests: XCTestCase {
 
 @MainActor
 private final class MockAnimateRepository: AnimateInProgressObserving {
-    private(set) var momentsSubjects: [CurrentValueSubject<[InProgressMoment], Error>] = []
+    private(set) var momentsSubjects: [CurrentValueSubject<[AnimateVideo], Error>] = []
     private(set) var observedOwnerUserIds: [String] = []
     private let momentsError: Error?
 
@@ -183,24 +183,24 @@ private final class MockAnimateRepository: AnimateInProgressObserving {
         self.momentsError = momentsError
     }
 
-    func observeInProgressMoments(ownerUserId: String) throws -> AnyPublisher<[InProgressMoment], Error> {
+    func observeAnimateVideos(ownerUserId: String) throws -> AnyPublisher<[AnimateVideo], Error> {
         observedOwnerUserIds.append(ownerUserId)
         if let momentsError {
             throw momentsError
         }
-        let subject = CurrentValueSubject<[InProgressMoment], Error>([])
+        let subject = CurrentValueSubject<[AnimateVideo], Error>([])
         momentsSubjects.append(subject)
         return subject.eraseToAnyPublisher()
     }
 
-    func sendMoments(_ moments: [InProgressMoment]) {
+    func sendMoments(_ moments: [AnimateVideo]) {
         momentsSubjects.last?.send(moments)
     }
 }
 
 @MainActor
 private final class MockWorkspaceRepository: AnimateWorkspaceObserving {
-    private(set) var workspaceSubjects: [CurrentValueSubject<MomentWorkspace?, Error>] = []
+    private(set) var workspaceSubjects: [CurrentValueSubject<AnimateWorkspace?, Error>] = []
     private(set) var observedRequests: [WorkspaceRequest] = []
     private let workspaceError: Error?
 
@@ -208,20 +208,20 @@ private final class MockWorkspaceRepository: AnimateWorkspaceObserving {
         self.workspaceError = workspaceError
     }
 
-    func observeMomentWorkspace(
+    func observeAnimateWorkspace(
         ownerUserId: String,
         momentId: String
-    ) throws -> AnyPublisher<MomentWorkspace?, Error> {
+    ) throws -> AnyPublisher<AnimateWorkspace?, Error> {
         observedRequests.append(WorkspaceRequest(ownerUserId: ownerUserId, momentId: momentId))
         if let workspaceError {
             throw workspaceError
         }
-        let subject = CurrentValueSubject<MomentWorkspace?, Error>(nil)
+        let subject = CurrentValueSubject<AnimateWorkspace?, Error>(nil)
         workspaceSubjects.append(subject)
         return subject.eraseToAnyPublisher()
     }
 
-    func sendWorkspace(_ workspace: MomentWorkspace?) {
+    func sendWorkspace(_ workspace: AnimateWorkspace?) {
         workspaceSubjects.last?.send(workspace)
     }
 }

@@ -5,8 +5,8 @@ import SwiftUI
 import UIKit
 
 enum MomentsSharedMediaItem: Identifiable, Equatable {
-    case local(MomentsSelectedMedia)
-    case synced(MomentMediaAsset)
+    case local(AnimateSelectedMedia)
+    case synced(AnimateMediaAsset)
 
     var id: String {
         switch self {
@@ -27,10 +27,10 @@ enum MomentsSharedMediaItem: Identifiable, Equatable {
     }
 
     var displayKind: String {
-        MomentStatusRules.displayKind(kind)
+        AnimateStatusRules.displayKind(kind)
     }
 
-    static func preferred(localMedia: [MomentsSelectedMedia], syncedMedia: [MomentMediaAsset]) -> [MomentsSharedMediaItem] {
+    static func preferred(localMedia: [AnimateSelectedMedia], syncedMedia: [AnimateMediaAsset]) -> [MomentsSharedMediaItem] {
         if !localMedia.isEmpty {
             return localMedia.map(Self.local)
         }
@@ -42,8 +42,8 @@ enum MomentsSharedMediaItem: Identifiable, Equatable {
 }
 
 struct MomentsSharedMediaSummaryStack: View {
-    let localMedia: [MomentsSelectedMedia]
-    let syncedMedia: [MomentMediaAsset]
+    let localMedia: [AnimateSelectedMedia]
+    let syncedMedia: [AnimateMediaAsset]
 
     private var items: [MomentsSharedMediaItem] {
         MomentsSharedMediaItem.preferred(localMedia: localMedia, syncedMedia: syncedMedia)
@@ -80,8 +80,8 @@ struct MomentsSharedMediaSummaryStack: View {
 }
 
 struct MomentsSharedMediaStrip: View {
-    let localMedia: [MomentsSelectedMedia]
-    let syncedMedia: [MomentMediaAsset]
+    let localMedia: [AnimateSelectedMedia]
+    let syncedMedia: [AnimateMediaAsset]
     var maxCount = 12
     var tileSize: CGFloat = 58
 
@@ -103,11 +103,11 @@ struct MomentsSharedMediaStrip: View {
 }
 
 struct MomentsSharedSyncedMediaGrid: View {
-    let mediaAssets: [MomentMediaAsset]
+    let mediaAssets: [AnimateMediaAsset]
     var minimumTileWidth: CGFloat = 72
     var spacing: CGFloat = 8
 
-    private var sortedMediaAssets: [MomentMediaAsset] {
+    private var sortedMediaAssets: [AnimateMediaAsset] {
         mediaAssets.sorted { $0.sortOrder < $1.sortOrder }
     }
 
@@ -165,7 +165,7 @@ struct MomentsSharedMediaThumbnailContent: View {
     }
 
     @ViewBuilder
-    private func localThumbnail(_ media: MomentsSelectedMedia) -> some View {
+    private func localThumbnail(_ media: AnimateSelectedMedia) -> some View {
         if media.kind == "photo", let image = UIImage(data: media.data) {
             Image(uiImage: image)
                 .resizable()
@@ -192,7 +192,7 @@ struct MomentsSharedMediaFallbackThumbnail: View {
 }
 
 struct AnimateCreateMediaRow: View {
-    let media: MomentsSelectedMedia
+    let media: AnimateSelectedMedia
     let remove: () -> Void
 
     var body: some View {
@@ -216,7 +216,7 @@ struct AnimateCreateMediaRow: View {
 }
 
 struct AnimateCreateMediaThumbnailTile: View {
-    let media: MomentsSelectedMedia
+    let media: AnimateSelectedMedia
     let index: Int
     let openDetails: () -> Void
 
@@ -264,7 +264,7 @@ struct AnimateCreateMediaThumbnailTile: View {
 }
 
 struct AnimateCreateMediaDetailSheet: View {
-    let media: MomentsSelectedMedia
+    let media: AnimateSelectedMedia
     let remove: () -> Void
 
     var body: some View {
@@ -322,7 +322,7 @@ struct AnimateCreateMediaDetailSheet: View {
 }
 
 struct AnimateCreateSyncedMediaThumbnailTile: View {
-    let media: MomentMediaAsset
+    let media: AnimateMediaAsset
     let index: Int
 
     var body: some View {
@@ -345,7 +345,7 @@ struct AnimateCreateSyncedMediaThumbnailTile: View {
 }
 
 struct AnimateCreateSyncedMediaThumbnailImage: View {
-    let media: MomentMediaAsset
+    let media: AnimateMediaAsset
     var size: CGFloat?
     @State private var image: UIImage?
 
@@ -410,11 +410,11 @@ private enum AnimateCreateLocalPhotoThumbnailLoader {
 }
 
 struct AnimateCreateSyncedMediaRow: View {
-    let media: MomentMediaAsset
+    let media: AnimateMediaAsset
 
     var body: some View {
         AVAppShellInfoRow(
-            title: "\(MomentStatusRules.displayKind(media.kind)) \(Int(media.sortOrder) + 1)",
+            title: "\(AnimateStatusRules.displayKind(media.kind)) \(Int(media.sortOrder) + 1)",
             detail: AnimateVideoFormatting.mediaAssetDetail(media),
             systemImage: media.kind == "video" ? "video.fill" : "photo.fill"
         ) {

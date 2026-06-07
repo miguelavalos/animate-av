@@ -82,7 +82,7 @@ final class AnimateCreateViewModelStoryStateTests: XCTestCase {
         let viewModel = AnimateCreateViewModel()
         viewModel.beginNewMoment()
 
-        XCTAssertTrue(viewModel.hasLocalMomentWorkspace)
+        XCTAssertTrue(viewModel.hasLocalAnimateWorkspace)
         XCTAssertEqual(viewModel.mediaPickerOpenRequest, 0)
         XCTAssertTrue(viewModel.workflowPresentation.showsMediaFirstWorkspace)
     }
@@ -91,12 +91,12 @@ final class AnimateCreateViewModelStoryStateTests: XCTestCase {
         let viewModel = AnimateCreateViewModel()
         viewModel.beginNewMoment(openMediaPicker: true)
 
-        XCTAssertTrue(viewModel.hasLocalMomentWorkspace)
+        XCTAssertTrue(viewModel.hasLocalAnimateWorkspace)
         XCTAssertEqual(viewModel.mediaPickerOpenRequest, 1)
     }
 
     func testFinalRenderUsesWorkspaceMediaIdentifiersAfterReload() {
-        let harness = MomentCreationFailureHarness(error: NSError(domain: "test", code: 1))
+        let harness = AnimateVideoCreationFailureHarness(error: NSError(domain: "test", code: 1))
         let workflow = harness.finalRenderWorkflow
         let workspaceMedia = [
             AnimateCreateTestFixtures.makeMediaAsset(
@@ -118,9 +118,9 @@ final class AnimateCreateViewModelStoryStateTests: XCTestCase {
     }
 
     func testFinalRenderDownloadUsesBackendWorkflowArtifactIdWhenAvailable() {
-        let harness = MomentCreationFailureHarness(error: NSError(domain: "test", code: 1))
+        let harness = AnimateVideoCreationFailureHarness(error: NSError(domain: "test", code: 1))
         let workflow = harness.finalRenderWorkflow
-        let artifact = MomentArtifact(
+        let artifact = AnimateArtifact(
             id: "convex-artifact-doc",
             workflowArtifactId: "workflow-artifact-1",
             kind: "final_export",
@@ -134,10 +134,10 @@ final class AnimateCreateViewModelStoryStateTests: XCTestCase {
     }
 
     func testFinalRenderPlanBlocksRecoveredWorkspaceWhenSourceMediaIsMissing() async {
-        let harness = MomentCreationFailureHarness(error: NSError(domain: "test", code: 1))
+        let harness = AnimateVideoCreationFailureHarness(error: NSError(domain: "test", code: 1))
         let workflow = harness.finalRenderWorkflow
         harness.publishWorkspace(
-            MomentWorkspace(
+            AnimateWorkspace(
                 moment: AnimateCreateTestFixtures.makeMoment(id: "moment-1"),
                 mediaAssets: [
                     AnimateCreateTestFixtures.makeMediaAsset(
@@ -156,7 +156,7 @@ final class AnimateCreateViewModelStoryStateTests: XCTestCase {
             momentId: "moment-1",
             template: .birthdayMessage,
             creationStyle: nil,
-            form: MomentSetupForm(template: .birthdayMessage),
+            form: AnimateVideoSetupForm(template: .birthdayMessage),
             selectedMedia: []
         )
 
@@ -314,12 +314,12 @@ final class AnimateCreateViewModelStoryStateTests: XCTestCase {
                 activeWorkspace: nil,
                 savedScenes: [],
                 generatedScenes: [],
-                statusMessage: MomentsRecoveryCopy.storyFailure(),
+                statusMessage: AnimateRecoveryCopy.storyFailure(),
                 isPlanning: false
             )
         )
 
-        XCTAssertEqual(viewModel.storySummary.statusMessage, MomentsRecoveryCopy.storyFailure())
+        XCTAssertEqual(viewModel.storySummary.statusMessage, AnimateRecoveryCopy.storyFailure())
         XCTAssertFalse(viewModel.isStoryPreparedForCurrentInput)
 
         viewModel.applyStoryState(
@@ -327,7 +327,7 @@ final class AnimateCreateViewModelStoryStateTests: XCTestCase {
                 activeWorkspace: nil,
                 savedScenes: [AnimateCreateTestFixtures.makeScene(id: "scene-1")],
                 generatedScenes: [],
-                statusMessage: MomentsRecoveryCopy.storyFailure(),
+                statusMessage: AnimateRecoveryCopy.storyFailure(),
                 isPlanning: false
             )
         )
@@ -361,7 +361,7 @@ final class AnimateCreateViewModelStoryStateTests: XCTestCase {
 
         viewModel.applyStoryState(
             AnimateCreateStoryState(
-                activeWorkspace: MomentWorkspace(
+                activeWorkspace: AnimateWorkspace(
                     moment: AnimateCreateTestFixtures.makeMoment(id: "moment-1"),
                     mediaAssets: [
                         AnimateCreateTestFixtures.makeMediaAsset(
@@ -450,7 +450,7 @@ final class AnimateCreateViewModelStoryStateTests: XCTestCase {
 
         viewModel.applyStoryState(
             AnimateCreateStoryState(
-                activeWorkspace: MomentWorkspace(
+                activeWorkspace: AnimateWorkspace(
                     moment: AnimateCreateTestFixtures.makeMoment(
                         id: "moment-1",
                         occasion: "Birthday",
@@ -528,7 +528,7 @@ final class AnimateCreateViewModelStoryStateTests: XCTestCase {
 
         viewModel.applyStoryState(
             AnimateCreateStoryState(
-                activeWorkspace: MomentWorkspace(
+                activeWorkspace: AnimateWorkspace(
                     moment: AnimateCreateTestFixtures.makeMoment(
                         id: "moment-1",
                         occasion: "Birthday",
@@ -606,7 +606,7 @@ final class AnimateCreateViewModelStoryStateTests: XCTestCase {
 
         viewModel.applyStoryState(
             AnimateCreateStoryState(
-                activeWorkspace: MomentWorkspace(
+                activeWorkspace: AnimateWorkspace(
                     moment: AnimateCreateTestFixtures.makeMoment(
                         id: "moment-1",
                         template: .partyRecap,
@@ -641,7 +641,7 @@ final class AnimateCreateViewModelStoryStateTests: XCTestCase {
     }
 
     func testGenerateStoryShowsImmediateVideoCreationError() async {
-        let harness = MomentCreationFailureHarness(error: AnimateSyncError.notConfigured)
+        let harness = AnimateVideoCreationFailureHarness(error: AnimateSyncError.notConfigured)
         let viewModel = AnimateCreateViewModel()
         viewModel.bind(
             accountStateProvider: harness,
@@ -686,7 +686,7 @@ final class AnimateCreateViewModelStoryStateTests: XCTestCase {
     private func applyPreparedBackendStory(
         to viewModel: AnimateCreateViewModel,
         momentId: String = "moment-1"
-    ) -> (media: MomentMediaAsset, signature: String) {
+    ) -> (media: AnimateMediaAsset, signature: String) {
         let media = makeBackendMedia()
         viewModel.applyMomentCreationState(
             AnimateCreateMomentCreationState(
@@ -701,7 +701,7 @@ final class AnimateCreateViewModelStoryStateTests: XCTestCase {
         )
         viewModel.applyStoryState(
             AnimateCreateStoryState(
-                activeWorkspace: MomentWorkspace(
+                activeWorkspace: AnimateWorkspace(
                     moment: AnimateCreateTestFixtures.makeMoment(
                         id: momentId,
                         occasion: "Birthday",
@@ -722,8 +722,8 @@ final class AnimateCreateViewModelStoryStateTests: XCTestCase {
         return (media, signature)
     }
 
-    private func makeBackendMedia() -> MomentMediaAsset {
-        MomentMediaAsset(
+    private func makeBackendMedia() -> AnimateMediaAsset {
+        AnimateMediaAsset(
             id: "backend-media-1",
             platformMediaAssetId: "local-asset-1",
             uploadId: "upload-backend-media-1",
@@ -736,7 +736,7 @@ final class AnimateCreateViewModelStoryStateTests: XCTestCase {
         )
     }
 
-    private func makeStoryMedia(from media: MomentMediaAsset) -> AnimateStoryMedia {
+    private func makeStoryMedia(from media: AnimateMediaAsset) -> AnimateStoryMedia {
         AnimateStoryMedia(
             mediaAssetId: media.id,
             mediaKind: media.kind,
@@ -754,7 +754,7 @@ final class AnimateCreateViewModelStoryStateTests: XCTestCase {
 }
 
 @MainActor
-private final class MomentCreationFailureHarness:
+private final class AnimateVideoCreationFailureHarness:
     AnimateAccountStateProviding,
     AnimateCurrentUserProviding,
     AnimateAuthTokenProviding,
@@ -772,15 +772,15 @@ private final class MomentCreationFailureHarness:
         AnimateCreditBalance(proMonthly: 0, promotional: 15, purchased: 0)
     )
     private let creditBalanceLoadStateSubject = CurrentValueSubject<AnimateCreditBalanceLoadState, Never>(.loaded)
-    private let workspaceSubject = CurrentValueSubject<MomentWorkspace?, Never>(nil)
+    private let workspaceSubject = CurrentValueSubject<AnimateWorkspace?, Never>(nil)
     private let workspaceErrorSubject = CurrentValueSubject<String?, Never>(nil)
 
     init(error: Error) {
         creationError = error
     }
 
-    var momentCreationWorkflow: MomentCreationWorkflow {
-        MomentCreationWorkflow(
+    var momentCreationWorkflow: AnimateVideoCreationWorkflow {
+        AnimateVideoCreationWorkflow(
             currentUserProvider: self,
             authTokenProvider: self,
             creditBalanceProvider: self,
@@ -853,7 +853,7 @@ private final class MomentCreationFailureHarness:
         true
     }
 
-    var activeWorkspacePublisher: AnyPublisher<MomentWorkspace?, Never> {
+    var activeWorkspacePublisher: AnyPublisher<AnimateWorkspace?, Never> {
         workspaceSubject.eraseToAnyPublisher()
     }
 
@@ -865,12 +865,12 @@ private final class MomentCreationFailureHarness:
         "token-1"
     }
 
-    func createMoment(bearerToken: String, form: MomentSetupForm) async throws -> String {
+    func createMoment(bearerToken: String, form: AnimateVideoSetupForm) async throws -> String {
         createAttemptExpectation.fulfill()
         throw creationError
     }
 
-    func updateMomentSetup(bearerToken: String, momentId: String, form: MomentSetupForm) async throws {}
+    func updateMomentSetup(bearerToken: String, momentId: String, form: AnimateVideoSetupForm) async throws {}
 
     func deleteMoment(bearerToken: String, momentId: String) async throws {}
 
@@ -880,7 +880,7 @@ private final class MomentCreationFailureHarness:
         workspaceSubject.send(nil)
     }
 
-    func publishWorkspace(_ workspace: MomentWorkspace) {
+    func publishWorkspace(_ workspace: AnimateWorkspace) {
         workspaceSubject.send(workspace)
     }
 

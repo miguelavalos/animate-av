@@ -5,9 +5,9 @@ import SwiftUI
 
 @MainActor
 final class MediaUploadWorkflow: WorkspaceObservingWorkflow {
-    @Published private(set) var selectedMedia: [MomentsSelectedMedia] = []
+    @Published private(set) var selectedMedia: [AnimateSelectedMedia] = []
     @Published private(set) var isImporting = false
-    @Published private(set) var importProgress: MomentsMediaImportProgress?
+    @Published private(set) var importProgress: AnimateMediaImportProgress?
     @Published private(set) var statusMessage: String?
 
     private let currentUserProvider: any AnimateCurrentUserProviding
@@ -34,11 +34,11 @@ final class MediaUploadWorkflow: WorkspaceObservingWorkflow {
 
     func importPickerItems(
         _ items: [PhotosPickerItem],
-        template: MomentTemplate,
+        template: AnimateVideoTemplate,
         momentId: String?
     ) async {
         guard !items.isEmpty else { return }
-        let remainingSlots = MomentsMediaRules.remainingSlots(
+        let remainingSlots = AnimateMediaRules.remainingSlots(
             template: template,
             selectedCount: selectedMediaCount
         )
@@ -49,7 +49,7 @@ final class MediaUploadWorkflow: WorkspaceObservingWorkflow {
 
         let generation = beginWorkflowGeneration()
         beginImport(totalCount: min(items.count, remainingSlots))
-        MomentsMediaUploadDiagnostics.addBreadcrumb(
+        AnimateMediaUploadDiagnostics.addBreadcrumb(
             operation: "import",
             source: "picker",
             assetCount: min(items.count, remainingSlots)
@@ -66,7 +66,7 @@ final class MediaUploadWorkflow: WorkspaceObservingWorkflow {
             )
 
             guard isCurrentWorkflowGeneration(generation) else { return }
-            let uniqueImported = MomentsMediaDeduplicator.uniqueNewMedia(
+            let uniqueImported = AnimateMediaDeduplicator.uniqueNewMedia(
                 existing: selectedMedia,
                 imported: imported
             )
@@ -79,25 +79,25 @@ final class MediaUploadWorkflow: WorkspaceObservingWorkflow {
             )
         } catch {
             guard isCurrentWorkflowGeneration(generation) else { return }
-            MomentsMediaUploadDiagnostics.captureImportError(
+            AnimateMediaUploadDiagnostics.captureImportError(
                 error,
                 source: "picker",
                 requestedCount: min(items.count, remainingSlots),
                 remainingSlots: remainingSlots
             )
-            statusMessage = MomentsRecoveryCopy.mediaImportFailure()
+            statusMessage = AnimateRecoveryCopy.mediaImportFailure()
         }
 
         guard isCurrentWorkflowGeneration(generation) else { return }
         endImport()
     }
 
-    func remove(_ media: MomentsSelectedMedia) {
+    func remove(_ media: AnimateSelectedMedia) {
         selectedMedia.removeAll { $0.id == media.id }
         normalizeOrder()
     }
 
-    override func workspaceDidChange(_ workspace: MomentWorkspace?) {
+    override func workspaceDidChange(_ workspace: AnimateWorkspace?) {
         guard selectedMedia.isEmpty,
               let workspace,
               restoredWorkspaceMomentId != workspace.moment.id,
@@ -123,7 +123,7 @@ final class MediaUploadWorkflow: WorkspaceObservingWorkflow {
         await persistSelectedMedia(
             momentId: momentId,
             requiresProductStateSave: true,
-            saveFailureMessage: MomentsRecoveryCopy.mediaStorySaveFailure()
+            saveFailureMessage: AnimateRecoveryCopy.mediaStorySaveFailure()
         )
     }
 
@@ -132,7 +132,7 @@ final class MediaUploadWorkflow: WorkspaceObservingWorkflow {
         let persistedMedia = await persistSelectedMedia(
             momentId: momentId,
             requiresProductStateSave: false,
-            saveFailureMessage: MomentsRecoveryCopy.mediaVideoSaveFailure()
+            saveFailureMessage: AnimateRecoveryCopy.mediaVideoSaveFailure()
         )
         return persistedMedia != nil || selectedCount == 0
     }
@@ -156,7 +156,7 @@ final class MediaUploadWorkflow: WorkspaceObservingWorkflow {
         if mediaToSave.isEmpty {
             return activeWorkspaceStoryMedia
         }
-        let syncedMediaBySourceIdentifier = (activeWorkspace?.mediaAssets ?? []).reduce(into: [String: MomentMediaAsset]()) {
+        let syncedMediaBySourceIdentifier = (activeWorkspace?.mediaAssets ?? []).reduce(into: [String: AnimateMediaAsset]()) {
             guard let sourceIdentifier = $1.platformMediaAssetId else { return }
             $0[sourceIdentifier] = $1
         }
@@ -180,9 +180,9 @@ final class MediaUploadWorkflow: WorkspaceObservingWorkflow {
 
         let generation = beginWorkflowGeneration()
         isImporting = true
-        importProgress = MomentsMediaImportProgress(completedCount: 0, totalCount: pendingMediaToSave.count)
+        importProgress = AnimateMediaImportProgress(completedCount: 0, totalCount: pendingMediaToSave.count)
         statusMessage = L10n.string("workflow.media.uploading")
-        MomentsMediaUploadDiagnostics.addBreadcrumb(
+        AnimateMediaUploadDiagnostics.addBreadcrumb(
             operation: "persist",
             source: "selected_media",
             assetCount: pendingMediaToSave.count
@@ -219,7 +219,7 @@ final class MediaUploadWorkflow: WorkspaceObservingWorkflow {
             return (alreadySyncedMedia + result.savedMedia).sorted { $0.sortOrder < $1.sortOrder }
         } catch AnimateUploadError.signedUploadUnavailable {
             guard isCurrentWorkflowGeneration(generation) else { return nil }
-            MomentsMediaUploadDiagnostics.capturePersistenceError(
+            AnimateMediaUploadDiagnostics.capturePersistenceError(
                 AnimateUploadError.signedUploadUnavailable,
                 step: "signed_upload_unavailable",
                 selectedCount: mediaToSave.count,
@@ -230,13 +230,13 @@ final class MediaUploadWorkflow: WorkspaceObservingWorkflow {
             logger.error(
                 "Media persistence failed error=signedUploadUnavailable selected=\(mediaToSave.count, privacy: .public) pending=\(pendingMediaToSave.count, privacy: .public)"
             )
-            statusMessage = MomentsRecoveryCopy.mediaUploadUnavailable()
+            statusMessage = AnimateRecoveryCopy.mediaUploadUnavailable()
             isImporting = false
             importProgress = nil
             return nil
         } catch let error as AnimateAPIError {
             guard isCurrentWorkflowGeneration(generation) else { return nil }
-            MomentsMediaUploadDiagnostics.capturePersistenceError(
+            AnimateMediaUploadDiagnostics.capturePersistenceError(
                 error,
                 step: "api",
                 selectedCount: mediaToSave.count,
@@ -253,7 +253,7 @@ final class MediaUploadWorkflow: WorkspaceObservingWorkflow {
             return nil
         } catch {
             guard isCurrentWorkflowGeneration(generation) else { return nil }
-            MomentsMediaUploadDiagnostics.capturePersistenceError(
+            AnimateMediaUploadDiagnostics.capturePersistenceError(
                 error,
                 step: "unknown",
                 selectedCount: mediaToSave.count,
@@ -282,10 +282,10 @@ final class MediaUploadWorkflow: WorkspaceObservingWorkflow {
         clearActiveWorkspace()
     }
 
-    private func restoreLocalMedia(from workspace: MomentWorkspace) async {
+    private func restoreLocalMedia(from workspace: AnimateWorkspace) async {
         let selectedAssetCount = workspace.mediaAssets.filter(\.selected).count
         let expectedSelectedCount = selectedAssetCount > 0 ? selectedAssetCount : workspace.mediaAssets.count
-        MomentsMediaUploadDiagnostics.addBreadcrumb(
+        AnimateMediaUploadDiagnostics.addBreadcrumb(
             operation: "restore",
             source: "local_media",
             assetCount: expectedSelectedCount
@@ -307,19 +307,19 @@ final class MediaUploadWorkflow: WorkspaceObservingWorkflow {
             statusMessage = L10n.string("workflow.media.savedReady")
         } catch {
             guard activeWorkspace?.moment.id == workspace.moment.id else { return }
-            MomentsMediaUploadDiagnostics.captureRestoreError(error, expectedAssetCount: expectedSelectedCount)
+            AnimateMediaUploadDiagnostics.captureRestoreError(error, expectedAssetCount: expectedSelectedCount)
             statusMessage = L10n.string("workflow.media.savedReady")
         }
     }
 
     private func beginImport(totalCount: Int) {
         isImporting = true
-        importProgress = MomentsMediaImportProgress(completedCount: 0, totalCount: max(totalCount, 0))
+        importProgress = AnimateMediaImportProgress(completedCount: 0, totalCount: max(totalCount, 0))
         statusMessage = nil
     }
 
     private func updateImportProgress(completedCount: Int, totalCount: Int) {
-        importProgress = MomentsMediaImportProgress(
+        importProgress = AnimateMediaImportProgress(
             completedCount: max(completedCount, 0),
             totalCount: max(totalCount, completedCount)
         )
@@ -369,7 +369,7 @@ final class MediaUploadWorkflow: WorkspaceObservingWorkflow {
         normalizeOrder()
     }
 
-    private func sortByFilenameOrderOrSelection(left: MomentsSelectedMedia, right: MomentsSelectedMedia) -> Bool {
+    private func sortByFilenameOrderOrSelection(left: AnimateSelectedMedia, right: AnimateSelectedMedia) -> Bool {
         guard let leftIndex = left.filenameOrderIndex,
               let rightIndex = right.filenameOrderIndex else {
             return left.sortOrder < right.sortOrder
@@ -404,7 +404,7 @@ final class MediaUploadWorkflow: WorkspaceObservingWorkflow {
     }
 
     private var selectedMediaCount: Int {
-        MomentsMediaRules.selectedCount(
+        AnimateMediaRules.selectedCount(
             localMedia: selectedMedia,
             syncedMedia: activeWorkspace?.mediaAssets ?? []
         )
@@ -427,14 +427,14 @@ final class MediaUploadWorkflow: WorkspaceObservingWorkflow {
     }
 }
 
-enum MomentsMediaDeduplicator {
+enum AnimateMediaDeduplicator {
     static func uniqueNewMedia(
-        existing: [MomentsSelectedMedia],
-        imported: [MomentsSelectedMedia]
-    ) -> [MomentsSelectedMedia] {
+        existing: [AnimateSelectedMedia],
+        imported: [AnimateSelectedMedia]
+    ) -> [AnimateSelectedMedia] {
         var seenSourceIdentifiers = Set(existing.map(\.sourceLocalIdentifier))
         var seenHashes = Set(existing.map(\.sha256))
-        var unique: [MomentsSelectedMedia] = []
+        var unique: [AnimateSelectedMedia] = []
 
         for media in imported {
             let sourceIsDuplicate = seenSourceIdentifiers.contains(media.sourceLocalIdentifier)
@@ -450,7 +450,7 @@ enum MomentsMediaDeduplicator {
     }
 }
 
-private extension MomentsSelectedMedia {
+private extension AnimateSelectedMedia {
     var filenameOrderPrefix: String? {
         filenameOrderMatch?.prefix
     }

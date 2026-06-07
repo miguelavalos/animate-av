@@ -7,9 +7,9 @@ final class MomentsDependencyContainer: ObservableObject {
     let galleryMomentsObserver: AnimateGalleryObserver
     let workspaceObserver: AnimateWorkspaceObserver
     let momentDeletionWorkflow: MomentDeletionWorkflow
-    let momentWorkspaceSelectionWorkflow: MomentWorkspaceSelectionWorkflow
-    let inProgressMomentsWorkflow: InProgressMomentsWorkflow
-    let momentCreationWorkflow: MomentCreationWorkflow
+    let momentWorkspaceSelectionWorkflow: AnimateWorkspaceSelectionWorkflow
+    let inProgressMomentsWorkflow: AnimateVideosWorkflow
+    let momentCreationWorkflow: AnimateVideoCreationWorkflow
     let mediaUploadWorkflow: MediaUploadWorkflow
     let storyWorkflow: StoryWorkflow
     let finalRenderWorkflow: FinalRenderWorkflow
@@ -75,7 +75,7 @@ final class MomentsDependencyContainer: ObservableObject {
         observedOwnerUserId = nextObservedOwnerUserId
         realtimeSessionTask?.cancel()
         realtimeSessionStore.clear()
-        inProgressMomentsWorkflow.observeInProgressMoments(ownerUserId: nil)
+        inProgressMomentsWorkflow.observeAnimateVideos(ownerUserId: nil)
         galleryMomentsObserver.observeGalleryMoments(ownerUserId: nil)
         inProgressViewModel.clearSelection()
         createViewModel.clearSessionState()
@@ -90,7 +90,7 @@ final class MomentsDependencyContainer: ObservableObject {
             await MainActor.run {
                 guard self?.observedOwnerUserId == .observed(ownerUserId) else { return }
                 self?.realtimeSessionStore.update(ownerUserId: ownerUserId, realtimeSessionId: realtimeSessionId)
-                self?.inProgressMomentsWorkflow.observeInProgressMoments(ownerUserId: ownerUserId)
+                self?.inProgressMomentsWorkflow.observeAnimateVideos(ownerUserId: ownerUserId)
                 self?.galleryMomentsObserver.observeGalleryMoments(ownerUserId: ownerUserId)
             }
         }

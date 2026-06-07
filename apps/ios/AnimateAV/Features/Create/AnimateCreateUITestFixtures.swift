@@ -25,12 +25,12 @@ enum AnimateCreateUITestFixtures {
         mode != nil
     }
 
-    static var moment: InProgressMoment {
+    static var moment: AnimateVideo {
         moment(for: .full)
     }
 
-    static func moment(for mode: Mode) -> InProgressMoment {
-        InProgressMoment(
+    static func moment(for mode: Mode) -> AnimateVideo {
+        AnimateVideo(
             id: momentId,
             template: .birthdayMessage,
             status: momentStatus(for: mode),
@@ -46,12 +46,12 @@ enum AnimateCreateUITestFixtures {
         )
     }
 
-    static var workspace: MomentWorkspace {
+    static var workspace: AnimateWorkspace {
         workspace(for: .full)
     }
 
-    static func workspace(for mode: Mode) -> MomentWorkspace {
-        MomentWorkspace(
+    static func workspace(for mode: Mode) -> AnimateWorkspace {
+        AnimateWorkspace(
             moment: moment(for: mode),
             mediaAssets: mediaAssets,
             storyScenes: storyScenes,
@@ -73,19 +73,19 @@ enum AnimateCreateUITestFixtures {
         }
     }
 
-    static var selectedMedia: [MomentsSelectedMedia] {
+    static var selectedMedia: [AnimateSelectedMedia] {
         [
             selectedMedia(id: "11111111-1111-1111-1111-111111111111", filename: "portrait-source.jpg", sortOrder: 0)
         ]
     }
 
-    static var mediaAssets: [MomentMediaAsset] {
+    static var mediaAssets: [AnimateMediaAsset] {
         [
             mediaAsset(id: "media-1", kind: "image", sortOrder: 0)
         ]
     }
 
-    static var storyScenes: [MomentStoryScene] {
+    static var storyScenes: [AnimateStoryScene] {
         [
             storyScene(
                 id: "scene-1",
@@ -102,11 +102,11 @@ enum AnimateCreateUITestFixtures {
         ]
     }
 
-    static var renderJobs: [MomentRenderJob] {
+    static var renderJobs: [AnimateRenderJob] {
         renderJobs(for: .full)
     }
 
-    static func renderJobs(for mode: Mode) -> [MomentRenderJob] {
+    static func renderJobs(for mode: Mode) -> [AnimateRenderJob] {
         switch mode {
         case .storyReady, .videoPlanReady, .videoPlanInsufficientCredits:
             return []
@@ -125,11 +125,11 @@ enum AnimateCreateUITestFixtures {
         }
     }
 
-    static var artifacts: [MomentArtifact] {
+    static var artifacts: [AnimateArtifact] {
         artifacts(for: .full)
     }
 
-    static func artifacts(for mode: Mode) -> [MomentArtifact] {
+    static func artifacts(for mode: Mode) -> [AnimateArtifact] {
         switch mode {
         case .storyReady, .videoPlanReady, .videoPlanInsufficientCredits:
             return []
@@ -142,24 +142,24 @@ enum AnimateCreateUITestFixtures {
         }
     }
 
-    static var renderPlan: MomentsRenderPlanResponse {
+    static var renderPlan: AnimateRenderPlanResponse {
         renderPlan(for: .videoPlanReady)
     }
 
-    static func renderPlan(for mode: Mode) -> MomentsRenderPlanResponse {
+    static func renderPlan(for mode: Mode) -> AnimateRenderPlanResponse {
         let hasCredits = mode != .videoPlanInsufficientCredits
-        return MomentsRenderPlanResponse(
+        return AnimateRenderPlanResponse(
             appId: "animateav",
             momentId: momentId,
             planId: hasCredits ? "ui-test-plan-1" : "ui-test-plan-low-credits",
-            watermark: MomentsRenderWatermarkPlan(
+            watermark: AnimateRenderWatermarkPlan(
                 includedForPro: true,
                 userHasWatermarkFree: false,
                 nonProRemovalCreditCost: 1,
                 selectedRemoveWatermark: false,
                 watermarkCreditCost: 0
             ),
-            plan: MomentsRenderPlan(
+            plan: AnimateRenderPlan(
                 schemaVersion: 1,
                 minimumDurationMs: 5_000,
                 targetDurationMs: 5_000,
@@ -198,8 +198,8 @@ enum AnimateCreateUITestFixtures {
         kind: String = "image",
         contentType: String = "image/jpeg",
         sortOrder: Double
-    ) -> MomentsSelectedMedia {
-        MomentsSelectedMedia(
+    ) -> AnimateSelectedMedia {
+        AnimateSelectedMedia(
             id: UUID(uuidString: id)!,
             sourceLocalIdentifier: id,
             originalFilename: filename,
@@ -214,8 +214,8 @@ enum AnimateCreateUITestFixtures {
         )
     }
 
-    private static func mediaAsset(id: String, kind: String, sortOrder: Double) -> MomentMediaAsset {
-        MomentMediaAsset(
+    private static func mediaAsset(id: String, kind: String, sortOrder: Double) -> AnimateMediaAsset {
+        AnimateMediaAsset(
             id: id,
             platformMediaAssetId: "platform-\(id)",
             uploadId: "upload-\(id)",
@@ -233,8 +233,8 @@ enum AnimateCreateUITestFixtures {
         index: Double,
         caption: String,
         narration: String
-    ) -> MomentStoryScene {
-        MomentStoryScene(
+    ) -> AnimateStoryScene {
+        AnimateStoryScene(
             id: id,
             sceneIndex: index,
             mediaAssetIds: [],
@@ -252,11 +252,11 @@ enum AnimateCreateUITestFixtures {
         kind: String,
         status: String,
         model: String
-    ) -> MomentRenderJob {
+    ) -> AnimateRenderJob {
         let isCompleted = status == "completed"
         let isQueued = status == "queued"
 
-        return MomentRenderJob(
+        return AnimateRenderJob(
             id: id,
             kind: kind,
             status: status,
@@ -286,8 +286,8 @@ enum AnimateCreateUITestFixtures {
         kind: String,
         key: String,
         hasWatermark: Bool
-    ) -> MomentArtifact {
-        MomentArtifact(
+    ) -> AnimateArtifact {
+        AnimateArtifact(
             id: id,
             kind: kind,
             r2Key: key,

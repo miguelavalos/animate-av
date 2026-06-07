@@ -19,7 +19,7 @@ final class AnimateRepositoryTests: XCTestCase {
         let repository = AnimateRepository(deploymentURL: "")
 
         do {
-            _ = try repository.observeInProgressMoments(ownerUserId: "user-1")
+            _ = try repository.observeAnimateVideos(ownerUserId: "user-1")
             XCTFail("Expected not configured error")
         } catch {
             XCTAssertEqual(error as? AnimateSyncError, .notConfigured)

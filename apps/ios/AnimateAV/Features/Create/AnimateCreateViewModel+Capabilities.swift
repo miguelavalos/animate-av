@@ -54,7 +54,7 @@ extension AnimateCreateViewModel {
         return AnimateCreateWorkflowCapabilityFactory.make(
             activeMomentId: activeMomentId,
             isSignedIn: isSignedIn,
-            hasMomentWorkspace: hasMomentWorkspace,
+            hasAnimateWorkspace: hasAnimateWorkspace,
             isImportingMedia: isImportingMedia,
             mediaRemainingSlots: mediaRemainingSlots,
             storyWorkflow: storyWorkflow,

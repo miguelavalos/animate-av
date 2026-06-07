@@ -1,8 +1,8 @@
 import Foundation
 
-struct InProgressMoment: Identifiable, Decodable, Equatable {
+struct AnimateVideo: Identifiable, Decodable, Equatable {
     let id: String
-    let template: MomentTemplateID
+    let template: AnimateVideoTemplateID
     let creationMode: String
     let look: String
     let theme: String
@@ -20,13 +20,13 @@ struct InProgressMoment: Identifiable, Decodable, Equatable {
     let creditCost: Double
     let updatedAt: Double
     let mediaCount: Int
-    let mediaPreview: [MomentMediaAsset]
-    let finalExport: MomentArtifact?
+    let mediaPreview: [AnimateMediaAsset]
+    let finalExport: AnimateArtifact?
     let assetKind: String
 
     init(
         id: String,
-        template: MomentTemplateID,
+        template: AnimateVideoTemplateID,
         creationMode: String = "quick",
         look: String = "cartoon",
         theme: String = "celebration",
@@ -44,8 +44,8 @@ struct InProgressMoment: Identifiable, Decodable, Equatable {
         creditCost: Double,
         updatedAt: Double,
         mediaCount: Int = 0,
-        mediaPreview: [MomentMediaAsset] = [],
-        finalExport: MomentArtifact? = nil,
+        mediaPreview: [AnimateMediaAsset] = [],
+        finalExport: AnimateArtifact? = nil,
         assetKind: String = "video"
     ) {
         self.id = id
@@ -72,8 +72,8 @@ struct InProgressMoment: Identifiable, Decodable, Equatable {
         self.assetKind = assetKind
     }
 
-    func renamed(_ title: String) -> InProgressMoment {
-        InProgressMoment(
+    func renamed(_ title: String) -> AnimateVideo {
+        AnimateVideo(
             id: id,
             template: template,
             creationMode: creationMode,
@@ -127,8 +127,8 @@ struct InProgressMoment: Identifiable, Decodable, Equatable {
     init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
         id = try container.decode(String.self, forKey: .id)
-        template = try container.decodeIfPresent(MomentTemplateID.self, forKey: .template)
-            ?? MomentTemplateID(rawValue: try container.decodeIfPresent(String.self, forKey: .theme) ?? "")
+        template = try container.decodeIfPresent(AnimateVideoTemplateID.self, forKey: .template)
+            ?? AnimateVideoTemplateID(rawValue: try container.decodeIfPresent(String.self, forKey: .theme) ?? "")
             ?? .birthdayMessage
         creationMode = try container.decodeIfPresent(String.self, forKey: .creationMode) ?? "quick"
         look = try container.decodeIfPresent(String.self, forKey: .look) ?? "cartoon"
@@ -147,9 +147,9 @@ struct InProgressMoment: Identifiable, Decodable, Equatable {
         durationSeconds = try container.decode(Double.self, forKey: .durationSeconds)
         creditCost = try container.decode(Double.self, forKey: .creditCost)
         updatedAt = try container.decode(Double.self, forKey: .updatedAt)
-        mediaPreview = try container.decodeIfPresent([MomentMediaAsset].self, forKey: .mediaPreview) ?? []
+        mediaPreview = try container.decodeIfPresent([AnimateMediaAsset].self, forKey: .mediaPreview) ?? []
         mediaCount = try container.decodeIfPresent(Int.self, forKey: .mediaCount) ?? mediaPreview.count
-        finalExport = try container.decodeIfPresent(MomentArtifact.self, forKey: .finalExport)
+        finalExport = try container.decodeIfPresent(AnimateArtifact.self, forKey: .finalExport)
         assetKind = try container.decodeIfPresent(String.self, forKey: .assetKind) ?? "video"
     }
 }

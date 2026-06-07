@@ -29,7 +29,7 @@ final class MomentDeletionWorkflow: ObservableObject {
         $errorMessage.eraseToAnyPublisher()
     }
 
-    func deleteMoment(_ moment: InProgressMoment) async -> Bool {
+    func deleteMoment(_ moment: AnimateVideo) async -> Bool {
         guard !isDeletingMoment else { return false }
         guard let ownerUserId = currentUserProvider.currentUserId else {
             errorMessage = "Sign in before deleting a moment."

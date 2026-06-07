@@ -15,14 +15,14 @@ struct AnimateInProgressWorkspaceSummaryPresentation: Equatable {
         }
     }
 
-    init(workspace: MomentWorkspace) {
+    init(workspace: AnimateWorkspace) {
         let finalExport = workspace.latestArtifact(kind: "final_export")
         let latestRenderJob = workspace.latestRenderJob()
 
         tiles = [
             AnimateInProgressSummaryTilePresentation(
                 title: L10n.string("moment.summary.status"),
-                value: MomentStatusRules.displayTitle(for: workspace.moment.status),
+                value: AnimateStatusRules.displayTitle(for: workspace.moment.status),
                 systemImage: "circle.dashed"
             ),
             AnimateInProgressSummaryTilePresentation(
@@ -38,14 +38,14 @@ struct AnimateInProgressWorkspaceSummaryPresentation: Equatable {
         ]
     }
 
-    private static func latestJobValue(_ latestRenderJob: MomentRenderJob?) -> String {
+    private static func latestJobValue(_ latestRenderJob: AnimateRenderJob?) -> String {
         guard let latestRenderJob else { return L10n.string("moment.progress.notStarted") }
-        return "\(MomentStatusRules.displayKind(latestRenderJob.kind)) · \(MomentStatusRules.displayTitle(for: latestRenderJob.status))"
+        return "\(AnimateStatusRules.displayKind(latestRenderJob.kind)) · \(AnimateStatusRules.displayTitle(for: latestRenderJob.status))"
     }
 
-    private static func summaryValue(for artifact: MomentArtifact?) -> String {
+    private static func summaryValue(for artifact: AnimateArtifact?) -> String {
         guard let artifact else { return L10n.string("moment.progress.notReady") }
-        return MomentStatusRules.displayTitle(for: artifact.status)
+        return AnimateStatusRules.displayTitle(for: artifact.status)
     }
 }
 

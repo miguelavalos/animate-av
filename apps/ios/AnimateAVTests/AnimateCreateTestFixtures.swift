@@ -4,7 +4,7 @@ import Foundation
 enum AnimateCreateTestFixtures {
     static func makeMoment(
         id: String,
-        template: MomentTemplateID = .birthdayMessage,
+        template: AnimateVideoTemplateID = .birthdayMessage,
         creationMode: String = "quick",
         look: String = "cartoon",
         theme: String = "celebration",
@@ -15,8 +15,8 @@ enum AnimateCreateTestFixtures {
         occasion: String? = nil,
         details: String? = nil,
         storyInputSignature: String? = nil
-    ) -> InProgressMoment {
-        InProgressMoment(
+    ) -> AnimateVideo {
+        AnimateVideo(
             id: id,
             template: template,
             creationMode: creationMode,
@@ -42,8 +42,8 @@ enum AnimateCreateTestFixtures {
         id: String,
         sortOrder: Double = 0,
         sourceLocalIdentifier: String? = nil
-    ) -> MomentMediaAsset {
-        MomentMediaAsset(
+    ) -> AnimateMediaAsset {
+        AnimateMediaAsset(
             id: id,
             platformMediaAssetId: sourceLocalIdentifier ?? "platform-\(id)",
             uploadId: "upload-\(id)",
@@ -60,8 +60,8 @@ enum AnimateCreateTestFixtures {
         id: String,
         sourceLocalIdentifier: String? = nil,
         sha256: String? = nil
-    ) -> MomentsSelectedMedia {
-        MomentsSelectedMedia(
+    ) -> AnimateSelectedMedia {
+        AnimateSelectedMedia(
             id: UUID(uuidString: id)!,
             sourceLocalIdentifier: sourceLocalIdentifier ?? id,
             originalFilename: "\(id).jpg",
@@ -76,8 +76,8 @@ enum AnimateCreateTestFixtures {
         )
     }
 
-    static func makeScene(id: String, sceneIndex: Double = 0, caption: String = "Opening") -> MomentStoryScene {
-        MomentStoryScene(
+    static func makeScene(id: String, sceneIndex: Double = 0, caption: String = "Opening") -> AnimateStoryScene {
+        AnimateStoryScene(
             id: id,
             sceneIndex: sceneIndex,
             mediaAssetIds: [],
@@ -90,8 +90,8 @@ enum AnimateCreateTestFixtures {
         )
     }
 
-    static func makeArtifact(id: String, kind: String) -> MomentArtifact {
-        MomentArtifact(
+    static func makeArtifact(id: String, kind: String) -> AnimateArtifact {
+        AnimateArtifact(
             id: id,
             kind: kind,
             r2Key: "animateav/\(id).mp4",
@@ -114,8 +114,8 @@ enum AnimateCreateTestFixtures {
         plannedAssetCount: Double? = nil,
         usedAssetCount: Double? = nil,
         errorMessage: String? = nil
-    ) -> MomentRenderJob {
-        MomentRenderJob(
+    ) -> AnimateRenderJob {
+        AnimateRenderJob(
             id: id,
             kind: kind,
             status: status,
@@ -150,12 +150,12 @@ enum AnimateCreateTestFixtures {
         plannedAssetCount: Int = 4,
         usedAssetCount: Int = 3,
         createVideoBlockers: [String]? = nil
-    ) -> MomentsRenderPlanResponse {
-        MomentsRenderPlanResponse(
+    ) -> AnimateRenderPlanResponse {
+        AnimateRenderPlanResponse(
             appId: "animateav",
             momentId: momentId,
             planId: "plan-1",
-            plan: MomentsRenderPlan(
+            plan: AnimateRenderPlan(
                 schemaVersion: 1,
                 minimumDurationMs: minimumDurationMs,
                 targetDurationMs: targetDurationMs,

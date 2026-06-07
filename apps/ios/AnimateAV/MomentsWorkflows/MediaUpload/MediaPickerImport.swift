@@ -16,8 +16,8 @@ enum MediaPickerImport {
         limit: Int,
         startingSortOrder: Int,
         progress: (@MainActor (Int, Int) -> Void)? = nil
-    ) async throws -> [MomentsSelectedMedia] {
-        var imported: [MomentsSelectedMedia] = []
+    ) async throws -> [AnimateSelectedMedia] {
+        var imported: [AnimateSelectedMedia] = []
         let total = min(items.count, limit)
 
         for (offset, item) in items.prefix(limit).enumerated() {
@@ -33,9 +33,9 @@ enum MediaPickerImport {
     }
 
     static func loadLocalMediaAssets(
-        _ mediaAssets: [MomentMediaAsset],
+        _ mediaAssets: [AnimateMediaAsset],
         progress: (@MainActor (Int, Int) -> Void)? = nil
-    ) async throws -> [MomentsSelectedMedia] {
+    ) async throws -> [AnimateSelectedMedia] {
         let status = await requestPhotoLibraryAccess()
         guard status == .authorized || status == .limited else {
             throw AnimateUploadError.photoLibraryAccessDenied
@@ -44,7 +44,7 @@ enum MediaPickerImport {
         let candidates = mediaAssets
             .filter(\.selected)
             .sorted { $0.sortOrder < $1.sortOrder }
-            .compactMap { media -> (asset: PHAsset, source: MomentMediaAsset)? in
+            .compactMap { media -> (asset: PHAsset, source: AnimateMediaAsset)? in
                 guard let localIdentifier = media.platformMediaAssetId else { return nil }
                 guard let asset = PHAsset
                     .fetchAssets(withLocalIdentifiers: [localIdentifier], options: nil)
@@ -53,7 +53,7 @@ enum MediaPickerImport {
                 return (asset, media)
             }
 
-        var imported: [MomentsSelectedMedia] = []
+        var imported: [AnimateSelectedMedia] = []
         imported.reserveCapacity(candidates.count)
         await progress?(0, candidates.count)
 
@@ -73,7 +73,7 @@ enum MediaPickerImport {
         return imported
     }
 
-    private static func loadMedia(from item: PhotosPickerItem, sortOrder: Int) async throws -> MomentsSelectedMedia {
+    private static func loadMedia(from item: PhotosPickerItem, sortOrder: Int) async throws -> AnimateSelectedMedia {
         guard let data = try await item.loadTransferable(type: Data.self) else {
             throw AnimateUploadError.unreadableSelection
         }
@@ -100,7 +100,7 @@ enum MediaPickerImport {
             )
         )
 
-        return MomentsSelectedMedia(
+        return AnimateSelectedMedia(
             id: UUID(),
             sourceLocalIdentifier: item.itemIdentifier ?? UUID().uuidString,
             originalFilename: normalized.filename,
@@ -140,7 +140,7 @@ enum MediaPickerImport {
         return await PHPhotoLibrary.requestAuthorization(for: .readWrite)
     }
 
-    private static func loadPhotoAsset(_ asset: PHAsset, sortOrder: Int) async throws -> MomentsSelectedMedia {
+    private static func loadPhotoAsset(_ asset: PHAsset, sortOrder: Int) async throws -> AnimateSelectedMedia {
         let (sourceData, sourceFilename) = try await imageData(for: asset)
         let normalized = try normalizedPhotoData(data: sourceData, filename: sourceFilename)
         let digest = SHA256.hash(data: normalized.data)
@@ -159,7 +159,7 @@ enum MediaPickerImport {
             )
         )
 
-        return MomentsSelectedMedia(
+        return AnimateSelectedMedia(
             id: UUID(),
             sourceLocalIdentifier: asset.localIdentifier,
             originalFilename: normalized.filename,
@@ -175,7 +175,7 @@ enum MediaPickerImport {
         )
     }
 
-    private static func loadLibraryAsset(_ asset: PHAsset, sortOrder: Int) async throws -> MomentsSelectedMedia {
+    private static func loadLibraryAsset(_ asset: PHAsset, sortOrder: Int) async throws -> AnimateSelectedMedia {
         switch asset.mediaType {
         case .image:
             return try await loadPhotoAsset(asset, sortOrder: sortOrder)
@@ -186,7 +186,7 @@ enum MediaPickerImport {
         }
     }
 
-    private static func loadVideoAsset(_ asset: PHAsset, sortOrder: Int) async throws -> MomentsSelectedMedia {
+    private static func loadVideoAsset(_ asset: PHAsset, sortOrder: Int) async throws -> AnimateSelectedMedia {
         let (data, filename) = try await videoData(for: asset)
         let contentType = contentType(for: filename) ?? "video/quicktime"
         let digest = SHA256.hash(data: data)
@@ -204,7 +204,7 @@ enum MediaPickerImport {
             )
         )
 
-        return MomentsSelectedMedia(
+        return AnimateSelectedMedia(
             id: UUID(),
             sourceLocalIdentifier: asset.localIdentifier,
             originalFilename: filename,

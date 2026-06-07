@@ -61,7 +61,7 @@ struct AnimateAviScreen: View {
 
 private struct AnimateAviGuidanceContent: View {
     let presentation: AnimateAviPresentation
-    let momentsSummary: InProgressMomentsSummary
+    let momentsSummary: AnimateInProgressSummary
     let creditBalance: AnimateCreditBalance
     let creditBalanceLoadState: AnimateCreditBalanceLoadState
     let isSignedIn: Bool

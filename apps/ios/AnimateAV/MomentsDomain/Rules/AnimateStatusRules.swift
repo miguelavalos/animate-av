@@ -1,7 +1,7 @@
 import Foundation
 
-enum MomentStatusRules {
-    static func isFinished(_ moment: InProgressMoment) -> Bool {
+enum AnimateStatusRules {
+    static func isFinished(_ moment: AnimateVideo) -> Bool {
         isFinishedStatus(moment.status)
     }
 
@@ -9,10 +9,10 @@ enum MomentStatusRules {
         status == "gallery_ready" || status == "completed"
     }
 
-    static func group(_ moments: [InProgressMoment]) -> InProgressMomentGroups {
+    static func group(_ moments: [AnimateVideo]) -> AnimateVideoGroups {
         let sortedMoments = moments.sortedByLatestUpdate()
 
-        return InProgressMomentGroups(
+        return AnimateVideoGroups(
             inProgress: sortedMoments.filter { !isFinished($0) },
             finished: sortedMoments.filter(isFinished)
         )
@@ -39,9 +39,9 @@ enum MomentStatusRules {
             .capitalized
     }
 
-    static func nextAction(for workspace: MomentWorkspace) -> MomentNextAction {
+    static func nextAction(for workspace: AnimateWorkspace) -> AnimateNextAction {
         if let failedJob = workspace.renderJobs.latest(where: { isFailureStatus($0.status) }) {
-            return MomentNextAction(
+            return AnimateNextAction(
                 title: L10n.string("moment.nextAction.videoAttention.title"),
                 message: L10n.string("moment.nextAction.videoAttention.message", displayKind(failedJob.kind)),
                 systemImage: "exclamationmark.triangle",
@@ -51,7 +51,7 @@ enum MomentStatusRules {
         }
 
         if workspace.mediaAssets.isEmpty {
-            return MomentNextAction(
+            return AnimateNextAction(
                 title: L10n.string("moment.nextAction.addMedia.title"),
                 message: L10n.string("moment.nextAction.addMedia.message"),
                 systemImage: "photo.badge.plus",
@@ -61,7 +61,7 @@ enum MomentStatusRules {
         }
 
         if workspace.storyScenes.isEmpty {
-            return MomentNextAction(
+            return AnimateNextAction(
                 title: L10n.string("moment.nextAction.prepareStory.title"),
                 message: L10n.string("moment.nextAction.prepareStory.message"),
                 systemImage: "text.bubble",
@@ -71,7 +71,7 @@ enum MomentStatusRules {
         }
 
         if !workspace.artifacts.containsAvailable(kind: "final_export") {
-            return MomentNextAction(
+            return AnimateNextAction(
                 title: L10n.string("moment.nextAction.createVideo.title"),
                 message: L10n.string("moment.nextAction.createVideo.message"),
                 systemImage: "video.fill",
@@ -80,7 +80,7 @@ enum MomentStatusRules {
             )
         }
 
-        return MomentNextAction(
+        return AnimateNextAction(
             title: L10n.string("library.finished.title"),
             message: L10n.string("moment.nextAction.finished.message"),
             systemImage: "checkmark.circle",
@@ -89,7 +89,7 @@ enum MomentStatusRules {
         )
     }
 
-    private static func focus(forFailedJobKind kind: String) -> MomentsContinuationFocus {
+    private static func focus(forFailedJobKind kind: String) -> AnimateContinuationFocus {
         switch kind {
         case "final":
             .finalRender
@@ -103,21 +103,21 @@ enum MomentStatusRules {
     }
 }
 
-private extension [InProgressMoment] {
-    func sortedByLatestUpdate() -> [InProgressMoment] {
+private extension [AnimateVideo] {
+    func sortedByLatestUpdate() -> [AnimateVideo] {
         sorted { $0.updatedAt > $1.updatedAt }
     }
 }
 
-private extension [MomentRenderJob] {
-    func latest(where predicate: (MomentRenderJob) -> Bool) -> MomentRenderJob? {
+private extension [AnimateRenderJob] {
+    func latest(where predicate: (AnimateRenderJob) -> Bool) -> AnimateRenderJob? {
         filter(predicate)
             .sorted { $0.updatedAt < $1.updatedAt }
             .last
     }
 }
 
-private extension [MomentArtifact] {
+private extension [AnimateArtifact] {
     func containsAvailable(kind: String) -> Bool {
         contains { $0.kind == kind && $0.status == "available" }
     }

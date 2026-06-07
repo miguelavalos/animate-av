@@ -1,7 +1,7 @@
 import SwiftUI
 
 struct AnimateInProgressListSummaryPill: View {
-    let pill: InProgressMomentsSummaryPresentation
+    let pill: AnimateInProgressSummaryPresentation
 
     var body: some View {
         VStack(alignment: .leading, spacing: 4) {

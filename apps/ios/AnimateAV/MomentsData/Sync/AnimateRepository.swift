@@ -18,19 +18,19 @@ struct AnimateRepository {
         remoteClient.isConfigured
     }
 
-    func observeInProgressMoments(ownerUserId: String) throws -> AnyPublisher<[InProgressMoment], Error> {
-        try remoteClient.observeInProgressMoments(ownerUserId: ownerUserId)
+    func observeAnimateVideos(ownerUserId: String) throws -> AnyPublisher<[AnimateVideo], Error> {
+        try remoteClient.observeAnimateVideos(ownerUserId: ownerUserId)
     }
 
-    func observeGalleryMoments(ownerUserId: String) throws -> AnyPublisher<[MomentArtifact], Error> {
+    func observeGalleryMoments(ownerUserId: String) throws -> AnyPublisher<[AnimateArtifact], Error> {
         try remoteClient.observeGalleryMoments(ownerUserId: ownerUserId)
     }
 
-    func observeMomentWorkspace(
+    func observeAnimateWorkspace(
         ownerUserId: String,
         momentId: String
-    ) throws -> AnyPublisher<MomentWorkspace?, Error> {
-        try remoteClient.observeMomentWorkspace(
+    ) throws -> AnyPublisher<AnimateWorkspace?, Error> {
+        try remoteClient.observeAnimateWorkspace(
             ownerUserId: ownerUserId,
             momentId: momentId
         )

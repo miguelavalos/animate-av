@@ -6,8 +6,8 @@ struct AnimateInProgressPresentation: Equatable {
 
     static func make(
         isSignedIn: Bool,
-        momentsSummary: InProgressMomentsSummary,
-        momentPendingDeletion: InProgressMoment?
+        momentsSummary: AnimateInProgressSummary,
+        momentPendingDeletion: AnimateVideo?
     ) -> AnimateInProgressPresentation {
         AnimateInProgressPresentation(
             availability: AnimateInProgressAvailability.make(
@@ -26,7 +26,7 @@ enum AnimateInProgressAvailability: Equatable {
 
     static func make(
         isSignedIn: Bool,
-        momentsSummary: InProgressMomentsSummary
+        momentsSummary: AnimateInProgressSummary
     ) -> AnimateInProgressAvailability {
         if !isSignedIn {
             return .signedOut(

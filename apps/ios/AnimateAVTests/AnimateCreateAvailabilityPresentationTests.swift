@@ -29,7 +29,7 @@ final class AnimateCreateAvailabilityPresentationTests: XCTestCase {
         let capability = AnimateCreateWorkflowCapabilityFactory.make(
             activeMomentId: "moment-1",
             isSignedIn: true,
-            hasMomentWorkspace: true,
+            hasAnimateWorkspace: true,
             isImportingMedia: false,
             mediaRemainingSlots: 2,
             storyWorkflow: nil,
@@ -49,7 +49,7 @@ final class AnimateCreateAvailabilityPresentationTests: XCTestCase {
         let withoutSlots = AnimateCreateWorkflowCapabilityFactory.make(
             activeMomentId: "moment-1",
             isSignedIn: true,
-            hasMomentWorkspace: true,
+            hasAnimateWorkspace: true,
             isImportingMedia: false,
             mediaRemainingSlots: 0,
             storyWorkflow: nil,
@@ -60,7 +60,7 @@ final class AnimateCreateAvailabilityPresentationTests: XCTestCase {
         let withoutMoment = AnimateCreateWorkflowCapabilityFactory.make(
             activeMomentId: nil,
             isSignedIn: true,
-            hasMomentWorkspace: false,
+            hasAnimateWorkspace: false,
             isImportingMedia: false,
             mediaRemainingSlots: 2,
             storyWorkflow: nil,
@@ -90,7 +90,7 @@ final class AnimateCreateAvailabilityPresentationTests: XCTestCase {
     func testAvailabilityMessageFactoryFormatsMediaStates() {
         XCTAssertEqual(
             AnimateCreateAvailabilityMessageFactory.media(
-                hasMomentWorkspace: false,
+                hasAnimateWorkspace: false,
                 isImportingMedia: false,
                 isMediaUploadConfigured: true,
                 mediaRemainingSlots: 2
@@ -99,7 +99,7 @@ final class AnimateCreateAvailabilityPresentationTests: XCTestCase {
         )
         XCTAssertNil(
             AnimateCreateAvailabilityMessageFactory.media(
-                hasMomentWorkspace: true,
+                hasAnimateWorkspace: true,
                 isImportingMedia: true,
                 isMediaUploadConfigured: false,
                 mediaRemainingSlots: 0
@@ -107,7 +107,7 @@ final class AnimateCreateAvailabilityPresentationTests: XCTestCase {
         )
         XCTAssertEqual(
             AnimateCreateAvailabilityMessageFactory.media(
-                hasMomentWorkspace: true,
+                hasAnimateWorkspace: true,
                 isImportingMedia: false,
                 isMediaUploadConfigured: true,
                 mediaRemainingSlots: 0
@@ -120,7 +120,7 @@ final class AnimateCreateAvailabilityPresentationTests: XCTestCase {
         XCTAssertEqual(
             AnimateCreateAvailabilityMessageFactory.story(
                 isSignedIn: true,
-                hasMomentWorkspace: true,
+                hasAnimateWorkspace: true,
                 isStoryPlanning: false,
                 isStoryAvailable: true,
                 isStoryConfigured: true,
@@ -133,7 +133,7 @@ final class AnimateCreateAvailabilityPresentationTests: XCTestCase {
         XCTAssertNil(
             AnimateCreateAvailabilityMessageFactory.story(
                 isSignedIn: true,
-                hasMomentWorkspace: true,
+                hasAnimateWorkspace: true,
                 isStoryPlanning: true,
                 isStoryAvailable: true,
                 isStoryConfigured: false,

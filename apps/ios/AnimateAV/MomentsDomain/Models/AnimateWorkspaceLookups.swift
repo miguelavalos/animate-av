@@ -1,7 +1,7 @@
 import Foundation
 
-extension MomentWorkspace {
-    func latestArtifact(kind: String) -> MomentArtifact? {
+extension AnimateWorkspace {
+    func latestArtifact(kind: String) -> AnimateArtifact? {
         artifacts.last { $0.kind == kind }
     }
 
@@ -9,7 +9,7 @@ extension MomentWorkspace {
         artifacts.contains { $0.kind == kind && $0.status == "available" }
     }
 
-    func latestRenderJob(kind: String? = nil) -> MomentRenderJob? {
+    func latestRenderJob(kind: String? = nil) -> AnimateRenderJob? {
         renderJobs
             .filter { job in
                 guard let kind else { return true }
@@ -18,7 +18,7 @@ extension MomentWorkspace {
             .max { $0.updatedAt < $1.updatedAt }
     }
 
-    var activeFinalRenderJob: MomentRenderJob? {
+    var activeFinalRenderJob: AnimateRenderJob? {
         renderJobs.first { job in
             job.kind == "final" && ["queued", "running"].contains(job.status)
         }
@@ -30,7 +30,7 @@ extension MomentWorkspace {
     }
 }
 
-extension MomentRenderJob {
+extension AnimateRenderJob {
     var isActiveRender: Bool {
         ["queued", "running", "processing", "in_progress"].contains(status)
     }

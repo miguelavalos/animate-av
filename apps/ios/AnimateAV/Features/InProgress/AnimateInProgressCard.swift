@@ -7,16 +7,16 @@ struct AnimateInProgressCard: View {
     let presentation: AnimateInProgressPresentation
     let balance: AnimateCreditBalance
     let creditBalanceLoadState: AnimateCreditBalanceLoadState
-    let momentsSummary: InProgressMomentsSummary
+    let momentsSummary: AnimateInProgressSummary
     let selectedMomentId: String?
-    let isLoadingMomentWorkspace: Bool
-    let activeWorkspace: MomentWorkspace?
+    let isLoadingAnimateWorkspace: Bool
+    let activeWorkspace: AnimateWorkspace?
     let isDeletingMoment: Bool
     let statusMessage: String?
-    let localMediaForMoment: (InProgressMoment) -> [MomentsSelectedMedia]
-    let selectMoment: (InProgressMoment) -> Void
-    let continueMoment: (MomentsContinuationRequest) -> Void
-    let requestRenameMoment: (InProgressMoment) -> Void
+    let localMediaForMoment: (AnimateVideo) -> [AnimateSelectedMedia]
+    let selectMoment: (AnimateVideo) -> Void
+    let continueMoment: (AnimateContinuationRequest) -> Void
+    let requestRenameMoment: (AnimateVideo) -> Void
     let startMoment: () -> Void
     let startSignInFlow: () -> Void
     let openCredits: () -> Void
@@ -61,7 +61,7 @@ struct AnimateInProgressCard: View {
         }
     }
 
-    private var continueMoments: [InProgressMoment] {
+    private var continueMoments: [AnimateVideo] {
         momentsSummary.moments.sorted { $0.updatedAt > $1.updatedAt }
     }
 }
@@ -181,7 +181,7 @@ private struct AnimateInProgressEmptyContent: View {
 }
 
 private struct AnimateInProgressAviBlock: View {
-    let momentsSummary: InProgressMomentsSummary
+    let momentsSummary: AnimateInProgressSummary
 
     var body: some View {
         HStack(spacing: 16) {
@@ -216,7 +216,7 @@ private struct AnimateInProgressAviBlock: View {
     }
 
     private var title: String {
-        if momentsSummary.latestInProgressMoment != nil {
+        if momentsSummary.latestAnimateVideo != nil {
             return L10n.string("inProgress.avi.momentInProgress.title")
         }
         if momentsSummary.finishedCount > 0 {
@@ -226,7 +226,7 @@ private struct AnimateInProgressAviBlock: View {
     }
 
     private var message: String {
-        if let moment = momentsSummary.latestInProgressMoment {
+        if let moment = momentsSummary.latestAnimateVideo {
             return L10n.string("inProgress.avi.momentInProgress.message", moment.title)
         }
         if momentsSummary.finishedCount > 0 {
@@ -237,10 +237,10 @@ private struct AnimateInProgressAviBlock: View {
 }
 
 private struct AnimateInProgressContinueBlock: View {
-    let moments: [InProgressMoment]
-    let localMediaForMoment: (InProgressMoment) -> [MomentsSelectedMedia]
-    let continueMoment: (MomentsContinuationRequest) -> Void
-    let requestRenameMoment: (InProgressMoment) -> Void
+    let moments: [AnimateVideo]
+    let localMediaForMoment: (AnimateVideo) -> [AnimateSelectedMedia]
+    let continueMoment: (AnimateContinuationRequest) -> Void
+    let requestRenameMoment: (AnimateVideo) -> Void
 
     var body: some View {
         if moments.isEmpty {
@@ -257,11 +257,11 @@ private struct AnimateInProgressContinueBlock: View {
                 AVAppShellSectionHeader(title: L10n.string("inProgress.title"))
 
                 ForEach(moments) { moment in
-                    AnimateInProgressMomentCard(
+                    AnimateAnimateVideoCard(
                         moment: moment,
                         localMedia: localMediaForMoment(moment),
                         continueMoment: {
-                            continueMoment(MomentsContinuationRequest(moment: moment))
+                            continueMoment(AnimateContinuationRequest(moment: moment))
                         },
                         renameMoment: {
                             requestRenameMoment(moment)
@@ -273,9 +273,9 @@ private struct AnimateInProgressContinueBlock: View {
     }
 }
 
-private struct AnimateInProgressMomentCard: View {
-    let moment: InProgressMoment
-    let localMedia: [MomentsSelectedMedia]
+private struct AnimateAnimateVideoCard: View {
+    let moment: AnimateVideo
+    let localMedia: [AnimateSelectedMedia]
     let continueMoment: () -> Void
     let renameMoment: () -> Void
 
@@ -306,16 +306,16 @@ private struct AnimateInProgressMomentCard: View {
                         }
                     }
 
-                    Text(MomentStatusRules.displayTitle(for: moment.status))
+                    Text(AnimateStatusRules.displayTitle(for: moment.status))
                         .font(AVBrandTypography.captionStrong)
                         .foregroundStyle(AVBrandColor.textSecondary)
 
                     HStack(spacing: 8) {
-                        AnimateInProgressMomentPill(
+                        AnimateAnimateVideoPill(
                             systemImage: "photo.on.rectangle",
                             text: L10n.string("inProgress.card.mediaCount", effectiveMediaCount)
                         )
-                        AnimateInProgressMomentPill(
+                        AnimateAnimateVideoPill(
                             systemImage: iconName,
                             text: AnimateVideoFormatting.updatedAt(moment)
                         )
@@ -381,7 +381,7 @@ private struct AnimateInProgressMomentCard: View {
     }
 }
 
-private struct AnimateInProgressMomentPill: View {
+private struct AnimateAnimateVideoPill: View {
     let systemImage: String
     let text: String
 

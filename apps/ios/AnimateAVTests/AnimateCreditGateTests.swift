@@ -23,7 +23,7 @@ final class AnimateCreditGateTests: XCTestCase {
 
     func testEmptyBalanceCannotAffordAnyLaunchTemplate() {
         XCTAssertFalse(
-            AnimateCreditGate.canAffordAny(MomentTemplate.launchTemplates, balance: .empty)
+            AnimateCreditGate.canAffordAny(AnimateVideoTemplate.launchTemplates, balance: .empty)
         )
     }
 
@@ -31,7 +31,7 @@ final class AnimateCreditGateTests: XCTestCase {
         let balance = AnimateCreditBalance(proMonthly: 0, promotional: 0, purchased: 2)
 
         XCTAssertTrue(
-            AnimateCreditGate.canAfford(MomentTemplate.birthdayMessage, balance: balance)
+            AnimateCreditGate.canAfford(AnimateVideoTemplate.birthdayMessage, balance: balance)
         )
     }
 
@@ -44,13 +44,13 @@ final class AnimateCreditGateTests: XCTestCase {
         )
 
         XCTAssertEqual(balance.spendable, 0)
-        XCTAssertFalse(AnimateCreditGate.canAfford(MomentTemplate.birthdayMessage, balance: balance))
+        XCTAssertFalse(AnimateCreditGate.canAfford(AnimateVideoTemplate.birthdayMessage, balance: balance))
     }
 
     func testPartyRecapRequiresTwoSpendableCredits() {
         XCTAssertTrue(
             AnimateCreditGate.canAfford(
-                MomentTemplate.partyRecap,
+                AnimateVideoTemplate.partyRecap,
                 balance: AnimateCreditBalance(proMonthly: 0, promotional: 0, purchased: 2)
             )
         )
@@ -78,24 +78,24 @@ final class AnimateCreditGateTests: XCTestCase {
     }
 
     func testLaunchTemplateDurationsCreditsAndAssetRanges() {
-        XCTAssertEqual(MomentTemplate.birthdayMessage.durationSeconds, 5)
-        XCTAssertEqual(MomentTemplate.birthdayMessage.creditCost, 1)
-        XCTAssertEqual(MomentTemplate.birthdayMessage.minimumAssets, 1)
-        XCTAssertEqual(MomentTemplate.birthdayMessage.maximumAssets, 1)
+        XCTAssertEqual(AnimateVideoTemplate.birthdayMessage.durationSeconds, 5)
+        XCTAssertEqual(AnimateVideoTemplate.birthdayMessage.creditCost, 1)
+        XCTAssertEqual(AnimateVideoTemplate.birthdayMessage.minimumAssets, 1)
+        XCTAssertEqual(AnimateVideoTemplate.birthdayMessage.maximumAssets, 1)
 
-        XCTAssertEqual(MomentTemplate.partyRecap.durationSeconds, 10)
-        XCTAssertEqual(MomentTemplate.partyRecap.creditCost, 1)
-        XCTAssertEqual(MomentTemplate.partyRecap.minimumAssets, 1)
-        XCTAssertEqual(MomentTemplate.partyRecap.maximumAssets, 1)
+        XCTAssertEqual(AnimateVideoTemplate.partyRecap.durationSeconds, 10)
+        XCTAssertEqual(AnimateVideoTemplate.partyRecap.creditCost, 1)
+        XCTAssertEqual(AnimateVideoTemplate.partyRecap.minimumAssets, 1)
+        XCTAssertEqual(AnimateVideoTemplate.partyRecap.maximumAssets, 1)
 
-        XCTAssertEqual(MomentTemplate.softRoast.durationSeconds, 15)
-        XCTAssertEqual(MomentTemplate.softRoast.creditCost, 1)
-        XCTAssertEqual(MomentTemplate.softRoast.minimumAssets, 1)
-        XCTAssertEqual(MomentTemplate.softRoast.maximumAssets, 1)
+        XCTAssertEqual(AnimateVideoTemplate.softRoast.durationSeconds, 15)
+        XCTAssertEqual(AnimateVideoTemplate.softRoast.creditCost, 1)
+        XCTAssertEqual(AnimateVideoTemplate.softRoast.minimumAssets, 1)
+        XCTAssertEqual(AnimateVideoTemplate.softRoast.maximumAssets, 1)
     }
 
     func testSetupFormRequiresOccasionBeforeCreate() {
-        var form = MomentSetupForm(template: .birthdayMessage)
+        var form = AnimateVideoSetupForm(template: .birthdayMessage)
 
         XCTAssertTrue(form.canCreateMoment)
 
@@ -105,20 +105,20 @@ final class AnimateCreditGateTests: XCTestCase {
     }
 
     func testSetupAvailabilityAllowsSetupWithoutCredits() {
-        var form = MomentSetupForm(template: .birthdayMessage)
+        var form = AnimateVideoSetupForm(template: .birthdayMessage)
         form.occasion = "Birthday"
 
-        let availability = MomentSetupRules.availability(
+        let availability = AnimateVideoSetupRules.availability(
             form: form,
             balance: .empty
         )
 
         XCTAssertTrue(availability.canCreateMoment)
-        XCTAssertNil(MomentSetupRules.availabilityMessage(availability))
+        XCTAssertNil(AnimateVideoSetupRules.availabilityMessage(availability))
     }
 
     func testContinuingSetupFormUsesVideoFieldsAndFallbacks() {
-        let moment = InProgressMoment(
+        let moment = AnimateVideo(
             id: "moment-1",
             template: .birthdayMessage,
             status: "in_progress",
@@ -132,9 +132,9 @@ final class AnimateCreditGateTests: XCTestCase {
             updatedAt: 0
         )
 
-        let form = MomentSetupForm.continuing(
+        let form = AnimateVideoSetupForm.continuing(
             moment: moment,
-            templates: MomentTemplate.launchTemplates
+            templates: AnimateVideoTemplate.launchTemplates
         )
 
         XCTAssertEqual(form?.template.id, .birthdayMessage)
@@ -146,18 +146,18 @@ final class AnimateCreditGateTests: XCTestCase {
     }
 
     func testMediaRulesEnforceTemplateMinimumsAndMaximums() {
-        XCTAssertFalse(MomentsMediaRules.canUseSelection(template: .birthdayMessage, selectedCount: 0))
-        XCTAssertTrue(MomentsMediaRules.canUseSelection(template: .birthdayMessage, selectedCount: 1))
-        XCTAssertFalse(MomentsMediaRules.canUseSelection(template: .birthdayMessage, selectedCount: 2))
+        XCTAssertFalse(AnimateMediaRules.canUseSelection(template: .birthdayMessage, selectedCount: 0))
+        XCTAssertTrue(AnimateMediaRules.canUseSelection(template: .birthdayMessage, selectedCount: 1))
+        XCTAssertFalse(AnimateMediaRules.canUseSelection(template: .birthdayMessage, selectedCount: 2))
 
-        XCTAssertFalse(MomentsMediaRules.canUseSelection(template: .partyRecap, selectedCount: 0))
-        XCTAssertTrue(MomentsMediaRules.canUseSelection(template: .partyRecap, selectedCount: 1))
-        XCTAssertFalse(MomentsMediaRules.canUseSelection(template: .partyRecap, selectedCount: 2))
+        XCTAssertFalse(AnimateMediaRules.canUseSelection(template: .partyRecap, selectedCount: 0))
+        XCTAssertTrue(AnimateMediaRules.canUseSelection(template: .partyRecap, selectedCount: 1))
+        XCTAssertFalse(AnimateMediaRules.canUseSelection(template: .partyRecap, selectedCount: 2))
     }
 
     func testStoryRulesUseSelectedConvexMediaCount() {
         let assets = (0..<3).map {
-            MomentMediaAsset(
+            AnimateMediaAsset(
                 id: "media-\($0)",
                 platformMediaAssetId: "platform-media-\($0)",
                 uploadId: "upload-\($0)",
@@ -185,7 +185,7 @@ final class AnimateCreditGateTests: XCTestCase {
             )
         }
 
-        var form = MomentSetupForm(template: .birthdayMessage)
+        var form = AnimateVideoSetupForm(template: .birthdayMessage)
         form.occasion = "Trip"
         form.details = "Use the desert photos."
         let media = [
@@ -227,7 +227,7 @@ final class AnimateCreditGateTests: XCTestCase {
 
     func testFinalRenderRulesRequireReadyStatusAndCredits() {
         let balance = AnimateCreditBalance(proMonthly: 0, promotional: 0, purchased: 2)
-        let moment = InProgressMoment(
+        let moment = AnimateVideo(
             id: "moment-1",
             template: .birthdayMessage,
             status: "story_ready",
@@ -263,7 +263,7 @@ final class AnimateCreditGateTests: XCTestCase {
             )
         )
 
-        let staleStoryMoment = InProgressMoment(
+        let staleStoryMoment = AnimateVideo(
             id: moment.id,
             template: moment.template,
             status: "in_progress",

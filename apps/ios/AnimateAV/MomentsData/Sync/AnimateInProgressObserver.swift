@@ -3,7 +3,7 @@ import Foundation
 
 @MainActor
 final class AnimateInProgressObserver: ObservableObject {
-    @Published private(set) var moments: [InProgressMoment] = []
+    @Published private(set) var moments: [AnimateVideo] = []
     @Published private(set) var errorMessage: String?
 
     private let momentsObserver: any AnimateInProgressObserving
@@ -15,7 +15,7 @@ final class AnimateInProgressObserver: ObservableObject {
         momentsObserver = momentsRepository
     }
 
-    var momentsPublisher: AnyPublisher<[InProgressMoment], Never> {
+    var momentsPublisher: AnyPublisher<[AnimateVideo], Never> {
         $moments.eraseToAnyPublisher()
     }
 
@@ -23,7 +23,7 @@ final class AnimateInProgressObserver: ObservableObject {
         $errorMessage.eraseToAnyPublisher()
     }
 
-    func observeInProgressMoments(ownerUserId: String?) {
+    func observeAnimateVideos(ownerUserId: String?) {
         observationGeneration += 1
         let generation = observationGeneration
         momentsTask?.cancel()
@@ -34,7 +34,7 @@ final class AnimateInProgressObserver: ObservableObject {
         AnimateSyncDiagnostics.addObserverBreadcrumb(observer: diagnosticsObserverName, message: "observer_started")
 
         do {
-            let updates = try momentsObserver.observeInProgressMoments(ownerUserId: ownerUserId).values
+            let updates = try momentsObserver.observeAnimateVideos(ownerUserId: ownerUserId).values
 
             momentsTask = Task { [weak self] in
                 do {
@@ -62,7 +62,7 @@ final class AnimateInProgressObserver: ObservableObject {
         }
     }
 
-    func clearInProgressMoments() {
+    func clearAnimateVideos() {
         observationGeneration += 1
         momentsTask?.cancel()
         moments = []

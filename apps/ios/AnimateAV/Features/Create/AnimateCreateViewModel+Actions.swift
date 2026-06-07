@@ -31,11 +31,11 @@ extension AnimateCreateViewModel {
             updateSetupErrorMessage(L10n.string("create.error.waitBeforeDiscard"))
             return
         }
-        guard hasMomentWorkspace || hasRecoverableMomentContext else {
+        guard hasAnimateWorkspace || hasRecoverableMomentContext else {
             updateSetupErrorMessage(L10n.string("create.error.noActiveMoment"))
             return
         }
-        if hasLocalMomentWorkspace {
+        if hasLocalAnimateWorkspace {
             resetActiveMoment(force: true)
             return
         }
@@ -73,7 +73,7 @@ extension AnimateCreateViewModel {
         }
     }
 
-    func removeMedia(_ media: MomentsSelectedMedia) {
+    func removeMedia(_ media: AnimateSelectedMedia) {
         markPreparedStoryMediaEdited()
         mediaUploadWorkflow?.remove(media)
     }
@@ -118,7 +118,7 @@ extension AnimateCreateViewModel {
             let persistedMedia = await self.mediaUploadWorkflow?.persistSelectedMedia(momentId: momentId)
             guard persistedMedia != nil || selectedMedia.isEmpty else {
                 self.updateStoryStatusMessage(self.mediaStatusMessage
-                    ?? MomentsRecoveryCopy.mediaStorySaveFailure()
+                    ?? AnimateRecoveryCopy.mediaStorySaveFailure()
                 )
                 return
             }
@@ -197,7 +197,7 @@ extension AnimateCreateViewModel {
                     return
                 }
                 guard await mediaUploadWorkflow.persistSelectedMediaForFinalVideo(momentId: momentId) else {
-                    self.failFinalVideoCommand(self.mediaStatusMessage ?? MomentsRecoveryCopy.mediaVideoSaveFailure())
+                    self.failFinalVideoCommand(self.mediaStatusMessage ?? AnimateRecoveryCopy.mediaVideoSaveFailure())
                     return
                 }
             }
@@ -263,7 +263,7 @@ extension AnimateCreateViewModel {
         }
     }
 
-    private func resolveMomentIdForPreparation(form: MomentSetupForm) async -> String? {
+    private func resolveMomentIdForPreparation(form: AnimateVideoSetupForm) async -> String? {
         if let activeMomentId {
             return activeMomentId
         }
@@ -277,7 +277,7 @@ extension AnimateCreateViewModel {
         return momentId
     }
 
-    private func persistSetupEditsIfNeeded(momentId: String, form: MomentSetupForm) async -> Bool {
+    private func persistSetupEditsIfNeeded(momentId: String, form: AnimateVideoSetupForm) async -> Bool {
         guard hasPendingLocalSetupEdits else { return true }
         guard let momentCreationWorkflow else { return false }
         return await momentCreationWorkflow.updateMomentSetup(momentId: momentId, form: form)
@@ -285,8 +285,8 @@ extension AnimateCreateViewModel {
 
     private func prepareStoryIfNeeded(
         momentId: String,
-        form: MomentSetupForm,
-        selectedMedia: [MomentsSelectedMedia],
+        form: AnimateVideoSetupForm,
+        selectedMedia: [AnimateSelectedMedia],
         storyWorkflow: StoryWorkflow
     ) async -> Bool {
         var inputSignature = preparedStoryComparisonInputSignature(momentId: momentId)
@@ -297,7 +297,7 @@ extension AnimateCreateViewModel {
 
         let persistedMedia = await mediaUploadWorkflow?.persistSelectedMedia(momentId: momentId)
         guard persistedMedia != nil || selectedMedia.isEmpty else {
-            updateStoryStatusMessage(mediaStatusMessage ?? MomentsRecoveryCopy.mediaStorySaveFailure())
+            updateStoryStatusMessage(mediaStatusMessage ?? AnimateRecoveryCopy.mediaStorySaveFailure())
             return false
         }
         inputSignature = currentStoryInputSignature(
@@ -347,12 +347,12 @@ extension AnimateCreateViewModel {
         return true
     }
 
-    private var activeTemplateContext: (momentId: String, template: MomentTemplate)? {
+    private var activeTemplateContext: (momentId: String, template: AnimateVideoTemplate)? {
         guard let activeMomentId else { return nil }
         return (activeMomentId, form.template)
     }
 
-    private var activeFormContext: (momentId: String, form: MomentSetupForm)? {
+    private var activeFormContext: (momentId: String, form: AnimateVideoSetupForm)? {
         guard let activeMomentId else { return nil }
         return (activeMomentId, form)
     }
@@ -360,6 +360,6 @@ extension AnimateCreateViewModel {
     private func momentCreationFailureMessage() -> String {
         momentCreationWorkflow?.errorMessage
             ?? setupErrorMessage
-            ?? MomentsRecoveryCopy.storyStartFailure()
+            ?? AnimateRecoveryCopy.storyStartFailure()
     }
 }

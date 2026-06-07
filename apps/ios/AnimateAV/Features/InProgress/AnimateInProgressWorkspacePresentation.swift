@@ -2,12 +2,12 @@ import Foundation
 
 struct AnimateInProgressWorkspaceDetailPresentation: Equatable {
     let title = L10n.string("moment.workspace.detailTitle")
-    let nextAction: MomentNextAction
-    let continuationRequest: MomentsContinuationRequest
+    let nextAction: AnimateNextAction
+    let continuationRequest: AnimateContinuationRequest
 
-    init(workspace: MomentWorkspace) {
-        nextAction = MomentStatusRules.nextAction(for: workspace)
-        continuationRequest = MomentsContinuationRequest(
+    init(workspace: AnimateWorkspace) {
+        nextAction = AnimateStatusRules.nextAction(for: workspace)
+        continuationRequest = AnimateContinuationRequest(
             moment: workspace.moment,
             focus: nextAction.continuationFocus
         )

@@ -8,7 +8,7 @@ enum AnimateDateFormatting {
 }
 
 enum AnimateVideoFormatting {
-    static func updatedAt(_ moment: InProgressMoment) -> String {
+    static func updatedAt(_ moment: AnimateVideo) -> String {
         "Updated \(AnimateDateFormatting.formattedDate(milliseconds: moment.updatedAt))"
     }
 
@@ -16,15 +16,15 @@ enum AnimateVideoFormatting {
         "Saved \(AnimateDateFormatting.formattedDate(milliseconds: milliseconds))"
     }
 
-    static func storyUsage(_ moment: InProgressMoment) -> String {
+    static func storyUsage(_ moment: AnimateVideo) -> String {
         L10n.string("moment.kind.story")
     }
 
-    static func statusTitle(_ moment: InProgressMoment) -> String {
-        MomentStatusRules.displayTitle(for: moment.status)
+    static func statusTitle(_ moment: AnimateVideo) -> String {
+        AnimateStatusRules.displayTitle(for: moment.status)
     }
 
-    static func compactDetail(for moment: InProgressMoment, includeTitle: Bool = false) -> String {
+    static func compactDetail(for moment: AnimateVideo, includeTitle: Bool = false) -> String {
         var parts: [String] = []
 
         if includeTitle {
@@ -37,14 +37,14 @@ enum AnimateVideoFormatting {
         return parts.joined(separator: " · ")
     }
 
-    static func mediaAssetDetail(_ media: MomentMediaAsset) -> String {
+    static func mediaAssetDetail(_ media: AnimateMediaAsset) -> String {
         let selection = media.selected ? "Selected" : "Not selected"
-        return "\(selection) · \(MomentStatusRules.displayTitle(for: media.moderationStatus))"
+        return "\(selection) · \(AnimateStatusRules.displayTitle(for: media.moderationStatus))"
     }
 
-    static func artifactDetail(_ artifact: MomentArtifact) -> String {
+    static func artifactDetail(_ artifact: AnimateArtifact) -> String {
         var parts = [
-            MomentStatusRules.displayTitle(for: artifact.status)
+            AnimateStatusRules.displayTitle(for: artifact.status)
         ]
 
         if artifact.hasWatermark == true {

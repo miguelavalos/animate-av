@@ -15,8 +15,8 @@ struct AnimateCreateWorkspaceSummary: Equatable {
     }
 
     static func make(
-        workspace: MomentWorkspace?,
-        finalExport: MomentArtifact?
+        workspace: AnimateWorkspace?,
+        finalExport: AnimateArtifact?
     ) -> AnimateCreateWorkspaceSummary {
         AnimateCreateWorkspaceSummary(
             mediaCount: workspace?.mediaAssets.count ?? 0,
@@ -29,10 +29,10 @@ struct AnimateCreateWorkspaceSummary: Equatable {
 }
 
 struct AnimateCreateMediaSummary: Equatable {
-    var selectedMedia: [MomentsSelectedMedia] = []
-    var syncedMediaAssets: [MomentMediaAsset] = []
+    var selectedMedia: [AnimateSelectedMedia] = []
+    var syncedMediaAssets: [AnimateMediaAsset] = []
     var isImporting = false
-    var importProgress: MomentsMediaImportProgress?
+    var importProgress: AnimateMediaImportProgress?
     var statusMessage: String?
 
     var selectedCount: Int {
@@ -61,12 +61,12 @@ struct AnimateCreateMediaSummary: Equatable {
         return selectedBackendCount > 0 ? selectedBackendCount : syncedMediaAssets.count
     }
 
-    func remainingSlots(template: MomentTemplate) -> Int {
-        MomentsMediaRules.remainingSlots(template: template, selectedCount: effectiveMediaCount)
+    func remainingSlots(template: AnimateVideoTemplate) -> Int {
+        AnimateMediaRules.remainingSlots(template: template, selectedCount: effectiveMediaCount)
     }
 }
 
-struct MomentsMediaImportProgress: Equatable {
+struct AnimateMediaImportProgress: Equatable {
     var completedCount = 0
     var totalCount = 0
 
@@ -82,7 +82,7 @@ struct MomentsMediaImportProgress: Equatable {
 }
 
 struct AnimateCreateStorySummary: Equatable {
-    var savedScenes: [MomentStoryScene] = []
+    var savedScenes: [AnimateStoryScene] = []
     var generatedScenes: [AnimateStorySceneResponse] = []
     var isPlanning = false
     var statusMessage: String?
@@ -138,17 +138,17 @@ struct AnimateCreateStoryScenePresentation: Equatable, Identifiable {
 
 struct AnimateCreateFinalRenderSummary: Equatable {
     var creditCost = 0
-    var renderPlan: MomentsRenderPlanResponse?
+    var renderPlan: AnimateRenderPlanResponse?
     var videoQuote: AnimateVideoQuoteResponse?
-    var finalExport: MomentArtifact?
+    var finalExport: AnimateArtifact?
     var pendingGalleryVideo: AnimateGalleryVideoRecord?
     var canRetryFinalVideoDownload = false
-    var latestFinalJob: MomentRenderJob?
+    var latestFinalJob: AnimateRenderJob?
     var isGenerating = false
     var statusMessage: String?
 
-    var realtimeStatus: MomentsRenderRealtimePresentation? {
-        latestFinalJob.map { MomentsRenderRealtimePresentation(renderJob: $0) }
+    var realtimeStatus: AnimateRenderRealtimePresentation? {
+        latestFinalJob.map { AnimateRenderRealtimePresentation(renderJob: $0) }
     }
 
     var effectiveCreditCost: Int {
@@ -156,7 +156,7 @@ struct AnimateCreateFinalRenderSummary: Equatable {
     }
 }
 
-struct MomentsRenderRealtimePresentation: Equatable {
+struct AnimateRenderRealtimePresentation: Equatable {
     let title: String
     let detail: String
     let progressFraction: Double?
@@ -164,7 +164,7 @@ struct MomentsRenderRealtimePresentation: Equatable {
     let isActive: Bool
     let canEditSetup: Bool
 
-    init(renderJob: MomentRenderJob) {
+    init(renderJob: AnimateRenderJob) {
         isActive = renderJob.isActiveRender
         canEditSetup = renderJob.canEditSetup ?? !renderJob.isActiveRender
         title = Self.title(status: renderJob.status, phase: renderJob.phase)
@@ -197,9 +197,9 @@ struct MomentsRenderRealtimePresentation: Equatable {
         }
     }
 
-    private static func detail(_ renderJob: MomentRenderJob) -> String {
+    private static func detail(_ renderJob: AnimateRenderJob) -> String {
         if renderJob.status == "failed" {
-            return MomentsRecoveryCopy.failedRenderDetail(
+            return AnimateRecoveryCopy.failedRenderDetail(
                 userMessage: renderJob.userMessage,
                 errorMessage: renderJob.errorMessage
             )

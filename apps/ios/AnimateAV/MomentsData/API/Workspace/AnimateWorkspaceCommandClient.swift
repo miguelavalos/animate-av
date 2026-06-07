@@ -9,40 +9,40 @@ struct AnimateWorkspaceCommandClient {
         URL(string: baseURLString.trimmingCharacters(in: .whitespacesAndNewlines)) != nil
     }
 
-    func createMoment(bearerToken: String, form: MomentSetupForm) async throws -> String {
-        let response: MomentWorkspaceCommandResponse = try await send(
+    func createMoment(bearerToken: String, form: AnimateVideoSetupForm) async throws -> String {
+        let response: AnimateWorkspaceCommandResponse = try await send(
             path: ["workspace", "moments"],
             method: "POST",
             bearerToken: bearerToken,
-            body: MomentWorkspaceSetupCommand(form: form)
+            body: AnimateWorkspaceSetupCommand(form: form)
         )
         return response.momentId
     }
 
-    func updateMomentSetup(bearerToken: String, momentId: String, form: MomentSetupForm) async throws {
-        let _: MomentWorkspaceCommandResponse = try await send(
+    func updateMomentSetup(bearerToken: String, momentId: String, form: AnimateVideoSetupForm) async throws {
+        let _: AnimateWorkspaceCommandResponse = try await send(
             path: ["workspace", "moments", momentId, "setup"],
             method: "PATCH",
             bearerToken: bearerToken,
-            body: MomentWorkspaceSetupCommand(form: form)
+            body: AnimateWorkspaceSetupCommand(form: form)
         )
     }
 
     func updateMomentTitle(bearerToken: String, momentId: String, title: String) async throws {
-        let _: MomentWorkspaceCommandResponse = try await send(
+        let _: AnimateWorkspaceCommandResponse = try await send(
             path: ["workspace", "moments", momentId, "title"],
             method: "PATCH",
             bearerToken: bearerToken,
-            body: MomentWorkspaceTitleCommand(title: title)
+            body: AnimateWorkspaceTitleCommand(title: title)
         )
     }
 
     func deleteMoment(bearerToken: String, momentId: String) async throws {
-        let _: MomentWorkspaceCommandResponse = try await send(
+        let _: AnimateWorkspaceCommandResponse = try await send(
             path: ["workspace", "moments", momentId],
             method: "DELETE",
             bearerToken: bearerToken,
-            body: MomentWorkspaceDeleteCommand()
+            body: AnimateWorkspaceDeleteCommand()
         )
     }
 
@@ -84,7 +84,7 @@ struct AnimateWorkspaceCommandClient {
     }
 }
 
-private struct MomentWorkspaceSetupCommand: Encodable {
+private struct AnimateWorkspaceSetupCommand: Encodable {
     let creationMode: String
     let look: String
     let theme: String
@@ -95,7 +95,7 @@ private struct MomentWorkspaceSetupCommand: Encodable {
     let occasion: String?
     let details: String?
 
-    init(form: MomentSetupForm) {
+    init(form: AnimateVideoSetupForm) {
         creationMode = form.creationMode.rawValue
         look = form.look.rawValue
         theme = form.theme.rawValue
@@ -108,16 +108,16 @@ private struct MomentWorkspaceSetupCommand: Encodable {
     }
 }
 
-private struct MomentWorkspaceTitleCommand: Encodable {
+private struct AnimateWorkspaceTitleCommand: Encodable {
     let title: String
 }
 
-private struct MomentWorkspaceDeleteCommand: Encodable {
+private struct AnimateWorkspaceDeleteCommand: Encodable {
     let deleteSourceMedia = true
     let deleteGeneratedArtifacts = true
     let reason = "user request"
 }
 
-private struct MomentWorkspaceCommandResponse: Decodable {
+private struct AnimateWorkspaceCommandResponse: Decodable {
     let momentId: String
 }

@@ -9,15 +9,15 @@ struct AnimateHomePresentation {
     let openInProgressAction: AnimateHomeAction
     let aviGuidanceAction: AnimateHomeAction
     let latestInProgressAction: AnimateHomeAction?
-    let latestInProgressContinuationRequest: MomentsContinuationRequest?
+    let latestInProgressContinuationRequest: AnimateContinuationRequest?
 
     static func make(
         isSignedIn: Bool,
         displayName: String?,
-        momentsSummary: InProgressMomentsSummary
+        momentsSummary: AnimateInProgressSummary
     ) -> AnimateHomePresentation {
-        let latestInProgressMoment = momentsSummary.latestInProgressMoment
-        let latestInProgressAction = latestInProgressMoment.map {
+        let latestAnimateVideo = momentsSummary.latestAnimateVideo
+        let latestInProgressAction = latestAnimateVideo.map {
             AnimateHomeAction(
                 title: L10n.string("home.action.continueLatest.title"),
                 detail: AnimateVideoFormatting.compactDetail(for: $0, includeTitle: true),
@@ -35,7 +35,7 @@ struct AnimateHomePresentation {
                 title: L10n.string("home.action.create.title"),
                 detail: L10n.string("home.action.create.detail"),
                 systemImage: "plus.app",
-                isProminent: latestInProgressMoment == nil,
+                isProminent: latestAnimateVideo == nil,
                 isDisabled: !isSignedIn
             ),
             openInProgressAction: AnimateHomeAction(
@@ -64,7 +64,7 @@ struct AnimateHomePresentation {
         return L10n.string("home.account.signInRequired")
     }
 
-    private static func momentStatusDetail(momentsSummary: InProgressMomentsSummary) -> String {
+    private static func momentStatusDetail(momentsSummary: AnimateInProgressSummary) -> String {
         if momentsSummary.hasMoments {
             return L10n.string("home.momentStatus.synced", momentsSummary.momentCount, momentLabel(momentsSummary.momentCount))
         }
@@ -72,12 +72,12 @@ struct AnimateHomePresentation {
         return L10n.string("home.momentStatus.empty")
     }
 
-    private static func aviBriefDetail(isSignedIn: Bool, momentsSummary: InProgressMomentsSummary) -> String {
+    private static func aviBriefDetail(isSignedIn: Bool, momentsSummary: AnimateInProgressSummary) -> String {
         guard isSignedIn else {
             return L10n.string("home.aviBrief.signIn")
         }
 
-        if let latestMoment = momentsSummary.latestInProgressMoment {
+        if let latestMoment = momentsSummary.latestAnimateVideo {
             return L10n.string("home.aviBrief.continueMoment", latestMoment.title)
         }
 

@@ -1,7 +1,7 @@
 import AVDiagnosticsFoundation
 import Foundation
 
-enum MomentsMediaUploadDiagnostics {
+enum AnimateMediaUploadDiagnostics {
     static func addBreadcrumb(operation: String, source: String? = nil, assetCount: Int? = nil) {
         var metadata: [String: String] = [
             "operation": operation,

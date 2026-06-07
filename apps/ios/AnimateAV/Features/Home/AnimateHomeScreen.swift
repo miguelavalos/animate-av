@@ -15,8 +15,8 @@ struct AnimateHomeScreen: View {
     let retryCredits: () -> Void
     let selectTab: (AnimateRootTab) -> Void
     let startMoment: () -> Void
-    let continueMoment: (MomentsContinuationRequest) -> Void
-    private var momentsSummary: InProgressMomentsSummary { viewModel.momentsSummary }
+    let continueMoment: (AnimateContinuationRequest) -> Void
+    private var momentsSummary: AnimateInProgressSummary { viewModel.momentsSummary }
     private var presentation: AnimateHomePresentation {
         AnimateHomePresentation.make(
             isSignedIn: viewModel.isSignedIn,
@@ -33,7 +33,7 @@ struct AnimateHomeScreen: View {
         retryCredits: @escaping () -> Void,
         selectTab: @escaping (AnimateRootTab) -> Void,
         startMoment: @escaping () -> Void,
-        continueMoment: @escaping (MomentsContinuationRequest) -> Void
+        continueMoment: @escaping (AnimateContinuationRequest) -> Void
     ) {
         self.openSettings = openSettings
         self.openAccount = openAccount

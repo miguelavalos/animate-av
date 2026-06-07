@@ -1,10 +1,10 @@
 import SwiftUI
 
 struct AnimateInProgressWorkspaceDetail: View {
-    let workspace: MomentWorkspace
+    let workspace: AnimateWorkspace
     let isDeletingMoment: Bool
-    let continueMoment: (MomentsContinuationRequest) -> Void
-    let requestDeleteMoment: (InProgressMoment) -> Void
+    let continueMoment: (AnimateContinuationRequest) -> Void
+    let requestDeleteMoment: (AnimateVideo) -> Void
     private var presentation: AnimateInProgressWorkspaceDetailPresentation {
         AnimateInProgressWorkspaceDetailPresentation(workspace: workspace)
     }

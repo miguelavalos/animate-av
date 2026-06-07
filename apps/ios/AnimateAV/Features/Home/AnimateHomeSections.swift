@@ -94,7 +94,7 @@ struct AnimateHomeSignInCard: View {
 
 struct AnimateHomeMomentStatusCard: View {
     let isSignedIn: Bool
-    let momentsSummary: InProgressMomentsSummary
+    let momentsSummary: AnimateInProgressSummary
     let presentation: AnimateHomePresentation
     let openInProgress: () -> Void
 
@@ -137,7 +137,7 @@ struct AnimateHomeMomentStatusCard: View {
 
 struct AnimateHomeNextActionsCard: View {
     let presentation: AnimateHomePresentation
-    let continueMoment: (MomentsContinuationRequest) -> Void
+    let continueMoment: (AnimateContinuationRequest) -> Void
     let startMoment: () -> Void
     let selectTab: (AnimateRootTab) -> Void
 

@@ -1,7 +1,7 @@
 import AVMediaAnalysisFoundation
 import Foundation
 
-struct MomentsSelectedMedia: Identifiable, Equatable {
+struct AnimateSelectedMedia: Identifiable, Equatable {
     let id: UUID
     let sourceLocalIdentifier: String
     let originalFilename: String
@@ -44,7 +44,7 @@ struct AnimateUploadCompletion: Decodable, Equatable, Sendable {
     let bytesReceived: Int
 }
 
-enum MomentsMediaRules {
+enum AnimateMediaRules {
     enum BlockReason {
         case tooFewSelected(missingCount: Int)
         case tooManySelected(extraCount: Int)
@@ -55,11 +55,11 @@ enum MomentsMediaRules {
         let blockReason: BlockReason?
     }
 
-    static func canUseSelection(template: MomentTemplate, selectedCount: Int) -> Bool {
+    static func canUseSelection(template: AnimateVideoTemplate, selectedCount: Int) -> Bool {
         availability(template: template, selectedCount: selectedCount).canUseSelection
     }
 
-    static func availability(template: MomentTemplate, selectedCount: Int) -> Availability {
+    static func availability(template: AnimateVideoTemplate, selectedCount: Int) -> Availability {
         if selectedCount < template.minimumAssets {
             return Availability(
                 canUseSelection: false,
@@ -75,13 +75,13 @@ enum MomentsMediaRules {
         return Availability(canUseSelection: true, blockReason: nil)
     }
 
-    static func remainingSlots(template: MomentTemplate, selectedCount: Int) -> Int {
+    static func remainingSlots(template: AnimateVideoTemplate, selectedCount: Int) -> Int {
         max(template.maximumAssets - selectedCount, 0)
     }
 
     static func selectedCount(
-        localMedia: [MomentsSelectedMedia],
-        syncedMedia: [MomentMediaAsset]
+        localMedia: [AnimateSelectedMedia],
+        syncedMedia: [AnimateMediaAsset]
     ) -> Int {
         if localMedia.isEmpty {
             let selectedSyncedCount = syncedMedia.filter(\.selected).count
@@ -107,7 +107,7 @@ enum MomentsMediaRules {
         }
     }
 
-    static func message(template: MomentTemplate, selectedCount: Int) -> String {
+    static func message(template: AnimateVideoTemplate, selectedCount: Int) -> String {
         selectionMessage(
             availability(template: template, selectedCount: selectedCount),
             tooFewMessage: { "Add \($0) more." },

@@ -1,6 +1,6 @@
 import Foundation
 
-struct MomentArtifact: Identifiable, Decodable, Equatable {
+struct AnimateArtifact: Identifiable, Decodable, Equatable {
     let id: String
     let workflowArtifactId: String?
     let kind: String

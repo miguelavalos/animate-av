@@ -49,21 +49,21 @@ struct AnimateCreateWorkflowContent: View {
 }
 
 private struct AnimateCreateMediaFirstWorkspace: View {
-    @Binding var form: MomentSetupForm
-    let selectedStyle: MomentCreationStyle
-    let autoStyleSuggestion: MomentsMediaAutoStyleSuggestion?
+    @Binding var form: AnimateVideoSetupForm
+    let selectedStyle: AnimateVideoCreationStyle
+    let autoStyleSuggestion: AnimateMediaAutoStyleSuggestion?
     let canUndoAutoStyleSuggestion: Bool
-    let styles: [MomentCreationStyle]
-    let selectedMusicPreset: MomentMusicPreset
+    let styles: [AnimateVideoCreationStyle]
+    let selectedMusicPreset: AnimateVideoMusicPreset
     let presentation: AnimateCreateWorkflowPresentation
     let isPreparingStory: Bool
     @Binding var pickerItems: [PhotosPickerItem]
     let importPickerItems: ([PhotosPickerItem]) -> Void
-    let removeMedia: (MomentsSelectedMedia) -> Void
+    let removeMedia: (AnimateSelectedMedia) -> Void
     let restoreLocalMediaForEditing: () -> Void
-    let selectStyle: (MomentCreationStyle) -> Void
-    let selectLook: (MomentLook) -> Void
-    let selectMusicPreset: (MomentMusicPreset) -> Void
+    let selectStyle: (AnimateVideoCreationStyle) -> Void
+    let selectLook: (AnimateVideoLook) -> Void
+    let selectMusicPreset: (AnimateVideoMusicPreset) -> Void
     let useAutoStyleSuggestion: () -> Void
     let undoAutoStyleSuggestion: () -> Void
     let openPickerRequest: Int
@@ -472,7 +472,7 @@ struct AnimateCreateBlockingPreparationView: View {
         mode.message(itemCount: progress?.totalCount)
     }
 
-    private var progress: MomentsMediaImportProgress? {
+    private var progress: AnimateMediaImportProgress? {
         presentation.mediaSummary.importProgress
     }
 
@@ -732,13 +732,13 @@ private struct AnimateCreateFinalVideoRecoveryScene: View {
 
 private struct AnimateCreateVideoDirectionCard: View {
     let presentation: AnimateCreateWorkflowPresentation
-    let selectedLook: MomentLook
+    let selectedLook: AnimateVideoLook
     let note: String
-    let selectedStyle: MomentCreationStyle
-    let selectedMusicPreset: MomentMusicPreset
-    let autoStyleSuggestion: MomentsMediaAutoStyleSuggestion?
+    let selectedStyle: AnimateVideoCreationStyle
+    let selectedMusicPreset: AnimateVideoMusicPreset
+    let autoStyleSuggestion: AnimateMediaAutoStyleSuggestion?
     let canUndoAutoStyleSuggestion: Bool
-    let styles: [MomentCreationStyle]
+    let styles: [AnimateVideoCreationStyle]
     let useAutoStyleSuggestion: () -> Void
     let undoAutoStyleSuggestion: () -> Void
     let editMedia: () -> Void
@@ -1814,11 +1814,11 @@ private struct AnimateCreateFinalVideoConfirmationSheet: View {
         }
     }
 
-    private var plan: MomentsRenderPlan? {
+    private var plan: AnimateRenderPlan? {
         action.summary.renderPlan?.plan
     }
 
-    private var watermark: MomentsRenderWatermarkPlan? {
+    private var watermark: AnimateRenderWatermarkPlan? {
         action.summary.renderPlan?.watermark
     }
 
@@ -2061,7 +2061,7 @@ private struct AnimateCreateConfirmationMetric: View {
 }
 
 private struct AnimateCreateRealtimeRenderStatusPanel: View {
-    let status: MomentsRenderRealtimePresentation
+    let status: AnimateRenderRealtimePresentation
 
     var body: some View {
         VStack(alignment: .leading, spacing: 9) {
@@ -2111,13 +2111,13 @@ private struct AnimateCreateRealtimeRenderStatusPanel: View {
 }
 
 private struct AnimateCreateGuideSummaryCard: View {
-    @Binding var form: MomentSetupForm
-    let style: MomentCreationStyle
-    let selectedMusicPreset: MomentMusicPreset
+    @Binding var form: AnimateVideoSetupForm
+    let style: AnimateVideoCreationStyle
+    let selectedMusicPreset: AnimateVideoMusicPreset
     let changeTheme: () -> Void
     let changeLook: () -> Void
     let changeVoice: () -> Void
-    let selectMusicPreset: (MomentMusicPreset) -> Void
+    let selectMusicPreset: (AnimateVideoMusicPreset) -> Void
 
     var body: some View {
         AVAppShellCard {
@@ -2223,9 +2223,9 @@ private struct AnimateCreateOptionDivider: View {
 }
 
 private struct AnimateCreateOptionsAviPanel: View {
-    let selectedStyle: MomentCreationStyle
-    let selectedMusicPreset: MomentMusicPreset
-    let autoStyleSuggestion: MomentsMediaAutoStyleSuggestion?
+    let selectedStyle: AnimateVideoCreationStyle
+    let selectedMusicPreset: AnimateVideoMusicPreset
+    let autoStyleSuggestion: AnimateMediaAutoStyleSuggestion?
     let canUndoAutoStyleSuggestion: Bool
     let useAutoStyleSuggestion: () -> Void
     let undoAutoStyleSuggestion: () -> Void
@@ -2310,7 +2310,7 @@ private struct AnimateCreateOptionsAviPanel: View {
         autoStyleSuggestion != nil && !isUsingAviSuggestion
     }
 
-    private func suggestedStyleTitle(for id: MomentCreationStyleID) -> String {
+    private func suggestedStyleTitle(for id: AnimateVideoCreationStyleID) -> String {
         switch id {
         case .celebration: L10n.string("create.theme.celebration.title")
         case .eventRecap: L10n.string("create.theme.eventRecap.title")
@@ -2557,15 +2557,15 @@ private struct AnimateCreateTwoColumnGrid<Item: Identifiable, Content: View>: Vi
 }
 
 private struct AnimateCreateLookChooserPage: View {
-    let selectedLook: MomentLook
-    let selectLook: (MomentLook) -> Void
+    let selectedLook: AnimateVideoLook
+    let selectLook: (AnimateVideoLook) -> Void
     let dismiss: () -> Void
 
-    @State private var setupLook: MomentLook
+    @State private var setupLook: AnimateVideoLook
 
     init(
-        selectedLook: MomentLook,
-        selectLook: @escaping (MomentLook) -> Void,
+        selectedLook: AnimateVideoLook,
+        selectLook: @escaping (AnimateVideoLook) -> Void,
         dismiss: @escaping () -> Void
     ) {
         self.selectedLook = selectedLook
@@ -2613,7 +2613,7 @@ private struct AnimateCreateLookChooserPage: View {
                             }
                         }
 
-                        AnimateCreateTwoColumnGrid(items: MomentLook.selectorOrder) { look in
+                        AnimateCreateTwoColumnGrid(items: AnimateVideoLook.selectorOrder) { look in
                             AnimateCreateLookImageTile(
                                 look: look,
                                 isSelected: setupLook == look,
@@ -2648,7 +2648,7 @@ private struct AnimateCreateLookChooserPage: View {
 }
 
 private struct AnimateCreateLookImageTile: View {
-    let look: MomentLook
+    let look: AnimateVideoLook
     let isSelected: Bool
     let selectLook: () -> Void
 
@@ -2718,17 +2718,17 @@ private struct AnimateCreateLookImageTile: View {
 }
 
 private struct AnimateCreateVoiceChooserPage: View {
-    let allowedMusic: [MomentMusicPreset]
-    let selectedMusicPreset: MomentMusicPreset
-    let selectMusicPreset: (MomentMusicPreset) -> Void
+    let allowedMusic: [AnimateVideoMusicPreset]
+    let selectedMusicPreset: AnimateVideoMusicPreset
+    let selectMusicPreset: (AnimateVideoMusicPreset) -> Void
     let dismiss: () -> Void
 
-    @State private var setupMusicPreset: MomentMusicPreset
+    @State private var setupMusicPreset: AnimateVideoMusicPreset
 
     init(
-        allowedMusic: [MomentMusicPreset],
-        selectedMusicPreset: MomentMusicPreset,
-        selectMusicPreset: @escaping (MomentMusicPreset) -> Void,
+        allowedMusic: [AnimateVideoMusicPreset],
+        selectedMusicPreset: AnimateVideoMusicPreset,
+        selectMusicPreset: @escaping (AnimateVideoMusicPreset) -> Void,
         dismiss: @escaping () -> Void
     ) {
         self.allowedMusic = allowedMusic
@@ -2763,7 +2763,7 @@ private struct AnimateCreateVoiceChooserPage: View {
         dismiss()
     }
 
-    private func detail(for preset: MomentMusicPreset) -> String {
+    private func detail(for preset: AnimateVideoMusicPreset) -> String {
         switch preset {
         case .warm:
             return L10n.string("create.selector.voice.warm.detail")
@@ -2934,17 +2934,17 @@ private struct AnimateCreateVisualOptionTile: View {
 }
 
 private struct AnimateCreateThemeChooserPage: View {
-    let styles: [MomentCreationStyle]
-    let selectedStyle: MomentCreationStyle
-    let selectStyle: (MomentCreationStyle) -> Void
+    let styles: [AnimateVideoCreationStyle]
+    let selectedStyle: AnimateVideoCreationStyle
+    let selectStyle: (AnimateVideoCreationStyle) -> Void
     let dismiss: () -> Void
 
-    @State private var setupStyleID: MomentCreationStyleID
+    @State private var setupStyleID: AnimateVideoCreationStyleID
 
     init(
-        styles: [MomentCreationStyle],
-        selectedStyle: MomentCreationStyle,
-        selectStyle: @escaping (MomentCreationStyle) -> Void,
+        styles: [AnimateVideoCreationStyle],
+        selectedStyle: AnimateVideoCreationStyle,
+        selectStyle: @escaping (AnimateVideoCreationStyle) -> Void,
         dismiss: @escaping () -> Void
     ) {
         self.styles = styles
@@ -3086,7 +3086,7 @@ private struct AnimateCreateChooserHeader: View {
 }
 
 private struct AnimateCreateThemeImageTile: View {
-    let style: MomentCreationStyle
+    let style: AnimateVideoCreationStyle
     let isSelected: Bool
     let selectStyle: () -> Void
 

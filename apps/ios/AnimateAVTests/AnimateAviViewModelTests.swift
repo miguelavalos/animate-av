@@ -7,7 +7,7 @@ final class AnimateAviViewModelTests: XCTestCase {
     func testSignedOutGuidanceAsksForAuthentication() {
         let presentation = AnimateAviPresentation.make(
             isSignedIn: false,
-            momentsSummary: InProgressMomentsSummary(),
+            momentsSummary: AnimateInProgressSummary(),
             creditBalance: .empty
         )
 
@@ -19,7 +19,7 @@ final class AnimateAviViewModelTests: XCTestCase {
     func testActiveVideosDriveWorkflowFocus() {
         let presentation = AnimateAviPresentation.make(
             isSignedIn: true,
-            momentsSummary: InProgressMomentsSummary.make(from: [
+            momentsSummary: AnimateInProgressSummary.make(from: [
                 makeMoment(id: "active-1", status: "story_ready", updatedAt: 20),
                 makeMoment(id: "done-1", status: "gallery_ready", updatedAt: 10)
             ]),
@@ -34,7 +34,7 @@ final class AnimateAviViewModelTests: XCTestCase {
     func testCreditGuidanceUsesSpendableBalance() {
         let presentation = AnimateAviPresentation.make(
             isSignedIn: true,
-            momentsSummary: InProgressMomentsSummary(),
+            momentsSummary: AnimateInProgressSummary(),
             creditBalance: AnimateCreditBalance(proMonthly: 2, promotional: 1, purchased: 3)
         )
 
@@ -44,7 +44,7 @@ final class AnimateAviViewModelTests: XCTestCase {
     func testCreditGuidanceUsesSingularSpendableCredit() {
         let presentation = AnimateAviPresentation.make(
             isSignedIn: true,
-            momentsSummary: InProgressMomentsSummary(),
+            momentsSummary: AnimateInProgressSummary(),
             creditBalance: AnimateCreditBalance(proMonthly: 1, promotional: 0, purchased: 0)
         )
 
@@ -54,7 +54,7 @@ final class AnimateAviViewModelTests: XCTestCase {
     func testZeroCreditsExplainFinalExportRequirement() {
         let presentation = AnimateAviPresentation.make(
             isSignedIn: true,
-            momentsSummary: InProgressMomentsSummary(),
+            momentsSummary: AnimateInProgressSummary(),
             creditBalance: .empty
         )
 
@@ -67,7 +67,7 @@ final class AnimateAviViewModelTests: XCTestCase {
     func testLoadingCreditsDoNotReadAsZeroCredits() {
         let presentation = AnimateAviPresentation.make(
             isSignedIn: true,
-            momentsSummary: InProgressMomentsSummary(),
+            momentsSummary: AnimateInProgressSummary(),
             creditBalance: .empty,
             creditBalanceLoadState: .loading
         )
@@ -78,7 +78,7 @@ final class AnimateAviViewModelTests: XCTestCase {
     func testOfflineCreditsExplainNetworkState() {
         let presentation = AnimateAviPresentation.make(
             isSignedIn: true,
-            momentsSummary: InProgressMomentsSummary(),
+            momentsSummary: AnimateInProgressSummary(),
             creditBalance: .empty,
             creditBalanceLoadState: .offline
         )
@@ -101,7 +101,7 @@ final class AnimateAviViewModelTests: XCTestCase {
             AnimateCreditBalance(proMonthly: 1, promotional: 0, purchased: 0)
         )
         summaryProvider.summary.send(
-            InProgressMomentsSummary.make(from: [
+            AnimateInProgressSummary.make(from: [
                 makeMoment(id: "active-1", status: "story_ready", updatedAt: 20)
             ])
         )
@@ -110,8 +110,8 @@ final class AnimateAviViewModelTests: XCTestCase {
         XCTAssertTrue(viewModel.presentation.creditGuidanceMessage.contains("1 credit available"))
     }
 
-    private func makeMoment(id: String, status: String, updatedAt: Double) -> InProgressMoment {
-        InProgressMoment(
+    private func makeMoment(id: String, status: String, updatedAt: Double) -> AnimateVideo {
+        AnimateVideo(
             id: id,
             template: .birthdayMessage,
             status: status,
@@ -127,10 +127,10 @@ final class AnimateAviViewModelTests: XCTestCase {
     }
 }
 
-private final class AviMomentsSummaryProvider: InProgressMomentsSummaryProviding {
-    let summary = CurrentValueSubject<InProgressMomentsSummary, Never>(InProgressMomentsSummary())
+private final class AviMomentsSummaryProvider: AnimateInProgressSummaryProviding {
+    let summary = CurrentValueSubject<AnimateInProgressSummary, Never>(AnimateInProgressSummary())
 
-    var inProgressSummaryPublisher: AnyPublisher<InProgressMomentsSummary, Never> {
+    var inProgressSummaryPublisher: AnyPublisher<AnimateInProgressSummary, Never> {
         summary.eraseToAnyPublisher()
     }
 }

@@ -83,11 +83,11 @@ struct AnimateCreditSpendPlan: Equatable {
 }
 
 enum AnimateCreditGate {
-    static func canAfford(_ template: MomentTemplate, balance: AnimateCreditBalance) -> Bool {
+    static func canAfford(_ template: AnimateVideoTemplate, balance: AnimateCreditBalance) -> Bool {
         balance.spendable >= template.creditCost
     }
 
-    static func canAffordAny(_ templates: [MomentTemplate], balance: AnimateCreditBalance) -> Bool {
+    static func canAffordAny(_ templates: [AnimateVideoTemplate], balance: AnimateCreditBalance) -> Bool {
         templates.contains { canAfford($0, balance: balance) }
     }
 

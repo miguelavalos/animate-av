@@ -5,7 +5,7 @@ struct AnimateInProgressWorkspaceHeaderPresentation: Equatable {
     let updatedAtTitle: String
     let countsTitle: String
 
-    init(workspace: MomentWorkspace) {
+    init(workspace: AnimateWorkspace) {
         title = workspace.moment.title
         updatedAtTitle = AnimateVideoFormatting.updatedAt(workspace.moment)
         countsTitle = [

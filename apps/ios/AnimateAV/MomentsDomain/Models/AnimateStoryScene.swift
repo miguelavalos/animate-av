@@ -1,6 +1,6 @@
 import Foundation
 
-struct MomentStoryScene: Identifiable, Decodable, Equatable {
+struct AnimateStoryScene: Identifiable, Decodable, Equatable {
     let id: String
     let sceneIndex: Double
     let mediaAssetIds: [String]

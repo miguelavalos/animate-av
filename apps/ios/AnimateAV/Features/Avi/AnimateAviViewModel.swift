@@ -3,7 +3,7 @@ import Foundation
 
 @MainActor
 final class AnimateAviViewModel: ObservableObject {
-    @Published private(set) var momentsSummary = InProgressMomentsSummary()
+    @Published private(set) var momentsSummary = AnimateInProgressSummary()
     @Published private(set) var isSignedIn = false
     @Published private(set) var creditBalance = AnimateCreditBalance.empty
     @Published private(set) var creditBalanceLoadState = AnimateCreditBalanceLoadState.signedOut
@@ -20,7 +20,7 @@ final class AnimateAviViewModel: ObservableObject {
         )
     }
 
-    func bind(to summaryProvider: any InProgressMomentsSummaryProviding) {
+    func bind(to summaryProvider: any AnimateInProgressSummaryProviding) {
         momentsCancellables.removeAll()
 
         summaryProvider.inProgressSummaryPublisher

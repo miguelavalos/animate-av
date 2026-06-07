@@ -14,7 +14,7 @@ struct AnimateCreditReservationResponse: Decodable, Equatable {
     let updatedAt: String
 }
 
-struct MomentsStartWorkflowResponse: Decodable, Equatable {
+struct AnimateStartWorkflowResponse: Decodable, Equatable {
     let appId: String
     let momentId: String
     let renderJobId: String
@@ -23,7 +23,7 @@ struct MomentsStartWorkflowResponse: Decodable, Equatable {
     let startedAt: String
 }
 
-struct MomentsRenderPlanRequest: Encodable {
+struct AnimateRenderPlanRequest: Encodable {
     let appId = "animateav"
     let momentId: String
     let creationMode: String
@@ -44,7 +44,7 @@ struct MomentsRenderPlanRequest: Encodable {
     let renderOptionId: String?
 }
 
-struct MomentsConfirmFinalRenderRequest: Encodable {
+struct AnimateConfirmFinalRenderRequest: Encodable {
     let appId = "animateav"
     let momentId: String
     let creationMode: String
@@ -67,22 +67,22 @@ struct MomentsConfirmFinalRenderRequest: Encodable {
     let idempotencyKey: String
 }
 
-struct MomentsConfirmFinalRenderResponse: Decodable, Equatable {
+struct AnimateConfirmFinalRenderResponse: Decodable, Equatable {
     let appId: String
     let momentId: String
     let planId: String
     let reservation: AnimateCreditReservationResponse
-    let workflow: MomentsStartWorkflowResponse
-    let renderPlan: MomentsRenderPlanResponse
+    let workflow: AnimateStartWorkflowResponse
+    let renderPlan: AnimateRenderPlanResponse
     let confirmedAt: String
 }
 
-struct MomentsRenderPlanResponse: Decodable, Equatable {
+struct AnimateRenderPlanResponse: Decodable, Equatable {
     let appId: String
     let momentId: String
     let planId: String
-    let watermark: MomentsRenderWatermarkPlan?
-    let plan: MomentsRenderPlan
+    let watermark: AnimateRenderWatermarkPlan?
+    let plan: AnimateRenderPlan
     let canCreateVideo: Bool
     let createVideoBlockers: [String]
     let generatedAt: String
@@ -102,8 +102,8 @@ struct MomentsRenderPlanResponse: Decodable, Equatable {
         appId: String,
         momentId: String,
         planId: String,
-        watermark: MomentsRenderWatermarkPlan? = nil,
-        plan: MomentsRenderPlan,
+        watermark: AnimateRenderWatermarkPlan? = nil,
+        plan: AnimateRenderPlan,
         canCreateVideo: Bool,
         createVideoBlockers: [String] = [],
         generatedAt: String
@@ -123,15 +123,15 @@ struct MomentsRenderPlanResponse: Decodable, Equatable {
         appId = try container.decode(String.self, forKey: .appId)
         momentId = try container.decode(String.self, forKey: .momentId)
         planId = try container.decode(String.self, forKey: .planId)
-        watermark = try container.decodeIfPresent(MomentsRenderWatermarkPlan.self, forKey: .watermark)
-        plan = try container.decode(MomentsRenderPlan.self, forKey: .plan)
+        watermark = try container.decodeIfPresent(AnimateRenderWatermarkPlan.self, forKey: .watermark)
+        plan = try container.decode(AnimateRenderPlan.self, forKey: .plan)
         canCreateVideo = try container.decode(Bool.self, forKey: .canCreateVideo)
         createVideoBlockers = try container.decodeIfPresent([String].self, forKey: .createVideoBlockers) ?? []
         generatedAt = try container.decode(String.self, forKey: .generatedAt)
     }
 }
 
-struct MomentsRenderWatermarkPlan: Decodable, Equatable {
+struct AnimateRenderWatermarkPlan: Decodable, Equatable {
     let includedForPro: Bool
     let userHasWatermarkFree: Bool
     let nonProRemovalCreditCost: Int
@@ -139,13 +139,13 @@ struct MomentsRenderWatermarkPlan: Decodable, Equatable {
     let watermarkCreditCost: Int
 }
 
-struct MomentsArtifactDownloadRequest: Encodable {
+struct AnimateArtifactDownloadRequest: Encodable {
     let appId = "animateav"
     let momentId: String
     let artifactId: String
 }
 
-struct MomentsArtifactDownloadResponse: Decodable, Equatable {
+struct AnimateArtifactDownloadResponse: Decodable, Equatable {
     let appId: String
     let momentId: String?
     let artifactId: String
@@ -158,7 +158,7 @@ struct MomentsArtifactDownloadResponse: Decodable, Equatable {
     let generatedAt: String
 }
 
-struct MomentsRenderPlan: Decodable, Equatable {
+struct AnimateRenderPlan: Decodable, Equatable {
     let schemaVersion: Int?
     let minimumDurationMs: Int?
     let targetDurationMs: Int
@@ -188,8 +188,8 @@ enum AnimateFinalRenderRules {
     }
 
     static func canGenerate(
-        moment: InProgressMoment,
-        template: MomentTemplate,
+        moment: AnimateVideo,
+        template: AnimateVideoTemplate,
         balance: AnimateCreditBalance,
         storySceneCount: Int = 0
     ) -> Bool {
@@ -201,7 +201,7 @@ enum AnimateFinalRenderRules {
         ).canGenerate
     }
 
-    static func canPreparePlan(moment: InProgressMoment?, storySceneCount: Int = 0) -> Bool {
+    static func canPreparePlan(moment: AnimateVideo?, storySceneCount: Int = 0) -> Bool {
         if storySceneCount > 0 { return true }
         guard let moment else { return false }
         return moment.status == "story_ready"
@@ -209,8 +209,8 @@ enum AnimateFinalRenderRules {
     }
 
     static func availability(
-        moment: InProgressMoment?,
-        template: MomentTemplate,
+        moment: AnimateVideo?,
+        template: AnimateVideoTemplate,
         balance: AnimateCreditBalance,
         storySceneCount: Int = 0
     ) -> Availability {

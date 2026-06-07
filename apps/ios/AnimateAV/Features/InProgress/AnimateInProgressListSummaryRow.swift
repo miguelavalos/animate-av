@@ -1,7 +1,7 @@
 import SwiftUI
 
 struct AnimateInProgressListSummaryRow: View {
-    let pills: [InProgressMomentsSummaryPresentation]
+    let pills: [AnimateInProgressSummaryPresentation]
 
     var body: some View {
         HStack(spacing: 10) {

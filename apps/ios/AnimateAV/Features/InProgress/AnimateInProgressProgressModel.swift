@@ -3,11 +3,11 @@ import Foundation
 struct AnimateInProgressProgressModel {
     let phases: [AnimateInProgressProgressPhase]
 
-    init(workspace: MomentWorkspace) {
+    init(workspace: AnimateWorkspace) {
         phases = [
             AnimateInProgressProgressPhase(
                 title: L10n.string("moment.progress.moment"),
-                detail: MomentStatusRules.displayTitle(for: workspace.moment.status),
+                detail: AnimateStatusRules.displayTitle(for: workspace.moment.status),
                 systemImage: "doc.text",
                 state: .complete
             ),
@@ -32,20 +32,20 @@ struct AnimateInProgressProgressModel {
         ]
     }
 
-    private static func renderDetail(workspace: MomentWorkspace, kind: String, fallback: String) -> String {
+    private static func renderDetail(workspace: AnimateWorkspace, kind: String, fallback: String) -> String {
         if let artifact = workspace.latestArtifact(kind: artifactKind(for: kind)) {
-            return MomentStatusRules.displayTitle(for: artifact.status)
+            return AnimateStatusRules.displayTitle(for: artifact.status)
         }
 
         guard let job = workspace.latestRenderJob(kind: kind) else {
             return fallback
         }
 
-        return MomentStatusRules.displayTitle(for: job.status)
+        return AnimateStatusRules.displayTitle(for: job.status)
     }
 
     private static func renderState(
-        workspace: MomentWorkspace,
+        workspace: AnimateWorkspace,
         kind: String,
         artifactKind: String
     ) -> AnimateInProgressProgressState {

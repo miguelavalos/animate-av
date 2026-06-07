@@ -29,7 +29,7 @@ struct AnimateStoryRequest: Encodable {
 enum AnimateStoryInputSignature {
     static func make(
         momentId: String,
-        form: MomentSetupForm,
+        form: AnimateVideoSetupForm,
         selectedMedia: [AnimateStoryMedia]
     ) -> String {
         let mediaSignature = selectedMedia
@@ -103,13 +103,13 @@ enum AnimateStoryRules {
         let blockReason: BlockReason?
     }
 
-    static func canPlan(mediaAssets: [MomentMediaAsset], template: MomentTemplate) -> Bool {
+    static func canPlan(mediaAssets: [AnimateMediaAsset], template: AnimateVideoTemplate) -> Bool {
         availability(mediaAssets: mediaAssets, template: template).canPlan
     }
 
     static func availability(
-        mediaAssets: [MomentMediaAsset]?,
-        template: MomentTemplate
+        mediaAssets: [AnimateMediaAsset]?,
+        template: AnimateVideoTemplate
     ) -> Availability {
         guard let mediaAssets else {
             return Availability(canPlan: false, blockReason: .missingMedia)
@@ -117,7 +117,7 @@ enum AnimateStoryRules {
 
         let selectedMediaCount = mediaAssets.filter(\.selected).count
         let selectedCount = selectedMediaCount > 0 ? selectedMediaCount : mediaAssets.count
-        switch MomentsMediaRules.availability(template: template, selectedCount: selectedCount).blockReason {
+        switch AnimateMediaRules.availability(template: template, selectedCount: selectedCount).blockReason {
         case nil:
             return Availability(canPlan: true, blockReason: nil)
         case .tooFewSelected(let missingCount):

@@ -1,6 +1,6 @@
 import Foundation
 
-enum MomentsRecoveryCopy {
+enum AnimateRecoveryCopy {
     static func mediaImportFailure() -> String {
         L10n.string("recovery.mediaImportFailure")
     }
@@ -42,7 +42,7 @@ enum MomentsRecoveryCopy {
     }
 
     static func artifactActionDetail(kind: String, status: String) -> String {
-        let kindTitle = MomentStatusRules.displayKind(kind)
+        let kindTitle = AnimateStatusRules.displayKind(kind)
 
         switch status {
         case "available":

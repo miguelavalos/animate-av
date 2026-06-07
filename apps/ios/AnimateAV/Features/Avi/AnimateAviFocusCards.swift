@@ -5,7 +5,7 @@ struct AnimateAviCurrentFocusCard: View {
     let workflowFocusTitle: String
     let workflowFocusMessage: String
     let workflowFocusSystemImage: String
-    let momentsSummary: InProgressMomentsSummary
+    let momentsSummary: AnimateInProgressSummary
     let creditBalance: AnimateCreditBalance
     let creditBalanceLoadState: AnimateCreditBalanceLoadState
 

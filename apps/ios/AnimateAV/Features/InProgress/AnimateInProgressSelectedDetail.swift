@@ -2,14 +2,14 @@ import SwiftUI
 
 struct AnimateInProgressSelectedDetail: View {
     let selectedMomentId: String?
-    let isLoadingMomentWorkspace: Bool
-    let activeWorkspace: MomentWorkspace?
+    let isLoadingAnimateWorkspace: Bool
+    let activeWorkspace: AnimateWorkspace?
     let isDeletingMoment: Bool
-    let continueMoment: (MomentsContinuationRequest) -> Void
-    let requestDeleteMoment: (InProgressMoment) -> Void
+    let continueMoment: (AnimateContinuationRequest) -> Void
+    let requestDeleteMoment: (AnimateVideo) -> Void
 
     var body: some View {
-        if isLoadingMomentWorkspace {
+        if isLoadingAnimateWorkspace {
             Divider()
                 .padding(.vertical, 8)
             AnimateInProgressLoadingDetail()

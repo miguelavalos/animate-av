@@ -12,7 +12,7 @@ final class AnimateMediaRulesTests: XCTestCase {
         ]
 
         XCTAssertEqual(
-            MomentsMediaRules.selectedCount(localMedia: [], syncedMedia: syncedMedia),
+            AnimateMediaRules.selectedCount(localMedia: [], syncedMedia: syncedMedia),
             2
         )
     }
@@ -29,22 +29,22 @@ final class AnimateMediaRulesTests: XCTestCase {
         ]
 
         XCTAssertEqual(
-            MomentsMediaRules.selectedCount(localMedia: localMedia, syncedMedia: syncedMedia),
+            AnimateMediaRules.selectedCount(localMedia: localMedia, syncedMedia: syncedMedia),
             1
         )
     }
 
     func testRemainingSlotsNeverReturnsNegativeCount() {
         XCTAssertEqual(
-            MomentsMediaRules.remainingSlots(template: .birthdayMessage, selectedCount: 11),
+            AnimateMediaRules.remainingSlots(template: .birthdayMessage, selectedCount: 11),
             0
         )
         XCTAssertEqual(
-            MomentsMediaRules.remainingSlots(template: .birthdayMessage, selectedCount: 12),
+            AnimateMediaRules.remainingSlots(template: .birthdayMessage, selectedCount: 12),
             0
         )
         XCTAssertEqual(
-            MomentsMediaRules.remainingSlots(template: .birthdayMessage, selectedCount: 13),
+            AnimateMediaRules.remainingSlots(template: .birthdayMessage, selectedCount: 13),
             0
         )
     }
@@ -66,9 +66,9 @@ final class AnimateMediaRulesTests: XCTestCase {
             )
         }
 
-        let suggestion = MomentsMediaAutoStyleSuggester.suggest(
+        let suggestion = AnimateMediaAutoStyleSuggester.suggest(
             media: media,
-            styles: MomentCreationStyle.launchStyles
+            styles: AnimateVideoCreationStyle.launchStyles
         )
 
         XCTAssertEqual(suggestion?.styleID, .travel)
@@ -80,8 +80,8 @@ final class AnimateMediaRulesTests: XCTestCase {
         id: String,
         selected: Bool,
         analysis: AVLocalMediaAnalysis? = nil
-    ) -> MomentsSelectedMedia {
-        MomentsSelectedMedia(
+    ) -> AnimateSelectedMedia {
+        AnimateSelectedMedia(
             id: UUID(uuidString: id)!,
             sourceLocalIdentifier: id,
             originalFilename: "\(id).jpg",
@@ -97,8 +97,8 @@ final class AnimateMediaRulesTests: XCTestCase {
         )
     }
 
-    private func makeSyncedMedia(id: String, selected: Bool) -> MomentMediaAsset {
-        MomentMediaAsset(
+    private func makeSyncedMedia(id: String, selected: Bool) -> AnimateMediaAsset {
+        AnimateMediaAsset(
             id: id,
             platformMediaAssetId: "platform-\(id)",
             uploadId: "upload-\(id)",

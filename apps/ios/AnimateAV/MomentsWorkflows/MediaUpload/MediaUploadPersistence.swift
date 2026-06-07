@@ -25,14 +25,14 @@ enum MediaUploadPersistence {
     private static let uploadConcurrencyLimit = 3
 
     private struct UploadedMedia {
-        let media: MomentsSelectedMedia
+        let media: AnimateSelectedMedia
         let preparedUpload: AnimatePreparedUpload
         let uploadCompletion: AnimateUploadCompletion
     }
 
     @MainActor
     static func save(
-        imported mediaItems: [MomentsSelectedMedia],
+        imported mediaItems: [AnimateSelectedMedia],
         ownerUserId: String,
         bearerToken: String,
         momentId: String,
@@ -85,7 +85,7 @@ enum MediaUploadPersistence {
 
     @MainActor
     private static func uploadMedia(
-        _ mediaItems: [MomentsSelectedMedia],
+        _ mediaItems: [AnimateSelectedMedia],
         momentId: String,
         bearerToken: String,
         uploadClient: AnimateUploadClient,
@@ -141,7 +141,7 @@ enum MediaUploadPersistence {
 enum MomentsLocalMediaThumbnailCache {
     private static let thumbnailSize = CGSize(width: 320, height: 320)
 
-    static func store(_ media: MomentsSelectedMedia, mediaAssetId: String) {
+    static func store(_ media: AnimateSelectedMedia, mediaAssetId: String) {
         guard let image = UIImage(data: media.data) else { return }
         store(image, mediaAssetId: mediaAssetId, platformMediaAssetId: media.sourceLocalIdentifier)
     }

@@ -2,7 +2,7 @@ import Foundation
 import OSLog
 
 @MainActor
-final class MomentCreationWorkflow: ObservableObject {
+final class AnimateVideoCreationWorkflow: ObservableObject {
     @Published private(set) var isCreatingMoment = false
     @Published private(set) var activeMomentId: String?
     @Published private(set) var errorMessage: String?
@@ -32,8 +32,8 @@ final class MomentCreationWorkflow: ObservableObject {
         self.workspaceObserver = workspaceObserver
     }
 
-    var launchTemplates: [MomentTemplate] {
-        MomentTemplate.launchTemplates
+    var launchTemplates: [AnimateVideoTemplate] {
+        AnimateVideoTemplate.launchTemplates
     }
 
     var balance: AnimateCreditBalance {
@@ -44,15 +44,15 @@ final class MomentCreationWorkflow: ObservableObject {
         momentCreator.isConfigured
     }
 
-    func canAfford(_ template: MomentTemplate) -> Bool {
+    func canAfford(_ template: AnimateVideoTemplate) -> Bool {
         AnimateCreditGate.canAfford(template, balance: balance)
     }
 
-    func spendPlan(for template: MomentTemplate) -> AnimateCreditSpendPlan? {
+    func spendPlan(for template: AnimateVideoTemplate) -> AnimateCreditSpendPlan? {
         AnimateCreditGate.spendPlan(for: template.creditCost, balance: balance)
     }
 
-    func createMoment(form: MomentSetupForm) async -> String? {
+    func createMoment(form: AnimateVideoSetupForm) async -> String? {
         guard !isCreatingMoment else { return nil }
         guard let ownerUserId = currentUserProvider.currentUserId else {
             errorMessage = L10n.string("workflow.moment.signInStart")
@@ -63,7 +63,7 @@ final class MomentCreationWorkflow: ObservableObject {
             return nil
         }
 
-        let availability = MomentSetupRules.availability(form: form, balance: balance)
+        let availability = AnimateVideoSetupRules.availability(form: form, balance: balance)
         guard availability.canCreateMoment else {
             errorMessage = createMomentBlockMessage(availability)
             return nil
@@ -89,7 +89,7 @@ final class MomentCreationWorkflow: ObservableObject {
         }
     }
 
-    func updateMomentSetup(momentId: String, form: MomentSetupForm) async -> Bool {
+    func updateMomentSetup(momentId: String, form: AnimateVideoSetupForm) async -> Bool {
         guard !isCreatingMoment else { return false }
         guard currentUserProvider.currentUserId != nil else {
             errorMessage = L10n.string("workflow.moment.signInContinue")
@@ -100,7 +100,7 @@ final class MomentCreationWorkflow: ObservableObject {
             return false
         }
 
-        let availability = MomentSetupRules.availability(form: form, balance: balance)
+        let availability = AnimateVideoSetupRules.availability(form: form, balance: balance)
         guard availability.canCreateMoment else {
             errorMessage = createMomentBlockMessage(availability)
             return false
@@ -125,7 +125,7 @@ final class MomentCreationWorkflow: ObservableObject {
         }
     }
 
-    func continueMoment(_ moment: InProgressMoment) {
+    func continueMoment(_ moment: AnimateVideo) {
         guard let ownerUserId = currentUserProvider.currentUserId else {
             errorMessage = L10n.string("workflow.moment.signInContinue")
             return
@@ -178,7 +178,7 @@ final class MomentCreationWorkflow: ObservableObject {
         }
     }
 
-    private func createMomentBlockMessage(_ availability: MomentSetupRules.Availability) -> String {
-        MomentSetupRules.availabilityMessage(availability) ?? L10n.string("workflow.moment.setupNotReady")
+    private func createMomentBlockMessage(_ availability: AnimateVideoSetupRules.Availability) -> String {
+        AnimateVideoSetupRules.availabilityMessage(availability) ?? L10n.string("workflow.moment.setupNotReady")
     }
 }

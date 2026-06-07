@@ -44,7 +44,7 @@ struct AnimateGalleryVideoPresentation: Identifiable, Equatable {
     let record: AnimateGalleryVideoRecord
     let localFileURL: URL?
     let availability: AnimateGalleryVideoAvailability
-    let remoteArtifact: MomentArtifact?
+    let remoteArtifact: AnimateArtifact?
 
     var id: String { record.id }
     var title: String { record.title }
@@ -75,7 +75,7 @@ enum AnimateGalleryVideoAvailability: String, Equatable {
 }
 
 struct AnimateGalleryImagePresentation: Identifiable, Equatable {
-    let artifact: MomentArtifact
+    let artifact: AnimateArtifact
     let localFileURL: URL?
 
     var id: String { artifact.workflowArtifactId ?? artifact.id }

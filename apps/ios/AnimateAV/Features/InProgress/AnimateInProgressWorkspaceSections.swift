@@ -2,7 +2,7 @@ import AVAppShellFoundation
 import SwiftUI
 
 struct AnimateInProgressMediaSection: View {
-    let mediaAssets: [MomentMediaAsset]
+    let mediaAssets: [AnimateMediaAsset]
 
     private var presentation: AnimateInProgressMediaSectionPresentation {
         AnimateInProgressMediaSectionPresentation(mediaAssets: mediaAssets)
@@ -25,7 +25,7 @@ struct AnimateInProgressMediaSection: View {
 }
 
 struct AnimateInProgressStorySection: View {
-    let storyScenes: [MomentStoryScene]
+    let storyScenes: [AnimateStoryScene]
 
     private var presentation: AnimateInProgressStorySectionPresentation {
         AnimateInProgressStorySectionPresentation(storyScenes: storyScenes)

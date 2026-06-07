@@ -4,7 +4,7 @@ import Foundation
 extension AnimateCreateViewModel {
     func bindWorkflowState(
         accountStateProvider: any AnimateAccountStateProviding,
-        momentCreationWorkflow: MomentCreationWorkflow,
+        momentCreationWorkflow: AnimateVideoCreationWorkflow,
         mediaUploadWorkflow: MediaUploadWorkflow,
         storyWorkflow: StoryWorkflow,
         finalRenderWorkflow: FinalRenderWorkflow
@@ -35,7 +35,7 @@ extension AnimateCreateViewModel {
             .store(in: &cancellables)
     }
 
-    private func bindMomentCreation(_ workflow: MomentCreationWorkflow) {
+    private func bindMomentCreation(_ workflow: AnimateVideoCreationWorkflow) {
         Publishers.CombineLatest3(
             workflow.$isCreatingMoment,
             workflow.$activeMomentId,
