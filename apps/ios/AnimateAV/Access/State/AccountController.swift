@@ -8,7 +8,7 @@ final class AccountController: ObservableObject {
     @Published private(set) var user: AccountAVUser?
     @Published private(set) var creditBalance = MomentsCreditBalance.empty
     @Published private(set) var creditBalanceLoadState = MomentsCreditBalanceLoadState.signedOut
-    @Published private(set) var purchaseCatalog = MomentsPurchaseCatalog.empty
+    @Published private(set) var purchaseCatalog = AnimatePurchaseCatalog.empty
     @Published private(set) var isPurchaseCatalogLoading = false
     @Published private(set) var purchaseCatalogErrorMessage: String?
     @Published private(set) var isPurchaseInProgress = false
@@ -20,7 +20,7 @@ final class AccountController: ObservableObject {
     private let accountProfileClient: MomentsAccountProfileClient
     private let balanceClient: MomentsCreditBalanceClient
     private let promoCodeClient: MomentsPromoCodeClient
-    private let purchaseService: MomentsPurchaseServicing
+    private let purchaseService: AnimatePurchaseServicing
     private let userDefaults: UserDefaults
     private let lastKnownAccountUserKey = "animateav.account.lastKnownUser"
 
@@ -29,7 +29,7 @@ final class AccountController: ObservableObject {
         accountProfileClient: MomentsAccountProfileClient? = nil,
         balanceClient: MomentsCreditBalanceClient? = nil,
         promoCodeClient: MomentsPromoCodeClient? = nil,
-        purchaseService: MomentsPurchaseServicing = RevenueCatMomentsPurchaseService(),
+        purchaseService: AnimatePurchaseServicing = RevenueCatAnimatePurchaseService(),
         userDefaults: UserDefaults = .standard
     ) {
         self.service = service
@@ -158,12 +158,12 @@ final class AccountController: ObservableObject {
         }
     }
 
-    func purchase(_ product: MomentsCreditPaywallProduct) async throws -> MomentsPurchaseResult {
+    func purchase(_ product: MomentsCreditPaywallProduct) async throws -> AnimatePurchaseResult {
         guard let user else {
             throw MomentsAPIError(code: "moments_sign_in_required", message: L10n.string("access.signInRequired.purchase"))
         }
         guard !isPurchaseInProgress else {
-            return MomentsPurchaseResult(status: .cancelled, productId: product.id, transactionId: nil)
+            return AnimatePurchaseResult(status: .cancelled, productId: product.id, transactionId: nil)
         }
 
         isPurchaseInProgress = true
@@ -176,12 +176,12 @@ final class AccountController: ObservableObject {
         return result
     }
 
-    func restorePurchases() async throws -> MomentsPurchaseResult {
+    func restorePurchases() async throws -> AnimatePurchaseResult {
         guard let user else {
             throw MomentsAPIError(code: "moments_sign_in_required", message: L10n.string("access.signInRequired.restore"))
         }
         guard !isPurchaseInProgress else {
-            return MomentsPurchaseResult(status: .cancelled, productId: nil, transactionId: nil)
+            return AnimatePurchaseResult(status: .cancelled, productId: nil, transactionId: nil)
         }
 
         isPurchaseInProgress = true

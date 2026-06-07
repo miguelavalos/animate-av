@@ -3,16 +3,16 @@ import XCTest
 
 final class AnimateCreditGateTests: XCTestCase {
     func testPurchaseCatalogRequiresAllPaywallProducts() {
-        XCTAssertFalse(MomentsPurchaseCatalog.empty.hasRequiredPaywallProducts)
+        XCTAssertFalse(AnimatePurchaseCatalog.empty.hasRequiredPaywallProducts)
 
-        let partialCatalog = MomentsPurchaseCatalog(entriesByProductId: [
+        let partialCatalog = AnimatePurchaseCatalog(entriesByProductId: [
             MomentsCreditProductID.proMonthlyProduct: purchaseCatalogEntry(productId: MomentsCreditProductID.proMonthlyProduct),
             MomentsCreditProductID.starterPackProduct: purchaseCatalogEntry(productId: MomentsCreditProductID.starterPackProduct)
         ])
 
         XCTAssertFalse(partialCatalog.hasRequiredPaywallProducts)
 
-        let completeCatalog = MomentsPurchaseCatalog(entriesByProductId: Dictionary(
+        let completeCatalog = AnimatePurchaseCatalog(entriesByProductId: Dictionary(
             uniqueKeysWithValues: MomentsCreditPaywallProduct.all.map {
                 ($0.id, purchaseCatalogEntry(productId: $0.id))
             }
@@ -288,8 +288,8 @@ final class AnimateCreditGateTests: XCTestCase {
         )
     }
 
-    private func purchaseCatalogEntry(productId: String) -> MomentsPurchaseCatalog.Entry {
-        MomentsPurchaseCatalog.Entry(
+    private func purchaseCatalogEntry(productId: String) -> AnimatePurchaseCatalog.Entry {
+        AnimatePurchaseCatalog.Entry(
             productId: productId,
             packageIdentifier: productId,
             localizedTitle: productId,

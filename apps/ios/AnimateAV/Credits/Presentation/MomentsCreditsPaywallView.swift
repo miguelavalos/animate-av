@@ -10,12 +10,12 @@ struct MomentsCreditsPaywallView: View {
     let isSignedIn: Bool
     let startSignInFlow: () -> Void
     let claimPromotionCode: (String) async throws -> Int
-    let purchaseCatalog: MomentsPurchaseCatalog
+    let purchaseCatalog: AnimatePurchaseCatalog
     let isPurchaseCatalogLoading: Bool
     let purchaseCatalogErrorMessage: String?
     let loadPurchaseProducts: () async -> Void
-    let purchaseProduct: (MomentsCreditPaywallProduct) async throws -> MomentsPurchaseResult
-    let restorePurchases: () async throws -> MomentsPurchaseResult
+    let purchaseProduct: (MomentsCreditPaywallProduct) async throws -> AnimatePurchaseResult
+    let restorePurchases: () async throws -> AnimatePurchaseResult
     let dismiss: () -> Void
 
     @State private var promoCode = ""
@@ -456,7 +456,7 @@ struct MomentsCreditsPaywallView: View {
     }
 
     private func purchaseErrorMessage(_ error: Error) -> String {
-        if let error = error as? MomentsPurchaseError {
+        if let error = error as? AnimatePurchaseError {
             return error.localizedDescription
         }
         return L10n.string("purchase.error.offeringUnavailable")

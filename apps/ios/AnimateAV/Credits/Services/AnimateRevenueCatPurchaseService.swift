@@ -1,7 +1,7 @@
 import Foundation
 import RevenueCat
 
-struct MomentsPurchaseCatalog: Equatable {
+struct AnimatePurchaseCatalog: Equatable {
     struct Entry: Equatable {
         let productId: String
         let packageIdentifier: String
@@ -11,7 +11,7 @@ struct MomentsPurchaseCatalog: Equatable {
 
     var entriesByProductId: [String: Entry]
 
-    static let empty = MomentsPurchaseCatalog(entriesByProductId: [:])
+    static let empty = AnimatePurchaseCatalog(entriesByProductId: [:])
 
     var hasRequiredPaywallProducts: Bool {
         MomentsCreditPaywallProduct.all.allSatisfy { entry(for: $0) != nil }
@@ -26,7 +26,7 @@ struct MomentsPurchaseCatalog: Equatable {
     }
 }
 
-struct MomentsPurchaseResult: Equatable {
+struct AnimatePurchaseResult: Equatable {
     enum Status: Equatable {
         case purchased
         case restored
@@ -38,7 +38,7 @@ struct MomentsPurchaseResult: Equatable {
     let transactionId: String?
 }
 
-enum MomentsPurchaseError: LocalizedError, Equatable {
+enum AnimatePurchaseError: LocalizedError, Equatable {
     case notConfigured
     case offeringUnavailable
     case productUnavailable(String)
@@ -56,15 +56,15 @@ enum MomentsPurchaseError: LocalizedError, Equatable {
 }
 
 @MainActor
-protocol MomentsPurchaseServicing {
-    func loadCatalog(userId: String) async throws -> MomentsPurchaseCatalog
-    func purchase(productId: String, userId: String) async throws -> MomentsPurchaseResult
-    func restorePurchases(userId: String) async throws -> MomentsPurchaseResult
+protocol AnimatePurchaseServicing {
+    func loadCatalog(userId: String) async throws -> AnimatePurchaseCatalog
+    func purchase(productId: String, userId: String) async throws -> AnimatePurchaseResult
+    func restorePurchases(userId: String) async throws -> AnimatePurchaseResult
     func logOut() async
 }
 
 @MainActor
-final class RevenueCatMomentsPurchaseService: MomentsPurchaseServicing {
+final class RevenueCatAnimatePurchaseService: AnimatePurchaseServicing {
     private let apiKeyProvider: () -> String
     private let offeringIDProvider: () -> String
     private let monthlyPackageIDProvider: () -> String
@@ -80,27 +80,27 @@ final class RevenueCatMomentsPurchaseService: MomentsPurchaseServicing {
         self.monthlyPackageIDProvider = monthlyPackageIDProvider
     }
 
-    func loadCatalog(userId: String) async throws -> MomentsPurchaseCatalog {
-        MomentsCreditsDiagnostics.addBreadcrumb(operation: "load_catalog")
+    func loadCatalog(userId: String) async throws -> AnimatePurchaseCatalog {
+        AnimateCreditsDiagnostics.addBreadcrumb(operation: "load_catalog")
         do {
             try await configureIfNeeded(userId: userId)
-            let offering = try await momentsOffering()
+            let offering = try await animateOffering()
             let catalog = catalog(from: offering)
-            MomentsCreditsDiagnostics.addBreadcrumb(
+            AnimateCreditsDiagnostics.addBreadcrumb(
                 operation: "catalog_loaded",
                 data: ["product_count": String(catalog.entriesByProductId.count)]
             )
             return catalog
         } catch {
-            MomentsCreditsDiagnostics.capture(error, operation: "load_catalog", step: "catalog")
+            AnimateCreditsDiagnostics.capture(error, operation: "load_catalog", step: "catalog")
             throw error
         }
     }
 
-    func purchase(productId: String, userId: String) async throws -> MomentsPurchaseResult {
-        MomentsCreditsDiagnostics.addBreadcrumb(
+    func purchase(productId: String, userId: String) async throws -> AnimatePurchaseResult {
+        AnimateCreditsDiagnostics.addBreadcrumb(
             operation: "purchase",
-            data: ["product_key": MomentsCreditsDiagnostics.productKey(for: productId)]
+            data: ["product_key": AnimateCreditsDiagnostics.productKey(for: productId)]
         )
         do {
             try await configureIfNeeded(userId: userId)
@@ -110,47 +110,47 @@ final class RevenueCatMomentsPurchaseService: MomentsPurchaseServicing {
             }
 
             guard let package = packagesByProductId[productId] else {
-                throw MomentsPurchaseError.productUnavailable(productId)
+                throw AnimatePurchaseError.productUnavailable(productId)
             }
 
             let result = try await Purchases.shared.purchase(package: package)
             guard !result.userCancelled else {
-                MomentsCreditsDiagnostics.addBreadcrumb(
+                AnimateCreditsDiagnostics.addBreadcrumb(
                     operation: "purchase_cancelled",
-                    data: ["product_key": MomentsCreditsDiagnostics.productKey(for: productId)]
+                    data: ["product_key": AnimateCreditsDiagnostics.productKey(for: productId)]
                 )
-                return MomentsPurchaseResult(status: .cancelled, productId: productId, transactionId: nil)
+                return AnimatePurchaseResult(status: .cancelled, productId: productId, transactionId: nil)
             }
 
-            MomentsCreditsDiagnostics.addBreadcrumb(
+            AnimateCreditsDiagnostics.addBreadcrumb(
                 operation: "purchase_completed",
-                data: ["product_key": MomentsCreditsDiagnostics.productKey(for: productId)]
+                data: ["product_key": AnimateCreditsDiagnostics.productKey(for: productId)]
             )
-            return MomentsPurchaseResult(
+            return AnimatePurchaseResult(
                 status: .purchased,
                 productId: result.transaction?.productIdentifier ?? productId,
                 transactionId: result.transaction?.transactionIdentifier
             )
         } catch {
-            MomentsCreditsDiagnostics.capture(
+            AnimateCreditsDiagnostics.capture(
                 error,
                 operation: "purchase",
                 step: "revenuecat",
-                data: ["product_key": MomentsCreditsDiagnostics.productKey(for: productId)]
+                data: ["product_key": AnimateCreditsDiagnostics.productKey(for: productId)]
             )
             throw error
         }
     }
 
-    func restorePurchases(userId: String) async throws -> MomentsPurchaseResult {
-        MomentsCreditsDiagnostics.addBreadcrumb(operation: "restore")
+    func restorePurchases(userId: String) async throws -> AnimatePurchaseResult {
+        AnimateCreditsDiagnostics.addBreadcrumb(operation: "restore")
         do {
             try await configureIfNeeded(userId: userId)
             _ = try await Purchases.shared.restorePurchases()
-            MomentsCreditsDiagnostics.addBreadcrumb(operation: "restore_completed")
-            return MomentsPurchaseResult(status: .restored, productId: nil, transactionId: nil)
+            AnimateCreditsDiagnostics.addBreadcrumb(operation: "restore_completed")
+            return AnimatePurchaseResult(status: .restored, productId: nil, transactionId: nil)
         } catch {
-            MomentsCreditsDiagnostics.capture(error, operation: "restore", step: "revenuecat")
+            AnimateCreditsDiagnostics.capture(error, operation: "restore", step: "revenuecat")
             throw error
         }
     }
@@ -164,7 +164,7 @@ final class RevenueCatMomentsPurchaseService: MomentsPurchaseServicing {
     private func configureIfNeeded(userId: String) async throws {
         let apiKey = apiKeyProvider().trimmingCharacters(in: .whitespacesAndNewlines)
         guard !apiKey.isEmpty else {
-            throw MomentsPurchaseError.notConfigured
+            throw AnimatePurchaseError.notConfigured
         }
 
         if Purchases.isConfigured {
@@ -178,13 +178,13 @@ final class RevenueCatMomentsPurchaseService: MomentsPurchaseServicing {
         Purchases.configure(withAPIKey: apiKey, appUserID: userId)
     }
 
-    private func momentsOffering() async throws -> Offering {
+    private func animateOffering() async throws -> Offering {
         let offerings: Offerings
         do {
             offerings = try await Purchases.shared.offerings()
         } catch {
-            MomentsCreditsDiagnostics.capture(error, operation: "load_catalog", step: "offerings")
-            throw MomentsPurchaseError.offeringUnavailable
+            AnimateCreditsDiagnostics.capture(error, operation: "load_catalog", step: "offerings")
+            throw AnimatePurchaseError.offeringUnavailable
         }
         let offeringID = offeringIDProvider().trimmingCharacters(in: .whitespacesAndNewlines)
         if !offeringID.isEmpty, let offering = offerings.offering(identifier: offeringID) {
@@ -193,10 +193,10 @@ final class RevenueCatMomentsPurchaseService: MomentsPurchaseServicing {
         if let current = offerings.current {
             return current
         }
-        throw MomentsPurchaseError.offeringUnavailable
+        throw AnimatePurchaseError.offeringUnavailable
     }
 
-    private func catalog(from offering: Offering) -> MomentsPurchaseCatalog {
+    private func catalog(from offering: Offering) -> AnimatePurchaseCatalog {
         var packagesByProductId: [String: Package] = [:]
         for package in offering.availablePackages where packagesByProductId[package.storeProduct.productIdentifier] == nil {
             packagesByProductId[package.storeProduct.productIdentifier] = package
@@ -204,9 +204,9 @@ final class RevenueCatMomentsPurchaseService: MomentsPurchaseServicing {
         self.packagesByProductId = packagesByProductId
         cacheConfiguredMonthlyPackage(from: offering)
 
-        return MomentsPurchaseCatalog(
+        return AnimatePurchaseCatalog(
             entriesByProductId: self.packagesByProductId.mapValues { package in
-                MomentsPurchaseCatalog.Entry(
+                AnimatePurchaseCatalog.Entry(
                     productId: package.storeProduct.productIdentifier,
                     packageIdentifier: package.identifier,
                     localizedTitle: package.storeProduct.localizedTitle,
@@ -229,7 +229,7 @@ final class RevenueCatMomentsPurchaseService: MomentsPurchaseServicing {
     }
 }
 
-private enum MomentsCreditsDiagnostics {
+private enum AnimateCreditsDiagnostics {
     static func addBreadcrumb(operation: String, data: [String: String] = [:]) {
         MomentsWorkflowDiagnostics.addBreadcrumb(
             feature: "animate.credits",

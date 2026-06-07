@@ -18,7 +18,7 @@ final class AccountControllerSessionRestoreTests: XCTestCase {
             service: accountService,
             accountProfileClient: accountProfileClient(),
             balanceClient: balanceClient(),
-            purchaseService: StubMomentsPurchaseService(),
+            purchaseService: StubAnimatePurchaseService(),
             userDefaults: isolatedUserDefaults()
         )
         await controller.syncFromAccountProvider()
@@ -40,7 +40,7 @@ final class AccountControllerSessionRestoreTests: XCTestCase {
             service: StubAVAccountService(user: user),
             accountProfileClient: accountProfileClient(),
             balanceClient: balanceClient(),
-            purchaseService: StubMomentsPurchaseService(),
+            purchaseService: StubAnimatePurchaseService(),
             userDefaults: userDefaults
         )
         await signedInController.syncFromAccountProvider()
@@ -49,7 +49,7 @@ final class AccountControllerSessionRestoreTests: XCTestCase {
             service: StubAVAccountService(user: nil, restoreResult: .temporarilyUnavailable(nil)),
             accountProfileClient: accountProfileClient(),
             balanceClient: balanceClient(),
-            purchaseService: StubMomentsPurchaseService(),
+            purchaseService: StubAnimatePurchaseService(),
             userDefaults: userDefaults
         )
         await restoredController.syncFromAccountProvider()
@@ -67,7 +67,7 @@ final class AccountControllerSessionRestoreTests: XCTestCase {
             service: StubAVAccountService(user: user),
             accountProfileClient: accountProfileClient(),
             balanceClient: balanceClient(),
-            purchaseService: StubMomentsPurchaseService(),
+            purchaseService: StubAnimatePurchaseService(),
             userDefaults: userDefaults
         )
         await signedInController.syncFromAccountProvider()
@@ -76,7 +76,7 @@ final class AccountControllerSessionRestoreTests: XCTestCase {
             service: StubAVAccountService(user: nil, restoreResult: .signedOut),
             accountProfileClient: accountProfileClient(),
             balanceClient: balanceClient(),
-            purchaseService: StubMomentsPurchaseService(),
+            purchaseService: StubAnimatePurchaseService(),
             userDefaults: userDefaults
         )
         await signedOutController.syncFromAccountProvider()
@@ -96,7 +96,7 @@ final class AccountControllerSessionRestoreTests: XCTestCase {
             service: accountService,
             accountProfileClient: accountProfileClient(),
             balanceClient: balanceClient(),
-            purchaseService: StubMomentsPurchaseService(),
+            purchaseService: StubAnimatePurchaseService(),
             userDefaults: userDefaults
         )
         await controller.syncFromAccountProvider()
@@ -108,7 +108,7 @@ final class AccountControllerSessionRestoreTests: XCTestCase {
             service: StubAVAccountService(user: nil, restoreResult: .temporarilyUnavailable(nil)),
             accountProfileClient: accountProfileClient(),
             balanceClient: balanceClient(),
-            purchaseService: StubMomentsPurchaseService(),
+            purchaseService: StubAnimatePurchaseService(),
             userDefaults: userDefaults
         )
 
@@ -133,7 +133,7 @@ final class AccountControllerSessionRestoreTests: XCTestCase {
             service: StubAVAccountService(user: providerUser),
             accountProfileClient: accountProfileClient(),
             balanceClient: balanceClient(),
-            purchaseService: StubMomentsPurchaseService(),
+            purchaseService: StubAnimatePurchaseService(),
             userDefaults: isolatedUserDefaults()
         )
 
@@ -155,7 +155,7 @@ final class AccountControllerSessionRestoreTests: XCTestCase {
             displayName: "Account AV User",
             emailAddress: "user@example.com"
         )
-        let purchaseService = CapturingMomentsPurchaseService()
+        let purchaseService = CapturingAnimatePurchaseService()
         AccountControllerURLProtocol.profileUser = internalUser
         let controller = AccountController(
             service: StubAVAccountService(user: providerUser),
@@ -189,7 +189,7 @@ final class AccountControllerSessionRestoreTests: XCTestCase {
             service: StubAVAccountService(user: providerUser),
             accountProfileClient: accountProfileClient(),
             balanceClient: balanceClient(),
-            purchaseService: StubMomentsPurchaseService(),
+            purchaseService: StubAnimatePurchaseService(),
             userDefaults: isolatedUserDefaults()
         )
 
@@ -210,7 +210,7 @@ final class AccountControllerSessionRestoreTests: XCTestCase {
             service: StubAVAccountService(user: providerUser, token: nil),
             accountProfileClient: accountProfileClient(),
             balanceClient: balanceClient(),
-            purchaseService: StubMomentsPurchaseService(),
+            purchaseService: StubAnimatePurchaseService(),
             userDefaults: isolatedUserDefaults()
         )
 
@@ -281,33 +281,33 @@ private final class StubAVAccountService: AVAccountService {
 }
 
 @MainActor
-private struct StubMomentsPurchaseService: MomentsPurchaseServicing {
-    func loadCatalog(userId: String) async throws -> MomentsPurchaseCatalog {
+private struct StubAnimatePurchaseService: AnimatePurchaseServicing {
+    func loadCatalog(userId: String) async throws -> AnimatePurchaseCatalog {
         .empty
     }
 
-    func purchase(productId: String, userId: String) async throws -> MomentsPurchaseResult {
-        MomentsPurchaseResult(status: .cancelled, productId: productId, transactionId: nil)
+    func purchase(productId: String, userId: String) async throws -> AnimatePurchaseResult {
+        AnimatePurchaseResult(status: .cancelled, productId: productId, transactionId: nil)
     }
 
-    func restorePurchases(userId: String) async throws -> MomentsPurchaseResult {
-        MomentsPurchaseResult(status: .cancelled, productId: nil, transactionId: nil)
+    func restorePurchases(userId: String) async throws -> AnimatePurchaseResult {
+        AnimatePurchaseResult(status: .cancelled, productId: nil, transactionId: nil)
     }
 
     func logOut() async {}
 }
 
 @MainActor
-private final class CapturingMomentsPurchaseService: MomentsPurchaseServicing {
+private final class CapturingAnimatePurchaseService: AnimatePurchaseServicing {
     private(set) var loadedCatalogUserIds: [String] = []
     private(set) var purchaseUserIds: [String] = []
     private(set) var restoreUserIds: [String] = []
 
-    func loadCatalog(userId: String) async throws -> MomentsPurchaseCatalog {
+    func loadCatalog(userId: String) async throws -> AnimatePurchaseCatalog {
         loadedCatalogUserIds.append(userId)
-        return MomentsPurchaseCatalog(
+        return AnimatePurchaseCatalog(
             entriesByProductId: [
-                MomentsCreditPaywallProduct.starterPack.id: MomentsPurchaseCatalog.Entry(
+                MomentsCreditPaywallProduct.starterPack.id: AnimatePurchaseCatalog.Entry(
                     productId: MomentsCreditPaywallProduct.starterPack.id,
                     packageIdentifier: "test-five-credits",
                     localizedTitle: "Five credits",
@@ -317,14 +317,14 @@ private final class CapturingMomentsPurchaseService: MomentsPurchaseServicing {
         )
     }
 
-    func purchase(productId: String, userId: String) async throws -> MomentsPurchaseResult {
+    func purchase(productId: String, userId: String) async throws -> AnimatePurchaseResult {
         purchaseUserIds.append(userId)
-        return MomentsPurchaseResult(status: .cancelled, productId: productId, transactionId: nil)
+        return AnimatePurchaseResult(status: .cancelled, productId: productId, transactionId: nil)
     }
 
-    func restorePurchases(userId: String) async throws -> MomentsPurchaseResult {
+    func restorePurchases(userId: String) async throws -> AnimatePurchaseResult {
         restoreUserIds.append(userId)
-        return MomentsPurchaseResult(status: .cancelled, productId: nil, transactionId: nil)
+        return AnimatePurchaseResult(status: .cancelled, productId: nil, transactionId: nil)
     }
 
     func logOut() async {}

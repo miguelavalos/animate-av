@@ -44,7 +44,7 @@ enum MomentsWorkflowDiagnostics {
         if let renderError = error as? MomentsFinalRenderError {
             return String(describing: renderError)
         }
-        if let purchaseError = error as? MomentsPurchaseError {
+        if let purchaseError = error as? AnimatePurchaseError {
             return String(describing: purchaseError)
         }
         return nil
