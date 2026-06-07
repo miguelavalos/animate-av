@@ -12,7 +12,7 @@ struct AnimateAppShellView: View {
     @EnvironmentObject private var inProgressViewModel: MomentsInProgressViewModel
     @EnvironmentObject private var galleryViewModel: MomentsGalleryViewModel
     @EnvironmentObject private var aviViewModel: MomentsAviViewModel
-    @EnvironmentObject private var newMomentStartController: MomentsNewMomentStartController
+    @EnvironmentObject private var newVideoStartController: AnimateNewVideoStartController
     @Environment(\.avCommonAppExperience) private var appExperience
     @State private var chromeItem: AVAppShellChromeItem?
     @State private var creditsPaywallIsPresented = false
@@ -251,13 +251,13 @@ struct AnimateAppShellView: View {
             return
         }
 
-        let startPreference = newMomentStartController.currentPreference
+        let startPreference = newVideoStartController.currentPreference
         createViewModel.beginNewMoment()
         selectRootTab(.create)
         requestStartPickerAfterCreateNavigation(startPreference)
     }
 
-    private func requestStartPickerAfterCreateNavigation(_ preference: MomentsNewMomentStartPreference) {
+    private func requestStartPickerAfterCreateNavigation(_ preference: AnimateNewVideoStartPreference) {
         guard preference != .askEveryTime else { return }
 
         Task { @MainActor in

@@ -15,7 +15,7 @@ struct AnimateProfileScreen: View {
     @EnvironmentObject private var inProgressViewModel: MomentsInProgressViewModel
     @EnvironmentObject private var languageController: AppLanguageController
     @EnvironmentObject private var themeController: AppThemeController
-    @EnvironmentObject private var newMomentStartController: MomentsNewMomentStartController
+    @EnvironmentObject private var newVideoStartController: AnimateNewVideoStartController
     @Environment(\.avCommonAppExperience) private var appExperience
     @Environment(\.openURL) private var openURL
     @State private var showsCreditDetails = false
@@ -126,7 +126,7 @@ struct AnimateProfileScreen: View {
                 detail: localized("profile.creationPreferences.start.detail")
             )
 
-            newMomentStartSelector
+            newVideoStartSelector
         }
     }
 
@@ -413,13 +413,13 @@ struct AnimateProfileScreen: View {
         }
     }
 
-    private var newMomentStartSelector: some View {
+    private var newVideoStartSelector: some View {
         Menu {
-            ForEach(MomentsNewMomentStartPreference.allCases) { preference in
+            ForEach(AnimateNewVideoStartPreference.allCases) { preference in
                 Button {
-                    newMomentStartController.select(preference)
+                    newVideoStartController.select(preference)
                 } label: {
-                    if newMomentStartController.currentPreference == preference {
+                    if newVideoStartController.currentPreference == preference {
                         Label {
                             Text(preference.title)
                         } icon: {
@@ -432,17 +432,17 @@ struct AnimateProfileScreen: View {
             }
         } label: {
             HStack(spacing: 12) {
-                Image(systemName: newMomentStartController.currentPreference.systemImage)
+                Image(systemName: newVideoStartController.currentPreference.systemImage)
                     .font(.system(size: 16, weight: .semibold))
                     .foregroundStyle(MomentsTheme.highlight)
                     .frame(width: 22)
 
                 VStack(alignment: .leading, spacing: 3) {
-                    Text(newMomentStartController.currentPreference.title)
+                    Text(newVideoStartController.currentPreference.title)
                         .font(.system(size: 15, weight: .semibold))
                         .foregroundStyle(AVBrandColor.textPrimary)
 
-                    Text(newMomentStartController.currentPreference.detail)
+                    Text(newVideoStartController.currentPreference.detail)
                         .font(.system(size: 12, weight: .medium))
                         .foregroundStyle(AVBrandColor.textSecondary)
                         .lineLimit(2)
@@ -465,7 +465,7 @@ struct AnimateProfileScreen: View {
                     .stroke(AVBrandColor.borderSubtle, lineWidth: 1)
             }
         }
-        .accessibilityIdentifier("settings.newMomentStart")
+        .accessibilityIdentifier("settings.newVideoStart")
     }
 
     private var accountIdentityDetail: String {

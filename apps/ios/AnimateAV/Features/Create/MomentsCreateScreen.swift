@@ -4,7 +4,7 @@ import SwiftUI
 
 struct MomentsCreateScreen: View {
     @EnvironmentObject private var viewModel: MomentsCreateViewModel
-    @EnvironmentObject private var newMomentStartController: MomentsNewMomentStartController
+    @EnvironmentObject private var newVideoStartController: AnimateNewVideoStartController
     @SceneStorage("animate.create.selectedAssetKind") private var selectedAssetKindRaw = MomentsCreateAssetKind.video.rawValue
     @State private var pickerItems: [PhotosPickerItem] = []
     @State private var showsAutomaticPhotoPicker = false

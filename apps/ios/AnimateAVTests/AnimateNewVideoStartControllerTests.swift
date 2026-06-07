@@ -20,23 +20,23 @@ final class AnimateNewVideoStartControllerTests: XCTestCase {
     }
 
     func testDefaultsToPhotosOrClipsForSpeed() {
-        let controller = MomentsNewMomentStartController(userDefaults: userDefaults)
+        let controller = AnimateNewVideoStartController(userDefaults: userDefaults)
 
         XCTAssertEqual(controller.currentPreference, .photosOrClips)
     }
 
     func testInvalidStoredPreferenceFallsBackToPhotosOrClips() {
-        userDefaults.set("unexpected", forKey: "animateav.newMomentStartPreference")
+        userDefaults.set("unexpected", forKey: "animateav.newVideoStartPreference")
 
-        let controller = MomentsNewMomentStartController(userDefaults: userDefaults)
+        let controller = AnimateNewVideoStartController(userDefaults: userDefaults)
 
         XCTAssertEqual(controller.currentPreference, .photosOrClips)
     }
 
-    func testInheritedAlbumPreferenceFallsBackToPhotosOrClips() {
-        userDefaults.set("album", forKey: "animateav.newMomentStartPreference")
+    func testInvalidAlbumPreferenceFallsBackToPhotosOrClips() {
+        userDefaults.set("album", forKey: "animateav.newVideoStartPreference")
 
-        let controller = MomentsNewMomentStartController(userDefaults: userDefaults)
+        let controller = AnimateNewVideoStartController(userDefaults: userDefaults)
 
         XCTAssertEqual(controller.currentPreference, .photosOrClips)
     }

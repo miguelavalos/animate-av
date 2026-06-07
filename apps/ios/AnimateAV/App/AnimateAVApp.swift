@@ -5,7 +5,7 @@ import SwiftUI
 struct AnimateAVApp: App {
     @StateObject private var languageController = AppLanguageController()
     @StateObject private var themeController = AppThemeController()
-    @StateObject private var newMomentStartController = MomentsNewMomentStartController()
+    @StateObject private var newVideoStartController = AnimateNewVideoStartController()
 
     init() {
         AppConfig.configureAVAccountIfPossible()
@@ -17,7 +17,7 @@ struct AnimateAVApp: App {
             MomentsAppBootstrapView()
                 .environmentObject(languageController)
                 .environmentObject(themeController)
-                .environmentObject(newMomentStartController)
+                .environmentObject(newVideoStartController)
                 .environment(\.locale, languageController.locale)
                 .avCommonAppExperience(AnimateAppExperience.experience)
                 .preferredColorScheme(themeController.currentTheme.preferredColorScheme)

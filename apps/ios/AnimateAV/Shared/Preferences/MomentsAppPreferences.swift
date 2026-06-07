@@ -131,7 +131,7 @@ enum AppTheme: String, CaseIterable, Identifiable {
     }
 }
 
-enum MomentsNewMomentStartPreference: String, CaseIterable, Identifiable {
+enum AnimateNewVideoStartPreference: String, CaseIterable, Identifiable {
     case askEveryTime = "ask"
     case photosOrClips = "single"
 
@@ -177,20 +177,20 @@ final class AppThemeController: ObservableObject {
     }
 }
 
-final class MomentsNewMomentStartController: ObservableObject {
-    @Published private(set) var currentPreference: MomentsNewMomentStartPreference
+final class AnimateNewVideoStartController: ObservableObject {
+    @Published private(set) var currentPreference: AnimateNewVideoStartPreference
 
     private let userDefaults: UserDefaults
-    private let userDefaultsKey = "animateav.newMomentStartPreference"
+    private let userDefaultsKey = "animateav.newVideoStartPreference"
 
     init(userDefaults: UserDefaults = .standard) {
         self.userDefaults = userDefaults
-        currentPreference = MomentsNewMomentStartPreference(
+        currentPreference = AnimateNewVideoStartPreference(
             rawValue: userDefaults.string(forKey: userDefaultsKey) ?? ""
         ) ?? .photosOrClips
     }
 
-    func select(_ preference: MomentsNewMomentStartPreference) {
+    func select(_ preference: AnimateNewVideoStartPreference) {
         guard currentPreference != preference else { return }
         currentPreference = preference
         userDefaults.set(preference.rawValue, forKey: userDefaultsKey)
