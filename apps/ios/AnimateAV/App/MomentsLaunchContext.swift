@@ -44,7 +44,7 @@ struct MomentsUITestEnvironment {
         accountMode != nil
     }
 
-    static let accountUserId = "moments-ui-test-user"
-    static let accountUserDisplayName = "Moments UI Test User"
-    static let accountUserEmailAddress = "moments-ui-test@example.test"
+    static let accountUserId = "animate-ui-test-user"
+    static let accountUserDisplayName = "Animate UI Test User"
+    static let accountUserEmailAddress = "animate-ui-test@example.test"
 }

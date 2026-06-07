@@ -187,7 +187,7 @@ private struct MomentsHomeAviContextCard: View {
             }
         }
         .buttonStyle(.plain)
-        .accessibilityIdentifier("moments.home.aviContext.open")
+        .accessibilityIdentifier("animate.home.aviContext.open")
         .accessibilityLabel("\(title). \(detail). \(buttonTitle)")
     }
 }

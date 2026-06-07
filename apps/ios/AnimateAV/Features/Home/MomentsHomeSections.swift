@@ -22,7 +22,7 @@ struct MomentsHomeAccountCard: View {
                     detail: creditBalance.spendable > 0 ? L10n.string("credits.manage.detail") : L10n.string("credits.get.detail"),
                     systemImage: creditBalance.spendable > 0 ? "creditcard.fill" : "plus.circle.fill",
                     isProminent: creditBalance.spendable == 0,
-                    accessibilityIdentifier: "moments.home.credits.open",
+                    accessibilityIdentifier: "animate.home.credits.open",
                     action: openCredits
                 )
             } else {
@@ -31,7 +31,7 @@ struct MomentsHomeAccountCard: View {
                     detail: L10n.string("credits.balance.retry.detail"),
                     systemImage: creditBalanceLoadState.systemImage,
                     isProminent: false,
-                    accessibilityIdentifier: "moments.home.credits.retry",
+                    accessibilityIdentifier: "animate.home.credits.retry",
                     action: retryCredits
                 )
             }
@@ -85,7 +85,7 @@ struct MomentsHomeSignInCard: View {
                 detail: L10n.string("home.signIn.action.detail"),
                 systemImage: "person.crop.circle.fill",
                 isProminent: true,
-                accessibilityIdentifier: "moments.home.signin",
+                accessibilityIdentifier: "animate.home.signin",
                 action: startSignInFlow
             )
         }
@@ -174,7 +174,7 @@ struct MomentsHomeNextActionsCard: View {
             systemImage: action.systemImage,
             isProminent: action.isProminent,
             isDisabled: action.isDisabled,
-            accessibilityIdentifier: "moments.home.action.\(action.title.lowercased().replacingOccurrences(of: " ", with: "."))",
+            accessibilityIdentifier: "animate.home.action.\(action.title.lowercased().replacingOccurrences(of: " ", with: "."))",
             action: perform
         )
     }

@@ -29,7 +29,7 @@ struct MomentsInProgressEmptyState: View {
                 detail: L10n.string("inProgress.empty.create.detail"),
                 systemImage: "plus.app.fill",
                 isProminent: true,
-                accessibilityIdentifier: "moments.inProgress.empty.create",
+                accessibilityIdentifier: "animate.inProgress.empty.create",
                 action: startMoment
             )
 

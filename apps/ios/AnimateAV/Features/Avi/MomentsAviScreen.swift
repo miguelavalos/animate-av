@@ -24,7 +24,7 @@ struct MomentsAviScreen: View {
                 AVAviLandingChip(title: L10n.string("avi.landing.story"), systemImage: "text.bubble"),
                 AVAviLandingChip(title: L10n.string("avi.landing.create"), systemImage: "video.fill")
             ],
-            accessibilityIdentifier: "moments.avi.hero"
+            accessibilityIdentifier: "animate.avi.hero"
         )
     }
 
@@ -33,7 +33,7 @@ struct MomentsAviScreen: View {
             identity: appExperience.identity,
             summary: L10n.string("avi.summary"),
             status: L10n.string("avi.status"),
-            headerAccessibilityIdentifier: "moments.avi.header",
+            headerAccessibilityIdentifier: "animate.avi.header",
             landingContent: landingContent,
             backgroundStyle: AnyShapeStyle(MomentsTheme.shellBackground)
         ) {
@@ -111,7 +111,7 @@ private struct MomentsAviSignInCard: View {
                     detail: L10n.string("avi.signIn.action.detail"),
                     systemImage: "person.crop.circle.fill",
                     isProminent: true,
-                    accessibilityIdentifier: "moments.avi.signin",
+                    accessibilityIdentifier: "animate.avi.signin",
                     action: startSignInFlow
                 )
             }

@@ -95,7 +95,7 @@ struct MomentsAppShellView: View {
     private var footerAssistant: AVAppShellConfiguredAssistant {
         AVAppShellConfiguredAssistant(
             experience: appExperience,
-            accessibilityIdentifier: "moments.tab.avi",
+            accessibilityIdentifier: "animate.tab.avi",
             activeContextSystemImage: "video.fill"
         )
     }

@@ -5,7 +5,7 @@ enum MomentsSyncDiagnostics {
     static func addObserverBreadcrumb(observer: String, message: String) {
         AVDiagnostics.addBreadcrumb(
             AVDiagnosticsBreadcrumb(
-                category: "moments.sync",
+                category: "animate.sync",
                 message: message,
                 data: [
                     "observer": observer,
@@ -19,7 +19,7 @@ enum MomentsSyncDiagnostics {
         AVDiagnostics.capture(
             error: error,
             context: AVDiagnosticsContext(
-                feature: "moments.sync",
+                feature: "animate.sync",
                 code: diagnosticsErrorCode(for: error),
                 data: [
                     "observer": observer,

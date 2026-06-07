@@ -100,7 +100,7 @@ final class FinalRenderWorkflow: WorkspaceObservingWorkflow {
         } catch {
             MomentsWorkflowDiagnostics.capture(
                 error,
-                feature: "moments.final_render",
+                feature: "animate.final_render",
                 operation: "quote_video",
                 step: "unknown",
                 data: [
@@ -134,7 +134,7 @@ final class FinalRenderWorkflow: WorkspaceObservingWorkflow {
         renderPlan = nil
         statusMessage = L10n.string("workflow.final.preparing")
         MomentsWorkflowDiagnostics.addBreadcrumb(
-            feature: "moments.final_render",
+            feature: "animate.final_render",
             operation: "prepare_plan",
             data: [
                 "selected_count": String(selectedMedia.filter(\.selected).count),
@@ -178,7 +178,7 @@ final class FinalRenderWorkflow: WorkspaceObservingWorkflow {
             logger.error("Final render plan API error code=\(error.code, privacy: .public) message=\(error.message, privacy: .public) momentId=\(momentId, privacy: .public)")
             MomentsWorkflowDiagnostics.capture(
                 error,
-                feature: "moments.final_render",
+                feature: "animate.final_render",
                 operation: "prepare_plan",
                 step: "api",
                 data: [
@@ -192,7 +192,7 @@ final class FinalRenderWorkflow: WorkspaceObservingWorkflow {
             guard isCurrentWorkflowGeneration(generation) else { return }
             MomentsWorkflowDiagnostics.capture(
                 error,
-                feature: "moments.final_render",
+                feature: "animate.final_render",
                 operation: "prepare_plan",
                 step: "unknown",
                 data: [
@@ -244,7 +244,7 @@ final class FinalRenderWorkflow: WorkspaceObservingWorkflow {
         isGenerating = true
         statusMessage = L10n.string("workflow.final.creatingVideo")
         MomentsWorkflowDiagnostics.addBreadcrumb(
-            feature: "moments.final_render",
+            feature: "animate.final_render",
             operation: "confirm",
             data: [
                 "selected_count": String(selectedMedia.filter(\.selected).count),
@@ -284,7 +284,7 @@ final class FinalRenderWorkflow: WorkspaceObservingWorkflow {
             logger.error("Final render API error code=\(error.code, privacy: .public) message=\(error.message, privacy: .public) momentId=\(momentId, privacy: .public)")
             MomentsWorkflowDiagnostics.capture(
                 error,
-                feature: "moments.final_render",
+                feature: "animate.final_render",
                 operation: "confirm",
                 step: "api",
                 data: [
@@ -301,7 +301,7 @@ final class FinalRenderWorkflow: WorkspaceObservingWorkflow {
             guard isCurrentWorkflowGeneration(generation) else { return }
             MomentsWorkflowDiagnostics.capture(
                 error,
-                feature: "moments.final_render",
+                feature: "animate.final_render",
                 operation: "confirm",
                 step: "unknown",
                 data: [
@@ -582,7 +582,7 @@ final class FinalRenderWorkflow: WorkspaceObservingWorkflow {
         do {
             statusMessage = L10n.string("workflow.final.savingToGallery")
             MomentsWorkflowDiagnostics.addBreadcrumb(
-                feature: "moments.final_render",
+                feature: "animate.final_render",
                 operation: "download",
                 data: [
                     "artifact_status": artifact.status,
@@ -608,7 +608,7 @@ final class FinalRenderWorkflow: WorkspaceObservingWorkflow {
         } catch {
             MomentsWorkflowDiagnostics.capture(
                 error,
-                feature: "moments.final_render",
+                feature: "animate.final_render",
                 operation: "download",
                 step: "gallery_save",
                 data: [

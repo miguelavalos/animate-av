@@ -71,7 +71,7 @@ final class StoryWorkflow: WorkspaceObservingWorkflow {
         isPlanning = true
         statusMessage = nil
         MomentsWorkflowDiagnostics.addBreadcrumb(
-            feature: "moments.story",
+            feature: "animate.story",
             operation: "generate_plan",
             data: [
                 "selected_count": String(media.filter(\.selected).count),
@@ -98,7 +98,7 @@ final class StoryWorkflow: WorkspaceObservingWorkflow {
             logger.error("Story plan workflow failed momentId=\(momentId, privacy: .public) reason=\(error.localizedDescription, privacy: .public)")
             MomentsWorkflowDiagnostics.capture(
                 error,
-                feature: "moments.story",
+                feature: "animate.story",
                 operation: "generate_plan",
                 step: "workflow",
                 data: [
@@ -114,7 +114,7 @@ final class StoryWorkflow: WorkspaceObservingWorkflow {
             logger.error("Story plan request failed momentId=\(momentId, privacy: .public) error=\(String(describing: error), privacy: .public)")
             MomentsWorkflowDiagnostics.capture(
                 error,
-                feature: "moments.story",
+                feature: "animate.story",
                 operation: "generate_plan",
                 step: "request",
                 data: [
@@ -130,7 +130,7 @@ final class StoryWorkflow: WorkspaceObservingWorkflow {
             logger.error("Story plan failed momentId=\(momentId, privacy: .public) error=\(String(describing: error), privacy: .public)")
             MomentsWorkflowDiagnostics.capture(
                 error,
-                feature: "moments.story",
+                feature: "animate.story",
                 operation: "generate_plan",
                 step: "unknown",
                 data: [

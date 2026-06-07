@@ -13,7 +13,7 @@ enum MomentsMediaUploadDiagnostics {
             metadata["asset_count"] = String(max(assetCount, 0))
         }
         AVDiagnostics.addBreadcrumb(AVDiagnosticsBreadcrumb(
-            category: "moments.media",
+            category: "animate.media",
             message: "moments_media_\(operation)",
             data: metadata
         ))
@@ -92,7 +92,7 @@ enum MomentsMediaUploadDiagnostics {
             "step": step,
         ]
         extra.forEach { data[$0.key] = $0.value }
-        return AVDiagnosticsContext(feature: "moments.media", code: errorCode, data: data)
+        return AVDiagnosticsContext(feature: "animate.media", code: errorCode, data: data)
     }
 
     private static func shouldCapture(_ error: any Error) -> Bool {

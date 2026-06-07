@@ -12,7 +12,7 @@ struct MomentsHomeLatestMomentRow: View {
             detail: detail,
             systemImage: "clock.badge.checkmark",
             eyebrow: L10n.string("home.latestMoment.eyebrow"),
-            accessibilityIdentifier: "moments.home.latestMoment",
+            accessibilityIdentifier: "animate.home.latestMoment",
             action: openMoment
         )
     }
@@ -24,7 +24,7 @@ struct MomentsHomeEmptyMomentRow: View {
             title: L10n.string("home.moments.emptyRow.title"),
             detail: L10n.string("home.moments.emptyRow.detail"),
             systemImage: "rectangle.stack.badge.plus",
-            accessibilityIdentifier: "moments.home.moments.empty"
+            accessibilityIdentifier: "animate.home.moments.empty"
         )
     }
 }

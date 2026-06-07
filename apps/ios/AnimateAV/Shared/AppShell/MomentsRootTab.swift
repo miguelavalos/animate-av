@@ -20,35 +20,35 @@ enum MomentsRootTab: String, CaseIterable, Identifiable {
                 id: self,
                 title: L10n.string("tab.home"),
                 systemImage: "house.fill",
-                accessibilityIdentifier: "moments.tab.home"
+                accessibilityIdentifier: "animate.tab.home"
             )
         case .create:
             AVAppShellTab(
                 id: self,
                 title: L10n.string("tab.create"),
                 systemImage: "plus.app.fill",
-                accessibilityIdentifier: "moments.tab.create"
+                accessibilityIdentifier: "animate.tab.create"
             )
         case .inProgress:
             AVAppShellTab(
                 id: self,
                 title: L10n.string("tab.inProgress"),
                 systemImage: "clock.fill",
-                accessibilityIdentifier: "moments.tab.inProgress"
+                accessibilityIdentifier: "animate.tab.inProgress"
             )
         case .gallery:
             AVAppShellTab(
                 id: self,
                 title: L10n.string("tab.gallery"),
                 systemImage: "play.square.stack.fill",
-                accessibilityIdentifier: "moments.tab.gallery"
+                accessibilityIdentifier: "animate.tab.gallery"
             )
         case .avi, .profile:
             AVAppShellTab(
                 id: self,
                 title: L10n.string("tab.avi"),
                 systemImage: "sparkles",
-                accessibilityIdentifier: "moments.tab.avi"
+                accessibilityIdentifier: "animate.tab.avi"
             )
         }
     }

@@ -99,8 +99,8 @@ private struct MomentsAuthOptionsPanel: View {
             isBusy: activeProvider != nil,
             activeProvider: activeProvider,
             isAvailable: accountIsAvailable,
-            appleAccessibilityIdentifier: "moments.onboarding.auth.apple",
-            googleAccessibilityIdentifier: "moments.onboarding.auth.google",
+            appleAccessibilityIdentifier: "animate.onboarding.auth.apple",
+            googleAccessibilityIdentifier: "animate.onboarding.auth.google",
             onApple: onAppleTap,
             onGoogle: onGoogleTap,
             onSkip: onSkip

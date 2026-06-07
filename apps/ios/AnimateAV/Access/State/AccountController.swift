@@ -306,7 +306,7 @@ final class AccountController: ObservableObject {
     private func addAccountBreadcrumb(_ message: String, data: [String: String] = [:]) {
         AVDiagnostics.addBreadcrumb(
             AVDiagnosticsBreadcrumb(
-                category: "moments.account",
+                category: "animate.account",
                 message: message,
                 data: data
             )
@@ -319,7 +319,7 @@ final class AccountController: ObservableObject {
         AVDiagnostics.capture(
             error: error,
             context: AVDiagnosticsContext(
-                feature: "moments.account",
+                feature: "animate.account",
                 code: diagnosticsErrorCode(for: error),
                 data: contextData
             )

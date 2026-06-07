@@ -232,7 +232,7 @@ final class RevenueCatMomentsPurchaseService: MomentsPurchaseServicing {
 private enum MomentsCreditsDiagnostics {
     static func addBreadcrumb(operation: String, data: [String: String] = [:]) {
         MomentsWorkflowDiagnostics.addBreadcrumb(
-            feature: "moments.credits",
+            feature: "animate.credits",
             operation: operation,
             data: data
         )
@@ -246,7 +246,7 @@ private enum MomentsCreditsDiagnostics {
     ) {
         MomentsWorkflowDiagnostics.capture(
             error,
-            feature: "moments.credits",
+            feature: "animate.credits",
             operation: operation,
             step: step,
             data: data

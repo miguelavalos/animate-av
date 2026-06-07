@@ -63,7 +63,7 @@ struct MomentsCreditsPaywallView: View {
                 }
             }
         }
-        .accessibilityIdentifier("moments.credits.paywall")
+        .accessibilityIdentifier("animate.credits.paywall")
         .task(id: isSignedIn) {
             guard isSignedIn else { return }
             await loadPurchaseProducts()
@@ -171,7 +171,7 @@ struct MomentsCreditsPaywallView: View {
                 systemImage: "calendar.badge.clock",
                 message: monthlySubscriptionTerms(for: .proMonthly)
             )
-            .accessibilityIdentifier("moments.credits.subscriptionTerms")
+            .accessibilityIdentifier("animate.credits.subscriptionTerms")
         }
     }
 
@@ -222,7 +222,7 @@ struct MomentsCreditsPaywallView: View {
                     }
                     .disabled(normalizedPromoCode.isEmpty || isClaimingPromo)
                     .accessibilityLabel(L10n.string("paywall.promo.claim"))
-                    .accessibilityIdentifier("moments.credits.claimPromo")
+                    .accessibilityIdentifier("animate.credits.claimPromo")
                 }
 
                 Text(L10n.string("paywall.promo.optional"))
@@ -273,14 +273,14 @@ struct MomentsCreditsPaywallView: View {
             }
             .buttonStyle(.plain)
             .disabled(isRestoringPurchases || purchasingProductID != nil)
-            .accessibilityIdentifier("moments.credits.restore")
+            .accessibilityIdentifier("animate.credits.restore")
 
             AVPaywallLegalLinks(
                 links: [
-                    AVPaywallLegalLink(title: L10n.string("paywall.terms"), accessibilityIdentifier: "moments.credits.terms") {
+                    AVPaywallLegalLink(title: L10n.string("paywall.terms"), accessibilityIdentifier: "animate.credits.terms") {
                         openURL(AppConfig.termsURL)
                     },
-                    AVPaywallLegalLink(title: L10n.string("paywall.privacy"), accessibilityIdentifier: "moments.credits.privacy") {
+                    AVPaywallLegalLink(title: L10n.string("paywall.privacy"), accessibilityIdentifier: "animate.credits.privacy") {
                         openURL(AppConfig.privacyPolicyURL)
                     }
                 ]
@@ -306,10 +306,10 @@ struct MomentsCreditsPaywallView: View {
             .background(AVBrandColor.mutedSurface, in: RoundedRectangle(cornerRadius: AVBrandRadius.control, style: .continuous))
         } else if let purchaseCatalogErrorMessage, !purchaseCatalogErrorMessage.isEmpty {
             AVPaywallStatusRow(systemImage: "info.circle.fill", message: purchaseCatalogErrorMessage)
-                .accessibilityIdentifier("moments.credits.purchasesUnavailable")
+                .accessibilityIdentifier("animate.credits.purchasesUnavailable")
         } else if !purchaseCatalog.hasRequiredPaywallProducts {
             AVPaywallStatusRow(systemImage: "info.circle.fill", message: L10n.string("paywall.purchasesUnavailable"))
-                .accessibilityIdentifier("moments.credits.purchasesUnavailable")
+                .accessibilityIdentifier("animate.credits.purchasesUnavailable")
         }
     }
 
@@ -341,7 +341,7 @@ struct MomentsCreditsPaywallView: View {
                 dismiss()
                 startSignInFlow()
             }
-            .accessibilityIdentifier("moments.credits.signIn")
+            .accessibilityIdentifier("animate.credits.signIn")
         }
         .padding(AVBrandSpacing.lg)
         .background(AVBrandColor.cardSurface, in: RoundedRectangle(cornerRadius: AVBrandRadius.card, style: .continuous))
@@ -553,7 +553,7 @@ private struct MomentsProPlanCard: View {
         }
         .buttonStyle(.plain)
         .disabled(isDisabled)
-        .accessibilityIdentifier("moments.credits.purchase.\(product.id)")
+        .accessibilityIdentifier("animate.credits.purchase.\(product.id)")
     }
 
     private var callToActionTitle: String {
@@ -651,7 +651,7 @@ private struct MomentsCreditsPackButton: View {
         }
         .buttonStyle(.plain)
         .disabled(isDisabled)
-        .accessibilityIdentifier("moments.credits.purchase.\(product.id)")
+        .accessibilityIdentifier("animate.credits.purchase.\(product.id)")
     }
 }
 

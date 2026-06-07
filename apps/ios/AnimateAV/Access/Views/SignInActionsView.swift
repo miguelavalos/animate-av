@@ -10,8 +10,8 @@ struct SignInActionsView<AuthenticationController>: View where AuthenticationCon
             isBusy: signInCoordinator.activeProvider != nil || authenticationController.isAuthenticationBusy,
             activeProvider: signInCoordinator.activeProvider,
             isAvailable: authenticationController.isAuthenticationAvailable,
-            appleAccessibilityIdentifier: "moments.auth.apple",
-            googleAccessibilityIdentifier: "moments.auth.google",
+            appleAccessibilityIdentifier: "animate.auth.apple",
+            googleAccessibilityIdentifier: "animate.auth.google",
             onApple: startAppleSignIn,
             onGoogle: startGoogleSignIn
         )
