@@ -41,10 +41,8 @@ enum MomentMusicPreset: String, CaseIterable, Identifiable {
 }
 
 enum MomentLook: String, CaseIterable, Identifiable, Codable {
-    case real
     case anime
     case cartoon
-    case cinematic
     case comic
     case clay
 
@@ -56,10 +54,8 @@ enum MomentLook: String, CaseIterable, Identifiable, Codable {
 
     var title: String {
         switch self {
-        case .real: L10n.string("create.look.real.title")
         case .anime: L10n.string("create.look.anime.title")
         case .cartoon: L10n.string("create.look.cartoon.title")
-        case .cinematic: L10n.string("create.look.cinematic.title")
         case .comic: L10n.string("create.look.comic.title")
         case .clay: L10n.string("create.look.clay.title")
         }
@@ -67,10 +63,8 @@ enum MomentLook: String, CaseIterable, Identifiable, Codable {
 
     var subtitle: String {
         switch self {
-        case .real: L10n.string("create.look.real.subtitle")
         case .anime: L10n.string("create.look.anime.subtitle")
         case .cartoon: L10n.string("create.look.cartoon.subtitle")
-        case .cinematic: L10n.string("create.look.cinematic.subtitle")
         case .comic: L10n.string("create.look.comic.subtitle")
         case .clay: L10n.string("create.look.clay.subtitle")
         }
@@ -78,10 +72,8 @@ enum MomentLook: String, CaseIterable, Identifiable, Codable {
 
     var assetName: String {
         switch self {
-        case .real: "LookReal"
         case .anime: "LookAnime"
         case .cartoon: "LookCartoon"
-        case .cinematic: "LookCinematic"
         case .comic: "LookComic"
         case .clay: "LookClay"
         }
@@ -89,10 +81,8 @@ enum MomentLook: String, CaseIterable, Identifiable, Codable {
 
     var systemImage: String {
         switch self {
-        case .real: "camera.fill"
         case .anime: "sparkles"
         case .cartoon: "face.smiling.fill"
-        case .cinematic: "movieclapper.fill"
         case .comic: "text.bubble.fill"
         case .clay: "cube.fill"
         }

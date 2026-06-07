@@ -120,14 +120,10 @@
 "create.look.anime.title" = "Anime";
 "create.look.cartoon.subtitle" = "Estil de dibuixos animats lluminós.";
 "create.look.cartoon.title" = "Cartoon";
-"create.look.cinematic.subtitle" = "Llum i contrast de cinema.";
-"create.look.cinematic.title" = "Cinemàtic";
 "create.look.clay.subtitle" = "Sensació suau d’animació 3D.";
 "create.look.clay.title" = "3D";
 "create.look.comic.subtitle" = "Panells gràfics i energia marcada.";
 "create.look.comic.title" = "Còmic";
-"create.look.real.subtitle" = "Color suau pintat i moviment delicat.";
-"create.look.real.title" = "Aquarel·la";
 "create.music.calm.subtitle" = "Suau, més lent i discret.";
 "create.music.calm.title" = "Calmat";
 "create.music.cinematic.subtitle" = "Ritme dramàtic i atmosfera.";

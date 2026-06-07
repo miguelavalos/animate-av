@@ -91,7 +91,7 @@ final class MomentCreationWorkflow: ObservableObject {
 
     func updateMomentSetup(momentId: String, form: MomentSetupForm) async -> Bool {
         guard !isCreatingMoment else { return false }
-        guard let ownerUserId = currentUserProvider.currentUserId else {
+        guard currentUserProvider.currentUserId != nil else {
             errorMessage = L10n.string("workflow.moment.signInContinue")
             return false
         }
@@ -149,7 +149,7 @@ final class MomentCreationWorkflow: ObservableObject {
 
     func discardActiveMoment(momentId momentIdOverride: String? = nil) async -> Bool {
         guard !isCreatingMoment else { return false }
-        guard let ownerUserId = currentUserProvider.currentUserId else {
+        guard currentUserProvider.currentUserId != nil else {
             errorMessage = L10n.string("workflow.moment.signInDiscard")
             return false
         }

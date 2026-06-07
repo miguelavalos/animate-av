@@ -350,14 +350,10 @@
 "create.look.anime.title" = "Anime";
 "create.look.cartoon.subtitle" = "Heller animierter Figurenstil.";
 "create.look.cartoon.title" = "Cartoon";
-"create.look.cinematic.subtitle" = "Filmisches Licht und Kontrast.";
-"create.look.cinematic.title" = "Filmisch";
 "create.look.clay.subtitle" = "Weiches 3D-Animationsgefühl.";
 "create.look.clay.title" = "3D";
 "create.look.comic.subtitle" = "Grafische Panels und starke Energie.";
 "create.look.comic.title" = "Comic";
-"create.look.real.subtitle" = "Weiche gemalte Farben und sanfte Bewegung.";
-"create.look.real.title" = "Aquarell";
 "create.music.calm.subtitle" = "Sanft, langsamer und zurückhaltend.";
 "create.music.calm.title" = "Ruhig";
 "create.music.cinematic.subtitle" = "Dramatisches Tempo und Atmosphäre.";

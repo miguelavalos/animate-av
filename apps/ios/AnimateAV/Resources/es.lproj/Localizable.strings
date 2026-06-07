@@ -120,14 +120,10 @@
 "create.look.anime.title" = "Anime";
 "create.look.cartoon.subtitle" = "Estilo de dibujos animados luminoso.";
 "create.look.cartoon.title" = "Dibujos";
-"create.look.cinematic.subtitle" = "Luz y contraste de cine.";
-"create.look.cinematic.title" = "Cinemático";
 "create.look.clay.subtitle" = "Sensación suave de animación 3D.";
 "create.look.clay.title" = "3D";
 "create.look.comic.subtitle" = "Paneles gráficos y energía marcada.";
 "create.look.comic.title" = "Cómic";
-"create.look.real.subtitle" = "Color suave pintado y movimiento delicado.";
-"create.look.real.title" = "Acuarela";
 "create.music.calm.subtitle" = "Suave, más lento y discreto.";
 "create.music.calm.title" = "Calmado";
 "create.music.cinematic.subtitle" = "Ritmo dramático y atmósfera.";

@@ -28,7 +28,7 @@ struct InProgressMoment: Identifiable, Decodable, Equatable {
         id: String,
         template: MomentTemplateID,
         creationMode: String = "quick",
-        look: String = "real",
+        look: String = "cartoon",
         theme: String = "celebration",
         mood: String? = nil,
         duration: String = "auto",
@@ -131,7 +131,7 @@ struct InProgressMoment: Identifiable, Decodable, Equatable {
             ?? MomentTemplateID(rawValue: try container.decodeIfPresent(String.self, forKey: .theme) ?? "")
             ?? .birthdayMessage
         creationMode = try container.decodeIfPresent(String.self, forKey: .creationMode) ?? "quick"
-        look = try container.decodeIfPresent(String.self, forKey: .look) ?? "real"
+        look = try container.decodeIfPresent(String.self, forKey: .look) ?? "cartoon"
         theme = try container.decodeIfPresent(String.self, forKey: .theme) ?? template.rawValue
         mood = try container.decodeIfPresent(String.self, forKey: .mood)
             ?? container.decodeIfPresent(String.self, forKey: .tone)
