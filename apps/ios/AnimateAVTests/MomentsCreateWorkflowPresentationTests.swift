@@ -358,8 +358,8 @@ final class MomentsCreateWorkflowPresentationTests: XCTestCase {
         XCTAssertEqual(summary.presentedScenes.map(\.caption), ["Open with the arrival.", "Show the trip highlights."])
     }
 
-    func testStoryDecisionPresentationFormatsReadyStoryState() {
-        let presentation = MomentsCreateStoryDecisionPresentation(
+    func testVideoDirectionPresentationFormatsReadyDirectionState() {
+        let presentation = MomentsCreateVideoDirectionPresentation(
             mediaSummary: MomentsCreateMediaSummary(
                 selectedMedia: [
                     MomentsCreateTestFixtures.makeSelectedMedia(id: "00000000-0000-0000-0000-000000000001"),
@@ -380,20 +380,20 @@ final class MomentsCreateWorkflowPresentationTests: XCTestCase {
 
         XCTAssertEqual(
             presentation.statusMessage,
-            "Plan is ready. Create the final video or adjust it first."
+            "Video direction is ready. Create the final video or adjust it first."
         )
-        XCTAssertEqual(presentation.modeTitle, "Plan")
+        XCTAssertEqual(presentation.modeTitle, "Direction")
         XCTAssertEqual(presentation.mediaCountTitle, "2 items")
-        XCTAssertEqual(presentation.primaryActionTitle, "Refresh plan")
-        XCTAssertEqual(presentation.editActionTitle, "Edit plan")
+        XCTAssertEqual(presentation.primaryActionTitle, "Refresh direction")
+        XCTAssertEqual(presentation.editActionTitle, "Edit direction")
         XCTAssertTrue(presentation.canRunPrimaryAction)
         XCTAssertTrue(presentation.canShowRefreshAction)
         XCTAssertEqual(presentation.visibleScenes.count, 2)
-        XCTAssertEqual(presentation.remainingSceneTitle, "2 more scenes in this plan")
+        XCTAssertEqual(presentation.remainingSceneTitle, "2 more direction details")
     }
 
-    func testStoryDecisionPresentationKeepsFinalPathNonBlockingWhenImproveIsUnavailable() {
-        let presentation = MomentsCreateStoryDecisionPresentation(
+    func testVideoDirectionPresentationKeepsFinalPathNonBlockingWhenImproveIsUnavailable() {
+        let presentation = MomentsCreateVideoDirectionPresentation(
             mediaSummary: MomentsCreateMediaSummary(
                 selectedMedia: [MomentsCreateTestFixtures.makeSelectedMedia(id: "00000000-0000-0000-0000-000000000001")]
             ),
@@ -407,15 +407,15 @@ final class MomentsCreateWorkflowPresentationTests: XCTestCase {
 
         XCTAssertEqual(
             presentation.statusMessage,
-            "Plan is ready. Create the final video or adjust it first."
+            "Video direction is ready. Create the final video or adjust it first."
         )
-        XCTAssertEqual(presentation.primaryActionTitle, "Refresh plan")
+        XCTAssertEqual(presentation.primaryActionTitle, "Refresh direction")
         XCTAssertFalse(presentation.canRunPrimaryAction)
         XCTAssertFalse(presentation.canShowRefreshAction)
     }
 
-    func testStoryDecisionPresentationFormatsPendingAndUnavailableStates() {
-        var presentation = MomentsCreateStoryDecisionPresentation(
+    func testVideoDirectionPresentationFormatsPendingAndUnavailableStates() {
+        var presentation = MomentsCreateVideoDirectionPresentation(
             mediaSummary: MomentsCreateMediaSummary(
                 selectedMedia: [MomentsCreateTestFixtures.makeSelectedMedia(id: "00000000-0000-0000-0000-000000000001")]
             ),
@@ -424,7 +424,7 @@ final class MomentsCreateWorkflowPresentationTests: XCTestCase {
             canRefreshStory: true
         )
 
-        XCTAssertEqual(presentation.statusMessage, "Ready for Avi to prepare the video.")
+        XCTAssertEqual(presentation.statusMessage, "Ready for Avi to prepare the video direction.")
         XCTAssertEqual(presentation.modeTitle, "Ready")
         XCTAssertEqual(presentation.mediaCountTitle, "1 item")
         XCTAssertEqual(presentation.primaryActionTitle, "Prepare video")
@@ -511,7 +511,7 @@ final class MomentsCreateWorkflowPresentationTests: XCTestCase {
         XCTAssertFalse(planning.hasRenderPlan)
         XCTAssertEqual(planning.primaryTitle, "Check credits")
         XCTAssertEqual(planning.primaryIconName, "creditcard.fill")
-        XCTAssertEqual(planning.creditPolicyMessage, "Avi checks media and credits before creating the final video.")
+        XCTAssertEqual(planning.creditPolicyMessage, "Avi checks the source image and credits before creating the final video.")
         XCTAssertTrue(planning.canAffordSelectedCost)
 
         let ready = MomentsCreateFinalVideoActionPresentation(
@@ -572,7 +572,7 @@ final class MomentsCreateWorkflowPresentationTests: XCTestCase {
         XCTAssertEqual(presentation.buttonIconName, "arrow.clockwise")
         XCTAssertEqual(
             presentation.statusMessage,
-            "Avi could not prepare video creation. Try again, or adjust the media and options."
+            "Avi could not prepare video creation. Try again, or adjust the source image and options."
         )
     }
 

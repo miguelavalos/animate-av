@@ -57,7 +57,7 @@ struct MomentsCreateStoryPresentation: Equatable {
     }
 }
 
-struct MomentsCreateStoryDecisionPresentation: Equatable {
+struct MomentsCreateVideoDirectionPresentation: Equatable {
     var mediaSummary: MomentsCreateMediaSummary
     var storySummary: MomentsCreateStorySummary
     var selectedDuration: MomentDuration
@@ -67,31 +67,31 @@ struct MomentsCreateStoryDecisionPresentation: Equatable {
 
     var statusMessage: String {
         if storySummary.hasScenes {
-            return L10n.string("create.storyDecision.status.ready")
+            return L10n.string("create.videoDirection.status.ready")
         }
         if storySummary.isPlanning {
-            return storySummary.statusMessage ?? L10n.string("create.storyDecision.status.improving")
+            return storySummary.statusMessage ?? L10n.string("create.videoDirection.status.improving")
         }
         if mediaCount > 0, canRefreshStory {
-            return L10n.string("create.storyDecision.status.readyToPrepare")
+            return L10n.string("create.videoDirection.status.readyToPrepare")
         }
         if mediaCount > 0 {
-            return availabilityMessage ?? L10n.string("create.storyDecision.status.unavailable")
+            return availabilityMessage ?? L10n.string("create.videoDirection.status.unavailable")
         }
-        return L10n.string("create.storyDecision.status.needsMedia")
+        return L10n.string("create.videoDirection.status.needsMedia")
     }
 
     var modeTitle: String {
         if storySummary.isPlanning {
-            return L10n.string("create.storyDecision.pill.working")
+            return L10n.string("create.videoDirection.pill.working")
         }
         if storySummary.hasScenes {
-            return L10n.string("create.storyDecision.pill.story")
+            return L10n.string("create.videoDirection.pill.story")
         }
         if mediaCount > 0 {
-            return L10n.string("create.storyDecision.pill.ready")
+            return L10n.string("create.videoDirection.pill.ready")
         }
-        return L10n.string("create.storyDecision.pill.noMedia")
+        return L10n.string("create.videoDirection.pill.noMedia")
     }
 
     var mediaCountTitle: String {
@@ -119,8 +119,8 @@ struct MomentsCreateStoryDecisionPresentation: Equatable {
 
     var primaryActionTitle: String {
         storySummary.hasScenes
-            ? L10n.string("create.storyDecision.action.refresh")
-            : L10n.string("create.storyDecision.action.prepare")
+            ? L10n.string("create.videoDirection.action.refresh")
+            : L10n.string("create.videoDirection.action.prepare")
     }
 
     var primaryActionIconName: String {
@@ -128,7 +128,7 @@ struct MomentsCreateStoryDecisionPresentation: Equatable {
     }
 
     var editActionTitle: String {
-        L10n.string("create.storyDecision.action.edit")
+        L10n.string("create.videoDirection.action.edit")
     }
 
     var iconName: String {
@@ -158,7 +158,7 @@ struct MomentsCreateStoryDecisionPresentation: Equatable {
     var remainingSceneTitle: String? {
         guard remainingSceneCount > 0 else { return nil }
         return L10n.string(
-            remainingSceneCount == 1 ? "create.storyDecision.moreScene" : "create.storyDecision.moreScenes",
+            remainingSceneCount == 1 ? "create.videoDirection.moreScene" : "create.videoDirection.moreScenes",
             remainingSceneCount
         )
     }

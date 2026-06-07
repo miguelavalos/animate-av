@@ -120,7 +120,7 @@ private struct MomentsCreateMediaFirstWorkspace: View {
                     if showsFinalVideoCompletion || presentation.isFinalRenderEditingLocked {
                         EmptyView()
                     } else if hasMediaSelection {
-                        MomentsCreateStoryDecisionCard(
+                        MomentsCreateVideoDirectionCard(
                             presentation: presentation,
                             selectedLook: form.look,
                             note: form.details,
@@ -767,60 +767,7 @@ private struct MomentsCreateFinalVideoRecoveryScene: View {
     }
 }
 
-private struct MomentsCreateStoryReviewCard: View {
-    let presentation: MomentsCreateWorkflowPresentation
-
-    var body: some View {
-        AVAppShellCard {
-            VStack(alignment: .leading, spacing: 14) {
-                HStack(spacing: 10) {
-                    Text(L10n.string("create.storyDirection.title"))
-                        .font(.system(size: 13, weight: .black))
-                        .foregroundStyle(AVBrandColor.textPrimary)
-
-                    Spacer(minLength: 0)
-
-                    Text(sceneCountTitle)
-                        .font(.system(size: 12, weight: .black))
-                        .foregroundStyle(AVBrandColor.accent)
-                }
-
-                Text(L10n.string("create.storyDirection.detail"))
-                    .font(.caption)
-                    .fontWeight(.semibold)
-                    .foregroundStyle(AVBrandColor.textSecondary)
-
-                VStack(alignment: .leading, spacing: 10) {
-                    if presentation.storySummary.presentedScenes.isEmpty {
-                        Label(L10n.string("create.storyDirection.needsStory"), systemImage: "text.bubble.fill")
-                            .font(.system(size: 12, weight: .bold))
-                            .foregroundStyle(AVBrandColor.textSecondary)
-                            .fixedSize(horizontal: false, vertical: true)
-                            .padding(10)
-                            .frame(maxWidth: .infinity, alignment: .leading)
-                            .background(AVBrandColor.neutral100.opacity(0.68), in: RoundedRectangle(cornerRadius: 8, style: .continuous))
-                    } else {
-                        ForEach(presentation.storySummary.presentedScenes) { scene in
-                            MomentsCreatePresentedStorySceneRow(scene: scene)
-                        }
-                    }
-                }
-
-                HStack(spacing: 8) {
-                    MomentsCreateOptionPill(title: "\(presentation.mediaSummary.effectiveMediaCount) items", systemImage: "photo.on.rectangle")
-                    MomentsCreateOptionPill(title: "\(presentation.template.duration)", systemImage: "timer")
-                }
-            }
-        }
-    }
-
-    private var sceneCountTitle: String {
-        let count = presentation.storySummary.presentedScenes.count
-        return "\(count) \(count == 1 ? "scene" : "scenes")"
-    }
-}
-
-private struct MomentsCreateStoryDecisionCard: View {
+private struct MomentsCreateVideoDirectionCard: View {
     let presentation: MomentsCreateWorkflowPresentation
     let selectedLook: MomentLook
     let note: String
@@ -850,7 +797,7 @@ private struct MomentsCreateStoryDecisionCard: View {
 
                     VStack(alignment: .leading, spacing: 7) {
                         HStack(spacing: 9) {
-                            Image(systemName: storyDecision.iconName)
+                            Image(systemName: videoDirection.iconName)
                                 .font(.system(size: 14, weight: .black))
                                 .foregroundStyle(.white)
                                 .frame(width: 30, height: 30)
@@ -863,7 +810,7 @@ private struct MomentsCreateStoryDecisionCard: View {
                                 .minimumScaleFactor(0.82)
                         }
 
-                        Text(storyDecision.statusMessage)
+                        Text(videoDirection.statusMessage)
                             .font(.system(size: 13, weight: .semibold))
                             .foregroundStyle(AVBrandColor.textSecondary)
                             .lineLimit(2)
@@ -872,7 +819,7 @@ private struct MomentsCreateStoryDecisionCard: View {
                     .frame(maxWidth: .infinity, alignment: .leading)
 
                     Menu {
-                        Section(L10n.string("create.storyDecision.menu.userActions")) {
+                        Section(L10n.string("create.videoDirection.menu.userActions")) {
                             Button(action: editMedia) {
                                 Label(L10n.string("create.media.editTitle"), systemImage: "photo.stack")
                             }
@@ -883,7 +830,7 @@ private struct MomentsCreateStoryDecisionCard: View {
                             }
                         }
 
-                        Section(L10n.string("create.storyDecision.menu.aviActions")) {
+                        Section(L10n.string("create.videoDirection.menu.aviActions")) {
                             if canUndoAutoStyleSuggestion {
                                 Button(action: undoAutoStyleSuggestion) {
                                     Label(L10n.string("create.aviDirection.undoSuggestion"), systemImage: "arrow.uturn.backward")
@@ -902,10 +849,10 @@ private struct MomentsCreateStoryDecisionCard: View {
                             .background(AVBrandColor.mutedSurface.opacity(0.62), in: Circle())
                     }
                     .buttonStyle(.plain)
-                    .accessibilityLabel(L10n.string("create.storyDecision.menu.accessibility"))
+                    .accessibilityLabel(L10n.string("create.videoDirection.menu.accessibility"))
                 }
 
-                MomentsCreateStoryDecisionSummary(
+                MomentsCreateVideoDirectionSummary(
                     isUserAdjusted: isUserAdjustedFromAvi,
                     title: decisionSummaryTitle,
                     detail: decisionSummaryDetail,
@@ -913,21 +860,21 @@ private struct MomentsCreateStoryDecisionCard: View {
                 )
 
                 VStack(alignment: .leading, spacing: 7) {
-                    Text(L10n.string("create.storyDecision.selectedSetup"))
+                    Text(L10n.string("create.videoDirection.selectedSetup"))
                         .font(.system(size: 11, weight: .black))
                         .foregroundStyle(AVBrandColor.textSecondary)
                         .textCase(.uppercase)
 
                     VStack(spacing: 0) {
-                        MomentsCreateStoryDecisionSummaryRow(
+                        MomentsCreateVideoDirectionSummaryRow(
                             title: L10n.string("create.workflowContent.mediaSelected"),
-                            value: storyDecision.mediaCountTitle,
+                            value: videoDirection.mediaCountTitle,
                             detail: mediaDetail,
                             systemImage: "photo.stack",
                             action: editMedia
                         )
                         MomentsCreateOptionDivider()
-                        MomentsCreateStoryDecisionSummaryRow(
+                        MomentsCreateVideoDirectionSummaryRow(
                             title: L10n.string("create.workflowContent.theme"),
                             value: selectedStyle.title,
                             detail: selectedStyle.subtitle,
@@ -935,7 +882,7 @@ private struct MomentsCreateStoryDecisionCard: View {
                             action: changeTheme
                         )
                         MomentsCreateOptionDivider()
-                        MomentsCreateStoryDecisionSummaryRow(
+                        MomentsCreateVideoDirectionSummaryRow(
                             title: L10n.string("create.guide.look.title"),
                             value: selectedLook.title,
                             detail: selectedLook.subtitle,
@@ -943,7 +890,7 @@ private struct MomentsCreateStoryDecisionCard: View {
                             action: changeLook
                         )
                         MomentsCreateOptionDivider()
-                        MomentsCreateStoryDecisionSummaryRow(
+                        MomentsCreateVideoDirectionSummaryRow(
                             title: L10n.string("create.workflowContent.tone"),
                             value: selectedMusicPreset.title,
                             detail: L10n.string("create.guide.voice.detail"),
@@ -951,7 +898,7 @@ private struct MomentsCreateStoryDecisionCard: View {
                             action: changeVoice
                         )
                         MomentsCreateOptionDivider()
-                        MomentsCreateStoryDecisionSummaryRow(
+                        MomentsCreateVideoDirectionSummaryRow(
                             title: L10n.string("create.note.field.title"),
                             value: noteTitle,
                             detail: noteDetail,
@@ -986,14 +933,14 @@ private struct MomentsCreateStoryDecisionCard: View {
 
     private var decisionSummaryTitle: String {
         isUserAdjustedFromAvi
-            ? L10n.string("create.storyDecision.summary.userTitle")
-            : L10n.string("create.storyDecision.summary.aviTitle")
+            ? L10n.string("create.videoDirection.summary.userTitle")
+            : L10n.string("create.videoDirection.summary.aviTitle")
     }
 
     private var decisionSummaryDetail: String {
         if isUserAdjustedFromAvi {
             return L10n.string(
-                "create.storyDecision.summary.userDetail",
+                "create.videoDirection.summary.userDetail",
                 selectedStyle.title,
                 selectedMusicPreset.title,
                 selectedLook.title
@@ -1001,7 +948,7 @@ private struct MomentsCreateStoryDecisionCard: View {
         }
 
         return L10n.string(
-            "create.storyDecision.summary.aviDetail",
+            "create.videoDirection.summary.aviDetail",
             selectedStyle.title,
             selectedMusicPreset.title,
             selectedLook.title,
@@ -1015,7 +962,7 @@ private struct MomentsCreateStoryDecisionCard: View {
         let styleTitle = styles.first(where: { $0.id == autoStyleSuggestion.styleID })?.title
             ?? L10n.string("create.options.anotherTheme")
         return L10n.string(
-            "create.storyDecision.summary.aviProposalDetail",
+            "create.videoDirection.summary.aviProposalDetail",
             styleTitle,
             autoStyleSuggestion.musicPreset.title,
             selectedLook.title
@@ -1063,8 +1010,8 @@ private struct MomentsCreateStoryDecisionCard: View {
         presentation.finalRenderSummary.latestFinalJob?.isActiveRender != true
     }
 
-    private var storyDecision: MomentsCreateStoryDecisionPresentation {
-        MomentsCreateStoryDecisionPresentation(
+    private var videoDirection: MomentsCreateVideoDirectionPresentation {
+        MomentsCreateVideoDirectionPresentation(
             mediaSummary: presentation.mediaSummary,
             storySummary: presentation.storySummary,
             selectedDuration: .short,
@@ -1076,7 +1023,7 @@ private struct MomentsCreateStoryDecisionCard: View {
 
 }
 
-private struct MomentsCreateStoryDecisionSummary: View {
+private struct MomentsCreateVideoDirectionSummary: View {
     let isUserAdjusted: Bool
     let title: String
     let detail: String
@@ -1106,7 +1053,7 @@ private struct MomentsCreateStoryDecisionSummary: View {
                     Divider()
                         .padding(.vertical, 2)
 
-                    Text(L10n.string("create.storyDecision.summary.aviProposalTitle"))
+                    Text(L10n.string("create.videoDirection.summary.aviProposalTitle"))
                         .font(.system(size: 11, weight: .black))
                         .foregroundStyle(AVBrandColor.accent)
 
@@ -1318,43 +1265,6 @@ private struct MomentsCreateLockedFinalRenderNotice: View {
     }
 }
 
-private struct MomentsCreatePresentedStorySceneRow: View {
-    let scene: MomentsCreateStoryScenePresentation
-
-    var body: some View {
-        HStack(alignment: .top, spacing: 10) {
-            Image(systemName: "rectangle.stack.fill")
-                .font(.system(size: 12, weight: .black))
-                .foregroundStyle(AVBrandColor.accent)
-                .frame(width: 26, height: 26)
-                .background(AVBrandColor.accent.opacity(0.10), in: Circle())
-
-            VStack(alignment: .leading, spacing: 3) {
-                Text(scene.title)
-                    .font(.system(size: 12, weight: .black))
-                    .foregroundStyle(AVBrandColor.textPrimary)
-
-                Text(scene.caption)
-                    .font(.caption)
-                    .fontWeight(.semibold)
-                    .foregroundStyle(AVBrandColor.textSecondary)
-                    .lineLimit(2)
-
-                if let detail = scene.detail, !detail.isEmpty {
-                    Text(detail)
-                        .font(.caption2)
-                        .fontWeight(.semibold)
-                        .foregroundStyle(AVBrandColor.textSecondary.opacity(0.78))
-                        .lineLimit(2)
-                }
-            }
-            .frame(maxWidth: .infinity, alignment: .leading)
-        }
-        .padding(10)
-        .background(AVBrandColor.neutral100.opacity(0.68), in: RoundedRectangle(cornerRadius: 8, style: .continuous))
-    }
-}
-
 private struct MomentsCreateOptionPill: View {
     let title: String
     let systemImage: String
@@ -1371,7 +1281,7 @@ private struct MomentsCreateOptionPill: View {
     }
 }
 
-private struct MomentsCreateStoryDecisionSummaryRow: View {
+private struct MomentsCreateVideoDirectionSummaryRow: View {
     let title: String
     let value: String
     let detail: String
