@@ -1,7 +1,7 @@
 import Foundation
 
-struct MomentsCreateFinalVideoActionPresentation: Equatable {
-    var summary: MomentsCreateFinalRenderSummary
+struct AnimateCreateFinalVideoActionPresentation: Equatable {
+    var summary: AnimateCreateFinalRenderSummary
     var template: MomentTemplate
     var balance: AnimateCreditBalance
     var removesWatermark = false
@@ -86,13 +86,13 @@ struct MomentsCreateFinalVideoActionPresentation: Equatable {
     }
 }
 
-struct MomentsCreatePrimaryActionPresentation: Equatable {
-    var workflow: MomentsCreateWorkflowPresentation
-    var finalVideoAction: MomentsCreateFinalVideoActionPresentation
+struct AnimateCreatePrimaryActionPresentation: Equatable {
+    var workflow: AnimateCreateWorkflowPresentation
+    var finalVideoAction: AnimateCreateFinalVideoActionPresentation
 
-    init(workflow: MomentsCreateWorkflowPresentation) {
+    init(workflow: AnimateCreateWorkflowPresentation) {
         self.workflow = workflow
-        self.finalVideoAction = MomentsCreateFinalVideoActionPresentation(
+        self.finalVideoAction = AnimateCreateFinalVideoActionPresentation(
             summary: workflow.finalRenderSummary,
             template: workflow.template,
             balance: workflow.balance
@@ -243,7 +243,7 @@ struct MomentsCreatePrimaryActionPresentation: Equatable {
                 guard missingCreditsForPreparedPlan > 0 else {
                     return L10n.string("workflow.final.addCredits")
                 }
-                return MomentsCreateAvailabilityCopy.finalRenderInsufficientCredits(
+                return AnimateCreateAvailabilityCopy.finalRenderInsufficientCredits(
                     missingCredits: missingCreditsForPreparedPlan
                 )
             }

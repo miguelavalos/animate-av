@@ -1,7 +1,7 @@
 import AVAppShellFoundation
 import SwiftUI
 
-struct MomentsCreateRenderJobStatusRow: View {
+struct AnimateCreateRenderJobStatusRow: View {
     let renderJob: MomentRenderJob
 
     var body: some View {
@@ -41,7 +41,7 @@ struct MomentsCreateRenderJobStatusRow: View {
     }
 }
 
-struct MomentsCreateArtifactStatusCard: View {
+struct AnimateCreateArtifactStatusCard: View {
     let title: String
     let systemImage: String
     let artifact: MomentArtifact

@@ -38,7 +38,7 @@ enum MomentsFinalVideoCommandState: Equatable {
 }
 
 @MainActor
-final class MomentsCreateViewModel: ObservableObject {
+final class AnimateCreateViewModel: ObservableObject {
     @Published private(set) var isSignedIn = false
     @Published private(set) var balance = AnimateCreditBalance.empty
     @Published private(set) var creditBalanceLoadState = AnimateCreditBalanceLoadState.signedOut
@@ -89,7 +89,7 @@ final class MomentsCreateViewModel: ObservableObject {
     private(set) var finalRenderWorkflow: FinalRenderWorkflow?
     private var authTokenProvider: (any AnimateAuthTokenProviding)?
     private var imageGenerationAccountingClient: MomentsImageGenerationAccountingClient?
-    let operationRunner = MomentsCreateOperationRunner()
+    let operationRunner = AnimateCreateOperationRunner()
     var cancellables = Set<AnyCancellable>()
     private var autoStyleMediaSignature: String?
     var lastPreparedStoryInputSignature: String?
@@ -103,7 +103,7 @@ final class MomentsCreateViewModel: ObservableObject {
 
     var activeMoment: InProgressMoment? {
         if let fixtureMode = activeUITestFixtureMode {
-            return MomentsCreateUITestFixtures.moment(for: fixtureMode)
+            return AnimateCreateUITestFixtures.moment(for: fixtureMode)
         }
 
         return activeWorkspace?.moment
@@ -433,7 +433,7 @@ final class MomentsCreateViewModel: ObservableObject {
     func applyUITestCreateFixture() {
         guard let fixtureMode = activeUITestFixtureMode else { return }
 
-        let workspace = MomentsCreateUITestFixtures.workspace(for: fixtureMode)
+        let workspace = AnimateCreateUITestFixtures.workspace(for: fixtureMode)
         let template = templates.first(where: { $0.id == workspace.moment.template }) ?? MomentTemplate.birthdayMessage
         form = MomentSetupForm(
             template: template,
@@ -444,11 +444,11 @@ final class MomentsCreateViewModel: ObservableObject {
             details: workspace.moment.details ?? ""
         )
         isSignedIn = true
-        balance = MomentsCreateUITestFixtures.balance(for: fixtureMode)
+        balance = AnimateCreateUITestFixtures.balance(for: fixtureMode)
         isContinuingMoment = true
         workflowActiveMomentId = workspace.moment.id
         setupErrorMessage = nil
-        selectedMedia = MomentsCreateUITestFixtures.selectedMedia
+        selectedMedia = AnimateCreateUITestFixtures.selectedMedia
         mediaStatusMessage = L10n.string("create.media.fixture.synced")
         savedScenes = workspace.storyScenes
         generatedScenes = []
@@ -461,7 +461,7 @@ final class MomentsCreateViewModel: ObservableObject {
         latestFinalJob = workspace.latestRenderJob(kind: "final")
         switch fixtureMode {
         case .videoPlanReady, .videoPlanInsufficientCredits:
-            renderPlan = MomentsCreateUITestFixtures.renderPlan(for: fixtureMode)
+            renderPlan = AnimateCreateUITestFixtures.renderPlan(for: fixtureMode)
         case .storyReady, .finalQueued, .finalRunning, .full:
             renderPlan = nil
         }
@@ -488,13 +488,13 @@ final class MomentsCreateViewModel: ObservableObject {
 
     var effectiveActiveWorkspace: MomentWorkspace? {
         if let fixtureMode = activeUITestFixtureMode {
-            return MomentsCreateUITestFixtures.workspace(for: fixtureMode)
+            return AnimateCreateUITestFixtures.workspace(for: fixtureMode)
         }
         return activeWorkspace
     }
 
     var effectiveSelectedMedia: [MomentsSelectedMedia] {
-        usesCreateUITestFixture ? MomentsCreateUITestFixtures.selectedMedia : selectedMedia
+        usesCreateUITestFixture ? AnimateCreateUITestFixtures.selectedMedia : selectedMedia
     }
 
     var effectiveSavedScenes: [MomentStoryScene] {
@@ -520,8 +520,8 @@ final class MomentsCreateViewModel: ObservableObject {
         effectiveActiveWorkspace?.latestRenderJob(kind: "final") ?? latestFinalJob
     }
 
-    var activeUITestFixtureMode: MomentsCreateUITestFixtures.Mode? {
-        MomentsCreateUITestFixtures.mode
+    var activeUITestFixtureMode: AnimateCreateUITestFixtures.Mode? {
+        AnimateCreateUITestFixtures.mode
     }
 
     var usesCreateUITestFixture: Bool {
@@ -826,8 +826,8 @@ final class MomentsCreateViewModel: ObservableObject {
     }
 }
 
-extension MomentsCreateViewModel {
-    func applyAccountState(_ state: MomentsCreateAccountState) {
+extension AnimateCreateViewModel {
+    func applyAccountState(_ state: AnimateCreateAccountState) {
         guard !usesCreateUITestFixture else { return }
         isSignedIn = state.isSignedIn
         balance = state.balance
@@ -846,7 +846,7 @@ extension MomentsCreateViewModel {
         updateFinalRenderStatusMessage(nil)
     }
 
-    func applyMomentCreationState(_ state: MomentsCreateMomentCreationState) {
+    func applyMomentCreationState(_ state: AnimateCreateMomentCreationState) {
         guard !usesCreateUITestFixture else { return }
         let previousActiveMomentId = workflowActiveMomentId
         isCreatingMoment = state.isCreatingMoment
@@ -859,7 +859,7 @@ extension MomentsCreateViewModel {
         }
     }
 
-    func applyMediaUploadState(_ state: MomentsCreateMediaUploadState) {
+    func applyMediaUploadState(_ state: AnimateCreateMediaUploadState) {
         guard !usesCreateUITestFixture else { return }
         selectedMedia = state.selectedMedia
         mediaStatusMessage = state.statusMessage
@@ -868,7 +868,7 @@ extension MomentsCreateViewModel {
         updateAutoStyleSuggestion(for: state.selectedMedia)
     }
 
-    func applyStoryState(_ state: MomentsCreateStoryState) {
+    func applyStoryState(_ state: AnimateCreateStoryState) {
         guard !usesCreateUITestFixture else { return }
         activeWorkspace = state.activeWorkspace
         syncFormWithActiveWorkspace(state.activeWorkspace)
@@ -897,7 +897,7 @@ extension MomentsCreateViewModel {
         finalRenderStatusMessage = message
     }
 
-    func applyFinalRenderState(_ state: MomentsCreateFinalRenderState) {
+    func applyFinalRenderState(_ state: AnimateCreateFinalRenderState) {
         guard !usesCreateUITestFixture else { return }
         finalExport = state.finalExport
         latestFinalJob = state.latestFinalJob
@@ -1025,7 +1025,7 @@ extension MomentsCreateViewModel {
         return latestFinalJob.userMessage
     }
 
-    private func reconcileFinalVideoCommandState(with state: MomentsCreateFinalRenderState) {
+    private func reconcileFinalVideoCommandState(with state: AnimateCreateFinalRenderState) {
         if state.pendingGalleryVideo != nil {
             finalVideoCommandState = .completedDownloadReady(
                 state.statusMessage ?? L10n.string("workflow.final.savedLocal")

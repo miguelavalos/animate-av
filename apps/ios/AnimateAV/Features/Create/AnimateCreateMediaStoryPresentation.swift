@@ -1,9 +1,9 @@
 import Foundation
 
-struct MomentsCreateMediaPresentation: Equatable {
+struct AnimateCreateMediaPresentation: Equatable {
     var activeMomentId: String?
     var template: MomentTemplate
-    var summary: MomentsCreateMediaSummary
+    var summary: AnimateCreateMediaSummary
     var canAddMedia = false
     var availabilityMessage: String?
 
@@ -37,8 +37,8 @@ struct MomentsCreateMediaPresentation: Equatable {
     }
 }
 
-struct MomentsCreateStoryPresentation: Equatable {
-    var summary: MomentsCreateStorySummary
+struct AnimateCreateStoryPresentation: Equatable {
+    var summary: AnimateCreateStorySummary
     var canPlanStory = false
     var availabilityMessage: String?
 
@@ -57,9 +57,9 @@ struct MomentsCreateStoryPresentation: Equatable {
     }
 }
 
-struct MomentsCreateVideoDirectionPresentation: Equatable {
-    var mediaSummary: MomentsCreateMediaSummary
-    var storySummary: MomentsCreateStorySummary
+struct AnimateCreateVideoDirectionPresentation: Equatable {
+    var mediaSummary: AnimateCreateMediaSummary
+    var storySummary: AnimateCreateStorySummary
     var selectedDuration: MomentDuration
     var renderPlan: MomentsRenderPlan?
     var canRefreshStory = false
@@ -147,7 +147,7 @@ struct MomentsCreateVideoDirectionPresentation: Equatable {
         storySummary.hasScenes && canRunPrimaryAction
     }
 
-    var visibleScenes: [MomentsCreateStoryScenePresentation] {
+    var visibleScenes: [AnimateCreateStoryScenePresentation] {
         Array(storySummary.presentedScenes.prefix(2))
     }
 

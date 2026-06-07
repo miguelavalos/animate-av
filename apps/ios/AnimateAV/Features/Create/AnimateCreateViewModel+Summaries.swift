@@ -1,13 +1,13 @@
-extension MomentsCreateViewModel {
-    var workspaceSummary: MomentsCreateWorkspaceSummary {
-        MomentsCreateWorkspaceSummary.make(
+extension AnimateCreateViewModel {
+    var workspaceSummary: AnimateCreateWorkspaceSummary {
+        AnimateCreateWorkspaceSummary.make(
             workspace: effectiveActiveWorkspace,
             finalExport: effectiveFinalExport
         )
     }
 
-    var mediaSummary: MomentsCreateMediaSummary {
-        MomentsCreateMediaSummary(
+    var mediaSummary: AnimateCreateMediaSummary {
+        AnimateCreateMediaSummary(
             selectedMedia: effectiveSelectedMedia,
             syncedMediaAssets: effectiveActiveWorkspace?.mediaAssets ?? [],
             isImporting: isImportingMedia,
@@ -16,8 +16,8 @@ extension MomentsCreateViewModel {
         )
     }
 
-    var storySummary: MomentsCreateStorySummary {
-        MomentsCreateStorySummary(
+    var storySummary: AnimateCreateStorySummary {
+        AnimateCreateStorySummary(
             savedScenes: effectiveSavedScenes,
             generatedScenes: generatedScenes,
             isPlanning: isPlanningStory,
@@ -25,8 +25,8 @@ extension MomentsCreateViewModel {
         )
     }
 
-    var finalRenderSummary: MomentsCreateFinalRenderSummary {
-        MomentsCreateFinalRenderSummary(
+    var finalRenderSummary: AnimateCreateFinalRenderSummary {
+        AnimateCreateFinalRenderSummary(
             creditCost: form.template.creditCost,
             renderPlan: currentRenderPlan,
             videoQuote: videoQuote,

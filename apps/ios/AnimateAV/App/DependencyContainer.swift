@@ -14,7 +14,7 @@ final class MomentsDependencyContainer: ObservableObject {
     let storyWorkflow: StoryWorkflow
     let finalRenderWorkflow: FinalRenderWorkflow
     let homeViewModel: AnimateHomeViewModel
-    let createViewModel: MomentsCreateViewModel
+    let createViewModel: AnimateCreateViewModel
     let inProgressViewModel: AnimateInProgressViewModel
     let galleryViewModel: AnimateGalleryViewModel
     let aviViewModel: AnimateAviViewModel
@@ -97,7 +97,7 @@ final class MomentsDependencyContainer: ObservableObject {
     }
 
     func applyUITestFixturesIfNeeded() {
-        guard MomentsCreateUITestFixtures.isActive else { return }
+        guard AnimateCreateUITestFixtures.isActive else { return }
         createViewModel.applyUITestCreateFixture()
     }
 }

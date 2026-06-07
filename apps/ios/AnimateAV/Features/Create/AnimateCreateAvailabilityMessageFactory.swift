@@ -1,6 +1,6 @@
 import Foundation
 
-enum MomentsCreateAvailabilityMessageFactory {
+enum AnimateCreateAvailabilityMessageFactory {
     static func setup(
         isSetupLocked: Bool,
         isSignedIn: Bool,
@@ -8,8 +8,8 @@ enum MomentsCreateAvailabilityMessageFactory {
         setupFormAvailability: MomentSetupRules.Availability
     ) -> String? {
         if isSetupLocked { return nil }
-        if !isSignedIn { return MomentsCreateAvailabilityCopy.momentSignInRequired }
-        if !isMomentCreationConfigured { return MomentsCreateAvailabilityCopy.momentSyncNotConfigured }
+        if !isSignedIn { return AnimateCreateAvailabilityCopy.momentSignInRequired }
+        if !isMomentCreationConfigured { return AnimateCreateAvailabilityCopy.momentSyncNotConfigured }
         return MomentSetupRules.availabilityMessage(setupFormAvailability)
     }
 
@@ -19,10 +19,10 @@ enum MomentsCreateAvailabilityMessageFactory {
         isMediaUploadConfigured: Bool,
         mediaRemainingSlots: Int
     ) -> String? {
-        if !hasMomentWorkspace { return MomentsCreateAvailabilityCopy.mediaMissingMoment }
+        if !hasMomentWorkspace { return AnimateCreateAvailabilityCopy.mediaMissingMoment }
         if isImportingMedia { return nil }
-        if !isMediaUploadConfigured { return MomentsCreateAvailabilityCopy.mediaUploadNotConfigured }
-        if mediaRemainingSlots == 0 { return MomentsCreateAvailabilityCopy.mediaTemplateFull }
+        if !isMediaUploadConfigured { return AnimateCreateAvailabilityCopy.mediaUploadNotConfigured }
+        if mediaRemainingSlots == 0 { return AnimateCreateAvailabilityCopy.mediaTemplateFull }
         return nil
     }
 
@@ -36,11 +36,11 @@ enum MomentsCreateAvailabilityMessageFactory {
         selectedMediaCount: Int,
         template: MomentTemplate
     ) -> String? {
-        guard isSignedIn else { return MomentsCreateAvailabilityCopy.storySignInRequired }
-        guard hasMomentWorkspace else { return MomentsCreateAvailabilityCopy.storyMissingMoment }
-        guard isStoryAvailable else { return MomentsCreateAvailabilityCopy.storyUnavailable }
+        guard isSignedIn else { return AnimateCreateAvailabilityCopy.storySignInRequired }
+        guard hasMomentWorkspace else { return AnimateCreateAvailabilityCopy.storyMissingMoment }
+        guard isStoryAvailable else { return AnimateCreateAvailabilityCopy.storyUnavailable }
         if isStoryPlanning { return nil }
-        if !isStoryConfigured { return MomentsCreateAvailabilityCopy.storyNotConfigured }
+        if !isStoryConfigured { return AnimateCreateAvailabilityCopy.storyNotConfigured }
 
         if selectedMediaCount > 0 {
             let availability = MomentsMediaRules.availability(template: template, selectedCount: selectedMediaCount)
@@ -65,7 +65,7 @@ enum MomentsCreateAvailabilityMessageFactory {
                 mediaAssets: mediaAssets,
                 template: template
             ),
-            missingMediaMessage: MomentsCreateAvailabilityCopy.storyMissingMedia
+            missingMediaMessage: AnimateCreateAvailabilityCopy.storyMissingMedia
         )
     }
 
@@ -79,22 +79,22 @@ enum MomentsCreateAvailabilityMessageFactory {
         balance: AnimateCreditBalance,
         creditBalanceLoadState: AnimateCreditBalanceLoadState = .loaded
     ) -> String? {
-        guard activeMomentId != nil else { return MomentsCreateAvailabilityCopy.finalRenderMissingMoment }
-        guard isFinalRenderAvailable else { return MomentsCreateAvailabilityCopy.finalRenderUnavailable }
+        guard activeMomentId != nil else { return AnimateCreateAvailabilityCopy.finalRenderMissingMoment }
+        guard isFinalRenderAvailable else { return AnimateCreateAvailabilityCopy.finalRenderUnavailable }
         if isFinalRenderGenerating { return nil }
-        if !isFinalRenderConfigured { return MomentsCreateAvailabilityCopy.finalRenderNotConfigured }
+        if !isFinalRenderConfigured { return AnimateCreateAvailabilityCopy.finalRenderNotConfigured }
         let availability = MomentsFinalRenderRules.availability(
             moment: moment,
             template: template,
             balance: balance
         )
         if availability.blockReason == .insufficientCredits, !creditBalanceLoadState.hasLoadedBalance {
-            return MomentsCreateAvailabilityCopy.finalRenderCreditBalanceUnavailable(creditBalanceLoadState)
+            return AnimateCreateAvailabilityCopy.finalRenderCreditBalanceUnavailable(creditBalanceLoadState)
         }
         return MomentsFinalRenderRules.availabilityMessage(
             availability,
-            missingMomentMessage: MomentsCreateAvailabilityCopy.finalRenderMissingWorkspace,
-            insufficientCreditsMessage: MomentsCreateAvailabilityCopy.finalRenderInsufficientCredits(
+            missingMomentMessage: AnimateCreateAvailabilityCopy.finalRenderMissingWorkspace,
+            insufficientCreditsMessage: AnimateCreateAvailabilityCopy.finalRenderInsufficientCredits(
                 missingCredits: missingCredits(template: template, balance: balance)
             )
         )

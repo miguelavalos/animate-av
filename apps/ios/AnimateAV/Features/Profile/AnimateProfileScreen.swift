@@ -11,7 +11,7 @@ struct AnimateProfileScreen: View {
     let startSignInFlow: () -> Void
 
     @EnvironmentObject private var accountController: AccountController
-    @EnvironmentObject private var createViewModel: MomentsCreateViewModel
+    @EnvironmentObject private var createViewModel: AnimateCreateViewModel
     @EnvironmentObject private var inProgressViewModel: AnimateInProgressViewModel
     @EnvironmentObject private var languageController: AppLanguageController
     @EnvironmentObject private var themeController: AppThemeController

@@ -1,6 +1,6 @@
 import Foundation
 
-enum MomentsCreateAvailabilityCopy {
+enum AnimateCreateAvailabilityCopy {
     static var momentSignInRequired: String { L10n.string("create.availability.momentSignInRequired") }
     static var momentSyncNotConfigured: String { L10n.string("create.availability.momentSyncNotConfigured") }
     static var mediaMissingMoment: String { L10n.string("create.availability.mediaMissingMoment") }

@@ -234,7 +234,7 @@ final class FinalRenderWorkflow: WorkspaceObservingWorkflow {
 
         let requiredCredits = renderPlan.plan.totalCreditCost
         guard creditBalanceProvider.currentCreditBalance.spendable >= requiredCredits else {
-            statusMessage = MomentsCreateAvailabilityCopy.finalRenderInsufficientCredits(
+            statusMessage = AnimateCreateAvailabilityCopy.finalRenderInsufficientCredits(
                 missingCredits: max(0, requiredCredits - creditBalanceProvider.currentCreditBalance.spendable)
             )
             return

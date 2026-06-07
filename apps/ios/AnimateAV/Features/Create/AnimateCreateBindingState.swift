@@ -1,25 +1,25 @@
 import Foundation
 
-struct MomentsCreateAccountState {
+struct AnimateCreateAccountState {
     let isSignedIn: Bool
     let balance: AnimateCreditBalance
     let creditBalanceLoadState: AnimateCreditBalanceLoadState
 }
 
-struct MomentsCreateMomentCreationState {
+struct AnimateCreateMomentCreationState {
     let isCreatingMoment: Bool
     let activeMomentId: String?
     let setupErrorMessage: String?
 }
 
-struct MomentsCreateMediaUploadState {
+struct AnimateCreateMediaUploadState {
     let selectedMedia: [MomentsSelectedMedia]
     let statusMessage: String?
     let isImporting: Bool
     let importProgress: MomentsMediaImportProgress?
 }
 
-struct MomentsCreateStoryState {
+struct AnimateCreateStoryState {
     let activeWorkspace: MomentWorkspace?
     let savedScenes: [MomentStoryScene]
     let generatedScenes: [MomentsStorySceneResponse]
@@ -27,7 +27,7 @@ struct MomentsCreateStoryState {
     let isPlanning: Bool
 }
 
-struct MomentsCreateFinalRenderState {
+struct AnimateCreateFinalRenderState {
     let finalExport: MomentArtifact?
     let latestFinalJob: MomentRenderJob?
     let renderPlan: MomentsRenderPlanResponse?

@@ -1,6 +1,6 @@
-extension MomentsCreateViewModel {
-    var workflowPresentation: MomentsCreateWorkflowPresentation {
-        MomentsCreateWorkflowPresentation.make(
+extension AnimateCreateViewModel {
+    var workflowPresentation: AnimateCreateWorkflowPresentation {
+        AnimateCreateWorkflowPresentation.make(
             activeMomentId: activeMomentId,
             isSignedIn: isSignedIn,
             isCreatingMoment: isCreatingMoment,
@@ -20,8 +20,8 @@ extension MomentsCreateViewModel {
         )
     }
 
-    var workflowAvailability: MomentsCreateWorkflowAvailability {
-        MomentsCreateWorkflowAvailability.make(
+    var workflowAvailability: AnimateCreateWorkflowAvailability {
+        AnimateCreateWorkflowAvailability.make(
             canAddMedia: canAddMedia,
             canPlanStory: canPlanStory,
             canPrepareFinalRenderPlan: canPrepareFinalRenderPlan,

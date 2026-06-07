@@ -1,6 +1,6 @@
 import Foundation
 
-struct MomentsCreateWorkflowAvailability: Equatable {
+struct AnimateCreateWorkflowAvailability: Equatable {
     var canAddMedia = false
     var canPlanStory = false
     var canPrepareFinalRenderPlan = false
@@ -19,8 +19,8 @@ struct MomentsCreateWorkflowAvailability: Equatable {
         mediaMessage: String?,
         storyMessage: String?,
         finalRenderMessage: String?
-    ) -> MomentsCreateWorkflowAvailability {
-        MomentsCreateWorkflowAvailability(
+    ) -> AnimateCreateWorkflowAvailability {
+        AnimateCreateWorkflowAvailability(
             canAddMedia: canAddMedia,
             canPlanStory: canPlanStory,
             canPrepareFinalRenderPlan: canPrepareFinalRenderPlan,

@@ -2,7 +2,7 @@ import Foundation
 import PhotosUI
 import SwiftUI
 
-extension MomentsCreateViewModel {
+extension AnimateCreateViewModel {
     @discardableResult
     func beginNewMoment(openMediaPicker: Bool = false) -> Bool {
         guard canBeginNewMoment else {

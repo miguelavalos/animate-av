@@ -1,4 +1,4 @@
-extension MomentsCreateViewModel {
+extension AnimateCreateViewModel {
     var canBeginNewMoment: Bool {
         !isSetupLocked && !isBusy
     }
@@ -37,9 +37,9 @@ extension MomentsCreateViewModel {
         workflowCapability.canRefreshFinalRenderStatus
     }
 
-    var workflowCapability: MomentsCreateWorkflowCapability {
+    var workflowCapability: AnimateCreateWorkflowCapability {
         if let fixtureMode = activeUITestFixtureMode {
-            return MomentsCreateWorkflowCapability(
+            return AnimateCreateWorkflowCapability(
                 canAddMedia: false,
                 canPlanStory: false,
                 canPrepareFinalRenderPlan: fixtureMode != .full
@@ -51,7 +51,7 @@ extension MomentsCreateViewModel {
             )
         }
 
-        return MomentsCreateWorkflowCapabilityFactory.make(
+        return AnimateCreateWorkflowCapabilityFactory.make(
             activeMomentId: activeMomentId,
             isSignedIn: isSignedIn,
             hasMomentWorkspace: hasMomentWorkspace,

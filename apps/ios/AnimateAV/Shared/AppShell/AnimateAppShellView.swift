@@ -8,7 +8,7 @@ struct AnimateAppShellView: View {
     let startSignInFlow: () -> Void
 
     @EnvironmentObject private var accountController: AccountController
-    @EnvironmentObject private var createViewModel: MomentsCreateViewModel
+    @EnvironmentObject private var createViewModel: AnimateCreateViewModel
     @EnvironmentObject private var inProgressViewModel: AnimateInProgressViewModel
     @EnvironmentObject private var galleryViewModel: AnimateGalleryViewModel
     @EnvironmentObject private var aviViewModel: AnimateAviViewModel
@@ -129,7 +129,7 @@ struct AnimateAppShellView: View {
                     }
                 )
             case .create:
-                MomentsCreateScreen(
+                AnimateCreateScreen(
                     startSignInFlow: startSignInFlow,
                     openCredits: openCredits,
                     cancelCreation: cancelCreation,

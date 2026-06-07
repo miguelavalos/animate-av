@@ -6,7 +6,7 @@ import SwiftUI
 
 struct AnimateHomeScreen: View {
     @EnvironmentObject private var viewModel: AnimateHomeViewModel
-    @EnvironmentObject private var createViewModel: MomentsCreateViewModel
+    @EnvironmentObject private var createViewModel: AnimateCreateViewModel
 
     let openSettings: () -> Void
     let openAccount: () -> Void

@@ -5,7 +5,7 @@ import Combine
 @MainActor
 final class AnimateCreateViewModelStoryStateTests: XCTestCase {
     func testSubmittingFinalVideoWithoutWorkflowFailsVisibly() {
-        let viewModel = MomentsCreateViewModel()
+        let viewModel = AnimateCreateViewModel()
 
         viewModel.submitFinalVideoConfirmation()
 
@@ -17,7 +17,7 @@ final class AnimateCreateViewModelStoryStateTests: XCTestCase {
     }
 
     func testFinalVideoCommandTracksQueuedBackendJob() {
-        let viewModel = MomentsCreateViewModel()
+        let viewModel = AnimateCreateViewModel()
         let job = AnimateCreateTestFixtures.makeRenderJob(
             id: "render-job-1",
             kind: "final",
@@ -27,7 +27,7 @@ final class AnimateCreateViewModelStoryStateTests: XCTestCase {
 
         viewModel.beginFinalVideoCommand(.confirming("Creating final video."))
         viewModel.applyFinalRenderState(
-            MomentsCreateFinalRenderState(
+            AnimateCreateFinalRenderState(
                 finalExport: nil,
                 latestFinalJob: job,
                 renderPlan: nil,
@@ -45,7 +45,7 @@ final class AnimateCreateViewModelStoryStateTests: XCTestCase {
     }
 
     func testClearingFinalSessionAfterGalleryMoveRemovesDownloadState() {
-        let viewModel = MomentsCreateViewModel()
+        let viewModel = AnimateCreateViewModel()
         let finalExport = AnimateCreateTestFixtures.makeArtifact(id: "artifact-1", kind: "final_export")
         let galleryVideo = AnimateGalleryVideoRecord(
             id: "artifact-1",
@@ -58,7 +58,7 @@ final class AnimateCreateViewModelStoryStateTests: XCTestCase {
         )
 
         viewModel.applyFinalRenderState(
-            MomentsCreateFinalRenderState(
+            AnimateCreateFinalRenderState(
                 finalExport: finalExport,
                 latestFinalJob: nil,
                 renderPlan: nil,
@@ -79,7 +79,7 @@ final class AnimateCreateViewModelStoryStateTests: XCTestCase {
     }
 
     func testBeginNewVideoWithoutPickerRequestShowsMediaChoice() {
-        let viewModel = MomentsCreateViewModel()
+        let viewModel = AnimateCreateViewModel()
         viewModel.beginNewMoment()
 
         XCTAssertTrue(viewModel.hasLocalMomentWorkspace)
@@ -88,7 +88,7 @@ final class AnimateCreateViewModelStoryStateTests: XCTestCase {
     }
 
     func testBeginNewVideoCanExplicitlyOpenPhotoPicker() {
-        let viewModel = MomentsCreateViewModel()
+        let viewModel = AnimateCreateViewModel()
         viewModel.beginNewMoment(openMediaPicker: true)
 
         XCTAssertTrue(viewModel.hasLocalMomentWorkspace)
@@ -185,11 +185,11 @@ final class AnimateCreateViewModelStoryStateTests: XCTestCase {
     }
 
     func testVisibleFinalRenderPlanCanBeConfirmedEvenWhenLocalSignatureChanged() {
-        let viewModel = MomentsCreateViewModel()
+        let viewModel = AnimateCreateViewModel()
         let plan = AnimateCreateTestFixtures.makeRenderPlan(momentId: "moment-1")
 
         viewModel.applyFinalRenderState(
-            MomentsCreateFinalRenderState(
+            AnimateCreateFinalRenderState(
                 finalExport: nil,
                 latestFinalJob: nil,
                 renderPlan: plan,
@@ -204,14 +204,14 @@ final class AnimateCreateViewModelStoryStateTests: XCTestCase {
     }
 
     func testBlockedFinalRenderPlanCannotBeConfirmed() {
-        let viewModel = MomentsCreateViewModel()
+        let viewModel = AnimateCreateViewModel()
         let plan = AnimateCreateTestFixtures.makeRenderPlan(
             momentId: "moment-1",
             canCreateVideo: false
         )
 
         viewModel.applyFinalRenderState(
-            MomentsCreateFinalRenderState(
+            AnimateCreateFinalRenderState(
                 finalExport: nil,
                 latestFinalJob: nil,
                 renderPlan: plan,
@@ -224,7 +224,7 @@ final class AnimateCreateViewModelStoryStateTests: XCTestCase {
     }
 
     func testFinalVideoActionUsesBackendVideoQuoteCostWhenAvailable() {
-        let summary = MomentsCreateFinalRenderSummary(
+        let summary = AnimateCreateFinalRenderSummary(
             creditCost: 1,
             renderPlan: AnimateCreateTestFixtures.makeRenderPlan(totalCreditCost: 2),
             videoQuote: AnimateVideoQuoteResponse(
@@ -247,7 +247,7 @@ final class AnimateCreateViewModelStoryStateTests: XCTestCase {
                 )
             )
         )
-        let action = MomentsCreateFinalVideoActionPresentation(
+        let action = AnimateCreateFinalVideoActionPresentation(
             summary: summary,
             template: .birthdayMessage,
             balance: AnimateCreditBalance(proMonthly: 0, promotional: 3, purchased: 0)
@@ -258,7 +258,7 @@ final class AnimateCreateViewModelStoryStateTests: XCTestCase {
     }
 
     func testInsufficientCreditRenderPlanClearsWhenBalanceCanCoverCost() {
-        let viewModel = MomentsCreateViewModel()
+        let viewModel = AnimateCreateViewModel()
         let plan = AnimateCreateTestFixtures.makeRenderPlan(
             momentId: "moment-1",
             canCreateVideo: false,
@@ -267,7 +267,7 @@ final class AnimateCreateViewModelStoryStateTests: XCTestCase {
         )
 
         viewModel.applyFinalRenderState(
-            MomentsCreateFinalRenderState(
+            AnimateCreateFinalRenderState(
                 finalExport: nil,
                 latestFinalJob: nil,
                 renderPlan: plan,
@@ -278,7 +278,7 @@ final class AnimateCreateViewModelStoryStateTests: XCTestCase {
         XCTAssertEqual(viewModel.currentRenderPlan?.planId, plan.planId)
 
         viewModel.applyAccountState(
-            MomentsCreateAccountState(
+            AnimateCreateAccountState(
                 isSignedIn: true,
                 balance: AnimateCreditBalance(proMonthly: 0, promotional: 5, purchased: 0),
                 creditBalanceLoadState: .loaded
@@ -289,20 +289,20 @@ final class AnimateCreateViewModelStoryStateTests: XCTestCase {
     }
 
     func testStoryScenesClearStaleErrorAndMarkCurrentInputPrepared() {
-        let viewModel = MomentsCreateViewModel()
+        let viewModel = AnimateCreateViewModel()
         let media = AnimateCreateTestFixtures.makeSelectedMedia(
             id: "00000000-0000-0000-0000-000000000001"
         )
 
         viewModel.applyMomentCreationState(
-            MomentsCreateMomentCreationState(
+            AnimateCreateMomentCreationState(
                 isCreatingMoment: false,
                 activeMomentId: "moment-1",
                 setupErrorMessage: nil
             )
         )
         viewModel.applyMediaUploadState(
-            MomentsCreateMediaUploadState(
+            AnimateCreateMediaUploadState(
                 selectedMedia: [media],
                 statusMessage: nil,
                 isImporting: false,
@@ -310,7 +310,7 @@ final class AnimateCreateViewModelStoryStateTests: XCTestCase {
             )
         )
         viewModel.applyStoryState(
-            MomentsCreateStoryState(
+            AnimateCreateStoryState(
                 activeWorkspace: nil,
                 savedScenes: [],
                 generatedScenes: [],
@@ -323,7 +323,7 @@ final class AnimateCreateViewModelStoryStateTests: XCTestCase {
         XCTAssertFalse(viewModel.isStoryPreparedForCurrentInput)
 
         viewModel.applyStoryState(
-            MomentsCreateStoryState(
+            AnimateCreateStoryState(
                 activeWorkspace: nil,
                 savedScenes: [AnimateCreateTestFixtures.makeScene(id: "scene-1")],
                 generatedScenes: [],
@@ -337,21 +337,21 @@ final class AnimateCreateViewModelStoryStateTests: XCTestCase {
     }
 
     func testCurrentStorySignaturePrefersLocalMediaWhenWorkspaceHasUploadedMedia() {
-        let viewModel = MomentsCreateViewModel()
+        let viewModel = AnimateCreateViewModel()
         let localMedia = AnimateCreateTestFixtures.makeSelectedMedia(
             id: "00000000-0000-0000-0000-000000000001",
             sourceLocalIdentifier: "local-asset-1"
         )
 
         viewModel.applyMomentCreationState(
-            MomentsCreateMomentCreationState(
+            AnimateCreateMomentCreationState(
                 isCreatingMoment: false,
                 activeMomentId: "moment-1",
                 setupErrorMessage: nil
             )
         )
         viewModel.applyMediaUploadState(
-            MomentsCreateMediaUploadState(
+            AnimateCreateMediaUploadState(
                 selectedMedia: [localMedia],
                 statusMessage: nil,
                 isImporting: false,
@@ -360,7 +360,7 @@ final class AnimateCreateViewModelStoryStateTests: XCTestCase {
         )
 
         viewModel.applyStoryState(
-            MomentsCreateStoryState(
+            AnimateCreateStoryState(
                 activeWorkspace: MomentWorkspace(
                     moment: AnimateCreateTestFixtures.makeMoment(id: "moment-1"),
                     mediaAssets: [
@@ -410,7 +410,7 @@ final class AnimateCreateViewModelStoryStateTests: XCTestCase {
     }
 
     func testWorkspaceSignatureReconcilesAfterStoryScenesArriveFirst() {
-        let viewModel = MomentsCreateViewModel()
+        let viewModel = AnimateCreateViewModel()
         let localMedia = AnimateCreateTestFixtures.makeSelectedMedia(
             id: "00000000-0000-0000-0000-000000000001",
             sourceLocalIdentifier: "local-asset-1"
@@ -422,14 +422,14 @@ final class AnimateCreateViewModelStoryStateTests: XCTestCase {
         )
 
         viewModel.applyMomentCreationState(
-            MomentsCreateMomentCreationState(
+            AnimateCreateMomentCreationState(
                 isCreatingMoment: false,
                 activeMomentId: "moment-1",
                 setupErrorMessage: nil
             )
         )
         viewModel.applyMediaUploadState(
-            MomentsCreateMediaUploadState(
+            AnimateCreateMediaUploadState(
                 selectedMedia: [localMedia],
                 statusMessage: nil,
                 isImporting: false,
@@ -438,7 +438,7 @@ final class AnimateCreateViewModelStoryStateTests: XCTestCase {
         )
 
         viewModel.applyStoryState(
-            MomentsCreateStoryState(
+            AnimateCreateStoryState(
                 activeWorkspace: nil,
                 savedScenes: [AnimateCreateTestFixtures.makeScene(id: "scene-1")],
                 generatedScenes: [],
@@ -449,7 +449,7 @@ final class AnimateCreateViewModelStoryStateTests: XCTestCase {
         XCTAssertTrue(viewModel.isStoryPreparedForCurrentInput)
 
         viewModel.applyStoryState(
-            MomentsCreateStoryState(
+            AnimateCreateStoryState(
                 activeWorkspace: MomentWorkspace(
                     moment: AnimateCreateTestFixtures.makeMoment(
                         id: "moment-1",
@@ -473,14 +473,14 @@ final class AnimateCreateViewModelStoryStateTests: XCTestCase {
     }
 
     func testRestoredLocalMediaDoesNotInvalidatePreparedBackendStory() {
-        let viewModel = MomentsCreateViewModel()
+        let viewModel = AnimateCreateViewModel()
         let syncedLocalMedia = AnimateCreateTestFixtures.makeSelectedMedia(
             id: "00000000-0000-0000-0000-000000000001",
             sourceLocalIdentifier: "local-asset-1"
         )
         let preparedStory = applyPreparedBackendStory(to: viewModel)
         viewModel.applyMediaUploadState(
-            MomentsCreateMediaUploadState(
+            AnimateCreateMediaUploadState(
                 selectedMedia: [syncedLocalMedia],
                 statusMessage: nil,
                 isImporting: false,
@@ -493,7 +493,7 @@ final class AnimateCreateViewModelStoryStateTests: XCTestCase {
     }
 
     func testDirectionChangeInvalidatesPreparedBackendStoryWithRestoredLocalMedia() {
-        let viewModel = MomentsCreateViewModel()
+        let viewModel = AnimateCreateViewModel()
         applyPreparedBackendStory(to: viewModel)
 
         XCTAssertTrue(viewModel.isStoryPreparedForCurrentInput)
@@ -504,14 +504,14 @@ final class AnimateCreateViewModelStoryStateTests: XCTestCase {
     }
 
     func testExplicitMediaEditInvalidatesPreparedBackendStory() {
-        let viewModel = MomentsCreateViewModel()
+        let viewModel = AnimateCreateViewModel()
         let preparedStory = applyPreparedBackendStory(to: viewModel)
 
         XCTAssertTrue(viewModel.isStoryPreparedForCurrentInput)
 
         viewModel.markPreparedStoryMediaEdited()
         viewModel.applyMediaUploadState(
-            MomentsCreateMediaUploadState(
+            AnimateCreateMediaUploadState(
                 selectedMedia: [
                     AnimateCreateTestFixtures.makeSelectedMedia(
                         id: "00000000-0000-0000-0000-000000000002",
@@ -527,7 +527,7 @@ final class AnimateCreateViewModelStoryStateTests: XCTestCase {
         XCTAssertFalse(viewModel.isStoryPreparedForCurrentInput)
 
         viewModel.applyStoryState(
-            MomentsCreateStoryState(
+            AnimateCreateStoryState(
                 activeWorkspace: MomentWorkspace(
                     moment: AnimateCreateTestFixtures.makeMoment(
                         id: "moment-1",
@@ -550,10 +550,10 @@ final class AnimateCreateViewModelStoryStateTests: XCTestCase {
     }
 
     func testExplicitMediaEditInvalidatesPreparedFinalRenderPlan() {
-        let viewModel = MomentsCreateViewModel()
+        let viewModel = AnimateCreateViewModel()
         applyPreparedBackendStory(to: viewModel)
         viewModel.applyFinalRenderState(
-            MomentsCreateFinalRenderState(
+            AnimateCreateFinalRenderState(
                 finalExport: nil,
                 latestFinalJob: nil,
                 renderPlan: AnimateCreateTestFixtures.makeRenderPlan(),
@@ -571,20 +571,20 @@ final class AnimateCreateViewModelStoryStateTests: XCTestCase {
     }
 
     func testSyncedBackendMediaIdsDoNotInvalidatePreparedFinalRenderPlan() {
-        let viewModel = MomentsCreateViewModel()
+        let viewModel = AnimateCreateViewModel()
         let localMedia = AnimateCreateTestFixtures.makeSelectedMedia(
             id: "00000000-0000-0000-0000-000000000001",
             sourceLocalIdentifier: "local-asset-1"
         )
         viewModel.applyMomentCreationState(
-            MomentsCreateMomentCreationState(
+            AnimateCreateMomentCreationState(
                 isCreatingMoment: false,
                 activeMomentId: "moment-1",
                 setupErrorMessage: nil
             )
         )
         viewModel.applyMediaUploadState(
-            MomentsCreateMediaUploadState(
+            AnimateCreateMediaUploadState(
                 selectedMedia: [localMedia],
                 statusMessage: nil,
                 isImporting: false,
@@ -592,7 +592,7 @@ final class AnimateCreateViewModelStoryStateTests: XCTestCase {
             )
         )
         viewModel.applyFinalRenderState(
-            MomentsCreateFinalRenderState(
+            AnimateCreateFinalRenderState(
                 finalExport: nil,
                 latestFinalJob: nil,
                 renderPlan: AnimateCreateTestFixtures.makeRenderPlan(),
@@ -605,7 +605,7 @@ final class AnimateCreateViewModelStoryStateTests: XCTestCase {
         XCTAssertNotNil(viewModel.currentRenderPlan)
 
         viewModel.applyStoryState(
-            MomentsCreateStoryState(
+            AnimateCreateStoryState(
                 activeWorkspace: MomentWorkspace(
                     moment: AnimateCreateTestFixtures.makeMoment(
                         id: "moment-1",
@@ -642,7 +642,7 @@ final class AnimateCreateViewModelStoryStateTests: XCTestCase {
 
     func testGenerateStoryShowsImmediateVideoCreationError() async {
         let harness = MomentCreationFailureHarness(error: MomentsSyncError.notConfigured)
-        let viewModel = MomentsCreateViewModel()
+        let viewModel = AnimateCreateViewModel()
         viewModel.bind(
             accountStateProvider: harness,
             momentCreationWorkflow: harness.momentCreationWorkflow,
@@ -655,7 +655,7 @@ final class AnimateCreateViewModelStoryStateTests: XCTestCase {
         await Task.yield()
         await Task.yield()
         viewModel.applyAccountState(
-            MomentsCreateAccountState(
+            AnimateCreateAccountState(
                 isSignedIn: true,
                 balance: AnimateCreditBalance(proMonthly: 0, promotional: 15, purchased: 0),
                 creditBalanceLoadState: .loaded
@@ -663,7 +663,7 @@ final class AnimateCreateViewModelStoryStateTests: XCTestCase {
         )
         viewModel.beginNewMoment(openMediaPicker: false)
         viewModel.applyMediaUploadState(
-            MomentsCreateMediaUploadState(
+            AnimateCreateMediaUploadState(
                 selectedMedia: [
                     AnimateCreateTestFixtures.makeSelectedMedia(
                         id: "00000000-0000-0000-0000-000000000001"
@@ -684,12 +684,12 @@ final class AnimateCreateViewModelStoryStateTests: XCTestCase {
 
     @discardableResult
     private func applyPreparedBackendStory(
-        to viewModel: MomentsCreateViewModel,
+        to viewModel: AnimateCreateViewModel,
         momentId: String = "moment-1"
     ) -> (media: MomentMediaAsset, signature: String) {
         let media = makeBackendMedia()
         viewModel.applyMomentCreationState(
-            MomentsCreateMomentCreationState(
+            AnimateCreateMomentCreationState(
                 isCreatingMoment: false,
                 activeMomentId: momentId,
                 setupErrorMessage: nil
@@ -700,7 +700,7 @@ final class AnimateCreateViewModelStoryStateTests: XCTestCase {
             persistedMedia: [makeStoryMedia(from: media)]
         )
         viewModel.applyStoryState(
-            MomentsCreateStoryState(
+            AnimateCreateStoryState(
                 activeWorkspace: MomentWorkspace(
                     moment: AnimateCreateTestFixtures.makeMoment(
                         id: momentId,
@@ -746,7 +746,7 @@ final class AnimateCreateViewModelStoryStateTests: XCTestCase {
         )
     }
 
-    private func waitForStoryStatusMessage(in viewModel: MomentsCreateViewModel) async {
+    private func waitForStoryStatusMessage(in viewModel: AnimateCreateViewModel) async {
         for _ in 0..<20 where viewModel.storySummary.statusMessage == nil {
             try? await Task.sleep(nanoseconds: 25_000_000)
         }

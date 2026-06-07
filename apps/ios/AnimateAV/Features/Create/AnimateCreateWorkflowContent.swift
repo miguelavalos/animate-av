@@ -3,8 +3,8 @@ import AVBrandFoundation
 import PhotosUI
 import SwiftUI
 
-struct MomentsCreateWorkflowContent: View {
-    @ObservedObject var viewModel: MomentsCreateViewModel
+struct AnimateCreateWorkflowContent: View {
+    @ObservedObject var viewModel: AnimateCreateViewModel
     @Binding var pickerItems: [PhotosPickerItem]
     let startSignInFlow: () -> Void
     let openCredits: () -> Void
@@ -13,7 +13,7 @@ struct MomentsCreateWorkflowContent: View {
     var body: some View {
         VStack(alignment: .leading, spacing: 12) {
             if viewModel.workflowPresentation.showsMediaFirstWorkspace {
-                MomentsCreateMediaFirstWorkspace(
+                AnimateCreateMediaFirstWorkspace(
                     form: $viewModel.form,
                     selectedStyle: viewModel.selectedCreationStyle,
                     autoStyleSuggestion: viewModel.autoStyleSuggestion,
@@ -48,14 +48,14 @@ struct MomentsCreateWorkflowContent: View {
     }
 }
 
-private struct MomentsCreateMediaFirstWorkspace: View {
+private struct AnimateCreateMediaFirstWorkspace: View {
     @Binding var form: MomentSetupForm
     let selectedStyle: MomentCreationStyle
     let autoStyleSuggestion: MomentsMediaAutoStyleSuggestion?
     let canUndoAutoStyleSuggestion: Bool
     let styles: [MomentCreationStyle]
     let selectedMusicPreset: MomentMusicPreset
-    let presentation: MomentsCreateWorkflowPresentation
+    let presentation: AnimateCreateWorkflowPresentation
     let isPreparingStory: Bool
     @Binding var pickerItems: [PhotosPickerItem]
     let importPickerItems: ([PhotosPickerItem]) -> Void
@@ -93,19 +93,19 @@ private struct MomentsCreateMediaFirstWorkspace: View {
             ScrollView {
                 VStack(alignment: .leading, spacing: showsWorkflowDashboard ? 10 : 12) {
                     if showsFinalVideoCompletion {
-                        MomentsCreateFinalVideoReadyScene(presentation: presentation)
+                        AnimateCreateFinalVideoReadyScene(presentation: presentation)
                             .padding(.top, 28)
                     } else if showsFinalVideoRecovery {
-                        MomentsCreateFinalVideoRecoveryScene(
+                        AnimateCreateFinalVideoRecoveryScene(
                             presentation: presentation,
                             discardMoment: { showsDiscardMomentConfirmation = true }
                         )
                         .padding(.top, 28)
                     } else if presentation.isFinalRenderEditingLocked {
-                        MomentsCreateLockedFinalRenderScene(presentation: presentation)
+                        AnimateCreateLockedFinalRenderScene(presentation: presentation)
                             .padding(.top, 28)
                     } else {
-                        MomentsCreateCompactAviGuide(
+                        AnimateCreateCompactAviGuide(
                             presentation: presentation
                         )
                     }
@@ -113,7 +113,7 @@ private struct MomentsCreateMediaFirstWorkspace: View {
                     if showsFinalVideoCompletion || presentation.isFinalRenderEditingLocked {
                         EmptyView()
                     } else if hasMediaSelection {
-                        MomentsCreateVideoDirectionCard(
+                        AnimateCreateVideoDirectionCard(
                             presentation: presentation,
                             selectedLook: form.look,
                             note: form.details,
@@ -134,7 +134,7 @@ private struct MomentsCreateMediaFirstWorkspace: View {
                     } else if hasFinalVideoState {
                         EmptyView()
                     } else {
-                        MomentsCreateMediaCard(
+                        AnimateCreateMediaCard(
                             presentation: mediaPresentation,
                             choosePhotos: presentCompactPhotoPicker
                         )
@@ -146,7 +146,7 @@ private struct MomentsCreateMediaFirstWorkspace: View {
             .scrollIndicators(.hidden)
 
             if showsPrimaryActionBar {
-                MomentsCreatePrimaryActionBar(
+                AnimateCreatePrimaryActionBar(
                     presentation: presentation,
                     startSignInFlow: startSignInFlow,
                     openCredits: openCredits,
@@ -172,7 +172,7 @@ private struct MomentsCreateMediaFirstWorkspace: View {
             pickerItems = []
         }
         .navigationDestination(isPresented: $showsCompactMediaManager) {
-            MomentsCreateMediaManagerSheet(
+            AnimateCreateMediaManagerSheet(
                 selectedMedia: presentation.mediaSummary.selectedMedia,
                 syncedMediaAssets: mediaPresentation.syncedMediaAssets,
                 canAddMedia: presentation.canAddMedia,
@@ -186,7 +186,7 @@ private struct MomentsCreateMediaFirstWorkspace: View {
             )
         }
         .sheet(isPresented: $showsCreateVideoConfirmation) {
-            MomentsCreateFinalVideoConfirmationSheet(
+            AnimateCreateFinalVideoConfirmationSheet(
                 action: finalVideoAction,
                 mediaSummary: presentation.mediaSummary,
                 confirm: { removesWatermark in
@@ -237,7 +237,7 @@ private struct MomentsCreateMediaFirstWorkspace: View {
             Text(discardConfirmationMessage)
         }
         .navigationDestination(isPresented: $showsThemeChooser) {
-            MomentsCreateThemeChooserPage(
+            AnimateCreateThemeChooserPage(
                 styles: styles,
                 selectedStyle: selectedStyle,
                 selectStyle: selectStyle,
@@ -246,7 +246,7 @@ private struct MomentsCreateMediaFirstWorkspace: View {
             .id(selectedStyle.id)
         }
         .navigationDestination(isPresented: $showsLookChooser) {
-            MomentsCreateLookChooserPage(
+            AnimateCreateLookChooserPage(
                 selectedLook: form.look,
                 selectLook: {
                     selectLook($0)
@@ -257,7 +257,7 @@ private struct MomentsCreateMediaFirstWorkspace: View {
             .id(form.look.rawValue)
         }
         .navigationDestination(isPresented: $showsVoiceChooser) {
-            MomentsCreateVoiceChooserPage(
+            AnimateCreateVoiceChooserPage(
                 allowedMusic: selectedStyle.allowedMusic,
                 selectedMusicPreset: selectedMusicPreset,
                 selectMusicPreset: {
@@ -269,15 +269,15 @@ private struct MomentsCreateMediaFirstWorkspace: View {
             .id(selectedMusicPreset.rawValue)
         }
         .navigationDestination(isPresented: $showsAviNoteEditor) {
-            MomentsCreateAviNoteEditorPage(
+            AnimateCreateAviNoteEditorPage(
                 text: $form.details,
                 dismiss: { showsAviNoteEditor = false }
             )
         }
     }
 
-    private var mediaPresentation: MomentsCreateMediaPresentation {
-        MomentsCreateMediaPresentation(
+    private var mediaPresentation: AnimateCreateMediaPresentation {
+        AnimateCreateMediaPresentation(
             activeMomentId: presentation.activeMomentId,
             template: presentation.template,
             summary: presentation.mediaSummary,
@@ -286,8 +286,8 @@ private struct MomentsCreateMediaFirstWorkspace: View {
         )
     }
 
-    private var finalVideoAction: MomentsCreateFinalVideoActionPresentation {
-        MomentsCreateFinalVideoActionPresentation(
+    private var finalVideoAction: AnimateCreateFinalVideoActionPresentation {
+        AnimateCreateFinalVideoActionPresentation(
             summary: presentation.finalRenderSummary,
             template: presentation.template,
             balance: presentation.balance
@@ -383,8 +383,8 @@ private struct MomentsCreateMediaFirstWorkspace: View {
     }
 }
 
-struct MomentsCreateBlockingPreparationView: View {
-    let presentation: MomentsCreateWorkflowPresentation
+struct AnimateCreateBlockingPreparationView: View {
+    let presentation: AnimateCreateWorkflowPresentation
     let isPreparingStory: Bool
     let isPreparingFinalPlan: Bool
 
@@ -579,8 +579,8 @@ struct MomentsCreateBlockingPreparationView: View {
     }
 }
 
-private struct MomentsCreateFinalVideoReadyScene: View {
-    let presentation: MomentsCreateWorkflowPresentation
+private struct AnimateCreateFinalVideoReadyScene: View {
+    let presentation: AnimateCreateWorkflowPresentation
 
     @State private var isAnimating = false
 
@@ -664,8 +664,8 @@ private struct MomentsCreateFinalVideoReadyScene: View {
     }
 }
 
-private struct MomentsCreateFinalVideoRecoveryScene: View {
-    let presentation: MomentsCreateWorkflowPresentation
+private struct AnimateCreateFinalVideoRecoveryScene: View {
+    let presentation: AnimateCreateWorkflowPresentation
     let discardMoment: () -> Void
 
     var body: some View {
@@ -714,7 +714,7 @@ private struct MomentsCreateFinalVideoRecoveryScene: View {
                     .frame(maxWidth: 240)
                     .frame(height: 44)
             }
-            .buttonStyle(MomentsCreateSoftActionButtonStyle())
+            .buttonStyle(AnimateCreateSoftActionButtonStyle())
 
             Spacer(minLength: 100)
         }
@@ -730,8 +730,8 @@ private struct MomentsCreateFinalVideoRecoveryScene: View {
     }
 }
 
-private struct MomentsCreateVideoDirectionCard: View {
-    let presentation: MomentsCreateWorkflowPresentation
+private struct AnimateCreateVideoDirectionCard: View {
+    let presentation: AnimateCreateWorkflowPresentation
     let selectedLook: MomentLook
     let note: String
     let selectedStyle: MomentCreationStyle
@@ -815,7 +815,7 @@ private struct MomentsCreateVideoDirectionCard: View {
                     .accessibilityLabel(L10n.string("create.videoDirection.menu.accessibility"))
                 }
 
-                MomentsCreateVideoDirectionSummary(
+                AnimateCreateVideoDirectionSummary(
                     isUserAdjusted: isUserAdjustedFromAvi,
                     title: decisionSummaryTitle,
                     detail: decisionSummaryDetail,
@@ -829,39 +829,39 @@ private struct MomentsCreateVideoDirectionCard: View {
                         .textCase(.uppercase)
 
                     VStack(spacing: 0) {
-                        MomentsCreateVideoDirectionSummaryRow(
+                        AnimateCreateVideoDirectionSummaryRow(
                             title: L10n.string("create.workflowContent.mediaSelected"),
                             value: videoDirection.mediaCountTitle,
                             detail: mediaDetail,
                             systemImage: "photo.stack",
                             action: editMedia
                         )
-                        MomentsCreateOptionDivider()
-                        MomentsCreateVideoDirectionSummaryRow(
+                        AnimateCreateOptionDivider()
+                        AnimateCreateVideoDirectionSummaryRow(
                             title: L10n.string("create.workflowContent.theme"),
                             value: selectedStyle.title,
                             detail: selectedStyle.subtitle,
                             systemImage: "paintpalette.fill",
                             action: changeTheme
                         )
-                        MomentsCreateOptionDivider()
-                        MomentsCreateVideoDirectionSummaryRow(
+                        AnimateCreateOptionDivider()
+                        AnimateCreateVideoDirectionSummaryRow(
                             title: L10n.string("create.guide.look.title"),
                             value: selectedLook.title,
                             detail: selectedLook.subtitle,
                             systemImage: selectedLook.systemImage,
                             action: changeLook
                         )
-                        MomentsCreateOptionDivider()
-                        MomentsCreateVideoDirectionSummaryRow(
+                        AnimateCreateOptionDivider()
+                        AnimateCreateVideoDirectionSummaryRow(
                             title: L10n.string("create.workflowContent.tone"),
                             value: selectedMusicPreset.title,
                             detail: L10n.string("create.guide.voice.detail"),
                             systemImage: "sparkles",
                             action: changeVoice
                         )
-                        MomentsCreateOptionDivider()
-                        MomentsCreateVideoDirectionSummaryRow(
+                        AnimateCreateOptionDivider()
+                        AnimateCreateVideoDirectionSummaryRow(
                             title: L10n.string("create.note.field.title"),
                             value: noteTitle,
                             detail: noteDetail,
@@ -932,8 +932,8 @@ private struct MomentsCreateVideoDirectionCard: View {
         )
     }
 
-    private var mediaPresentation: MomentsCreateMediaPresentation {
-        MomentsCreateMediaPresentation(
+    private var mediaPresentation: AnimateCreateMediaPresentation {
+        AnimateCreateMediaPresentation(
             activeMomentId: presentation.activeMomentId,
             template: presentation.template,
             summary: presentation.mediaSummary,
@@ -973,8 +973,8 @@ private struct MomentsCreateVideoDirectionCard: View {
         presentation.finalRenderSummary.latestFinalJob?.isActiveRender != true
     }
 
-    private var videoDirection: MomentsCreateVideoDirectionPresentation {
-        MomentsCreateVideoDirectionPresentation(
+    private var videoDirection: AnimateCreateVideoDirectionPresentation {
+        AnimateCreateVideoDirectionPresentation(
             mediaSummary: presentation.mediaSummary,
             storySummary: presentation.storySummary,
             selectedDuration: .auto,
@@ -986,7 +986,7 @@ private struct MomentsCreateVideoDirectionCard: View {
 
 }
 
-private struct MomentsCreateVideoDirectionSummary: View {
+private struct AnimateCreateVideoDirectionSummary: View {
     let isUserAdjusted: Bool
     let title: String
     let detail: String
@@ -1036,8 +1036,8 @@ private struct MomentsCreateVideoDirectionSummary: View {
     }
 }
 
-private struct MomentsCreateLockedFinalRenderScene: View {
-    let presentation: MomentsCreateWorkflowPresentation
+private struct AnimateCreateLockedFinalRenderScene: View {
+    let presentation: AnimateCreateWorkflowPresentation
 
     @State private var pulse = false
 
@@ -1103,19 +1103,19 @@ private struct MomentsCreateLockedFinalRenderScene: View {
 
             VStack(alignment: .leading, spacing: 12) {
                 HStack(spacing: 8) {
-                    MomentsCreateLockedRenderMetric(
+                    AnimateCreateLockedRenderMetric(
                         title: L10n.string("create.final.confirmSheet.cost"),
                         value: AnimateCreditCopy.countTitle(presentation.lockedFinalRenderCreditCost),
                         systemImage: "creditcard.fill"
                     )
-                    MomentsCreateLockedRenderMetric(
+                    AnimateCreateLockedRenderMetric(
                         title: L10n.string("create.final.confirmSheet.media"),
                         value: mediaCountTitle,
                         systemImage: "photo.stack.fill"
                     )
                 }
 
-                MomentsCreateLockedFinalRenderNotice()
+                AnimateCreateLockedFinalRenderNotice()
 
                 Text(L10n.string("create.workflowContent.renderMayTakeMinutes"))
                     .font(.caption)
@@ -1167,7 +1167,7 @@ private struct MomentsCreateLockedFinalRenderScene: View {
 
 }
 
-private struct MomentsCreateLockedRenderMetric: View {
+private struct AnimateCreateLockedRenderMetric: View {
     let title: String
     let value: String
     let systemImage: String
@@ -1200,7 +1200,7 @@ private struct MomentsCreateLockedRenderMetric: View {
     }
 }
 
-private struct MomentsCreateLockedFinalRenderNotice: View {
+private struct AnimateCreateLockedFinalRenderNotice: View {
     var body: some View {
         HStack(alignment: .top, spacing: 10) {
             Image(systemName: "lock.fill")
@@ -1228,7 +1228,7 @@ private struct MomentsCreateLockedFinalRenderNotice: View {
     }
 }
 
-private struct MomentsCreateOptionPill: View {
+private struct AnimateCreateOptionPill: View {
     let title: String
     let systemImage: String
 
@@ -1244,7 +1244,7 @@ private struct MomentsCreateOptionPill: View {
     }
 }
 
-private struct MomentsCreateVideoDirectionSummaryRow: View {
+private struct AnimateCreateVideoDirectionSummaryRow: View {
     let title: String
     let value: String
     let detail: String
@@ -1254,7 +1254,7 @@ private struct MomentsCreateVideoDirectionSummaryRow: View {
     var body: some View {
         Button(action: action) {
             HStack(alignment: .center, spacing: 10) {
-                MomentsCreateGuideFieldIcon(systemImage: systemImage)
+                AnimateCreateGuideFieldIcon(systemImage: systemImage)
 
                 VStack(alignment: .leading, spacing: 3) {
                     Text(title)
@@ -1290,8 +1290,8 @@ private struct MomentsCreateVideoDirectionSummaryRow: View {
     }
 }
 
-private struct MomentsCreateCompactAviGuide: View {
-    let presentation: MomentsCreateWorkflowPresentation
+private struct AnimateCreateCompactAviGuide: View {
+    let presentation: AnimateCreateWorkflowPresentation
 
     var body: some View {
         AVAppShellCard {
@@ -1371,8 +1371,8 @@ private struct MomentsCreateCompactAviGuide: View {
     }
 }
 
-private struct MomentsCreatePrimaryActionBar: View {
-    let presentation: MomentsCreateWorkflowPresentation
+private struct AnimateCreatePrimaryActionBar: View {
+    let presentation: AnimateCreateWorkflowPresentation
     let startSignInFlow: () -> Void
     let openCredits: () -> Void
     let generateFinalRender: () -> Void
@@ -1383,7 +1383,7 @@ private struct MomentsCreatePrimaryActionBar: View {
     @ViewBuilder
     var body: some View {
         if showsFinalVideoDock {
-            MomentsCreateFinalVideoActionDock(
+            AnimateCreateFinalVideoActionDock(
                 presentation: presentation,
                 downloadTitle: finalVideoDownloadButtonTitle,
                 download: retryFinalVideoDownload,
@@ -1394,7 +1394,7 @@ private struct MomentsCreatePrimaryActionBar: View {
             VStack(alignment: .leading, spacing: 10) {
                 if presentation.finalRenderSummary.finalExport == nil,
                    let realtimeStatus = presentation.finalRenderSummary.realtimeStatus {
-                    MomentsCreateRealtimeRenderStatusPanel(status: realtimeStatus)
+                    AnimateCreateRealtimeRenderStatusPanel(status: realtimeStatus)
                 }
 
                 HStack(alignment: .center, spacing: 10) {
@@ -1430,7 +1430,7 @@ private struct MomentsCreatePrimaryActionBar: View {
                             .frame(height: 46)
                     }
                     .disabled(!primaryActionPresentation.canRunPrimaryAction)
-                    .buttonStyle(MomentsCreateSoftActionButtonStyle())
+                    .buttonStyle(AnimateCreateSoftActionButtonStyle())
                     .opacity(primaryActionPresentation.canRunPrimaryAction ? 1 : 0.72)
                 }
 
@@ -1448,7 +1448,7 @@ private struct MomentsCreatePrimaryActionBar: View {
                             Label(L10n.string("create.final.finishGallery"), systemImage: "checkmark.circle.fill")
                                 .frame(maxWidth: .infinity)
                         }
-                        .buttonStyle(MomentsCreateSoftActionButtonStyle())
+                        .buttonStyle(AnimateCreateSoftActionButtonStyle())
                     }
                     .font(.system(size: 14, weight: .black))
                 } else if presentation.finalRenderSummary.finalExport != nil {
@@ -1457,7 +1457,7 @@ private struct MomentsCreatePrimaryActionBar: View {
                             Label(finalVideoDownloadButtonTitle, systemImage: "arrow.down.circle.fill")
                                 .frame(maxWidth: .infinity)
                         }
-                        .buttonStyle(MomentsCreateSoftActionButtonStyle())
+                        .buttonStyle(AnimateCreateSoftActionButtonStyle())
                     }
                     .font(.system(size: 14, weight: .black))
                 } else if presentation.finalRenderSummary.canRetryFinalVideoDownload {
@@ -1465,7 +1465,7 @@ private struct MomentsCreatePrimaryActionBar: View {
                         Label(L10n.string("create.workflowContent.retryFinalDownload"), systemImage: "arrow.down.circle.fill")
                             .frame(maxWidth: .infinity)
                     }
-                    .buttonStyle(MomentsCreateSoftActionButtonStyle())
+                    .buttonStyle(AnimateCreateSoftActionButtonStyle())
                     .font(.system(size: 14, weight: .black))
                 }
             }
@@ -1485,8 +1485,8 @@ private struct MomentsCreatePrimaryActionBar: View {
             || presentation.finalRenderSummary.pendingGalleryVideo != nil
     }
 
-    private var primaryActionPresentation: MomentsCreatePrimaryActionPresentation {
-        MomentsCreatePrimaryActionPresentation(workflow: presentation)
+    private var primaryActionPresentation: AnimateCreatePrimaryActionPresentation {
+        AnimateCreatePrimaryActionPresentation(workflow: presentation)
     }
 
     private var finalVideoDownloadButtonTitle: String {
@@ -1542,8 +1542,8 @@ private struct MomentsCreatePrimaryActionBar: View {
     }
 }
 
-private struct MomentsCreateFinalVideoActionDock: View {
-    let presentation: MomentsCreateWorkflowPresentation
+private struct AnimateCreateFinalVideoActionDock: View {
+    let presentation: AnimateCreateWorkflowPresentation
     let downloadTitle: String
     let download: () -> Void
     let finish: () -> Void
@@ -1558,7 +1558,7 @@ private struct MomentsCreateFinalVideoActionDock: View {
                     .frame(maxWidth: .infinity)
                     .frame(height: 54)
             }
-            .buttonStyle(MomentsCreateFinalVideoButtonStyle())
+            .buttonStyle(AnimateCreateFinalVideoButtonStyle())
         }
         .padding(10)
         .background {
@@ -1601,7 +1601,7 @@ private struct MomentsCreateFinalVideoActionDock: View {
     }
 }
 
-private struct MomentsCreateFinalVideoButtonStyle: ButtonStyle {
+private struct AnimateCreateFinalVideoButtonStyle: ButtonStyle {
     @Environment(\.isEnabled) private var isEnabled
 
     func makeBody(configuration: Configuration) -> some View {
@@ -1629,9 +1629,9 @@ private struct MomentsCreateFinalVideoButtonStyle: ButtonStyle {
     }
 }
 
-private struct MomentsCreateFinalVideoConfirmationSheet: View {
-    let action: MomentsCreateFinalVideoActionPresentation
-    let mediaSummary: MomentsCreateMediaSummary
+private struct AnimateCreateFinalVideoConfirmationSheet: View {
+    let action: AnimateCreateFinalVideoActionPresentation
+    let mediaSummary: AnimateCreateMediaSummary
     let confirm: (Bool) -> Void
     let openCredits: () -> Void
     let cancel: () -> Void
@@ -1639,8 +1639,8 @@ private struct MomentsCreateFinalVideoConfirmationSheet: View {
     @State private var isSubmitting = false
 
     init(
-        action: MomentsCreateFinalVideoActionPresentation,
-        mediaSummary: MomentsCreateMediaSummary,
+        action: AnimateCreateFinalVideoActionPresentation,
+        mediaSummary: AnimateCreateMediaSummary,
         confirm: @escaping (Bool) -> Void,
         openCredits: @escaping () -> Void,
         cancel: @escaping () -> Void
@@ -1668,22 +1668,22 @@ private struct MomentsCreateFinalVideoConfirmationSheet: View {
             header
 
             VStack(spacing: 8) {
-                MomentsCreateConfirmationMetric(
+                AnimateCreateConfirmationMetric(
                     title: L10n.string("create.final.confirmSheet.cost"),
                     value: selectedCreditCostTitle,
                     systemImage: "creditcard.fill"
                 )
-                MomentsCreateConfirmationMetric(
+                AnimateCreateConfirmationMetric(
                     title: L10n.string("create.final.confirmSheet.media"),
                     value: mediaUsageTitle,
                     systemImage: "photo.stack"
                 )
-                MomentsCreateConfirmationMetric(
+                AnimateCreateConfirmationMetric(
                     title: L10n.string("create.final.confirmSheet.duration"),
                     value: durationTitle,
                     systemImage: "timer"
                 )
-                MomentsCreateConfirmationMetric(
+                AnimateCreateConfirmationMetric(
                     title: L10n.string("create.final.confirmSheet.watermark"),
                     value: watermarkTitle,
                     systemImage: "seal"
@@ -1709,7 +1709,7 @@ private struct MomentsCreateFinalVideoConfirmationSheet: View {
                         .frame(maxWidth: .infinity)
                         .frame(height: 38)
                 }
-                .buttonStyle(MomentsCreateNeutralInlineButtonStyle())
+                .buttonStyle(AnimateCreateNeutralInlineButtonStyle())
             }
         }
     }
@@ -1763,13 +1763,13 @@ private struct MomentsCreateFinalVideoConfirmationSheet: View {
                 .textCase(.uppercase)
 
             VStack(spacing: 7) {
-                MomentsCreateCostDetailRow(
+                AnimateCreateCostDetailRow(
                     title: L10n.string("create.final.costDetails.video"),
                     detail: durationTitle,
                     value: AnimateCreditCopy.countTitle(plan?.creditCost ?? action.totalCreditCost)
                 )
 
-                MomentsCreateCostDetailRow(
+                AnimateCreateCostDetailRow(
                     title: L10n.string("create.final.costDetails.watermark"),
                     detail: watermarkCostDetail,
                     value: watermarkCostTitle
@@ -1778,7 +1778,7 @@ private struct MomentsCreateFinalVideoConfirmationSheet: View {
                 Divider()
                     .overlay(AVBrandColor.textSecondary.opacity(0.14))
 
-                MomentsCreateCostDetailRow(
+                AnimateCreateCostDetailRow(
                     title: L10n.string("create.final.costDetails.total"),
                     detail: L10n.string("create.final.costDetails.chargedOnCompletion"),
                     value: selectedCreditCostTitle,
@@ -1860,7 +1860,7 @@ private struct MomentsCreateFinalVideoConfirmationSheet: View {
             return L10n.string("create.final.confirmMessage", selectedCreditCostTitle)
         }
         let missingCredits = max(0, selectedCreditCost - action.balance.spendable)
-        return MomentsCreateAvailabilityCopy.finalRenderInsufficientCredits(missingCredits: missingCredits)
+        return AnimateCreateAvailabilityCopy.finalRenderInsufficientCredits(missingCredits: missingCredits)
     }
 
     private var canAffordSelectedCost: Bool {
@@ -1999,7 +1999,7 @@ private struct MomentsCreateFinalVideoConfirmationSheet: View {
     }
 }
 
-private struct MomentsCreateCostDetailRow: View {
+private struct AnimateCreateCostDetailRow: View {
     let title: String
     let detail: String
     let value: String
@@ -2029,7 +2029,7 @@ private struct MomentsCreateCostDetailRow: View {
     }
 }
 
-private struct MomentsCreateConfirmationMetric: View {
+private struct AnimateCreateConfirmationMetric: View {
     let title: String
     let value: String
     let systemImage: String
@@ -2060,7 +2060,7 @@ private struct MomentsCreateConfirmationMetric: View {
     }
 }
 
-private struct MomentsCreateRealtimeRenderStatusPanel: View {
+private struct AnimateCreateRealtimeRenderStatusPanel: View {
     let status: MomentsRenderRealtimePresentation
 
     var body: some View {
@@ -2110,7 +2110,7 @@ private struct MomentsCreateRealtimeRenderStatusPanel: View {
     }
 }
 
-private struct MomentsCreateGuideSummaryCard: View {
+private struct AnimateCreateGuideSummaryCard: View {
     @Binding var form: MomentSetupForm
     let style: MomentCreationStyle
     let selectedMusicPreset: MomentMusicPreset
@@ -2127,7 +2127,7 @@ private struct MomentsCreateGuideSummaryCard: View {
                     .foregroundStyle(AVBrandColor.textPrimary)
 
                 VStack(spacing: 0) {
-                    MomentsCreateEditableOptionRow(
+                    AnimateCreateEditableOptionRow(
                         title: L10n.string("create.guide.theme.title"),
                         value: style.title,
                         detail: style.subtitle,
@@ -2135,9 +2135,9 @@ private struct MomentsCreateGuideSummaryCard: View {
                         action: changeTheme
                     )
 
-                    MomentsCreateOptionDivider()
+                    AnimateCreateOptionDivider()
 
-                    MomentsCreateEditableOptionRow(
+                    AnimateCreateEditableOptionRow(
                         title: L10n.string("create.guide.look.title"),
                         value: form.look.title,
                         detail: form.look.subtitle,
@@ -2145,9 +2145,9 @@ private struct MomentsCreateGuideSummaryCard: View {
                         action: changeLook
                     )
 
-                    MomentsCreateOptionDivider()
+                    AnimateCreateOptionDivider()
 
-                    MomentsCreateEditableOptionRow(
+                    AnimateCreateEditableOptionRow(
                         title: L10n.string("create.guide.voice.title"),
                         value: selectedMusicPreset.title,
                         detail: L10n.string("create.guide.voice.detail"),
@@ -2160,7 +2160,7 @@ private struct MomentsCreateGuideSummaryCard: View {
     }
 }
 
-private struct MomentsCreateEditableOptionRow: View {
+private struct AnimateCreateEditableOptionRow: View {
     let title: String
     let value: String
     let detail: String
@@ -2170,7 +2170,7 @@ private struct MomentsCreateEditableOptionRow: View {
     var body: some View {
         Button(action: action) {
             HStack(alignment: .center, spacing: 14) {
-                MomentsCreateGuideFieldIcon(systemImage: systemImage)
+                AnimateCreateGuideFieldIcon(systemImage: systemImage)
 
                 VStack(alignment: .leading, spacing: 4) {
                     Text(title)
@@ -2193,7 +2193,7 @@ private struct MomentsCreateEditableOptionRow: View {
 
                 Spacer(minLength: 8)
 
-                MomentsCreateOptionActionText()
+                AnimateCreateOptionActionText()
             }
             .padding(.vertical, 12)
             .frame(maxWidth: .infinity, alignment: .leading)
@@ -2203,7 +2203,7 @@ private struct MomentsCreateEditableOptionRow: View {
     }
 }
 
-private struct MomentsCreateOptionActionText: View {
+private struct AnimateCreateOptionActionText: View {
     var body: some View {
         Image(systemName: "square.and.pencil")
             .font(.system(size: 13, weight: .black))
@@ -2213,7 +2213,7 @@ private struct MomentsCreateOptionActionText: View {
     }
 }
 
-private struct MomentsCreateOptionDivider: View {
+private struct AnimateCreateOptionDivider: View {
     var body: some View {
         Rectangle()
             .fill(AVBrandColor.borderSubtle.opacity(0.42))
@@ -2222,7 +2222,7 @@ private struct MomentsCreateOptionDivider: View {
     }
 }
 
-private struct MomentsCreateOptionsAviPanel: View {
+private struct AnimateCreateOptionsAviPanel: View {
     let selectedStyle: MomentCreationStyle
     let selectedMusicPreset: MomentMusicPreset
     let autoStyleSuggestion: MomentsMediaAutoStyleSuggestion?
@@ -2256,13 +2256,13 @@ private struct MomentsCreateOptionsAviPanel: View {
                     if autoStyleSuggestion != nil {
                         HStack(spacing: 8) {
                             if canUndoAutoStyleSuggestion {
-                                MomentsCreateAviSuggestionButton(
+                                AnimateCreateAviSuggestionButton(
                                     title: L10n.string("create.aviDirection.undoSuggestion"),
                                     systemImage: "arrow.uturn.backward",
                                     action: undoAutoStyleSuggestion
                                 )
                             } else if showsUseAviSuggestion {
-                                MomentsCreateAviSuggestionButton(
+                                AnimateCreateAviSuggestionButton(
                                     title: L10n.string("create.aviDirection.useSuggestion"),
                                     systemImage: "sparkles",
                                     action: useAutoStyleSuggestion
@@ -2324,7 +2324,7 @@ private struct MomentsCreateOptionsAviPanel: View {
     }
 }
 
-private struct MomentsCreateAviSuggestionButton: View {
+private struct AnimateCreateAviSuggestionButton: View {
     let title: String
     let systemImage: String
     let action: () -> Void
@@ -2342,7 +2342,7 @@ private struct MomentsCreateAviSuggestionButton: View {
     }
 }
 
-private struct MomentsCreateAviNoteField: View {
+private struct AnimateCreateAviNoteField: View {
     @Binding var text: String
 
     var body: some View {
@@ -2354,7 +2354,7 @@ private struct MomentsCreateAviNoteField: View {
 
                 VStack(alignment: .leading, spacing: 8) {
                     HStack(alignment: .center, spacing: 10) {
-                        MomentsCreateGuideFieldIcon(systemImage: "text.bubble.fill")
+                        AnimateCreateGuideFieldIcon(systemImage: "text.bubble.fill")
 
                         VStack(alignment: .leading, spacing: 2) {
                             Text(L10n.string("create.note.field.title"))
@@ -2380,13 +2380,13 @@ private struct MomentsCreateAviNoteField: View {
                 }
                 .padding(12)
                 .frame(maxWidth: .infinity, alignment: .leading)
-                .background(MomentsCreateGuideFieldBackground())
+                .background(AnimateCreateGuideFieldBackground())
             }
         }
     }
 }
 
-private struct MomentsCreateAviNoteEditorPage: View {
+private struct AnimateCreateAviNoteEditorPage: View {
     @Binding var text: String
     let dismiss: () -> Void
     @State private var draftText: String
@@ -2400,7 +2400,7 @@ private struct MomentsCreateAviNoteEditorPage: View {
     var body: some View {
         ZStack(alignment: .bottom) {
             VStack(spacing: 0) {
-                MomentsCreateChooserHeader(
+                AnimateCreateChooserHeader(
                     title: L10n.string("create.note.field.title"),
                     dismiss: dismiss
                 )
@@ -2439,7 +2439,7 @@ private struct MomentsCreateAviNoteEditorPage: View {
                         AVAppShellCard {
                             VStack(alignment: .leading, spacing: 12) {
                                 HStack(alignment: .center, spacing: 10) {
-                                    MomentsCreateGuideFieldIcon(systemImage: "text.bubble.fill")
+                                    AnimateCreateGuideFieldIcon(systemImage: "text.bubble.fill")
 
                                     VStack(alignment: .leading, spacing: 2) {
                                         Text(L10n.string("create.note.field.title"))
@@ -2466,7 +2466,7 @@ private struct MomentsCreateAviNoteEditorPage: View {
                             }
                             .padding(12)
                             .frame(maxWidth: .infinity, alignment: .leading)
-                            .background(MomentsCreateGuideFieldBackground())
+                            .background(AnimateCreateGuideFieldBackground())
                         }
                     }
                     .padding(.horizontal, 20)
@@ -2476,7 +2476,7 @@ private struct MomentsCreateAviNoteEditorPage: View {
                 .scrollIndicators(.hidden)
             }
 
-            MomentsCreateFixedFooterAction(
+            AnimateCreateFixedFooterAction(
                 title: L10n.string("common.done"),
                 systemImage: "checkmark.circle.fill",
                 action: applyChanges
@@ -2495,7 +2495,7 @@ private struct MomentsCreateAviNoteEditorPage: View {
     }
 }
 
-private struct MomentsCreateGuideFieldIcon: View {
+private struct AnimateCreateGuideFieldIcon: View {
     let systemImage: String
 
     var body: some View {
@@ -2510,7 +2510,7 @@ private struct MomentsCreateGuideFieldIcon: View {
     }
 }
 
-private struct MomentsCreateGuideFieldBackground: View {
+private struct AnimateCreateGuideFieldBackground: View {
     var body: some View {
         RoundedRectangle(cornerRadius: AVBrandRadius.xs, style: .continuous)
             .fill(AVBrandColor.cardSurface.opacity(0.72))
@@ -2521,7 +2521,7 @@ private struct MomentsCreateGuideFieldBackground: View {
     }
 }
 
-private struct MomentsCreateTwoColumnGrid<Item: Identifiable, Content: View>: View {
+private struct AnimateCreateTwoColumnGrid<Item: Identifiable, Content: View>: View {
     let items: [Item]
     var horizontalSpacing: CGFloat = 12
     var verticalSpacing: CGFloat = 12
@@ -2556,7 +2556,7 @@ private struct MomentsCreateTwoColumnGrid<Item: Identifiable, Content: View>: Vi
     }
 }
 
-private struct MomentsCreateLookChooserPage: View {
+private struct AnimateCreateLookChooserPage: View {
     let selectedLook: MomentLook
     let selectLook: (MomentLook) -> Void
     let dismiss: () -> Void
@@ -2577,7 +2577,7 @@ private struct MomentsCreateLookChooserPage: View {
     var body: some View {
         ZStack(alignment: .bottom) {
             VStack(spacing: 0) {
-                MomentsCreateChooserHeader(
+                AnimateCreateChooserHeader(
                     title: L10n.string("create.selector.look.title"),
                     dismiss: dismiss
                 )
@@ -2613,8 +2613,8 @@ private struct MomentsCreateLookChooserPage: View {
                             }
                         }
 
-                        MomentsCreateTwoColumnGrid(items: MomentLook.selectorOrder) { look in
-                            MomentsCreateLookImageTile(
+                        AnimateCreateTwoColumnGrid(items: MomentLook.selectorOrder) { look in
+                            AnimateCreateLookImageTile(
                                 look: look,
                                 isSelected: setupLook == look,
                                 selectLook: { setupLook = look }
@@ -2628,7 +2628,7 @@ private struct MomentsCreateLookChooserPage: View {
                 .scrollIndicators(.hidden)
             }
 
-            MomentsCreateFixedFooterAction(
+            AnimateCreateFixedFooterAction(
                 title: L10n.string("common.done"),
                 systemImage: "checkmark.circle.fill",
                 action: applySelection
@@ -2647,7 +2647,7 @@ private struct MomentsCreateLookChooserPage: View {
     }
 }
 
-private struct MomentsCreateLookImageTile: View {
+private struct AnimateCreateLookImageTile: View {
     let look: MomentLook
     let isSelected: Bool
     let selectLook: () -> Void
@@ -2717,7 +2717,7 @@ private struct MomentsCreateLookImageTile: View {
     }
 }
 
-private struct MomentsCreateVoiceChooserPage: View {
+private struct AnimateCreateVoiceChooserPage: View {
     let allowedMusic: [MomentMusicPreset]
     let selectedMusicPreset: MomentMusicPreset
     let selectMusicPreset: (MomentMusicPreset) -> Void
@@ -2739,15 +2739,15 @@ private struct MomentsCreateVoiceChooserPage: View {
     }
 
     var body: some View {
-        MomentsCreateVisualOptionChooserPage(
+        AnimateCreateVisualOptionChooserPage(
             title: L10n.string("create.selector.voice.title"),
             introTitle: L10n.string("create.selector.voice.intro.title"),
             introDetail: L10n.string("create.selector.voice.intro.detail"),
             dismiss: dismiss,
             confirm: applySelection
         ) {
-            MomentsCreateTwoColumnGrid(items: allowedMusic) { preset in
-                    MomentsCreateVisualOptionTile(
+            AnimateCreateTwoColumnGrid(items: allowedMusic) { preset in
+                    AnimateCreateVisualOptionTile(
                         title: preset.title,
                         detail: detail(for: preset),
                         assetName: preset.assetName,
@@ -2779,7 +2779,7 @@ private struct MomentsCreateVoiceChooserPage: View {
     }
 }
 
-private struct MomentsCreateVisualOptionChooserPage<Content: View>: View {
+private struct AnimateCreateVisualOptionChooserPage<Content: View>: View {
     let title: String
     let introTitle: String
     let introDetail: String
@@ -2806,7 +2806,7 @@ private struct MomentsCreateVisualOptionChooserPage<Content: View>: View {
     var body: some View {
         ZStack(alignment: .bottom) {
             VStack(spacing: 0) {
-                MomentsCreateChooserHeader(title: title, dismiss: dismiss)
+                AnimateCreateChooserHeader(title: title, dismiss: dismiss)
                     .padding(.horizontal, 20)
                     .padding(.top, 20)
                     .padding(.bottom, 14)
@@ -2848,7 +2848,7 @@ private struct MomentsCreateVisualOptionChooserPage<Content: View>: View {
                 .scrollIndicators(.hidden)
             }
 
-            MomentsCreateFixedFooterAction(
+            AnimateCreateFixedFooterAction(
                 title: L10n.string("common.done"),
                 systemImage: "checkmark.circle.fill",
                 action: confirm
@@ -2862,7 +2862,7 @@ private struct MomentsCreateVisualOptionChooserPage<Content: View>: View {
     }
 }
 
-private struct MomentsCreateVisualOptionTile: View {
+private struct AnimateCreateVisualOptionTile: View {
     let title: String
     let detail: String
     let assetName: String
@@ -2933,7 +2933,7 @@ private struct MomentsCreateVisualOptionTile: View {
     }
 }
 
-private struct MomentsCreateThemeChooserPage: View {
+private struct AnimateCreateThemeChooserPage: View {
     let styles: [MomentCreationStyle]
     let selectedStyle: MomentCreationStyle
     let selectStyle: (MomentCreationStyle) -> Void
@@ -2957,7 +2957,7 @@ private struct MomentsCreateThemeChooserPage: View {
     var body: some View {
         ZStack(alignment: .bottom) {
             VStack(spacing: 0) {
-                MomentsCreateThemeChooserHeader(
+                AnimateCreateThemeChooserHeader(
                     dismiss: dismiss
                 )
                 .padding(.horizontal, 20)
@@ -2992,8 +2992,8 @@ private struct MomentsCreateThemeChooserPage: View {
                             }
                         }
 
-                        MomentsCreateTwoColumnGrid(items: styles) { style in
-                            MomentsCreateThemeImageTile(
+                        AnimateCreateTwoColumnGrid(items: styles) { style in
+                            AnimateCreateThemeImageTile(
                                 style: style,
                                 isSelected: setupStyleID == style.id,
                                 selectStyle: { setupStyleID = style.id }
@@ -3007,7 +3007,7 @@ private struct MomentsCreateThemeChooserPage: View {
                 .scrollIndicators(.hidden)
             }
 
-            MomentsCreateFixedFooterAction(
+            AnimateCreateFixedFooterAction(
                 title: L10n.string("common.done"),
                 systemImage: "checkmark.circle.fill",
                 action: applySelection
@@ -3030,7 +3030,7 @@ private struct MomentsCreateThemeChooserPage: View {
     }
 }
 
-private struct MomentsCreateThemeChooserHeader: View {
+private struct AnimateCreateThemeChooserHeader: View {
     let dismiss: () -> Void
 
     var body: some View {
@@ -3057,7 +3057,7 @@ private struct MomentsCreateThemeChooserHeader: View {
     }
 }
 
-private struct MomentsCreateChooserHeader: View {
+private struct AnimateCreateChooserHeader: View {
     let title: String
     let dismiss: () -> Void
 
@@ -3085,7 +3085,7 @@ private struct MomentsCreateChooserHeader: View {
     }
 }
 
-private struct MomentsCreateThemeImageTile: View {
+private struct AnimateCreateThemeImageTile: View {
     let style: MomentCreationStyle
     let isSelected: Bool
     let selectStyle: () -> Void

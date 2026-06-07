@@ -3,7 +3,7 @@ import PhotosUI
 import SwiftUI
 import UIKit
 
-private enum MomentsCreateImageLook: String, CaseIterable, Identifiable {
+private enum AnimateCreateImageLook: String, CaseIterable, Identifiable {
     case cartoon
     case anime
     case watercolor
@@ -43,7 +43,7 @@ private enum MomentsCreateImageLook: String, CaseIterable, Identifiable {
     }
 }
 
-struct MomentsCreateImagesWorkspace: View {
+struct AnimateCreateImagesWorkspace: View {
     let balance: AnimateCreditBalance
     let creditBalanceLoadState: AnimateCreditBalanceLoadState
     let imageGenerationAvailability: AnimateImageGenerationAvailabilityResponse?
@@ -60,7 +60,7 @@ struct MomentsCreateImagesWorkspace: View {
     @State private var selectedImage: UIImage?
     @State private var selectedImageData: Data?
     @State private var selectedSourceImageLocalIdentifier: String?
-    @State private var selectedLooks: Set<MomentsCreateImageLook> = [.cartoon]
+    @State private var selectedLooks: Set<AnimateCreateImageLook> = [.cartoon]
     @State private var isLoadingImage = false
 
     private let lookSelectionLimit = 5
@@ -77,20 +77,20 @@ struct MomentsCreateImagesWorkspace: View {
     var body: some View {
         ScrollView {
             VStack(alignment: .leading, spacing: 14) {
-                MomentsCreateImagesHeader()
+                AnimateCreateImagesHeader()
 
-                MomentsCreateImagesSourceCard(
+                AnimateCreateImagesSourceCard(
                     image: selectedImage,
                     isLoading: isLoadingImage,
                     pickerItem: $pickerItem
                 )
 
-                MomentsCreateImagesLookGrid(
+                AnimateCreateImagesLookGrid(
                     selectedLooks: $selectedLooks,
                     selectionLimit: lookSelectionLimit
                 )
 
-                MomentsCreateImagesBalanceCard(
+                AnimateCreateImagesBalanceCard(
                     spendableCredits: balance.spendable,
                     creditBalanceLoadState: creditBalanceLoadState,
                     imageGenerationAvailability: imageGenerationAvailability,
@@ -165,7 +165,7 @@ struct MomentsCreateImagesWorkspace: View {
     }
 }
 
-private struct MomentsCreateImagesHeader: View {
+private struct AnimateCreateImagesHeader: View {
     var body: some View {
         VStack(alignment: .leading, spacing: 6) {
             Text(L10n.string("create.images.title"))
@@ -181,7 +181,7 @@ private struct MomentsCreateImagesHeader: View {
     }
 }
 
-private struct MomentsCreateImagesSourceCard: View {
+private struct AnimateCreateImagesSourceCard: View {
     let image: UIImage?
     let isLoading: Bool
     @Binding var pickerItem: PhotosPickerItem?
@@ -248,8 +248,8 @@ private struct MomentsCreateImagesSourceCard: View {
     }
 }
 
-private struct MomentsCreateImagesLookGrid: View {
-    @Binding var selectedLooks: Set<MomentsCreateImageLook>
+private struct AnimateCreateImagesLookGrid: View {
+    @Binding var selectedLooks: Set<AnimateCreateImageLook>
     let selectionLimit: Int
 
     private let columns = [
@@ -268,11 +268,11 @@ private struct MomentsCreateImagesLookGrid: View {
                 .foregroundStyle(AVBrandColor.textSecondary)
 
             LazyVGrid(columns: columns, spacing: 10) {
-                ForEach(MomentsCreateImageLook.allCases) { look in
+                ForEach(AnimateCreateImageLook.allCases) { look in
                     Button {
                         toggle(look)
                     } label: {
-                        MomentsCreateImageLookTile(
+                        AnimateCreateImageLookTile(
                             look: look,
                             isSelected: selectedLooks.contains(look)
                         )
@@ -288,7 +288,7 @@ private struct MomentsCreateImagesLookGrid: View {
         )
     }
 
-    private func toggle(_ look: MomentsCreateImageLook) {
+    private func toggle(_ look: AnimateCreateImageLook) {
         if selectedLooks.contains(look) {
             guard selectedLooks.count > 1 else { return }
             selectedLooks.remove(look)
@@ -299,8 +299,8 @@ private struct MomentsCreateImagesLookGrid: View {
     }
 }
 
-private struct MomentsCreateImageLookTile: View {
-    let look: MomentsCreateImageLook
+private struct AnimateCreateImageLookTile: View {
+    let look: AnimateCreateImageLook
     let isSelected: Bool
 
     var body: some View {
@@ -345,7 +345,7 @@ private struct MomentsCreateImageLookTile: View {
     }
 }
 
-private struct MomentsCreateImagesBalanceCard: View {
+private struct AnimateCreateImagesBalanceCard: View {
     let spendableCredits: Int
     let creditBalanceLoadState: AnimateCreditBalanceLoadState
     let imageGenerationAvailability: AnimateImageGenerationAvailabilityResponse?

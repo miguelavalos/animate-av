@@ -1,7 +1,7 @@
 import Foundation
 
 @MainActor
-final class MomentsCreateOperationRunner {
+final class AnimateCreateOperationRunner {
     private var tasks: [UUID: Task<Void, Never>] = [:]
 
     func run(_ operation: @escaping @MainActor () async -> Void) {

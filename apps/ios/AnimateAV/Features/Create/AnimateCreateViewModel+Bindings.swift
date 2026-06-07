@@ -1,7 +1,7 @@
 import Combine
 import Foundation
 
-extension MomentsCreateViewModel {
+extension AnimateCreateViewModel {
     func bindWorkflowState(
         accountStateProvider: any AnimateAccountStateProviding,
         momentCreationWorkflow: MomentCreationWorkflow,
@@ -25,7 +25,7 @@ extension MomentsCreateViewModel {
             .receive(on: DispatchQueue.main)
             .sink { [weak self] isSignedIn, balance, creditBalanceLoadState in
                 self?.applyAccountState(
-                    MomentsCreateAccountState(
+                    AnimateCreateAccountState(
                         isSignedIn: isSignedIn,
                         balance: balance,
                         creditBalanceLoadState: creditBalanceLoadState
@@ -44,7 +44,7 @@ extension MomentsCreateViewModel {
             .receive(on: DispatchQueue.main)
             .sink { [weak self] isCreatingMoment, activeMomentId, setupErrorMessage in
                 self?.applyMomentCreationState(
-                    MomentsCreateMomentCreationState(
+                    AnimateCreateMomentCreationState(
                         isCreatingMoment: isCreatingMoment,
                         activeMomentId: activeMomentId,
                         setupErrorMessage: setupErrorMessage
@@ -64,7 +64,7 @@ extension MomentsCreateViewModel {
             .receive(on: DispatchQueue.main)
             .sink { [weak self] selectedMedia, statusMessage, isImporting, importProgress in
                 self?.applyMediaUploadState(
-                    MomentsCreateMediaUploadState(
+                    AnimateCreateMediaUploadState(
                         selectedMedia: selectedMedia,
                         statusMessage: statusMessage,
                         isImporting: isImporting,
@@ -85,7 +85,7 @@ extension MomentsCreateViewModel {
             .receive(on: DispatchQueue.main)
             .sink { [weak self] activeWorkspace, generatedScenes, statusMessage, isPlanning in
                 self?.applyStoryState(
-                    MomentsCreateStoryState(
+                    AnimateCreateStoryState(
                         activeWorkspace: activeWorkspace,
                         savedScenes: activeWorkspace?.storyScenes ?? [],
                         generatedScenes: generatedScenes,
@@ -117,7 +117,7 @@ extension MomentsCreateViewModel {
                 let (finalExport, latestFinalJob, renderPlan, pendingGalleryVideo) = content
                 let (videoQuote, isGenerating, statusMessage, canRetryFinalVideoDownload) = state
                 self?.applyFinalRenderState(
-                    MomentsCreateFinalRenderState(
+                    AnimateCreateFinalRenderState(
                         finalExport: finalExport,
                         latestFinalJob: latestFinalJob,
                         renderPlan: renderPlan,

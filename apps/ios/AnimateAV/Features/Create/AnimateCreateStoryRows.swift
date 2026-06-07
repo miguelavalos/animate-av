@@ -1,7 +1,7 @@
 import AVAppShellFoundation
 import SwiftUI
 
-struct MomentsCreateStorySceneRow: View {
+struct AnimateCreateStorySceneRow: View {
     let index: Int
     let caption: String
     let narration: String

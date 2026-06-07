@@ -4,7 +4,7 @@ import SwiftUI
 
 struct AnimateInProgressScreen: View {
     @EnvironmentObject private var viewModel: AnimateInProgressViewModel
-    @EnvironmentObject private var createViewModel: MomentsCreateViewModel
+    @EnvironmentObject private var createViewModel: AnimateCreateViewModel
     @State private var momentPendingDeletion: InProgressMoment?
     @State private var momentPendingRename: InProgressMoment?
     @SceneStorage("animate.inProgress.selectedAssetKind") private var selectedAssetKindRaw = AnimateInProgressAssetKind.videos.rawValue

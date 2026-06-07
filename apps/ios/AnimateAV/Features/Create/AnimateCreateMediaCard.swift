@@ -3,8 +3,8 @@ import AVBrandFoundation
 import SwiftUI
 import UIKit
 
-struct MomentsCreateMediaCard: View {
-    let presentation: MomentsCreateMediaPresentation
+struct AnimateCreateMediaCard: View {
+    let presentation: AnimateCreateMediaPresentation
     let choosePhotos: () -> Void
 
     var body: some View {
@@ -39,7 +39,7 @@ struct MomentsCreateMediaCard: View {
                         .fixedSize(horizontal: false, vertical: true)
 
                     VStack(spacing: 8) {
-                        MomentsCreateMediaChoiceAction(
+                        AnimateCreateMediaChoiceAction(
                             title: L10n.string("create.media.choose"),
                             systemImage: "photo.badge.plus",
                             isPrimary: true,
@@ -65,7 +65,7 @@ struct MomentsCreateMediaCard: View {
     }
 }
 
-private struct MomentsCreateMediaChoiceAction: View {
+private struct AnimateCreateMediaChoiceAction: View {
     let title: String
     let systemImage: String
     let isPrimary: Bool
@@ -115,7 +115,7 @@ private struct MomentsCreateMediaChoiceAction: View {
     }
 }
 
-struct MomentsCreateMediaManagerSheet: View {
+struct AnimateCreateMediaManagerSheet: View {
     let selectedMedia: [MomentsSelectedMedia]
     let syncedMediaAssets: [MomentMediaAsset]
     let canAddMedia: Bool
@@ -156,7 +156,7 @@ struct MomentsCreateMediaManagerSheet: View {
 
             ScrollView {
                 VStack(alignment: .leading, spacing: 16) {
-                    MomentsCreateEditorAviPanel(
+                    AnimateCreateEditorAviPanel(
                         selectedCount: displayCount,
                         canAddMedia: canAddMedia,
                         isImporting: isImporting,
@@ -164,14 +164,14 @@ struct MomentsCreateMediaManagerSheet: View {
                     )
 
                     if isImporting {
-                        MomentsCreateMediaImportProgressCard(
+                        AnimateCreateMediaImportProgressCard(
                             selectedCount: workingMedia.count,
                             progress: importProgress
                         )
                     }
 
                     if workingMedia.isEmpty, syncedMediaAssets.isEmpty {
-                        MomentsCreateMediaEmptyState(
+                        AnimateCreateMediaEmptyState(
                             canAddMedia: canAddMedia,
                             isImporting: isImporting,
                             addMedia: chooseManually
@@ -180,7 +180,7 @@ struct MomentsCreateMediaManagerSheet: View {
                         if !workingMedia.isEmpty {
                             LazyVGrid(columns: columns, alignment: .center, spacing: 16) {
                                 ForEach(Array(workingMedia.enumerated()), id: \.element.id) { index, media in
-                                    MomentsCreateManageableMediaTile(
+                                    AnimateCreateManageableMediaTile(
                                         media: media,
                                         index: index,
                                         isImporting: isImporting,
@@ -198,7 +198,7 @@ struct MomentsCreateMediaManagerSheet: View {
                         if workingMedia.isEmpty, !syncedMediaAssets.isEmpty {
                             LazyVGrid(columns: columns, alignment: .center, spacing: 16) {
                                 ForEach(Array(syncedMediaAssets.enumerated()), id: \.element.id) { index, media in
-                                    MomentsCreateSyncedMediaEditorTile(media: media, index: index)
+                                    AnimateCreateSyncedMediaEditorTile(media: media, index: index)
                                 }
                             }
                         }
@@ -212,14 +212,14 @@ struct MomentsCreateMediaManagerSheet: View {
             .scrollBounceBehavior(.basedOnSize)
         }
         .fullScreenCover(item: $zoomedMedia) { media in
-            MomentsCreateMediaZoomView(media: media) {
+            AnimateCreateMediaZoomView(media: media) {
                 zoomedMedia = nil
             }
         }
     }
 
     private var editHeader: some View {
-        MomentsCreateEditorPageHeader(
+        AnimateCreateEditorPageHeader(
             title: L10n.string("create.media.editTitle"),
             dismiss: { dismiss() }
         )
@@ -230,7 +230,7 @@ struct MomentsCreateMediaManagerSheet: View {
     }
 }
 
-private struct MomentsCreateMediaEmptyState: View {
+private struct AnimateCreateMediaEmptyState: View {
     let canAddMedia: Bool
     let isImporting: Bool
     let addMedia: () -> Void
@@ -296,13 +296,13 @@ private struct MomentsCreateMediaEmptyState: View {
     }
 }
 
-private struct MomentsCreateSyncedMediaEditorTile: View {
+private struct AnimateCreateSyncedMediaEditorTile: View {
     let media: MomentMediaAsset
     let index: Int
 
     var body: some View {
         VStack(spacing: 6) {
-            MomentsCreateSyncedMediaThumbnailImage(media: media)
+            AnimateCreateSyncedMediaThumbnailImage(media: media)
                 .frame(width: 96, height: mediaFrame.height)
                 .clipShape(RoundedRectangle(cornerRadius: 5, style: .continuous))
 
@@ -350,7 +350,7 @@ private struct MomentsCreateSyncedMediaEditorTile: View {
     }
 }
 
-private struct MomentsCreateMediaImportProgressCard: View {
+private struct AnimateCreateMediaImportProgressCard: View {
     let selectedCount: Int
     let progress: MomentsMediaImportProgress?
 
@@ -422,7 +422,7 @@ private struct MomentsCreateMediaImportProgressCard: View {
     }
 }
 
-private struct MomentsCreateManageableMediaTile: View {
+private struct AnimateCreateManageableMediaTile: View {
     let media: MomentsSelectedMedia
     let index: Int
     let isImporting: Bool
@@ -523,7 +523,7 @@ private struct MomentsCreateManageableMediaTile: View {
     }
 }
 
-private struct MomentsCreateMediaZoomView: View {
+private struct AnimateCreateMediaZoomView: View {
     let media: MomentsSelectedMedia
     let dismiss: () -> Void
 
@@ -628,7 +628,7 @@ private struct MomentsCreateMediaZoomView: View {
     }
 }
 
-private struct MomentsCreateEditorAviPanel: View {
+private struct AnimateCreateEditorAviPanel: View {
     let selectedCount: Int
     let canAddMedia: Bool
     let isImporting: Bool
@@ -695,7 +695,7 @@ private struct MomentsCreateEditorAviPanel: View {
     }
 }
 
-private struct MomentsCreateMediaReorderRow: View {
+private struct AnimateCreateMediaReorderRow: View {
     let media: MomentsSelectedMedia
     let index: Int
 
@@ -750,7 +750,7 @@ private struct MomentsCreateMediaReorderRow: View {
     }
 }
 
-private struct MomentsCreateSyncedMediaSection: View {
+private struct AnimateCreateSyncedMediaSection: View {
     let mediaAssets: [MomentMediaAsset]
 
     private let columns = [
@@ -765,7 +765,7 @@ private struct MomentsCreateSyncedMediaSection: View {
 
                 LazyVGrid(columns: columns, alignment: .leading, spacing: 8) {
                     ForEach(Array(mediaAssets.enumerated()), id: \.element.id) { index, media in
-                        MomentsCreateSyncedMediaThumbnailTile(media: media, index: index)
+                        AnimateCreateSyncedMediaThumbnailTile(media: media, index: index)
                     }
                 }
             }
@@ -773,7 +773,7 @@ private struct MomentsCreateSyncedMediaSection: View {
     }
 }
 
-struct MomentsCreateSoftActionButtonStyle: ButtonStyle {
+struct AnimateCreateSoftActionButtonStyle: ButtonStyle {
     @Environment(\.isEnabled) private var isEnabled
 
     func makeBody(configuration: Configuration) -> some View {
@@ -800,7 +800,7 @@ struct MomentsCreateSoftActionButtonStyle: ButtonStyle {
     }
 }
 
-struct MomentsCreateFixedFooterAction: View {
+struct AnimateCreateFixedFooterAction: View {
     let title: String
     let systemImage: String
     let action: () -> Void
@@ -815,7 +815,7 @@ struct MomentsCreateFixedFooterAction: View {
                     .frame(maxWidth: .infinity)
                     .frame(height: 46)
             }
-            .buttonStyle(MomentsCreateSoftActionButtonStyle())
+            .buttonStyle(AnimateCreateSoftActionButtonStyle())
         }
         .padding(.horizontal, 12)
         .padding(.vertical, 12)
@@ -828,7 +828,7 @@ struct MomentsCreateFixedFooterAction: View {
     }
 }
 
-struct MomentsCreateSubtleInlineButtonStyle: ButtonStyle {
+struct AnimateCreateSubtleInlineButtonStyle: ButtonStyle {
     @Environment(\.isEnabled) private var isEnabled
 
     func makeBody(configuration: Configuration) -> some View {
@@ -843,7 +843,7 @@ struct MomentsCreateSubtleInlineButtonStyle: ButtonStyle {
     }
 }
 
-struct MomentsCreateNeutralInlineButtonStyle: ButtonStyle {
+struct AnimateCreateNeutralInlineButtonStyle: ButtonStyle {
     @Environment(\.isEnabled) private var isEnabled
 
     func makeBody(configuration: Configuration) -> some View {
@@ -862,7 +862,7 @@ struct MomentsCreateNeutralInlineButtonStyle: ButtonStyle {
     }
 }
 
-struct MomentsCreateEditorPageHeader: View {
+struct AnimateCreateEditorPageHeader: View {
     let title: String
     let dismiss: () -> Void
 
@@ -889,7 +889,7 @@ struct MomentsCreateEditorPageHeader: View {
     }
 }
 
-private struct MomentsCreateToolbarPillButtonStyle: ButtonStyle {
+private struct AnimateCreateToolbarPillButtonStyle: ButtonStyle {
     func makeBody(configuration: Configuration) -> some View {
         configuration.label
             .foregroundStyle(AVBrandColor.textPrimary)

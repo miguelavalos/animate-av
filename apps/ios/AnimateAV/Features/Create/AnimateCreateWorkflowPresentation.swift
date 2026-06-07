@@ -1,6 +1,6 @@
 import Foundation
 
-struct MomentsCreateWorkflowPresentation: Equatable {
+struct AnimateCreateWorkflowPresentation: Equatable {
     var activeMomentId: String?
     var isSignedIn = false
     var isCreatingMoment = false
@@ -13,9 +13,9 @@ struct MomentsCreateWorkflowPresentation: Equatable {
     var occasionTitle = ""
     var balance: AnimateCreditBalance
     var creditBalanceLoadState = AnimateCreditBalanceLoadState.loaded
-    var mediaSummary: MomentsCreateMediaSummary
-    var storySummary: MomentsCreateStorySummary
-    var finalRenderSummary: MomentsCreateFinalRenderSummary
+    var mediaSummary: AnimateCreateMediaSummary
+    var storySummary: AnimateCreateStorySummary
+    var finalRenderSummary: AnimateCreateFinalRenderSummary
     var canAddMedia = false
     var canPlanStory = false
     var canPrepareFinalRenderPlan = false
@@ -37,7 +37,7 @@ struct MomentsCreateWorkflowPresentation: Equatable {
             || finalRenderSummary.finalExport != nil
     }
 
-    var currentStage: MomentsCreateCurrentStage {
+    var currentStage: AnimateCreateCurrentStage {
         if finalRenderSummary.finalExport != nil {
             return .finalVideo
         }
@@ -113,12 +113,12 @@ struct MomentsCreateWorkflowPresentation: Equatable {
         occasionTitle: String,
         balance: AnimateCreditBalance,
         creditBalanceLoadState: AnimateCreditBalanceLoadState = .loaded,
-        mediaSummary: MomentsCreateMediaSummary,
-        storySummary: MomentsCreateStorySummary,
-        finalRenderSummary: MomentsCreateFinalRenderSummary,
-        availability: MomentsCreateWorkflowAvailability
-    ) -> MomentsCreateWorkflowPresentation {
-        MomentsCreateWorkflowPresentation(
+        mediaSummary: AnimateCreateMediaSummary,
+        storySummary: AnimateCreateStorySummary,
+        finalRenderSummary: AnimateCreateFinalRenderSummary,
+        availability: AnimateCreateWorkflowAvailability
+    ) -> AnimateCreateWorkflowPresentation {
+        AnimateCreateWorkflowPresentation(
             activeMomentId: activeMomentId,
             isSignedIn: isSignedIn,
             isCreatingMoment: isCreatingMoment,
@@ -146,7 +146,7 @@ struct MomentsCreateWorkflowPresentation: Equatable {
     }
 }
 
-enum MomentsCreateCurrentStage: Equatable {
+enum AnimateCreateCurrentStage: Equatable {
     case media
     case story
     case finalVideo

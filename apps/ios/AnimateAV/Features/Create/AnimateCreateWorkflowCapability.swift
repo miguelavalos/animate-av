@@ -1,7 +1,7 @@
 import Foundation
 
 @MainActor
-enum MomentsCreateWorkflowCapabilityFactory {
+enum AnimateCreateWorkflowCapabilityFactory {
     static func make(
         activeMomentId: String?,
         isSignedIn: Bool,
@@ -13,8 +13,8 @@ enum MomentsCreateWorkflowCapabilityFactory {
         creditBalanceLoadState: AnimateCreditBalanceLoadState = .loaded,
         template: MomentTemplate,
         selectedMediaCount: Int
-    ) -> MomentsCreateWorkflowCapability {
-        MomentsCreateWorkflowCapability(
+    ) -> AnimateCreateWorkflowCapability {
+        AnimateCreateWorkflowCapability(
             canAddMedia: canAddMedia(
                 hasMomentWorkspace: hasMomentWorkspace,
                 isImportingMedia: isImportingMedia,

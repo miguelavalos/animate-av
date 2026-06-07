@@ -4,7 +4,7 @@ import XCTest
 @MainActor
 final class AnimateCreateAvailabilityPresentationTests: XCTestCase {
     func testWorkflowAvailabilityBuilderCarriesCapabilitiesAndMessages() {
-        let availability = MomentsCreateWorkflowAvailability.make(
+        let availability = AnimateCreateWorkflowAvailability.make(
             canAddMedia: true,
             canPlanStory: false,
             canPrepareFinalRenderPlan: true,
@@ -26,7 +26,7 @@ final class AnimateCreateAvailabilityPresentationTests: XCTestCase {
     }
 
     func testWorkflowCapabilityFactoryFormatsMediaAndFinalRenderCapabilities() {
-        let capability = MomentsCreateWorkflowCapabilityFactory.make(
+        let capability = AnimateCreateWorkflowCapabilityFactory.make(
             activeMomentId: "moment-1",
             isSignedIn: true,
             hasMomentWorkspace: true,
@@ -46,7 +46,7 @@ final class AnimateCreateAvailabilityPresentationTests: XCTestCase {
     }
 
     func testWorkflowCapabilityFactoryBlocksMediaWithoutSlotsOrVideo() {
-        let withoutSlots = MomentsCreateWorkflowCapabilityFactory.make(
+        let withoutSlots = AnimateCreateWorkflowCapabilityFactory.make(
             activeMomentId: "moment-1",
             isSignedIn: true,
             hasMomentWorkspace: true,
@@ -57,7 +57,7 @@ final class AnimateCreateAvailabilityPresentationTests: XCTestCase {
             template: .birthdayMessage,
             selectedMediaCount: 0
         )
-        let withoutMoment = MomentsCreateWorkflowCapabilityFactory.make(
+        let withoutMoment = AnimateCreateWorkflowCapabilityFactory.make(
             activeMomentId: nil,
             isSignedIn: true,
             hasMomentWorkspace: false,
@@ -74,31 +74,31 @@ final class AnimateCreateAvailabilityPresentationTests: XCTestCase {
     }
 
     func testAvailabilityCopyUsesSingularAndPluralCreditMessages() {
-        XCTAssertEqual(MomentsCreateAvailabilityCopy.momentSignInRequired, "Sign in before starting a video.")
-        XCTAssertEqual(MomentsCreateAvailabilityCopy.mediaTemplateFull, "Avi has the photo for this video.")
-        XCTAssertEqual(MomentsCreateAvailabilityCopy.storyMissingMedia, "Add one photo before preparing the video.")
+        XCTAssertEqual(AnimateCreateAvailabilityCopy.momentSignInRequired, "Sign in before starting a video.")
+        XCTAssertEqual(AnimateCreateAvailabilityCopy.mediaTemplateFull, "Avi has the photo for this video.")
+        XCTAssertEqual(AnimateCreateAvailabilityCopy.storyMissingMedia, "Add one photo before preparing the video.")
         XCTAssertEqual(
-            MomentsCreateAvailabilityCopy.finalRenderMissingWorkspace,
+            AnimateCreateAvailabilityCopy.finalRenderMissingWorkspace,
             "Wait for this video to sync before creating the final video."
         )
         XCTAssertEqual(
-            MomentsCreateAvailabilityCopy.finalRenderInsufficientCredits(missingCredits: 2),
+            AnimateCreateAvailabilityCopy.finalRenderInsufficientCredits(missingCredits: 2),
             "Add 2 more credits before creating the final video."
         )
     }
 
     func testAvailabilityMessageFactoryFormatsMediaStates() {
         XCTAssertEqual(
-            MomentsCreateAvailabilityMessageFactory.media(
+            AnimateCreateAvailabilityMessageFactory.media(
                 hasMomentWorkspace: false,
                 isImportingMedia: false,
                 isMediaUploadConfigured: true,
                 mediaRemainingSlots: 2
             ),
-            MomentsCreateAvailabilityCopy.mediaMissingMoment
+            AnimateCreateAvailabilityCopy.mediaMissingMoment
         )
         XCTAssertNil(
-            MomentsCreateAvailabilityMessageFactory.media(
+            AnimateCreateAvailabilityMessageFactory.media(
                 hasMomentWorkspace: true,
                 isImportingMedia: true,
                 isMediaUploadConfigured: false,
@@ -106,19 +106,19 @@ final class AnimateCreateAvailabilityPresentationTests: XCTestCase {
             )
         )
         XCTAssertEqual(
-            MomentsCreateAvailabilityMessageFactory.media(
+            AnimateCreateAvailabilityMessageFactory.media(
                 hasMomentWorkspace: true,
                 isImportingMedia: false,
                 isMediaUploadConfigured: true,
                 mediaRemainingSlots: 0
             ),
-            MomentsCreateAvailabilityCopy.mediaTemplateFull
+            AnimateCreateAvailabilityCopy.mediaTemplateFull
         )
     }
 
     func testAvailabilityMessageFactoryFormatsStoryStates() {
         XCTAssertEqual(
-            MomentsCreateAvailabilityMessageFactory.story(
+            AnimateCreateAvailabilityMessageFactory.story(
                 isSignedIn: true,
                 hasMomentWorkspace: true,
                 isStoryPlanning: false,
@@ -131,7 +131,7 @@ final class AnimateCreateAvailabilityPresentationTests: XCTestCase {
             "Add 1 more photo before preparing the video."
         )
         XCTAssertNil(
-            MomentsCreateAvailabilityMessageFactory.story(
+            AnimateCreateAvailabilityMessageFactory.story(
                 isSignedIn: true,
                 hasMomentWorkspace: true,
                 isStoryPlanning: true,
@@ -146,7 +146,7 @@ final class AnimateCreateAvailabilityPresentationTests: XCTestCase {
 
     func testAvailabilityMessageFactoryFormatsFinalRenderStoryRequirement() {
         XCTAssertEqual(
-            MomentsCreateAvailabilityMessageFactory.finalRender(
+            AnimateCreateAvailabilityMessageFactory.finalRender(
                 activeMomentId: "moment-1",
                 isFinalRenderAvailable: true,
                 isFinalRenderGenerating: false,
@@ -161,7 +161,7 @@ final class AnimateCreateAvailabilityPresentationTests: XCTestCase {
 
     func testFinalRenderCreditsLoadingDoesNotReportInsufficientCredits() {
         XCTAssertEqual(
-            MomentsCreateAvailabilityMessageFactory.finalRender(
+            AnimateCreateAvailabilityMessageFactory.finalRender(
                 activeMomentId: "moment-1",
                 isFinalRenderAvailable: true,
                 isFinalRenderGenerating: false,
@@ -177,7 +177,7 @@ final class AnimateCreateAvailabilityPresentationTests: XCTestCase {
 
     func testFinalRenderCreditsOfflineDoesNotReportInsufficientCredits() {
         XCTAssertEqual(
-            MomentsCreateAvailabilityMessageFactory.finalRender(
+            AnimateCreateAvailabilityMessageFactory.finalRender(
                 activeMomentId: "moment-1",
                 isFinalRenderAvailable: true,
                 isFinalRenderGenerating: false,

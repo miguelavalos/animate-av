@@ -1,6 +1,6 @@
 import Foundation
 
-struct MomentsCreateWorkspaceSummary: Equatable {
+struct AnimateCreateWorkspaceSummary: Equatable {
     var mediaCount = 0
     var sceneCount = 0
     var renderJobCount = 0
@@ -17,8 +17,8 @@ struct MomentsCreateWorkspaceSummary: Equatable {
     static func make(
         workspace: MomentWorkspace?,
         finalExport: MomentArtifact?
-    ) -> MomentsCreateWorkspaceSummary {
-        MomentsCreateWorkspaceSummary(
+    ) -> AnimateCreateWorkspaceSummary {
+        AnimateCreateWorkspaceSummary(
             mediaCount: workspace?.mediaAssets.count ?? 0,
             sceneCount: workspace?.storyScenes.count ?? 0,
             renderJobCount: workspace?.renderJobs.count ?? 0,
@@ -28,7 +28,7 @@ struct MomentsCreateWorkspaceSummary: Equatable {
 
 }
 
-struct MomentsCreateMediaSummary: Equatable {
+struct AnimateCreateMediaSummary: Equatable {
     var selectedMedia: [MomentsSelectedMedia] = []
     var syncedMediaAssets: [MomentMediaAsset] = []
     var isImporting = false
@@ -81,7 +81,7 @@ struct MomentsMediaImportProgress: Equatable {
     }
 }
 
-struct MomentsCreateStorySummary: Equatable {
+struct AnimateCreateStorySummary: Equatable {
     var savedScenes: [MomentStoryScene] = []
     var generatedScenes: [MomentsStorySceneResponse] = []
     var isPlanning = false
@@ -91,12 +91,12 @@ struct MomentsCreateStorySummary: Equatable {
         !savedScenes.isEmpty || !generatedScenes.isEmpty
     }
 
-    var presentedScenes: [MomentsCreateStoryScenePresentation] {
+    var presentedScenes: [AnimateCreateStoryScenePresentation] {
         if !savedScenes.isEmpty {
             return savedScenes
                 .sorted { $0.sceneIndex < $1.sceneIndex }
                 .map {
-                    MomentsCreateStoryScenePresentation(
+                    AnimateCreateStoryScenePresentation(
                         title: Self.sceneTitle(Int($0.sceneIndex)),
                         caption: $0.caption,
                         detail: $0.narrationText
@@ -107,7 +107,7 @@ struct MomentsCreateStorySummary: Equatable {
         return generatedScenes
             .sorted { $0.sceneIndex < $1.sceneIndex }
             .map {
-                MomentsCreateStoryScenePresentation(
+                AnimateCreateStoryScenePresentation(
                     title: Self.sceneTitle($0.sceneIndex),
                     caption: $0.caption,
                     detail: $0.narrationText
@@ -129,14 +129,14 @@ struct MomentsCreateStorySummary: Equatable {
     }
 }
 
-struct MomentsCreateStoryScenePresentation: Equatable, Identifiable {
+struct AnimateCreateStoryScenePresentation: Equatable, Identifiable {
     var id: String { "\(title)-\(caption)" }
     let title: String
     let caption: String
     let detail: String?
 }
 
-struct MomentsCreateFinalRenderSummary: Equatable {
+struct AnimateCreateFinalRenderSummary: Equatable {
     var creditCost = 0
     var renderPlan: MomentsRenderPlanResponse?
     var videoQuote: AnimateVideoQuoteResponse?

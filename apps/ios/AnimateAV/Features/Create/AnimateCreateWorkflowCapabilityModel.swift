@@ -1,6 +1,6 @@
 import Foundation
 
-struct MomentsCreateWorkflowCapability: Equatable {
+struct AnimateCreateWorkflowCapability: Equatable {
     var canAddMedia = false
     var canPlanStory = false
     var canPrepareFinalRenderPlan = false

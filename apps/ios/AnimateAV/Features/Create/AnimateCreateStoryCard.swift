@@ -2,8 +2,8 @@ import AVAppShellFoundation
 import AVBrandFoundation
 import SwiftUI
 
-struct MomentsCreateStoryCard: View {
-    let presentation: MomentsCreateStoryPresentation
+struct AnimateCreateStoryCard: View {
+    let presentation: AnimateCreateStoryPresentation
     let generateStory: () -> Void
 
     var body: some View {
@@ -14,7 +14,7 @@ struct MomentsCreateStoryCard: View {
                     detail: L10n.string("create.story.plan.detail")
                 )
 
-                MomentsCreateStoryScenesSection(presentation: presentation)
+                AnimateCreateStoryScenesSection(presentation: presentation)
 
                 AVAppShellPrimaryButton(
                     presentation.planButtonTitle,
@@ -37,13 +37,13 @@ struct MomentsCreateStoryCard: View {
     }
 }
 
-private struct MomentsCreateStoryScenesSection: View {
-    let presentation: MomentsCreateStoryPresentation
+private struct AnimateCreateStoryScenesSection: View {
+    let presentation: AnimateCreateStoryPresentation
 
     var body: some View {
         if !presentation.savedScenes.isEmpty {
             ForEach(presentation.savedScenes) { scene in
-                MomentsCreateStorySceneRow(
+                AnimateCreateStorySceneRow(
                     index: Int(scene.sceneIndex),
                     caption: scene.caption,
                     narration: scene.narrationText ?? ""
@@ -51,14 +51,14 @@ private struct MomentsCreateStoryScenesSection: View {
             }
         } else if !presentation.summary.generatedScenes.isEmpty {
             ForEach(presentation.summary.generatedScenes) { scene in
-                MomentsCreateStorySceneRow(
+                AnimateCreateStorySceneRow(
                     index: scene.sceneIndex,
                     caption: scene.caption,
                     narration: scene.narrationText
                 )
             }
         } else {
-            MomentsCreateEmptySectionRow(
+            AnimateCreateEmptySectionRow(
                 systemImage: "text.bubble",
                 message: presentation.emptyMessage
             )

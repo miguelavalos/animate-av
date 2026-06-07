@@ -2,10 +2,10 @@ import AVAppShellFoundation
 import PhotosUI
 import SwiftUI
 
-struct MomentsCreateScreen: View {
-    @EnvironmentObject private var viewModel: MomentsCreateViewModel
+struct AnimateCreateScreen: View {
+    @EnvironmentObject private var viewModel: AnimateCreateViewModel
     @EnvironmentObject private var newVideoStartController: AnimateNewVideoStartController
-    @SceneStorage("animate.create.selectedAssetKind") private var selectedAssetKindRaw = MomentsCreateAssetKind.video.rawValue
+    @SceneStorage("animate.create.selectedAssetKind") private var selectedAssetKindRaw = AnimateCreateAssetKind.video.rawValue
     @State private var pickerItems: [PhotosPickerItem] = []
     @State private var showsAutomaticPhotoPicker = false
     @State private var handledAutomaticPhotoPickerRequest = 0
@@ -32,11 +32,11 @@ struct MomentsCreateScreen: View {
 
     var body: some View {
         VStack(alignment: .leading, spacing: 12) {
-            MomentsCreateAssetKindPicker(selectedAssetKind: selectedAssetKindBinding)
+            AnimateCreateAssetKindPicker(selectedAssetKind: selectedAssetKindBinding)
 
             switch selectedAssetKind {
             case .video:
-                MomentsCreateWorkflowContent(
+                AnimateCreateWorkflowContent(
                     viewModel: viewModel,
                     pickerItems: $pickerItems,
                     startSignInFlow: startSignInFlow,
@@ -44,7 +44,7 @@ struct MomentsCreateScreen: View {
                     finishFinalVideoToGallery: finishFinalVideoToGallery
                 )
             case .images:
-                MomentsCreateImagesWorkspace(
+                AnimateCreateImagesWorkspace(
                     balance: viewModel.balance,
                     creditBalanceLoadState: viewModel.creditBalanceLoadState,
                     imageGenerationAvailability: viewModel.imageGenerationAvailability,
@@ -95,7 +95,7 @@ struct MomentsCreateScreen: View {
                 set: { _ in }
             )
         ) {
-            MomentsCreateBlockingPreparationView(
+            AnimateCreateBlockingPreparationView(
                 presentation: viewModel.workflowPresentation,
                 isPreparingStory: viewModel.isPreparingStory,
                 isPreparingFinalPlan: viewModel.isPreparingFinalPlan
@@ -125,11 +125,11 @@ struct MomentsCreateScreen: View {
         1
     }
 
-    private var selectedAssetKind: MomentsCreateAssetKind {
-        MomentsCreateAssetKind(rawValue: selectedAssetKindRaw) ?? .video
+    private var selectedAssetKind: AnimateCreateAssetKind {
+        AnimateCreateAssetKind(rawValue: selectedAssetKindRaw) ?? .video
     }
 
-    private var selectedAssetKindBinding: Binding<MomentsCreateAssetKind> {
+    private var selectedAssetKindBinding: Binding<AnimateCreateAssetKind> {
         Binding(
             get: { selectedAssetKind },
             set: { selectedAssetKindRaw = $0.rawValue }
@@ -157,16 +157,16 @@ struct MomentsCreateScreen: View {
     }
 }
 
-private struct MomentsCreateAssetKindPicker: View {
-    @Binding var selectedAssetKind: MomentsCreateAssetKind
+private struct AnimateCreateAssetKindPicker: View {
+    @Binding var selectedAssetKind: AnimateCreateAssetKind
 
     var body: some View {
         HStack(spacing: 8) {
-            ForEach(MomentsCreateAssetKind.allCases) { kind in
+            ForEach(AnimateCreateAssetKind.allCases) { kind in
                 Button {
                     selectedAssetKind = kind
                 } label: {
-                    MomentsCreateAssetKindPill(
+                    AnimateCreateAssetKindPill(
                         title: kind.title,
                         isSelected: selectedAssetKind == kind
                     )
@@ -180,7 +180,7 @@ private struct MomentsCreateAssetKindPicker: View {
     }
 }
 
-private struct MomentsCreateAssetKindPill: View {
+private struct AnimateCreateAssetKindPill: View {
     let title: String
     let isSelected: Bool
 
@@ -205,7 +205,7 @@ private struct MomentsCreateAssetKindPill: View {
     }
 }
 
-private enum MomentsCreateAssetKind: String, CaseIterable, Identifiable {
+private enum AnimateCreateAssetKind: String, CaseIterable, Identifiable {
     case video
     case images
 
@@ -221,7 +221,7 @@ private enum MomentsCreateAssetKind: String, CaseIterable, Identifiable {
     }
 }
 
-enum MomentsCreateSection: Hashable {
+enum AnimateCreateSection: Hashable {
     case moment
     case media
     case story

@@ -1,6 +1,6 @@
 import Foundation
 
-extension MomentsCreateViewModel {
+extension AnimateCreateViewModel {
     func runOperation(_ operation: @escaping @MainActor () async -> Void) {
         operationRunner.run(operation)
     }

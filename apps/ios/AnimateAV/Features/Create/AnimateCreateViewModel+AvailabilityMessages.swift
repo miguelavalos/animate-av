@@ -1,6 +1,6 @@
-extension MomentsCreateViewModel {
+extension AnimateCreateViewModel {
     var setupAvailabilityMessage: String? {
-        MomentsCreateAvailabilityMessageFactory.setup(
+        AnimateCreateAvailabilityMessageFactory.setup(
             isSetupLocked: isSetupLocked,
             isSignedIn: isSignedIn,
             isMomentCreationConfigured: momentCreationWorkflow?.isConfigured ?? false,
@@ -9,7 +9,7 @@ extension MomentsCreateViewModel {
     }
 
     var mediaAvailabilityMessage: String? {
-        MomentsCreateAvailabilityMessageFactory.media(
+        AnimateCreateAvailabilityMessageFactory.media(
             hasMomentWorkspace: hasMomentWorkspace,
             isImportingMedia: isImportingMedia,
             isMediaUploadConfigured: mediaUploadWorkflow?.isConfigured ?? false,
@@ -18,7 +18,7 @@ extension MomentsCreateViewModel {
     }
 
     var storyAvailabilityMessage: String? {
-        MomentsCreateAvailabilityMessageFactory.story(
+        AnimateCreateAvailabilityMessageFactory.story(
             isSignedIn: isSignedIn,
             hasMomentWorkspace: hasMomentWorkspace,
             isStoryPlanning: storyWorkflow?.isPlanning ?? false,
@@ -31,7 +31,7 @@ extension MomentsCreateViewModel {
     }
 
     var finalRenderAvailabilityMessage: String? {
-        MomentsCreateAvailabilityMessageFactory.finalRender(
+        AnimateCreateAvailabilityMessageFactory.finalRender(
             activeMomentId: activeMomentId,
             isFinalRenderAvailable: finalRenderWorkflow != nil,
             isFinalRenderGenerating: finalRenderWorkflow?.isGenerating ?? false,

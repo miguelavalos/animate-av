@@ -1,8 +1,8 @@
 import AVAppShellFoundation
 import SwiftUI
 
-struct MomentsCreateWorkspaceProgress: View {
-    let summary: MomentsCreateWorkspaceSummary
+struct AnimateCreateWorkspaceProgress: View {
+    let summary: AnimateCreateWorkspaceSummary
     let minimumMediaCount: Int
 
     var body: some View {

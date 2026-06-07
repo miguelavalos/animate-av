@@ -1,6 +1,6 @@
 import Foundation
 
-enum MomentsCreateUITestFixtures {
+enum AnimateCreateUITestFixtures {
     enum Mode: String {
         case storyReady = "story_ready"
         case videoPlanReady = "video_plan_ready"

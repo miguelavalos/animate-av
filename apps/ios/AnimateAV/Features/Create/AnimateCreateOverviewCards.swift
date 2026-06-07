@@ -2,7 +2,7 @@ import AVAppShellFoundation
 import AVBrandFoundation
 import SwiftUI
 
-struct MomentsCreateIntroCard: View {
+struct AnimateCreateIntroCard: View {
     let isSignedIn: Bool
 
     var body: some View {
@@ -16,7 +16,7 @@ struct MomentsCreateIntroCard: View {
     }
 }
 
-struct MomentsCreateActiveMomentCard: View {
+struct AnimateCreateActiveMomentCard: View {
     let activeMoment: InProgressMoment?
 
     var body: some View {
@@ -33,7 +33,7 @@ struct MomentsCreateActiveMomentCard: View {
     }
 }
 
-struct MomentsCreateContinuationHintCard: View {
+struct AnimateCreateContinuationHintCard: View {
     let focus: MomentsContinuationFocus?
     let dismiss: () -> Void
 
@@ -58,7 +58,7 @@ struct MomentsCreateContinuationHintCard: View {
     }
 }
 
-struct MomentsCreateCreditsCard: View {
+struct AnimateCreateCreditsCard: View {
     let balance: AnimateCreditBalance
 
     var body: some View {

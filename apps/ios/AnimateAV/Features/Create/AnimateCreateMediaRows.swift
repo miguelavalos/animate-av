@@ -160,7 +160,7 @@ struct MomentsSharedMediaThumbnailContent: View {
         case .local(let media):
             localThumbnail(media)
         case .synced(let media):
-            MomentsCreateSyncedMediaThumbnailImage(media: media, size: size)
+            AnimateCreateSyncedMediaThumbnailImage(media: media, size: size)
         }
     }
 
@@ -191,7 +191,7 @@ struct MomentsSharedMediaFallbackThumbnail: View {
     }
 }
 
-struct MomentsCreateMediaRow: View {
+struct AnimateCreateMediaRow: View {
     let media: MomentsSelectedMedia
     let remove: () -> Void
 
@@ -215,7 +215,7 @@ struct MomentsCreateMediaRow: View {
     }
 }
 
-struct MomentsCreateMediaThumbnailTile: View {
+struct AnimateCreateMediaThumbnailTile: View {
     let media: MomentsSelectedMedia
     let index: Int
     let openDetails: () -> Void
@@ -263,7 +263,7 @@ struct MomentsCreateMediaThumbnailTile: View {
     }
 }
 
-struct MomentsCreateMediaDetailSheet: View {
+struct AnimateCreateMediaDetailSheet: View {
     let media: MomentsSelectedMedia
     let remove: () -> Void
 
@@ -321,13 +321,13 @@ struct MomentsCreateMediaDetailSheet: View {
     }
 }
 
-struct MomentsCreateSyncedMediaThumbnailTile: View {
+struct AnimateCreateSyncedMediaThumbnailTile: View {
     let media: MomentMediaAsset
     let index: Int
 
     var body: some View {
         ZStack(alignment: .bottomLeading) {
-            MomentsCreateSyncedMediaThumbnailImage(media: media)
+            AnimateCreateSyncedMediaThumbnailImage(media: media)
 
             Image(systemName: "checkmark.circle.fill")
                 .font(.system(size: 16, weight: .bold))
@@ -344,7 +344,7 @@ struct MomentsCreateSyncedMediaThumbnailTile: View {
     }
 }
 
-struct MomentsCreateSyncedMediaThumbnailImage: View {
+struct AnimateCreateSyncedMediaThumbnailImage: View {
     let media: MomentMediaAsset
     var size: CGFloat?
     @State private var image: UIImage?
@@ -370,7 +370,7 @@ struct MomentsCreateSyncedMediaThumbnailImage: View {
                 platformMediaAssetId: media.platformMediaAssetId
             )
             guard image == nil else { return }
-            image = await MomentsCreateLocalPhotoThumbnailLoader.thumbnail(
+            image = await AnimateCreateLocalPhotoThumbnailLoader.thumbnail(
                 for: media.platformMediaAssetId,
                 targetSize: CGSize(width: 220, height: 220)
             )
@@ -385,7 +385,7 @@ struct MomentsCreateSyncedMediaThumbnailImage: View {
     }
 }
 
-private enum MomentsCreateLocalPhotoThumbnailLoader {
+private enum AnimateCreateLocalPhotoThumbnailLoader {
     static func thumbnail(for localIdentifier: String?, targetSize: CGSize) async -> UIImage? {
         guard let localIdentifier, !localIdentifier.isEmpty else { return nil }
         let result = PHAsset.fetchAssets(withLocalIdentifiers: [localIdentifier], options: nil)
@@ -409,7 +409,7 @@ private enum MomentsCreateLocalPhotoThumbnailLoader {
     }
 }
 
-struct MomentsCreateSyncedMediaRow: View {
+struct AnimateCreateSyncedMediaRow: View {
     let media: MomentMediaAsset
 
     var body: some View {
@@ -425,7 +425,7 @@ struct MomentsCreateSyncedMediaRow: View {
     }
 }
 
-struct MomentsCreateEmptySectionRow: View {
+struct AnimateCreateEmptySectionRow: View {
     let systemImage: String
     let message: String
 
