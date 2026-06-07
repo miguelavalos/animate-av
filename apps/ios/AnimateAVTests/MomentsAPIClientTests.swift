@@ -471,6 +471,52 @@ final class MomentsAPIClientTests: XCTestCase {
         XCTAssertEqual(confirmation.renderPlan.plan.totalCreditCost, 2)
     }
 
+    func testVideoQuoteUsesBackendOwnedQuoteEndpoint() async throws {
+        let session = makeMockSession(
+            json: """
+            {
+              "appId": "animateav",
+              "outputKind": "video",
+              "duration": "upTo10s",
+              "baseCreditCost": 2,
+              "brandingRemovalCreditCost": 1,
+              "totalCreditCost": 3,
+              "proIncludesBrandingFreeVideo": false,
+              "branding": {
+                "enabled": true,
+                "included": false,
+                "removalAvailable": true,
+                "removalRequested": true,
+                "removalIncluded": false,
+                "assetId": null,
+                "placement": null,
+                "reason": "branding_removal_purchased"
+              }
+            }
+            """
+        )
+        let client = MomentsVideoQuoteClient(baseURLString: accountAPIBaseURL, session: session)
+
+        let quote = try await client.quoteVideo(
+            duration: .upTo10s,
+            removeBranding: true,
+            bearerToken: "token-1"
+        )
+
+        XCTAssertEqual(MomentsURLProtocolMock.lastRequest?.url?.absoluteString, "\(accountAPIBaseURL)/v1/apps/animateav/video/quotes")
+        XCTAssertEqual(MomentsURLProtocolMock.lastRequest?.httpMethod, "POST")
+        XCTAssertEqual(MomentsURLProtocolMock.lastRequest?.value(forHTTPHeaderField: "Authorization"), "Bearer token-1")
+        let body = try XCTUnwrap(MomentsURLProtocolMock.lastRequestBody)
+        let json = try XCTUnwrap(JSONSerialization.jsonObject(with: body) as? [String: Any])
+        XCTAssertEqual(json["appId"] as? String, "animateav")
+        XCTAssertEqual(json["duration"] as? String, "upTo10s")
+        XCTAssertEqual(json["removeBranding"] as? Bool, true)
+        XCTAssertEqual(quote.baseCreditCost, 2)
+        XCTAssertEqual(quote.brandingRemovalCreditCost, 1)
+        XCTAssertEqual(quote.totalCreditCost, 3)
+        XCTAssertEqual(quote.branding.reason, "branding_removal_purchased")
+    }
+
     func testPrepareFinalArtifactDownloadAcceptsPublicSafeResponseWithoutR2Key() async throws {
         let session = makeMockSession(
             json: """

@@ -66,6 +66,7 @@ struct MomentsWorkflowClients {
     let realtimeSession: MomentsRealtimeSessionClient
     let upload: MomentsUploadClient
     let story: MomentsStoryClient
+    let videoQuote: MomentsVideoQuoteClient
     let finalRender: MomentsFinalRenderClient
 
     init(baseURLString: String) {
@@ -73,6 +74,7 @@ struct MomentsWorkflowClients {
         realtimeSession = MomentsRealtimeSessionClient(baseURLString: baseURLString)
         upload = MomentsUploadClient(baseURLString: baseURLString, session: Self.makeUploadSession())
         story = MomentsStoryClient(baseURLString: baseURLString)
+        videoQuote = MomentsVideoQuoteClient(baseURLString: baseURLString)
         finalRender = MomentsFinalRenderClient(baseURLString: baseURLString)
     }
 
