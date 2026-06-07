@@ -806,7 +806,6 @@
 "workflow.moment.setupNotReady" = "Der Entwurf ist noch nicht bereit zum Erstellen.";
 "workflow.media.templateFull" = "Avi hat genug Medien für dieses Video.";
 "workflow.media.noNewMedia" = "Keine neuen Medien hinzugefügt.";
-"workflow.media.noRecentPhotos" = "Keine aktuellen Fotos gefunden.";
 "workflow.media.noAlbumPhotos" = "Keine Fotos in diesem Album gefunden.";
 "workflow.media.signInPrepareStory" = "Melde dich an, bevor du fortfährst.";
 "workflow.media.signInAgainPrepareStory" = "Melde dich erneut an, bevor du fortfährst.";

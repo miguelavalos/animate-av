@@ -804,7 +804,6 @@
 "workflow.moment.setupNotReady" = "Le brouillon n’est pas encore prêt à être créé.";
 "workflow.media.templateFull" = "Avi a assez de médias pour cette vidéo.";
 "workflow.media.noNewMedia" = "Aucun nouveau média ajouté.";
-"workflow.media.noRecentPhotos" = "Aucune photo récente trouvée.";
 "workflow.media.noAlbumPhotos" = "Aucune photo trouvée dans cet album.";
 "workflow.media.signInPrepareStory" = "Connecte-toi avant de continuer.";
 "workflow.media.signInAgainPrepareStory" = "Reconnecte-toi avant de continuer.";

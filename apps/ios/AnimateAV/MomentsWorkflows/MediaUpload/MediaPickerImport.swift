@@ -39,40 +39,6 @@ enum MediaPickerImport {
         return imported
     }
 
-    static func loadLatestPhotos(
-        limit: Int,
-        startingSortOrder: Int,
-        progress: (@MainActor (Int, Int) -> Void)? = nil
-    ) async throws -> [MomentsSelectedMedia] {
-        guard limit > 0 else { return [] }
-        let status = await requestPhotoLibraryAccess()
-        guard status == .authorized || status == .limited else {
-            throw MomentsUploadError.photoLibraryAccessDenied
-        }
-
-        let options = PHFetchOptions()
-        options.fetchLimit = limit
-        options.predicate = NSPredicate(format: "mediaType == %d", PHAssetMediaType.image.rawValue)
-        options.sortDescriptors = [
-            NSSortDescriptor(key: "creationDate", ascending: false),
-            NSSortDescriptor(key: "modificationDate", ascending: false)
-        ]
-
-        let assets = PHAsset.fetchAssets(with: options)
-        var imported: [MomentsSelectedMedia] = []
-
-        for index in 0..<assets.count {
-            let media = try await loadPhotoAsset(
-                assets.object(at: index),
-                sortOrder: startingSortOrder + index
-            )
-            imported.append(media)
-            await progress?(imported.count, assets.count)
-        }
-
-        return imported
-    }
-
     static func loadPhotoAlbums() async throws -> [PhotoAlbum] {
         let status = await requestPhotoLibraryAccess()
         guard status == .authorized || status == .limited else {

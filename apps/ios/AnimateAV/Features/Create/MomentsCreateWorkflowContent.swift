@@ -24,13 +24,9 @@ struct MomentsCreateWorkflowContent: View {
                     isPreparingStory: viewModel.isPreparingStory,
                     pickerItems: $pickerItems,
                     importPickerItems: viewModel.importPickerItems,
-                    importLatestPhotos: viewModel.importLatestPhotos,
                     importPhotoAlbum: viewModel.importPhotoAlbum,
                     removeMedia: viewModel.removeMedia,
-                    moveMedia: viewModel.moveMedia,
-                    reorderMedia: viewModel.reorderMedia,
                     restoreLocalMediaForEditing: viewModel.restoreLocalMediaForEditing,
-                    autoPickStrongMoments: viewModel.autoPickStrongMoments,
                     selectStyle: viewModel.selectCreationStyle,
                     selectLook: viewModel.selectLook,
                     selectMusicPreset: viewModel.selectMusicPreset,
@@ -66,13 +62,9 @@ private struct MomentsCreateMediaFirstWorkspace: View {
     let isPreparingStory: Bool
     @Binding var pickerItems: [PhotosPickerItem]
     let importPickerItems: ([PhotosPickerItem]) -> Void
-    let importLatestPhotos: () -> Void
     let importPhotoAlbum: (String) -> Void
     let removeMedia: (MomentsSelectedMedia) -> Void
-    let moveMedia: (MomentsSelectedMedia, MomentsSelectedMedia) -> Void
-    let reorderMedia: ([MomentsSelectedMedia]) -> Void
     let restoreLocalMediaForEditing: () -> Void
-    let autoPickStrongMoments: () -> Void
     let selectStyle: (MomentCreationStyle) -> Void
     let selectLook: (MomentLook) -> Void
     let selectMusicPreset: (MomentMusicPreset) -> Void
@@ -180,7 +172,7 @@ private struct MomentsCreateMediaFirstWorkspace: View {
             isPresented: $showsCompactPhotoPicker,
             selection: $pickerItems,
             maxSelectionCount: mediaPresentation.remainingSlots,
-            matching: .any(of: [.images, .videos])
+            matching: .images
         )
         .onChange(of: pickerItems) { _, newItems in
             guard !newItems.isEmpty else { return }
@@ -195,17 +187,13 @@ private struct MomentsCreateMediaFirstWorkspace: View {
                 isImporting: presentation.mediaSummary.isImporting,
                 importProgress: presentation.mediaSummary.importProgress,
                 removeMedia: removeMedia,
-                moveMedia: moveMedia,
-                reorderMedia: reorderMedia,
                 restoreLocalMediaForEditing: restoreLocalMediaForEditing,
                 chooseManually: {
                     presentCompactPhotoPicker()
                 },
                 chooseAlbum: {
                     presentCompactAlbumPicker()
-                },
-                importLatestPhotos: importLatestPhotos,
-                smartOrder: autoPickStrongMoments
+                }
             )
         }
         .sheet(isPresented: $showsCompactAlbumPicker) {

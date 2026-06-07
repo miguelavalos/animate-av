@@ -287,18 +287,12 @@ struct MomentsCreateMediaManagerSheet: View {
     let isImporting: Bool
     let importProgress: MomentsMediaImportProgress?
     let removeMedia: (MomentsSelectedMedia) -> Void
-    let moveMedia: (MomentsSelectedMedia, MomentsSelectedMedia) -> Void
-    let reorderMedia: ([MomentsSelectedMedia]) -> Void
     let restoreLocalMediaForEditing: () -> Void
     let chooseManually: () -> Void
     let chooseAlbum: () -> Void
-    let importLatestPhotos: () -> Void
-    let smartOrder: () -> Void
 
     @Environment(\.dismiss) private var dismiss
     @State private var workingMedia: [MomentsSelectedMedia] = []
-    @State private var isReordering = false
-    @State private var orderBeforeAviSuggestion: [MomentsSelectedMedia]?
     @State private var zoomedMedia: MomentsSelectedMedia?
 
     private let columns = [
@@ -306,13 +300,7 @@ struct MomentsCreateMediaManagerSheet: View {
     ]
 
     var body: some View {
-        Group {
-            if isReordering {
-                reorderList
-            } else {
-                gridView
-            }
-        }
+        gridView
         .background(MomentsTheme.shellBackground.ignoresSafeArea())
         .navigationBarBackButtonHidden(true)
         .toolbar(.hidden, for: .navigationBar)
@@ -336,15 +324,10 @@ struct MomentsCreateMediaManagerSheet: View {
                 VStack(alignment: .leading, spacing: 16) {
                     MomentsCreateEditorAviPanel(
                         selectedCount: displayCount,
-                        isReordering: false,
                         canAddMedia: canAddMedia,
                         isImporting: isImporting,
                         addMedia: chooseManually,
-                        chooseAlbum: chooseAlbum,
-                        reorder: startManualReorder,
-                        suggestOrder: suggestAviOrder,
-                        undoAviOrder: undoAviOrder,
-                        hasUndoAviOrder: orderBeforeAviSuggestion != nil
+                        chooseAlbum: chooseAlbum
                     )
 
                     if isImporting {
@@ -402,102 +385,11 @@ struct MomentsCreateMediaManagerSheet: View {
         }
     }
 
-    private var reorderList: some View {
-        ZStack(alignment: .bottom) {
-            VStack(spacing: 0) {
-                reorderHeader
-                    .padding(.horizontal, 20)
-                    .padding(.top, 20)
-                    .padding(.bottom, 14)
-
-                List {
-                    ForEach(Array(workingMedia.enumerated()), id: \.element.id) { index, media in
-                        MomentsCreateMediaReorderRow(media: media, index: index)
-                    }
-                    .onMove(perform: moveRows)
-                }
-                .listStyle(.plain)
-                .scrollContentBackground(.hidden)
-                .environment(\.editMode, .constant(.active))
-                .safeAreaPadding(.bottom, 192)
-            }
-
-            MomentsCreateFixedFooterAction(
-                title: L10n.string("create.media.doneReordering"),
-                systemImage: "checkmark.circle.fill",
-                action: finishManualReorder
-            )
-            .padding(.horizontal, 20)
-            .padding(.bottom, 96)
-        }
-        .background(MomentsTheme.shellBackground.ignoresSafeArea())
-    }
-
     private var editHeader: some View {
         MomentsCreateEditorPageHeader(
-            title: isReordering
-                ? L10n.string("create.media.reorderTitle")
-                : L10n.string("create.media.editTitle"),
+            title: L10n.string("create.media.editTitle"),
             dismiss: { dismiss() }
         )
-    }
-
-    private var reorderHeader: some View {
-        HStack(spacing: 12) {
-            Button {
-                cancelManualReorder()
-            } label: {
-                Image(systemName: "chevron.left")
-                    .font(.system(size: 17, weight: .black))
-                    .foregroundStyle(AVBrandColor.textPrimary)
-                    .frame(width: 44, height: 44)
-                    .background(.white.opacity(0.92), in: Circle())
-                    .shadow(color: AVBrandColor.ink.opacity(0.08), radius: 10, x: 0, y: 4)
-            }
-            .accessibilityLabel(L10n.string("create.media.backEditor"))
-
-            Text(L10n.string("create.media.reorderTitle"))
-                .font(.system(size: 18, weight: .black))
-                .foregroundStyle(AVBrandColor.textPrimary)
-                .frame(maxWidth: .infinity)
-
-            Color.clear
-                .frame(width: 44, height: 44)
-        }
-    }
-
-    private func moveRows(from source: IndexSet, to destination: Int) {
-        orderBeforeAviSuggestion = nil
-        workingMedia.move(fromOffsets: source, toOffset: destination)
-    }
-
-    private func startManualReorder() {
-        guard !isImporting else { return }
-        orderBeforeAviSuggestion = nil
-        isReordering = true
-    }
-
-    private func finishManualReorder() {
-        reorderMedia(workingMedia)
-        isReordering = false
-    }
-
-    private func cancelManualReorder() {
-        workingMedia = selectedMedia
-        isReordering = false
-    }
-
-    private func suggestAviOrder() {
-        guard !isImporting else { return }
-        orderBeforeAviSuggestion = workingMedia
-        smartOrder()
-    }
-
-    private func undoAviOrder() {
-        guard let previousOrder = orderBeforeAviSuggestion else { return }
-        workingMedia = previousOrder
-        reorderMedia(previousOrder)
-        orderBeforeAviSuggestion = nil
     }
 
     private var displayCount: Int {
@@ -905,15 +797,10 @@ private struct MomentsCreateMediaZoomView: View {
 
 private struct MomentsCreateEditorAviPanel: View {
     let selectedCount: Int
-    let isReordering: Bool
     let canAddMedia: Bool
     let isImporting: Bool
     let addMedia: () -> Void
     let chooseAlbum: () -> Void
-    let reorder: () -> Void
-    let suggestOrder: () -> Void
-    let undoAviOrder: () -> Void
-    let hasUndoAviOrder: Bool
 
     var body: some View {
         AVAppShellCard {
@@ -942,7 +829,7 @@ private struct MomentsCreateEditorAviPanel: View {
 
                 Menu {
                     Section(L10n.string("create.mediaCard.menu.yourEdits")) {
-                        if canAddMedia && !isReordering {
+                        if canAddMedia {
                             Button(action: addMedia) {
                             Label(L10n.string("create.media.add"), systemImage: "photo.badge.plus")
                             }
@@ -952,24 +839,6 @@ private struct MomentsCreateEditorAviPanel: View {
                                 Label(L10n.string("create.media.addCollection"), systemImage: "rectangle.stack.badge.plus")
                             }
                             .disabled(isImporting)
-                        }
-
-                        Button(action: reorder) {
-                            Label(isReordering ? L10n.string("create.media.finishReorder") : L10n.string("create.media.reorder"), systemImage: isReordering ? "checkmark" : "line.3.horizontal")
-                        }
-                    }
-
-                    if !isReordering {
-                        Section(L10n.string("create.mediaCard.menu.aviAutomatic")) {
-                            if hasUndoAviOrder {
-                                Button(action: undoAviOrder) {
-                                    Label(L10n.string("create.media.undoAviOrder"), systemImage: "arrow.uturn.backward")
-                                }
-                            } else {
-                                Button(action: suggestOrder) {
-                                Label(L10n.string("create.media.suggestOrder"), systemImage: "sparkles")
-                                }
-                            }
                         }
                     }
                 } label: {
@@ -985,9 +854,6 @@ private struct MomentsCreateEditorAviPanel: View {
     }
 
     private var panelTitle: String {
-        if isReordering {
-            return L10n.string("create.media.orderStory")
-        }
         if selectedCount == 0 {
             return L10n.string("create.media.startTitle")
         }
@@ -995,9 +861,6 @@ private struct MomentsCreateEditorAviPanel: View {
     }
 
     private var panelMessage: String {
-        if isReordering {
-            return L10n.string("create.mediaCard.reorderMessage")
-        }
         if selectedCount == 0 {
             return L10n.string("create.media.panelDetail")
         }

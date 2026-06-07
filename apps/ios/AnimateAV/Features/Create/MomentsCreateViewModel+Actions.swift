@@ -79,22 +79,6 @@ extension MomentsCreateViewModel {
         }
     }
 
-    func importLatestPhotos() {
-        guard canAddMedia, let mediaUploadWorkflow else {
-            updateSetupErrorMessage(mediaAvailabilityMessage ?? L10n.string("create.error.mediaUnavailable"))
-            return
-        }
-        let template = form.template
-        markPreparedStoryMediaEdited()
-
-        runOperation {
-            await mediaUploadWorkflow.importLatestPhotos(
-                template: template,
-                momentId: self.activeMomentId
-            )
-        }
-    }
-
     func importPhotoAlbum(id albumId: String) {
         guard canAddMedia, let mediaUploadWorkflow else {
             updateSetupErrorMessage(mediaAvailabilityMessage ?? L10n.string("create.error.mediaUnavailable"))
@@ -115,21 +99,6 @@ extension MomentsCreateViewModel {
     func removeMedia(_ media: MomentsSelectedMedia) {
         markPreparedStoryMediaEdited()
         mediaUploadWorkflow?.remove(media)
-    }
-
-    func moveMedia(_ media: MomentsSelectedMedia, before target: MomentsSelectedMedia) {
-        markPreparedStoryMediaEdited()
-        mediaUploadWorkflow?.move(media, before: target)
-    }
-
-    func reorderMedia(_ media: [MomentsSelectedMedia]) {
-        markPreparedStoryMediaEdited()
-        mediaUploadWorkflow?.reorder(media)
-    }
-
-    func autoPickStrongMoments() {
-        markPreparedStoryMediaEdited()
-        mediaUploadWorkflow?.autoPickStrongMoments()
     }
 
     func restoreLocalMediaForEditing() {

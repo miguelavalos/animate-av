@@ -804,7 +804,6 @@
 "workflow.moment.setupNotReady" = "L’esborrany encara no està llest per crear-se.";
 "workflow.media.templateFull" = "Avi té prou mèdia per a aquest vídeo.";
 "workflow.media.noNewMedia" = "No s’ha afegit mèdia nova.";
-"workflow.media.noRecentPhotos" = "No s’han trobat fotos recents.";
 "workflow.media.noAlbumPhotos" = "No s’han trobat fotos en aquest àlbum.";
 "workflow.media.signInPrepareStory" = "Inicia sessió abans de continuar.";
 "workflow.media.signInAgainPrepareStory" = "Torna a iniciar sessió abans de continuar.";

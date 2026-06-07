@@ -92,63 +92,6 @@ final class MediaUploadWorkflow: WorkspaceObservingWorkflow {
         endImport()
     }
 
-    func importLatestPhotos(
-        template: MomentTemplate,
-        momentId: String?
-    ) async {
-        let remainingSlots = MomentsMediaRules.remainingSlots(
-            template: template,
-            selectedCount: selectedMediaCount
-        )
-        guard remainingSlots > 0 else {
-            statusMessage = L10n.string("workflow.media.templateFull")
-            return
-        }
-
-        let generation = beginWorkflowGeneration()
-        beginImport(totalCount: remainingSlots)
-        MomentsMediaUploadDiagnostics.addBreadcrumb(
-            operation: "import",
-            source: "latest_photos",
-            assetCount: remainingSlots
-        )
-
-        do {
-            let imported = try await MediaPickerImport.loadLatestPhotos(
-                limit: remainingSlots,
-                startingSortOrder: selectedMedia.count,
-                progress: { [weak self] completedCount, totalCount in
-                    self?.updateImportProgress(completedCount: completedCount, totalCount: totalCount)
-                }
-            )
-
-            guard isCurrentWorkflowGeneration(generation) else { return }
-            let uniqueImported = MomentsMediaDeduplicator.uniqueNewMedia(
-                existing: selectedMedia,
-                imported: imported
-            )
-            selectedMedia.append(contentsOf: uniqueImported)
-            sortChronologically()
-            statusMessage = importStatusMessage(
-                importedCount: uniqueImported.count,
-                skippedDuplicateCount: imported.count - uniqueImported.count,
-                emptyMessage: L10n.string("workflow.media.noRecentPhotos")
-            )
-        } catch {
-            guard isCurrentWorkflowGeneration(generation) else { return }
-            MomentsMediaUploadDiagnostics.captureImportError(
-                error,
-                source: "latest_photos",
-                requestedCount: remainingSlots,
-                remainingSlots: remainingSlots
-            )
-            statusMessage = MomentsRecoveryCopy.mediaImportFailure()
-        }
-
-        guard isCurrentWorkflowGeneration(generation) else { return }
-        endImport()
-    }
-
     func importPhotoAlbum(
         id albumId: String,
         template: MomentTemplate,
@@ -211,27 +154,6 @@ final class MediaUploadWorkflow: WorkspaceObservingWorkflow {
     func remove(_ media: MomentsSelectedMedia) {
         selectedMedia.removeAll { $0.id == media.id }
         normalizeOrder()
-    }
-
-    func move(_ media: MomentsSelectedMedia, before target: MomentsSelectedMedia) {
-        guard media.id != target.id,
-              let sourceIndex = selectedMedia.firstIndex(where: { $0.id == media.id }),
-              let targetIndex = selectedMedia.firstIndex(where: { $0.id == target.id }) else { return }
-
-        let movedMedia = selectedMedia.remove(at: sourceIndex)
-        let adjustedTargetIndex = sourceIndex < targetIndex ? targetIndex - 1 : targetIndex
-        selectedMedia.insert(movedMedia, at: adjustedTargetIndex)
-        normalizeOrder()
-    }
-
-    func reorder(_ media: [MomentsSelectedMedia]) {
-        let mediaById = Dictionary(uniqueKeysWithValues: selectedMedia.map { ($0.id, $0) })
-        selectedMedia = media.compactMap { mediaById[$0.id] }
-        normalizeOrder()
-    }
-
-    func autoPickStrongMoments() {
-        sortChronologically()
     }
 
     override func workspaceDidChange(_ workspace: MomentWorkspace?) {

@@ -53,7 +53,7 @@ struct MomentsCreateScreen: View {
             isPresented: $showsAutomaticPhotoPicker,
             selection: $pickerItems,
             maxSelectionCount: automaticPhotoPickerSelectionLimit,
-            matching: .any(of: [.images, .videos])
+            matching: .images
         )
         .onChange(of: viewModel.mediaPickerOpenRequest) { _, request in
             openAutomaticPhotoPickerIfRequested(request)
