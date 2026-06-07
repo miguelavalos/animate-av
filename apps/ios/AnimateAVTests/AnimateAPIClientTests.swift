@@ -934,14 +934,14 @@ final class AnimateAPIClientTests: XCTestCase {
             }
             """
         )
-        let client = MomentsCreditBalanceClient(baseURLString: accountAPIBaseURL, session: session)
+        let client = AnimateCreditBalanceClient(baseURLString: accountAPIBaseURL, session: session)
 
         let balance = try await client.fetchBalance(bearerToken: "token-1")
 
         XCTAssertEqual(AnimateURLProtocolMock.lastRequest?.url?.absoluteString, "\(accountAPIBaseURL)/v1/apps/animateav/credits/balance")
         XCTAssertEqual(AnimateURLProtocolMock.lastRequest?.httpMethod, "GET")
         XCTAssertEqual(AnimateURLProtocolMock.lastRequest?.value(forHTTPHeaderField: "Authorization"), "Bearer token-1")
-        XCTAssertEqual(balance, MomentsCreditBalance(proMonthly: 0, promotional: 10, purchased: 0, availableCredits: 10))
+        XCTAssertEqual(balance, AnimateCreditBalance(proMonthly: 0, promotional: 10, purchased: 0, availableCredits: 10))
     }
 
     func testPromoCodeRedeemUsesBackendAndReturnsUpdatedBalance() async throws {
@@ -982,7 +982,7 @@ final class AnimateAPIClientTests: XCTestCase {
         XCTAssertEqual(AnimateURLProtocolMock.lastRequest?.httpMethod, "POST")
         XCTAssertEqual(AnimateURLProtocolMock.lastRequest?.value(forHTTPHeaderField: "Authorization"), "Bearer token-1")
         XCTAssertEqual(response.creditsGranted, 5)
-        XCTAssertEqual(response.balance, MomentsCreditBalance(proMonthly: 0, promotional: 5, purchased: 0, availableCredits: 5))
+        XCTAssertEqual(response.balance, AnimateCreditBalance(proMonthly: 0, promotional: 5, purchased: 0, availableCredits: 5))
     }
 
     private var accountAPIBaseURL: String {

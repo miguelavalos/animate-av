@@ -59,7 +59,7 @@ struct MomentsCreateContinuationHintCard: View {
 }
 
 struct MomentsCreateCreditsCard: View {
-    let balance: MomentsCreditBalance
+    let balance: AnimateCreditBalance
 
     var body: some View {
         AVAppShellCard {
@@ -68,7 +68,7 @@ struct MomentsCreateCreditsCard: View {
                 detail: L10n.string("create.credits.detail")
             )
             AVAppShellInfoRow(
-                title: MomentsCreditCopy.countTitle(balance.spendable),
+                title: AnimateCreditCopy.countTitle(balance.spendable),
                 detail: balance.spendable > 0 ? L10n.string("create.credits.ready") : L10n.string("create.credits.setupNow"),
                 systemImage: "creditcard"
             )

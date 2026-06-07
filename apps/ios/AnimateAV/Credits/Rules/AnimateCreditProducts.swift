@@ -1,12 +1,12 @@
 import Foundation
 
-enum MomentsCreditProductID {
+enum AnimateCreditProductID {
     static let proMonthlyProduct = "animateav_pro_monthly"
     static let starterPackProduct = "animateav_credits_5"
     static let creatorPackProduct = "animateav_credits_20"
 }
 
-struct MomentsCreditPaywallProduct: Identifiable, Equatable {
+struct AnimateCreditPaywallProduct: Identifiable, Equatable {
     enum Kind: Equatable {
         case subscription
         case consumableCredits(Int)
@@ -21,9 +21,9 @@ struct MomentsCreditPaywallProduct: Identifiable, Equatable {
     let systemImage: String
     let isRecommended: Bool
 
-    static var proMonthly: MomentsCreditPaywallProduct {
-        MomentsCreditPaywallProduct(
-        id: MomentsCreditProductID.proMonthlyProduct,
+    static var proMonthly: AnimateCreditPaywallProduct {
+        AnimateCreditPaywallProduct(
+        id: AnimateCreditProductID.proMonthlyProduct,
         kind: .subscription,
         eyebrow: L10n.string("paywall.product.bestValue"),
         title: L10n.string("paywall.product.pro.title"),
@@ -34,9 +34,9 @@ struct MomentsCreditPaywallProduct: Identifiable, Equatable {
         )
     }
 
-    static var starterPack: MomentsCreditPaywallProduct {
-        MomentsCreditPaywallProduct(
-        id: MomentsCreditProductID.starterPackProduct,
+    static var starterPack: AnimateCreditPaywallProduct {
+        AnimateCreditPaywallProduct(
+        id: AnimateCreditProductID.starterPackProduct,
         kind: .consumableCredits(5),
         eyebrow: L10n.string("paywall.product.starter.eyebrow"),
         title: L10n.string("paywall.product.starter.title"),
@@ -47,9 +47,9 @@ struct MomentsCreditPaywallProduct: Identifiable, Equatable {
         )
     }
 
-    static var creatorPack: MomentsCreditPaywallProduct {
-        MomentsCreditPaywallProduct(
-        id: MomentsCreditProductID.creatorPackProduct,
+    static var creatorPack: AnimateCreditPaywallProduct {
+        AnimateCreditPaywallProduct(
+        id: AnimateCreditProductID.creatorPackProduct,
         kind: .consumableCredits(20),
         eyebrow: L10n.string("paywall.product.bestValue"),
         title: L10n.string("paywall.product.creator.title"),
@@ -60,7 +60,7 @@ struct MomentsCreditPaywallProduct: Identifiable, Equatable {
         )
     }
 
-    static var all: [MomentsCreditPaywallProduct] { [
+    static var all: [AnimateCreditPaywallProduct] { [
         .proMonthly,
         .starterPack,
         .creatorPack

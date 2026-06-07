@@ -17,7 +17,7 @@ final class FinalRenderWorkflow: WorkspaceObservingWorkflow {
 
     private let currentUserProvider: any MomentsCurrentUserProviding
     private let authTokenProvider: any MomentsAuthTokenProviding
-    private let creditBalanceProvider: any MomentsCreditBalanceProviding
+    private let creditBalanceProvider: any AnimateCreditBalanceProviding
     private let finalRenderClient: MomentsFinalRenderClient
     private let videoQuoteClient: MomentsVideoQuoteClient
     private let imageGenerationAccountingClient: MomentsImageGenerationAccountingClient?
@@ -30,7 +30,7 @@ final class FinalRenderWorkflow: WorkspaceObservingWorkflow {
     init(
         currentUserProvider: any MomentsCurrentUserProviding,
         authTokenProvider: any MomentsAuthTokenProviding,
-        creditBalanceProvider: any MomentsCreditBalanceProviding,
+        creditBalanceProvider: any AnimateCreditBalanceProviding,
         workspaceObserver: any MomentsActiveWorkspaceObserving,
         finalRenderClient: MomentsFinalRenderClient,
         videoQuoteClient: MomentsVideoQuoteClient? = nil,

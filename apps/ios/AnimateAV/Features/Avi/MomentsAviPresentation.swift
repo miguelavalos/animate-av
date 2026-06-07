@@ -9,8 +9,8 @@ struct MomentsAviPresentation: Equatable {
     static func make(
         isSignedIn: Bool,
         momentsSummary: InProgressMomentsSummary,
-        creditBalance: MomentsCreditBalance,
-        creditBalanceLoadState: MomentsCreditBalanceLoadState = .loaded
+        creditBalance: AnimateCreditBalance,
+        creditBalanceLoadState: AnimateCreditBalanceLoadState = .loaded
     ) -> MomentsAviPresentation {
         MomentsAviPresentation(
             workflowFocusTitle: workflowFocusTitle(
@@ -62,19 +62,19 @@ struct MomentsAviPresentation: Equatable {
 
     private static func creditGuidanceMessage(
         isSignedIn: Bool,
-        creditBalance: MomentsCreditBalance,
-        creditBalanceLoadState: MomentsCreditBalanceLoadState
+        creditBalance: AnimateCreditBalance,
+        creditBalanceLoadState: AnimateCreditBalanceLoadState
     ) -> String {
         guard isSignedIn else {
             return L10n.string("avi.credits.signIn.message")
         }
         guard creditBalanceLoadState.hasLoadedBalance else {
-            return MomentsCreditCopy.balanceStatusDetail(creditBalanceLoadState)
+            return AnimateCreditCopy.balanceStatusDetail(creditBalanceLoadState)
         }
         guard creditBalance.spendable > 0 else {
             return L10n.string("avi.credits.none.message")
         }
-        return L10n.string("avi.credits.available.message", MomentsCreditCopy.countTitle(creditBalance.spendable))
+        return L10n.string("avi.credits.available.message", AnimateCreditCopy.countTitle(creditBalance.spendable))
     }
 
     private static func inProgressMomentLabel(_ momentsSummary: InProgressMomentsSummary) -> String {

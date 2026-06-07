@@ -44,8 +44,8 @@ private enum MomentsCreateImageLook: String, CaseIterable, Identifiable {
 }
 
 struct MomentsCreateImagesWorkspace: View {
-    let balance: MomentsCreditBalance
-    let creditBalanceLoadState: MomentsCreditBalanceLoadState
+    let balance: AnimateCreditBalance
+    let creditBalanceLoadState: AnimateCreditBalanceLoadState
     let imageGenerationAvailability: AnimateImageGenerationAvailabilityResponse?
     let isLoadingImageGenerationAvailability: Bool
     let isStartingImageGeneration: Bool
@@ -347,7 +347,7 @@ private struct MomentsCreateImageLookTile: View {
 
 private struct MomentsCreateImagesBalanceCard: View {
     let spendableCredits: Int
-    let creditBalanceLoadState: MomentsCreditBalanceLoadState
+    let creditBalanceLoadState: AnimateCreditBalanceLoadState
     let imageGenerationAvailability: AnimateImageGenerationAvailabilityResponse?
     let isLoadingImageGenerationAvailability: Bool
     let isPurchasingImageGenerationPack: Bool

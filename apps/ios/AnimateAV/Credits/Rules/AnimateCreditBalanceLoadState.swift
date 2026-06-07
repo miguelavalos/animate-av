@@ -1,6 +1,6 @@
 import Foundation
 
-enum MomentsCreditBalanceLoadState: Equatable {
+enum AnimateCreditBalanceLoadState: Equatable {
     case signedOut
     case loading
     case loaded
@@ -30,7 +30,7 @@ enum MomentsCreditBalanceLoadState: Equatable {
         }
     }
 
-    static func failureState(for error: Error) -> MomentsCreditBalanceLoadState {
+    static func failureState(for error: Error) -> AnimateCreditBalanceLoadState {
         let nsError = error as NSError
         guard nsError.domain == NSURLErrorDomain else {
             return .unavailable

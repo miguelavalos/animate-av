@@ -14,16 +14,16 @@ enum CreditSource: String, CaseIterable {
     }
 }
 
-struct MomentsCreditBalance: Equatable {
+struct AnimateCreditBalance: Equatable {
     var proMonthly: Int
     var promotional: Int
     var purchased: Int
     var availableCredits: Int?
-    var walletSummary: MomentsCreditWalletSummary?
+    var walletSummary: AnimateCreditWalletSummary?
     var watermarkRemovalCreditCost: Int = 1
     var watermarkFreeIncluded: Bool = false
 
-    static let empty = MomentsCreditBalance(proMonthly: 0, promotional: 0, purchased: 0)
+    static let empty = AnimateCreditBalance(proMonthly: 0, promotional: 0, purchased: 0)
 
     var spendable: Int {
         availableCredits ?? (proMonthly + promotional + purchased)
@@ -38,7 +38,7 @@ struct MomentsCreditBalance: Equatable {
     }
 }
 
-struct MomentsCreditWalletSummary: Decodable, Equatable {
+struct AnimateCreditWalletSummary: Decodable, Equatable {
     let plan: Plan
     let period: Period
     let credits: Credits
@@ -72,7 +72,7 @@ struct MomentsCreditWalletSummary: Decodable, Equatable {
     }
 }
 
-struct MomentsCreditSpendPlan: Equatable {
+struct AnimateCreditSpendPlan: Equatable {
     let proMonthly: Int
     let promotional: Int
     let purchased: Int
@@ -82,16 +82,16 @@ struct MomentsCreditSpendPlan: Equatable {
     }
 }
 
-enum MomentsCreditGate {
-    static func canAfford(_ template: MomentTemplate, balance: MomentsCreditBalance) -> Bool {
+enum AnimateCreditGate {
+    static func canAfford(_ template: MomentTemplate, balance: AnimateCreditBalance) -> Bool {
         balance.spendable >= template.creditCost
     }
 
-    static func canAffordAny(_ templates: [MomentTemplate], balance: MomentsCreditBalance) -> Bool {
+    static func canAffordAny(_ templates: [MomentTemplate], balance: AnimateCreditBalance) -> Bool {
         templates.contains { canAfford($0, balance: balance) }
     }
 
-    static func spendPlan(for cost: Int, balance: MomentsCreditBalance) -> MomentsCreditSpendPlan? {
+    static func spendPlan(for cost: Int, balance: AnimateCreditBalance) -> AnimateCreditSpendPlan? {
         guard cost > 0, balance.spendable >= cost else { return nil }
 
         let proMonthlySpend = min(balance.proMonthly, cost)
@@ -99,7 +99,7 @@ enum MomentsCreditGate {
         let promotionalSpend = min(balance.promotional, afterPro)
         let purchasedSpend = afterPro - promotionalSpend
 
-        return MomentsCreditSpendPlan(
+        return AnimateCreditSpendPlan(
             proMonthly: proMonthlySpend,
             promotional: promotionalSpend,
             purchased: purchasedSpend

@@ -14,14 +14,14 @@ struct AnimatePurchaseCatalog: Equatable {
     static let empty = AnimatePurchaseCatalog(entriesByProductId: [:])
 
     var hasRequiredPaywallProducts: Bool {
-        MomentsCreditPaywallProduct.all.allSatisfy { entry(for: $0) != nil }
+        AnimateCreditPaywallProduct.all.allSatisfy { entry(for: $0) != nil }
     }
 
-    func entry(for product: MomentsCreditPaywallProduct) -> Entry? {
+    func entry(for product: AnimateCreditPaywallProduct) -> Entry? {
         entriesByProductId[product.id]
     }
 
-    func localizedPrice(for product: MomentsCreditPaywallProduct) -> String? {
+    func localizedPrice(for product: AnimateCreditPaywallProduct) -> String? {
         entry(for: product)?.localizedPrice
     }
 }
@@ -221,11 +221,11 @@ final class RevenueCatAnimatePurchaseService: AnimatePurchaseServicing {
         guard !monthlyPackageID.isEmpty,
               let package = offering.availablePackages.first(where: {
                   $0.identifier == monthlyPackageID &&
-                  $0.storeProduct.productIdentifier == MomentsCreditProductID.proMonthlyProduct
+                  $0.storeProduct.productIdentifier == AnimateCreditProductID.proMonthlyProduct
               }) else {
             return
         }
-        packagesByProductId[MomentsCreditProductID.proMonthlyProduct] = package
+        packagesByProductId[AnimateCreditProductID.proMonthlyProduct] = package
     }
 }
 
@@ -255,11 +255,11 @@ private enum AnimateCreditsDiagnostics {
 
     static func productKey(for productId: String) -> String {
         switch productId {
-        case MomentsCreditProductID.starterPackProduct:
+        case AnimateCreditProductID.starterPackProduct:
             return "starter_pack"
-        case MomentsCreditProductID.creatorPackProduct:
+        case AnimateCreditProductID.creatorPackProduct:
             return "creator_pack"
-        case MomentsCreditProductID.proMonthlyProduct:
+        case AnimateCreditProductID.proMonthlyProduct:
             return "pro_monthly"
         default:
             return "unknown"

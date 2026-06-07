@@ -76,8 +76,8 @@ enum MomentsCreateAvailabilityMessageFactory {
         isFinalRenderConfigured: Bool,
         moment: InProgressMoment?,
         template: MomentTemplate,
-        balance: MomentsCreditBalance,
-        creditBalanceLoadState: MomentsCreditBalanceLoadState = .loaded
+        balance: AnimateCreditBalance,
+        creditBalanceLoadState: AnimateCreditBalanceLoadState = .loaded
     ) -> String? {
         guard activeMomentId != nil else { return MomentsCreateAvailabilityCopy.finalRenderMissingMoment }
         guard isFinalRenderAvailable else { return MomentsCreateAvailabilityCopy.finalRenderUnavailable }
@@ -100,7 +100,7 @@ enum MomentsCreateAvailabilityMessageFactory {
         )
     }
 
-    private static func missingCredits(template: MomentTemplate, balance: MomentsCreditBalance) -> Int {
+    private static func missingCredits(template: MomentTemplate, balance: AnimateCreditBalance) -> Int {
         max(template.creditCost - balance.spendable, 0)
     }
 }

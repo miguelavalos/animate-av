@@ -46,7 +46,7 @@ extension MomentsCreateViewModel {
                     && !isBusy,
                 canGenerateFinalRender: fixtureMode != .full
                     && !isBusy
-                    && MomentsCreditGate.canAfford(form.template, balance: balance),
+                    && AnimateCreditGate.canAfford(form.template, balance: balance),
                 canRefreshFinalRenderStatus: false
             )
         }

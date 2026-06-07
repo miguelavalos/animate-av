@@ -9,7 +9,7 @@ final class MomentCreationWorkflow: ObservableObject {
 
     private let currentUserProvider: any MomentsCurrentUserProviding
     private let authTokenProvider: any MomentsAuthTokenProviding
-    private let creditBalanceProvider: any MomentsCreditBalanceProviding
+    private let creditBalanceProvider: any AnimateCreditBalanceProviding
     private let momentCreator: any MomentsCreating
     private let momentDeleter: any MomentsDeleting
     private let workspaceObserver: any MomentsActiveWorkspaceObserving
@@ -19,7 +19,7 @@ final class MomentCreationWorkflow: ObservableObject {
     init(
         currentUserProvider: any MomentsCurrentUserProviding,
         authTokenProvider: any MomentsAuthTokenProviding,
-        creditBalanceProvider: any MomentsCreditBalanceProviding,
+        creditBalanceProvider: any AnimateCreditBalanceProviding,
         momentCreator: any MomentsCreating,
         momentDeleter: any MomentsDeleting,
         workspaceObserver: any MomentsActiveWorkspaceObserving
@@ -36,7 +36,7 @@ final class MomentCreationWorkflow: ObservableObject {
         MomentTemplate.launchTemplates
     }
 
-    var balance: MomentsCreditBalance {
+    var balance: AnimateCreditBalance {
         creditBalanceProvider.currentCreditBalance
     }
 
@@ -45,11 +45,11 @@ final class MomentCreationWorkflow: ObservableObject {
     }
 
     func canAfford(_ template: MomentTemplate) -> Bool {
-        MomentsCreditGate.canAfford(template, balance: balance)
+        AnimateCreditGate.canAfford(template, balance: balance)
     }
 
-    func spendPlan(for template: MomentTemplate) -> MomentsCreditSpendPlan? {
-        MomentsCreditGate.spendPlan(for: template.creditCost, balance: balance)
+    func spendPlan(for template: MomentTemplate) -> AnimateCreditSpendPlan? {
+        AnimateCreditGate.spendPlan(for: template.creditCost, balance: balance)
     }
 
     func createMoment(form: MomentSetupForm) async -> String? {

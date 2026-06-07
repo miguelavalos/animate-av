@@ -10,7 +10,7 @@ final class AnimateCreateWorkflowPresentationTests: XCTestCase {
                 isSignedIn: true,
                 hasMomentWorkspace: true,
                 template: .birthdayMessage,
-                balance: MomentsCreditBalance(proMonthly: 0, promotional: 1, purchased: 0),
+                balance: AnimateCreditBalance(proMonthly: 0, promotional: 1, purchased: 0),
                 mediaSummary: MomentsCreateMediaSummary(
                     selectedMedia: [AnimateCreateTestFixtures.makeSelectedMedia(id: "00000000-0000-0000-0000-000000000001")]
                 ),
@@ -36,7 +36,7 @@ final class AnimateCreateWorkflowPresentationTests: XCTestCase {
                 isSignedIn: true,
                 hasMomentWorkspace: true,
                 template: .birthdayMessage,
-                balance: MomentsCreditBalance(proMonthly: 0, promotional: 1, purchased: 0),
+                balance: AnimateCreditBalance(proMonthly: 0, promotional: 1, purchased: 0),
                 mediaSummary: MomentsCreateMediaSummary(
                     selectedMedia: [AnimateCreateTestFixtures.makeSelectedMedia(id: "00000000-0000-0000-0000-000000000001")]
                 ),
@@ -192,7 +192,7 @@ final class AnimateCreateWorkflowPresentationTests: XCTestCase {
             activeMomentId: "moment-1",
             hasMomentWorkspace: true,
             template: .birthdayMessage,
-            balance: MomentsCreditBalance(proMonthly: 0, promotional: 2, purchased: 0),
+            balance: AnimateCreditBalance(proMonthly: 0, promotional: 2, purchased: 0),
             mediaSummary: mediaSummary,
             storySummary: storySummary,
             finalRenderSummary: finalRenderSummary,
@@ -234,7 +234,7 @@ final class AnimateCreateWorkflowPresentationTests: XCTestCase {
             toneTitle: "Warm",
             tempoTitle: "Balanced",
             occasionTitle: "Birthday for Ava",
-            balance: MomentsCreditBalance(proMonthly: 0, promotional: 1, purchased: 0),
+            balance: AnimateCreditBalance(proMonthly: 0, promotional: 1, purchased: 0),
             mediaSummary: MomentsCreateMediaSummary(),
             storySummary: MomentsCreateStorySummary(),
             finalRenderSummary: MomentsCreateFinalRenderSummary(),
@@ -505,7 +505,7 @@ final class AnimateCreateWorkflowPresentationTests: XCTestCase {
         let planning = MomentsCreateFinalVideoActionPresentation(
             summary: MomentsCreateFinalRenderSummary(creditCost: 2),
             template: .birthdayMessage,
-            balance: MomentsCreditBalance(proMonthly: 0, promotional: 3, purchased: 0)
+            balance: AnimateCreditBalance(proMonthly: 0, promotional: 3, purchased: 0)
         )
 
         XCTAssertFalse(planning.hasRenderPlan)
@@ -520,7 +520,7 @@ final class AnimateCreateWorkflowPresentationTests: XCTestCase {
                 renderPlan: AnimateCreateTestFixtures.makeRenderPlan()
             ),
             template: .birthdayMessage,
-            balance: MomentsCreditBalance(proMonthly: 0, promotional: 3, purchased: 0),
+            balance: AnimateCreditBalance(proMonthly: 0, promotional: 3, purchased: 0),
             removesWatermark: true
         )
 
@@ -553,7 +553,7 @@ final class AnimateCreateWorkflowPresentationTests: XCTestCase {
             isSignedIn: true,
             hasMomentWorkspace: true,
             template: .birthdayMessage,
-            balance: MomentsCreditBalance(proMonthly: 0, promotional: 3, purchased: 0),
+            balance: AnimateCreditBalance(proMonthly: 0, promotional: 3, purchased: 0),
             mediaSummary: MomentsCreateMediaSummary(
                 selectedMedia: [AnimateCreateTestFixtures.makeSelectedMedia(id: "00000000-0000-0000-0000-000000000001")]
             ),
@@ -589,7 +589,7 @@ final class AnimateCreateWorkflowPresentationTests: XCTestCase {
             isSignedIn: true,
             hasMomentWorkspace: true,
             template: .birthdayMessage,
-            balance: MomentsCreditBalance(proMonthly: 0, promotional: 3, purchased: 0),
+            balance: AnimateCreditBalance(proMonthly: 0, promotional: 3, purchased: 0),
             mediaSummary: MomentsCreateMediaSummary(
                 selectedMedia: [AnimateCreateTestFixtures.makeSelectedMedia(id: "00000000-0000-0000-0000-000000000001")]
             ),
@@ -613,7 +613,7 @@ final class AnimateCreateWorkflowPresentationTests: XCTestCase {
                 isSignedIn: true,
                 hasMomentWorkspace: true,
                 template: .birthdayMessage,
-                balance: MomentsCreditBalance(proMonthly: 0, promotional: 2, purchased: 0),
+                balance: AnimateCreditBalance(proMonthly: 0, promotional: 2, purchased: 0),
                 mediaSummary: MomentsCreateMediaSummary(
                     selectedMedia: [AnimateCreateTestFixtures.makeSelectedMedia(id: "00000000-0000-0000-0000-000000000001")],
                     isImporting: true,
@@ -642,7 +642,7 @@ final class AnimateCreateWorkflowPresentationTests: XCTestCase {
                 isSignedIn: true,
                 hasMomentWorkspace: true,
                 template: .birthdayMessage,
-                balance: MomentsCreditBalance(proMonthly: 0, promotional: 2, purchased: 0),
+                balance: AnimateCreditBalance(proMonthly: 0, promotional: 2, purchased: 0),
                 mediaSummary: MomentsCreateMediaSummary(
                     selectedMedia: [AnimateCreateTestFixtures.makeSelectedMedia(id: "00000000-0000-0000-0000-000000000001")]
                 ),
@@ -667,7 +667,7 @@ final class AnimateCreateWorkflowPresentationTests: XCTestCase {
                 isSignedIn: true,
                 hasMomentWorkspace: true,
                 template: .birthdayMessage,
-                balance: MomentsCreditBalance(proMonthly: 0, promotional: 3, purchased: 0),
+                balance: AnimateCreditBalance(proMonthly: 0, promotional: 3, purchased: 0),
                 mediaSummary: MomentsCreateMediaSummary(
                     syncedMediaAssets: [AnimateCreateTestFixtures.makeMediaAsset(id: "media-1")]
                 ),
@@ -700,7 +700,7 @@ final class AnimateCreateWorkflowPresentationTests: XCTestCase {
                 isSignedIn: true,
                 hasMomentWorkspace: true,
                 template: .birthdayMessage,
-                balance: MomentsCreditBalance(proMonthly: 0, promotional: 0, purchased: 0),
+                balance: AnimateCreditBalance(proMonthly: 0, promotional: 0, purchased: 0),
                 mediaSummary: MomentsCreateMediaSummary(
                     syncedMediaAssets: [AnimateCreateTestFixtures.makeMediaAsset(id: "media-1")]
                 ),
@@ -734,7 +734,7 @@ final class AnimateCreateWorkflowPresentationTests: XCTestCase {
                 isSignedIn: true,
                 hasMomentWorkspace: true,
                 template: .birthdayMessage,
-                balance: MomentsCreditBalance(proMonthly: 0, promotional: 5, purchased: 0),
+                balance: AnimateCreditBalance(proMonthly: 0, promotional: 5, purchased: 0),
                 mediaSummary: MomentsCreateMediaSummary(
                     syncedMediaAssets: [AnimateCreateTestFixtures.makeMediaAsset(id: "media-1")]
                 ),
@@ -769,7 +769,7 @@ final class AnimateCreateWorkflowPresentationTests: XCTestCase {
                 isSignedIn: true,
                 hasMomentWorkspace: true,
                 template: .birthdayMessage,
-                balance: MomentsCreditBalance(proMonthly: 0, promotional: 3, purchased: 0),
+                balance: AnimateCreditBalance(proMonthly: 0, promotional: 3, purchased: 0),
                 mediaSummary: MomentsCreateMediaSummary(
                     syncedMediaAssets: [AnimateCreateTestFixtures.makeMediaAsset(id: "media-1")]
                 ),

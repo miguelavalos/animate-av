@@ -250,7 +250,7 @@ final class AnimateCreateViewModelStoryStateTests: XCTestCase {
         let action = MomentsCreateFinalVideoActionPresentation(
             summary: summary,
             template: .birthdayMessage,
-            balance: MomentsCreditBalance(proMonthly: 0, promotional: 3, purchased: 0)
+            balance: AnimateCreditBalance(proMonthly: 0, promotional: 3, purchased: 0)
         )
 
         XCTAssertEqual(action.totalCreditCost, 4)
@@ -280,7 +280,7 @@ final class AnimateCreateViewModelStoryStateTests: XCTestCase {
         viewModel.applyAccountState(
             MomentsCreateAccountState(
                 isSignedIn: true,
-                balance: MomentsCreditBalance(proMonthly: 0, promotional: 5, purchased: 0),
+                balance: AnimateCreditBalance(proMonthly: 0, promotional: 5, purchased: 0),
                 creditBalanceLoadState: .loaded
             )
         )
@@ -657,7 +657,7 @@ final class AnimateCreateViewModelStoryStateTests: XCTestCase {
         viewModel.applyAccountState(
             MomentsCreateAccountState(
                 isSignedIn: true,
-                balance: MomentsCreditBalance(proMonthly: 0, promotional: 15, purchased: 0),
+                balance: AnimateCreditBalance(proMonthly: 0, promotional: 15, purchased: 0),
                 creditBalanceLoadState: .loaded
             )
         )
@@ -758,7 +758,7 @@ private final class MomentCreationFailureHarness:
     MomentsAccountStateProviding,
     MomentsCurrentUserProviding,
     MomentsAuthTokenProviding,
-    MomentsCreditBalanceProviding,
+    AnimateCreditBalanceProviding,
     MomentsCreating,
     MomentsDeleting,
     MomentsActiveWorkspaceObserving
@@ -768,10 +768,10 @@ private final class MomentCreationFailureHarness:
     private let signedInSubject = CurrentValueSubject<Bool, Never>(true)
     private let currentUserSubject = CurrentValueSubject<String?, Never>("user-1")
     private let displayNameSubject = CurrentValueSubject<String?, Never>("Ava")
-    private let balanceSubject = CurrentValueSubject<MomentsCreditBalance, Never>(
-        MomentsCreditBalance(proMonthly: 0, promotional: 15, purchased: 0)
+    private let balanceSubject = CurrentValueSubject<AnimateCreditBalance, Never>(
+        AnimateCreditBalance(proMonthly: 0, promotional: 15, purchased: 0)
     )
-    private let creditBalanceLoadStateSubject = CurrentValueSubject<MomentsCreditBalanceLoadState, Never>(.loaded)
+    private let creditBalanceLoadStateSubject = CurrentValueSubject<AnimateCreditBalanceLoadState, Never>(.loaded)
     private let workspaceSubject = CurrentValueSubject<MomentWorkspace?, Never>(nil)
     private let workspaceErrorSubject = CurrentValueSubject<String?, Never>(nil)
 
@@ -831,11 +831,11 @@ private final class MomentCreationFailureHarness:
         displayNameSubject.eraseToAnyPublisher()
     }
 
-    var creditBalancePublisher: AnyPublisher<MomentsCreditBalance, Never> {
+    var creditBalancePublisher: AnyPublisher<AnimateCreditBalance, Never> {
         balanceSubject.eraseToAnyPublisher()
     }
 
-    var creditBalanceLoadStatePublisher: AnyPublisher<MomentsCreditBalanceLoadState, Never> {
+    var creditBalanceLoadStatePublisher: AnyPublisher<AnimateCreditBalanceLoadState, Never> {
         creditBalanceLoadStateSubject.eraseToAnyPublisher()
     }
 
@@ -843,7 +843,7 @@ private final class MomentCreationFailureHarness:
         currentUserSubject.value
     }
 
-    var currentCreditBalance: MomentsCreditBalance {
+    var currentCreditBalance: AnimateCreditBalance {
         balanceSubject.value
     }
 

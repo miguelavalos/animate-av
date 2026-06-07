@@ -2,8 +2,8 @@ import Foundation
 
 struct MomentsCreateAccountState {
     let isSignedIn: Bool
-    let balance: MomentsCreditBalance
-    let creditBalanceLoadState: MomentsCreditBalanceLoadState
+    let balance: AnimateCreditBalance
+    let creditBalanceLoadState: AnimateCreditBalanceLoadState
 }
 
 struct MomentsCreateMomentCreationState {

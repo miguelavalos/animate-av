@@ -3,10 +3,10 @@ import AVBrandFoundation
 import AVPaywallFoundation
 import SwiftUI
 
-struct MomentsCreditsPaywallView: View {
+struct AnimateCreditsPaywallView: View {
     @Environment(\.openURL) private var openURL
 
-    let balance: MomentsCreditBalance
+    let balance: AnimateCreditBalance
     let isSignedIn: Bool
     let startSignInFlow: () -> Void
     let claimPromotionCode: (String) async throws -> Int
@@ -14,7 +14,7 @@ struct MomentsCreditsPaywallView: View {
     let isPurchaseCatalogLoading: Bool
     let purchaseCatalogErrorMessage: String?
     let loadPurchaseProducts: () async -> Void
-    let purchaseProduct: (MomentsCreditPaywallProduct) async throws -> AnimatePurchaseResult
+    let purchaseProduct: (AnimateCreditPaywallProduct) async throws -> AnimatePurchaseResult
     let restorePurchases: () async throws -> AnimatePurchaseResult
     let dismiss: () -> Void
 
@@ -100,7 +100,7 @@ struct MomentsCreditsPaywallView: View {
                     .minimumScaleFactor(0.75)
             }
 
-            MomentsCreditsPrimaryBalanceTile(title: L10n.string("credits.videoCredits.title"), value: balance.spendable, detail: balanceTitle)
+            AnimateCreditsPrimaryBalanceTile(title: L10n.string("credits.videoCredits.title"), value: balance.spendable, detail: balanceTitle)
 
             if isSignedIn {
                 Button {
@@ -116,8 +116,8 @@ struct MomentsCreditsPaywallView: View {
 
                 if showsBalanceDetails {
                     HStack(spacing: AVBrandSpacing.sm) {
-                        ForEach(MomentsCreditCopy.detailRows(for: balance)) { row in
-                            MomentsCreditsBalanceTile(row: row)
+                        ForEach(AnimateCreditCopy.detailRows(for: balance)) { row in
+                            AnimateCreditsBalanceTile(row: row)
                         }
                     }
                     .transition(.opacity.combined(with: .move(edge: .top)))
@@ -134,18 +134,18 @@ struct MomentsCreditsPaywallView: View {
             sectionHeader(title: L10n.string("paywall.oneTime.title"), detail: L10n.string("paywall.oneTime.detail"))
 
             HStack(spacing: AVBrandSpacing.sm) {
-                MomentsCreditsPackButton(
+                AnimateCreditsPackButton(
                     product: .starterPack,
                     priceText: priceText(for: .starterPack),
-                    isBusy: purchasingProductID == MomentsCreditProductID.starterPackProduct,
+                    isBusy: purchasingProductID == AnimateCreditProductID.starterPackProduct,
                     isDisabled: isPurchaseActionDisabled
                 ) {
                     startPurchase(.starterPack)
                 }
-                MomentsCreditsPackButton(
+                AnimateCreditsPackButton(
                     product: .creatorPack,
                     priceText: priceText(for: .creatorPack),
-                    isBusy: purchasingProductID == MomentsCreditProductID.creatorPackProduct,
+                    isBusy: purchasingProductID == AnimateCreditProductID.creatorPackProduct,
                     isDisabled: isPurchaseActionDisabled
                 ) {
                     startPurchase(.creatorPack)
@@ -158,10 +158,10 @@ struct MomentsCreditsPaywallView: View {
         VStack(alignment: .leading, spacing: AVBrandSpacing.sm) {
             sectionHeader(title: L10n.string("paywall.proMonthly.title"), detail: L10n.string("paywall.proMonthly.detail"))
 
-            MomentsProPlanCard(
+            AnimateProPlanCard(
                 product: .proMonthly,
                 priceText: monthlyPriceText(for: .proMonthly),
-                isBusy: purchasingProductID == MomentsCreditProductID.proMonthlyProduct,
+                isBusy: purchasingProductID == AnimateCreditProductID.proMonthlyProduct,
                 isDisabled: isPurchaseActionDisabled
             ) {
                 startPurchase(.proMonthly)
@@ -351,7 +351,7 @@ struct MomentsCreditsPaywallView: View {
         if balance.spendable == 0 {
             return L10n.string("paywall.balance.noCredits")
         }
-        return MomentsCreditCopy.availableTitle(balance)
+        return AnimateCreditCopy.availableTitle(balance)
     }
 
     private var normalizedPromoCode: String {
@@ -372,23 +372,23 @@ struct MomentsCreditsPaywallView: View {
             && purchaseCatalog.hasRequiredPaywallProducts
     }
 
-    private func priceText(for product: MomentsCreditPaywallProduct) -> String {
+    private func priceText(for product: AnimateCreditPaywallProduct) -> String {
         purchaseCatalog.localizedPrice(for: product) ?? product.buttonTitle
     }
 
-    private func monthlyPriceText(for product: MomentsCreditPaywallProduct) -> String {
+    private func monthlyPriceText(for product: AnimateCreditPaywallProduct) -> String {
         guard let price = purchaseCatalog.localizedPrice(for: product) else {
             return product.buttonTitle
         }
         return L10n.string("paywall.price.month", price)
     }
 
-    private func monthlySubscriptionTerms(for product: MomentsCreditPaywallProduct) -> String {
+    private func monthlySubscriptionTerms(for product: AnimateCreditPaywallProduct) -> String {
         let price = purchaseCatalog.localizedPrice(for: product) ?? L10n.string("paywall.price.appStore")
         return L10n.string("paywall.subscription.terms", price)
     }
 
-    private func startPurchase(_ product: MomentsCreditPaywallProduct) {
+    private func startPurchase(_ product: AnimateCreditPaywallProduct) {
         guard !isPurchaseActionDisabled else { return }
         purchasingProductID = product.id
         statusMessage = nil
@@ -443,7 +443,7 @@ struct MomentsCreditsPaywallView: View {
         Task {
             do {
                 let creditsGranted = try await claimPromotionCode(code)
-                promoStatusMessage = L10n.string("paywall.promo.added", MomentsCreditCopy.countTitle(creditsGranted))
+                promoStatusMessage = L10n.string("paywall.promo.added", AnimateCreditCopy.countTitle(creditsGranted))
                 promoCode = ""
                 if creditsGranted > 0 {
                     dismiss()
@@ -463,8 +463,8 @@ struct MomentsCreditsPaywallView: View {
     }
 }
 
-private struct MomentsProPlanCard: View {
-    let product: MomentsCreditPaywallProduct
+private struct AnimateProPlanCard: View {
+    let product: AnimateCreditPaywallProduct
     let priceText: String
     let isBusy: Bool
     let isDisabled: Bool
@@ -516,8 +516,8 @@ private struct MomentsProPlanCard: View {
                     .fixedSize(horizontal: false, vertical: true)
 
                 VStack(alignment: .leading, spacing: AVBrandSpacing.xs) {
-                    MomentsProBenefitRow(systemImage: "video.fill", text: L10n.string("paywall.pro.benefit.videoCredits"))
-                    MomentsProBenefitRow(systemImage: "checkmark.seal.fill", text: L10n.string("paywall.pro.benefit.noWatermark"))
+                    AnimateProBenefitRow(systemImage: "video.fill", text: L10n.string("paywall.pro.benefit.videoCredits"))
+                    AnimateProBenefitRow(systemImage: "checkmark.seal.fill", text: L10n.string("paywall.pro.benefit.noWatermark"))
                 }
 
                 HStack(spacing: AVBrandSpacing.sm) {
@@ -566,7 +566,7 @@ private struct MomentsProPlanCard: View {
     }
 }
 
-private struct MomentsProBenefitRow: View {
+private struct AnimateProBenefitRow: View {
     let systemImage: String
     let text: String
 
@@ -585,8 +585,8 @@ private struct MomentsProBenefitRow: View {
     }
 }
 
-private struct MomentsCreditsPackButton: View {
-    let product: MomentsCreditPaywallProduct
+private struct AnimateCreditsPackButton: View {
+    let product: AnimateCreditPaywallProduct
     let priceText: String
     let isBusy: Bool
     let isDisabled: Bool
@@ -655,7 +655,7 @@ private struct MomentsCreditsPackButton: View {
     }
 }
 
-private struct MomentsCreditsPrimaryBalanceTile: View {
+private struct AnimateCreditsPrimaryBalanceTile: View {
     let title: String
     let value: Int
     let detail: String
@@ -685,8 +685,8 @@ private struct MomentsCreditsPrimaryBalanceTile: View {
     }
 }
 
-private struct MomentsCreditsBalanceTile: View {
-    let row: MomentsCreditDetailRow
+private struct AnimateCreditsBalanceTile: View {
+    let row: AnimateCreditDetailRow
 
     var body: some View {
         VStack(alignment: .leading, spacing: AVBrandSpacing.xxs) {

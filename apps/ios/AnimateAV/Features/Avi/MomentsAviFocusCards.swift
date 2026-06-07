@@ -6,8 +6,8 @@ struct MomentsAviCurrentFocusCard: View {
     let workflowFocusMessage: String
     let workflowFocusSystemImage: String
     let momentsSummary: InProgressMomentsSummary
-    let creditBalance: MomentsCreditBalance
-    let creditBalanceLoadState: MomentsCreditBalanceLoadState
+    let creditBalance: AnimateCreditBalance
+    let creditBalanceLoadState: AnimateCreditBalanceLoadState
 
     var body: some View {
         AVAviGuidanceCard(

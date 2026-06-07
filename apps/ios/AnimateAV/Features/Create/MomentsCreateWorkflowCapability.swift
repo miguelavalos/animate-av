@@ -10,7 +10,7 @@ enum MomentsCreateWorkflowCapabilityFactory {
         mediaRemainingSlots: Int,
         storyWorkflow: StoryWorkflow?,
         finalRenderWorkflow: FinalRenderWorkflow?,
-        creditBalanceLoadState: MomentsCreditBalanceLoadState = .loaded,
+        creditBalanceLoadState: AnimateCreditBalanceLoadState = .loaded,
         template: MomentTemplate,
         selectedMediaCount: Int
     ) -> MomentsCreateWorkflowCapability {
@@ -76,7 +76,7 @@ enum MomentsCreateWorkflowCapabilityFactory {
     private static func canGenerateFinalRender(
         activeMomentId: String?,
         finalRenderWorkflow: FinalRenderWorkflow?,
-        creditBalanceLoadState: MomentsCreditBalanceLoadState,
+        creditBalanceLoadState: AnimateCreditBalanceLoadState,
         template: MomentTemplate
     ) -> Bool {
         guard let finalRenderWorkflow, activeMomentId != nil else { return false }

@@ -1,6 +1,6 @@
 import Foundation
 
-struct MomentsCreditReservationResponse: Decodable, Equatable {
+struct AnimateCreditReservationResponse: Decodable, Equatable {
     let id: String
     let appId: String
     let userId: String?
@@ -71,7 +71,7 @@ struct MomentsConfirmFinalRenderResponse: Decodable, Equatable {
     let appId: String
     let momentId: String
     let planId: String
-    let reservation: MomentsCreditReservationResponse
+    let reservation: AnimateCreditReservationResponse
     let workflow: MomentsStartWorkflowResponse
     let renderPlan: MomentsRenderPlanResponse
     let confirmedAt: String
@@ -190,7 +190,7 @@ enum MomentsFinalRenderRules {
     static func canGenerate(
         moment: InProgressMoment,
         template: MomentTemplate,
-        balance: MomentsCreditBalance,
+        balance: AnimateCreditBalance,
         storySceneCount: Int = 0
     ) -> Bool {
         availability(
@@ -211,7 +211,7 @@ enum MomentsFinalRenderRules {
     static func availability(
         moment: InProgressMoment?,
         template: MomentTemplate,
-        balance: MomentsCreditBalance,
+        balance: AnimateCreditBalance,
         storySceneCount: Int = 0
     ) -> Availability {
         guard let moment else {
@@ -220,7 +220,7 @@ enum MomentsFinalRenderRules {
         if !canPreparePlan(moment: moment, storySceneCount: storySceneCount) {
             return Availability(canGenerate: false, blockReason: .storyNotReady)
         }
-        if !MomentsCreditGate.canAfford(template, balance: balance) {
+        if !AnimateCreditGate.canAfford(template, balance: balance) {
             return Availability(canGenerate: false, blockReason: .insufficientCredits)
         }
         return Availability(canGenerate: true, blockReason: nil)

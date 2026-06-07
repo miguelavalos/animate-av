@@ -2,11 +2,11 @@ import AVAppShellFoundation
 import SwiftUI
 
 struct MomentsHomeCreditBreakdown: View {
-    let balance: MomentsCreditBalance
+    let balance: AnimateCreditBalance
 
     var body: some View {
         AVAppShellMetricStrip(
-            metrics: MomentsCreditCopy.detailRows(for: balance).map { row in
+            metrics: AnimateCreditCopy.detailRows(for: balance).map { row in
                 AVAppShellMetric(
                     id: row.id,
                     title: row.title,

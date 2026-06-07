@@ -1105,7 +1105,7 @@ private struct MomentsCreateLockedFinalRenderScene: View {
                 HStack(spacing: 8) {
                     MomentsCreateLockedRenderMetric(
                         title: L10n.string("create.final.confirmSheet.cost"),
-                        value: MomentsCreditCopy.countTitle(presentation.lockedFinalRenderCreditCost),
+                        value: AnimateCreditCopy.countTitle(presentation.lockedFinalRenderCreditCost),
                         systemImage: "creditcard.fill"
                     )
                     MomentsCreateLockedRenderMetric(
@@ -1766,7 +1766,7 @@ private struct MomentsCreateFinalVideoConfirmationSheet: View {
                 MomentsCreateCostDetailRow(
                     title: L10n.string("create.final.costDetails.video"),
                     detail: durationTitle,
-                    value: MomentsCreditCopy.countTitle(plan?.creditCost ?? action.totalCreditCost)
+                    value: AnimateCreditCopy.countTitle(plan?.creditCost ?? action.totalCreditCost)
                 )
 
                 MomentsCreateCostDetailRow(
@@ -1840,7 +1840,7 @@ private struct MomentsCreateFinalVideoConfirmationSheet: View {
     }
 
     private var selectedCreditCostTitle: String {
-        MomentsCreditCopy.countTitle(selectedCreditCost)
+        AnimateCreditCopy.countTitle(selectedCreditCost)
     }
 
     private var confirmationActionTitle: String {
@@ -1875,7 +1875,7 @@ private struct MomentsCreateFinalVideoConfirmationSheet: View {
                     VStack(alignment: .leading, spacing: 3) {
                         Text(L10n.string(
                             "create.final.watermark.remove",
-                            MomentsCreditCopy.countTitle(videoQuote.brandingRemovalCreditCost)
+                            AnimateCreditCopy.countTitle(videoQuote.brandingRemovalCreditCost)
                         ))
                         .font(.system(size: 12, weight: .black))
                         .foregroundStyle(AVBrandColor.textPrimary)
@@ -1901,7 +1901,7 @@ private struct MomentsCreateFinalVideoConfirmationSheet: View {
                 VStack(alignment: .leading, spacing: 3) {
                     Text(L10n.string(
                         "create.final.watermark.remove",
-                        MomentsCreditCopy.countTitle(watermark.nonProRemovalCreditCost)
+                        AnimateCreditCopy.countTitle(watermark.nonProRemovalCreditCost)
                     ))
                     .font(.system(size: 12, weight: .black))
                     .foregroundStyle(AVBrandColor.textPrimary)
@@ -1936,7 +1936,7 @@ private struct MomentsCreateFinalVideoConfirmationSheet: View {
                 return L10n.string("create.final.costDetails.includedWithPro")
             }
             if videoQuote.branding.removalRequested || removesWatermark {
-                return MomentsCreditCopy.countTitle(videoQuote.brandingRemovalCreditCost)
+                return AnimateCreditCopy.countTitle(videoQuote.brandingRemovalCreditCost)
             }
             return L10n.string("create.final.costDetails.noExtraCost")
         }
@@ -1944,7 +1944,7 @@ private struct MomentsCreateFinalVideoConfirmationSheet: View {
             return L10n.string("create.final.costDetails.includedWithPro")
         }
         if removesWatermark {
-            return MomentsCreditCopy.countTitle(watermark?.nonProRemovalCreditCost ?? action.balance.watermarkRemovalCreditCost)
+            return AnimateCreditCopy.countTitle(watermark?.nonProRemovalCreditCost ?? action.balance.watermarkRemovalCreditCost)
         }
         return L10n.string("create.final.costDetails.noExtraCost")
     }

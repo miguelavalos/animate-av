@@ -12,8 +12,8 @@ protocol MomentsAuthTokenProviding: AnyObject {
 }
 
 @MainActor
-protocol MomentsCreditBalanceProviding: AnyObject {
-    var currentCreditBalance: MomentsCreditBalance { get }
+protocol AnimateCreditBalanceProviding: AnyObject {
+    var currentCreditBalance: AnimateCreditBalance { get }
 
     func refreshCreditBalance() async
 }
@@ -23,8 +23,8 @@ protocol MomentsAccountStateProviding: AnyObject {
     var isSignedInPublisher: AnyPublisher<Bool, Never> { get }
     var currentUserIdPublisher: AnyPublisher<String?, Never> { get }
     var displayNamePublisher: AnyPublisher<String?, Never> { get }
-    var creditBalancePublisher: AnyPublisher<MomentsCreditBalance, Never> { get }
-    var creditBalanceLoadStatePublisher: AnyPublisher<MomentsCreditBalanceLoadState, Never> { get }
+    var creditBalancePublisher: AnyPublisher<AnimateCreditBalance, Never> { get }
+    var creditBalanceLoadStatePublisher: AnyPublisher<AnimateCreditBalanceLoadState, Never> { get }
 }
 
 @MainActor

@@ -228,7 +228,7 @@ struct MomentsProfileScreen: View {
                 AVSettingsInfoRow(
                     systemImage: accountController.creditBalanceLoadState.systemImage,
                     title: creditBalanceRowTitle,
-                    detail: MomentsCreditCopy.balanceStatusDetail(
+                    detail: AnimateCreditCopy.balanceStatusDetail(
                         accountController.creditBalanceLoadState,
                         balance: accountController.creditBalance
                     )
@@ -251,7 +251,7 @@ struct MomentsProfileScreen: View {
                 }
 
                 if showsCreditDetails, accountController.creditBalanceLoadState.hasLoadedBalance {
-                    ForEach(MomentsCreditCopy.detailRows(for: accountController.creditBalance)) { row in
+                    ForEach(AnimateCreditCopy.detailRows(for: accountController.creditBalance)) { row in
                         AVSettingsInfoRow(
                             systemImage: row.systemImage,
                             title: row.title,
@@ -489,23 +489,23 @@ struct MomentsProfileScreen: View {
     private var accessDetail: String {
         if accountController.isSignedIn {
             guard accountController.creditBalanceLoadState.hasLoadedBalance else {
-                return MomentsCreditCopy.balanceStatusDetail(accountController.creditBalanceLoadState)
+                return AnimateCreditCopy.balanceStatusDetail(accountController.creditBalanceLoadState)
             }
-            return MomentsCreditCopy.accessDetail(accountController.creditBalance)
+            return AnimateCreditCopy.accessDetail(accountController.creditBalance)
         }
         return localized("profile.summary.plan.detail.guest")
     }
 
     private var creditsSubtitle: String {
         guard accountController.creditBalanceLoadState.hasLoadedBalance else {
-            return MomentsCreditCopy.balanceStatusDetail(accountController.creditBalanceLoadState)
+            return AnimateCreditCopy.balanceStatusDetail(accountController.creditBalanceLoadState)
         }
-        return MomentsCreditCopy.walletSubtitle(accountController.creditBalance)
+        return AnimateCreditCopy.walletSubtitle(accountController.creditBalance)
     }
 
     private var creditBalanceRowTitle: String {
         guard accountController.creditBalanceLoadState.hasLoadedBalance else {
-            return MomentsCreditCopy.balanceStatusTitle(accountController.creditBalanceLoadState)
+            return AnimateCreditCopy.balanceStatusTitle(accountController.creditBalanceLoadState)
         }
         return localized("credits.available.title")
     }
@@ -519,9 +519,9 @@ struct MomentsProfileScreen: View {
     private var momentsProSubtitle: String {
         if accountController.isSignedIn {
             guard accountController.creditBalanceLoadState.hasLoadedBalance else {
-                return MomentsCreditCopy.balanceStatusDetail(accountController.creditBalanceLoadState)
+                return AnimateCreditCopy.balanceStatusDetail(accountController.creditBalanceLoadState)
             }
-            return MomentsCreditCopy.accessDetail(accountController.creditBalance)
+            return AnimateCreditCopy.accessDetail(accountController.creditBalance)
         }
         return localized("profile.pro.subtitle.guest")
     }

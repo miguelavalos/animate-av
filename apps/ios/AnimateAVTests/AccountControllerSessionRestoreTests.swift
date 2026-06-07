@@ -225,8 +225,8 @@ final class AccountControllerSessionRestoreTests: XCTestCase {
         MomentsAccountProfileClient(baseURLString: "https://account.example.test", session: urlProtocolSession())
     }
 
-    private func balanceClient() -> MomentsCreditBalanceClient {
-        MomentsCreditBalanceClient(baseURLString: "https://account.example.test", session: urlProtocolSession())
+    private func balanceClient() -> AnimateCreditBalanceClient {
+        AnimateCreditBalanceClient(baseURLString: "https://account.example.test", session: urlProtocolSession())
     }
 
     private func urlProtocolSession() -> URLSession {
@@ -307,8 +307,8 @@ private final class CapturingAnimatePurchaseService: AnimatePurchaseServicing {
         loadedCatalogUserIds.append(userId)
         return AnimatePurchaseCatalog(
             entriesByProductId: [
-                MomentsCreditPaywallProduct.starterPack.id: AnimatePurchaseCatalog.Entry(
-                    productId: MomentsCreditPaywallProduct.starterPack.id,
+                AnimateCreditPaywallProduct.starterPack.id: AnimatePurchaseCatalog.Entry(
+                    productId: AnimateCreditPaywallProduct.starterPack.id,
                     packageIdentifier: "test-five-credits",
                     localizedTitle: "Five credits",
                     localizedPrice: "$5.00"

@@ -8,8 +8,8 @@ struct MomentsInProgressScreen: View {
     @State private var momentPendingDeletion: InProgressMoment?
     @State private var momentPendingRename: InProgressMoment?
     @SceneStorage("animate.inProgress.selectedAssetKind") private var selectedAssetKindRaw = MomentsInProgressAssetKind.videos.rawValue
-    let balance: MomentsCreditBalance
-    let creditBalanceLoadState: MomentsCreditBalanceLoadState
+    let balance: AnimateCreditBalance
+    let creditBalanceLoadState: AnimateCreditBalanceLoadState
     let continueMoment: (MomentsContinuationRequest) -> Void
     let startMoment: () -> Void
     let startSignInFlow: () -> Void
@@ -33,8 +33,8 @@ struct MomentsInProgressScreen: View {
     }
 
     init(
-        balance: MomentsCreditBalance = .empty,
-        creditBalanceLoadState: MomentsCreditBalanceLoadState = .loaded,
+        balance: AnimateCreditBalance = .empty,
+        creditBalanceLoadState: AnimateCreditBalanceLoadState = .loaded,
         continueMoment: @escaping (MomentsContinuationRequest) -> Void = { _ in },
         startMoment: @escaping () -> Void = {},
         startSignInFlow: @escaping () -> Void = {},

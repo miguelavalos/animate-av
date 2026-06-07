@@ -126,7 +126,7 @@ enum MomentSetupRules {
 
     static func availability(
         form: MomentSetupForm,
-        balance: MomentsCreditBalance
+        balance: AnimateCreditBalance
     ) -> Availability {
         guard !form.occasion.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty else {
             return Availability(canCreateMoment: false, blockReason: .missingOccasion)

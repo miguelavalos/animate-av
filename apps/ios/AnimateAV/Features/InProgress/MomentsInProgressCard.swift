@@ -5,8 +5,8 @@ import SwiftUI
 
 struct MomentsInProgressCard: View {
     let presentation: MomentsInProgressPresentation
-    let balance: MomentsCreditBalance
-    let creditBalanceLoadState: MomentsCreditBalanceLoadState
+    let balance: AnimateCreditBalance
+    let creditBalanceLoadState: AnimateCreditBalanceLoadState
     let momentsSummary: InProgressMomentsSummary
     let selectedMomentId: String?
     let isLoadingMomentWorkspace: Bool
@@ -67,8 +67,8 @@ struct MomentsInProgressCard: View {
 }
 
 private struct MomentsInProgressCreditStatus: View {
-    let balance: MomentsCreditBalance
-    let creditBalanceLoadState: MomentsCreditBalanceLoadState
+    let balance: AnimateCreditBalance
+    let creditBalanceLoadState: AnimateCreditBalanceLoadState
     let openCredits: () -> Void
     let retryCredits: () -> Void
 
@@ -121,14 +121,14 @@ private struct MomentsInProgressCreditStatus: View {
 
     private var title: String {
         guard creditBalanceLoadState.hasLoadedBalance else {
-            return MomentsCreditCopy.balanceStatusTitle(creditBalanceLoadState)
+            return AnimateCreditCopy.balanceStatusTitle(creditBalanceLoadState)
         }
-        return L10n.string("credits.available.detail", MomentsCreditCopy.countTitle(balance.spendable))
+        return L10n.string("credits.available.detail", AnimateCreditCopy.countTitle(balance.spendable))
     }
 
     private var detail: String {
         guard creditBalanceLoadState.hasLoadedBalance else {
-            return MomentsCreditCopy.balanceStatusDetail(creditBalanceLoadState)
+            return AnimateCreditCopy.balanceStatusDetail(creditBalanceLoadState)
         }
         return balance.spendable > 0 ? L10n.string("inProgress.credits.ready") : L10n.string("inProgress.credits.needed")
     }

@@ -6,8 +6,8 @@ import Foundation
 @MainActor
 final class AccountController: ObservableObject {
     @Published private(set) var user: AccountAVUser?
-    @Published private(set) var creditBalance = MomentsCreditBalance.empty
-    @Published private(set) var creditBalanceLoadState = MomentsCreditBalanceLoadState.signedOut
+    @Published private(set) var creditBalance = AnimateCreditBalance.empty
+    @Published private(set) var creditBalanceLoadState = AnimateCreditBalanceLoadState.signedOut
     @Published private(set) var purchaseCatalog = AnimatePurchaseCatalog.empty
     @Published private(set) var isPurchaseCatalogLoading = false
     @Published private(set) var purchaseCatalogErrorMessage: String?
@@ -18,7 +18,7 @@ final class AccountController: ObservableObject {
 
     private let service: AVAccountService
     private let accountProfileClient: MomentsAccountProfileClient
-    private let balanceClient: MomentsCreditBalanceClient
+    private let balanceClient: AnimateCreditBalanceClient
     private let promoCodeClient: MomentsPromoCodeClient
     private let purchaseService: AnimatePurchaseServicing
     private let userDefaults: UserDefaults
@@ -27,14 +27,14 @@ final class AccountController: ObservableObject {
     init(
         service: AVAccountService = DefaultAVAccountService(),
         accountProfileClient: MomentsAccountProfileClient? = nil,
-        balanceClient: MomentsCreditBalanceClient? = nil,
+        balanceClient: AnimateCreditBalanceClient? = nil,
         promoCodeClient: MomentsPromoCodeClient? = nil,
         purchaseService: AnimatePurchaseServicing = RevenueCatAnimatePurchaseService(),
         userDefaults: UserDefaults = .standard
     ) {
         self.service = service
         self.accountProfileClient = accountProfileClient ?? MomentsAccountProfileClient(baseURLString: AppConfig.animateAPIBaseURL)
-        self.balanceClient = balanceClient ?? MomentsCreditBalanceClient(baseURLString: AppConfig.animateAPIBaseURL)
+        self.balanceClient = balanceClient ?? AnimateCreditBalanceClient(baseURLString: AppConfig.animateAPIBaseURL)
         self.promoCodeClient = promoCodeClient ?? MomentsPromoCodeClient(baseURLString: AppConfig.animateAPIBaseURL)
         self.purchaseService = purchaseService
         self.userDefaults = userDefaults
@@ -158,7 +158,7 @@ final class AccountController: ObservableObject {
         }
     }
 
-    func purchase(_ product: MomentsCreditPaywallProduct) async throws -> AnimatePurchaseResult {
+    func purchase(_ product: AnimateCreditPaywallProduct) async throws -> AnimatePurchaseResult {
         guard let user else {
             throw MomentsAPIError(code: "moments_sign_in_required", message: L10n.string("access.signInRequired.purchase"))
         }
@@ -209,7 +209,7 @@ final class AccountController: ObservableObject {
             persistLastKnownAccountUser(user)
         } catch {
             captureAccountError(error, operation: "credit_balance")
-            creditBalanceLoadState = MomentsCreditBalanceLoadState.failureState(for: error)
+            creditBalanceLoadState = AnimateCreditBalanceLoadState.failureState(for: error)
             errorMessage = error.localizedDescription
         }
     }
@@ -392,11 +392,11 @@ private struct MomentsAccountProfileResponse: Decodable {
     }
 }
 
-struct MomentsCreditBalanceClient {
+struct AnimateCreditBalanceClient {
     var baseURLString: String
     var session: URLSession = .shared
 
-    func fetchBalance(bearerToken: String) async throws -> MomentsCreditBalance {
+    func fetchBalance(bearerToken: String) async throws -> AnimateCreditBalance {
         guard let url = URL(string: "\(baseURLString)/v1/apps/animateav/credits/balance") else {
             throw MomentsAPIError(code: "invalid_moments_api_url", message: L10n.string("access.apiURLMissing"))
         }
@@ -414,8 +414,8 @@ struct MomentsCreditBalanceClient {
             )
         }
 
-        let decoded = try JSONDecoder().decode(MomentsCreditBalanceResponse.self, from: data)
-        return MomentsCreditBalance(
+        let decoded = try JSONDecoder().decode(AnimateCreditBalanceResponse.self, from: data)
+        return AnimateCreditBalance(
             proMonthly: decoded.proMonthlyCredits,
             promotional: decoded.promotionalGrantedCredits,
             purchased: decoded.purchasedCredits,
@@ -427,14 +427,14 @@ struct MomentsCreditBalanceClient {
     }
 }
 
-private struct MomentsCreditBalanceResponse: Decodable {
+private struct AnimateCreditBalanceResponse: Decodable {
     let spendableCredits: Int
     let proMonthlyCredits: Int
     let promotionalGrantedCredits: Int
     let purchasedCredits: Int
     let watermarkRemovalCreditCost: Int
     let watermarkFreeIncluded: Bool
-    let walletSummary: MomentsCreditWalletSummary?
+    let walletSummary: AnimateCreditWalletSummary?
 
     private enum CodingKeys: String, CodingKey {
         case spendableCredits
@@ -454,7 +454,7 @@ private struct MomentsCreditBalanceResponse: Decodable {
         purchasedCredits = try container.decode(Int.self, forKey: .purchasedCredits)
         watermarkRemovalCreditCost = try container.decodeIfPresent(Int.self, forKey: .watermarkRemovalCreditCost) ?? 1
         watermarkFreeIncluded = try container.decodeIfPresent(Bool.self, forKey: .watermarkFreeIncluded) ?? false
-        walletSummary = try container.decodeIfPresent(MomentsCreditWalletSummary.self, forKey: .walletSummary)
+        walletSummary = try container.decodeIfPresent(AnimateCreditWalletSummary.self, forKey: .walletSummary)
     }
 }
 
@@ -492,7 +492,7 @@ private struct MomentsPromoCodeRedeemRequest: Encodable {
 
 struct MomentsPromoCodeRedemptionResponse: Decodable {
     let creditsGranted: Int
-    let balance: MomentsCreditBalance
+    let balance: AnimateCreditBalance
 
     private enum CodingKeys: String, CodingKey {
         case creditsGranted
@@ -513,24 +513,24 @@ struct MomentsPromoCodeRedemptionResponse: Decodable {
         let container = try decoder.container(keyedBy: CodingKeys.self)
         creditsGranted = try container.decode(Int.self, forKey: .creditsGranted)
         let balanceContainer = try container.nestedContainer(keyedBy: BalanceCodingKeys.self, forKey: .balance)
-        balance = MomentsCreditBalance(
+        balance = AnimateCreditBalance(
             proMonthly: try balanceContainer.decode(Int.self, forKey: .proMonthlyCredits),
             promotional: try balanceContainer.decode(Int.self, forKey: .promotionalGrantedCredits),
             purchased: try balanceContainer.decode(Int.self, forKey: .purchasedCredits),
             availableCredits: try balanceContainer.decodeIfPresent(Int.self, forKey: .spendableCredits),
-            walletSummary: try balanceContainer.decodeIfPresent(MomentsCreditWalletSummary.self, forKey: .walletSummary),
+            walletSummary: try balanceContainer.decodeIfPresent(AnimateCreditWalletSummary.self, forKey: .walletSummary),
             watermarkRemovalCreditCost: try balanceContainer.decodeIfPresent(Int.self, forKey: .watermarkRemovalCreditCost) ?? 1,
             watermarkFreeIncluded: try balanceContainer.decodeIfPresent(Bool.self, forKey: .watermarkFreeIncluded) ?? false
         )
     }
 }
 
-extension AccountController: MomentsCurrentUserProviding, MomentsAuthTokenProviding, MomentsCreditBalanceProviding, MomentsAccountStateProviding, MomentsAuthenticationControlling {
+extension AccountController: MomentsCurrentUserProviding, MomentsAuthTokenProviding, AnimateCreditBalanceProviding, MomentsAccountStateProviding, MomentsAuthenticationControlling {
     var currentUserId: String? {
         user?.id
     }
 
-    var currentCreditBalance: MomentsCreditBalance {
+    var currentCreditBalance: AnimateCreditBalance {
         creditBalance
     }
 
@@ -560,11 +560,11 @@ extension AccountController: MomentsCurrentUserProviding, MomentsAuthTokenProvid
             .eraseToAnyPublisher()
     }
 
-    var creditBalancePublisher: AnyPublisher<MomentsCreditBalance, Never> {
+    var creditBalancePublisher: AnyPublisher<AnimateCreditBalance, Never> {
         $creditBalance.eraseToAnyPublisher()
     }
 
-    var creditBalanceLoadStatePublisher: AnyPublisher<MomentsCreditBalanceLoadState, Never> {
+    var creditBalanceLoadStatePublisher: AnyPublisher<AnimateCreditBalanceLoadState, Never> {
         $creditBalanceLoadState.eraseToAnyPublisher()
     }
 }

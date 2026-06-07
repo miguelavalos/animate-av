@@ -1,4 +1,4 @@
-enum MomentsCreditCopy {
+enum AnimateCreditCopy {
     static let monthlyVideoCreditsIncluded = 6
 
     static func noun(_ count: Int) -> String {
@@ -9,17 +9,17 @@ enum MomentsCreditCopy {
         L10n.string("credits.countTitle", count, noun(count))
     }
 
-    static func availableTitle(_ balance: MomentsCreditBalance) -> String {
+    static func availableTitle(_ balance: AnimateCreditBalance) -> String {
         countTitle(balance.spendable)
     }
 
-    static func availableDetail(_ balance: MomentsCreditBalance) -> String {
+    static func availableDetail(_ balance: AnimateCreditBalance) -> String {
         balance.spendable == 0
             ? L10n.string("credits.available.none")
             : L10n.string("credits.available.detail", availableTitle(balance))
     }
 
-    static func walletSubtitle(_ balance: MomentsCreditBalance) -> String {
+    static func walletSubtitle(_ balance: AnimateCreditBalance) -> String {
         guard let summary = balance.walletSummary else {
             return availableDetail(balance)
         }
@@ -33,7 +33,7 @@ enum MomentsCreditCopy {
         return L10n.string("credits.wallet.subtitle.free", available)
     }
 
-    static func accessDetail(_ balance: MomentsCreditBalance) -> String {
+    static func accessDetail(_ balance: AnimateCreditBalance) -> String {
         guard let summary = balance.walletSummary else {
             return availableDetail(balance)
         }
@@ -45,7 +45,7 @@ enum MomentsCreditCopy {
         return L10n.string("profile.summary.plan.detail.free")
     }
 
-    static func balanceStatusTitle(_ loadState: MomentsCreditBalanceLoadState) -> String {
+    static func balanceStatusTitle(_ loadState: AnimateCreditBalanceLoadState) -> String {
         switch loadState {
         case .signedOut:
             L10n.string("credits.balance.signedOut.title")
@@ -60,7 +60,7 @@ enum MomentsCreditCopy {
         }
     }
 
-    static func balanceStatusDetail(_ loadState: MomentsCreditBalanceLoadState) -> String {
+    static func balanceStatusDetail(_ loadState: AnimateCreditBalanceLoadState) -> String {
         switch loadState {
         case .signedOut:
             L10n.string("credits.balance.signedOut.detail")
@@ -76,13 +76,13 @@ enum MomentsCreditCopy {
     }
 
     static func balanceStatusDetail(
-        _ loadState: MomentsCreditBalanceLoadState,
-        balance: MomentsCreditBalance
+        _ loadState: AnimateCreditBalanceLoadState,
+        balance: AnimateCreditBalance
     ) -> String {
         loadState.hasLoadedBalance ? availableDetail(balance) : balanceStatusDetail(loadState)
     }
 
-    static func proMonthlyDetail(_ balance: MomentsCreditBalance) -> String {
+    static func proMonthlyDetail(_ balance: AnimateCreditBalance) -> String {
         guard let summary = balance.walletSummary else {
             return L10n.string("credits.proMonthly.detail", balance.proMonthly, monthlyVideoCreditsIncluded)
         }
@@ -103,38 +103,38 @@ enum MomentsCreditCopy {
         return L10n.string("credits.proMonthly.none.detail")
     }
 
-    static func purchasedDetail(_ balance: MomentsCreditBalance) -> String {
+    static func purchasedDetail(_ balance: AnimateCreditBalance) -> String {
         if let summary = balance.walletSummary {
             return L10n.string("credits.purchased.detail", summary.credits.purchasedTotal)
         }
         return L10n.string("credits.purchased.detail", balance.purchased)
     }
 
-    static func otherDetail(_ balance: MomentsCreditBalance) -> String {
+    static func otherDetail(_ balance: AnimateCreditBalance) -> String {
         if let summary = balance.walletSummary {
             return L10n.string("credits.other.detail", summary.credits.promoGrantedTotal)
         }
         return L10n.string("credits.other.detail", balance.promotional)
     }
 
-    static func detailRows(for balance: MomentsCreditBalance) -> [MomentsCreditDetailRow] {
+    static func detailRows(for balance: AnimateCreditBalance) -> [AnimateCreditDetailRow] {
         if let summary = balance.walletSummary {
             var rows = [
-                MomentsCreditDetailRow(
+                AnimateCreditDetailRow(
                     id: "availableNow",
                     title: L10n.string("credits.availableNow.title"),
                     value: summary.credits.available,
                     detail: L10n.string("credits.availableNow.detail", countTitle(summary.credits.available)),
                     systemImage: "creditcard"
                 ),
-                MomentsCreditDetailRow(
+                AnimateCreditDetailRow(
                     id: "reserved",
                     title: L10n.string("credits.reserved.title"),
                     value: summary.credits.reserved,
                     detail: L10n.string("credits.reserved.detail", summary.credits.reserved),
                     systemImage: "lock"
                 ),
-                MomentsCreditDetailRow(
+                AnimateCreditDetailRow(
                     id: "periodUsed",
                     title: L10n.string("credits.periodUsed.title"),
                     value: summary.period.usedCredits,
@@ -145,7 +145,7 @@ enum MomentsCreditCopy {
 
             if summary.plan.isProActive {
                 rows.append(
-                    MomentsCreditDetailRow(
+                    AnimateCreditDetailRow(
                         id: "plan",
                         title: L10n.string("credits.plan.title"),
                         value: summary.plan.includesMonthlyCredits ? summary.period.remainingIncludedCredits : summary.credits.available,
@@ -161,21 +161,21 @@ enum MomentsCreditCopy {
         }
 
         return [
-            MomentsCreditDetailRow(
+            AnimateCreditDetailRow(
                 id: "proMonthly",
                 title: L10n.string("credits.proMonthly.title"),
                 value: balance.proMonthly,
                 detail: proMonthlyDetail(balance),
                 systemImage: "sparkles.rectangle.stack"
             ),
-            MomentsCreditDetailRow(
+            AnimateCreditDetailRow(
                 id: "purchased",
                 title: L10n.string("credits.purchased.title"),
                 value: balance.purchased,
                 detail: purchasedDetail(balance),
                 systemImage: "creditcard"
             ),
-            MomentsCreditDetailRow(
+            AnimateCreditDetailRow(
                 id: "other",
                 title: L10n.string("credits.other.title"),
                 value: balance.promotional,
@@ -185,7 +185,7 @@ enum MomentsCreditCopy {
         ]
     }
 
-    private static func planTitle(_ plan: MomentsCreditWalletSummary.Plan) -> String {
+    private static func planTitle(_ plan: AnimateCreditWalletSummary.Plan) -> String {
         switch plan.source {
         case "subscription":
             return L10n.string("credits.plan.pro.subscription")
@@ -199,7 +199,7 @@ enum MomentsCreditCopy {
         }
     }
 
-    private static func periodDetail(_ summary: MomentsCreditWalletSummary) -> String {
+    private static func periodDetail(_ summary: AnimateCreditWalletSummary) -> String {
         if summary.plan.includesMonthlyCredits {
             return L10n.string(
                 "credits.periodUsed.subscription.detail",
@@ -217,7 +217,7 @@ enum MomentsCreditCopy {
     }
 }
 
-struct MomentsCreditDetailRow: Identifiable, Equatable {
+struct AnimateCreditDetailRow: Identifiable, Equatable {
     let id: String
     let title: String
     let value: Int

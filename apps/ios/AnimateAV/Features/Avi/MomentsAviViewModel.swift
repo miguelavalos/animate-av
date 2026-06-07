@@ -5,8 +5,8 @@ import Foundation
 final class MomentsAviViewModel: ObservableObject {
     @Published private(set) var momentsSummary = InProgressMomentsSummary()
     @Published private(set) var isSignedIn = false
-    @Published private(set) var creditBalance = MomentsCreditBalance.empty
-    @Published private(set) var creditBalanceLoadState = MomentsCreditBalanceLoadState.signedOut
+    @Published private(set) var creditBalance = AnimateCreditBalance.empty
+    @Published private(set) var creditBalanceLoadState = AnimateCreditBalanceLoadState.signedOut
 
     private var momentsCancellables = Set<AnyCancellable>()
     private var accountCancellables = Set<AnyCancellable>()

@@ -62,8 +62,8 @@ struct MomentsAviScreen: View {
 private struct MomentsAviGuidanceContent: View {
     let presentation: MomentsAviPresentation
     let momentsSummary: InProgressMomentsSummary
-    let creditBalance: MomentsCreditBalance
-    let creditBalanceLoadState: MomentsCreditBalanceLoadState
+    let creditBalance: AnimateCreditBalance
+    let creditBalanceLoadState: AnimateCreditBalanceLoadState
     let isSignedIn: Bool
     let startSignInFlow: () -> Void
     let startMoment: () -> Void

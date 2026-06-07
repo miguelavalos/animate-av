@@ -3,7 +3,7 @@ import Foundation
 struct MomentsCreateFinalVideoActionPresentation: Equatable {
     var summary: MomentsCreateFinalRenderSummary
     var template: MomentTemplate
-    var balance: MomentsCreditBalance
+    var balance: AnimateCreditBalance
     var removesWatermark = false
 
     var hasRenderPlan: Bool {
@@ -47,7 +47,7 @@ struct MomentsCreateFinalVideoActionPresentation: Equatable {
     }
 
     var totalCreditCostTitle: String {
-        MomentsCreditCopy.countTitle(totalCreditCost)
+        AnimateCreditCopy.countTitle(totalCreditCost)
     }
 
     var primaryTitle: String {

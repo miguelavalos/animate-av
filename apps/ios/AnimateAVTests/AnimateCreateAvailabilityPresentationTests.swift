@@ -153,7 +153,7 @@ final class AnimateCreateAvailabilityPresentationTests: XCTestCase {
                 isFinalRenderConfigured: true,
                 moment: AnimateCreateTestFixtures.makeMoment(id: "moment-1"),
                 template: .birthdayMessage,
-                balance: MomentsCreditBalance(proMonthly: 4, promotional: 0, purchased: 0)
+                balance: AnimateCreditBalance(proMonthly: 4, promotional: 0, purchased: 0)
             ),
             "Prepare the video before creating the final video."
         )

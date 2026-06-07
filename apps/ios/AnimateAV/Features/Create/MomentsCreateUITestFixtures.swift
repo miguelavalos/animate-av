@@ -60,16 +60,16 @@ enum MomentsCreateUITestFixtures {
         )
     }
 
-    static var balance: MomentsCreditBalance {
+    static var balance: AnimateCreditBalance {
         balance(for: .full)
     }
 
-    static func balance(for mode: Mode) -> MomentsCreditBalance {
+    static func balance(for mode: Mode) -> AnimateCreditBalance {
         switch mode {
         case .videoPlanInsufficientCredits:
             return .empty
         case .storyReady, .videoPlanReady, .finalQueued, .finalRunning, .full:
-            return MomentsCreditBalance(proMonthly: 4, promotional: 1, purchased: 3)
+            return AnimateCreditBalance(proMonthly: 4, promotional: 1, purchased: 3)
         }
     }
 

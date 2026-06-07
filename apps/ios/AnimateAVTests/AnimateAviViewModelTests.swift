@@ -35,7 +35,7 @@ final class AnimateAviViewModelTests: XCTestCase {
         let presentation = MomentsAviPresentation.make(
             isSignedIn: true,
             momentsSummary: InProgressMomentsSummary(),
-            creditBalance: MomentsCreditBalance(proMonthly: 2, promotional: 1, purchased: 3)
+            creditBalance: AnimateCreditBalance(proMonthly: 2, promotional: 1, purchased: 3)
         )
 
         XCTAssertTrue(presentation.creditGuidanceMessage.contains("6 credits available"))
@@ -45,7 +45,7 @@ final class AnimateAviViewModelTests: XCTestCase {
         let presentation = MomentsAviPresentation.make(
             isSignedIn: true,
             momentsSummary: InProgressMomentsSummary(),
-            creditBalance: MomentsCreditBalance(proMonthly: 1, promotional: 0, purchased: 0)
+            creditBalance: AnimateCreditBalance(proMonthly: 1, promotional: 0, purchased: 0)
         )
 
         XCTAssertTrue(presentation.creditGuidanceMessage.contains("1 credit available"))
@@ -98,7 +98,7 @@ final class AnimateAviViewModelTests: XCTestCase {
 
         accountProvider.isSignedIn.send(true)
         accountProvider.creditBalance.send(
-            MomentsCreditBalance(proMonthly: 1, promotional: 0, purchased: 0)
+            AnimateCreditBalance(proMonthly: 1, promotional: 0, purchased: 0)
         )
         summaryProvider.summary.send(
             InProgressMomentsSummary.make(from: [
@@ -139,8 +139,8 @@ private final class AviAccountStateProvider: MomentsAccountStateProviding {
     let isSignedIn = CurrentValueSubject<Bool, Never>(false)
     let currentUserId = CurrentValueSubject<String?, Never>(nil)
     let displayName = CurrentValueSubject<String?, Never>(nil)
-    let creditBalance = CurrentValueSubject<MomentsCreditBalance, Never>(.empty)
-    let creditBalanceLoadState = CurrentValueSubject<MomentsCreditBalanceLoadState, Never>(.loaded)
+    let creditBalance = CurrentValueSubject<AnimateCreditBalance, Never>(.empty)
+    let creditBalanceLoadState = CurrentValueSubject<AnimateCreditBalanceLoadState, Never>(.loaded)
 
     var isSignedInPublisher: AnyPublisher<Bool, Never> {
         isSignedIn.eraseToAnyPublisher()
@@ -154,11 +154,11 @@ private final class AviAccountStateProvider: MomentsAccountStateProviding {
         displayName.eraseToAnyPublisher()
     }
 
-    var creditBalancePublisher: AnyPublisher<MomentsCreditBalance, Never> {
+    var creditBalancePublisher: AnyPublisher<AnimateCreditBalance, Never> {
         creditBalance.eraseToAnyPublisher()
     }
 
-    var creditBalanceLoadStatePublisher: AnyPublisher<MomentsCreditBalanceLoadState, Never> {
+    var creditBalanceLoadStatePublisher: AnyPublisher<AnimateCreditBalanceLoadState, Never> {
         creditBalanceLoadState.eraseToAnyPublisher()
     }
 }

@@ -2,8 +2,8 @@ import AVAppShellFoundation
 import SwiftUI
 
 struct MomentsHomeAccountCard: View {
-    let creditBalance: MomentsCreditBalance
-    let creditBalanceLoadState: MomentsCreditBalanceLoadState
+    let creditBalance: AnimateCreditBalance
+    let creditBalanceLoadState: AnimateCreditBalanceLoadState
     let openCredits: () -> Void
     let retryCredits: () -> Void
 
@@ -51,7 +51,7 @@ struct MomentsHomeAccountCard: View {
 
     private var creditDetail: String {
         guard creditBalanceLoadState.hasLoadedBalance else {
-            return MomentsCreditCopy.balanceStatusDetail(creditBalanceLoadState)
+            return AnimateCreditCopy.balanceStatusDetail(creditBalanceLoadState)
         }
         if creditBalance.spendable == 0 {
             return L10n.string("credits.home.none")

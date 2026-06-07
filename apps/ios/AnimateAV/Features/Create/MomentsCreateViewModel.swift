@@ -40,8 +40,8 @@ enum MomentsFinalVideoCommandState: Equatable {
 @MainActor
 final class MomentsCreateViewModel: ObservableObject {
     @Published private(set) var isSignedIn = false
-    @Published private(set) var balance = MomentsCreditBalance.empty
-    @Published private(set) var creditBalanceLoadState = MomentsCreditBalanceLoadState.signedOut
+    @Published private(set) var balance = AnimateCreditBalance.empty
+    @Published private(set) var creditBalanceLoadState = AnimateCreditBalanceLoadState.signedOut
     @Published private(set) var templates = MomentTemplate.launchTemplates
     @Published private(set) var creationStyles = MomentCreationStyle.launchStyles
     @Published var selectedCreationStyle = MomentCreationStyle.launchStyles[0]
@@ -835,7 +835,7 @@ extension MomentsCreateViewModel {
         clearInsufficientCreditRenderPlanIfBalanceNowCovers(state.balance)
     }
 
-    private func clearInsufficientCreditRenderPlanIfBalanceNowCovers(_ balance: MomentsCreditBalance) {
+    private func clearInsufficientCreditRenderPlanIfBalanceNowCovers(_ balance: AnimateCreditBalance) {
         guard let renderPlan,
               renderPlan.canCreateVideo == false,
               renderPlan.createVideoBlockers.contains("insufficient_credits"),

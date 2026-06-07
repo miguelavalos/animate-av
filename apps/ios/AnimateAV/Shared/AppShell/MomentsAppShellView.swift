@@ -22,7 +22,7 @@ struct MomentsAppShellView: View {
     var body: some View {
         appScaffold
         .sheet(isPresented: $creditsPaywallIsPresented) {
-            MomentsCreditsPaywallView(
+            AnimateCreditsPaywallView(
                 balance: accountController.creditBalance,
                 isSignedIn: accountController.isSignedIn,
                 startSignInFlow: startSignInFlow,

@@ -6,14 +6,14 @@ final class AnimateCreditGateTests: XCTestCase {
         XCTAssertFalse(AnimatePurchaseCatalog.empty.hasRequiredPaywallProducts)
 
         let partialCatalog = AnimatePurchaseCatalog(entriesByProductId: [
-            MomentsCreditProductID.proMonthlyProduct: purchaseCatalogEntry(productId: MomentsCreditProductID.proMonthlyProduct),
-            MomentsCreditProductID.starterPackProduct: purchaseCatalogEntry(productId: MomentsCreditProductID.starterPackProduct)
+            AnimateCreditProductID.proMonthlyProduct: purchaseCatalogEntry(productId: AnimateCreditProductID.proMonthlyProduct),
+            AnimateCreditProductID.starterPackProduct: purchaseCatalogEntry(productId: AnimateCreditProductID.starterPackProduct)
         ])
 
         XCTAssertFalse(partialCatalog.hasRequiredPaywallProducts)
 
         let completeCatalog = AnimatePurchaseCatalog(entriesByProductId: Dictionary(
-            uniqueKeysWithValues: MomentsCreditPaywallProduct.all.map {
+            uniqueKeysWithValues: AnimateCreditPaywallProduct.all.map {
                 ($0.id, purchaseCatalogEntry(productId: $0.id))
             }
         ))
@@ -23,20 +23,20 @@ final class AnimateCreditGateTests: XCTestCase {
 
     func testEmptyBalanceCannotAffordAnyLaunchTemplate() {
         XCTAssertFalse(
-            MomentsCreditGate.canAffordAny(MomentTemplate.launchTemplates, balance: .empty)
+            AnimateCreditGate.canAffordAny(MomentTemplate.launchTemplates, balance: .empty)
         )
     }
 
     func testPurchasedCreditsAllowCreationWithoutProMonthlyCredits() {
-        let balance = MomentsCreditBalance(proMonthly: 0, promotional: 0, purchased: 2)
+        let balance = AnimateCreditBalance(proMonthly: 0, promotional: 0, purchased: 2)
 
         XCTAssertTrue(
-            MomentsCreditGate.canAfford(MomentTemplate.birthdayMessage, balance: balance)
+            AnimateCreditGate.canAfford(MomentTemplate.birthdayMessage, balance: balance)
         )
     }
 
     func testSpendableUsesBackendAvailableCreditsWhenProvided() {
-        let balance = MomentsCreditBalance(
+        let balance = AnimateCreditBalance(
             proMonthly: 0,
             promotional: 5,
             purchased: 0,
@@ -44,35 +44,35 @@ final class AnimateCreditGateTests: XCTestCase {
         )
 
         XCTAssertEqual(balance.spendable, 0)
-        XCTAssertFalse(MomentsCreditGate.canAfford(MomentTemplate.birthdayMessage, balance: balance))
+        XCTAssertFalse(AnimateCreditGate.canAfford(MomentTemplate.birthdayMessage, balance: balance))
     }
 
     func testPartyRecapRequiresTwoSpendableCredits() {
         XCTAssertTrue(
-            MomentsCreditGate.canAfford(
+            AnimateCreditGate.canAfford(
                 MomentTemplate.partyRecap,
-                balance: MomentsCreditBalance(proMonthly: 0, promotional: 0, purchased: 2)
+                balance: AnimateCreditBalance(proMonthly: 0, promotional: 0, purchased: 2)
             )
         )
     }
 
     func testSpendPlanUsesProThenPromotionalThenPurchasedCredits() {
-        let plan = MomentsCreditGate.spendPlan(
+        let plan = AnimateCreditGate.spendPlan(
             for: 5,
-            balance: MomentsCreditBalance(proMonthly: 2, promotional: 2, purchased: 4)
+            balance: AnimateCreditBalance(proMonthly: 2, promotional: 2, purchased: 4)
         )
 
         XCTAssertEqual(
             plan,
-            MomentsCreditSpendPlan(proMonthly: 2, promotional: 2, purchased: 1)
+            AnimateCreditSpendPlan(proMonthly: 2, promotional: 2, purchased: 1)
         )
     }
 
     func testSpendPlanIsNilWhenBalanceCannotCoverCost() {
         XCTAssertNil(
-            MomentsCreditGate.spendPlan(
+            AnimateCreditGate.spendPlan(
                 for: 3,
-                balance: MomentsCreditBalance(proMonthly: 0, promotional: 1, purchased: 1)
+                balance: AnimateCreditBalance(proMonthly: 0, promotional: 1, purchased: 1)
             )
         )
     }
@@ -226,7 +226,7 @@ final class AnimateCreditGateTests: XCTestCase {
     }
 
     func testFinalRenderRulesRequireReadyStatusAndCredits() {
-        let balance = MomentsCreditBalance(proMonthly: 0, promotional: 0, purchased: 2)
+        let balance = AnimateCreditBalance(proMonthly: 0, promotional: 0, purchased: 2)
         let moment = InProgressMoment(
             id: "moment-1",
             template: .birthdayMessage,
