@@ -184,13 +184,6 @@ final class MomentsCreateViewModel: ObservableObject {
         )
     }
 
-    func selectTemplate(id: MomentTemplateID) {
-        guard !isSetupLocked else { return }
-        guard let template = templates.first(where: { $0.id == id }) else { return }
-        form.template = template
-        markLocalSetupEdited()
-    }
-
     func selectCreationStyle(_ style: MomentCreationStyle) {
         guard style.isEnabled else { return }
         guard canEditCreationOptions else { return }

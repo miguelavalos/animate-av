@@ -641,14 +641,6 @@
 "create.final.blocker.default" = "Avi ne peut pas encore créer cette vidéo finale.";
 "create.form.details" = "Détails pour Avi";
 "create.form.details.placeholder" = "Ajoute des noms, blagues internes, scènes à souligner ou choses à éviter.";
-"create.form.occasion" = "Occasion";
-"create.form.occasion.placeholder" = "Anniversaire, voyage, lancement...";
-"create.form.recipient" = "Destinataire";
-"create.form.recipient.placeholder" = "Pour qui est-ce ?";
-"create.form.tempo" = "Tempo";
-"create.form.template" = "Modèle";
-"create.form.template.choose" = "Choisir un modèle";
-"create.form.tone" = "Ton";
 "create.media.addPhotos" = "Ajouter une image";
 "create.media.added" = "Image ajoutée";
 "create.media.backEditor" = "Retour à l’éditeur d’image";

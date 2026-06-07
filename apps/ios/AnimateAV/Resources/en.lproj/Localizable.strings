@@ -648,14 +648,6 @@
 "create.final.watermark.removeDetail" = "Removes the branded outro before creating the video.";
 "create.form.details" = "Details for Avi";
 "create.form.details.placeholder" = "Add names, the line Avi should say, a greeting style, or anything to avoid.";
-"create.form.occasion" = "Occasion";
-"create.form.occasion.placeholder" = "Birthday, trip, launch...";
-"create.form.recipient" = "Recipient";
-"create.form.recipient.placeholder" = "Who is this for?";
-"create.form.tempo" = "Tempo";
-"create.form.template" = "Template";
-"create.form.template.choose" = "Choose template";
-"create.form.tone" = "Tone";
 "create.media.addPhotos" = "Add image";
 "create.media.added" = "Image added";
 "create.media.backEditor" = "Back to image editor";

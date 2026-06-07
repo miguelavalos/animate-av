@@ -641,14 +641,6 @@
 "create.final.blocker.default" = "Avi encara no pot crear aquest vídeo final.";
 "create.form.details" = "Detalls per a Avi";
 "create.form.details.placeholder" = "Afegeix noms, bromes internes, escenes a destacar o coses a evitar.";
-"create.form.occasion" = "Ocasió";
-"create.form.occasion.placeholder" = "Aniversari, viatge, llançament...";
-"create.form.recipient" = "Destinatari";
-"create.form.recipient.placeholder" = "Per a qui és?";
-"create.form.tempo" = "Ritme";
-"create.form.template" = "Plantilla";
-"create.form.template.choose" = "Triar plantilla";
-"create.form.tone" = "To";
 "create.media.addPhotos" = "Afegir imatge";
 "create.media.added" = "Imatge afegida";
 "create.media.backEditor" = "Tornar a l’editor d’imatge";

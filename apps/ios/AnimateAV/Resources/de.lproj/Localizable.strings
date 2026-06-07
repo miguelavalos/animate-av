@@ -643,14 +643,6 @@
 "create.final.blocker.default" = "Avi kann dieses finale Video noch nicht erstellen.";
 "create.form.details" = "Details für Avi";
 "create.form.details.placeholder" = "Namen, Insider, wichtige Szenen oder Dinge zum Vermeiden hinzufügen.";
-"create.form.occasion" = "Anlass";
-"create.form.occasion.placeholder" = "Geburtstag, Reise, Launch...";
-"create.form.recipient" = "Empfänger";
-"create.form.recipient.placeholder" = "Für wen ist es?";
-"create.form.tempo" = "Tempo";
-"create.form.template" = "Vorlage";
-"create.form.template.choose" = "Vorlage wählen";
-"create.form.tone" = "Ton";
 "create.media.addPhotos" = "Bild hinzufügen";
 "create.media.added" = "Bild hinzugefügt";
 "create.media.backEditor" = "Zurück zum Bildeditor";

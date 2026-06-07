@@ -648,14 +648,6 @@
 "create.final.watermark.removeDetail" = "Elimina la tarjeta final de branding antes de crear el video.";
 "create.form.details" = "Detalles para Avi";
 "create.form.details.placeholder" = "Añade nombres, la frase que Avi debe decir, estilo de felicitación o algo a evitar.";
-"create.form.occasion" = "Ocasión";
-"create.form.occasion.placeholder" = "Cumpleaños, viaje, lanzamiento...";
-"create.form.recipient" = "Destinatario";
-"create.form.recipient.placeholder" = "¿Para quién es?";
-"create.form.tempo" = "Ritmo";
-"create.form.template" = "Plantilla";
-"create.form.template.choose" = "Elegir plantilla";
-"create.form.tone" = "Tono";
 "create.media.addPhotos" = "Añadir imagen";
 "create.media.added" = "Imagen añadida";
 "create.media.backEditor" = "Volver al editor de imagen";
