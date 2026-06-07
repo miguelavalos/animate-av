@@ -64,22 +64,22 @@ struct AnimateWorkflowBundle {
 }
 
 struct MomentsWorkflowClients {
-    let workspaceCommands: MomentsWorkspaceCommandClient
-    let realtimeSession: MomentsRealtimeSessionClient
-    let upload: MomentsUploadClient
-    let story: MomentsStoryClient
-    let videoQuote: MomentsVideoQuoteClient
-    let imageGenerationAccounting: MomentsImageGenerationAccountingClient
-    let finalRender: MomentsFinalRenderClient
+    let workspaceCommands: AnimateWorkspaceCommandClient
+    let realtimeSession: AnimateRealtimeSessionClient
+    let upload: AnimateUploadClient
+    let story: AnimateStoryClient
+    let videoQuote: AnimateVideoQuoteClient
+    let imageGenerationAccounting: AnimateImageGenerationAccountingClient
+    let finalRender: AnimateFinalRenderClient
 
     init(baseURLString: String) {
-        workspaceCommands = MomentsWorkspaceCommandClient(baseURLString: baseURLString)
-        realtimeSession = MomentsRealtimeSessionClient(baseURLString: baseURLString)
-        upload = MomentsUploadClient(baseURLString: baseURLString, session: Self.makeUploadSession())
-        story = MomentsStoryClient(baseURLString: baseURLString)
-        videoQuote = MomentsVideoQuoteClient(baseURLString: baseURLString)
-        imageGenerationAccounting = MomentsImageGenerationAccountingClient(baseURLString: baseURLString)
-        finalRender = MomentsFinalRenderClient(baseURLString: baseURLString)
+        workspaceCommands = AnimateWorkspaceCommandClient(baseURLString: baseURLString)
+        realtimeSession = AnimateRealtimeSessionClient(baseURLString: baseURLString)
+        upload = AnimateUploadClient(baseURLString: baseURLString, session: Self.makeUploadSession())
+        story = AnimateStoryClient(baseURLString: baseURLString)
+        videoQuote = AnimateVideoQuoteClient(baseURLString: baseURLString)
+        imageGenerationAccounting = AnimateImageGenerationAccountingClient(baseURLString: baseURLString)
+        finalRender = AnimateFinalRenderClient(baseURLString: baseURLString)
     }
 
     private static func makeUploadSession() -> URLSession {

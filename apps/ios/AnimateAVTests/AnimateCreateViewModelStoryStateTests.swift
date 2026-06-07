@@ -383,7 +383,7 @@ final class AnimateCreateViewModelStoryStateTests: XCTestCase {
         let expectedLocalSignature = viewModel.currentStoryInputSignature(
             momentId: "moment-1",
             persistedMedia: [
-                MomentsStoryMedia(
+                AnimateStoryMedia(
                     mediaAssetId: localMedia.id.uuidString,
                     mediaKind: localMedia.kind,
                     sortOrder: localMedia.sortOrder,
@@ -395,7 +395,7 @@ final class AnimateCreateViewModelStoryStateTests: XCTestCase {
         let backendMediaSignature = viewModel.currentStoryInputSignature(
             momentId: "moment-1",
             persistedMedia: [
-                MomentsStoryMedia(
+                AnimateStoryMedia(
                     mediaAssetId: "backend-media-1",
                     mediaKind: "image",
                     sortOrder: 0,
@@ -650,7 +650,7 @@ final class AnimateCreateViewModelStoryStateTests: XCTestCase {
             storyWorkflow: harness.storyWorkflow,
             finalRenderWorkflow: harness.finalRenderWorkflow,
             authTokenProvider: harness,
-            imageGenerationAccountingClient: MomentsImageGenerationAccountingClient(baseURLString: "https://api.example.test")
+            imageGenerationAccountingClient: AnimateImageGenerationAccountingClient(baseURLString: "https://api.example.test")
         )
         await Task.yield()
         await Task.yield()
@@ -736,8 +736,8 @@ final class AnimateCreateViewModelStoryStateTests: XCTestCase {
         )
     }
 
-    private func makeStoryMedia(from media: MomentMediaAsset) -> MomentsStoryMedia {
-        MomentsStoryMedia(
+    private func makeStoryMedia(from media: MomentMediaAsset) -> AnimateStoryMedia {
+        AnimateStoryMedia(
             mediaAssetId: media.id,
             mediaKind: media.kind,
             sortOrder: Int(media.sortOrder),
@@ -795,7 +795,7 @@ private final class MomentCreationFailureHarness:
             currentUserProvider: self,
             authTokenProvider: self,
             workspaceObserver: self,
-            uploadClient: MomentsUploadClient(baseURLString: "https://api.example.com")
+            uploadClient: AnimateUploadClient(baseURLString: "https://api.example.com")
         )
     }
 
@@ -804,7 +804,7 @@ private final class MomentCreationFailureHarness:
             currentUserProvider: self,
             authTokenProvider: self,
             workspaceObserver: self,
-            storyClient: MomentsStoryClient(baseURLString: "https://api.example.com")
+            storyClient: AnimateStoryClient(baseURLString: "https://api.example.com")
         )
     }
 
@@ -814,7 +814,7 @@ private final class MomentCreationFailureHarness:
             authTokenProvider: self,
             creditBalanceProvider: self,
             workspaceObserver: self,
-            finalRenderClient: MomentsFinalRenderClient(baseURLString: "https://api.example.com"),
+            finalRenderClient: AnimateFinalRenderClient(baseURLString: "https://api.example.com"),
             galleryStore: TestGalleryStore()
         )
     }

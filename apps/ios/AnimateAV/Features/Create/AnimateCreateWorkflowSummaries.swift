@@ -83,7 +83,7 @@ struct MomentsMediaImportProgress: Equatable {
 
 struct AnimateCreateStorySummary: Equatable {
     var savedScenes: [MomentStoryScene] = []
-    var generatedScenes: [MomentsStorySceneResponse] = []
+    var generatedScenes: [AnimateStorySceneResponse] = []
     var isPlanning = false
     var statusMessage: String?
 

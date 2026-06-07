@@ -1,9 +1,9 @@
 import Foundation
 
-struct MomentsWorkspaceCommandClient {
+struct AnimateWorkspaceCommandClient {
     var baseURLString: String
     var session: URLSession = .shared
-    var retryPolicy = MomentsNetworkRetryPolicy()
+    var retryPolicy = AnimateNetworkRetryPolicy()
 
     var isConfigured: Bool {
         URL(string: baseURLString.trimmingCharacters(in: .whitespacesAndNewlines)) != nil
@@ -53,7 +53,7 @@ struct MomentsWorkspaceCommandClient {
         body: Body
     ) async throws -> Response {
         guard var endpoint = URL(string: baseURLString.trimmingCharacters(in: .whitespacesAndNewlines)) else {
-            throw MomentsAPIError(code: "moments_workspace_not_configured", message: "Moments workspace commands are not configured.")
+            throw AnimateAPIError(code: "moments_workspace_not_configured", message: "Moments workspace commands are not configured.")
         }
 
         endpoint.appendPathComponent("v1")
@@ -73,7 +73,7 @@ struct MomentsWorkspaceCommandClient {
             try await session.data(for: request)
         }
         guard let httpResponse = response as? HTTPURLResponse, 200..<300 ~= httpResponse.statusCode else {
-            throw MomentsAPIError.decode(
+            throw AnimateAPIError.decode(
                 from: data,
                 fallbackCode: "moments_workspace_command_failed",
                 fallbackMessage: "Moment update failed."

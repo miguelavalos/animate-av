@@ -1,9 +1,9 @@
 import Foundation
 
-struct MomentsVideoQuoteClient {
+struct AnimateVideoQuoteClient {
     var baseURLString: String
     var session: URLSession = .shared
-    var retryPolicy = MomentsNetworkRetryPolicy()
+    var retryPolicy = AnimateNetworkRetryPolicy()
 
     var isConfigured: Bool {
         URL(string: baseURLString.trimmingCharacters(in: .whitespacesAndNewlines)) != nil
@@ -17,7 +17,7 @@ struct MomentsVideoQuoteClient {
         bearerToken: String
     ) async throws -> AnimateVideoQuoteResponse {
         guard let baseURL = URL(string: baseURLString.trimmingCharacters(in: .whitespacesAndNewlines)) else {
-            throw MomentsVideoQuoteError.apiNotConfigured
+            throw AnimateVideoQuoteError.apiNotConfigured
         }
 
         let endpoint = baseURL
@@ -43,10 +43,10 @@ struct MomentsVideoQuoteClient {
             try await session.data(for: request)
         }
         guard let httpResponse = response as? HTTPURLResponse, 200..<300 ~= httpResponse.statusCode else {
-            throw MomentsAPIError.decode(
+            throw AnimateAPIError.decode(
                 from: data,
                 fallbackCode: "animate_video_quote_failed",
-                fallbackMessage: MomentsVideoQuoteError.quoteFailed.localizedDescription
+                fallbackMessage: AnimateVideoQuoteError.quoteFailed.localizedDescription
             )
         }
 
@@ -101,7 +101,7 @@ struct AnimateVideoBrandingPlacement: Decodable, Equatable {
     let safeAreaMarginPercentRange: [Int]
 }
 
-enum MomentsVideoQuoteError: LocalizedError {
+enum AnimateVideoQuoteError: LocalizedError {
     case apiNotConfigured
     case quoteFailed
 

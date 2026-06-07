@@ -175,7 +175,7 @@ struct MomentsRenderPlan: Decodable, Equatable {
     let qualityWarnings: [String]
 }
 
-enum MomentsFinalRenderRules {
+enum AnimateFinalRenderRules {
     enum BlockReason {
         case missingMoment
         case insufficientCredits

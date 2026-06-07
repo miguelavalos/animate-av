@@ -1,6 +1,6 @@
 import Foundation
 
-struct MomentsNetworkRetryPolicy: Sendable {
+struct AnimateNetworkRetryPolicy: Sendable {
     var maximumRetries = 2
     var baseDelayNanoseconds: UInt64 = 300_000_000
 
@@ -45,10 +45,10 @@ struct MomentsNetworkRetryPolicy: Sendable {
     }
 }
 
-struct MomentsFinalRenderClient {
+struct AnimateFinalRenderClient {
     var baseURLString: String
     var session: URLSession = .shared
-    var retryPolicy = MomentsNetworkRetryPolicy()
+    var retryPolicy = AnimateNetworkRetryPolicy()
 
     var isConfigured: Bool {
         URL(string: baseURLString.trimmingCharacters(in: .whitespacesAndNewlines)) != nil
@@ -66,7 +66,7 @@ struct MomentsFinalRenderClient {
         generatedImageArtifactId: String? = nil
     ) async throws -> MomentsRenderPlanResponse {
         guard let baseURL = URL(string: baseURLString.trimmingCharacters(in: .whitespacesAndNewlines)) else {
-            throw MomentsFinalRenderError.apiNotConfigured
+            throw AnimateFinalRenderError.apiNotConfigured
         }
 
         let endpoint = baseURL
@@ -106,10 +106,10 @@ struct MomentsFinalRenderClient {
             try await session.data(for: request)
         }
         guard let httpResponse = response as? HTTPURLResponse, 200..<300 ~= httpResponse.statusCode else {
-            throw MomentsAPIError.decode(
+            throw AnimateAPIError.decode(
                 from: data,
                 fallbackCode: "moments_render_plan_failed",
-                fallbackMessage: MomentsFinalRenderError.planFailed.localizedDescription
+                fallbackMessage: AnimateFinalRenderError.planFailed.localizedDescription
             )
         }
 
@@ -130,7 +130,7 @@ struct MomentsFinalRenderClient {
         renderOptionId: String?
     ) async throws -> MomentsConfirmFinalRenderResponse {
         guard let baseURL = URL(string: baseURLString.trimmingCharacters(in: .whitespacesAndNewlines)) else {
-            throw MomentsFinalRenderError.apiNotConfigured
+            throw AnimateFinalRenderError.apiNotConfigured
         }
 
         let endpoint = baseURL
@@ -173,10 +173,10 @@ struct MomentsFinalRenderClient {
             try await session.data(for: request)
         }
         guard let httpResponse = response as? HTTPURLResponse, 200..<300 ~= httpResponse.statusCode else {
-            throw MomentsAPIError.decode(
+            throw AnimateAPIError.decode(
                 from: data,
                 fallbackCode: "moments_final_render_confirm_failed",
-                fallbackMessage: MomentsFinalRenderError.generationFailed.localizedDescription
+                fallbackMessage: AnimateFinalRenderError.generationFailed.localizedDescription
             )
         }
 
@@ -189,7 +189,7 @@ struct MomentsFinalRenderClient {
         bearerToken: String
     ) async throws -> MomentsArtifactDownloadResponse {
         guard let baseURL = URL(string: baseURLString.trimmingCharacters(in: .whitespacesAndNewlines)) else {
-            throw MomentsFinalRenderError.apiNotConfigured
+            throw AnimateFinalRenderError.apiNotConfigured
         }
 
         let endpoint = baseURL
@@ -214,10 +214,10 @@ struct MomentsFinalRenderClient {
             try await session.data(for: request)
         }
         guard let httpResponse = response as? HTTPURLResponse, 200..<300 ~= httpResponse.statusCode else {
-            throw MomentsAPIError.decode(
+            throw AnimateAPIError.decode(
                 from: data,
                 fallbackCode: "moments_artifact_download_failed",
-                fallbackMessage: MomentsFinalRenderError.downloadPreparationFailed.localizedDescription
+                fallbackMessage: AnimateFinalRenderError.downloadPreparationFailed.localizedDescription
             )
         }
 
@@ -229,7 +229,7 @@ struct MomentsFinalRenderClient {
         bearerToken: String
     ) async throws -> MomentsArtifactDownloadResponse {
         guard let baseURL = URL(string: baseURLString.trimmingCharacters(in: .whitespacesAndNewlines)) else {
-            throw MomentsFinalRenderError.apiNotConfigured
+            throw AnimateFinalRenderError.apiNotConfigured
         }
 
         let endpoint = baseURL
@@ -249,10 +249,10 @@ struct MomentsFinalRenderClient {
             try await session.data(for: request)
         }
         guard let httpResponse = response as? HTTPURLResponse, 200..<300 ~= httpResponse.statusCode else {
-            throw MomentsAPIError.decode(
+            throw AnimateAPIError.decode(
                 from: data,
                 fallbackCode: "animate_image_artifact_download_failed",
-                fallbackMessage: MomentsFinalRenderError.downloadPreparationFailed.localizedDescription
+                fallbackMessage: AnimateFinalRenderError.downloadPreparationFailed.localizedDescription
             )
         }
 
@@ -261,7 +261,7 @@ struct MomentsFinalRenderClient {
 
     func downloadFinalArtifact(from response: MomentsArtifactDownloadResponse) async throws -> URL {
         guard let downloadURL = URL(string: response.downloadUrl) else {
-            throw MomentsFinalRenderError.downloadPreparationFailed
+            throw AnimateFinalRenderError.downloadPreparationFailed
         }
 
         var request = URLRequest(url: downloadURL)
@@ -274,7 +274,7 @@ struct MomentsFinalRenderClient {
             try await session.download(for: request)
         }
         guard let httpResponse = urlResponse as? HTTPURLResponse, 200..<300 ~= httpResponse.statusCode else {
-            throw MomentsFinalRenderError.downloadFailed
+            throw AnimateFinalRenderError.downloadFailed
         }
 
         return fileURL
@@ -302,7 +302,7 @@ struct MomentsFinalRenderClient {
     }
 }
 
-enum MomentsFinalRenderError: LocalizedError {
+enum AnimateFinalRenderError: LocalizedError {
     case apiNotConfigured
     case planFailed
     case generationFailed

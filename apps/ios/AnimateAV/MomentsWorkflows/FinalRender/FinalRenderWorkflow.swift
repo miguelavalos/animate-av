@@ -18,9 +18,9 @@ final class FinalRenderWorkflow: WorkspaceObservingWorkflow {
     private let currentUserProvider: any AnimateCurrentUserProviding
     private let authTokenProvider: any AnimateAuthTokenProviding
     private let creditBalanceProvider: any AnimateCreditBalanceProviding
-    private let finalRenderClient: MomentsFinalRenderClient
-    private let videoQuoteClient: MomentsVideoQuoteClient
-    private let imageGenerationAccountingClient: MomentsImageGenerationAccountingClient?
+    private let finalRenderClient: AnimateFinalRenderClient
+    private let videoQuoteClient: AnimateVideoQuoteClient
+    private let imageGenerationAccountingClient: AnimateImageGenerationAccountingClient?
     private let galleryStore: any AnimateGalleryStoring
     private let logger = Logger(subsystem: "com.avalsys.animateav", category: "final-render")
     private var downloadingArtifactIds = Set<String>()
@@ -32,16 +32,16 @@ final class FinalRenderWorkflow: WorkspaceObservingWorkflow {
         authTokenProvider: any AnimateAuthTokenProviding,
         creditBalanceProvider: any AnimateCreditBalanceProviding,
         workspaceObserver: any MomentsActiveWorkspaceObserving,
-        finalRenderClient: MomentsFinalRenderClient,
-        videoQuoteClient: MomentsVideoQuoteClient? = nil,
-        imageGenerationAccountingClient: MomentsImageGenerationAccountingClient? = nil,
+        finalRenderClient: AnimateFinalRenderClient,
+        videoQuoteClient: AnimateVideoQuoteClient? = nil,
+        imageGenerationAccountingClient: AnimateImageGenerationAccountingClient? = nil,
         galleryStore: any AnimateGalleryStoring = AnimateGalleryStore()
     ) {
         self.currentUserProvider = currentUserProvider
         self.authTokenProvider = authTokenProvider
         self.creditBalanceProvider = creditBalanceProvider
         self.finalRenderClient = finalRenderClient
-        self.videoQuoteClient = videoQuoteClient ?? MomentsVideoQuoteClient(baseURLString: finalRenderClient.baseURLString)
+        self.videoQuoteClient = videoQuoteClient ?? AnimateVideoQuoteClient(baseURLString: finalRenderClient.baseURLString)
         self.imageGenerationAccountingClient = imageGenerationAccountingClient
         self.galleryStore = galleryStore
         super.init(workspaceObserver: workspaceObserver)
@@ -93,7 +93,7 @@ final class FinalRenderWorkflow: WorkspaceObservingWorkflow {
                 removeBranding: removesWatermark,
                 bearerToken: bearerToken
             )
-        } catch let error as MomentsAPIError {
+        } catch let error as AnimateAPIError {
             logger.error("Video quote API error code=\(error.code, privacy: .public) message=\(error.message, privacy: .public)")
             videoQuote = nil
             statusMessage = error.localizedDescription
@@ -110,7 +110,7 @@ final class FinalRenderWorkflow: WorkspaceObservingWorkflow {
                 ]
             )
             videoQuote = nil
-            statusMessage = MomentsVideoQuoteError.quoteFailed.localizedDescription
+            statusMessage = AnimateVideoQuoteError.quoteFailed.localizedDescription
         }
     }
 
@@ -173,7 +173,7 @@ final class FinalRenderWorkflow: WorkspaceObservingWorkflow {
                     await creditBalanceProvider.refreshCreditBalance()
                 }
             }
-        } catch let error as MomentsAPIError {
+        } catch let error as AnimateAPIError {
             guard isCurrentWorkflowGeneration(generation) else { return }
             logger.error("Final render plan API error code=\(error.code, privacy: .public) message=\(error.message, privacy: .public) momentId=\(momentId, privacy: .public)")
             MomentsWorkflowDiagnostics.capture(
@@ -279,7 +279,7 @@ final class FinalRenderWorkflow: WorkspaceObservingWorkflow {
             await creditBalanceProvider.refreshCreditBalance()
             workspaceObserver.observeWorkspace(ownerUserId: ownerUserId, momentId: momentId)
             statusMessage = L10n.string("workflow.final.creatingVideo")
-        } catch let error as MomentsAPIError {
+        } catch let error as AnimateAPIError {
             guard isCurrentWorkflowGeneration(generation) else { return }
             logger.error("Final render API error code=\(error.code, privacy: .public) message=\(error.message, privacy: .public) momentId=\(momentId, privacy: .public)")
             MomentsWorkflowDiagnostics.capture(
@@ -376,7 +376,7 @@ final class FinalRenderWorkflow: WorkspaceObservingWorkflow {
                     selectedSourceLocalIdentifiers: selectedSourceLocalIdentifiers,
                     sourceImageUploadId: sourceImageUploadId
                 )
-            } catch let error as MomentsAPIError where error.isRetryableMediaVisibilityError && attempt < 2 {
+            } catch let error as AnimateAPIError where error.isRetryableMediaVisibilityError && attempt < 2 {
                 attempt += 1
                 try await Task.sleep(nanoseconds: UInt64(attempt) * 750_000_000)
             }
@@ -653,8 +653,8 @@ final class FinalRenderWorkflow: WorkspaceObservingWorkflow {
         statusMessage = nil
     }
 
-    private func generateBlockMessage(_ availability: MomentsFinalRenderRules.Availability) -> String {
-        MomentsFinalRenderRules.availabilityMessage(
+    private func generateBlockMessage(_ availability: AnimateFinalRenderRules.Availability) -> String {
+        AnimateFinalRenderRules.availabilityMessage(
             availability,
             missingMomentMessage: L10n.string("workflow.final.missingMoment"),
             insufficientCreditsMessage: L10n.string("workflow.final.addCredits")
@@ -684,7 +684,7 @@ private struct PreparedVideoSourceUpload {
     let sourceImageUploadId: String
 }
 
-private extension MomentsAPIError {
+private extension AnimateAPIError {
     var isRetryableMediaVisibilityError: Bool {
         code == "insufficient_allowed_media"
             || code == "moments_final_render_source_media_required"

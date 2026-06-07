@@ -1,7 +1,7 @@
 import CryptoKit
 import Foundation
 
-struct MomentsStoryMedia: Encodable {
+struct AnimateStoryMedia: Encodable {
     let mediaAssetId: String
     let mediaKind: String
     let sortOrder: Int
@@ -9,7 +9,7 @@ struct MomentsStoryMedia: Encodable {
     let moderationStatus: String
 }
 
-struct MomentsStoryRequest: Encodable {
+struct AnimateStoryRequest: Encodable {
     let appId = "animateav"
     let momentId: String
     let creationMode: String
@@ -21,16 +21,16 @@ struct MomentsStoryRequest: Encodable {
     let occasion: String
     let details: String
     let narrationVoice = "avi_clear"
-    let media: [MomentsStoryMedia]
+    let media: [AnimateStoryMedia]
     let safetyAcknowledged = true
     let idempotencyKey: String
 }
 
-enum MomentsStoryInputSignature {
+enum AnimateStoryInputSignature {
     static func make(
         momentId: String,
         form: MomentSetupForm,
-        selectedMedia: [MomentsStoryMedia]
+        selectedMedia: [AnimateStoryMedia]
     ) -> String {
         let mediaSignature = selectedMedia
             .filter(\.selected)
@@ -61,7 +61,7 @@ enum MomentsStoryInputSignature {
     }
 }
 
-struct MomentsStorySceneResponse: Decodable, Identifiable, Equatable {
+struct AnimateStorySceneResponse: Decodable, Identifiable, Equatable {
     var id: Int { sceneIndex }
     let sceneIndex: Int
     let mediaAssetIds: [String]
@@ -75,7 +75,7 @@ struct MomentsStorySceneResponse: Decodable, Identifiable, Equatable {
     let editable: Bool
 }
 
-struct MomentsStoryResponse: Decodable, Equatable {
+struct AnimateStoryResponse: Decodable, Equatable {
     let appId: String
     let momentId: String
     let workflowRunId: String
@@ -87,11 +87,11 @@ struct MomentsStoryResponse: Decodable, Equatable {
     let errorMessage: String?
     let narrationVoice: String
     let helperCopy: String
-    let scenes: [MomentsStorySceneResponse]
+    let scenes: [AnimateStorySceneResponse]
     let generatedAt: String
 }
 
-enum MomentsStoryRules {
+enum AnimateStoryRules {
     enum BlockReason {
         case missingMedia
         case tooFewSelectedMedia(missingCount: Int)

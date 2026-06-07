@@ -68,4 +68,4 @@ extension MomentsRepository:
     GalleryMomentsObserving,
     MomentWorkspaceObserving {}
 
-extension MomentsWorkspaceCommandClient: MomentsCreating, MomentsDeleting, MomentsTitleUpdating {}
+extension AnimateWorkspaceCommandClient: MomentsCreating, MomentsDeleting, MomentsTitleUpdating {}

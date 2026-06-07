@@ -20,7 +20,7 @@ struct MomentsSelectedMedia: Identifiable, Equatable {
     }
 }
 
-struct MomentsPreparedUpload: Decodable, Equatable, Sendable {
+struct AnimatePreparedUpload: Decodable, Equatable, Sendable {
     let appId: String
     let momentId: String
     let mediaAssetId: String
@@ -33,7 +33,7 @@ struct MomentsPreparedUpload: Decodable, Equatable, Sendable {
     let generatedAt: String
 }
 
-struct MomentsUploadCompletion: Decodable, Equatable, Sendable {
+struct AnimateUploadCompletion: Decodable, Equatable, Sendable {
     let appId: String
     let momentId: String
     let mediaAssetId: String

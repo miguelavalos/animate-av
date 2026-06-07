@@ -1,0 +1,27 @@
+import Foundation
+
+struct AnimateAPIError: LocalizedError {
+    let code: String
+    let message: String
+
+    var errorDescription: String? {
+        message
+    }
+
+    static func decode(from data: Data, fallbackCode: String, fallbackMessage: String) -> AnimateAPIError {
+        if let envelope = try? JSONDecoder().decode(AnimateAPIErrorEnvelope.self, from: data) {
+            return AnimateAPIError(code: envelope.error.code, message: envelope.error.message)
+        }
+
+        return AnimateAPIError(code: fallbackCode, message: fallbackMessage)
+    }
+}
+
+private struct AnimateAPIErrorEnvelope: Decodable {
+    let error: AnimateAPIErrorPayload
+}
+
+private struct AnimateAPIErrorPayload: Decodable {
+    let code: String
+    let message: String
+}

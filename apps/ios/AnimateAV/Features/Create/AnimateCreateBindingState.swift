@@ -22,7 +22,7 @@ struct AnimateCreateMediaUploadState {
 struct AnimateCreateStoryState {
     let activeWorkspace: MomentWorkspace?
     let savedScenes: [MomentStoryScene]
-    let generatedScenes: [MomentsStorySceneResponse]
+    let generatedScenes: [AnimateStorySceneResponse]
     let statusMessage: String?
     let isPlanning: Bool
 }

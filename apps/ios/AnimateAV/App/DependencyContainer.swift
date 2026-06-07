@@ -18,8 +18,8 @@ final class MomentsDependencyContainer: ObservableObject {
     let inProgressViewModel: AnimateInProgressViewModel
     let galleryViewModel: AnimateGalleryViewModel
     let aviViewModel: AnimateAviViewModel
-    private let realtimeSessionClient: MomentsRealtimeSessionClient
-    private let realtimeSessionStore: MomentsRealtimeSessionStore
+    private let realtimeSessionClient: AnimateRealtimeSessionClient
+    private let realtimeSessionStore: AnimateRealtimeSessionStore
     private var realtimeSessionTask: Task<Void, Never>?
     private var observedOwnerUserId: ObservedOwnerUserId = .unobserved
 

@@ -11,7 +11,7 @@ final class AnimateGalleryViewModel: ObservableObject {
     private let galleryStore: any AnimateGalleryStoring
     private let galleryMomentsProvider: (any GalleryMomentsListProviding)?
     private let authTokenProvider: (any AnimateAuthTokenProviding)?
-    private let finalRenderClient: MomentsFinalRenderClient?
+    private let finalRenderClient: AnimateFinalRenderClient?
     private var remoteArtifacts: [MomentArtifact] = []
     private var downloadedImageURLs: [String: URL] = [:]
 
@@ -19,7 +19,7 @@ final class AnimateGalleryViewModel: ObservableObject {
         galleryStore: any AnimateGalleryStoring = AnimateGalleryStore(),
         galleryMomentsProvider: (any GalleryMomentsListProviding)? = nil,
         authTokenProvider: (any AnimateAuthTokenProviding)? = nil,
-        finalRenderClient: MomentsFinalRenderClient? = nil
+        finalRenderClient: AnimateFinalRenderClient? = nil
     ) {
         self.galleryStore = galleryStore
         self.galleryMomentsProvider = galleryMomentsProvider

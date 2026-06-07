@@ -38,7 +38,7 @@ enum MediaPickerImport {
     ) async throws -> [MomentsSelectedMedia] {
         let status = await requestPhotoLibraryAccess()
         guard status == .authorized || status == .limited else {
-            throw MomentsUploadError.photoLibraryAccessDenied
+            throw AnimateUploadError.photoLibraryAccessDenied
         }
 
         let candidates = mediaAssets
@@ -75,7 +75,7 @@ enum MediaPickerImport {
 
     private static func loadMedia(from item: PhotosPickerItem, sortOrder: Int) async throws -> MomentsSelectedMedia {
         guard let data = try await item.loadTransferable(type: Data.self) else {
-            throw MomentsUploadError.unreadableSelection
+            throw AnimateUploadError.unreadableSelection
         }
 
         let kind = item.supportedContentTypes.contains(where: { $0.conforms(to: .movie) }) ? "video" : "photo"
@@ -182,7 +182,7 @@ enum MediaPickerImport {
         case .video:
             return try await loadVideoAsset(asset, sortOrder: sortOrder)
         default:
-            throw MomentsUploadError.unreadableSelection
+            throw AnimateUploadError.unreadableSelection
         }
     }
 
@@ -237,7 +237,7 @@ enum MediaPickerImport {
                 }
 
                 guard let data else {
-                    continuation.resume(throwing: MomentsUploadError.unreadableSelection)
+                    continuation.resume(throwing: AnimateUploadError.unreadableSelection)
                     return
                 }
 
@@ -249,7 +249,7 @@ enum MediaPickerImport {
     private static func videoData(for asset: PHAsset) async throws -> (Data, String) {
         guard let resource = PHAssetResource.assetResources(for: asset)
             .first(where: { $0.type == .video || $0.type == .fullSizeVideo }) else {
-            throw MomentsUploadError.unreadableSelection
+            throw AnimateUploadError.unreadableSelection
         }
         let options = PHAssetResourceRequestOptions()
         options.isNetworkAccessAllowed = true
@@ -296,7 +296,7 @@ enum MediaPickerImport {
     ) throws -> (data: Data, filename: String, contentType: String) {
         guard let image = UIImage(data: data),
               let jpegData = image.jpegData(compressionQuality: 0.92) else {
-            throw MomentsUploadError.unreadableSelection
+            throw AnimateUploadError.unreadableSelection
         }
         return (jpegData, jpegFilename(from: filename), "image/jpeg")
     }

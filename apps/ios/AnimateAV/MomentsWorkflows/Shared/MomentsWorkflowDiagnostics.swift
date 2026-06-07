@@ -35,13 +35,13 @@ enum MomentsWorkflowDiagnostics {
     }
 
     static func errorCode(for error: any Error) -> String? {
-        if let apiError = error as? MomentsAPIError {
+        if let apiError = error as? AnimateAPIError {
             return apiError.code
         }
         if let storyError = error as? StoryWorkflowError {
             return String(describing: storyError)
         }
-        if let renderError = error as? MomentsFinalRenderError {
+        if let renderError = error as? AnimateFinalRenderError {
             return String(describing: renderError)
         }
         if let purchaseError = error as? AnimatePurchaseError {

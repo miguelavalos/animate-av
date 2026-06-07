@@ -59,7 +59,7 @@ final class AnimateCreateViewModel: ObservableObject {
     @Published private(set) var autoStyleSuggestion: MomentsMediaAutoStyleSuggestion?
     @Published private(set) var canUndoAutoStyleSuggestion = false
     @Published private(set) var savedScenes: [MomentStoryScene] = []
-    @Published private(set) var generatedScenes: [MomentsStorySceneResponse] = []
+    @Published private(set) var generatedScenes: [AnimateStorySceneResponse] = []
     @Published private(set) var storyStatusMessage: String?
     @Published private(set) var isPlanningStory = false
     @Published var isPreparingStory = false
@@ -88,7 +88,7 @@ final class AnimateCreateViewModel: ObservableObject {
     private(set) var storyWorkflow: StoryWorkflow?
     private(set) var finalRenderWorkflow: FinalRenderWorkflow?
     private var authTokenProvider: (any AnimateAuthTokenProviding)?
-    private var imageGenerationAccountingClient: MomentsImageGenerationAccountingClient?
+    private var imageGenerationAccountingClient: AnimateImageGenerationAccountingClient?
     let operationRunner = AnimateCreateOperationRunner()
     var cancellables = Set<AnyCancellable>()
     private var autoStyleMediaSignature: String?
@@ -156,7 +156,7 @@ final class AnimateCreateViewModel: ObservableObject {
         storyWorkflow: StoryWorkflow,
         finalRenderWorkflow: FinalRenderWorkflow,
         authTokenProvider: any AnimateAuthTokenProviding,
-        imageGenerationAccountingClient: MomentsImageGenerationAccountingClient
+        imageGenerationAccountingClient: AnimateImageGenerationAccountingClient
     ) {
         cancelOperations()
         self.momentCreationWorkflow = momentCreationWorkflow
@@ -247,7 +247,7 @@ final class AnimateCreateViewModel: ObservableObject {
               let imageGenerationAccountingClient,
               imageGenerationAccountingClient.isConfigured
         else {
-            imageGenerationAvailabilityMessage = MomentsImageGenerationAccountingError.apiNotConfigured.localizedDescription
+            imageGenerationAvailabilityMessage = AnimateImageGenerationAccountingError.apiNotConfigured.localizedDescription
             return
         }
 
@@ -256,7 +256,7 @@ final class AnimateCreateViewModel: ObservableObject {
         Task { [weak self, authTokenProvider, imageGenerationAccountingClient] in
             do {
                 guard let bearerToken = try await authTokenProvider.currentBearerToken() else {
-                    throw MomentsImageGenerationAccountingError.signInRequired
+                    throw AnimateImageGenerationAccountingError.signInRequired
                 }
                 let availability = try await imageGenerationAccountingClient.fetchAvailability(bearerToken: bearerToken)
                 await MainActor.run {
@@ -301,7 +301,7 @@ final class AnimateCreateViewModel: ObservableObject {
               let imageGenerationAccountingClient,
               imageGenerationAccountingClient.isConfigured
         else {
-            imageGenerationAvailabilityMessage = MomentsImageGenerationAccountingError.apiNotConfigured.localizedDescription
+            imageGenerationAvailabilityMessage = AnimateImageGenerationAccountingError.apiNotConfigured.localizedDescription
             return
         }
 
@@ -310,7 +310,7 @@ final class AnimateCreateViewModel: ObservableObject {
         Task { [weak self, authTokenProvider, imageGenerationAccountingClient] in
             do {
                 guard let bearerToken = try await authTokenProvider.currentBearerToken() else {
-                    throw MomentsImageGenerationAccountingError.signInRequired
+                    throw AnimateImageGenerationAccountingError.signInRequired
                 }
                 let sha256 = SHA256.hash(data: imageData)
                     .map { String(format: "%02x", $0) }
@@ -361,7 +361,7 @@ final class AnimateCreateViewModel: ObservableObject {
               let imageGenerationAccountingClient,
               imageGenerationAccountingClient.isConfigured
         else {
-            imageGenerationAvailabilityMessage = MomentsImageGenerationAccountingError.apiNotConfigured.localizedDescription
+            imageGenerationAvailabilityMessage = AnimateImageGenerationAccountingError.apiNotConfigured.localizedDescription
             return
         }
 
@@ -370,7 +370,7 @@ final class AnimateCreateViewModel: ObservableObject {
         Task { [weak self, authTokenProvider, imageGenerationAccountingClient] in
             do {
                 guard let bearerToken = try await authTokenProvider.currentBearerToken() else {
-                    throw MomentsImageGenerationAccountingError.signInRequired
+                    throw AnimateImageGenerationAccountingError.signInRequired
                 }
                 let response = try await imageGenerationAccountingClient.purchasePack(
                     idempotencyKey: "animate-image-pack-\(UUID().uuidString)",
@@ -597,7 +597,7 @@ final class AnimateCreateViewModel: ObservableObject {
     }
 
     func currentStoryInputSignature(momentId: String) -> String {
-        MomentsStoryInputSignature.make(
+        AnimateStoryInputSignature.make(
             momentId: momentId,
             form: form,
             selectedMedia: currentStorySignatureMedia()
@@ -606,9 +606,9 @@ final class AnimateCreateViewModel: ObservableObject {
 
     func currentStoryInputSignature(
         momentId: String,
-        persistedMedia: [MomentsStoryMedia]?
+        persistedMedia: [AnimateStoryMedia]?
     ) -> String {
-        MomentsStoryInputSignature.make(
+        AnimateStoryInputSignature.make(
             momentId: momentId,
             form: form,
             selectedMedia: persistedMedia ?? currentStorySignatureMedia()
@@ -745,7 +745,7 @@ final class AnimateCreateViewModel: ObservableObject {
         return recordedSignature
     }
 
-    private func currentStorySignatureMedia() -> [MomentsStoryMedia] {
+    private func currentStorySignatureMedia() -> [AnimateStoryMedia] {
         let localMedia = effectiveSelectedMedia
             .filter(\.selected)
             .sorted { $0.sortOrder < $1.sortOrder }
@@ -758,7 +758,7 @@ final class AnimateCreateViewModel: ObservableObject {
             return localMedia
                 .map {
                     let syncedMedia = syncedMediaBySourceIdentifier[$0.sourceLocalIdentifier]
-                    return MomentsStoryMedia(
+                    return AnimateStoryMedia(
                         mediaAssetId: syncedMedia?.id ?? $0.id.uuidString,
                         mediaKind: syncedMedia?.kind ?? $0.kind,
                         sortOrder: $0.sortOrder,
@@ -772,7 +772,7 @@ final class AnimateCreateViewModel: ObservableObject {
             .filter(\.selected)
             .sorted { $0.sortOrder < $1.sortOrder }
             .map {
-                MomentsStoryMedia(
+                AnimateStoryMedia(
                     mediaAssetId: $0.id,
                     mediaKind: $0.kind,
                     sortOrder: Int($0.sortOrder),
@@ -808,14 +808,14 @@ final class AnimateCreateViewModel: ObservableObject {
             }
     }
 
-    private func currentWorkspaceStorySignatureMedia() -> [MomentsStoryMedia]? {
+    private func currentWorkspaceStorySignatureMedia() -> [AnimateStoryMedia]? {
         let mediaAssets = effectiveActiveWorkspace?.mediaAssets ?? []
         guard !mediaAssets.isEmpty else { return nil }
         let selectedAssets = mediaAssets.filter(\.selected)
         return (selectedAssets.isEmpty ? mediaAssets : selectedAssets)
             .sorted { $0.sortOrder < $1.sortOrder }
             .map {
-                MomentsStoryMedia(
+                AnimateStoryMedia(
                     mediaAssetId: $0.id,
                     mediaKind: $0.kind,
                     sortOrder: Int($0.sortOrder),

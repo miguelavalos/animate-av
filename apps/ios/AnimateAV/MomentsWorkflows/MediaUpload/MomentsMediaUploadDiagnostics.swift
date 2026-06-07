@@ -100,10 +100,10 @@ enum MomentsMediaUploadDiagnostics {
     }
 
     private static func errorCode(for error: any Error) -> String? {
-        if let apiError = error as? MomentsAPIError {
+        if let apiError = error as? AnimateAPIError {
             return apiError.code
         }
-        if let uploadError = error as? MomentsUploadError {
+        if let uploadError = error as? AnimateUploadError {
             return String(describing: uploadError)
         }
         return nil

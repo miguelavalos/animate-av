@@ -12,7 +12,7 @@ final class MediaUploadWorkflow: WorkspaceObservingWorkflow {
 
     private let currentUserProvider: any AnimateCurrentUserProviding
     private let authTokenProvider: any AnimateAuthTokenProviding
-    private let uploadClient: MomentsUploadClient
+    private let uploadClient: AnimateUploadClient
     private let logger = Logger(subsystem: "com.avalsys.animateav", category: "media-upload")
     private var restoredWorkspaceMomentId: String?
 
@@ -20,7 +20,7 @@ final class MediaUploadWorkflow: WorkspaceObservingWorkflow {
         currentUserProvider: any AnimateCurrentUserProviding,
         authTokenProvider: any AnimateAuthTokenProviding,
         workspaceObserver: any MomentsActiveWorkspaceObserving,
-        uploadClient: MomentsUploadClient
+        uploadClient: AnimateUploadClient
     ) {
         self.currentUserProvider = currentUserProvider
         self.authTokenProvider = authTokenProvider
@@ -119,7 +119,7 @@ final class MediaUploadWorkflow: WorkspaceObservingWorkflow {
         }
     }
 
-    func persistSelectedMedia(momentId: String) async -> [MomentsStoryMedia]? {
+    func persistSelectedMedia(momentId: String) async -> [AnimateStoryMedia]? {
         await persistSelectedMedia(
             momentId: momentId,
             requiresProductStateSave: true,
@@ -141,7 +141,7 @@ final class MediaUploadWorkflow: WorkspaceObservingWorkflow {
         momentId: String,
         requiresProductStateSave: Bool,
         saveFailureMessage: String
-    ) async -> [MomentsStoryMedia]? {
+    ) async -> [AnimateStoryMedia]? {
         guard let ownerUserId = currentUserProvider.currentUserId else {
             statusMessage = L10n.string("workflow.media.signInPrepareStory")
             return nil
@@ -160,9 +160,9 @@ final class MediaUploadWorkflow: WorkspaceObservingWorkflow {
             guard let sourceIdentifier = $1.platformMediaAssetId else { return }
             $0[sourceIdentifier] = $1
         }
-        let alreadySyncedMedia = mediaToSave.compactMap { media -> MomentsStoryMedia? in
+        let alreadySyncedMedia = mediaToSave.compactMap { media -> AnimateStoryMedia? in
             guard let synced = syncedMediaBySourceIdentifier[media.sourceLocalIdentifier] else { return nil }
-            return MomentsStoryMedia(
+            return AnimateStoryMedia(
                 mediaAssetId: synced.id,
                 mediaKind: synced.kind,
                 sortOrder: media.sortOrder,
@@ -217,10 +217,10 @@ final class MediaUploadWorkflow: WorkspaceObservingWorkflow {
                 "Persisted selected media saved=\(result.savedMedia.count, privacy: .public) total=\((alreadySyncedMedia.count + result.savedMedia.count), privacy: .public)"
             )
             return (alreadySyncedMedia + result.savedMedia).sorted { $0.sortOrder < $1.sortOrder }
-        } catch MomentsUploadError.signedUploadUnavailable {
+        } catch AnimateUploadError.signedUploadUnavailable {
             guard isCurrentWorkflowGeneration(generation) else { return nil }
             MomentsMediaUploadDiagnostics.capturePersistenceError(
-                MomentsUploadError.signedUploadUnavailable,
+                AnimateUploadError.signedUploadUnavailable,
                 step: "signed_upload_unavailable",
                 selectedCount: mediaToSave.count,
                 pendingCount: pendingMediaToSave.count,
@@ -234,7 +234,7 @@ final class MediaUploadWorkflow: WorkspaceObservingWorkflow {
             isImporting = false
             importProgress = nil
             return nil
-        } catch let error as MomentsAPIError {
+        } catch let error as AnimateAPIError {
             guard isCurrentWorkflowGeneration(generation) else { return nil }
             MomentsMediaUploadDiagnostics.capturePersistenceError(
                 error,
@@ -302,7 +302,7 @@ final class MediaUploadWorkflow: WorkspaceObservingWorkflow {
             } else if expectedSelectedCount > 0 {
                 statusMessage = L10n.string("workflow.media.savedReadyThumbnailsPending")
             }
-        } catch MomentsUploadError.photoLibraryAccessDenied {
+        } catch AnimateUploadError.photoLibraryAccessDenied {
             guard activeWorkspace?.moment.id == workspace.moment.id else { return }
             statusMessage = L10n.string("workflow.media.savedReady")
         } catch {
@@ -410,13 +410,13 @@ final class MediaUploadWorkflow: WorkspaceObservingWorkflow {
         )
     }
 
-    private var activeWorkspaceStoryMedia: [MomentsStoryMedia] {
+    private var activeWorkspaceStoryMedia: [AnimateStoryMedia] {
         let mediaAssets = activeWorkspace?.mediaAssets ?? []
         let selectedAssets = mediaAssets.filter(\.selected)
         return (selectedAssets.isEmpty ? mediaAssets : selectedAssets)
             .sorted { $0.sortOrder < $1.sortOrder }
             .map {
-                MomentsStoryMedia(
+                AnimateStoryMedia(
                     mediaAssetId: $0.id,
                     mediaKind: $0.kind,
                     sortOrder: Int($0.sortOrder),

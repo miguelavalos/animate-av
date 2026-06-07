@@ -1,20 +1,20 @@
 import Foundation
 import OSLog
 
-struct MomentsUploadClient: Sendable {
+struct AnimateUploadClient: Sendable {
     var baseURLString: String
     var session: URLSession = .shared
-    var uploadRetryPolicy = MomentsUploadRetryPolicy()
-    var networkRetryPolicy = MomentsNetworkRetryPolicy()
+    var uploadRetryPolicy = AnimateUploadRetryPolicy()
+    var networkRetryPolicy = AnimateNetworkRetryPolicy()
     private let logger = Logger(subsystem: "com.avalsys.animateav", category: "upload-client")
 
     var isConfigured: Bool {
         URL(string: baseURLString.trimmingCharacters(in: .whitespacesAndNewlines)) != nil
     }
 
-    func prepareUpload(momentId: String, bearerToken: String, media: MomentsSelectedMedia) async throws -> MomentsPreparedUpload {
+    func prepareUpload(momentId: String, bearerToken: String, media: MomentsSelectedMedia) async throws -> AnimatePreparedUpload {
         guard let baseURL = URL(string: baseURLString.trimmingCharacters(in: .whitespacesAndNewlines)) else {
-            throw MomentsUploadError.apiNotConfigured
+            throw AnimateUploadError.apiNotConfigured
         }
 
         let endpoint = baseURL
@@ -28,21 +28,21 @@ struct MomentsUploadClient: Sendable {
         request.httpMethod = "POST"
         request.setValue("application/json", forHTTPHeaderField: "Content-Type")
         request.setValue("Bearer \(bearerToken)", forHTTPHeaderField: "Authorization")
-        request.httpBody = try JSONEncoder().encode(MomentsPrepareUploadRequest(momentId: momentId, media: media))
+        request.httpBody = try JSONEncoder().encode(AnimatePrepareUploadRequest(momentId: momentId, media: media))
 
         let (data, response) = try await retryingData(for: request)
         guard let httpResponse = response as? HTTPURLResponse, 200..<300 ~= httpResponse.statusCode else {
             let statusCode = (response as? HTTPURLResponse)?.statusCode ?? -1
             logger.error("prepare-upload failed status=\(statusCode, privacy: .public)")
-            throw MomentsAPIError.decode(
+            throw AnimateAPIError.decode(
                 from: data,
                 fallbackCode: "moments_upload_prepare_failed",
-                fallbackMessage: MomentsUploadError.prepareFailed.localizedDescription
+                fallbackMessage: AnimateUploadError.prepareFailed.localizedDescription
             )
         }
 
         do {
-            let preparedUpload = try JSONDecoder().decode(MomentsPreparedUpload.self, from: data)
+            let preparedUpload = try JSONDecoder().decode(AnimatePreparedUpload.self, from: data)
             logger.info("prepare-upload succeeded direct=\(preparedUpload.completionUrl != nil, privacy: .public)")
             return preparedUpload
         } catch {
@@ -51,9 +51,9 @@ struct MomentsUploadClient: Sendable {
         }
     }
 
-    func upload(media: MomentsSelectedMedia, preparedUpload: MomentsPreparedUpload) async throws -> MomentsUploadCompletion {
+    func upload(media: MomentsSelectedMedia, preparedUpload: AnimatePreparedUpload) async throws -> AnimateUploadCompletion {
         guard let uploadURL = preparedUpload.uploadUrl else {
-            throw MomentsUploadError.signedUploadUnavailable
+            throw AnimateUploadError.signedUploadUnavailable
         }
 
         var request = URLRequest(url: uploadURL)
@@ -75,7 +75,7 @@ struct MomentsUploadClient: Sendable {
 
         let uploadResponseData = try await uploadWithRetry(request: request, data: media.data)
         do {
-            let completion = try JSONDecoder().decode(MomentsUploadCompletion.self, from: uploadResponseData)
+            let completion = try JSONDecoder().decode(AnimateUploadCompletion.self, from: uploadResponseData)
             logger.info("api upload completed uploadId=\(completion.uploadId, privacy: .public)")
             return completion
         } catch {
@@ -84,27 +84,27 @@ struct MomentsUploadClient: Sendable {
         }
     }
 
-    private func completeUpload(uploadId: String, completionUrl: URL, media: MomentsSelectedMedia) async throws -> MomentsUploadCompletion {
+    private func completeUpload(uploadId: String, completionUrl: URL, media: MomentsSelectedMedia) async throws -> AnimateUploadCompletion {
         var request = URLRequest(url: completionUrl)
         request.httpMethod = "POST"
         request.timeoutInterval = 20
         request.cachePolicy = .reloadIgnoringLocalAndRemoteCacheData
         request.setValue("application/json", forHTTPHeaderField: "Content-Type")
-        request.httpBody = try JSONEncoder().encode(MomentsUploadCompletionIntent(media: media))
+        request.httpBody = try JSONEncoder().encode(AnimateUploadCompletionIntent(media: media))
 
         let (data, response) = try await retryingData(for: request)
         guard let httpResponse = response as? HTTPURLResponse, 200..<300 ~= httpResponse.statusCode else {
             let statusCode = (response as? HTTPURLResponse)?.statusCode ?? -1
             logger.error("direct upload complete failed uploadId=\(uploadId, privacy: .public) status=\(statusCode, privacy: .public)")
-            throw MomentsAPIError.decode(
+            throw AnimateAPIError.decode(
                 from: data,
                 fallbackCode: "moments_upload_complete_failed",
-                fallbackMessage: MomentsUploadError.uploadFailed.localizedDescription
+                fallbackMessage: AnimateUploadError.uploadFailed.localizedDescription
             )
         }
 
         do {
-            let completion = try JSONDecoder().decode(MomentsUploadCompletion.self, from: data)
+            let completion = try JSONDecoder().decode(AnimateUploadCompletion.self, from: data)
             logger.info("direct upload completed uploadId=\(uploadId, privacy: .public)")
             return completion
         } catch {
@@ -122,10 +122,10 @@ struct MomentsUploadClient: Sendable {
                 guard let httpResponse = response as? HTTPURLResponse, 200..<300 ~= httpResponse.statusCode else {
                     let statusCode = (response as? HTTPURLResponse)?.statusCode ?? -1
                     logger.error("upload request failed status=\(statusCode, privacy: .public) attempt=\(attempt, privacy: .public)")
-                    throw MomentsAPIError.decode(
+                    throw AnimateAPIError.decode(
                         from: responseData,
                         fallbackCode: "moments_upload_failed",
-                        fallbackMessage: MomentsUploadError.uploadFailed.localizedDescription
+                        fallbackMessage: AnimateUploadError.uploadFailed.localizedDescription
                     )
                 }
                 return responseData
@@ -158,7 +158,7 @@ struct MomentsUploadClient: Sendable {
     }
 }
 
-private struct MomentsUploadCompletionIntent: Encodable {
+private struct AnimateUploadCompletionIntent: Encodable {
     let sortOrder: Int
     let selected: Bool
 
@@ -168,7 +168,7 @@ private struct MomentsUploadCompletionIntent: Encodable {
     }
 }
 
-struct MomentsUploadRetryPolicy: Sendable {
+struct AnimateUploadRetryPolicy: Sendable {
     var maximumRetries = 3
     var baseDelayNanoseconds: UInt64 = 300_000_000
 
@@ -196,7 +196,7 @@ struct MomentsUploadRetryPolicy: Sendable {
     }
 }
 
-private struct MomentsPrepareUploadRequest: Encodable {
+private struct AnimatePrepareUploadRequest: Encodable {
     let appId = "animateav"
     let momentId: String
     let mediaKind: String
@@ -217,7 +217,7 @@ private struct MomentsPrepareUploadRequest: Encodable {
     }
 }
 
-enum MomentsUploadError: LocalizedError {
+enum AnimateUploadError: LocalizedError {
     case unreadableSelection
     case apiNotConfigured
     case prepareFailed

@@ -170,13 +170,13 @@ final class AnimateCreditGateTests: XCTestCase {
             )
         }
 
-        XCTAssertFalse(MomentsStoryRules.canPlan(mediaAssets: assets, template: .birthdayMessage))
-        XCTAssertFalse(MomentsStoryRules.canPlan(mediaAssets: assets, template: .partyRecap))
+        XCTAssertFalse(AnimateStoryRules.canPlan(mediaAssets: assets, template: .birthdayMessage))
+        XCTAssertFalse(AnimateStoryRules.canPlan(mediaAssets: assets, template: .partyRecap))
     }
 
     func testStoryInputSignatureTracksMediaOrderAndDirection() {
-        func storyMedia(id: String, sortOrder: Int) -> MomentsStoryMedia {
-            MomentsStoryMedia(
+        func storyMedia(id: String, sortOrder: Int) -> AnimateStoryMedia {
+            AnimateStoryMedia(
                 mediaAssetId: id,
                 mediaKind: "image",
                 sortOrder: sortOrder,
@@ -193,12 +193,12 @@ final class AnimateCreditGateTests: XCTestCase {
             storyMedia(id: "media-b", sortOrder: 1)
         ]
 
-        let baseSignature = MomentsStoryInputSignature.make(
+        let baseSignature = AnimateStoryInputSignature.make(
             momentId: "moment-1",
             form: form,
             selectedMedia: media
         )
-        let sameInputSignature = MomentsStoryInputSignature.make(
+        let sameInputSignature = AnimateStoryInputSignature.make(
             momentId: "moment-1",
             form: form,
             selectedMedia: media.reversed()
@@ -206,7 +206,7 @@ final class AnimateCreditGateTests: XCTestCase {
 
         XCTAssertEqual(baseSignature, sameInputSignature)
 
-        let reorderedSignature = MomentsStoryInputSignature.make(
+        let reorderedSignature = AnimateStoryInputSignature.make(
             momentId: "moment-1",
             form: form,
             selectedMedia: [
@@ -217,7 +217,7 @@ final class AnimateCreditGateTests: XCTestCase {
         XCTAssertNotEqual(baseSignature, reorderedSignature)
 
         form.details = "Use the desert photos and end on the group shot."
-        let changedDirectionSignature = MomentsStoryInputSignature.make(
+        let changedDirectionSignature = AnimateStoryInputSignature.make(
             momentId: "moment-1",
             form: form,
             selectedMedia: media
@@ -241,22 +241,22 @@ final class AnimateCreditGateTests: XCTestCase {
             updatedAt: 0
         )
         XCTAssertTrue(
-            MomentsFinalRenderRules.canGenerate(
+            AnimateFinalRenderRules.canGenerate(
                 moment: moment,
                 template: .birthdayMessage,
                 balance: balance
             )
         )
         XCTAssertFalse(
-            MomentsFinalRenderRules.canGenerate(
+            AnimateFinalRenderRules.canGenerate(
                 moment: moment,
                 template: .birthdayMessage,
                 balance: .empty
             )
         )
-        XCTAssertTrue(MomentsFinalRenderRules.canPreparePlan(moment: moment))
+        XCTAssertTrue(AnimateFinalRenderRules.canPreparePlan(moment: moment))
         XCTAssertTrue(
-            MomentsFinalRenderRules.canGenerate(
+            AnimateFinalRenderRules.canGenerate(
                 moment: moment,
                 template: .birthdayMessage,
                 balance: balance
@@ -276,10 +276,10 @@ final class AnimateCreditGateTests: XCTestCase {
             creditCost: moment.creditCost,
             updatedAt: moment.updatedAt
         )
-        XCTAssertFalse(MomentsFinalRenderRules.canPreparePlan(moment: staleStoryMoment))
-        XCTAssertTrue(MomentsFinalRenderRules.canPreparePlan(moment: staleStoryMoment, storySceneCount: 1))
+        XCTAssertFalse(AnimateFinalRenderRules.canPreparePlan(moment: staleStoryMoment))
+        XCTAssertTrue(AnimateFinalRenderRules.canPreparePlan(moment: staleStoryMoment, storySceneCount: 1))
         XCTAssertTrue(
-            MomentsFinalRenderRules.canGenerate(
+            AnimateFinalRenderRules.canGenerate(
                 moment: staleStoryMoment,
                 template: .birthdayMessage,
                 balance: balance,

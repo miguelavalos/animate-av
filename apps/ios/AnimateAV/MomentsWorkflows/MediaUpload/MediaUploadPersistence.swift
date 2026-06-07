@@ -4,7 +4,7 @@ import UIKit
 
 struct MediaUploadPersistenceResult {
     let savedCount: Int
-    let savedMedia: [MomentsStoryMedia]
+    let savedMedia: [AnimateStoryMedia]
     let storageBlocked: Bool
 
     var statusMessage: String {
@@ -26,8 +26,8 @@ enum MediaUploadPersistence {
 
     private struct UploadedMedia {
         let media: MomentsSelectedMedia
-        let preparedUpload: MomentsPreparedUpload
-        let uploadCompletion: MomentsUploadCompletion
+        let preparedUpload: AnimatePreparedUpload
+        let uploadCompletion: AnimateUploadCompletion
     }
 
     @MainActor
@@ -36,7 +36,7 @@ enum MediaUploadPersistence {
         ownerUserId: String,
         bearerToken: String,
         momentId: String,
-        uploadClient: MomentsUploadClient,
+        uploadClient: AnimateUploadClient,
         requiresProductStateSave: Bool = true,
         progress: @MainActor @escaping (_ completedCount: Int, _ totalCount: Int) -> Void = { _, _ in },
         shouldContinue: @MainActor () -> Bool
@@ -67,7 +67,7 @@ enum MediaUploadPersistence {
 
         let savedMedia = zip(uploadedMedia, savedMediaAssetIds).map { uploaded, savedMediaAssetId in
             MomentsLocalMediaThumbnailCache.store(uploaded.media, mediaAssetId: savedMediaAssetId)
-            return MomentsStoryMedia(
+            return AnimateStoryMedia(
                 mediaAssetId: savedMediaAssetId,
                 mediaKind: uploaded.media.kind,
                 sortOrder: uploaded.media.sortOrder,
@@ -88,7 +88,7 @@ enum MediaUploadPersistence {
         _ mediaItems: [MomentsSelectedMedia],
         momentId: String,
         bearerToken: String,
-        uploadClient: MomentsUploadClient,
+        uploadClient: AnimateUploadClient,
         shouldContinue: @MainActor () -> Bool,
         progress: @MainActor @escaping (_ completedCount: Int) -> Void
     ) async throws -> [UploadedMedia] {

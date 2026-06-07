@@ -1,9 +1,9 @@
 import Foundation
 
-struct MomentsImageGenerationAccountingClient {
+struct AnimateImageGenerationAccountingClient {
     var baseURLString: String
     var session: URLSession = .shared
-    var retryPolicy = MomentsNetworkRetryPolicy()
+    var retryPolicy = AnimateNetworkRetryPolicy()
 
     var isConfigured: Bool {
         URL(string: baseURLString.trimmingCharacters(in: .whitespacesAndNewlines)) != nil
@@ -11,7 +11,7 @@ struct MomentsImageGenerationAccountingClient {
 
     func fetchAvailability(bearerToken: String) async throws -> AnimateImageGenerationAvailabilityResponse {
         guard let baseURL = URL(string: baseURLString.trimmingCharacters(in: .whitespacesAndNewlines)) else {
-            throw MomentsImageGenerationAccountingError.apiNotConfigured
+            throw AnimateImageGenerationAccountingError.apiNotConfigured
         }
 
         let endpoint = baseURL
@@ -29,10 +29,10 @@ struct MomentsImageGenerationAccountingClient {
             try await session.data(for: request)
         }
         guard let httpResponse = response as? HTTPURLResponse, 200..<300 ~= httpResponse.statusCode else {
-            throw MomentsAPIError.decode(
+            throw AnimateAPIError.decode(
                 from: data,
                 fallbackCode: "animate_image_availability_failed",
-                fallbackMessage: MomentsImageGenerationAccountingError.availabilityFailed.localizedDescription
+                fallbackMessage: AnimateImageGenerationAccountingError.availabilityFailed.localizedDescription
             )
         }
 
@@ -46,7 +46,7 @@ struct MomentsImageGenerationAccountingClient {
         bearerToken: String
     ) async throws -> AnimateImageGenerationStartResponse {
         guard let baseURL = URL(string: baseURLString.trimmingCharacters(in: .whitespacesAndNewlines)) else {
-            throw MomentsImageGenerationAccountingError.apiNotConfigured
+            throw AnimateImageGenerationAccountingError.apiNotConfigured
         }
 
         let endpoint = baseURL
@@ -71,10 +71,10 @@ struct MomentsImageGenerationAccountingClient {
             try await session.data(for: request)
         }
         guard let httpResponse = response as? HTTPURLResponse, 200..<300 ~= httpResponse.statusCode else {
-            throw MomentsAPIError.decode(
+            throw AnimateAPIError.decode(
                 from: data,
                 fallbackCode: "animate_image_generation_failed",
-                fallbackMessage: MomentsImageGenerationAccountingError.startFailed.localizedDescription
+                fallbackMessage: AnimateImageGenerationAccountingError.startFailed.localizedDescription
             )
         }
 
@@ -92,7 +92,7 @@ struct MomentsImageGenerationAccountingClient {
         bearerToken: String
     ) async throws -> AnimateSourceImagePreparedUpload {
         guard let baseURL = URL(string: baseURLString.trimmingCharacters(in: .whitespacesAndNewlines)) else {
-            throw MomentsImageGenerationAccountingError.apiNotConfigured
+            throw AnimateImageGenerationAccountingError.apiNotConfigured
         }
 
         let endpoint = baseURL
@@ -122,10 +122,10 @@ struct MomentsImageGenerationAccountingClient {
             try await session.data(for: request)
         }
         guard let httpResponse = response as? HTTPURLResponse, 200..<300 ~= httpResponse.statusCode else {
-            throw MomentsAPIError.decode(
+            throw AnimateAPIError.decode(
                 from: data,
                 fallbackCode: "animate_source_image_prepare_failed",
-                fallbackMessage: MomentsImageGenerationAccountingError.sourceUploadFailed.localizedDescription
+                fallbackMessage: AnimateImageGenerationAccountingError.sourceUploadFailed.localizedDescription
             )
         }
 
@@ -139,7 +139,7 @@ struct MomentsImageGenerationAccountingClient {
         guard let uploadUrl = preparedUpload.uploadUrl,
               let endpoint = URL(string: uploadUrl)
         else {
-            throw MomentsImageGenerationAccountingError.sourceUploadFailed
+            throw AnimateImageGenerationAccountingError.sourceUploadFailed
         }
 
         var request = URLRequest(url: endpoint)
@@ -153,10 +153,10 @@ struct MomentsImageGenerationAccountingClient {
             try await session.data(for: request)
         }
         guard let httpResponse = response as? HTTPURLResponse, 200..<300 ~= httpResponse.statusCode else {
-            throw MomentsAPIError.decode(
+            throw AnimateAPIError.decode(
                 from: responseData,
                 fallbackCode: "animate_source_image_upload_failed",
-                fallbackMessage: MomentsImageGenerationAccountingError.sourceUploadFailed.localizedDescription
+                fallbackMessage: AnimateImageGenerationAccountingError.sourceUploadFailed.localizedDescription
             )
         }
 
@@ -168,7 +168,7 @@ struct MomentsImageGenerationAccountingClient {
         bearerToken: String
     ) async throws -> AnimateImageGenerationPackPurchaseResponse {
         guard let baseURL = URL(string: baseURLString.trimmingCharacters(in: .whitespacesAndNewlines)) else {
-            throw MomentsImageGenerationAccountingError.apiNotConfigured
+            throw AnimateImageGenerationAccountingError.apiNotConfigured
         }
 
         let endpoint = baseURL
@@ -190,10 +190,10 @@ struct MomentsImageGenerationAccountingClient {
             try await session.data(for: request)
         }
         guard let httpResponse = response as? HTTPURLResponse, 200..<300 ~= httpResponse.statusCode else {
-            throw MomentsAPIError.decode(
+            throw AnimateAPIError.decode(
                 from: data,
                 fallbackCode: "animate_image_pack_purchase_failed",
-                fallbackMessage: MomentsImageGenerationAccountingError.packPurchaseFailed.localizedDescription
+                fallbackMessage: AnimateImageGenerationAccountingError.packPurchaseFailed.localizedDescription
             )
         }
 
@@ -325,7 +325,7 @@ struct AnimateImageGenerationPackPurchase: Decodable, Equatable {
     let createdAt: String
 }
 
-enum MomentsImageGenerationAccountingError: LocalizedError {
+enum AnimateImageGenerationAccountingError: LocalizedError {
     case apiNotConfigured
     case signInRequired
     case availabilityFailed

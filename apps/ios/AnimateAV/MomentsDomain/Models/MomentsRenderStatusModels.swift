@@ -1,6 +1,6 @@
 import Foundation
 
-struct MomentsRenderStatusResponse: Decodable, Equatable {
+struct AnimateRenderStatusResponse: Decodable, Equatable {
     let appId: String
     let momentId: String
     let renderJobId: String

@@ -13,8 +13,8 @@ struct AnimateViewModelBundle {
         workflows: AnimateWorkflowBundle,
         galleryMomentsProvider: any GalleryMomentsListProviding,
         authTokenProvider: any AnimateAuthTokenProviding,
-        imageGenerationAccountingClient: MomentsImageGenerationAccountingClient,
-        finalRenderClient: MomentsFinalRenderClient
+        imageGenerationAccountingClient: AnimateImageGenerationAccountingClient,
+        finalRenderClient: AnimateFinalRenderClient
     ) {
         home = AnimateHomeViewModel()
         create = AnimateCreateViewModel()

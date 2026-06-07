@@ -24,7 +24,7 @@ final class AnimateAPIClientTests: XCTestCase {
             }
             """
         )
-        let client = MomentsUploadClient(baseURLString: accountAPIBaseURL, session: session)
+        let client = AnimateUploadClient(baseURLString: accountAPIBaseURL, session: session)
         let media = MomentsSelectedMedia(
             id: UUID(uuidString: "00000000-0000-0000-0000-000000000001")!,
             sourceLocalIdentifier: "local-1",
@@ -62,10 +62,10 @@ final class AnimateAPIClientTests: XCTestCase {
             }
             """
         )
-        let client = MomentsUploadClient(
+        let client = AnimateUploadClient(
             baseURLString: accountAPIBaseURL,
             session: session,
-            networkRetryPolicy: MomentsNetworkRetryPolicy(maximumRetries: 1, baseDelayNanoseconds: 1)
+            networkRetryPolicy: AnimateNetworkRetryPolicy(maximumRetries: 1, baseDelayNanoseconds: 1)
         )
         let media = MomentsSelectedMedia(
             id: UUID(uuidString: "00000000-0000-0000-0000-000000000011")!,
@@ -88,7 +88,7 @@ final class AnimateAPIClientTests: XCTestCase {
 
     func testUploadUsesPreparedURLAndHeaders() async throws {
         let session = makeMockSession(json: uploadCompletionJSON)
-        let client = MomentsUploadClient(baseURLString: accountAPIBaseURL, session: session)
+        let client = AnimateUploadClient(baseURLString: accountAPIBaseURL, session: session)
         let uploadURL = URL(string: "\(accountAPIBaseURL)/v1/apps/animateav/uploads/upload-1")!
         let media = MomentsSelectedMedia(
             id: UUID(uuidString: "00000000-0000-0000-0000-000000000002")!,
@@ -103,7 +103,7 @@ final class AnimateAPIClientTests: XCTestCase {
             sortOrder: 0,
             selected: true
         )
-        let prepared = MomentsPreparedUpload(
+        let prepared = AnimatePreparedUpload(
             appId: "animateav",
             momentId: "moment-1",
             mediaAssetId: "media-1",
@@ -130,7 +130,7 @@ final class AnimateAPIClientTests: XCTestCase {
 
     func testUploadWithoutSignedURLFailsBeforeSavingMedia() async throws {
         let session = makeMockSession(json: "{}")
-        let client = MomentsUploadClient(baseURLString: accountAPIBaseURL, session: session)
+        let client = AnimateUploadClient(baseURLString: accountAPIBaseURL, session: session)
         let media = MomentsSelectedMedia(
             id: UUID(uuidString: "00000000-0000-0000-0000-000000000012")!,
             sourceLocalIdentifier: "local-1",
@@ -144,7 +144,7 @@ final class AnimateAPIClientTests: XCTestCase {
             sortOrder: 0,
             selected: true
         )
-        let prepared = MomentsPreparedUpload(
+        let prepared = AnimatePreparedUpload(
             appId: "animateav",
             momentId: "moment-1",
             mediaAssetId: "media-1",
@@ -160,7 +160,7 @@ final class AnimateAPIClientTests: XCTestCase {
         do {
             _ = try await client.upload(media: media, preparedUpload: prepared)
             XCTFail("Expected missing upload URL to fail.")
-        } catch MomentsUploadError.signedUploadUnavailable {
+        } catch AnimateUploadError.signedUploadUnavailable {
             XCTAssertEqual(AnimateURLProtocolMock.requestCount, 0)
         } catch {
             XCTFail("Unexpected error: \(error)")
@@ -169,7 +169,7 @@ final class AnimateAPIClientTests: XCTestCase {
 
     func testDirectUploadCompletesPreparedUploadAfterR2Put() async throws {
         let session = makeMockSession(json: uploadCompletionJSON)
-        let client = MomentsUploadClient(baseURLString: accountAPIBaseURL, session: session)
+        let client = AnimateUploadClient(baseURLString: accountAPIBaseURL, session: session)
         let uploadURL = URL(string: "https://account-1.r2.cloudflarestorage.com/appsav-assets-preview/animateav/user/moment/source/media-1?X-Amz-Signature=test")!
         let completionURL = URL(string: "\(accountAPIBaseURL)/v1/apps/animateav/uploads/upload-1/complete")!
         let media = MomentsSelectedMedia(
@@ -185,7 +185,7 @@ final class AnimateAPIClientTests: XCTestCase {
             sortOrder: 0,
             selected: true
         )
-        let prepared = MomentsPreparedUpload(
+        let prepared = AnimatePreparedUpload(
             appId: "animateav",
             momentId: "moment-1",
             mediaAssetId: "media-1",
@@ -211,10 +211,10 @@ final class AnimateAPIClientTests: XCTestCase {
     func testUploadRetriesTransientNetworkLoss() async throws {
         AnimateURLProtocolMock.failuresBeforeSuccess = 1
         let session = makeMockSession(json: uploadCompletionJSON)
-        let client = MomentsUploadClient(
+        let client = AnimateUploadClient(
             baseURLString: accountAPIBaseURL,
             session: session,
-            uploadRetryPolicy: MomentsUploadRetryPolicy(maximumRetries: 1, baseDelayNanoseconds: 1)
+            uploadRetryPolicy: AnimateUploadRetryPolicy(maximumRetries: 1, baseDelayNanoseconds: 1)
         )
         let uploadURL = URL(string: "\(accountAPIBaseURL)/v1/apps/animateav/uploads/upload-1")!
         let media = MomentsSelectedMedia(
@@ -230,7 +230,7 @@ final class AnimateAPIClientTests: XCTestCase {
             sortOrder: 0,
             selected: true
         )
-        let prepared = MomentsPreparedUpload(
+        let prepared = AnimatePreparedUpload(
             appId: "animateav",
             momentId: "moment-1",
             mediaAssetId: "media-1",
@@ -268,7 +268,7 @@ final class AnimateAPIClientTests: XCTestCase {
             }
             """
         )
-        let client = MomentsStoryClient(baseURLString: accountAPIBaseURL, session: session)
+        let client = AnimateStoryClient(baseURLString: accountAPIBaseURL, session: session)
 
         _ = try await client.generatePlan(
             momentId: "moment-1",
@@ -303,10 +303,10 @@ final class AnimateAPIClientTests: XCTestCase {
             }
             """
         )
-        let client = MomentsStoryClient(
+        let client = AnimateStoryClient(
             baseURLString: accountAPIBaseURL,
             session: session,
-            retryPolicy: MomentsNetworkRetryPolicy(maximumRetries: 1, baseDelayNanoseconds: 1)
+            retryPolicy: AnimateNetworkRetryPolicy(maximumRetries: 1, baseDelayNanoseconds: 1)
         )
 
         _ = try await client.generatePlan(
@@ -356,7 +356,7 @@ final class AnimateAPIClientTests: XCTestCase {
             }
             """
         )
-        let client = MomentsFinalRenderClient(baseURLString: accountAPIBaseURL, session: session)
+        let client = AnimateFinalRenderClient(baseURLString: accountAPIBaseURL, session: session)
         var form = MomentSetupForm(template: .partyRecap)
         form.theme = .travel
         form.look = .cartoon
@@ -428,7 +428,7 @@ final class AnimateAPIClientTests: XCTestCase {
             }
             """
         )
-        let client = MomentsFinalRenderClient(baseURLString: accountAPIBaseURL, session: session)
+        let client = AnimateFinalRenderClient(baseURLString: accountAPIBaseURL, session: session)
         var form = MomentSetupForm(template: .birthdayMessage)
         form.theme = .celebration
         form.look = .cartoon
@@ -515,7 +515,7 @@ final class AnimateAPIClientTests: XCTestCase {
             }
             """
         )
-        let client = MomentsFinalRenderClient(baseURLString: accountAPIBaseURL, session: session)
+        let client = AnimateFinalRenderClient(baseURLString: accountAPIBaseURL, session: session)
 
         let confirmation = try await client.confirmFinalRender(
             momentId: "moment-1",
@@ -567,7 +567,7 @@ final class AnimateAPIClientTests: XCTestCase {
             }
             """
         )
-        let client = MomentsVideoQuoteClient(baseURLString: accountAPIBaseURL, session: session)
+        let client = AnimateVideoQuoteClient(baseURLString: accountAPIBaseURL, session: session)
 
         let quote = try await client.quoteVideo(
             message: "Happy birthday Ana",
@@ -619,7 +619,7 @@ final class AnimateAPIClientTests: XCTestCase {
             }
             """
         )
-        let client = MomentsImageGenerationAccountingClient(baseURLString: accountAPIBaseURL, session: session)
+        let client = AnimateImageGenerationAccountingClient(baseURLString: accountAPIBaseURL, session: session)
 
         let availability = try await client.fetchAvailability(bearerToken: "token-1")
 
@@ -678,7 +678,7 @@ final class AnimateAPIClientTests: XCTestCase {
             }
             """
         )
-        let client = MomentsImageGenerationAccountingClient(baseURLString: accountAPIBaseURL, session: session)
+        let client = AnimateImageGenerationAccountingClient(baseURLString: accountAPIBaseURL, session: session)
 
         let response = try await client.startGeneration(
             sourceImageUploadId: "source-upload-1",
@@ -715,7 +715,7 @@ final class AnimateAPIClientTests: XCTestCase {
             }
             """
         )
-        let client = MomentsImageGenerationAccountingClient(baseURLString: accountAPIBaseURL, session: session)
+        let client = AnimateImageGenerationAccountingClient(baseURLString: accountAPIBaseURL, session: session)
 
         let prepared = try await client.prepareSourceImageUpload(
             sourceLocalIdentifier: "local-photo-1",
@@ -756,7 +756,7 @@ final class AnimateAPIClientTests: XCTestCase {
             }
             """
         )
-        let client = MomentsImageGenerationAccountingClient(baseURLString: accountAPIBaseURL, session: session)
+        let client = AnimateImageGenerationAccountingClient(baseURLString: accountAPIBaseURL, session: session)
         let prepared = AnimateSourceImagePreparedUpload(
             appId: "animateav",
             sourceImageUploadId: "source-upload-1",
@@ -812,7 +812,7 @@ final class AnimateAPIClientTests: XCTestCase {
             }
             """
         )
-        let client = MomentsImageGenerationAccountingClient(baseURLString: accountAPIBaseURL, session: session)
+        let client = AnimateImageGenerationAccountingClient(baseURLString: accountAPIBaseURL, session: session)
 
         let response = try await client.purchasePack(
             idempotencyKey: "pack-key-1",
@@ -846,7 +846,7 @@ final class AnimateAPIClientTests: XCTestCase {
             }
             """
         )
-        let client = MomentsFinalRenderClient(baseURLString: accountAPIBaseURL, session: session)
+        let client = AnimateFinalRenderClient(baseURLString: accountAPIBaseURL, session: session)
 
         let response = try await client.prepareFinalArtifactDownload(
             momentId: "moment-1",
@@ -881,7 +881,7 @@ final class AnimateAPIClientTests: XCTestCase {
             }
             """
         )
-        let client = MomentsRenderStatusClient(baseURLString: accountAPIBaseURL, session: session)
+        let client = AnimateRenderStatusClient(baseURLString: accountAPIBaseURL, session: session)
 
         let status = try await client.fetchStatus(renderJobId: "render-1", bearerToken: "token-1")
 
@@ -904,7 +904,7 @@ final class AnimateAPIClientTests: XCTestCase {
             }
             """
         )
-        let client = MomentsRenderStatusClient(baseURLString: accountAPIBaseURL, session: session)
+        let client = AnimateRenderStatusClient(baseURLString: accountAPIBaseURL, session: session)
 
         do {
             _ = try await client.fetchStatus(renderJobId: "missing-render", bearerToken: "token-1")

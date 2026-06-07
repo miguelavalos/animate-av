@@ -60,8 +60,8 @@ enum AnimateCreateAvailabilityMessageFactory {
             )
         }
 
-        return MomentsStoryRules.availabilityMessage(
-            MomentsStoryRules.availability(
+        return AnimateStoryRules.availabilityMessage(
+            AnimateStoryRules.availability(
                 mediaAssets: mediaAssets,
                 template: template
             ),
@@ -83,7 +83,7 @@ enum AnimateCreateAvailabilityMessageFactory {
         guard isFinalRenderAvailable else { return AnimateCreateAvailabilityCopy.finalRenderUnavailable }
         if isFinalRenderGenerating { return nil }
         if !isFinalRenderConfigured { return AnimateCreateAvailabilityCopy.finalRenderNotConfigured }
-        let availability = MomentsFinalRenderRules.availability(
+        let availability = AnimateFinalRenderRules.availability(
             moment: moment,
             template: template,
             balance: balance
@@ -91,7 +91,7 @@ enum AnimateCreateAvailabilityMessageFactory {
         if availability.blockReason == .insufficientCredits, !creditBalanceLoadState.hasLoadedBalance {
             return AnimateCreateAvailabilityCopy.finalRenderCreditBalanceUnavailable(creditBalanceLoadState)
         }
-        return MomentsFinalRenderRules.availabilityMessage(
+        return AnimateFinalRenderRules.availabilityMessage(
             availability,
             missingMomentMessage: AnimateCreateAvailabilityCopy.finalRenderMissingWorkspace,
             insufficientCreditsMessage: AnimateCreateAvailabilityCopy.finalRenderInsufficientCredits(

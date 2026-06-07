@@ -1,8 +1,8 @@
 import Foundation
 
 @MainActor
-final class MomentsRealtimeSessionStore {
-    static let shared = MomentsRealtimeSessionStore()
+final class AnimateRealtimeSessionStore {
+    static let shared = AnimateRealtimeSessionStore()
 
     private(set) var ownerUserId: String?
     private(set) var realtimeSessionId: String?

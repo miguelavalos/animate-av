@@ -5,9 +5,9 @@ import Foundation
 @MainActor
 struct MomentsRemoteClient {
     private let client: ConvexClient?
-    private let realtimeSessionStore: MomentsRealtimeSessionStore
+    private let realtimeSessionStore: AnimateRealtimeSessionStore
 
-    init(deploymentURL: String, realtimeSessionStore: MomentsRealtimeSessionStore = .shared) {
+    init(deploymentURL: String, realtimeSessionStore: AnimateRealtimeSessionStore = .shared) {
         let trimmedURL = deploymentURL.trimmingCharacters(in: .whitespacesAndNewlines)
         client = trimmedURL.isEmpty ? nil : ConvexClient(deploymentUrl: trimmedURL)
         self.realtimeSessionStore = realtimeSessionStore

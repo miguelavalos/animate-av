@@ -1,17 +1,17 @@
 import Foundation
 
-struct MomentsRenderStatusClient {
+struct AnimateRenderStatusClient {
     var baseURLString: String
     var session: URLSession = .shared
-    var retryPolicy = MomentsNetworkRetryPolicy()
+    var retryPolicy = AnimateNetworkRetryPolicy()
 
     var isConfigured: Bool {
         URL(string: baseURLString.trimmingCharacters(in: .whitespacesAndNewlines)) != nil
     }
 
-    func fetchStatus(renderJobId: String, bearerToken: String) async throws -> MomentsRenderStatusResponse {
+    func fetchStatus(renderJobId: String, bearerToken: String) async throws -> AnimateRenderStatusResponse {
         guard let baseURL = URL(string: baseURLString.trimmingCharacters(in: .whitespacesAndNewlines)) else {
-            throw MomentsRenderStatusError.apiNotConfigured
+            throw AnimateRenderStatusError.apiNotConfigured
         }
 
         let endpoint = baseURL
@@ -30,19 +30,19 @@ struct MomentsRenderStatusClient {
             try await session.data(for: request)
         }
         guard let httpResponse = response as? HTTPURLResponse, 200..<300 ~= httpResponse.statusCode else {
-            throw MomentsAPIError.decode(
+            throw AnimateAPIError.decode(
                 from: data,
                 fallbackCode: "moments_render_status_failed",
-                fallbackMessage: MomentsRenderStatusError.statusFailed.localizedDescription
+                fallbackMessage: AnimateRenderStatusError.statusFailed.localizedDescription
             )
         }
 
-        return try JSONDecoder().decode(MomentsRenderStatusResponse.self, from: data)
+        return try JSONDecoder().decode(AnimateRenderStatusResponse.self, from: data)
     }
 
 }
 
-enum MomentsRenderStatusError: LocalizedError {
+enum AnimateRenderStatusError: LocalizedError {
     case apiNotConfigured
     case statusFailed
 

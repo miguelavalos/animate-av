@@ -3,20 +3,20 @@ import OSLog
 
 @MainActor
 final class StoryWorkflow: WorkspaceObservingWorkflow {
-    @Published private(set) var generatedPlan: MomentsStoryResponse?
+    @Published private(set) var generatedPlan: AnimateStoryResponse?
     @Published private(set) var isPlanning = false
     @Published private(set) var statusMessage: String?
 
     private let currentUserProvider: any AnimateCurrentUserProviding
     private let authTokenProvider: any AnimateAuthTokenProviding
-    private let storyClient: MomentsStoryClient
+    private let storyClient: AnimateStoryClient
     private let logger = Logger(subsystem: "com.avalsys.animateav", category: "story")
 
     init(
         currentUserProvider: any AnimateCurrentUserProviding,
         authTokenProvider: any AnimateAuthTokenProviding,
         workspaceObserver: any MomentsActiveWorkspaceObserving,
-        storyClient: MomentsStoryClient
+        storyClient: AnimateStoryClient
     ) {
         self.currentUserProvider = currentUserProvider
         self.authTokenProvider = authTokenProvider
@@ -31,7 +31,7 @@ final class StoryWorkflow: WorkspaceObservingWorkflow {
     func canPlan(template: MomentTemplate) -> Bool {
         return currentUserProvider.currentUserId != nil
             && isConfigured
-            && MomentsStoryRules.availability(
+            && AnimateStoryRules.availability(
                 mediaAssets: activeWorkspace?.mediaAssets,
                 template: template
             ).canPlan
@@ -42,7 +42,7 @@ final class StoryWorkflow: WorkspaceObservingWorkflow {
         momentId: String,
         form: MomentSetupForm,
         selectedMedia: [MomentsSelectedMedia],
-        persistedMedia: [MomentsStoryMedia]? = nil
+        persistedMedia: [AnimateStoryMedia]? = nil
     ) async -> Bool {
         guard let ownerUserId = currentUserProvider.currentUserId else {
             statusMessage = L10n.string("workflow.story.signInPlan")
@@ -160,13 +160,13 @@ final class StoryWorkflow: WorkspaceObservingWorkflow {
     private func storyMedia(
         from selectedMedia: [MomentsSelectedMedia],
         fallbackMediaAssets: [MomentMediaAsset]?
-    ) -> [MomentsStoryMedia] {
+    ) -> [AnimateStoryMedia] {
         if !selectedMedia.isEmpty {
             return selectedMedia
                 .filter(\.selected)
                 .sorted { $0.sortOrder < $1.sortOrder }
                 .map {
-                    MomentsStoryMedia(
+                    AnimateStoryMedia(
                         mediaAssetId: $0.id.uuidString,
                         mediaKind: $0.kind,
                         sortOrder: $0.sortOrder,
@@ -180,7 +180,7 @@ final class StoryWorkflow: WorkspaceObservingWorkflow {
             .filter(\.selected)
             .sorted { $0.sortOrder < $1.sortOrder }
             .map {
-                MomentsStoryMedia(
+                AnimateStoryMedia(
                     mediaAssetId: $0.id,
                     mediaKind: $0.kind,
                     sortOrder: Int($0.sortOrder),
@@ -191,8 +191,8 @@ final class StoryWorkflow: WorkspaceObservingWorkflow {
     }
 
     private func validatePlanMediaReferences(
-        _ plan: MomentsStoryResponse,
-        availableMedia: [MomentsStoryMedia]
+        _ plan: AnimateStoryResponse,
+        availableMedia: [AnimateStoryMedia]
     ) throws {
         let availableMediaIds = Set(availableMedia.map(\.mediaAssetId))
         let missingMediaIds = plan.scenes
