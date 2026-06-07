@@ -65,8 +65,6 @@
 "profile.creationPreferences.start.ask.detail" = "Mostra les opcions d’imatge abans de començar.";
 "profile.creationPreferences.start.photos.title" = "Fotos o clips";
 "profile.creationPreferences.start.photos.detail" = "Obre la selecció d’imatge immediatament.";
-"profile.creationPreferences.start.album.title" = "Àlbum";
-"profile.creationPreferences.start.album.detail" = "Obre primer els teus àlbums.";
 "profile.pro.avi.detail" = "Vídeos finals sense branding mentre Pro sigui actiu.";
 "profile.pro.avi.title" = "Sense branding";
 "profile.pro.library.detail" = "Millor valor mensual que comprar crèdits un a un.";
@@ -583,7 +581,6 @@
 "common.edit" = "Editar";
 "create.media.actions" = "Accions de foto";
 "create.media.add" = "Afegir foto";
-"create.media.addCollection" = "Triar un àlbum";
 "create.media.choose" = "Triar foto";
 "create.media.emptySummary" = "Tria una foto de la biblioteca.";
 "create.media.finishReorder" = "Acabar ordre";
@@ -664,10 +661,6 @@
 "create.form.tone" = "To";
 "create.media.addPhotos" = "Afegir imatge";
 "create.media.added" = "Imatge afegida";
-"create.media.albums.empty" = "Sense àlbums";
-"create.media.albums.emptyDetail" = "Tria una imatge de Fotos per usar-la com a font.";
-"create.media.albums.loading" = "Carregant àlbums";
-"create.media.albums.unavailable" = "Àlbums no disponibles";
 "create.media.backEditor" = "Tornar a l’editor d’imatge";
 "create.media.doneReordering" = "Ordre acabat";
 "create.media.emptyStart" = "Tria una foto per començar aquest vídeo cartoon.";
@@ -682,9 +675,6 @@
 "create.media.chooseShort" = "Triar";
 "create.media.editTitle" = "Editar foto";
 "create.media.editSummary" = "Toca per previsualitzar, substituir o eliminar.";
-"create.media.collection.confirmTitleFallback" = "Afegir imatge de l’àlbum?";
-"create.media.collection.confirmTitle" = "Afegir fins a %d %@?";
-"create.media.collection.confirmMessage" = "Avi afegirà fins a %d %@ de %@ i ometrà imatges ja seleccionades.";
 "create.media.status.ready" = "Foto a punt. Avi pot planejar el cartoon.";
 "create.media.status.duplicatesOnly" = "Aquesta imatge ja estava seleccionada.";
 "create.media.status.addedSkippingDuplicates" = "Afegits %d %@. S’han omès %d ja seleccionats.";

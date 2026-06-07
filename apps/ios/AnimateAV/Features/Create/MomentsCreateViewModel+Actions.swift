@@ -4,7 +4,7 @@ import SwiftUI
 
 extension MomentsCreateViewModel {
     @discardableResult
-    func beginNewMoment(openMediaPicker: Bool = false, openAlbumPicker: Bool = false) -> Bool {
+    func beginNewMoment(openMediaPicker: Bool = false) -> Bool {
         guard canBeginNewMoment else {
             updateSetupErrorMessage(setupAvailabilityMessage ?? L10n.string("create.error.startWhenReady"))
             return false
@@ -14,18 +14,12 @@ extension MomentsCreateViewModel {
         pendingFocus = .media
         if openMediaPicker {
             mediaPickerOpenRequest += 1
-        } else if openAlbumPicker {
-            albumPickerOpenRequest += 1
         }
         return true
     }
 
     func requestMediaPickerOpen() {
         mediaPickerOpenRequest += 1
-    }
-
-    func requestAlbumPickerOpen() {
-        albumPickerOpenRequest += 1
     }
 
     func discardMoment() {
@@ -73,23 +67,6 @@ extension MomentsCreateViewModel {
         runOperation {
             await mediaUploadWorkflow.importPickerItems(
                 items,
-                template: template,
-                momentId: self.activeMomentId
-            )
-        }
-    }
-
-    func importPhotoAlbum(id albumId: String) {
-        guard canAddMedia, let mediaUploadWorkflow else {
-            updateSetupErrorMessage(mediaAvailabilityMessage ?? L10n.string("create.error.mediaUnavailable"))
-            return
-        }
-        let template = form.template
-        markPreparedStoryMediaEdited()
-
-        runOperation {
-            await mediaUploadWorkflow.importPhotoAlbum(
-                id: albumId,
                 template: template,
                 momentId: self.activeMomentId
             )

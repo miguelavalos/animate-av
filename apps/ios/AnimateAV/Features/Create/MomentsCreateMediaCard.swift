@@ -1,13 +1,11 @@
 import AVAppShellFoundation
 import AVBrandFoundation
-import Photos
 import SwiftUI
 import UIKit
 
 struct MomentsCreateMediaCard: View {
     let presentation: MomentsCreateMediaPresentation
     let choosePhotos: () -> Void
-    let chooseAlbum: () -> Void
 
     var body: some View {
         AVAppShellCard {
@@ -117,169 +115,6 @@ private struct MomentsCreateMediaChoiceAction: View {
     }
 }
 
-struct MomentsCreateAlbumPickerSheet: View {
-    let remainingSlots: Int
-    let selectAlbum: (MediaPickerImport.PhotoAlbum) -> Void
-
-    @Environment(\.dismiss) private var dismiss
-    @State private var albums: [MediaPickerImport.PhotoAlbum] = []
-    @State private var isLoading = true
-    @State private var errorMessage: String?
-    @State private var albumPendingConfirmation: MediaPickerImport.PhotoAlbum?
-
-    var body: some View {
-        NavigationStack {
-            Group {
-                if isLoading {
-                    ProgressView(L10n.string("create.media.albums.loading"))
-                        .font(.system(size: 14, weight: .semibold))
-                        .tint(AVBrandColor.accent)
-                } else if let errorMessage {
-                    ContentUnavailableView(
-                        L10n.string("create.media.albums.unavailable"),
-                        systemImage: "photo.on.rectangle.angled",
-                        description: Text(errorMessage)
-                    )
-                } else if albums.isEmpty {
-                    ContentUnavailableView(
-                        L10n.string("create.media.albums.empty"),
-                        systemImage: "rectangle.stack",
-                        description: Text(L10n.string("create.media.albums.emptyDetail"))
-                    )
-                } else {
-                    List(albums) { album in
-                        Button {
-                            albumPendingConfirmation = album
-                        } label: {
-                            HStack(spacing: 12) {
-                                MomentsCreateAlbumCover(album: album)
-
-                                VStack(alignment: .leading, spacing: 2) {
-                                    Text(album.title)
-                                        .font(.system(size: 15, weight: .black))
-                                        .foregroundStyle(AVBrandColor.textPrimary)
-                                        .lineLimit(1)
-
-                                    Text(albumDetail(album))
-                                        .font(.caption)
-                                        .fontWeight(.semibold)
-                                        .foregroundStyle(AVBrandColor.textSecondary)
-                                }
-
-                                Spacer(minLength: 0)
-                            }
-                            .contentShape(Rectangle())
-                        }
-                        .buttonStyle(.plain)
-                    }
-                    .listStyle(.plain)
-                }
-            }
-            .navigationTitle(L10n.string("create.media.addCollection"))
-            .navigationBarTitleDisplayMode(.inline)
-            .toolbar {
-                ToolbarItem(placement: .cancellationAction) {
-                    Button(L10n.string("common.cancel")) {
-                        dismiss()
-                    }
-                }
-            }
-            .task {
-                await loadAlbums()
-            }
-            .confirmationDialog(
-                confirmationTitle,
-                isPresented: Binding(
-                    get: { albumPendingConfirmation != nil },
-                    set: { isPresented in
-                        if !isPresented {
-                            albumPendingConfirmation = nil
-                        }
-                    }
-                ),
-                titleVisibility: .visible,
-                presenting: albumPendingConfirmation
-            ) { album in
-                Button(L10n.string("create.media.addPhotos")) {
-                    albumPendingConfirmation = nil
-                    selectAlbum(album)
-                }
-
-                Button(L10n.string("common.cancel"), role: .cancel) {
-                    albumPendingConfirmation = nil
-                }
-            } message: { album in
-                Text(confirmationMessage(for: album))
-            }
-        }
-    }
-
-    private var confirmationTitle: String {
-        guard let albumPendingConfirmation else {
-            return L10n.string("create.media.collection.confirmTitleFallback")
-        }
-        let importCount = min(albumPendingConfirmation.assetCount, remainingSlots)
-        let photoWord = importCount == 1
-            ? L10n.string("media.photo.singular")
-            : L10n.string("media.photo.plural")
-        return L10n.string("create.media.collection.confirmTitle", importCount, photoWord)
-    }
-
-    private func confirmationMessage(for album: MediaPickerImport.PhotoAlbum) -> String {
-        let importCount = min(album.assetCount, remainingSlots)
-        let photoWord = importCount == 1
-            ? L10n.string("media.photo.singular")
-            : L10n.string("media.photo.plural")
-        return L10n.string("create.media.collection.confirmMessage", importCount, photoWord, album.title)
-    }
-
-    private func albumDetail(_ album: MediaPickerImport.PhotoAlbum) -> String {
-        let importCount = min(album.assetCount, remainingSlots)
-        if album.assetCount > remainingSlots {
-            return "\(album.assetCount) photos · adds first \(importCount)"
-        }
-        return "\(album.assetCount) \(album.assetCount == 1 ? "photo" : "photos")"
-    }
-
-    private func loadAlbums() async {
-        isLoading = true
-        errorMessage = nil
-        do {
-            albums = try await MediaPickerImport.loadPhotoAlbums()
-        } catch {
-            errorMessage = error.localizedDescription
-        }
-        isLoading = false
-    }
-}
-
-private struct MomentsCreateAlbumCover: View {
-    let album: MediaPickerImport.PhotoAlbum
-
-    var body: some View {
-        ZStack {
-            if let coverData = album.coverData,
-               let image = UIImage(data: coverData) {
-                Image(uiImage: image)
-                    .resizable()
-                    .scaledToFill()
-            } else {
-                AVBrandColor.accent.opacity(0.10)
-                Image(systemName: "rectangle.stack.fill")
-                    .font(.system(size: 18, weight: .semibold))
-                    .foregroundStyle(AVBrandColor.accent)
-            }
-        }
-        .frame(width: 44, height: 44)
-        .clipShape(RoundedRectangle(cornerRadius: 8, style: .continuous))
-        .overlay {
-            RoundedRectangle(cornerRadius: 8, style: .continuous)
-                .stroke(AVBrandColor.borderSubtle.opacity(0.55), lineWidth: 1)
-        }
-        .accessibilityHidden(true)
-    }
-}
-
 struct MomentsCreateMediaManagerSheet: View {
     let selectedMedia: [MomentsSelectedMedia]
     let syncedMediaAssets: [MomentMediaAsset]
@@ -289,7 +124,6 @@ struct MomentsCreateMediaManagerSheet: View {
     let removeMedia: (MomentsSelectedMedia) -> Void
     let restoreLocalMediaForEditing: () -> Void
     let chooseManually: () -> Void
-    let chooseAlbum: () -> Void
 
     @Environment(\.dismiss) private var dismiss
     @State private var workingMedia: [MomentsSelectedMedia] = []
@@ -326,8 +160,7 @@ struct MomentsCreateMediaManagerSheet: View {
                         selectedCount: displayCount,
                         canAddMedia: canAddMedia,
                         isImporting: isImporting,
-                        addMedia: chooseManually,
-                        chooseAlbum: chooseAlbum
+                        addMedia: chooseManually
                     )
 
                     if isImporting {
@@ -800,7 +633,6 @@ private struct MomentsCreateEditorAviPanel: View {
     let canAddMedia: Bool
     let isImporting: Bool
     let addMedia: () -> Void
-    let chooseAlbum: () -> Void
 
     var body: some View {
         AVAppShellCard {
@@ -832,11 +664,6 @@ private struct MomentsCreateEditorAviPanel: View {
                         if canAddMedia {
                             Button(action: addMedia) {
                             Label(L10n.string("create.media.add"), systemImage: "photo.badge.plus")
-                            }
-                            .disabled(isImporting)
-
-                            Button(action: chooseAlbum) {
-                                Label(L10n.string("create.media.addCollection"), systemImage: "rectangle.stack.badge.plus")
                             }
                             .disabled(isImporting)
                         }

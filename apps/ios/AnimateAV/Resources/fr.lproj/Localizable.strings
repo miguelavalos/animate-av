@@ -65,8 +65,6 @@
 "profile.creationPreferences.start.ask.detail" = "Affiche les deux options de média avant de commencer.";
 "profile.creationPreferences.start.photos.title" = "Photos ou clips";
 "profile.creationPreferences.start.photos.detail" = "Ouvre immédiatement la sélection de média.";
-"profile.creationPreferences.start.album.title" = "Album";
-"profile.creationPreferences.start.album.detail" = "Ouvre d'abord vos albums.";
 "profile.pro.avi.detail" = "Vidéos finales sans branding tant que Pro est actif.";
 "profile.pro.avi.title" = "Sans branding";
 "profile.pro.library.detail" = "Meilleure valeur mensuelle que l'achat de crédits un par un.";
@@ -583,7 +581,6 @@
 "common.edit" = "Modifier";
 "create.media.actions" = "Actions de photo";
 "create.media.add" = "Ajouter une photo";
-"create.media.addCollection" = "Choisir un album";
 "create.media.choose" = "Choisir une photo";
 "create.media.emptySummary" = "Choisis une photo dans ta photothèque.";
 "create.media.finishReorder" = "Terminer l'ordre";
@@ -664,10 +661,6 @@
 "create.form.tone" = "Ton";
 "create.media.addPhotos" = "Ajouter une image";
 "create.media.added" = "Image ajoutée";
-"create.media.albums.empty" = "Aucun album";
-"create.media.albums.emptyDetail" = "Choisis une image dans Photos pour l’utiliser comme source.";
-"create.media.albums.loading" = "Chargement des albums";
-"create.media.albums.unavailable" = "Albums indisponibles";
 "create.media.backEditor" = "Retour à l’éditeur d’image";
 "create.media.doneReordering" = "Réorganisation terminée";
 "create.media.emptyStart" = "Choisis une photo pour démarrer cette vidéo cartoon.";
@@ -682,9 +675,6 @@
 "create.media.chooseShort" = "Choisir";
 "create.media.editTitle" = "Modifier la photo";
 "create.media.editSummary" = "Touchez pour prévisualiser, remplacer ou supprimer.";
-"create.media.collection.confirmTitleFallback" = "Ajouter l’image de l’album ?";
-"create.media.collection.confirmTitle" = "Ajouter jusqu’à %d %@ ?";
-"create.media.collection.confirmMessage" = "Avi ajoutera jusqu’à %d %@ depuis %@ et ignorera les images déjà sélectionnées.";
 "create.media.status.ready" = "Photo prête. Avi peut planifier le cartoon.";
 "create.media.status.duplicatesOnly" = "Cette image était déjà sélectionnée.";
 "create.media.status.addedSkippingDuplicates" = "%d %@ ajoutés. %d déjà sélectionnés ignorés.";

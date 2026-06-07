@@ -134,7 +134,6 @@ enum AppTheme: String, CaseIterable, Identifiable {
 enum MomentsNewMomentStartPreference: String, CaseIterable, Identifiable {
     case askEveryTime = "ask"
     case photosOrClips = "single"
-    case album
 
     var id: String { rawValue }
 
@@ -142,7 +141,6 @@ enum MomentsNewMomentStartPreference: String, CaseIterable, Identifiable {
         switch self {
         case .askEveryTime: L10n.string("profile.creationPreferences.start.ask.title")
         case .photosOrClips: L10n.string("profile.creationPreferences.start.photos.title")
-        case .album: L10n.string("profile.creationPreferences.start.album.title")
         }
     }
 
@@ -150,7 +148,6 @@ enum MomentsNewMomentStartPreference: String, CaseIterable, Identifiable {
         switch self {
         case .askEveryTime: L10n.string("profile.creationPreferences.start.ask.detail")
         case .photosOrClips: L10n.string("profile.creationPreferences.start.photos.detail")
-        case .album: L10n.string("profile.creationPreferences.start.album.detail")
         }
     }
 
@@ -158,7 +155,6 @@ enum MomentsNewMomentStartPreference: String, CaseIterable, Identifiable {
         switch self {
         case .askEveryTime: "rectangle.stack.badge.plus"
         case .photosOrClips: "photo.badge.plus"
-        case .album: "rectangle.stack"
         }
     }
 }

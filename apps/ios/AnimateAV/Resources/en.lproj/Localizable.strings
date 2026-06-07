@@ -65,8 +65,6 @@
 "profile.creationPreferences.start.ask.detail" = "Show start options before creating.";
 "profile.creationPreferences.start.photos.title" = "Photo";
 "profile.creationPreferences.start.photos.detail" = "Open photo selection immediately.";
-"profile.creationPreferences.start.album.title" = "Album";
-"profile.creationPreferences.start.album.detail" = "Open albums first.";
 "profile.pro.avi.detail" = "Create final videos without Animate AV branding while Pro is active.";
 "profile.pro.avi.title" = "No branding";
 "profile.pro.library.detail" = "Better monthly value than buying credits one by one.";
@@ -585,7 +583,6 @@
 "common.edit" = "Edit";
 "create.media.actions" = "Photo actions";
 "create.media.add" = "Add photo";
-"create.media.addCollection" = "Choose an album";
 "create.media.choose" = "Choose photo";
 "create.media.emptySummary" = "Choose one photo from your library.";
 "create.media.finishReorder" = "Done";
@@ -671,10 +668,6 @@
 "create.form.tone" = "Tone";
 "create.media.addPhotos" = "Add image";
 "create.media.added" = "Image added";
-"create.media.albums.empty" = "No albums";
-"create.media.albums.emptyDetail" = "Choose one image from Photos to use as the source.";
-"create.media.albums.loading" = "Loading albums";
-"create.media.albums.unavailable" = "Albums unavailable";
 "create.media.backEditor" = "Back to image editor";
 "create.media.doneReordering" = "Done";
 "create.media.emptyStart" = "Choose one photo to start this cartoon video.";
@@ -689,9 +682,6 @@
 "create.media.chooseShort" = "Choose";
 "create.media.editTitle" = "Edit photo";
 "create.media.editSummary" = "Tap to preview, replace, or remove.";
-"create.media.collection.confirmTitleFallback" = "Add album photos?";
-"create.media.collection.confirmTitle" = "Add up to %d %@?";
-"create.media.collection.confirmMessage" = "Avi will add up to %d %@ from %@ and skip photos already selected.";
 "create.media.status.ready" = "Photo ready. Avi can plan the cartoon.";
 "create.media.status.duplicatesOnly" = "That image was already selected.";
 "create.media.status.addedSkippingDuplicates" = "Added %d %@. Skipped %d already selected.";

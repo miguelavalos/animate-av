@@ -65,8 +65,6 @@
 "profile.creationPreferences.start.ask.detail" = "Zeigt vor dem Start beide Bildoptionen.";
 "profile.creationPreferences.start.photos.title" = "Foto";
 "profile.creationPreferences.start.photos.detail" = "Öffnet die Bildauswahl sofort.";
-"profile.creationPreferences.start.album.title" = "Album";
-"profile.creationPreferences.start.album.detail" = "Öffnet zuerst deine Alben.";
 "profile.pro.avi.detail" = "Finale Videos ohne Branding, solange Pro aktiv ist.";
 "profile.pro.avi.title" = "Kein Branding";
 "profile.pro.library.detail" = "Besserer Monatswert als Credits einzeln zu kaufen.";
@@ -585,7 +583,6 @@
 "common.edit" = "Bearbeiten";
 "create.media.actions" = "Foto-Aktionen";
 "create.media.add" = "Foto hinzufügen";
-"create.media.addCollection" = "Album auswählen";
 "create.media.choose" = "Foto wählen";
 "create.media.emptySummary" = "Wähle ein Foto aus deiner Mediathek.";
 "create.media.finishReorder" = "Sortierung abschließen";
@@ -666,10 +663,6 @@
 "create.form.tone" = "Ton";
 "create.media.addPhotos" = "Bild hinzufügen";
 "create.media.added" = "Bild hinzugefügt";
-"create.media.albums.empty" = "Keine Alben";
-"create.media.albums.emptyDetail" = "Wähle ein Bild aus Fotos als Quelle.";
-"create.media.albums.loading" = "Alben werden geladen";
-"create.media.albums.unavailable" = "Alben nicht verfügbar";
 "create.media.backEditor" = "Zurück zum Bildeditor";
 "create.media.doneReordering" = "Sortierung fertig";
 "create.media.emptyStart" = "Wähle ein Foto, um dieses Cartoon-Video zu starten.";
@@ -684,9 +677,6 @@
 "create.media.chooseShort" = "Wählen";
 "create.media.editTitle" = "Foto bearbeiten";
 "create.media.editSummary" = "Tippe zum Vorschauen, Ersetzen oder Entfernen.";
-"create.media.collection.confirmTitleFallback" = "Bild aus Album hinzufügen?";
-"create.media.collection.confirmTitle" = "Bis zu %d %@ hinzufügen?";
-"create.media.collection.confirmMessage" = "Avi fügt bis zu %d %@ aus %@ hinzu und überspringt bereits ausgewählte Bilder.";
 "create.media.status.ready" = "Foto bereit. Avi kann den Cartoon planen.";
 "create.media.status.duplicatesOnly" = "Dieses Bild war bereits ausgewählt.";
 "create.media.status.addedSkippingDuplicates" = "%d %@ hinzugefügt. %d bereits ausgewählte übersprungen.";

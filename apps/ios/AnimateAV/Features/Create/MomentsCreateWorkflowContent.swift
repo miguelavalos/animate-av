@@ -24,7 +24,6 @@ struct MomentsCreateWorkflowContent: View {
                     isPreparingStory: viewModel.isPreparingStory,
                     pickerItems: $pickerItems,
                     importPickerItems: viewModel.importPickerItems,
-                    importPhotoAlbum: viewModel.importPhotoAlbum,
                     removeMedia: viewModel.removeMedia,
                     restoreLocalMediaForEditing: viewModel.restoreLocalMediaForEditing,
                     selectStyle: viewModel.selectCreationStyle,
@@ -33,9 +32,7 @@ struct MomentsCreateWorkflowContent: View {
                     useAutoStyleSuggestion: viewModel.useAutoStyleSuggestion,
                     undoAutoStyleSuggestion: viewModel.undoAutoStyleSuggestion,
                     openPickerRequest: 0,
-                    openAlbumRequest: viewModel.albumPickerOpenRequest,
                     consumeOpenPickerRequest: {},
-                    consumeOpenAlbumRequest: viewModel.consumeAlbumPickerOpenRequest,
                     discardMoment: viewModel.discardMoment,
                     startSignInFlow: startSignInFlow,
                     openCredits: openCredits,
@@ -62,7 +59,6 @@ private struct MomentsCreateMediaFirstWorkspace: View {
     let isPreparingStory: Bool
     @Binding var pickerItems: [PhotosPickerItem]
     let importPickerItems: ([PhotosPickerItem]) -> Void
-    let importPhotoAlbum: (String) -> Void
     let removeMedia: (MomentsSelectedMedia) -> Void
     let restoreLocalMediaForEditing: () -> Void
     let selectStyle: (MomentCreationStyle) -> Void
@@ -71,9 +67,7 @@ private struct MomentsCreateMediaFirstWorkspace: View {
     let useAutoStyleSuggestion: () -> Void
     let undoAutoStyleSuggestion: () -> Void
     let openPickerRequest: Int
-    let openAlbumRequest: Int
     let consumeOpenPickerRequest: () -> Void
-    let consumeOpenAlbumRequest: () -> Void
     let discardMoment: () -> Void
     let startSignInFlow: () -> Void
     let openCredits: () -> Void
@@ -90,7 +84,6 @@ private struct MomentsCreateMediaFirstWorkspace: View {
     @State private var waitsForFinalRenderPlan = false
     @State private var showsDiscardMomentConfirmation = false
     @State private var showsCompactPhotoPicker = false
-    @State private var showsCompactAlbumPicker = false
     @State private var showsCompactMediaManager = false
     @State private var handledOpenPickerRequest = 0
     @State private var handledOpenAlbumRequest = 0
@@ -143,8 +136,7 @@ private struct MomentsCreateMediaFirstWorkspace: View {
                     } else {
                         MomentsCreateMediaCard(
                             presentation: mediaPresentation,
-                            choosePhotos: presentCompactPhotoPicker,
-                            chooseAlbum: presentCompactAlbumPicker
+                            choosePhotos: presentCompactPhotoPicker
                         )
                     }
                 }
@@ -190,21 +182,8 @@ private struct MomentsCreateMediaFirstWorkspace: View {
                 restoreLocalMediaForEditing: restoreLocalMediaForEditing,
                 chooseManually: {
                     presentCompactPhotoPicker()
-                },
-                chooseAlbum: {
-                    presentCompactPhotoPicker()
                 }
             )
-        }
-        .sheet(isPresented: $showsCompactAlbumPicker) {
-            MomentsCreateAlbumPickerSheet(
-                remainingSlots: mediaPresentation.remainingSlots,
-                selectAlbum: { album in
-                    showsCompactAlbumPicker = false
-                    importPhotoAlbum(album.id)
-                }
-            )
-            .presentationDetents([.medium, .large])
         }
         .sheet(isPresented: $showsCreateVideoConfirmation) {
             MomentsCreateFinalVideoConfirmationSheet(
@@ -245,13 +224,9 @@ private struct MomentsCreateMediaFirstWorkspace: View {
         }
         .onAppear {
             openCompactPickerIfRequested(openPickerRequest)
-            openCompactAlbumIfRequested(openAlbumRequest)
         }
         .onChange(of: openPickerRequest) { _, newValue in
             openCompactPickerIfRequested(newValue)
-        }
-        .onChange(of: openAlbumRequest) { _, newValue in
-            openCompactAlbumIfRequested(newValue)
         }
         .alert(L10n.string("create.discard.confirmTitle"), isPresented: $showsDiscardMomentConfirmation) {
             Button(L10n.string("create.discard.keep"), role: .cancel) {}
@@ -336,14 +311,6 @@ private struct MomentsCreateMediaFirstWorkspace: View {
         presentCompactPhotoPickerAfterViewUpdate()
     }
 
-    private func openCompactAlbumIfRequested(_ request: Int) {
-        guard request > handledOpenAlbumRequest,
-              presentation.mediaSummary.selectedCount == 0 else { return }
-        handledOpenAlbumRequest = request
-        consumeOpenAlbumRequest()
-        presentCompactAlbumPicker()
-    }
-
     private func presentCompactPhotoPicker() {
         showsCompactPhotoPicker = true
     }
@@ -353,10 +320,6 @@ private struct MomentsCreateMediaFirstWorkspace: View {
             await Task.yield()
             showsCompactPhotoPicker = true
         }
-    }
-
-    private func presentCompactAlbumPicker() {
-        showsCompactAlbumPicker = true
     }
 
     private func discardCurrentMoment() {

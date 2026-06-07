@@ -271,8 +271,6 @@ struct MomentsAppShellView: View {
                 break
             case .photosOrClips:
                 createViewModel.requestMediaPickerOpen()
-            case .album:
-                createViewModel.requestAlbumPickerOpen()
             }
         }
     }

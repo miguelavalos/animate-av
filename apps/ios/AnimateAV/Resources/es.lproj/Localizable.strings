@@ -65,8 +65,6 @@
 "profile.creationPreferences.start.ask.detail" = "Muestra opciones de inicio antes de crear.";
 "profile.creationPreferences.start.photos.title" = "Foto";
 "profile.creationPreferences.start.photos.detail" = "Abre la selección de foto inmediatamente.";
-"profile.creationPreferences.start.album.title" = "Álbum";
-"profile.creationPreferences.start.album.detail" = "Abre primero tus álbumes.";
 "profile.pro.avi.detail" = "Videos finales sin branding mientras Pro esté activo.";
 "profile.pro.avi.title" = "Sin branding";
 "profile.pro.library.detail" = "Mejor valor mensual que comprar créditos uno a uno.";
@@ -585,7 +583,6 @@
 "common.edit" = "Editar";
 "create.media.actions" = "Acciones de foto";
 "create.media.add" = "Añadir foto";
-"create.media.addCollection" = "Elegir un álbum";
 "create.media.choose" = "Elegir foto";
 "create.media.emptySummary" = "Elige una foto de tu biblioteca.";
 "create.media.finishReorder" = "Listo";
@@ -671,10 +668,6 @@
 "create.form.tone" = "Tono";
 "create.media.addPhotos" = "Añadir imagen";
 "create.media.added" = "Imagen añadida";
-"create.media.albums.empty" = "Sin álbumes";
-"create.media.albums.emptyDetail" = "Crea un álbum en Fotos o elige una imagen individual.";
-"create.media.albums.loading" = "Cargando álbumes";
-"create.media.albums.unavailable" = "Álbumes no disponibles";
 "create.media.backEditor" = "Volver al editor de imagen";
 "create.media.doneReordering" = "Listo";
 "create.media.emptyStart" = "Elige una foto para empezar este video cartoon.";
@@ -689,9 +682,6 @@
 "create.media.chooseShort" = "Elegir";
 "create.media.editTitle" = "Editar foto";
 "create.media.editSummary" = "Toca para previsualizar, sustituir o quitar.";
-"create.media.collection.confirmTitleFallback" = "¿Añadir fotos del álbum?";
-"create.media.collection.confirmTitle" = "¿Añadir hasta %d %@?";
-"create.media.collection.confirmMessage" = "Avi añadirá hasta %d %@ de %@ y omitirá fotos ya seleccionadas.";
 "create.media.status.ready" = "Foto lista. Avi puede planear el cartoon.";
 "create.media.status.duplicatesOnly" = "Esa imagen ya estaba seleccionada.";
 "create.media.status.addedSkippingDuplicates" = "Añadidos %d %@. Se omitieron %d ya seleccionados.";

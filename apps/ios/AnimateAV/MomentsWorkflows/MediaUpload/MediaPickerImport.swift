@@ -11,13 +11,6 @@ import UniformTypeIdentifiers
 enum MediaPickerImport {
     private static let analyzer = AVVisionLocalMediaAnalyzer()
 
-    struct PhotoAlbum: Identifiable, Equatable {
-        let id: String
-        let title: String
-        let assetCount: Int
-        let coverData: Data?
-    }
-
     static func load(
         items: [PhotosPickerItem],
         limit: Int,
@@ -34,73 +27,6 @@ enum MediaPickerImport {
             )
             imported.append(media)
             await progress?(imported.count, total)
-        }
-
-        return imported
-    }
-
-    static func loadPhotoAlbums() async throws -> [PhotoAlbum] {
-        let status = await requestPhotoLibraryAccess()
-        guard status == .authorized || status == .limited else {
-            throw MomentsUploadError.photoLibraryAccessDenied
-        }
-
-        let smartAlbums = albums(
-            from: PHAssetCollection.fetchAssetCollections(
-                with: .smartAlbum,
-                subtype: .any,
-                options: nil
-            )
-        )
-        let userAlbums = albums(
-            from: PHAssetCollection.fetchAssetCollections(
-                with: .album,
-                subtype: .any,
-                options: nil
-            )
-        )
-        let albums = (smartAlbums + userAlbums).reduce(into: [PhotoAlbum]()) { uniqueAlbums, album in
-            guard !uniqueAlbums.contains(where: { $0.id == album.id }) else { return }
-            uniqueAlbums.append(album)
-        }
-
-        return albums.sorted {
-            if $0.title.localizedCaseInsensitiveCompare($1.title) == .orderedSame {
-                return $0.id < $1.id
-            }
-            return $0.title.localizedCaseInsensitiveCompare($1.title) == .orderedAscending
-        }
-    }
-
-    static func loadPhotoAlbum(
-        id albumId: String,
-        limit: Int,
-        startingSortOrder: Int,
-        progress: (@MainActor (Int, Int) -> Void)? = nil
-    ) async throws -> [MomentsSelectedMedia] {
-        guard limit > 0 else { return [] }
-        let status = await requestPhotoLibraryAccess()
-        guard status == .authorized || status == .limited else {
-            throw MomentsUploadError.photoLibraryAccessDenied
-        }
-        guard let collection = PHAssetCollection
-            .fetchAssetCollections(withLocalIdentifiers: [albumId], options: nil)
-            .firstObject else {
-            return []
-        }
-
-        let options = photoFetchOptions()
-        options.fetchLimit = limit
-        let assets = PHAsset.fetchAssets(in: collection, options: options)
-        var imported: [MomentsSelectedMedia] = []
-
-        for index in 0..<assets.count {
-            let media = try await loadPhotoAsset(
-                assets.object(at: index),
-                sortOrder: startingSortOrder + index
-            )
-            imported.append(media)
-            await progress?(imported.count, assets.count)
         }
 
         return imported
@@ -212,64 +138,6 @@ enum MediaPickerImport {
         let current = PHPhotoLibrary.authorizationStatus(for: .readWrite)
         guard current == .notDetermined else { return current }
         return await PHPhotoLibrary.requestAuthorization(for: .readWrite)
-    }
-
-    private static func photoCount(in collection: PHAssetCollection) -> Int {
-        PHAsset.fetchAssets(in: collection, options: photoFetchOptions()).count
-    }
-
-    private static func albums(from collections: PHFetchResult<PHAssetCollection>) -> [PhotoAlbum] {
-        var albums: [PhotoAlbum] = []
-        collections.enumerateObjects { collection, _, _ in
-            let count = photoCount(in: collection)
-            guard count > 0,
-                  let title = collection.localizedTitle,
-                  !title.isEmpty else { return }
-            albums.append(
-                PhotoAlbum(
-                    id: collection.localIdentifier,
-                    title: title,
-                    assetCount: count,
-                    coverData: coverData(in: collection)
-                )
-            )
-        }
-        return albums
-    }
-
-    private static func coverData(in collection: PHAssetCollection) -> Data? {
-        let options = photoFetchOptions()
-        options.fetchLimit = 1
-        guard let asset = PHAsset.fetchAssets(in: collection, options: options).firstObject else {
-            return nil
-        }
-
-        let requestOptions = PHImageRequestOptions()
-        requestOptions.isNetworkAccessAllowed = true
-        requestOptions.deliveryMode = .opportunistic
-        requestOptions.resizeMode = .fast
-        requestOptions.isSynchronous = true
-
-        var imageData: Data?
-        PHImageManager.default().requestImage(
-            for: asset,
-            targetSize: CGSize(width: 160, height: 160),
-            contentMode: .aspectFill,
-            options: requestOptions
-        ) { image, _ in
-            imageData = image?.jpegData(compressionQuality: 0.72)
-        }
-        return imageData
-    }
-
-    private static func photoFetchOptions() -> PHFetchOptions {
-        let options = PHFetchOptions()
-        options.predicate = NSPredicate(format: "mediaType == %d", PHAssetMediaType.image.rawValue)
-        options.sortDescriptors = [
-            NSSortDescriptor(key: "creationDate", ascending: true),
-            NSSortDescriptor(key: "modificationDate", ascending: true)
-        ]
-        return options
     }
 
     private static func loadPhotoAsset(_ asset: PHAsset, sortOrder: Int) async throws -> MomentsSelectedMedia {
