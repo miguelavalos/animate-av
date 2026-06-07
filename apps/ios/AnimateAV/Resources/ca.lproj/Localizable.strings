@@ -114,8 +114,8 @@
 "create.duration.standard.subtitle" = "Més ritme i context.";
 "create.duration.standard.title" = "16-30 s";
 "create.guide.look.title" = "Estil";
-"create.guide.mood.detail" = "Defineix el to de veu i la sensació de l’audio.";
-"create.guide.mood.title" = "Veu";
+"create.guide.voice.detail" = "Defineix el to de veu i la sensació de l’audio.";
+"create.guide.voice.title" = "Veu";
 "create.guide.theme.title" = "Tema";
 "create.guide.videoSetup.title" = "Configuració de vídeo";
 "create.look.anime.subtitle" = "Escenes estilitzades inspirades en anime.";
@@ -150,14 +150,14 @@
 "create.selector.look.intro.detail" = "Mantén el mateix tema, però canvia com es veu el vídeo final.";
 "create.selector.look.intro.title" = "El look canvia l’estil final";
 "create.selector.look.title" = "Triar look";
-"create.selector.mood.calm.detail" = "Suau, més lent i discret.";
-"create.selector.mood.cinematic.detail" = "Ritme més dramàtic i amb atmosfera.";
-"create.selector.mood.fun.detail" = "Energia juganera per moments compartits.";
-"create.selector.mood.intro.detail" = "Tria com s’ha de sentir el missatge parlat i l’audio.";
-"create.selector.mood.intro.title" = "La veu guia el vídeo";
-"create.selector.mood.title" = "Triar veu";
-"create.selector.mood.upbeat.detail" = "Ràpid, lluminós i viu.";
-"create.selector.mood.warm.detail" = "Càlid, proper i personal.";
+"create.selector.voice.calm.detail" = "Suau, més lent i discret.";
+"create.selector.voice.cinematic.detail" = "Ritme més dramàtic i amb atmosfera.";
+"create.selector.voice.fun.detail" = "Energia juganera per moments compartits.";
+"create.selector.voice.intro.detail" = "Tria com s’ha de sentir el missatge parlat i l’audio.";
+"create.selector.voice.intro.title" = "La veu guia el vídeo";
+"create.selector.voice.title" = "Triar veu";
+"create.selector.voice.upbeat.detail" = "Ràpid, lluminós i viu.";
+"create.selector.voice.warm.detail" = "Càlid, proper i personal.";
 "create.selector.theme.accessibility" = "Tema %@";
 "create.selector.theme.accessibilitySoon" = "Tema %@, disponible aviat";
 "create.selector.theme.intro.detail" = "Tria quin tipus de record vols crear. Avi donarà forma a la història al voltant d’aquest propòsit.";
@@ -594,7 +594,7 @@
 "create.media.suggestOrder" = "Suggerir ordre";
 "create.media.title" = "Mèdia";
 "create.media.undoAviOrder" = "Desfer ordre d'Avi";
-"create.options.detail" = "Avi pot ajustar ànim, ritme i la nota d'història abans de crear el vídeo.";
+"create.options.detail" = "Avi pot ajustar veu, estil i missatge abans de crear el vídeo.";
 "create.options.edit" = "Editar opcions";
 "create.options.suggestion" = "Avi suggereix %@ · %@";
 "create.options.suggestionActive" = "El suggeriment d'Avi està actiu. Obre opcions per desfer-lo o ajustar-lo.";
@@ -979,7 +979,7 @@
 "create.workflowContent.aviTip" = "Avi tip";
 "create.workflowContent.tipFinalReady" = "Your video is ready to download and move to Gallery.";
 "create.workflowContent.tipFinalWorking" = "Avi està acabant el vídeo final. El progrés s’actualitza automàticament.";
-"create.workflowContent.tipPickMoments" = "Pick the moments. Avi will shape the story, mood, and pacing.";
+"create.workflowContent.tipPickMoments" = "Tria la imatge. Avi definirà estil, missatge i ritme.";
 "create.workflowContent.planDetail" = "%ds · %d elements";
 
 "create.renderRows.renderJob" = "Render job";

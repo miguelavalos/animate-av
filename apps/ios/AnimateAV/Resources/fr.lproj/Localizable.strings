@@ -114,8 +114,8 @@
 "create.duration.standard.subtitle" = "Plus de rythme et de contexte.";
 "create.duration.standard.title" = "16-30 s";
 "create.guide.look.title" = "Style";
-"create.guide.mood.detail" = "Définit le ton de la voix et l’ambiance audio.";
-"create.guide.mood.title" = "Voix";
+"create.guide.voice.detail" = "Définit le ton de la voix et l’ambiance audio.";
+"create.guide.voice.title" = "Voix";
 "create.guide.theme.title" = "Thème";
 "create.guide.videoSetup.title" = "Réglage vidéo";
 "create.look.anime.subtitle" = "Scènes stylisées inspirées anime.";
@@ -150,14 +150,14 @@
 "create.selector.look.intro.detail" = "Garde le même thème, mais change l’apparence de la vidéo finale.";
 "create.selector.look.intro.title" = "Le look change le style final";
 "create.selector.look.title" = "Choisir le look";
-"create.selector.mood.calm.detail" = "Doux, plus lent et discret.";
-"create.selector.mood.cinematic.detail" = "Rythme plus dramatique et atmosphère marquée.";
-"create.selector.mood.fun.detail" = "Énergie joueuse pour les moments partagés.";
-"create.selector.mood.intro.detail" = "Choisis le ressenti du message parlé et de l’audio.";
-"create.selector.mood.intro.title" = "La voix guide la vidéo";
-"create.selector.mood.title" = "Choisir la voix";
-"create.selector.mood.upbeat.detail" = "Rapide, lumineux et vivant.";
-"create.selector.mood.warm.detail" = "Chaleureux, proche et personnel.";
+"create.selector.voice.calm.detail" = "Doux, plus lent et discret.";
+"create.selector.voice.cinematic.detail" = "Rythme plus dramatique et atmosphère marquée.";
+"create.selector.voice.fun.detail" = "Énergie joueuse pour les moments partagés.";
+"create.selector.voice.intro.detail" = "Choisis le ressenti du message parlé et de l’audio.";
+"create.selector.voice.intro.title" = "La voix guide la vidéo";
+"create.selector.voice.title" = "Choisir la voix";
+"create.selector.voice.upbeat.detail" = "Rapide, lumineux et vivant.";
+"create.selector.voice.warm.detail" = "Chaleureux, proche et personnel.";
 "create.selector.theme.accessibility" = "Thème %@";
 "create.selector.theme.accessibilitySoon" = "Thème %@, bientôt disponible";
 "create.selector.theme.intro.detail" = "Choisis le type de souvenir à créer. Avi structurera l’histoire autour de cette intention.";
@@ -594,7 +594,7 @@
 "create.media.suggestOrder" = "Suggérer l'ordre";
 "create.media.title" = "Médias";
 "create.media.undoAviOrder" = "Annuler l'ordre d'Avi";
-"create.options.detail" = "Avi peut ajuster l'ambiance, le rythme et la note d'histoire avant de créer la vidéo.";
+"create.options.detail" = "Avi peut ajuster la voix, le style et le message avant de créer la vidéo.";
 "create.options.edit" = "Modifier les options";
 "create.options.suggestion" = "Avi suggère %@ · %@";
 "create.options.suggestionActive" = "La suggestion d'Avi est active. Ouvre les options pour l'annuler ou l'ajuster.";
@@ -979,7 +979,7 @@
 "create.workflowContent.aviTip" = "Avi tip";
 "create.workflowContent.tipFinalReady" = "Your video is ready to download and move to Gallery.";
 "create.workflowContent.tipFinalWorking" = "Avi termine la vidéo finale. La progression se met à jour automatiquement.";
-"create.workflowContent.tipPickMoments" = "Pick the moments. Avi will shape the story, mood, and pacing.";
+"create.workflowContent.tipPickMoments" = "Choisis l’image. Avi définira le style, le message et le rythme.";
 "create.workflowContent.planDetail" = "%ds · %d éléments";
 
 "create.renderRows.renderJob" = "Render job";

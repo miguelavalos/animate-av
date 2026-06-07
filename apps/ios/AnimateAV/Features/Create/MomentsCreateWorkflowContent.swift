@@ -84,7 +84,7 @@ private struct MomentsCreateMediaFirstWorkspace: View {
 
     @State private var showsThemeChooser = false
     @State private var showsLookChooser = false
-    @State private var showsMoodChooser = false
+    @State private var showsVoiceChooser = false
     @State private var showsAviNoteEditor = false
     @State private var showsCreateVideoConfirmation = false
     @State private var waitsForFinalRenderPlan = false
@@ -134,7 +134,7 @@ private struct MomentsCreateMediaFirstWorkspace: View {
                             editMedia: { showsCompactMediaManager = true },
                             changeTheme: { showsThemeChooser = true },
                             changeLook: { showsLookChooser = true },
-                            changeMood: { showsMoodChooser = true },
+                            changeVoice: { showsVoiceChooser = true },
                             editNote: { showsAviNoteEditor = true },
                             discardMoment: { showsDiscardMomentConfirmation = true }
                         )
@@ -281,15 +281,15 @@ private struct MomentsCreateMediaFirstWorkspace: View {
             )
             .id(form.look.rawValue)
         }
-        .navigationDestination(isPresented: $showsMoodChooser) {
-            MomentsCreateMoodChooserPage(
+        .navigationDestination(isPresented: $showsVoiceChooser) {
+            MomentsCreateVoiceChooserPage(
                 allowedMusic: selectedStyle.allowedMusic,
                 selectedMusicPreset: selectedMusicPreset,
                 selectMusicPreset: {
                     selectMusicPreset($0)
-                    showsMoodChooser = false
+                    showsVoiceChooser = false
                 },
-                dismiss: { showsMoodChooser = false }
+                dismiss: { showsVoiceChooser = false }
             )
             .id(selectedMusicPreset.rawValue)
         }
@@ -834,7 +834,7 @@ private struct MomentsCreateStoryDecisionCard: View {
     let editMedia: () -> Void
     let changeTheme: () -> Void
     let changeLook: () -> Void
-    let changeMood: () -> Void
+    let changeVoice: () -> Void
     let editNote: () -> Void
     let discardMoment: () -> Void
     var body: some View {
@@ -946,9 +946,9 @@ private struct MomentsCreateStoryDecisionCard: View {
                         MomentsCreateStoryDecisionSummaryRow(
                             title: L10n.string("create.workflowContent.tone"),
                             value: selectedMusicPreset.title,
-                            detail: L10n.string("create.guide.mood.detail"),
+                            detail: L10n.string("create.guide.voice.detail"),
                             systemImage: "sparkles",
-                            action: changeMood
+                            action: changeVoice
                         )
                         MomentsCreateOptionDivider()
                         MomentsCreateStoryDecisionSummaryRow(
@@ -2243,7 +2243,7 @@ private struct MomentsCreateGuideSummaryCard: View {
     let selectedMusicPreset: MomentMusicPreset
     let changeTheme: () -> Void
     let changeLook: () -> Void
-    let changeMood: () -> Void
+    let changeVoice: () -> Void
     let selectMusicPreset: (MomentMusicPreset) -> Void
 
     var body: some View {
@@ -2275,11 +2275,11 @@ private struct MomentsCreateGuideSummaryCard: View {
                     MomentsCreateOptionDivider()
 
                     MomentsCreateEditableOptionRow(
-                        title: L10n.string("create.guide.mood.title"),
+                        title: L10n.string("create.guide.voice.title"),
                         value: selectedMusicPreset.title,
-                        detail: L10n.string("create.guide.mood.detail"),
+                        detail: L10n.string("create.guide.voice.detail"),
                         systemImage: "sparkles",
-                        action: changeMood
+                        action: changeVoice
                     )
                 }
             }
@@ -2844,7 +2844,7 @@ private struct MomentsCreateLookImageTile: View {
     }
 }
 
-private struct MomentsCreateMoodChooserPage: View {
+private struct MomentsCreateVoiceChooserPage: View {
     let allowedMusic: [MomentMusicPreset]
     let selectedMusicPreset: MomentMusicPreset
     let selectMusicPreset: (MomentMusicPreset) -> Void
@@ -2867,9 +2867,9 @@ private struct MomentsCreateMoodChooserPage: View {
 
     var body: some View {
         MomentsCreateVisualOptionChooserPage(
-            title: L10n.string("create.selector.mood.title"),
-            introTitle: L10n.string("create.selector.mood.intro.title"),
-            introDetail: L10n.string("create.selector.mood.intro.detail"),
+            title: L10n.string("create.selector.voice.title"),
+            introTitle: L10n.string("create.selector.voice.intro.title"),
+            introDetail: L10n.string("create.selector.voice.intro.detail"),
             dismiss: dismiss,
             confirm: applySelection
         ) {
@@ -2893,15 +2893,15 @@ private struct MomentsCreateMoodChooserPage: View {
     private func detail(for preset: MomentMusicPreset) -> String {
         switch preset {
         case .warm:
-            return L10n.string("create.selector.mood.warm.detail")
+            return L10n.string("create.selector.voice.warm.detail")
         case .fun:
-            return L10n.string("create.selector.mood.fun.detail")
+            return L10n.string("create.selector.voice.fun.detail")
         case .cinematic:
-            return L10n.string("create.selector.mood.cinematic.detail")
+            return L10n.string("create.selector.voice.cinematic.detail")
         case .calm:
-            return L10n.string("create.selector.mood.calm.detail")
+            return L10n.string("create.selector.voice.calm.detail")
         case .upbeat:
-            return L10n.string("create.selector.mood.upbeat.detail")
+            return L10n.string("create.selector.voice.upbeat.detail")
         }
     }
 }
