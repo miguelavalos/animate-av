@@ -7,7 +7,7 @@ struct MomentsInProgressScreen: View {
     @EnvironmentObject private var createViewModel: MomentsCreateViewModel
     @State private var momentPendingDeletion: InProgressMoment?
     @State private var momentPendingRename: InProgressMoment?
-    @State private var selectedAssetKind: MomentsInProgressAssetKind = .videos
+    @SceneStorage("animate.inProgress.selectedAssetKind") private var selectedAssetKindRaw = MomentsInProgressAssetKind.videos.rawValue
     let balance: MomentsCreditBalance
     let creditBalanceLoadState: MomentsCreditBalanceLoadState
     let continueMoment: (MomentsContinuationRequest) -> Void
@@ -54,12 +54,7 @@ struct MomentsInProgressScreen: View {
         AVAppShellScrollableScreenScaffold {
             MomentsTheme.shellBackground
         } content: {
-            Picker(L10n.string("inProgress.assetKind.accessibility"), selection: $selectedAssetKind) {
-                ForEach(MomentsInProgressAssetKind.allCases) { kind in
-                    Text(kind.title).tag(kind)
-                }
-            }
-            .pickerStyle(.segmented)
+            MomentsInProgressAssetKindPicker(selectedAssetKind: selectedAssetKindBinding)
 
             switch selectedAssetKind {
             case .videos:
@@ -131,6 +126,17 @@ struct MomentsInProgressScreen: View {
         )
     }
 
+    private var selectedAssetKind: MomentsInProgressAssetKind {
+        MomentsInProgressAssetKind(rawValue: selectedAssetKindRaw) ?? .videos
+    }
+
+    private var selectedAssetKindBinding: Binding<MomentsInProgressAssetKind> {
+        Binding(
+            get: { selectedAssetKind },
+            set: { selectedAssetKindRaw = $0.rawValue }
+        )
+    }
+
     private func confirmMomentDeletion() {
         if let momentPendingDeletion {
             if createViewModel.activeMomentId == momentPendingDeletion.id {
@@ -157,6 +163,54 @@ struct MomentsInProgressScreen: View {
         }
 
         return createViewModel.selectedMedia
+    }
+}
+
+private struct MomentsInProgressAssetKindPicker: View {
+    @Binding var selectedAssetKind: MomentsInProgressAssetKind
+
+    var body: some View {
+        HStack(spacing: 8) {
+            ForEach(MomentsInProgressAssetKind.allCases) { kind in
+                Button {
+                    selectedAssetKind = kind
+                } label: {
+                    MomentsInProgressAssetKindPill(
+                        title: kind.title,
+                        isSelected: selectedAssetKind == kind
+                    )
+                }
+                .buttonStyle(.plain)
+                .accessibilityAddTraits(selectedAssetKind == kind ? .isSelected : [])
+            }
+        }
+        .accessibilityElement(children: .contain)
+        .accessibilityLabel(L10n.string("inProgress.assetKind.accessibility"))
+    }
+}
+
+private struct MomentsInProgressAssetKindPill: View {
+    let title: String
+    let isSelected: Bool
+
+    var body: some View {
+        Text(title)
+            .font(.system(size: 14, weight: .black))
+            .frame(maxWidth: .infinity)
+            .frame(height: 38)
+            .foregroundStyle(isSelected ? .white : AVBrandColor.textPrimary)
+            .background(background)
+            .overlay(border)
+    }
+
+    private var background: some View {
+        RoundedRectangle(cornerRadius: 14, style: .continuous)
+            .fill(isSelected ? AVBrandColor.accent : AVBrandColor.elevatedSurface)
+    }
+
+    private var border: some View {
+        RoundedRectangle(cornerRadius: 14, style: .continuous)
+            .stroke(AVBrandColor.borderSubtle.opacity(isSelected ? 0 : 0.55), lineWidth: 1)
     }
 }
 

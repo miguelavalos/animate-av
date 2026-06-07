@@ -9,7 +9,7 @@ struct MomentsGalleryScreen: View {
     @State private var videoPendingDeletion: MomentsGalleryVideoPresentation?
     @State private var selectedVideo: MomentsGalleryVideoPlayerItem?
     @State private var videoPendingRename: MomentsGalleryVideoPresentation?
-    @State private var selectedAssetKind: MomentsGalleryAssetKind = .videos
+    @SceneStorage("animate.gallery.selectedAssetKind") private var selectedAssetKindRaw = MomentsGalleryAssetKind.videos.rawValue
 
     var body: some View {
         AVAppShellScrollableScreenScaffold {
@@ -26,12 +26,7 @@ struct MomentsGalleryScreen: View {
             }
             .frame(maxWidth: .infinity, alignment: .leading)
 
-            Picker(L10n.string("gallery.assetKind.accessibility"), selection: $selectedAssetKind) {
-                ForEach(MomentsGalleryAssetKind.allCases) { kind in
-                    Text(kind.title).tag(kind)
-                }
-            }
-            .pickerStyle(.segmented)
+            MomentsGalleryAssetKindPicker(selectedAssetKind: selectedAssetKindBinding)
 
             switch selectedAssetKind {
             case .videos:
@@ -121,11 +116,70 @@ struct MomentsGalleryScreen: View {
         )
     }
 
+    private var selectedAssetKind: MomentsGalleryAssetKind {
+        MomentsGalleryAssetKind(rawValue: selectedAssetKindRaw) ?? .videos
+    }
+
+    private var selectedAssetKindBinding: Binding<MomentsGalleryAssetKind> {
+        Binding(
+            get: { selectedAssetKind },
+            set: { selectedAssetKindRaw = $0.rawValue }
+        )
+    }
+
     private func confirmDeletion() {
         if let videoPendingDeletion {
             viewModel.deleteVideo(videoPendingDeletion)
         }
         videoPendingDeletion = nil
+    }
+}
+
+private struct MomentsGalleryAssetKindPicker: View {
+    @Binding var selectedAssetKind: MomentsGalleryAssetKind
+
+    var body: some View {
+        HStack(spacing: 8) {
+            ForEach(MomentsGalleryAssetKind.allCases) { kind in
+                Button {
+                    selectedAssetKind = kind
+                } label: {
+                    MomentsGalleryAssetKindPill(
+                        title: kind.title,
+                        isSelected: selectedAssetKind == kind
+                    )
+                }
+                .buttonStyle(.plain)
+                .accessibilityAddTraits(selectedAssetKind == kind ? .isSelected : [])
+            }
+        }
+        .accessibilityElement(children: .contain)
+        .accessibilityLabel(L10n.string("gallery.assetKind.accessibility"))
+    }
+}
+
+private struct MomentsGalleryAssetKindPill: View {
+    let title: String
+    let isSelected: Bool
+
+    var body: some View {
+        Text(title)
+            .font(.system(size: 14, weight: .black))
+            .frame(maxWidth: .infinity)
+            .frame(height: 38)
+            .foregroundStyle(isSelected ? .white : AVBrandColor.textPrimary)
+            .background(background)
+            .overlay(border)
+    }
+
+    private var background: some View {
+        RoundedRectangle(cornerRadius: 14, style: .continuous)
+            .fill(isSelected ? AVBrandColor.accent : AVBrandColor.elevatedSurface)
+    }
+
+    private var border: some View {
+        RoundedRectangle(cornerRadius: 14, style: .continuous)
+            .stroke(AVBrandColor.borderSubtle.opacity(isSelected ? 0 : 0.55), lineWidth: 1)
     }
 }
 
@@ -458,17 +512,15 @@ private struct MomentsGalleryVideoThumbnail: View {
     }
 
     private static func loadThumbnail(url: URL) async -> UIImage? {
-        await Task.detached(priority: .utility) {
-            let asset = AVURLAsset(url: url)
-            let generator = AVAssetImageGenerator(asset: asset)
-            generator.appliesPreferredTrackTransform = true
-            generator.maximumSize = CGSize(width: 720, height: 720)
+        let asset = AVURLAsset(url: url)
+        let generator = AVAssetImageGenerator(asset: asset)
+        generator.appliesPreferredTrackTransform = true
+        generator.maximumSize = CGSize(width: 720, height: 720)
 
-            guard let cgImage = try? generator.copyCGImage(at: .zero, actualTime: nil) else {
-                return nil
-            }
-            return UIImage(cgImage: cgImage)
-        }.value
+        guard let cgImage = try? await generator.image(at: .zero).image else {
+            return nil
+        }
+        return UIImage(cgImage: cgImage)
     }
 }
 
