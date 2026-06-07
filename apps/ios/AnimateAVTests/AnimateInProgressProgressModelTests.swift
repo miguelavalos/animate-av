@@ -3,7 +3,7 @@ import XCTest
 
 final class AnimateInProgressProgressModelTests: XCTestCase {
     func testEmptyWorkspaceMarksVideoCreatedAndRemainingStepsWaiting() {
-        let model = MomentsInProgressProgressModel(workspace: makeWorkspace())
+        let model = AnimateInProgressProgressModel(workspace: makeWorkspace())
 
         XCTAssertEqual(model.phases.map(\.title), ["Video", "Photo", "Direction", "Create Video"])
         XCTAssertEqual(model.phases.map(\.state), [.complete, .waiting, .waiting, .waiting])
@@ -16,7 +16,7 @@ final class AnimateInProgressProgressModelTests: XCTestCase {
     }
 
     func testRenderJobStatusDrivesFinalProgressUntilArtifactIsAvailable() {
-        let model = MomentsInProgressProgressModel(
+        let model = AnimateInProgressProgressModel(
             workspace: makeWorkspace(renderJobs: [makeRenderJob(kind: "final", status: "running")])
         )
 
@@ -26,7 +26,7 @@ final class AnimateInProgressProgressModelTests: XCTestCase {
     }
 
     func testAvailableFinalExportArtifactCompletesFinalProgress() {
-        let model = MomentsInProgressProgressModel(
+        let model = AnimateInProgressProgressModel(
             workspace: makeWorkspace(
                 renderJobs: [makeRenderJob(kind: "final", status: "failed")],
                 artifacts: [makeArtifact(kind: "final_export", status: "available")]

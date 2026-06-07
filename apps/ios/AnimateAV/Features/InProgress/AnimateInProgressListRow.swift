@@ -1,13 +1,13 @@
 import SwiftUI
 
-struct MomentsInProgressListRow: View {
-    let row: MomentsInProgressListRowPresentation
+struct AnimateInProgressListRow: View {
+    let row: AnimateInProgressListRowPresentation
     let selectMoment: () -> Void
 
     var body: some View {
         Button(action: selectMoment) {
             HStack(alignment: .top, spacing: 12) {
-                MomentsInProgressStatusMarker(row: row)
+                AnimateInProgressStatusMarker(row: row)
 
                 VStack(alignment: .leading, spacing: 8) {
                     Text(row.title)
@@ -17,7 +17,7 @@ struct MomentsInProgressListRow: View {
 
                     HStack(spacing: 8) {
                         ForEach(row.metadata) { metadata in
-                            MomentsInProgressListMetadata(metadata: metadata)
+                            AnimateInProgressListMetadata(metadata: metadata)
                         }
                     }
 

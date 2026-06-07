@@ -12,7 +12,7 @@ struct AnimateProfileScreen: View {
 
     @EnvironmentObject private var accountController: AccountController
     @EnvironmentObject private var createViewModel: MomentsCreateViewModel
-    @EnvironmentObject private var inProgressViewModel: MomentsInProgressViewModel
+    @EnvironmentObject private var inProgressViewModel: AnimateInProgressViewModel
     @EnvironmentObject private var languageController: AppLanguageController
     @EnvironmentObject private var themeController: AppThemeController
     @EnvironmentObject private var newVideoStartController: AnimateNewVideoStartController

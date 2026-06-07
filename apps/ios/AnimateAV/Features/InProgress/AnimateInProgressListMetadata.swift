@@ -1,7 +1,7 @@
 import SwiftUI
 
-struct MomentsInProgressStatusMarker: View {
-    let row: MomentsInProgressListRowPresentation
+struct AnimateInProgressStatusMarker: View {
+    let row: AnimateInProgressListRowPresentation
 
     var body: some View {
         Image(systemName: row.statusSystemImage)
@@ -11,8 +11,8 @@ struct MomentsInProgressStatusMarker: View {
     }
 }
 
-struct MomentsInProgressListMetadata: View {
-    let metadata: MomentsInProgressListMetadataPresentation
+struct AnimateInProgressListMetadata: View {
+    let metadata: AnimateInProgressListMetadataPresentation
 
     var body: some View {
         Label(metadata.text, systemImage: metadata.systemImage)

@@ -3,8 +3,8 @@ import AVBrandFoundation
 import AVKit
 import SwiftUI
 
-struct MomentsInProgressCard: View {
-    let presentation: MomentsInProgressPresentation
+struct AnimateInProgressCard: View {
+    let presentation: AnimateInProgressPresentation
     let balance: AnimateCreditBalance
     let creditBalanceLoadState: AnimateCreditBalanceLoadState
     let momentsSummary: InProgressMomentsSummary
@@ -24,39 +24,39 @@ struct MomentsInProgressCard: View {
 
     var body: some View {
         VStack(alignment: .leading, spacing: 14) {
-            MomentsInProgressAviBlock(momentsSummary: momentsSummary)
+            AnimateInProgressAviBlock(momentsSummary: momentsSummary)
 
             switch presentation.availability {
             case let .signedOut(unavailable):
-                MomentsInProgressSignedOutState(
+                AnimateInProgressSignedOutState(
                     unavailable: unavailable,
                     startSignInFlow: startSignInFlow
                 )
             case let .empty(unavailable):
-                MomentsInProgressCreditStatus(
+                AnimateInProgressCreditStatus(
                     balance: balance,
                     creditBalanceLoadState: creditBalanceLoadState,
                     openCredits: openCredits,
                     retryCredits: retryCredits
                 )
-                MomentsInProgressEmptyContent(
+                AnimateInProgressEmptyContent(
                     unavailable: unavailable,
                     startMoment: startMoment
                 )
             case .available:
-                MomentsInProgressCreditStatus(
+                AnimateInProgressCreditStatus(
                     balance: balance,
                     creditBalanceLoadState: creditBalanceLoadState,
                     openCredits: openCredits,
                     retryCredits: retryCredits
                 )
-                MomentsInProgressContinueBlock(
+                AnimateInProgressContinueBlock(
                     moments: continueMoments,
                     localMediaForMoment: localMediaForMoment,
                     continueMoment: continueMoment,
                     requestRenameMoment: requestRenameMoment
                 )
-                MomentsInProgressStatusMessage(message: statusMessage)
+                AnimateInProgressStatusMessage(message: statusMessage)
             }
         }
     }
@@ -66,7 +66,7 @@ struct MomentsInProgressCard: View {
     }
 }
 
-private struct MomentsInProgressCreditStatus: View {
+private struct AnimateInProgressCreditStatus: View {
     let balance: AnimateCreditBalance
     let creditBalanceLoadState: AnimateCreditBalanceLoadState
     let openCredits: () -> Void
@@ -148,12 +148,12 @@ private struct MomentsInProgressCreditStatus: View {
     }
 }
 
-private struct MomentsInProgressSignedOutState: View {
-    let unavailable: MomentsInProgressUnavailablePresentation
+private struct AnimateInProgressSignedOutState: View {
+    let unavailable: AnimateInProgressUnavailablePresentation
     let startSignInFlow: () -> Void
 
     var body: some View {
-        MomentsInProgressInlineEmptyState(
+        AnimateInProgressInlineEmptyState(
             systemImage: unavailable.systemImage,
             title: unavailable.title,
             message: unavailable.message,
@@ -164,12 +164,12 @@ private struct MomentsInProgressSignedOutState: View {
     }
 }
 
-private struct MomentsInProgressEmptyContent: View {
-    let unavailable: MomentsInProgressUnavailablePresentation
+private struct AnimateInProgressEmptyContent: View {
+    let unavailable: AnimateInProgressUnavailablePresentation
     let startMoment: () -> Void
 
     var body: some View {
-        MomentsInProgressInlineEmptyState(
+        AnimateInProgressInlineEmptyState(
             systemImage: "photo.badge.plus",
             title: L10n.string("inProgress.empty.inProgress.title"),
             message: L10n.string("inProgress.empty.inProgress.detail"),
@@ -180,7 +180,7 @@ private struct MomentsInProgressEmptyContent: View {
     }
 }
 
-private struct MomentsInProgressAviBlock: View {
+private struct AnimateInProgressAviBlock: View {
     let momentsSummary: InProgressMomentsSummary
 
     var body: some View {
@@ -236,7 +236,7 @@ private struct MomentsInProgressAviBlock: View {
     }
 }
 
-private struct MomentsInProgressContinueBlock: View {
+private struct AnimateInProgressContinueBlock: View {
     let moments: [InProgressMoment]
     let localMediaForMoment: (InProgressMoment) -> [MomentsSelectedMedia]
     let continueMoment: (MomentsContinuationRequest) -> Void
@@ -244,7 +244,7 @@ private struct MomentsInProgressContinueBlock: View {
 
     var body: some View {
         if moments.isEmpty {
-            MomentsInProgressInlineEmptyState(
+            AnimateInProgressInlineEmptyState(
                 systemImage: "photo.badge.plus",
                 title: L10n.string("inProgress.empty.inProgress.title"),
                 message: L10n.string("inProgress.empty.inProgress.fullDetail"),
@@ -257,7 +257,7 @@ private struct MomentsInProgressContinueBlock: View {
                 AVAppShellSectionHeader(title: L10n.string("inProgress.title"))
 
                 ForEach(moments) { moment in
-                    MomentsInProgressMomentCard(
+                    AnimateInProgressMomentCard(
                         moment: moment,
                         localMedia: localMediaForMoment(moment),
                         continueMoment: {
@@ -273,7 +273,7 @@ private struct MomentsInProgressContinueBlock: View {
     }
 }
 
-private struct MomentsInProgressMomentCard: View {
+private struct AnimateInProgressMomentCard: View {
     let moment: InProgressMoment
     let localMedia: [MomentsSelectedMedia]
     let continueMoment: () -> Void
@@ -311,11 +311,11 @@ private struct MomentsInProgressMomentCard: View {
                         .foregroundStyle(AVBrandColor.textSecondary)
 
                     HStack(spacing: 8) {
-                        MomentsInProgressMomentPill(
+                        AnimateInProgressMomentPill(
                             systemImage: "photo.on.rectangle",
                             text: L10n.string("inProgress.card.mediaCount", effectiveMediaCount)
                         )
-                        MomentsInProgressMomentPill(
+                        AnimateInProgressMomentPill(
                             systemImage: iconName,
                             text: AnimateVideoFormatting.updatedAt(moment)
                         )
@@ -381,7 +381,7 @@ private struct MomentsInProgressMomentCard: View {
     }
 }
 
-private struct MomentsInProgressMomentPill: View {
+private struct AnimateInProgressMomentPill: View {
     let systemImage: String
     let text: String
 
@@ -396,7 +396,7 @@ private struct MomentsInProgressMomentPill: View {
     }
 }
 
-struct MomentsInProgressInlineEmptyState: View {
+struct AnimateInProgressInlineEmptyState: View {
     let systemImage: String
     let title: String
     let message: String
@@ -457,9 +457,9 @@ struct MomentsInProgressInlineEmptyState: View {
     }
 }
 
-private struct MomentsInProgressGalleryEmptyState: View {
+private struct AnimateInProgressGalleryEmptyState: View {
     var body: some View {
-        MomentsInProgressInlineEmptyState(
+        AnimateInProgressInlineEmptyState(
             systemImage: "play.square.stack.fill",
             title: L10n.string("gallery.empty.shortTitle"),
             message: L10n.string("gallery.empty.downloadDetail"),
@@ -470,11 +470,11 @@ private struct MomentsInProgressGalleryEmptyState: View {
     }
 }
 
-private struct MomentsInProgressNoMomentsEmptyState: View {
+private struct AnimateInProgressNoMomentsEmptyState: View {
     let startMoment: (() -> Void)?
 
     var body: some View {
-        MomentsInProgressInlineEmptyState(
+        AnimateInProgressInlineEmptyState(
             systemImage: "photo.badge.plus",
             title: L10n.string("inProgress.empty.inProgress.title"),
             message: L10n.string("inProgress.empty.inProgress.detail"),

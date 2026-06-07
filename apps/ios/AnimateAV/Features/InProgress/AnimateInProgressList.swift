@@ -1,11 +1,11 @@
 import SwiftUI
 
-struct MomentsInProgressList: View {
+struct AnimateInProgressList: View {
     let momentsSummary: InProgressMomentsSummary
     let selectedMomentId: String?
     let selectMoment: (InProgressMoment) -> Void
-    private var presentation: MomentsInProgressListPresentation {
-        MomentsInProgressListPresentation.make(
+    private var presentation: AnimateInProgressListPresentation {
+        AnimateInProgressListPresentation.make(
             momentsSummary: momentsSummary,
             selectedMomentId: selectedMomentId
         )
@@ -13,10 +13,10 @@ struct MomentsInProgressList: View {
 
     var body: some View {
         VStack(alignment: .leading, spacing: 14) {
-            MomentsInProgressListSummaryRow(pills: presentation.summaryPills)
+            AnimateInProgressListSummaryRow(pills: presentation.summaryPills)
 
             ForEach(presentation.groups) { group in
-                MomentsInProgressListGroup(
+                AnimateInProgressListGroup(
                     group: group,
                     selectMoment: selectMoment
                 )

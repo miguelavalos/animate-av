@@ -15,7 +15,7 @@ final class MomentsDependencyContainer: ObservableObject {
     let finalRenderWorkflow: FinalRenderWorkflow
     let homeViewModel: AnimateHomeViewModel
     let createViewModel: MomentsCreateViewModel
-    let inProgressViewModel: MomentsInProgressViewModel
+    let inProgressViewModel: AnimateInProgressViewModel
     let galleryViewModel: MomentsGalleryViewModel
     let aviViewModel: AnimateAviViewModel
     private let realtimeSessionClient: MomentsRealtimeSessionClient

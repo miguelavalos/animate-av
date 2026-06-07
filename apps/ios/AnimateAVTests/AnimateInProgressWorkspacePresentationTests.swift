@@ -10,7 +10,7 @@ final class AnimateInProgressWorkspacePresentationTests: XCTestCase {
             ]
         )
 
-        let presentation = MomentsInProgressWorkspaceDetailPresentation(workspace: workspace)
+        let presentation = AnimateInProgressWorkspaceDetailPresentation(workspace: workspace)
 
         XCTAssertEqual(presentation.title, "Video detail")
         XCTAssertEqual(presentation.nextAction.title, "Prepare video")
@@ -26,14 +26,14 @@ final class AnimateInProgressWorkspacePresentationTests: XCTestCase {
             ]
         )
 
-        let presentation = MomentsInProgressWorkspaceDetailPresentation(workspace: workspace)
+        let presentation = AnimateInProgressWorkspaceDetailPresentation(workspace: workspace)
 
         XCTAssertEqual(presentation.nextAction.title, "Video needs attention")
         XCTAssertEqual(presentation.continuationRequest.focus, .finalRender)
     }
 
     func testWorkspaceHeaderPresentationFormatsTitleUpdateAndCounts() {
-        let presentation = MomentsInProgressWorkspaceHeaderPresentation(
+        let presentation = AnimateInProgressWorkspaceHeaderPresentation(
             workspace: makeWorkspace(
                 moment: makeMoment(title: "Family Weekend", updatedAt: 1_781_592_000_000),
                 mediaAssets: [
@@ -54,7 +54,7 @@ final class AnimateInProgressWorkspacePresentationTests: XCTestCase {
     }
 
     func testWorkspaceHeaderPresentationFormatsPluralCounts() {
-        let presentation = MomentsInProgressWorkspaceHeaderPresentation(
+        let presentation = AnimateInProgressWorkspaceHeaderPresentation(
             workspace: makeWorkspace(
                 moment: makeMoment(title: "Family Weekend"),
                 mediaAssets: [
@@ -76,7 +76,7 @@ final class AnimateInProgressWorkspacePresentationTests: XCTestCase {
     }
 
     func testWorkspaceSummaryPresentationFormatsStatusArtifactsAndLatestJob() {
-        let presentation = MomentsInProgressWorkspaceSummaryPresentation(
+        let presentation = AnimateInProgressWorkspaceSummaryPresentation(
             workspace: makeWorkspace(
                 moment: makeMoment(status: "story_ready"),
                 renderJobs: [
@@ -97,7 +97,7 @@ final class AnimateInProgressWorkspacePresentationTests: XCTestCase {
     }
 
     func testWorkspaceSummaryPresentationUsesFallbacksWhenNoArtifactsOrJobsExist() {
-        let presentation = MomentsInProgressWorkspaceSummaryPresentation(
+        let presentation = AnimateInProgressWorkspaceSummaryPresentation(
             workspace: makeWorkspace(moment: makeMoment(status: "in_progress"))
         )
 
@@ -105,7 +105,7 @@ final class AnimateInProgressWorkspacePresentationTests: XCTestCase {
     }
 
     func testMediaSectionPresentationFormatsTitleEmptyStateAndRows() {
-        let presentation = MomentsInProgressMediaSectionPresentation(mediaAssets: [
+        let presentation = AnimateInProgressMediaSectionPresentation(mediaAssets: [
             makeMediaAsset(id: "second", kind: "video", sortOrder: 1, selected: false, moderationStatus: "pending"),
             makeMediaAsset(id: "first", kind: "image", sortOrder: 0, selected: true, moderationStatus: "approved")
         ])
@@ -134,7 +134,7 @@ final class AnimateInProgressWorkspacePresentationTests: XCTestCase {
     }
 
     func testStorySectionPresentationFormatsTitleEmptyStateAndRows() {
-        let presentation = MomentsInProgressStorySectionPresentation(storyScenes: [
+        let presentation = AnimateInProgressStorySectionPresentation(storyScenes: [
             makeScene(id: "scene-2", sceneIndex: 1, caption: "Second beat"),
             makeScene(id: "scene-1", sceneIndex: 0, caption: "Opening beat")
         ])
@@ -146,7 +146,7 @@ final class AnimateInProgressWorkspacePresentationTests: XCTestCase {
     }
 
     func testMediaAssetPresentationSortsBySortOrderAndFormatsRows() {
-        let presentations = MomentsInProgressMediaAssetPresentation.sorted([
+        let presentations = AnimateInProgressMediaAssetPresentation.sorted([
             makeMediaAsset(id: "second", kind: "video", sortOrder: 1, selected: false, moderationStatus: "pending"),
             makeMediaAsset(id: "first", kind: "image", sortOrder: 0, selected: true, moderationStatus: "approved")
         ])
@@ -197,7 +197,7 @@ final class AnimateInProgressWorkspacePresentationTests: XCTestCase {
     }
 
     func testStoryScenePresentationSortsBySceneIndexAndFormatsRows() {
-        let presentations = MomentsInProgressStoryScenePresentation.sorted([
+        let presentations = AnimateInProgressStoryScenePresentation.sorted([
             makeScene(id: "scene-2", sceneIndex: 1, caption: "Second beat"),
             makeScene(id: "scene-1", sceneIndex: 0, caption: "Opening beat")
         ])

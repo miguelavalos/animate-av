@@ -1,7 +1,7 @@
 import AVAppShellFoundation
 import SwiftUI
 
-struct MomentsInProgressProgressSection: View {
+struct AnimateInProgressProgressSection: View {
     let workspace: MomentWorkspace
 
     var body: some View {
@@ -9,16 +9,16 @@ struct MomentsInProgressProgressSection: View {
             AVAppShellSectionHeader(title: L10n.string("moment.progress.title"))
 
             VStack(alignment: .leading, spacing: 10) {
-                ForEach(MomentsInProgressProgressModel(workspace: workspace).phases) { phase in
-                    MomentsInProgressProgressRow(phase: phase)
+                ForEach(AnimateInProgressProgressModel(workspace: workspace).phases) { phase in
+                    AnimateInProgressProgressRow(phase: phase)
                 }
             }
         }
     }
 }
 
-private struct MomentsInProgressProgressRow: View {
-    let phase: MomentsInProgressProgressPhase
+private struct AnimateInProgressProgressRow: View {
+    let phase: AnimateInProgressProgressPhase
 
     var body: some View {
         AVAppShellProgressRow(
@@ -31,7 +31,7 @@ private struct MomentsInProgressProgressRow: View {
     }
 }
 
-private extension MomentsInProgressProgressState {
+private extension AnimateInProgressProgressState {
     var tint: Color {
         switch self {
         case .complete: AnimateTheme.highlight

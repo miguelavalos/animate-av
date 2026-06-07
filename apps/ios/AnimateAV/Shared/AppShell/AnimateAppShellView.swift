@@ -9,7 +9,7 @@ struct AnimateAppShellView: View {
 
     @EnvironmentObject private var accountController: AccountController
     @EnvironmentObject private var createViewModel: MomentsCreateViewModel
-    @EnvironmentObject private var inProgressViewModel: MomentsInProgressViewModel
+    @EnvironmentObject private var inProgressViewModel: AnimateInProgressViewModel
     @EnvironmentObject private var galleryViewModel: MomentsGalleryViewModel
     @EnvironmentObject private var aviViewModel: AnimateAviViewModel
     @EnvironmentObject private var newVideoStartController: AnimateNewVideoStartController
@@ -137,7 +137,7 @@ struct AnimateAppShellView: View {
                     bottomSafeAreaPadding: 82
                 )
             case .inProgress:
-                MomentsInProgressScreen(
+                AnimateInProgressScreen(
                     balance: accountController.creditBalance,
                     creditBalanceLoadState: accountController.creditBalanceLoadState,
                     continueMoment: { request in

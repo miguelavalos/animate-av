@@ -1,10 +1,10 @@
 import AVAppShellFoundation
 import SwiftUI
 
-struct MomentsInProgressWorkspaceHeader: View {
+struct AnimateInProgressWorkspaceHeader: View {
     let workspace: MomentWorkspace
-    private var presentation: MomentsInProgressWorkspaceHeaderPresentation {
-        MomentsInProgressWorkspaceHeaderPresentation(workspace: workspace)
+    private var presentation: AnimateInProgressWorkspaceHeaderPresentation {
+        AnimateInProgressWorkspaceHeaderPresentation(workspace: workspace)
     }
 
     var body: some View {
@@ -21,7 +21,7 @@ struct MomentsInProgressWorkspaceHeader: View {
     }
 }
 
-struct MomentsInProgressNextActionRow: View {
+struct AnimateInProgressNextActionRow: View {
     let action: MomentNextAction
 
     var body: some View {
@@ -33,7 +33,7 @@ struct MomentsInProgressNextActionRow: View {
     }
 }
 
-struct MomentsInProgressContinueButton: View {
+struct AnimateInProgressContinueButton: View {
     let action: MomentNextAction
     let continueMoment: () -> Void
 
@@ -46,7 +46,7 @@ struct MomentsInProgressContinueButton: View {
     }
 }
 
-struct MomentsInProgressDeleteButton: View {
+struct AnimateInProgressDeleteButton: View {
     let isDeletingMoment: Bool
     let requestDeleteMoment: () -> Void
 

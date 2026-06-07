@@ -1,8 +1,8 @@
 import AVAppShellFoundation
 import SwiftUI
 
-struct MomentsInProgressListGroup: View {
-    let group: MomentsInProgressListGroupPresentation
+struct AnimateInProgressListGroup: View {
+    let group: AnimateInProgressListGroupPresentation
     let selectMoment: (InProgressMoment) -> Void
 
     var body: some View {
@@ -14,7 +14,7 @@ struct MomentsInProgressListGroup: View {
             }
 
             ForEach(group.rows) { row in
-                MomentsInProgressListRow(row: row) {
+                AnimateInProgressListRow(row: row) {
                     selectMoment(row.moment)
                 }
             }

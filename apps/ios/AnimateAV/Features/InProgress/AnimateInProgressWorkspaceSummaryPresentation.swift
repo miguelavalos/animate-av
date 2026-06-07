@@ -1,8 +1,8 @@
 import AVAppShellFoundation
 import Foundation
 
-struct MomentsInProgressWorkspaceSummaryPresentation: Equatable {
-    let tiles: [MomentsInProgressSummaryTilePresentation]
+struct AnimateInProgressWorkspaceSummaryPresentation: Equatable {
+    let tiles: [AnimateInProgressSummaryTilePresentation]
 
     var metrics: [AVAppShellMetric] {
         tiles.map {
@@ -20,17 +20,17 @@ struct MomentsInProgressWorkspaceSummaryPresentation: Equatable {
         let latestRenderJob = workspace.latestRenderJob()
 
         tiles = [
-            MomentsInProgressSummaryTilePresentation(
+            AnimateInProgressSummaryTilePresentation(
                 title: L10n.string("moment.summary.status"),
                 value: MomentStatusRules.displayTitle(for: workspace.moment.status),
                 systemImage: "circle.dashed"
             ),
-            MomentsInProgressSummaryTilePresentation(
+            AnimateInProgressSummaryTilePresentation(
                 title: L10n.string("moment.summary.final"),
                 value: Self.summaryValue(for: finalExport),
                 systemImage: "video.fill"
             ),
-            MomentsInProgressSummaryTilePresentation(
+            AnimateInProgressSummaryTilePresentation(
                 title: L10n.string("moment.summary.latestJob"),
                 value: Self.latestJobValue(latestRenderJob),
                 systemImage: "gearshape.2"
@@ -49,7 +49,7 @@ struct MomentsInProgressWorkspaceSummaryPresentation: Equatable {
     }
 }
 
-struct MomentsInProgressSummaryTilePresentation: Identifiable, Equatable {
+struct AnimateInProgressSummaryTilePresentation: Identifiable, Equatable {
     let title: String
     let value: String
     let systemImage: String

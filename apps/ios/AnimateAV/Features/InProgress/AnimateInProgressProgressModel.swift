@@ -1,29 +1,29 @@
 import Foundation
 
-struct MomentsInProgressProgressModel {
-    let phases: [MomentsInProgressProgressPhase]
+struct AnimateInProgressProgressModel {
+    let phases: [AnimateInProgressProgressPhase]
 
     init(workspace: MomentWorkspace) {
         phases = [
-            MomentsInProgressProgressPhase(
+            AnimateInProgressProgressPhase(
                 title: L10n.string("moment.progress.moment"),
                 detail: MomentStatusRules.displayTitle(for: workspace.moment.status),
                 systemImage: "doc.text",
                 state: .complete
             ),
-            MomentsInProgressProgressPhase(
+            AnimateInProgressProgressPhase(
                 title: L10n.string("moment.progress.media"),
                 detail: workspace.mediaAssets.isEmpty ? L10n.string("moment.progress.noMedia") : L10n.string("moment.progress.assets", workspace.mediaAssets.count),
                 systemImage: "photo.on.rectangle",
                 state: workspace.mediaAssets.isEmpty ? .waiting : .complete
             ),
-            MomentsInProgressProgressPhase(
+            AnimateInProgressProgressPhase(
                 title: L10n.string("moment.progress.story"),
                 detail: workspace.storyScenes.isEmpty ? L10n.string("moment.progress.notReady") : L10n.string("moment.progress.scenes", workspace.storyScenes.count),
                 systemImage: "text.bubble",
                 state: workspace.storyScenes.isEmpty ? .waiting : .complete
             ),
-            MomentsInProgressProgressPhase(
+            AnimateInProgressProgressPhase(
                 title: L10n.string("moment.progress.createVideo"),
                 detail: Self.renderDetail(workspace: workspace, kind: "final", fallback: L10n.string("moment.progress.notCreated")),
                 systemImage: "video.fill",
@@ -48,7 +48,7 @@ struct MomentsInProgressProgressModel {
         workspace: MomentWorkspace,
         kind: String,
         artifactKind: String
-    ) -> MomentsInProgressProgressState {
+    ) -> AnimateInProgressProgressState {
         if workspace.hasAvailableArtifact(kind: artifactKind) {
             return .complete
         }
@@ -57,7 +57,7 @@ struct MomentsInProgressProgressModel {
             return .waiting
         }
 
-        return MomentsInProgressProgressState(status: job.status)
+        return AnimateInProgressProgressState(status: job.status)
     }
 
     private static func artifactKind(for renderKind: String) -> String {
@@ -65,18 +65,18 @@ struct MomentsInProgressProgressModel {
     }
 }
 
-struct MomentsInProgressProgressPhase: Identifiable, Equatable {
+struct AnimateInProgressProgressPhase: Identifiable, Equatable {
     let title: String
     let detail: String
     let systemImage: String
-    let state: MomentsInProgressProgressState
+    let state: AnimateInProgressProgressState
 
     var id: String {
         title
     }
 }
 
-enum MomentsInProgressProgressState: Equatable {
+enum AnimateInProgressProgressState: Equatable {
     case complete
     case active
     case waiting

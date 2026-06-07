@@ -1,33 +1,33 @@
 import Foundation
 
-struct MomentsInProgressRenderJobsSectionPresentation: Equatable {
+struct AnimateInProgressRenderJobsSectionPresentation: Equatable {
     let title = L10n.string("moment.activity.title")
     let emptySystemImage = "gearshape.2"
     let emptyMessage = L10n.string("moment.activity.empty")
-    let jobs: [MomentsInProgressRenderJobPresentation]
+    let jobs: [AnimateInProgressRenderJobPresentation]
 
     init(renderJobs: [MomentRenderJob]) {
-        jobs = MomentsInProgressRenderJobPresentation.sorted(renderJobs)
+        jobs = AnimateInProgressRenderJobPresentation.sorted(renderJobs)
     }
 }
 
-struct MomentsInProgressArtifactSectionPresentation: Equatable {
+struct AnimateInProgressArtifactSectionPresentation: Equatable {
     let title: String
     let emptySystemImage: String
     let emptyMessage: String
-    let artifact: MomentsInProgressArtifactPresentation?
+    let artifact: AnimateInProgressArtifactPresentation?
 
-    static func finalExport(artifacts: [MomentArtifact]) -> MomentsInProgressArtifactSectionPresentation {
-        MomentsInProgressArtifactSectionPresentation(
+    static func finalExport(artifacts: [MomentArtifact]) -> AnimateInProgressArtifactSectionPresentation {
+        AnimateInProgressArtifactSectionPresentation(
             title: L10n.string("moment.artifact.final.title"),
             emptySystemImage: "video.fill",
             emptyMessage: L10n.string("moment.artifact.final.empty"),
-            artifact: MomentsInProgressArtifactPresentation.finalExport(in: artifacts)
+            artifact: AnimateInProgressArtifactPresentation.finalExport(in: artifacts)
         )
     }
 }
 
-struct MomentsInProgressArtifactPresentation: Equatable {
+struct AnimateInProgressArtifactPresentation: Equatable {
     let status: String
     let kindTitle: String
     let watermarkTitle: String
@@ -44,12 +44,12 @@ struct MomentsInProgressArtifactPresentation: Equatable {
         actionDetail = MomentsRecoveryCopy.artifactActionDetail(kind: artifact.kind, status: artifact.status)
     }
 
-    static func finalExport(in artifacts: [MomentArtifact]) -> MomentsInProgressArtifactPresentation? {
-        artifacts.last { $0.kind == "final_export" }.map(MomentsInProgressArtifactPresentation.init)
+    static func finalExport(in artifacts: [MomentArtifact]) -> AnimateInProgressArtifactPresentation? {
+        artifacts.last { $0.kind == "final_export" }.map(AnimateInProgressArtifactPresentation.init)
     }
 }
 
-struct MomentsInProgressRenderJobPresentation: Identifiable, Equatable {
+struct AnimateInProgressRenderJobPresentation: Identifiable, Equatable {
     let id: String
     let status: String
     let kindTitle: String
@@ -81,9 +81,9 @@ struct MomentsInProgressRenderJobPresentation: Identifiable, Equatable {
             : renderJob.errorMessage
     }
 
-    static func sorted(_ renderJobs: [MomentRenderJob]) -> [MomentsInProgressRenderJobPresentation] {
+    static func sorted(_ renderJobs: [MomentRenderJob]) -> [AnimateInProgressRenderJobPresentation] {
         renderJobs
             .sorted { $0.updatedAt > $1.updatedAt }
-            .map(MomentsInProgressRenderJobPresentation.init)
+            .map(AnimateInProgressRenderJobPresentation.init)
     }
 }

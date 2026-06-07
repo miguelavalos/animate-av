@@ -1,6 +1,6 @@
 import SwiftUI
 
-struct MomentsInProgressDiagnosticStatusBadge: View {
+struct AnimateInProgressDiagnosticStatusBadge: View {
     let status: String
 
     var body: some View {

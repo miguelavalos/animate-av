@@ -1,6 +1,6 @@
 import SwiftUI
 
-struct MomentsInProgressListSummaryPill: View {
+struct AnimateInProgressListSummaryPill: View {
     let pill: InProgressMomentsSummaryPresentation
 
     var body: some View {

@@ -1,16 +1,16 @@
 import Foundation
 
-struct MomentsInProgressPresentation: Equatable {
-    let availability: MomentsInProgressAvailability
+struct AnimateInProgressPresentation: Equatable {
+    let availability: AnimateInProgressAvailability
     let deletionMessage: String
 
     static func make(
         isSignedIn: Bool,
         momentsSummary: InProgressMomentsSummary,
         momentPendingDeletion: InProgressMoment?
-    ) -> MomentsInProgressPresentation {
-        MomentsInProgressPresentation(
-            availability: MomentsInProgressAvailability.make(
+    ) -> AnimateInProgressPresentation {
+        AnimateInProgressPresentation(
+            availability: AnimateInProgressAvailability.make(
                 isSignedIn: isSignedIn,
                 momentsSummary: momentsSummary
             ),
@@ -19,18 +19,18 @@ struct MomentsInProgressPresentation: Equatable {
     }
 }
 
-enum MomentsInProgressAvailability: Equatable {
-    case signedOut(MomentsInProgressUnavailablePresentation)
-    case empty(MomentsInProgressUnavailablePresentation)
+enum AnimateInProgressAvailability: Equatable {
+    case signedOut(AnimateInProgressUnavailablePresentation)
+    case empty(AnimateInProgressUnavailablePresentation)
     case available
 
     static func make(
         isSignedIn: Bool,
         momentsSummary: InProgressMomentsSummary
-    ) -> MomentsInProgressAvailability {
+    ) -> AnimateInProgressAvailability {
         if !isSignedIn {
             return .signedOut(
-                MomentsInProgressUnavailablePresentation(
+                AnimateInProgressUnavailablePresentation(
                     systemImage: "person.crop.circle.fill",
                     title: L10n.string("inProgress.signIn.title"),
                     message: L10n.string("inProgress.signIn.message")
@@ -40,7 +40,7 @@ enum MomentsInProgressAvailability: Equatable {
 
         if !momentsSummary.hasMoments {
             return .empty(
-                MomentsInProgressUnavailablePresentation(
+                AnimateInProgressUnavailablePresentation(
                     systemImage: "rectangle.stack.badge.plus",
                     title: L10n.string("inProgress.empty.title"),
                     message: L10n.string("inProgress.empty.message")
@@ -52,7 +52,7 @@ enum MomentsInProgressAvailability: Equatable {
     }
 }
 
-struct MomentsInProgressUnavailablePresentation: Equatable {
+struct AnimateInProgressUnavailablePresentation: Equatable {
     let systemImage: String
     let title: String
     let message: String

@@ -1,11 +1,11 @@
 import AVAppShellFoundation
 import SwiftUI
 
-struct MomentsInProgressMediaSection: View {
+struct AnimateInProgressMediaSection: View {
     let mediaAssets: [MomentMediaAsset]
 
-    private var presentation: MomentsInProgressMediaSectionPresentation {
-        MomentsInProgressMediaSectionPresentation(mediaAssets: mediaAssets)
+    private var presentation: AnimateInProgressMediaSectionPresentation {
+        AnimateInProgressMediaSectionPresentation(mediaAssets: mediaAssets)
     }
 
     var body: some View {
@@ -13,7 +13,7 @@ struct MomentsInProgressMediaSection: View {
             AVAppShellSectionHeader(title: presentation.title)
 
             if presentation.mediaAssets.isEmpty {
-                MomentsInProgressEmptySectionRow(
+                AnimateInProgressEmptySectionRow(
                     systemImage: presentation.emptySystemImage,
                     message: presentation.emptyMessage
                 )
@@ -24,11 +24,11 @@ struct MomentsInProgressMediaSection: View {
     }
 }
 
-struct MomentsInProgressStorySection: View {
+struct AnimateInProgressStorySection: View {
     let storyScenes: [MomentStoryScene]
 
-    private var presentation: MomentsInProgressStorySectionPresentation {
-        MomentsInProgressStorySectionPresentation(storyScenes: storyScenes)
+    private var presentation: AnimateInProgressStorySectionPresentation {
+        AnimateInProgressStorySectionPresentation(storyScenes: storyScenes)
     }
 
     var body: some View {
@@ -36,20 +36,20 @@ struct MomentsInProgressStorySection: View {
             AVAppShellSectionHeader(title: presentation.title)
 
             if presentation.storyScenes.isEmpty {
-                MomentsInProgressEmptySectionRow(
+                AnimateInProgressEmptySectionRow(
                     systemImage: presentation.emptySystemImage,
                     message: presentation.emptyMessage
                 )
             } else {
                 ForEach(presentation.storyScenes) { storyScene in
-                    MomentsInProgressStorySceneRow(presentation: storyScene)
+                    AnimateInProgressStorySceneRow(presentation: storyScene)
                 }
             }
         }
     }
 }
 
-struct MomentsInProgressEmptySectionRow: View {
+struct AnimateInProgressEmptySectionRow: View {
     let systemImage: String
     let message: String
 
@@ -58,8 +58,8 @@ struct MomentsInProgressEmptySectionRow: View {
     }
 }
 
-struct MomentsInProgressMediaAssetRow: View {
-    let presentation: MomentsInProgressMediaAssetPresentation
+struct AnimateInProgressMediaAssetRow: View {
+    let presentation: AnimateInProgressMediaAssetPresentation
 
     var body: some View {
         AVAppShellInfoRow(
@@ -70,8 +70,8 @@ struct MomentsInProgressMediaAssetRow: View {
     }
 }
 
-struct MomentsInProgressStorySceneRow: View {
-    let presentation: MomentsInProgressStoryScenePresentation
+struct AnimateInProgressStorySceneRow: View {
+    let presentation: AnimateInProgressStoryScenePresentation
 
     var body: some View {
         AVAppShellInfoRow(

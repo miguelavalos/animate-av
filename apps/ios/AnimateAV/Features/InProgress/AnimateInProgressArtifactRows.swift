@@ -1,13 +1,13 @@
 import AVAppShellFoundation
 import SwiftUI
 
-struct MomentsInProgressArtifactDetail: View {
-    let presentation: MomentsInProgressArtifactPresentation
+struct AnimateInProgressArtifactDetail: View {
+    let presentation: AnimateInProgressArtifactPresentation
 
     var body: some View {
         AVAppShellMetadataCard {
             HStack(alignment: .center, spacing: 8) {
-                MomentsInProgressDiagnosticStatusBadge(status: presentation.status)
+                AnimateInProgressDiagnosticStatusBadge(status: presentation.status)
 
                 Text(presentation.kindTitle)
                     .font(.caption.weight(.semibold))
@@ -44,13 +44,13 @@ struct MomentsInProgressArtifactDetail: View {
     }
 }
 
-struct MomentsInProgressRenderJobRow: View {
-    let presentation: MomentsInProgressRenderJobPresentation
+struct AnimateInProgressRenderJobRow: View {
+    let presentation: AnimateInProgressRenderJobPresentation
 
     var body: some View {
         AVAppShellMetadataCard {
             HStack(alignment: .center, spacing: 8) {
-                MomentsInProgressDiagnosticStatusBadge(status: presentation.status)
+                AnimateInProgressDiagnosticStatusBadge(status: presentation.status)
 
                 Text(presentation.kindTitle)
                     .font(.caption.weight(.semibold))
@@ -81,7 +81,7 @@ struct MomentsInProgressRenderJobRow: View {
                 )
             }
 
-            MomentsInProgressRenderJobErrorBlock(
+            AnimateInProgressRenderJobErrorBlock(
                 errorCode: presentation.errorCode,
                 errorMessage: presentation.errorMessage
             )
@@ -95,7 +95,7 @@ struct MomentsInProgressRenderJobRow: View {
     }
 }
 
-private struct MomentsInProgressRenderJobErrorBlock: View {
+private struct AnimateInProgressRenderJobErrorBlock: View {
     let errorCode: String?
     let errorMessage: String?
 

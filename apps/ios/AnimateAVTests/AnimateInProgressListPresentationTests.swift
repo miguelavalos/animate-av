@@ -3,7 +3,7 @@ import XCTest
 
 final class AnimateInProgressListPresentationTests: XCTestCase {
     func testSummaryPillsUseVideoSummaryCounts() {
-        let presentation = MomentsInProgressListPresentation.make(
+        let presentation = AnimateInProgressListPresentation.make(
             momentsSummary: InProgressMomentsSummary.make(from: [
                 makeMoment(id: "active", status: "story_ready", updatedAt: 20),
                 makeMoment(id: "done", status: "gallery_ready", updatedAt: 10)
@@ -17,7 +17,7 @@ final class AnimateInProgressListPresentationTests: XCTestCase {
     }
 
     func testGroupsOmitEmptySectionsAndPreserveStatusRulesOrder() {
-        let presentation = MomentsInProgressListPresentation.make(
+        let presentation = AnimateInProgressListPresentation.make(
             momentsSummary: InProgressMomentsSummary.make(from: [
                 makeMoment(id: "older-active", status: "in_progress", updatedAt: 10),
                 makeMoment(id: "newer-active", status: "story_ready", updatedAt: 30),
@@ -38,7 +38,7 @@ final class AnimateInProgressListPresentationTests: XCTestCase {
             title: "Family Weekend",
             creditCost: 3,
         )
-        let row = MomentsInProgressListRowPresentation(moment: moment, isSelected: true)
+        let row = AnimateInProgressListRowPresentation(moment: moment, isSelected: true)
 
         XCTAssertEqual(row.id, "moment-1")
         XCTAssertEqual(row.title, "Family Weekend")
@@ -52,7 +52,7 @@ final class AnimateInProgressListPresentationTests: XCTestCase {
     }
 
     func testFinishedRowUsesFinishedMarkerAndCollapsedAccessoryWhenNotSelected() {
-        let row = MomentsInProgressListRowPresentation(
+        let row = AnimateInProgressListRowPresentation(
             moment: makeMoment(id: "done", status: "gallery_ready"),
             isSelected: false
         )

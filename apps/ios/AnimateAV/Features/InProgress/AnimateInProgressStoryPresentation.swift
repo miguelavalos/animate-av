@@ -1,17 +1,17 @@
 import Foundation
 
-struct MomentsInProgressStorySectionPresentation: Equatable {
+struct AnimateInProgressStorySectionPresentation: Equatable {
     let title = L10n.string("moment.story.title")
     let emptySystemImage = "text.bubble"
     let emptyMessage = L10n.string("moment.story.empty")
-    let storyScenes: [MomentsInProgressStoryScenePresentation]
+    let storyScenes: [AnimateInProgressStoryScenePresentation]
 
     init(storyScenes: [MomentStoryScene]) {
-        self.storyScenes = MomentsInProgressStoryScenePresentation.sorted(storyScenes)
+        self.storyScenes = AnimateInProgressStoryScenePresentation.sorted(storyScenes)
     }
 }
 
-struct MomentsInProgressStoryScenePresentation: Identifiable, Equatable {
+struct AnimateInProgressStoryScenePresentation: Identifiable, Equatable {
     let id: String
     let title: String
     let caption: String
@@ -22,9 +22,9 @@ struct MomentsInProgressStoryScenePresentation: Identifiable, Equatable {
         caption = scene.caption
     }
 
-    static func sorted(_ scenes: [MomentStoryScene]) -> [MomentsInProgressStoryScenePresentation] {
+    static func sorted(_ scenes: [MomentStoryScene]) -> [AnimateInProgressStoryScenePresentation] {
         scenes
             .sorted { $0.sceneIndex < $1.sceneIndex }
-            .map(MomentsInProgressStoryScenePresentation.init)
+            .map(AnimateInProgressStoryScenePresentation.init)
     }
 }

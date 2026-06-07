@@ -1,14 +1,14 @@
 import Foundation
 
-struct MomentsInProgressListPresentation: Equatable {
+struct AnimateInProgressListPresentation: Equatable {
     let summaryPills: [InProgressMomentsSummaryPresentation]
-    let groups: [MomentsInProgressListGroupPresentation]
+    let groups: [AnimateInProgressListGroupPresentation]
 
     static func make(
         momentsSummary: InProgressMomentsSummary,
         selectedMomentId: String?
-    ) -> MomentsInProgressListPresentation {
-        MomentsInProgressListPresentation(
+    ) -> AnimateInProgressListPresentation {
+        AnimateInProgressListPresentation(
             summaryPills: [
                 InProgressMomentsSummaryPresentation(
                     title: L10n.string("inProgress.summary.total"),
@@ -27,16 +27,16 @@ struct MomentsInProgressListPresentation: Equatable {
                 )
             ],
             groups: [
-                MomentsInProgressListGroupPresentation(
+                AnimateInProgressListGroupPresentation(
                     title: L10n.string("inProgress.group.inProgress"),
                     rows: momentsSummary.groups.inProgress.map {
-                        MomentsInProgressListRowPresentation(moment: $0, isSelected: selectedMomentId == $0.id)
+                        AnimateInProgressListRowPresentation(moment: $0, isSelected: selectedMomentId == $0.id)
                     }
                 ),
-                MomentsInProgressListGroupPresentation(
+                AnimateInProgressListGroupPresentation(
                     title: L10n.string("inProgress.group.finished"),
                     rows: momentsSummary.groups.finished.map {
-                        MomentsInProgressListRowPresentation(moment: $0, isSelected: selectedMomentId == $0.id)
+                        AnimateInProgressListRowPresentation(moment: $0, isSelected: selectedMomentId == $0.id)
                     }
                 )
             ].filter { !$0.rows.isEmpty }
@@ -52,20 +52,20 @@ struct InProgressMomentsSummaryPresentation: Identifiable, Equatable {
     var id: String { title }
 }
 
-struct MomentsInProgressListGroupPresentation: Identifiable, Equatable {
+struct AnimateInProgressListGroupPresentation: Identifiable, Equatable {
     let title: String
-    let rows: [MomentsInProgressListRowPresentation]
+    let rows: [AnimateInProgressListRowPresentation]
 
     var id: String { title }
     var count: Int { rows.count }
 }
 
-struct MomentsInProgressListRowPresentation: Identifiable, Equatable {
+struct AnimateInProgressListRowPresentation: Identifiable, Equatable {
     let moment: InProgressMoment
     let title: String
     let statusSystemImage: String
     let isFinished: Bool
-    let metadata: [MomentsInProgressListMetadataPresentation]
+    let metadata: [AnimateInProgressListMetadataPresentation]
     let statusTitle: String
     let accessorySystemImage: String
     let isSelected: Bool
@@ -78,11 +78,11 @@ struct MomentsInProgressListRowPresentation: Identifiable, Equatable {
         self.isFinished = MomentStatusRules.isFinished(moment)
         self.statusSystemImage = isFinished ? "checkmark.circle.fill" : "circle.dashed"
         self.metadata = [
-            MomentsInProgressListMetadataPresentation(
+            AnimateInProgressListMetadataPresentation(
                 systemImage: "clock",
                 text: AnimateVideoFormatting.updatedAt(moment)
             ),
-            MomentsInProgressListMetadataPresentation(
+            AnimateInProgressListMetadataPresentation(
                 systemImage: "text.bubble",
                 text: AnimateVideoFormatting.storyUsage(moment)
             )
@@ -93,7 +93,7 @@ struct MomentsInProgressListRowPresentation: Identifiable, Equatable {
     }
 }
 
-struct MomentsInProgressListMetadataPresentation: Identifiable, Equatable {
+struct AnimateInProgressListMetadataPresentation: Identifiable, Equatable {
     let systemImage: String
     let text: String
 

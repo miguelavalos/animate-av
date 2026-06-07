@@ -1,11 +1,11 @@
 import AVAppShellFoundation
 import SwiftUI
 
-struct MomentsInProgressRenderJobsSection: View {
+struct AnimateInProgressRenderJobsSection: View {
     let renderJobs: [MomentRenderJob]
 
-    private var presentation: MomentsInProgressRenderJobsSectionPresentation {
-        MomentsInProgressRenderJobsSectionPresentation(renderJobs: renderJobs)
+    private var presentation: AnimateInProgressRenderJobsSectionPresentation {
+        AnimateInProgressRenderJobsSectionPresentation(renderJobs: renderJobs)
     }
 
     var body: some View {
@@ -13,24 +13,24 @@ struct MomentsInProgressRenderJobsSection: View {
             AVAppShellSectionHeader(title: presentation.title)
 
             if presentation.jobs.isEmpty {
-                MomentsInProgressEmptySectionRow(
+                AnimateInProgressEmptySectionRow(
                     systemImage: presentation.emptySystemImage,
                     message: presentation.emptyMessage
                 )
             } else {
                 ForEach(presentation.jobs) { job in
-                    MomentsInProgressRenderJobRow(presentation: job)
+                    AnimateInProgressRenderJobRow(presentation: job)
                 }
             }
         }
     }
 }
 
-struct MomentsInProgressFinalExportSection: View {
+struct AnimateInProgressFinalExportSection: View {
     let artifacts: [MomentArtifact]
 
-    private var presentation: MomentsInProgressArtifactSectionPresentation {
-        MomentsInProgressArtifactSectionPresentation.finalExport(artifacts: artifacts)
+    private var presentation: AnimateInProgressArtifactSectionPresentation {
+        AnimateInProgressArtifactSectionPresentation.finalExport(artifacts: artifacts)
     }
 
     var body: some View {
@@ -38,9 +38,9 @@ struct MomentsInProgressFinalExportSection: View {
             AVAppShellSectionHeader(title: presentation.title)
 
             if let artifact = presentation.artifact {
-                MomentsInProgressArtifactDetail(presentation: artifact)
+                AnimateInProgressArtifactDetail(presentation: artifact)
             } else {
-                MomentsInProgressEmptySectionRow(
+                AnimateInProgressEmptySectionRow(
                     systemImage: presentation.emptySystemImage,
                     message: presentation.emptyMessage
                 )

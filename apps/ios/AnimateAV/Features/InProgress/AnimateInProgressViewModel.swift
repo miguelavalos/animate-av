@@ -3,7 +3,7 @@ import Foundation
 import SwiftUI
 
 @MainActor
-final class MomentsInProgressViewModel: ObservableObject {
+final class AnimateInProgressViewModel: ObservableObject {
     @Published private(set) var momentsSummary = InProgressMomentsSummary()
     @Published private(set) var isSignedIn = false
     @Published private(set) var currentUserId: String?

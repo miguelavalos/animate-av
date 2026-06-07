@@ -1,6 +1,6 @@
 import SwiftUI
 
-struct MomentsInProgressSelectedDetail: View {
+struct AnimateInProgressSelectedDetail: View {
     let selectedMomentId: String?
     let isLoadingMomentWorkspace: Bool
     let activeWorkspace: MomentWorkspace?
@@ -12,11 +12,11 @@ struct MomentsInProgressSelectedDetail: View {
         if isLoadingMomentWorkspace {
             Divider()
                 .padding(.vertical, 8)
-            MomentsInProgressLoadingDetail()
+            AnimateInProgressLoadingDetail()
         } else if let activeWorkspace, selectedMomentId == activeWorkspace.moment.id {
             Divider()
                 .padding(.vertical, 8)
-            MomentsInProgressWorkspaceDetail(
+            AnimateInProgressWorkspaceDetail(
                 workspace: activeWorkspace,
                 isDeletingMoment: isDeletingMoment,
                 continueMoment: continueMoment,

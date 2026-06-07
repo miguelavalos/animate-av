@@ -3,7 +3,7 @@ import XCTest
 
 final class AnimateInProgressPresentationTests: XCTestCase {
     func testSignedOutAvailabilityExplainsAccountRequirement() {
-        let presentation = MomentsInProgressPresentation.make(
+        let presentation = AnimateInProgressPresentation.make(
             isSignedIn: false,
             momentsSummary: InProgressMomentsSummary(),
             momentPendingDeletion: nil
@@ -12,7 +12,7 @@ final class AnimateInProgressPresentationTests: XCTestCase {
         XCTAssertEqual(
             presentation.availability,
             .signedOut(
-                MomentsInProgressUnavailablePresentation(
+                AnimateInProgressUnavailablePresentation(
                     systemImage: "person.crop.circle.fill",
                     title: "Sign in to make videos",
                     message: "In Progress and Gallery unlock once your account is connected."
@@ -22,7 +22,7 @@ final class AnimateInProgressPresentationTests: XCTestCase {
     }
 
     func testEmptySignedInAvailabilityExplainsCreateFirstState() {
-        let presentation = MomentsInProgressPresentation.make(
+        let presentation = AnimateInProgressPresentation.make(
             isSignedIn: true,
             momentsSummary: InProgressMomentsSummary(),
             momentPendingDeletion: nil
@@ -31,7 +31,7 @@ final class AnimateInProgressPresentationTests: XCTestCase {
         XCTAssertEqual(
             presentation.availability,
             .empty(
-                MomentsInProgressUnavailablePresentation(
+                AnimateInProgressUnavailablePresentation(
                     systemImage: "rectangle.stack.badge.plus",
                     title: "Nothing here yet",
                     message: "Active cartoons appear in In Progress. Finished ones appear in Gallery."
@@ -41,7 +41,7 @@ final class AnimateInProgressPresentationTests: XCTestCase {
     }
 
     func testVideoAvailabilityIsAvailableWhenSignedInWithVideos() {
-        let presentation = MomentsInProgressPresentation.make(
+        let presentation = AnimateInProgressPresentation.make(
             isSignedIn: true,
             momentsSummary: InProgressMomentsSummary.make(from: [
                 makeMoment(id: "moment-1")
@@ -53,13 +53,13 @@ final class AnimateInProgressPresentationTests: XCTestCase {
     }
 
     func testDeletionMessageUsesPendingVideoTitleOrFallback() {
-        let fallback = MomentsInProgressPresentation.make(
+        let fallback = AnimateInProgressPresentation.make(
             isSignedIn: true,
             momentsSummary: InProgressMomentsSummary(),
             momentPendingDeletion: nil
         )
         let moment = makeMoment(id: "moment-1", title: "Family Weekend")
-        let titled = MomentsInProgressPresentation.make(
+        let titled = AnimateInProgressPresentation.make(
             isSignedIn: true,
             momentsSummary: InProgressMomentsSummary(),
             momentPendingDeletion: moment

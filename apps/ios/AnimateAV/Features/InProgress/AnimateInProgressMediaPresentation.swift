@@ -1,17 +1,17 @@
 import Foundation
 
-struct MomentsInProgressMediaSectionPresentation: Equatable {
+struct AnimateInProgressMediaSectionPresentation: Equatable {
     let title = L10n.string("moment.media.title")
     let emptySystemImage = "photo.badge.plus"
     let emptyMessage = L10n.string("moment.media.empty")
-    let mediaAssets: [MomentsInProgressMediaAssetPresentation]
+    let mediaAssets: [AnimateInProgressMediaAssetPresentation]
 
     init(mediaAssets: [MomentMediaAsset]) {
-        self.mediaAssets = MomentsInProgressMediaAssetPresentation.sorted(mediaAssets)
+        self.mediaAssets = AnimateInProgressMediaAssetPresentation.sorted(mediaAssets)
     }
 }
 
-struct MomentsInProgressMediaAssetPresentation: Identifiable, Equatable {
+struct AnimateInProgressMediaAssetPresentation: Identifiable, Equatable {
     let id: String
     let systemImage: String
     let title: String
@@ -24,9 +24,9 @@ struct MomentsInProgressMediaAssetPresentation: Identifiable, Equatable {
         detail = AnimateVideoFormatting.mediaAssetDetail(mediaAsset)
     }
 
-    static func sorted(_ mediaAssets: [MomentMediaAsset]) -> [MomentsInProgressMediaAssetPresentation] {
+    static func sorted(_ mediaAssets: [MomentMediaAsset]) -> [AnimateInProgressMediaAssetPresentation] {
         mediaAssets
             .sorted { $0.sortOrder < $1.sortOrder }
-            .map(MomentsInProgressMediaAssetPresentation.init)
+            .map(AnimateInProgressMediaAssetPresentation.init)
     }
 }

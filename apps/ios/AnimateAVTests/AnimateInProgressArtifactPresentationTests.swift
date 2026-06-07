@@ -3,7 +3,7 @@ import XCTest
 
 final class AnimateInProgressArtifactPresentationTests: XCTestCase {
     func testRenderJobsSectionPresentationFormatsTitleEmptyStateAndJobs() {
-        let presentation = MomentsInProgressRenderJobsSectionPresentation(renderJobs: [
+        let presentation = AnimateInProgressRenderJobsSectionPresentation(renderJobs: [
             makeRenderJob(id: "old", kind: "final", status: "queued", updatedAt: 10),
             makeRenderJob(id: "new", kind: "final", status: "failed", updatedAt: 20)
         ])
@@ -21,7 +21,7 @@ final class AnimateInProgressArtifactPresentationTests: XCTestCase {
             makeArtifact(id: "thumb-2", kind: "thumbnail", status: "available")
         ]
 
-        let finalExport = MomentsInProgressArtifactSectionPresentation.finalExport(artifacts: artifacts)
+        let finalExport = AnimateInProgressArtifactSectionPresentation.finalExport(artifacts: artifacts)
 
         XCTAssertEqual(finalExport.title, "Final video")
         XCTAssertEqual(finalExport.emptySystemImage, "video.fill")
@@ -30,7 +30,7 @@ final class AnimateInProgressArtifactPresentationTests: XCTestCase {
     }
 
     func testArtifactSectionPresentationsUseEmptyArtifactWhenMissing() {
-        XCTAssertNil(MomentsInProgressArtifactSectionPresentation.finalExport(artifacts: []).artifact)
+        XCTAssertNil(AnimateInProgressArtifactSectionPresentation.finalExport(artifacts: []).artifact)
     }
 
     func testFinalExportPicksLatestMatchingArtifact() {
@@ -40,11 +40,11 @@ final class AnimateInProgressArtifactPresentationTests: XCTestCase {
             makeArtifact(id: "thumb-2", kind: "thumbnail", status: "available")
         ]
 
-        XCTAssertEqual(MomentsInProgressArtifactPresentation.finalExport(in: artifacts)?.storageKey, "animateav/final-1.mp4")
+        XCTAssertEqual(AnimateInProgressArtifactPresentation.finalExport(in: artifacts)?.storageKey, "animateav/final-1.mp4")
     }
 
     func testArtifactPresentationFormatsKindWatermarkAndExpiry() {
-        let presentation = MomentsInProgressArtifactPresentation(
+        let presentation = AnimateInProgressArtifactPresentation(
             artifact: makeArtifact(
                 id: "final-1",
                 kind: "final_export",
@@ -61,16 +61,16 @@ final class AnimateInProgressArtifactPresentationTests: XCTestCase {
     }
 
     func testFinalArtifactPresentationProvidesExportAndRecoveryCopy() {
-        let availableFinal = MomentsInProgressArtifactPresentation(
+        let availableFinal = AnimateInProgressArtifactPresentation(
             artifact: makeArtifact(id: "final-1", kind: "final_export", status: "available")
         )
-        let expiredFinal = MomentsInProgressArtifactPresentation(
+        let expiredFinal = AnimateInProgressArtifactPresentation(
             artifact: makeArtifact(id: "final-2", kind: "final_export", status: "expired")
         )
-        let failedFinal = MomentsInProgressArtifactPresentation(
+        let failedFinal = AnimateInProgressArtifactPresentation(
             artifact: makeArtifact(id: "final-3", kind: "final_export", status: "failed")
         )
-        let queuedFinal = MomentsInProgressArtifactPresentation(
+        let queuedFinal = AnimateInProgressArtifactPresentation(
             artifact: makeArtifact(id: "final-4", kind: "final_export", status: "queued")
         )
 
@@ -84,7 +84,7 @@ final class AnimateInProgressArtifactPresentationTests: XCTestCase {
     }
 
     func testRenderJobPresentationSortsNewestFirstAndUsesFallbacks() {
-        let presentations = MomentsInProgressRenderJobPresentation.sorted([
+        let presentations = AnimateInProgressRenderJobPresentation.sorted([
             makeRenderJob(id: "old", kind: "final", status: "queued", updatedAt: 10),
             makeRenderJob(
                 id: "new",
@@ -110,7 +110,7 @@ final class AnimateInProgressArtifactPresentationTests: XCTestCase {
     }
 
     func testRenderJobPresentationPreservesSafeFailedUserMessage() {
-        let presentation = MomentsInProgressRenderJobPresentation(
+        let presentation = AnimateInProgressRenderJobPresentation(
             renderJob: makeRenderJob(
                 id: "final",
                 kind: "final",

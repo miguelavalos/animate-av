@@ -2,12 +2,12 @@ import AVAppShellFoundation
 import AVBrandFoundation
 import SwiftUI
 
-struct MomentsInProgressScreen: View {
-    @EnvironmentObject private var viewModel: MomentsInProgressViewModel
+struct AnimateInProgressScreen: View {
+    @EnvironmentObject private var viewModel: AnimateInProgressViewModel
     @EnvironmentObject private var createViewModel: MomentsCreateViewModel
     @State private var momentPendingDeletion: InProgressMoment?
     @State private var momentPendingRename: InProgressMoment?
-    @SceneStorage("animate.inProgress.selectedAssetKind") private var selectedAssetKindRaw = MomentsInProgressAssetKind.videos.rawValue
+    @SceneStorage("animate.inProgress.selectedAssetKind") private var selectedAssetKindRaw = AnimateInProgressAssetKind.videos.rawValue
     let balance: AnimateCreditBalance
     let creditBalanceLoadState: AnimateCreditBalanceLoadState
     let continueMoment: (MomentsContinuationRequest) -> Void
@@ -16,16 +16,16 @@ struct MomentsInProgressScreen: View {
     let openCredits: () -> Void
     let retryCredits: () -> Void
 
-    private var presentation: MomentsInProgressPresentation {
-        MomentsInProgressPresentation.make(
+    private var presentation: AnimateInProgressPresentation {
+        AnimateInProgressPresentation.make(
             isSignedIn: viewModel.isSignedIn,
             momentsSummary: viewModel.videoMomentsSummary,
             momentPendingDeletion: momentPendingDeletion
         )
     }
 
-    private var imagesPresentation: MomentsInProgressPresentation {
-        MomentsInProgressPresentation.make(
+    private var imagesPresentation: AnimateInProgressPresentation {
+        AnimateInProgressPresentation.make(
             isSignedIn: viewModel.isSignedIn,
             momentsSummary: viewModel.imageMomentsSummary,
             momentPendingDeletion: nil
@@ -54,7 +54,7 @@ struct MomentsInProgressScreen: View {
         AVAppShellScrollableScreenScaffold {
             AnimateTheme.shellBackground
         } content: {
-            MomentsInProgressAssetKindPicker(selectedAssetKind: selectedAssetKindBinding)
+            AnimateInProgressAssetKindPicker(selectedAssetKind: selectedAssetKindBinding)
 
             switch selectedAssetKind {
             case .videos:
@@ -65,7 +65,7 @@ struct MomentsInProgressScreen: View {
                     )
                 }
 
-                MomentsInProgressCard(
+                AnimateInProgressCard(
                     presentation: presentation,
                     balance: balance,
                     creditBalanceLoadState: creditBalanceLoadState,
@@ -85,7 +85,7 @@ struct MomentsInProgressScreen: View {
                     retryCredits: retryCredits
                 )
             case .images:
-                MomentsInProgressImagesCard(
+                AnimateInProgressImagesCard(
                     presentation: imagesPresentation,
                     momentsSummary: viewModel.imageMomentsSummary,
                     startSignInFlow: startSignInFlow,
@@ -108,7 +108,7 @@ struct MomentsInProgressScreen: View {
             Text(presentation.deletionMessage)
         }
         .sheet(item: $momentPendingRename) { moment in
-            MomentsInProgressRenameSheet(moment: moment) { title in
+            AnimateInProgressRenameSheet(moment: moment) { title in
                 viewModel.renameMoment(moment, title: title)
             }
             .presentationDetents([.height(230)])
@@ -126,11 +126,11 @@ struct MomentsInProgressScreen: View {
         )
     }
 
-    private var selectedAssetKind: MomentsInProgressAssetKind {
-        MomentsInProgressAssetKind(rawValue: selectedAssetKindRaw) ?? .videos
+    private var selectedAssetKind: AnimateInProgressAssetKind {
+        AnimateInProgressAssetKind(rawValue: selectedAssetKindRaw) ?? .videos
     }
 
-    private var selectedAssetKindBinding: Binding<MomentsInProgressAssetKind> {
+    private var selectedAssetKindBinding: Binding<AnimateInProgressAssetKind> {
         Binding(
             get: { selectedAssetKind },
             set: { selectedAssetKindRaw = $0.rawValue }
@@ -166,16 +166,16 @@ struct MomentsInProgressScreen: View {
     }
 }
 
-private struct MomentsInProgressAssetKindPicker: View {
-    @Binding var selectedAssetKind: MomentsInProgressAssetKind
+private struct AnimateInProgressAssetKindPicker: View {
+    @Binding var selectedAssetKind: AnimateInProgressAssetKind
 
     var body: some View {
         HStack(spacing: 8) {
-            ForEach(MomentsInProgressAssetKind.allCases) { kind in
+            ForEach(AnimateInProgressAssetKind.allCases) { kind in
                 Button {
                     selectedAssetKind = kind
                 } label: {
-                    MomentsInProgressAssetKindPill(
+                    AnimateInProgressAssetKindPill(
                         title: kind.title,
                         isSelected: selectedAssetKind == kind
                     )
@@ -189,7 +189,7 @@ private struct MomentsInProgressAssetKindPicker: View {
     }
 }
 
-private struct MomentsInProgressAssetKindPill: View {
+private struct AnimateInProgressAssetKindPill: View {
     let title: String
     let isSelected: Bool
 
@@ -214,8 +214,8 @@ private struct MomentsInProgressAssetKindPill: View {
     }
 }
 
-private struct MomentsInProgressImagesCard: View {
-    let presentation: MomentsInProgressPresentation
+private struct AnimateInProgressImagesCard: View {
+    let presentation: AnimateInProgressPresentation
     let momentsSummary: InProgressMomentsSummary
     let startSignInFlow: () -> Void
     let startImages: () -> Void
@@ -224,7 +224,7 @@ private struct MomentsInProgressImagesCard: View {
         AVAppShellCard {
             switch presentation.availability {
             case let .signedOut(unavailable):
-                MomentsInProgressInlineEmptyState(
+                AnimateInProgressInlineEmptyState(
                     systemImage: unavailable.systemImage,
                     title: unavailable.title,
                     message: unavailable.message,
@@ -233,9 +233,9 @@ private struct MomentsInProgressImagesCard: View {
                     action: startSignInFlow
                 )
             case .empty:
-                MomentsInProgressImagesEmptyState(startImages: startImages)
+                AnimateInProgressImagesEmptyState(startImages: startImages)
             case .available:
-                MomentsInProgressList(
+                AnimateInProgressList(
                     momentsSummary: momentsSummary,
                     selectedMomentId: nil,
                     selectMoment: { _ in }
@@ -245,7 +245,7 @@ private struct MomentsInProgressImagesCard: View {
     }
 }
 
-private enum MomentsInProgressAssetKind: String, CaseIterable, Identifiable {
+private enum AnimateInProgressAssetKind: String, CaseIterable, Identifiable {
     case videos
     case images
 
@@ -261,7 +261,7 @@ private enum MomentsInProgressAssetKind: String, CaseIterable, Identifiable {
     }
 }
 
-private struct MomentsInProgressImagesEmptyState: View {
+private struct AnimateInProgressImagesEmptyState: View {
     let startImages: () -> Void
 
     var body: some View {
@@ -303,7 +303,7 @@ private struct MomentsInProgressImagesEmptyState: View {
     }
 }
 
-private struct MomentsInProgressRenameSheet: View {
+private struct AnimateInProgressRenameSheet: View {
     let moment: InProgressMoment
     let save: (String) -> Void
     @Environment(\.dismiss) private var dismiss

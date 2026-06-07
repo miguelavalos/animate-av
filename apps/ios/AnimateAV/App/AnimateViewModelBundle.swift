@@ -4,7 +4,7 @@ import Foundation
 struct AnimateViewModelBundle {
     let home: AnimateHomeViewModel
     let create: MomentsCreateViewModel
-    let inProgress: MomentsInProgressViewModel
+    let inProgress: AnimateInProgressViewModel
     let gallery: MomentsGalleryViewModel
     let avi: AnimateAviViewModel
 
@@ -18,7 +18,7 @@ struct AnimateViewModelBundle {
     ) {
         home = AnimateHomeViewModel()
         create = MomentsCreateViewModel()
-        inProgress = MomentsInProgressViewModel()
+        inProgress = AnimateInProgressViewModel()
         gallery = MomentsGalleryViewModel(
             galleryMomentsProvider: galleryMomentsProvider,
             authTokenProvider: authTokenProvider,
