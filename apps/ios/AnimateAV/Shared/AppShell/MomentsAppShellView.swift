@@ -103,7 +103,7 @@ struct MomentsAppShellView: View {
     @ViewBuilder
     private func screen(for tab: MomentsRootTab) -> some View {
         if let chromeItem {
-            MomentsProfileScreen(
+            AnimateProfileScreen(
                 mode: chromeItem,
                 openSettings: { self.chromeItem = .settings },
                 openAccount: { self.chromeItem = .account },

@@ -3,7 +3,7 @@ import AVBrandFoundation
 import AVSettingsFoundation
 import SwiftUI
 
-struct MomentsProfileScreen: View {
+struct AnimateProfileScreen: View {
     let mode: AVAppShellChromeItem
     let openSettings: () -> Void
     let openAccount: () -> Void
