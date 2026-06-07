@@ -80,10 +80,12 @@ final class FinalRenderWorkflow: WorkspaceObservingWorkflow {
         removesWatermark: Bool = false
     ) async {
         guard let bearerToken = await validatedBearerTokenForFinalRender() else { return }
+        let messageFields = Self.videoMessageFields(form)
 
         do {
             videoQuote = try await videoQuoteClient.quoteVideo(
-                duration: AnimateVideoQuoteDuration(form.duration),
+                message: messageFields.message,
+                script: messageFields.script,
                 removeBranding: removesWatermark,
                 bearerToken: bearerToken
             )
@@ -98,7 +100,8 @@ final class FinalRenderWorkflow: WorkspaceObservingWorkflow {
                 operation: "quote_video",
                 step: "unknown",
                 data: [
-                    "duration": form.duration.rawValue,
+                    "has_message": String(messageFields.message != nil),
+                    "has_script": String(messageFields.script != nil),
                     "removes_watermark": String(removesWatermark),
                 ]
             )
@@ -596,6 +599,22 @@ final class FinalRenderWorkflow: WorkspaceObservingWorkflow {
             missingMomentMessage: L10n.string("workflow.final.missingMoment"),
             insufficientCreditsMessage: L10n.string("workflow.final.addCredits")
         ) ?? L10n.string("workflow.final.notReady")
+    }
+
+    private static func videoMessageFields(_ form: MomentSetupForm) -> (message: String?, script: String?) {
+        if let script = nonBlankOptional(form.details) {
+            return (message: nil, script: script)
+        }
+
+        return (message: nonBlankOptional(form.occasion), script: nil)
+    }
+
+    private static func nonBlankOptional(_ value: String?) -> String? {
+        guard let trimmed = value?.trimmingCharacters(in: .whitespacesAndNewlines),
+              !trimmed.isEmpty else {
+            return nil
+        }
+        return trimmed
     }
 
 }

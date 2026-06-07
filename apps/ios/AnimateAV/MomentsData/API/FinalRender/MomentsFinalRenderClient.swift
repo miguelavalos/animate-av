@@ -73,6 +73,7 @@ struct MomentsFinalRenderClient {
             .appendingPathComponent("animateav")
             .appendingPathComponent("renders")
             .appendingPathComponent("plan")
+        let messageFields = Self.videoMessageFields(form)
         let body = MomentsRenderPlanRequest(
             momentId: momentId,
             creationMode: form.creationMode.rawValue,
@@ -84,6 +85,8 @@ struct MomentsFinalRenderClient {
             selectedSourceLocalIdentifiers: Self.nonBlankIdentifiers(selectedSourceLocalIdentifiers),
             occasion: Self.nonBlankOptional(form.occasion),
             details: Self.nonBlankOptional(form.details),
+            message: messageFields.message,
+            script: messageFields.script,
             creditCost: nil,
             removeWatermark: removesWatermark,
             renderOptionId: nil
@@ -131,6 +134,7 @@ struct MomentsFinalRenderClient {
             .appendingPathComponent("renders")
             .appendingPathComponent("final")
             .appendingPathComponent("confirm")
+        let messageFields = Self.videoMessageFields(form)
         let body = MomentsConfirmFinalRenderRequest(
             momentId: momentId,
             creationMode: form.creationMode.rawValue,
@@ -142,6 +146,8 @@ struct MomentsFinalRenderClient {
             selectedSourceLocalIdentifiers: Self.nonBlankIdentifiers(selectedSourceLocalIdentifiers),
             occasion: Self.nonBlankOptional(form.occasion),
             details: Self.nonBlankOptional(form.details),
+            message: messageFields.message,
+            script: messageFields.script,
             creditCost: nil,
             removeWatermark: removesWatermark,
             renderOptionId: renderOptionId,
@@ -237,6 +243,14 @@ struct MomentsFinalRenderClient {
             return nil
         }
         return trimmed
+    }
+
+    private static func videoMessageFields(_ form: MomentSetupForm) -> (message: String?, script: String?) {
+        if let script = nonBlankOptional(form.details) {
+            return (message: nil, script: script)
+        }
+
+        return (message: nonBlankOptional(form.occasion), script: nil)
     }
 
     private static func nonBlankIdentifiers(_ values: [String]) -> [String]? {

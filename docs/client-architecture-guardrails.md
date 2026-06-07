@@ -14,7 +14,7 @@ renders the state returned by the configured backend/realtime layer.
 The current v1 user flow is:
 
 ```text
-Choose source photo -> choose style, message, and duration -> confirm credits -> generate animated video -> local download -> Gallery
+Choose source photo -> choose style and message -> backend infers duration and quotes credits -> generate animated video -> local download -> Gallery
 ```
 
 Images use the same ownership model with a simpler output: choose one source

@@ -383,8 +383,70 @@ final class MomentsAPIClientTests: XCTestCase {
         XCTAssertEqual(json["appId"] as? String, "animateav")
         XCTAssertNil(json["occasion"])
         XCTAssertNil(json["details"])
+        XCTAssertNil(json["message"])
+        XCTAssertNil(json["script"])
         XCTAssertEqual(json["selectedSourceLocalIdentifiers"] as? [String], ["local-1", "local-2"])
         XCTAssertNil(json["creditCost"])
+    }
+
+    func testPrepareRenderPlanSendsCustomScriptForDurationInference() async throws {
+        let session = makeMockSession(
+            json: """
+            {
+              "appId": "animateav",
+              "momentId": "moment-1",
+              "planId": "plan-1",
+              "canCreateVideo": true,
+              "createVideoBlockers": [],
+              "generatedAt": "2026-05-16T16:00:00Z",
+              "plan": {
+                "schemaVersion": 1,
+                "secondsPerCredit": 15,
+                "renderOptionId": "short_moment",
+                "renderOptionTitle": "Short Moment",
+                "creationMode": "quick",
+                "look": "cartoon",
+                "theme": "celebration",
+                "mood": "warm",
+                "duration": "auto",
+                "mediaUse": "aviPick",
+                "creditCost": 1,
+                "totalCreditCost": 1,
+                "targetDurationMs": 10000,
+                "fps": 24,
+                "rendererMode": "image_to_video",
+                "plannedAssetCount": 1,
+                "usedAssetCount": 1,
+                "rejectedAssetCount": 0,
+                "qualityWarnings": [],
+                "userMessage": "Ready."
+              }
+            }
+            """
+        )
+        let client = MomentsFinalRenderClient(baseURLString: accountAPIBaseURL, session: session)
+        var form = MomentSetupForm(template: .birthdayMessage)
+        form.theme = .celebration
+        form.look = .cartoon
+        form.occasion = "Birthday"
+        form.details = "Happy birthday, Ana. Your photo turns into a watercolor celebration."
+
+        _ = try await client.prepareRenderPlan(
+            momentId: "moment-1",
+            bearerToken: "token-1",
+            template: .birthdayMessage,
+            creationStyle: nil,
+            form: form,
+            removesWatermark: false,
+            selectedSourceLocalIdentifiers: ["photo-1"]
+        )
+
+        let body = try XCTUnwrap(MomentsURLProtocolMock.lastRequestBody)
+        let json = try XCTUnwrap(JSONSerialization.jsonObject(with: body) as? [String: Any])
+        XCTAssertEqual(json["occasion"] as? String, "Birthday")
+        XCTAssertEqual(json["details"] as? String, "Happy birthday, Ana. Your photo turns into a watercolor celebration.")
+        XCTAssertNil(json["message"])
+        XCTAssertEqual(json["script"] as? String, "Happy birthday, Ana. Your photo turns into a watercolor celebration.")
     }
 
     func testConfirmFinalRenderUsesBackendOwnedEndpoint() async throws {
@@ -498,7 +560,8 @@ final class MomentsAPIClientTests: XCTestCase {
         let client = MomentsVideoQuoteClient(baseURLString: accountAPIBaseURL, session: session)
 
         let quote = try await client.quoteVideo(
-            duration: .upTo10s,
+            message: "Happy birthday Ana",
+            script: nil,
             removeBranding: true,
             bearerToken: "token-1"
         )
@@ -509,7 +572,9 @@ final class MomentsAPIClientTests: XCTestCase {
         let body = try XCTUnwrap(MomentsURLProtocolMock.lastRequestBody)
         let json = try XCTUnwrap(JSONSerialization.jsonObject(with: body) as? [String: Any])
         XCTAssertEqual(json["appId"] as? String, "animateav")
-        XCTAssertEqual(json["duration"] as? String, "upTo10s")
+        XCTAssertNil(json["duration"])
+        XCTAssertEqual(json["message"] as? String, "Happy birthday Ana")
+        XCTAssertNil(json["script"])
         XCTAssertEqual(json["removeBranding"] as? Bool, true)
         XCTAssertEqual(quote.baseCreditCost, 2)
         XCTAssertEqual(quote.brandingRemovalCreditCost, 1)

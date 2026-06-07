@@ -35,6 +35,8 @@ struct MomentsRenderPlanRequest: Encodable {
     let selectedSourceLocalIdentifiers: [String]?
     let occasion: String?
     let details: String?
+    let message: String?
+    let script: String?
     let creditCost: Int?
     let removeWatermark: Bool
     let renderOptionId: String?
@@ -52,6 +54,8 @@ struct MomentsConfirmFinalRenderRequest: Encodable {
     let selectedSourceLocalIdentifiers: [String]?
     let occasion: String?
     let details: String?
+    let message: String?
+    let script: String?
     let creditCost: Int?
     let removeWatermark: Bool
     let renderOptionId: String?

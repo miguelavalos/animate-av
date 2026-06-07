@@ -93,7 +93,6 @@ final class MomentsCreateViewModel: ObservableObject {
     private var hasLocalSetupEdits = false
     private var hasUserStyleOverride = false
     private var hasUserLookOverride = false
-    private var hasUserDurationOverride = false
     private var autoStyleUndoSelection: (style: MomentCreationStyle, musicPreset: MomentMusicPreset, form: MomentSetupForm)?
 
     var activeMoment: InProgressMoment? {
@@ -401,7 +400,6 @@ final class MomentsCreateViewModel: ObservableObject {
         hasLocalSetupEdits = false
         hasUserStyleOverride = false
         hasUserLookOverride = false
-        hasUserDurationOverride = false
         applyStyleDefaults(selectedCreationStyle)
     }
 
@@ -430,15 +428,11 @@ final class MomentsCreateViewModel: ObservableObject {
 
     private func applyStyleDefaults(_ style: MomentCreationStyle, preserveUserOverrides: Bool = false) {
         let currentLook = form.look
-        let currentDuration = form.duration
         form.template = style.template
         form.theme = style.id
         form.look = preserveUserOverrides && hasUserLookOverride ? currentLook : .real
         form.creationMode = .quick
-        form.duration = preserveUserOverrides && hasUserDurationOverride ? currentDuration : .short
-        if !preserveUserOverrides {
-            hasUserDurationOverride = false
-        }
+        form.duration = .short
         form.mediaUse = .aviPick
         form.occasion = style.title
         form.tone = style.tone
@@ -502,9 +496,7 @@ final class MomentsCreateViewModel: ObservableObject {
 
     func effectiveFinalRenderForm() -> MomentSetupForm {
         var finalForm = form
-        if !hasUserDurationOverride {
-            finalForm.duration = .short
-        }
+        finalForm.duration = .short
         return finalForm
     }
 
@@ -561,12 +553,6 @@ final class MomentsCreateViewModel: ObservableObject {
         renderPlanInputSignature = nil
         pendingRenderPlanInputSignature = nil
         finalRenderWorkflow?.clearRenderPlan()
-    }
-
-    func selectDuration(_ duration: MomentDuration) {
-        form.duration = duration
-        hasUserDurationOverride = true
-        markLocalSetupEdited()
     }
 
     func selectLook(_ look: MomentLook) {
@@ -785,13 +771,11 @@ extension MomentsCreateViewModel {
             if continuedForm.matchesPersistedSetup(of: form) {
                 hasLocalSetupEdits = false
                 hasUserLookOverride = false
-                hasUserDurationOverride = false
             }
             return
         }
 
         form = continuedForm
-        hasUserDurationOverride = false
         if let continuedStyle = creationStyles.first(where: { $0.template.id == continuedForm.template.id }) {
             selectedCreationStyle = continuedStyle
             selectedMusicPreset = continuedStyle.allowedMusic.first(where: { $0 == continuedStyle.defaultMusic }) ?? continuedStyle.defaultMusic

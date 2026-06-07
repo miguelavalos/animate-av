@@ -33,7 +33,6 @@ struct MomentsCreateWorkflowContent: View {
                     autoPickStrongMoments: viewModel.autoPickStrongMoments,
                     selectStyle: viewModel.selectCreationStyle,
                     selectLook: viewModel.selectLook,
-                    selectDuration: viewModel.selectDuration,
                     selectMusicPreset: viewModel.selectMusicPreset,
                     useAutoStyleSuggestion: viewModel.useAutoStyleSuggestion,
                     undoAutoStyleSuggestion: viewModel.undoAutoStyleSuggestion,
@@ -76,7 +75,6 @@ private struct MomentsCreateMediaFirstWorkspace: View {
     let autoPickStrongMoments: () -> Void
     let selectStyle: (MomentCreationStyle) -> Void
     let selectLook: (MomentLook) -> Void
-    let selectDuration: (MomentDuration) -> Void
     let selectMusicPreset: (MomentMusicPreset) -> Void
     let useAutoStyleSuggestion: () -> Void
     let undoAutoStyleSuggestion: () -> Void
@@ -94,7 +92,6 @@ private struct MomentsCreateMediaFirstWorkspace: View {
 
     @State private var showsThemeChooser = false
     @State private var showsLookChooser = false
-    @State private var showsLengthChooser = false
     @State private var showsMoodChooser = false
     @State private var showsAviNoteEditor = false
     @State private var showsCreateVideoConfirmation = false
@@ -133,7 +130,6 @@ private struct MomentsCreateMediaFirstWorkspace: View {
                     } else if hasMediaSelection {
                         MomentsCreateStoryDecisionCard(
                             presentation: presentation,
-                            selectedDuration: form.duration,
                             selectedLook: form.look,
                             note: form.details,
                             selectedStyle: selectedStyle,
@@ -147,7 +143,6 @@ private struct MomentsCreateMediaFirstWorkspace: View {
                             changeTheme: { showsThemeChooser = true },
                             changeLook: { showsLookChooser = true },
                             changeMood: { showsMoodChooser = true },
-                            changeLength: { showsLengthChooser = true },
                             editNote: { showsAviNoteEditor = true },
                             discardMoment: { showsDiscardMomentConfirmation = true }
                         )
@@ -297,17 +292,6 @@ private struct MomentsCreateMediaFirstWorkspace: View {
                 dismiss: { showsLookChooser = false }
             )
             .id(form.look.rawValue)
-        }
-        .navigationDestination(isPresented: $showsLengthChooser) {
-            MomentsCreateLengthChooserPage(
-                selectedDuration: form.duration,
-                selectDuration: {
-                    selectDuration($0)
-                    showsLengthChooser = false
-                },
-                dismiss: { showsLengthChooser = false }
-            )
-            .id(form.duration.rawValue)
         }
         .navigationDestination(isPresented: $showsMoodChooser) {
             MomentsCreateMoodChooserPage(
@@ -850,7 +834,6 @@ private struct MomentsCreateStoryReviewCard: View {
 
 private struct MomentsCreateStoryDecisionCard: View {
     let presentation: MomentsCreateWorkflowPresentation
-    let selectedDuration: MomentDuration
     let selectedLook: MomentLook
     let note: String
     let selectedStyle: MomentCreationStyle
@@ -864,7 +847,6 @@ private struct MomentsCreateStoryDecisionCard: View {
     let changeTheme: () -> Void
     let changeLook: () -> Void
     let changeMood: () -> Void
-    let changeLength: () -> Void
     let editNote: () -> Void
     let discardMoment: () -> Void
     var body: some View {
@@ -982,14 +964,6 @@ private struct MomentsCreateStoryDecisionCard: View {
                         )
                         MomentsCreateOptionDivider()
                         MomentsCreateStoryDecisionSummaryRow(
-                            title: L10n.string("create.workflowContent.pacing"),
-                            value: storyDecision.durationTitle,
-                            detail: lengthDetail,
-                            systemImage: "timer",
-                            action: changeLength
-                        )
-                        MomentsCreateOptionDivider()
-                        MomentsCreateStoryDecisionSummaryRow(
                             title: L10n.string("create.note.field.title"),
                             value: noteTitle,
                             detail: noteDetail,
@@ -1104,19 +1078,6 @@ private struct MomentsCreateStoryDecisionCard: View {
             : L10n.string("create.workflowContent.scenesReady", count)
     }
 
-    private var lengthDetail: String {
-        switch selectedDuration {
-        case .auto:
-            return L10n.string("create.guide.length.auto.detail")
-        case .short:
-            return L10n.string("create.guide.length.short.detail")
-        case .standard:
-            return L10n.string("create.guide.length.standard.detail")
-        case .extended:
-            return L10n.string("create.guide.length.extended.detail")
-        }
-    }
-
     private var noteTitle: String {
         note.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty
             ? L10n.string("create.note.field.subtitle")
@@ -1144,7 +1105,7 @@ private struct MomentsCreateStoryDecisionCard: View {
         MomentsCreateStoryDecisionPresentation(
             mediaSummary: presentation.mediaSummary,
             storySummary: presentation.storySummary,
-            selectedDuration: selectedDuration,
+            selectedDuration: .short,
             renderPlan: presentation.finalRenderSummary.renderPlan?.plan,
             canRefreshStory: presentation.canPlanStory,
             availabilityMessage: presentation.storyAvailabilityMessage
@@ -2320,7 +2281,6 @@ private struct MomentsCreateGuideSummaryCard: View {
     let selectedMusicPreset: MomentMusicPreset
     let changeTheme: () -> Void
     let changeLook: () -> Void
-    let changeLength: () -> Void
     let changeMood: () -> Void
     let selectMusicPreset: (MomentMusicPreset) -> Void
 
@@ -2359,31 +2319,8 @@ private struct MomentsCreateGuideSummaryCard: View {
                         systemImage: "sparkles",
                         action: changeMood
                     )
-
-                    MomentsCreateOptionDivider()
-
-                    MomentsCreateEditableOptionRow(
-                        title: L10n.string("create.guide.length.title"),
-                        value: form.duration.title,
-                        detail: lengthDetail,
-                        systemImage: "timer",
-                        action: changeLength
-                    )
                 }
             }
-        }
-    }
-
-    private var lengthDetail: String {
-        switch form.duration {
-        case .auto:
-            return L10n.string("create.guide.length.auto.detail")
-        case .short:
-            return L10n.string("create.guide.length.short.detail")
-        case .standard:
-            return L10n.string("create.guide.length.standard.detail")
-        case .extended:
-            return L10n.string("create.guide.length.extended.detail")
         }
     }
 }
@@ -2942,63 +2879,6 @@ private struct MomentsCreateLookImageTile: View {
                     .stroke(isSelected ? AVBrandColor.accent : AVBrandColor.borderSubtle.opacity(0.7), lineWidth: isSelected ? 2 : 1)
             }
             .shadow(color: AVBrandColor.ink.opacity(isSelected ? 0.12 : 0.05), radius: isSelected ? 8 : 4, x: 0, y: 3)
-    }
-}
-
-private struct MomentsCreateLengthChooserPage: View {
-    let selectedDuration: MomentDuration
-    let selectDuration: (MomentDuration) -> Void
-    let dismiss: () -> Void
-
-    @State private var setupDuration: MomentDuration
-
-    init(
-        selectedDuration: MomentDuration,
-        selectDuration: @escaping (MomentDuration) -> Void,
-        dismiss: @escaping () -> Void
-    ) {
-        self.selectedDuration = selectedDuration
-        self.selectDuration = selectDuration
-        self.dismiss = dismiss
-        _setupDuration = State(initialValue: selectedDuration)
-    }
-
-    var body: some View {
-        MomentsCreateVisualOptionChooserPage(
-            title: L10n.string("create.selector.length.title"),
-            introTitle: L10n.string("create.selector.length.intro.title"),
-            introDetail: L10n.string("create.selector.length.intro.detail"),
-            dismiss: dismiss,
-            confirm: applySelection
-        ) {
-            MomentsCreateTwoColumnGrid(items: MomentDuration.allCases) { duration in
-                    MomentsCreateVisualOptionTile(
-                        title: duration.title,
-                        detail: detail(for: duration),
-                        assetName: duration.assetName,
-                        isSelected: setupDuration == duration,
-                        select: { setupDuration = duration }
-                    )
-            }
-        }
-    }
-
-    private func applySelection() {
-        selectDuration(setupDuration)
-        dismiss()
-    }
-
-    private func detail(for duration: MomentDuration) -> String {
-        switch duration {
-        case .auto:
-            return L10n.string("create.selector.length.auto.detail")
-        case .short:
-            return L10n.string("create.selector.length.short.detail")
-        case .standard:
-            return L10n.string("create.selector.length.standard.detail")
-        case .extended:
-            return L10n.string("create.selector.length.extended.detail")
-        }
     }
 }
 

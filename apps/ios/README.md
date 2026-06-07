@@ -29,7 +29,7 @@ credit commit/release.
 Current v1 flow:
 
 ```text
-Choose source photo -> choose style, message, and duration -> confirm credits -> generate animated video -> local download -> Gallery
+Choose source photo -> choose style and message -> backend infers duration and quotes credits -> generate animated video -> local download -> Gallery
 ```
 
 Images are a separate v1 workflow: choose one source photo, generate a stylized

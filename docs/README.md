@@ -33,7 +33,7 @@ handoff values belong in the private AVALSYS suite.
 V1 is a signed-in one-photo animation workflow:
 
 ```text
-Choose source photo -> choose style, message, and duration -> confirm credits -> generate animated video -> local download -> Gallery
+Choose source photo -> choose style and message -> backend infers duration and quotes credits -> generate animated video -> local download -> Gallery
 ```
 
 The public client may also expose image generation from a source photo as a

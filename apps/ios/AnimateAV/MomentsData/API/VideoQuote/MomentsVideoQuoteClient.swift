@@ -10,7 +10,9 @@ struct MomentsVideoQuoteClient {
     }
 
     func quoteVideo(
-        duration: AnimateVideoQuoteDuration,
+        duration: AnimateVideoQuoteDuration? = nil,
+        message: String?,
+        script: String?,
         removeBranding: Bool,
         bearerToken: String
     ) async throws -> AnimateVideoQuoteResponse {
@@ -26,6 +28,8 @@ struct MomentsVideoQuoteClient {
             .appendingPathComponent("quotes")
         let body = AnimateVideoQuoteRequest(
             duration: duration,
+            message: Self.nonBlankOptional(message),
+            script: Self.nonBlankOptional(script),
             removeBranding: removeBranding
         )
 
@@ -48,6 +52,11 @@ struct MomentsVideoQuoteClient {
 
         return try JSONDecoder().decode(AnimateVideoQuoteResponse.self, from: data)
     }
+
+    private static func nonBlankOptional(_ value: String?) -> String? {
+        let trimmed = value?.trimmingCharacters(in: .whitespacesAndNewlines) ?? ""
+        return trimmed.isEmpty ? nil : trimmed
+    }
 }
 
 enum AnimateVideoQuoteDuration: String, Codable, Equatable {
@@ -69,7 +78,9 @@ enum AnimateVideoQuoteDuration: String, Codable, Equatable {
 
 struct AnimateVideoQuoteRequest: Encodable, Equatable {
     let appId = "animateav"
-    let duration: AnimateVideoQuoteDuration
+    let duration: AnimateVideoQuoteDuration?
+    let message: String?
+    let script: String?
     let removeBranding: Bool
 }
 
