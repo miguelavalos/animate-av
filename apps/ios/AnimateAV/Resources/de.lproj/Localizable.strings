@@ -177,11 +177,12 @@
 "credits.balance.signedOut.title" = "Anmelden für Guthaben";
 "credits.balance.signedOut.detail" = "Guthaben erscheint hier nach der Anmeldung.";
 "credits.balance.loading.title" = "Guthaben wird geprüft";
-"credits.balance.loading.detail" = "Dein Video-Guthaben wird geladen.";
+"credits.balance.loading.detail" = "Dein Credit-Stand wird geladen.";
 "credits.balance.offline.title" = "Guthaben offline nicht verfügbar";
 "credits.balance.offline.detail" = "Verbinde dich mit dem Internet, um dein Guthaben zu sehen oder Guthaben zu erhalten.";
 "credits.balance.unavailable.title" = "Guthaben konnte nicht geladen werden";
 "credits.balance.unavailable.detail" = "Animate AV konnte dein Guthaben nicht prüfen. Prüfe die Verbindung und versuche es erneut. Wenn es weiter fehlschlägt, melde dich erneut an.";
+"credits.balance.retry.detail" = "Credits erneut prüfen.";
 "credits.balance.retry.title" = "Erneut versuchen";
 "credits.noun.one" = "Guthabenpunkt";
 "credits.noun.other" = "Guthabenpunkte";
@@ -255,8 +256,8 @@
 "home.aviBrief.firstMemory" = "Starte das erste animierte Video mit einem Quellbild.";
 "home.aviBrief.openInProgress" = "Open In Progress and continue the next unfinished step.";
 "home.aviBrief.signIn" = "Melde dich an, um Videos zu erstellen, Videos zu speichern und Credits im Konto zu behalten.";
-"home.header.subtitle" = "Erstelle private animierte Videos und stilisierte Bilder aus einem Foto.";
-"home.header.title" = "Animate AV";
+"home.header.subtitle" = "Verwandle ein Quellfoto in ein privates animiertes Video oder ein stilisiertes Bild.";
+"home.header.title" = "Erwecke Fotos zum Leben";
 "home.nextActions.detail" = "Starte ein Video, setze aktive Arbeit fort oder öffne die Hilfe.";
 "home.nextActions.title" = "Nächste Aktionen";
 "home.momentStatus.empty" = "Noch keine synchronisierten Videos.";

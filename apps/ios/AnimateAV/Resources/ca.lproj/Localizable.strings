@@ -274,11 +274,12 @@
 "credits.balance.signedOut.title" = "Inicia sessió per veure crèdits";
 "credits.balance.signedOut.detail" = "Els crèdits apareixeran aquí després d’iniciar sessió.";
 "credits.balance.loading.title" = "Comprovant crèdits";
-"credits.balance.loading.detail" = "Carregant el saldo de crèdits de vídeo.";
+"credits.balance.loading.detail" = "Carregant el saldo de crèdits.";
 "credits.balance.offline.title" = "Crèdits no disponibles sense connexió";
 "credits.balance.offline.detail" = "Connecta’t a internet per veure el saldo o obtenir crèdits.";
 "credits.balance.unavailable.title" = "No s’han pogut carregar els crèdits";
 "credits.balance.unavailable.detail" = "Animate AV no ha pogut comprovar el teu saldo de crèdits. Revisa la connexió i torna-ho a provar. Si continua fallant, inicia sessió de nou.";
+"credits.balance.retry.detail" = "Torna a comprovar els crèdits.";
 "credits.balance.retry.title" = "Torna-ho a provar";
 "credits.noun.one" = "crèdit";
 "credits.noun.other" = "crèdits";
@@ -352,8 +353,8 @@
 "home.aviBrief.firstMemory" = "Comença el primer vídeo animat amb una imatge font.";
 "home.aviBrief.openInProgress" = "Open In Progress and continue the next unfinished step.";
 "home.aviBrief.signIn" = "Inicia sessió per crear vídeos, desar vídeos i mantenir els crèdits al compte.";
-"home.header.subtitle" = "Crea vídeos animats privats i imatges amb estil a partir d’una foto.";
-"home.header.title" = "Animate AV";
+"home.header.subtitle" = "Converteix una foto font en un vídeo animat privat o una imatge amb estil.";
+"home.header.title" = "Dona vida a les fotos";
 "home.nextActions.detail" = "Comença un vídeo, continua feina activa o obre la guia.";
 "home.nextActions.title" = "Accions següents";
 "home.momentStatus.empty" = "Encara no hi ha vídeos sincronitzats.";

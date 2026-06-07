@@ -28,7 +28,7 @@ struct MomentsHomeAccountCard: View {
             } else {
                 AVAppShellActionRow(
                     title: L10n.string("credits.balance.retry.title"),
-                    detail: MomentsCreditCopy.balanceStatusDetail(creditBalanceLoadState),
+                    detail: L10n.string("credits.balance.retry.detail"),
                     systemImage: creditBalanceLoadState.systemImage,
                     isProminent: false,
                     accessibilityIdentifier: "moments.home.credits.retry",

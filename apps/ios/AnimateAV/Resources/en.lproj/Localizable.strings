@@ -276,11 +276,12 @@
 "credits.balance.signedOut.title" = "Sign in for credits";
 "credits.balance.signedOut.detail" = "Credits appear here after sign in.";
 "credits.balance.loading.title" = "Checking credits";
-"credits.balance.loading.detail" = "Loading your video credit balance.";
+"credits.balance.loading.detail" = "Loading your credit balance.";
 "credits.balance.offline.title" = "Credits unavailable offline";
 "credits.balance.offline.detail" = "Connect to the internet to see your balance or get credits.";
 "credits.balance.unavailable.title" = "Credits could not load";
 "credits.balance.unavailable.detail" = "Animate AV could not verify your credit balance. Check your connection and try again. If it keeps failing, sign in again.";
+"credits.balance.retry.detail" = "Retry credit check.";
 "credits.balance.retry.title" = "Try again";
 "credits.noun.one" = "credit";
 "credits.noun.other" = "credits";
@@ -354,8 +355,8 @@
 "home.aviBrief.firstMemory" = "Start the first animated video with one source image.";
 "home.aviBrief.openInProgress" = "Open In Progress and continue the next unfinished step.";
 "home.aviBrief.signIn" = "Sign in to create videos, save videos, and keep Credits with your account.";
-"home.header.subtitle" = "Create private animated videos and stylized images from one photo.";
-"home.header.title" = "Animate AV";
+"home.header.subtitle" = "Turn a source photo into a private animated video or stylized image.";
+"home.header.title" = "Bring photos to life";
 "home.nextActions.detail" = "Start a video, continue active work, or open guidance.";
 "home.nextActions.title" = "Next actions";
 "home.momentStatus.empty" = "No synced videos yet.";

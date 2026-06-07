@@ -279,6 +279,7 @@
 "credits.balance.offline.detail" = "Connecte-toi à internet pour voir ton solde ou obtenir des crédits.";
 "credits.balance.unavailable.title" = "Impossible de charger les crédits";
 "credits.balance.unavailable.detail" = "Animate AV n’a pas pu vérifier ton solde de crédits. Vérifie la connexion puis réessaie. Si le problème continue, reconnecte-toi.";
+"credits.balance.retry.detail" = "Relancer la vérification des crédits.";
 "credits.balance.retry.title" = "Réessayer";
 "credits.noun.one" = "crédit";
 "credits.noun.other" = "crédits";
@@ -352,8 +353,8 @@
 "home.aviBrief.firstMemory" = "Commence la première vidéo animée avec une image source.";
 "home.aviBrief.openInProgress" = "Open In Progress and continue the next unfinished step.";
 "home.aviBrief.signIn" = "Connecte-toi pour créer des vidéos, enregistrer des vidéos et garder les crédits avec ton compte.";
-"home.header.subtitle" = "Crée des vidéos animées privées et des images stylisées à partir d’une photo.";
-"home.header.title" = "Animate AV";
+"home.header.subtitle" = "Transforme une photo source en vidéo animée privée ou en image stylisée.";
+"home.header.title" = "Donne vie aux photos";
 "home.nextActions.detail" = "Commence une vidéo, continue un travail actif ou ouvre le guide.";
 "home.nextActions.title" = "Actions suivantes";
 "home.momentStatus.empty" = "Aucune vidéo synchronisée pour le moment.";
