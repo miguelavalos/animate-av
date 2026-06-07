@@ -157,7 +157,7 @@
 "create.template.celebration.summary" = "A bright little greeting from one photo.";
 "create.template.celebration.title" = "Celebration";
 "create.template.duration" = "%d sec";
-"create.template.eventRecap.summary" = "A quick cartoon moment from one photo.";
+"create.template.eventRecap.summary" = "A quick cartoon from one photo.";
 "create.template.eventRecap.title" = "Standard";
 "create.template.mediaRange" = "%d photo";
 "create.template.softRoast.summary" = "A longer playful cartoon from one photo.";
@@ -491,7 +491,7 @@
 "app.onboarding.title" = "Bring a photo to life";
 "app.settings.subtitle" = "Manage %@, credits, video privacy, and support links.";
 "app.splash.status" = "Preparing your studio";
-"app.splash.tagline" = "Private animated videos";
+"app.splash.tagline" = "Private cartoon videos";
 "common.close" = "Close";
 "common.ok" = "OK";
 "common.tryAgain" = "Please try again.";

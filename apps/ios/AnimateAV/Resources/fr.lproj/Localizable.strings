@@ -172,7 +172,7 @@
 "create.theme.familyMoments.title" = "Quotidien";
 "create.theme.favoritePeople.subtitle" = "Proche et tendre.";
 "create.theme.favoritePeople.title" = "Personnes favorites";
-"create.theme.milestone.subtitle" = "Un souvenir clair avant/après.";
+"create.theme.milestone.subtitle" = "Un avant/après clair et stylisé.";
 "create.theme.milestone.title" = "Étape clé";
 "create.theme.softRoast.subtitle" = "Drôle, affectueux, jamais méchant.";
 "create.theme.softRoast.title" = "Taquinerie douce";
@@ -253,10 +253,10 @@
 "credits.availableNow.detail" = "%@ prêts pour les vidéos finales.";
 "credits.availableNow.title" = "Disponibles maintenant";
 "credits.countTitle" = "%d %@";
-"credits.get.detail" = "Ajoute des crédits avant de créer ton prochain film souvenir.";
+"credits.get.detail" = "Ajoute des crédits avant de créer ta prochaine vidéo cartoon.";
 "credits.get.title" = "Obtenir des crédits";
 "credits.home.none" = "Aucun crédit disponible pour le moment.";
-"credits.home.ready" = "Prêt pour des films souvenirs privés.";
+"credits.home.ready" = "Prêt pour des vidéos cartoon privées.";
 "credits.manage.detail" = "Voir les détails du solde, les achats et les options de restauration.";
 "credits.manage.title" = "Gérer les crédits";
 "credits.balance.signedOut.title" = "Connecte-toi pour voir les crédits";
@@ -341,7 +341,7 @@
 "home.aviBrief.firstMemory" = "Commence avec une photo et laisse Avi la mettre en mouvement.";
 "home.aviBrief.openInProgress" = "Ouvre En cours et termine la prochaine étape cartoon.";
 "home.aviBrief.signIn" = "Connecte-toi pour qu’Avi garde ensemble vidéos, images et crédits.";
-"home.header.subtitle" = "Transforme une photo préférée en vidéo cartoon, message anime, souvenir aquarelle ou image joueuse.";
+"home.header.subtitle" = "Transforme une photo préférée en vidéo cartoon, message anime, carte aquarelle ou image joueuse.";
 "home.header.title" = "Cartoonise tes photos";
 "home.nextActions.detail" = "Fais une vidéo, termine un cartoon ou demande des idées à Avi.";
 "home.nextActions.title" = "On anime quoi ?";
@@ -486,10 +486,10 @@
 "app.onboarding.signIn" = "SE CONNECTER";
 "app.onboarding.skip" = "IGNORER";
 "app.onboarding.subtitle" = "Transforme une photo préférée en vidéo animée stylisée avec son.";
-"app.onboarding.title" = "Créer des films de souvenirs";
+"app.onboarding.title" = "Donner vie à une photo";
 "app.settings.subtitle" = "Gère %@, les crédits, la confidentialité de l'app et les liens d'aide.";
 "app.splash.status" = "Préparation du studio";
-"app.splash.tagline" = "Films de souvenirs privés";
+"app.splash.tagline" = "Vidéos cartoon privées";
 "common.close" = "Fermer";
 "common.ok" = "OK";
 "common.tryAgain" = "Réessaie.";

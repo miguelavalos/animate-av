@@ -343,7 +343,7 @@
 "home.aviBrief.firstMemory" = "Empieza con una foto y deja que Avi la ponga en movimiento.";
 "home.aviBrief.openInProgress" = "Abre En progreso y termina el siguiente paso cartoon.";
 "home.aviBrief.signIn" = "Inicia sesión para que Avi mantenga juntos tus videos, imágenes y Créditos.";
-"home.header.subtitle" = "Convierte una foto favorita en video cartoon, felicitación anime, recuerdo en acuarela o imagen juguetona.";
+"home.header.subtitle" = "Convierte una foto favorita en video cartoon, felicitación anime, postal en acuarela o imagen juguetona.";
 "home.header.title" = "Cartooniza tus fotos";
 "home.nextActions.detail" = "Haz un video, termina un cartoon o pide ideas a Avi.";
 "home.nextActions.title" = "¿Qué animamos?";
@@ -491,7 +491,7 @@
 "app.onboarding.title" = "Da vida a una foto";
 "app.settings.subtitle" = "Gestiona %@, Créditos, privacidad de videos y enlaces de soporte.";
 "app.splash.status" = "Preparando tu estudio";
-"app.splash.tagline" = "Videos animados privados";
+"app.splash.tagline" = "Videos cartoon privados";
 "common.close" = "Cerrar";
 "common.ok" = "OK";
 "common.tryAgain" = "Inténtalo de nuevo.";

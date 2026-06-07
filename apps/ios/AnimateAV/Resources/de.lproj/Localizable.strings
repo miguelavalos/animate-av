@@ -166,10 +166,10 @@
 "credits.availableNow.detail" = "%@ bereit für finale Videos.";
 "credits.availableNow.title" = "Jetzt verfügbar";
 "credits.countTitle" = "%d %@";
-"credits.get.detail" = "Füge Credits hinzu, bevor du deinen nächsten Erinnerungsfilm erstellst.";
+"credits.get.detail" = "Füge Credits hinzu, bevor du dein nächstes Cartoon-Video erstellst.";
 "credits.get.title" = "Guthaben holen";
 "credits.home.none" = "Noch kein Guthaben verfügbar.";
-"credits.home.ready" = "Bereit für private Erinnerungsvideos.";
+"credits.home.ready" = "Bereit für private Cartoon-Videos.";
 "credits.manage.detail" = "Guthaben-Details, Käufe und Wiederherstellung anzeigen.";
 "credits.manage.title" = "Guthaben verwalten";
 "credits.balance.signedOut.title" = "Anmelden für Guthaben";
@@ -487,11 +487,11 @@
 "app.account.subtitle" = "Verwalte Anmeldung, %@-Identität, Credits und Kontosicherheit.";
 "app.onboarding.signIn" = "ANMELDEN";
 "app.onboarding.skip" = "VORLÄUFIG ÜBERSPRINGEN";
-"app.onboarding.subtitle" = "Verwandle ein Lieblingsfoto in ein stilisiertes animiertes Video mit Ton.";
-"app.onboarding.title" = "Erinnerungsvideos erstellen";
+"app.onboarding.subtitle" = "Verwandle ein Lieblingsfoto in ein stilisiertes Cartoon-Video mit Ton.";
+"app.onboarding.title" = "Ein Foto zum Leben erwecken";
 "app.settings.subtitle" = "Verwalte %@, Credits, App-Datenschutz und Supportlinks.";
 "app.splash.status" = "Studio wird vorbereitet";
-"app.splash.tagline" = "Private Erinnerungsvideos";
+"app.splash.tagline" = "Private Cartoon-Videos";
 "common.close" = "Schließen";
 "common.ok" = "OK";
 "common.tryAgain" = "Bitte versuche es erneut.";
