@@ -1,6 +1,6 @@
 import Foundation
 
-struct MomentsHomeAction: Equatable {
+struct AnimateHomeAction: Equatable {
     let title: String
     let detail: String
     let systemImage: String

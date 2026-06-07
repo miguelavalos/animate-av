@@ -4,8 +4,8 @@ import AVBrandFoundation
 import AVSettingsFoundation
 import SwiftUI
 
-struct MomentsHomeScreen: View {
-    @EnvironmentObject private var viewModel: MomentsHomeViewModel
+struct AnimateHomeScreen: View {
+    @EnvironmentObject private var viewModel: AnimateHomeViewModel
     @EnvironmentObject private var createViewModel: MomentsCreateViewModel
 
     let openSettings: () -> Void
@@ -17,8 +17,8 @@ struct MomentsHomeScreen: View {
     let startMoment: () -> Void
     let continueMoment: (MomentsContinuationRequest) -> Void
     private var momentsSummary: InProgressMomentsSummary { viewModel.momentsSummary }
-    private var presentation: MomentsHomePresentation {
-        MomentsHomePresentation.make(
+    private var presentation: AnimateHomePresentation {
+        AnimateHomePresentation.make(
             isSignedIn: viewModel.isSignedIn,
             displayName: viewModel.displayName,
             momentsSummary: momentsSummary
@@ -59,7 +59,7 @@ struct MomentsHomeScreen: View {
                     openAccount: openAccount
                 )
             } content: {
-                MomentsHomeAviContextCard(
+                AnimateHomeAviContextCard(
                     title: aviContextTitle,
                     detail: aviContextDetail,
                     buttonTitle: aviContextButtonTitle,
@@ -70,24 +70,24 @@ struct MomentsHomeScreen: View {
             }
 
             if viewModel.isSignedIn {
-                MomentsHomeAccountCard(
+                AnimateHomeAccountCard(
                     creditBalance: viewModel.creditBalance,
                     creditBalanceLoadState: viewModel.creditBalanceLoadState,
                     openCredits: openCredits,
                     retryCredits: retryCredits
                 )
             } else {
-                MomentsHomeSignInCard(startSignInFlow: startSignInFlow)
+                AnimateHomeSignInCard(startSignInFlow: startSignInFlow)
             }
 
-            MomentsHomeMomentStatusCard(
+            AnimateHomeMomentStatusCard(
                 isSignedIn: viewModel.isSignedIn,
                 momentsSummary: momentsSummary,
                 presentation: presentation,
                 openInProgress: { selectTab(.inProgress) }
             )
 
-            MomentsHomeNextActionsCard(
+            AnimateHomeNextActionsCard(
                 presentation: presentation,
                 continueMoment: continueMoment,
                 startMoment: startMoment,
@@ -138,7 +138,7 @@ struct MomentsHomeScreen: View {
     }
 }
 
-private struct MomentsHomeAviContextCard: View {
+private struct AnimateHomeAviContextCard: View {
     let title: String
     let detail: String
     let buttonTitle: String

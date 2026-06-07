@@ -1,7 +1,7 @@
 import AVAppShellFoundation
 import SwiftUI
 
-struct MomentsHomeAccountCard: View {
+struct AnimateHomeAccountCard: View {
     let creditBalance: AnimateCreditBalance
     let creditBalanceLoadState: AnimateCreditBalanceLoadState
     let openCredits: () -> Void
@@ -72,7 +72,7 @@ struct MomentsHomeAccountCard: View {
     }
 }
 
-struct MomentsHomeSignInCard: View {
+struct AnimateHomeSignInCard: View {
     let startSignInFlow: () -> Void
 
     var body: some View {
@@ -92,10 +92,10 @@ struct MomentsHomeSignInCard: View {
     }
 }
 
-struct MomentsHomeMomentStatusCard: View {
+struct AnimateHomeMomentStatusCard: View {
     let isSignedIn: Bool
     let momentsSummary: InProgressMomentsSummary
-    let presentation: MomentsHomePresentation
+    let presentation: AnimateHomePresentation
     let openInProgress: () -> Void
 
     var body: some View {
@@ -104,13 +104,13 @@ struct MomentsHomeMomentStatusCard: View {
             detail: presentation.momentStatusDetail
         ) {
             if let latestMoment = momentsSummary.latestMoment {
-                MomentsHomeLatestMomentRow(
+                AnimateHomeLatestMomentRow(
                     title: latestMoment.title,
                     detail: MomentsMomentFormatting.compactDetail(for: latestMoment),
                     openMoment: openInProgress
                 )
             } else if isSignedIn {
-                MomentsHomeEmptyMomentRow()
+                AnimateHomeEmptyMomentRow()
             }
 
             AVAppShellMetricStrip(metrics: momentMetrics)
@@ -135,8 +135,8 @@ struct MomentsHomeMomentStatusCard: View {
     }
 }
 
-struct MomentsHomeNextActionsCard: View {
-    let presentation: MomentsHomePresentation
+struct AnimateHomeNextActionsCard: View {
+    let presentation: AnimateHomePresentation
     let continueMoment: (MomentsContinuationRequest) -> Void
     let startMoment: () -> Void
     let selectTab: (AnimateRootTab) -> Void
@@ -167,7 +167,7 @@ struct MomentsHomeNextActionsCard: View {
         }
     }
 
-    private func homeActionRow(action: MomentsHomeAction, perform: @escaping () -> Void) -> some View {
+    private func homeActionRow(action: AnimateHomeAction, perform: @escaping () -> Void) -> some View {
         AVAppShellActionRow(
             title: action.title,
             detail: action.detail,

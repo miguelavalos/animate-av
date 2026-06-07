@@ -1,7 +1,7 @@
 import AVAppShellFoundation
 import SwiftUI
 
-struct MomentsHomeCreditBreakdown: View {
+struct AnimateHomeCreditBreakdown: View {
     let balance: AnimateCreditBalance
 
     var body: some View {

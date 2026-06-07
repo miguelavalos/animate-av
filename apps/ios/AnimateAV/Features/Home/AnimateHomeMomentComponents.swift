@@ -1,7 +1,7 @@
 import AVAppShellFoundation
 import SwiftUI
 
-struct MomentsHomeLatestMomentRow: View {
+struct AnimateHomeLatestMomentRow: View {
     let title: String
     let detail: String
     let openMoment: () -> Void
@@ -18,7 +18,7 @@ struct MomentsHomeLatestMomentRow: View {
     }
 }
 
-struct MomentsHomeEmptyMomentRow: View {
+struct AnimateHomeEmptyMomentRow: View {
     var body: some View {
         AVAppShellInfoRow(
             title: L10n.string("home.moments.emptyRow.title"),

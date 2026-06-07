@@ -2,7 +2,7 @@ import Foundation
 
 @MainActor
 struct AnimateViewModelBundle {
-    let home: MomentsHomeViewModel
+    let home: AnimateHomeViewModel
     let create: MomentsCreateViewModel
     let inProgress: MomentsInProgressViewModel
     let gallery: MomentsGalleryViewModel
@@ -16,7 +16,7 @@ struct AnimateViewModelBundle {
         imageGenerationAccountingClient: MomentsImageGenerationAccountingClient,
         finalRenderClient: MomentsFinalRenderClient
     ) {
-        home = MomentsHomeViewModel()
+        home = AnimateHomeViewModel()
         create = MomentsCreateViewModel()
         inProgress = MomentsInProgressViewModel()
         gallery = MomentsGalleryViewModel(

@@ -115,7 +115,7 @@ struct AnimateAppShellView: View {
         } else {
             switch tab {
             case .home:
-                MomentsHomeScreen(
+                AnimateHomeScreen(
                     openSettings: { chromeItem = .settings },
                     openAccount: { chromeItem = .account },
                     startSignInFlow: startSignInFlow,

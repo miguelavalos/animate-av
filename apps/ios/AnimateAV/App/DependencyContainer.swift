@@ -13,7 +13,7 @@ final class MomentsDependencyContainer: ObservableObject {
     let mediaUploadWorkflow: MediaUploadWorkflow
     let storyWorkflow: StoryWorkflow
     let finalRenderWorkflow: FinalRenderWorkflow
-    let homeViewModel: MomentsHomeViewModel
+    let homeViewModel: AnimateHomeViewModel
     let createViewModel: MomentsCreateViewModel
     let inProgressViewModel: MomentsInProgressViewModel
     let galleryViewModel: MomentsGalleryViewModel

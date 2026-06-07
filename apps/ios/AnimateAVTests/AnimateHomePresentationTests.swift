@@ -3,7 +3,7 @@ import XCTest
 
 final class AnimateHomePresentationTests: XCTestCase {
     func testSignedOutStateRequiresAccountAndDisablesVideoActions() {
-        let presentation = MomentsHomePresentation.make(
+        let presentation = AnimateHomePresentation.make(
             isSignedIn: false,
             displayName: nil,
             momentsSummary: InProgressMomentsSummary()
@@ -21,7 +21,7 @@ final class AnimateHomePresentationTests: XCTestCase {
     }
 
     func testEmptySignedInStatePromotesCreateAction() {
-        let presentation = MomentsHomePresentation.make(
+        let presentation = AnimateHomePresentation.make(
             isSignedIn: true,
             displayName: "Ava",
             momentsSummary: InProgressMomentsSummary()
@@ -40,7 +40,7 @@ final class AnimateHomePresentationTests: XCTestCase {
 
     func testLatestInProgressVideoAddsContinuationAction() {
         let moment = makeMoment(id: "latest-plan", status: "story_ready", updatedAt: 20)
-        let presentation = MomentsHomePresentation.make(
+        let presentation = AnimateHomePresentation.make(
             isSignedIn: true,
             displayName: nil,
             momentsSummary: InProgressMomentsSummary.make(from: [
@@ -58,7 +58,7 @@ final class AnimateHomePresentationTests: XCTestCase {
     }
 
     func testVideoCountDrivesStatusAndReviewDetail() {
-        let presentation = MomentsHomePresentation.make(
+        let presentation = AnimateHomePresentation.make(
             isSignedIn: true,
             displayName: nil,
             momentsSummary: InProgressMomentsSummary.make(from: [
@@ -78,7 +78,7 @@ final class AnimateHomePresentationTests: XCTestCase {
     }
 
     func testSingleVideoUsesSingularVideoCopy() {
-        let presentation = MomentsHomePresentation.make(
+        let presentation = AnimateHomePresentation.make(
             isSignedIn: true,
             displayName: nil,
             momentsSummary: InProgressMomentsSummary.make(from: [

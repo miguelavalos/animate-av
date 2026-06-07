@@ -1,24 +1,24 @@
 import Foundation
 
-struct MomentsHomePresentation {
+struct AnimateHomePresentation {
     let accountTitle: String
     let accountDetail: String
     let aviBriefDetail: String
     let momentStatusDetail: String
-    let createAction: MomentsHomeAction
-    let openInProgressAction: MomentsHomeAction
-    let aviGuidanceAction: MomentsHomeAction
-    let latestInProgressAction: MomentsHomeAction?
+    let createAction: AnimateHomeAction
+    let openInProgressAction: AnimateHomeAction
+    let aviGuidanceAction: AnimateHomeAction
+    let latestInProgressAction: AnimateHomeAction?
     let latestInProgressContinuationRequest: MomentsContinuationRequest?
 
     static func make(
         isSignedIn: Bool,
         displayName: String?,
         momentsSummary: InProgressMomentsSummary
-    ) -> MomentsHomePresentation {
+    ) -> AnimateHomePresentation {
         let latestInProgressMoment = momentsSummary.latestInProgressMoment
         let latestInProgressAction = latestInProgressMoment.map {
-            MomentsHomeAction(
+            AnimateHomeAction(
                 title: L10n.string("home.action.continueLatest.title"),
                 detail: MomentsMomentFormatting.compactDetail(for: $0, includeTitle: true),
                 systemImage: "arrow.right.circle",
@@ -26,19 +26,19 @@ struct MomentsHomePresentation {
             )
         }
 
-        return MomentsHomePresentation(
+        return AnimateHomePresentation(
             accountTitle: isSignedIn ? L10n.string("home.account.connected.title") : L10n.string("home.account.required.title"),
             accountDetail: accountDetail(isSignedIn: isSignedIn, displayName: displayName),
             aviBriefDetail: aviBriefDetail(isSignedIn: isSignedIn, momentsSummary: momentsSummary),
             momentStatusDetail: momentStatusDetail(momentsSummary: momentsSummary),
-            createAction: MomentsHomeAction(
+            createAction: AnimateHomeAction(
                 title: L10n.string("home.action.create.title"),
                 detail: L10n.string("home.action.create.detail"),
                 systemImage: "plus.app",
                 isProminent: latestInProgressMoment == nil,
                 isDisabled: !isSignedIn
             ),
-            openInProgressAction: MomentsHomeAction(
+            openInProgressAction: AnimateHomeAction(
                 title: L10n.string("home.action.openInProgress.title"),
                 detail: momentsSummary.hasMoments
                     ? L10n.string("home.action.openInProgress.detail.hasMoments")
@@ -46,7 +46,7 @@ struct MomentsHomePresentation {
                 systemImage: "clock",
                 isDisabled: !isSignedIn
             ),
-            aviGuidanceAction: MomentsHomeAction(
+            aviGuidanceAction: AnimateHomeAction(
                 title: L10n.string("home.action.guidance.title"),
                 detail: L10n.string("home.action.guidance.detail"),
                 systemImage: "sparkles"

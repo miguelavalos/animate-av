@@ -2,7 +2,7 @@ import Combine
 import Foundation
 
 @MainActor
-final class MomentsHomeViewModel: ObservableObject {
+final class AnimateHomeViewModel: ObservableObject {
     @Published private(set) var momentsSummary = InProgressMomentsSummary()
     @Published private(set) var isSignedIn = false
     @Published private(set) var displayName: String?
