@@ -19,7 +19,7 @@ struct AnimateAVApp: App {
                 .environmentObject(themeController)
                 .environmentObject(newMomentStartController)
                 .environment(\.locale, languageController.locale)
-                .avCommonAppExperience(MomentsAppExperience.experience)
+                .avCommonAppExperience(AnimateAppExperience.experience)
                 .preferredColorScheme(themeController.currentTheme.preferredColorScheme)
         }
     }

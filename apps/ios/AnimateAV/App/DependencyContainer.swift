@@ -38,7 +38,7 @@ final class MomentsDependencyContainer: ObservableObject {
         self.momentsObserver = resolvedMomentsObserver
         self.galleryMomentsObserver = resolvedGalleryMomentsObserver
         self.workspaceObserver = resolvedWorkspaceObserver
-        let workflows = MomentsWorkflowBundle(
+        let workflows = AnimateWorkflowBundle(
             accountController: accountController,
             momentsRepository: momentsRepository,
             momentsObserver: resolvedMomentsObserver,
@@ -54,7 +54,7 @@ final class MomentsDependencyContainer: ObservableObject {
         self.finalRenderWorkflow = workflows.finalRender
         self.realtimeSessionClient = clients.realtimeSession
         self.realtimeSessionStore = .shared
-        let viewModels = MomentsViewModelBundle(
+        let viewModels = AnimateViewModelBundle(
             accountController: accountController,
             workflows: workflows,
             galleryMomentsProvider: resolvedGalleryMomentsObserver,

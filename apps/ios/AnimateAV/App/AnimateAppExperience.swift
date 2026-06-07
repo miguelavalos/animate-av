@@ -2,7 +2,7 @@ import AVBrandFoundation
 import AVSettingsFoundation
 import Foundation
 
-enum MomentsAppExperience {
+enum AnimateAppExperience {
     private static let appIdentity = AVAppIdentity(
         displayName: "Animate AV",
         assistantName: "Avi",

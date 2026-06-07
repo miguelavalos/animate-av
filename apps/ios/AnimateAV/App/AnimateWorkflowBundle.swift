@@ -1,7 +1,7 @@
 import Foundation
 
 @MainActor
-struct MomentsWorkflowBundle {
+struct AnimateWorkflowBundle {
     let momentDeletion: MomentDeletionWorkflow
     let momentWorkspaceSelection: MomentWorkspaceSelectionWorkflow
     let inProgressMoments: InProgressMomentsWorkflow

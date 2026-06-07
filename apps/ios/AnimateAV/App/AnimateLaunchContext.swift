@@ -1,6 +1,6 @@
 import Foundation
 
-struct MomentsLaunchContext {
+struct AnimateLaunchContext {
     enum Tab: String {
         case home
         case create
@@ -12,7 +12,7 @@ struct MomentsLaunchContext {
     let shouldDisableSplash: Bool
     let preferredTab: Tab?
 
-    static let current = MomentsLaunchContext(environment: ProcessInfo.processInfo.environment)
+    static let current = AnimateLaunchContext(environment: ProcessInfo.processInfo.environment)
 
     init(environment: [String: String]) {
         isUITesting = environment["ANIMATEAV_UI_TESTS"] == "1"

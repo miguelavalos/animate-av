@@ -12,7 +12,7 @@ struct MomentsAppBootstrapView: View {
     @State private var didApplyLaunchTab = false
     @State private var postAuthenticationSplashIsPresented = false
 
-    private let launchContext = MomentsLaunchContext.current
+    private let launchContext = AnimateLaunchContext.current
     private var splashPolicy: AVSplashTransitionPolicy {
         AVSplashTransitionPolicy(isDisabled: launchContext.shouldDisableSplash)
     }
@@ -141,7 +141,7 @@ struct MomentsAppBootstrapView: View {
 }
 
 private extension AnimateRootTab {
-    init(_ launchTab: MomentsLaunchContext.Tab) {
+    init(_ launchTab: AnimateLaunchContext.Tab) {
         switch launchTab {
         case .home:
             self = .home

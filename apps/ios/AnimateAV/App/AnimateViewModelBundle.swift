@@ -1,7 +1,7 @@
 import Foundation
 
 @MainActor
-struct MomentsViewModelBundle {
+struct AnimateViewModelBundle {
     let home: MomentsHomeViewModel
     let create: MomentsCreateViewModel
     let inProgress: MomentsInProgressViewModel
@@ -10,7 +10,7 @@ struct MomentsViewModelBundle {
 
     init(
         accountController: AccountController,
-        workflows: MomentsWorkflowBundle,
+        workflows: AnimateWorkflowBundle,
         galleryMomentsProvider: any GalleryMomentsListProviding,
         authTokenProvider: any MomentsAuthTokenProviding,
         imageGenerationAccountingClient: MomentsImageGenerationAccountingClient,
