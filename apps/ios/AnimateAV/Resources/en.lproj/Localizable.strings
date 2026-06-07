@@ -1049,5 +1049,9 @@
 "create.images.balance.signIn" = "Sign in before generating images.";
 "create.images.balance.add" = "Add Credits";
 "create.images.action.needsImage" = "Choose a photo first";
+"create.images.action.needsGenerations" = "Get image generations first";
+"create.images.action.start" = "Create images";
+"create.images.action.starting" = "Starting image generation";
+"create.images.action.queued" = "%d image generations queued.";
 "create.images.action.tooManyLooks" = "Choose fewer looks";
 "create.images.action.backendPending" = "Backend generation pending";

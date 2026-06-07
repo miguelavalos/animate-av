@@ -1040,5 +1040,9 @@
 "create.images.balance.signIn" = "Inicia sessió abans de generar imatges.";
 "create.images.balance.add" = "Afegir Credits";
 "create.images.action.needsImage" = "Tria una foto primer";
+"create.images.action.needsGenerations" = "Aconsegueix generacions d’imatge primer";
+"create.images.action.start" = "Crear imatges";
+"create.images.action.starting" = "Iniciant generació d’imatges";
+"create.images.action.queued" = "%d generacions d’imatge en cua.";
 "create.images.action.tooManyLooks" = "Tria menys looks";
 "create.images.action.backendPending" = "Generació backend pendent";

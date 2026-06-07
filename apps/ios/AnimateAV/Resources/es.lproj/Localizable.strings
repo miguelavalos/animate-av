@@ -1049,5 +1049,9 @@
 "create.images.balance.signIn" = "Inicia sesión antes de generar imágenes.";
 "create.images.balance.add" = "Añadir Credits";
 "create.images.action.needsImage" = "Elige una foto primero";
+"create.images.action.needsGenerations" = "Consigue generaciones de imagen primero";
+"create.images.action.start" = "Crear imágenes";
+"create.images.action.starting" = "Iniciando generación de imágenes";
+"create.images.action.queued" = "%d generaciones de imagen en cola.";
 "create.images.action.tooManyLooks" = "Elige menos looks";
 "create.images.action.backendPending" = "Generación backend pendiente";

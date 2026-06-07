@@ -48,19 +48,26 @@ struct MomentsCreateImagesWorkspace: View {
     let creditBalanceLoadState: MomentsCreditBalanceLoadState
     let imageGenerationAvailability: AnimateImageGenerationAvailabilityResponse?
     let isLoadingImageGenerationAvailability: Bool
+    let isStartingImageGeneration: Bool
     let imageGenerationAvailabilityMessage: String?
     let refreshImageGenerationAvailability: () -> Void
+    let startImageGeneration: (String?, [String]) -> Void
     let openCredits: () -> Void
 
     @State private var pickerItem: PhotosPickerItem?
     @State private var selectedImage: UIImage?
+    @State private var selectedSourceImageLocalIdentifier: String?
     @State private var selectedLooks: Set<MomentsCreateImageLook> = [.cartoon]
     @State private var isLoadingImage = false
 
     private let lookSelectionLimit = 5
 
     private var canSubmit: Bool {
-        false
+        selectedImage != nil
+            && selectedSourceImageLocalIdentifier != nil
+            && !selectedLooks.isEmpty
+            && imageGenerationAvailability?.availableImages ?? 0 >= selectedLooks.count
+            && !isStartingImageGeneration
     }
 
     var body: some View {
@@ -89,7 +96,10 @@ struct MomentsCreateImagesWorkspace: View {
                 )
 
                 Button {
-                    // Backend image generation is wired in the next slice.
+                    startImageGeneration(
+                        selectedSourceImageLocalIdentifier,
+                        selectedLooks.map(\.rawValue).sorted()
+                    )
                 } label: {
                     Label(
                         createButtonTitle,
@@ -119,12 +129,20 @@ struct MomentsCreateImagesWorkspace: View {
         if selectedLooks.count > lookSelectionLimit {
             return L10n.string("create.images.action.tooManyLooks")
         }
-        return L10n.string("create.images.action.backendPending")
+        if isStartingImageGeneration {
+            return L10n.string("create.images.action.starting")
+        }
+        if let availableImages = imageGenerationAvailability?.availableImages,
+           availableImages < selectedLooks.count {
+            return L10n.string("create.images.action.needsGenerations")
+        }
+        return L10n.string("create.images.action.start")
     }
 
     private func loadImage(from item: PhotosPickerItem?) {
         guard let item else { return }
         isLoadingImage = true
+        selectedSourceImageLocalIdentifier = item.itemIdentifier
         Task {
             let data = try? await item.loadTransferable(type: Data.self)
             let image = data.flatMap(UIImage.init(data:))

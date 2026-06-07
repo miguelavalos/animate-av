@@ -1042,5 +1042,9 @@
 "create.images.balance.signIn" = "Melde dich an, bevor du Bilder generierst.";
 "create.images.balance.add" = "Credits hinzufügen";
 "create.images.action.needsImage" = "Wähle zuerst ein Foto";
+"create.images.action.needsGenerations" = "Hole zuerst Bildgenerierungen";
+"create.images.action.start" = "Bilder erstellen";
+"create.images.action.starting" = "Bildgenerierung wird gestartet";
+"create.images.action.queued" = "%d Bildgenerierungen eingereiht.";
 "create.images.action.tooManyLooks" = "Wähle weniger Looks";
 "create.images.action.backendPending" = "Backend-Generierung ausstehend";

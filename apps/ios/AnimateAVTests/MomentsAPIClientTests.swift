@@ -623,6 +623,71 @@ final class MomentsAPIClientTests: XCTestCase {
         XCTAssertEqual(availability.packOffer.imageGenerations, 50)
     }
 
+    func testImageGenerationStartUsesBackendOwnedEndpoint() async throws {
+        let session = makeMockSession(
+            json: """
+            {
+              "appId": "animateav",
+              "sourceImageLocalIdentifier": "local-photo-1",
+              "jobs": [
+                {
+                  "imageJobId": "convex-image-job-1",
+                  "look": "cartoon",
+                  "status": "queued",
+                  "reservation": {
+                    "idempotencyKey": "start-key-1:cartoon",
+                    "monthlyReserved": 0,
+                    "purchasedReserved": 1
+                  }
+                }
+              ],
+              "availability": {
+                "appId": "animateav",
+                "outputKind": "image",
+                "monthlyProAllowance": {
+                  "included": false,
+                  "period": "2026-06",
+                  "allowance": 0,
+                  "used": 0,
+                  "remaining": 0
+                },
+                "purchasedImages": {
+                  "balance": 49
+                },
+                "availableImages": 49,
+                "packOffer": {
+                  "enabled": true,
+                  "creditCost": 1,
+                  "imageGenerations": 50,
+                  "userCanPurchase": false,
+                  "blocker": "insufficient_credits"
+                }
+              },
+              "generatedAt": "2026-06-07T12:00:00.000Z"
+            }
+            """
+        )
+        let client = MomentsImageGenerationAccountingClient(baseURLString: accountAPIBaseURL, session: session)
+
+        let response = try await client.startGeneration(
+            sourceImageLocalIdentifier: "local-photo-1",
+            looks: ["cartoon"],
+            idempotencyKey: "start-key-1",
+            bearerToken: "token-1"
+        )
+
+        XCTAssertEqual(MomentsURLProtocolMock.lastRequest?.url?.absoluteString, "\(accountAPIBaseURL)/v1/apps/animateav/images/generations")
+        XCTAssertEqual(MomentsURLProtocolMock.lastRequest?.httpMethod, "POST")
+        XCTAssertEqual(MomentsURLProtocolMock.lastRequest?.value(forHTTPHeaderField: "Authorization"), "Bearer token-1")
+        let body = try XCTUnwrap(MomentsURLProtocolMock.lastRequestBody)
+        let json = try XCTUnwrap(JSONSerialization.jsonObject(with: body) as? [String: Any])
+        XCTAssertEqual(json["sourceImageLocalIdentifier"] as? String, "local-photo-1")
+        XCTAssertEqual(json["looks"] as? [String], ["cartoon"])
+        XCTAssertEqual(json["idempotencyKey"] as? String, "start-key-1")
+        XCTAssertEqual(response.jobs.first?.imageJobId, "convex-image-job-1")
+        XCTAssertEqual(response.availability.availableImages, 49)
+    }
+
     func testPrepareFinalArtifactDownloadAcceptsPublicSafeResponseWithoutR2Key() async throws {
         let session = makeMockSession(
             json: """
