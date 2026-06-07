@@ -1,7 +1,7 @@
 import AVAppShellFoundation
 import Foundation
 
-enum MomentsRootTab: String, CaseIterable, Identifiable {
+enum AnimateRootTab: String, CaseIterable, Identifiable {
     case home
     case create
     case inProgress
@@ -11,9 +11,9 @@ enum MomentsRootTab: String, CaseIterable, Identifiable {
 
     var id: String { rawValue }
 
-    static let footerTabs: [MomentsRootTab] = [.home, .inProgress, .gallery]
+    static let footerTabs: [AnimateRootTab] = [.home, .inProgress, .gallery]
 
-    var shellTab: AVAppShellTab<MomentsRootTab> {
+    var shellTab: AVAppShellTab<AnimateRootTab> {
         switch self {
         case .home:
             AVAppShellTab(

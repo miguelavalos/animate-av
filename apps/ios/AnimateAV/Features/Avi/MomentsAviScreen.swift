@@ -4,7 +4,7 @@ import AVSettingsFoundation
 import SwiftUI
 
 struct MomentsAviScreen: View {
-    let selectTab: (MomentsRootTab) -> Void
+    let selectTab: (AnimateRootTab) -> Void
     let startMoment: () -> Void
     let startSignInFlow: () -> Void
     @Environment(\.avCommonAppExperience) private var appExperience
@@ -67,7 +67,7 @@ private struct MomentsAviGuidanceContent: View {
     let isSignedIn: Bool
     let startSignInFlow: () -> Void
     let startMoment: () -> Void
-    let selectTab: (MomentsRootTab) -> Void
+    let selectTab: (AnimateRootTab) -> Void
 
     var body: some View {
         if !isSignedIn {

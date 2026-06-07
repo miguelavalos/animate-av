@@ -4,7 +4,7 @@ import SwiftUI
 struct MomentsAppBootstrapView: View {
     @Environment(\.scenePhase) private var scenePhase
     @StateObject private var dependencies = MomentsDependencyContainer()
-    @State private var selectedTab: MomentsRootTab = .home
+    @State private var selectedTab: AnimateRootTab = .home
     @State private var authOptionsArePresented = false
     @State private var authenticationWasSkipped = false
     @State private var isShowingAccountOnboarding = false
@@ -30,7 +30,7 @@ struct MomentsAppBootstrapView: View {
                     onSkip: skipAuthentication
                 )
             } else {
-                MomentsAppShellView(
+                AnimateAppShellView(
                     selectedTab: $selectedTab,
                     startSignInFlow: { startSignInFlow(showAuthOptions: true) }
                 )
@@ -79,7 +79,7 @@ struct MomentsAppBootstrapView: View {
         guard !didApplyLaunchTab else { return }
         didApplyLaunchTab = true
         guard let preferredTab = launchContext.preferredTab else { return }
-        selectedTab = MomentsRootTab(preferredTab)
+        selectedTab = AnimateRootTab(preferredTab)
     }
 
     private func completeInitialSplashIfNeeded() async {
@@ -140,7 +140,7 @@ struct MomentsAppBootstrapView: View {
     }
 }
 
-private extension MomentsRootTab {
+private extension AnimateRootTab {
     init(_ launchTab: MomentsLaunchContext.Tab) {
         switch launchTab {
         case .home:

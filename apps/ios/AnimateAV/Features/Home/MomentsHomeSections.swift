@@ -139,7 +139,7 @@ struct MomentsHomeNextActionsCard: View {
     let presentation: MomentsHomePresentation
     let continueMoment: (MomentsContinuationRequest) -> Void
     let startMoment: () -> Void
-    let selectTab: (MomentsRootTab) -> Void
+    let selectTab: (AnimateRootTab) -> Void
 
     var body: some View {
         AVAppShellDashboardSection(

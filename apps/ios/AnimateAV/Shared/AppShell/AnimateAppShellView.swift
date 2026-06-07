@@ -3,8 +3,8 @@ import AVBrandFoundation
 import AVSettingsFoundation
 import SwiftUI
 
-struct MomentsAppShellView: View {
-    @Binding var selectedTab: MomentsRootTab
+struct AnimateAppShellView: View {
+    @Binding var selectedTab: AnimateRootTab
     let startSignInFlow: () -> Void
 
     @EnvironmentObject private var accountController: AccountController
@@ -41,7 +41,7 @@ struct MomentsAppShellView: View {
     private var appScaffold: some View {
         AVAppShellConfiguredScaffold(
             selectedTabID: footerSelectedTab,
-            tabs: MomentsRootTab.footerTabs.map(\.shellTab),
+            tabs: AnimateRootTab.footerTabs.map(\.shellTab),
             assistantID: .avi,
             assistant: footerAssistant,
             hasAssistantActiveContext: selectedTab != .avi && hasAviActiveContext,
@@ -101,7 +101,7 @@ struct MomentsAppShellView: View {
     }
 
     @ViewBuilder
-    private func screen(for tab: MomentsRootTab) -> some View {
+    private func screen(for tab: AnimateRootTab) -> some View {
         if let chromeItem {
             AnimateProfileScreen(
                 mode: chromeItem,
@@ -182,7 +182,7 @@ struct MomentsAppShellView: View {
         }
     }
 
-    private var footerSelectedTab: MomentsRootTab {
+    private var footerSelectedTab: AnimateRootTab {
         guard chromeItem == nil else { return .profile }
         return selectedTab == .create ? .inProgress : selectedTab
     }
@@ -275,7 +275,7 @@ struct MomentsAppShellView: View {
         }
     }
 
-    private func selectRootTab(_ tab: MomentsRootTab) {
+    private func selectRootTab(_ tab: AnimateRootTab) {
         navigationPath = NavigationPath()
         navigationStackResetID = UUID()
         selectedTab = tab

@@ -13,7 +13,7 @@ struct MomentsHomeScreen: View {
     let startSignInFlow: () -> Void
     let openCredits: () -> Void
     let retryCredits: () -> Void
-    let selectTab: (MomentsRootTab) -> Void
+    let selectTab: (AnimateRootTab) -> Void
     let startMoment: () -> Void
     let continueMoment: (MomentsContinuationRequest) -> Void
     private var momentsSummary: InProgressMomentsSummary { viewModel.momentsSummary }
@@ -31,7 +31,7 @@ struct MomentsHomeScreen: View {
         startSignInFlow: @escaping () -> Void,
         openCredits: @escaping () -> Void,
         retryCredits: @escaping () -> Void,
-        selectTab: @escaping (MomentsRootTab) -> Void,
+        selectTab: @escaping (AnimateRootTab) -> Void,
         startMoment: @escaping () -> Void,
         continueMoment: @escaping (MomentsContinuationRequest) -> Void
     ) {
