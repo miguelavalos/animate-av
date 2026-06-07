@@ -233,6 +233,40 @@ final class MomentsCreateViewModelStoryStateTests: XCTestCase {
         XCTAssertFalse(viewModel.hasConfirmableRenderPlan(momentId: "moment-1"))
     }
 
+    func testFinalVideoActionUsesBackendVideoQuoteCostWhenAvailable() {
+        let summary = MomentsCreateFinalRenderSummary(
+            creditCost: 1,
+            renderPlan: MomentsCreateTestFixtures.makeRenderPlan(totalCreditCost: 2),
+            videoQuote: AnimateVideoQuoteResponse(
+                appId: "animateav",
+                outputKind: "video",
+                duration: .upTo15s,
+                baseCreditCost: 3,
+                brandingRemovalCreditCost: 1,
+                totalCreditCost: 4,
+                proIncludesBrandingFreeVideo: false,
+                branding: AnimateVideoQuoteBranding(
+                    enabled: true,
+                    included: false,
+                    removalAvailable: true,
+                    removalRequested: true,
+                    removalIncluded: false,
+                    assetId: nil,
+                    placement: nil,
+                    reason: "branding_removal_purchased"
+                )
+            )
+        )
+        let action = MomentsCreateFinalVideoActionPresentation(
+            summary: summary,
+            template: .birthdayMessage,
+            balance: MomentsCreditBalance(proMonthly: 0, promotional: 3, purchased: 0)
+        )
+
+        XCTAssertEqual(action.totalCreditCost, 4)
+        XCTAssertFalse(action.canAffordSelectedCost)
+    }
+
     func testInsufficientCreditRenderPlanClearsWhenBalanceCanCoverCost() {
         let viewModel = MomentsCreateViewModel()
         let plan = MomentsCreateTestFixtures.makeRenderPlan(

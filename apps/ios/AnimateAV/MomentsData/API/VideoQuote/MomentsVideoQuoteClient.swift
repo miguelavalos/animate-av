@@ -54,6 +54,17 @@ enum AnimateVideoQuoteDuration: String, Codable, Equatable {
     case upTo5s
     case upTo10s
     case upTo15s
+
+    init(_ duration: MomentDuration) {
+        switch duration {
+        case .auto, .short:
+            self = .upTo5s
+        case .standard:
+            self = .upTo10s
+        case .extended:
+            self = .upTo15s
+        }
+    }
 }
 
 struct AnimateVideoQuoteRequest: Encodable, Equatable {

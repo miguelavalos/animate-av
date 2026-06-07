@@ -256,6 +256,10 @@ extension MomentsCreateViewModel {
                 }
             }
 
+            await finalRenderWorkflow.quoteVideo(
+                form: form,
+                removesWatermark: removesWatermark
+            )
             await finalRenderWorkflow.prepareFinalRenderPlan(
                 momentId: momentId,
                 template: form.template,

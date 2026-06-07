@@ -2027,6 +2027,14 @@ private struct MomentsCreateFinalVideoConfirmationSheet: View {
     }
 
     private var selectedCreditCost: Int {
+        if let videoQuote = action.summary.videoQuote {
+            if removesWatermark,
+               !videoQuote.branding.removalIncluded,
+               !videoQuote.branding.removalRequested {
+                return videoQuote.totalCreditCost + videoQuote.brandingRemovalCreditCost
+            }
+            return videoQuote.totalCreditCost
+        }
         let baseCost = plan?.creditCost ?? action.totalCreditCost
         guard removesWatermark,
               watermark?.userHasWatermarkFree != true else {
@@ -2065,7 +2073,25 @@ private struct MomentsCreateFinalVideoConfirmationSheet: View {
 
     @ViewBuilder
     private var watermarkControl: some View {
-        if watermark?.userHasWatermarkFree == true {
+        if let videoQuote = action.summary.videoQuote {
+            if videoQuote.branding.removalAvailable && !videoQuote.branding.removalIncluded {
+                Toggle(isOn: $removesWatermark) {
+                    VStack(alignment: .leading, spacing: 3) {
+                        Text(L10n.string(
+                            "create.final.watermark.remove",
+                            MomentsCreditCopy.countTitle(videoQuote.brandingRemovalCreditCost)
+                        ))
+                        .font(.system(size: 12, weight: .black))
+                        .foregroundStyle(AVBrandColor.textPrimary)
+
+                        Text(L10n.string("create.final.watermark.removeDetail"))
+                            .font(.system(size: 11, weight: .semibold))
+                            .foregroundStyle(AVBrandColor.textSecondary)
+                    }
+                }
+                .toggleStyle(.switch)
+            }
+        } else if watermark?.userHasWatermarkFree == true {
             HStack(spacing: 10) {
                 Image(systemName: "checkmark.seal.fill")
                     .font(.system(size: 12, weight: .black))
@@ -2094,6 +2120,14 @@ private struct MomentsCreateFinalVideoConfirmationSheet: View {
     }
 
     private var watermarkTitle: String {
+        if let videoQuote = action.summary.videoQuote {
+            if videoQuote.branding.removalIncluded || videoQuote.branding.removalRequested || removesWatermark {
+                return L10n.string("create.final.watermark.none")
+            }
+            return videoQuote.branding.included
+                ? L10n.string("create.final.watermark.included")
+                : L10n.string("create.final.watermark.none")
+        }
         if watermark?.userHasWatermarkFree == true || removesWatermark {
             return L10n.string("create.final.watermark.none")
         }
@@ -2101,6 +2135,15 @@ private struct MomentsCreateFinalVideoConfirmationSheet: View {
     }
 
     private var watermarkCostTitle: String {
+        if let videoQuote = action.summary.videoQuote {
+            if videoQuote.branding.removalIncluded {
+                return L10n.string("create.final.costDetails.includedWithPro")
+            }
+            if videoQuote.branding.removalRequested || removesWatermark {
+                return MomentsCreditCopy.countTitle(videoQuote.brandingRemovalCreditCost)
+            }
+            return L10n.string("create.final.costDetails.noExtraCost")
+        }
         if watermark?.userHasWatermarkFree == true {
             return L10n.string("create.final.costDetails.includedWithPro")
         }
@@ -2111,6 +2154,15 @@ private struct MomentsCreateFinalVideoConfirmationSheet: View {
     }
 
     private var watermarkCostDetail: String {
+        if let videoQuote = action.summary.videoQuote {
+            if videoQuote.branding.removalIncluded {
+                return L10n.string("create.final.watermark.proIncluded")
+            }
+            if videoQuote.branding.removalRequested || removesWatermark {
+                return L10n.string("create.final.watermark.removeDetail")
+            }
+            return L10n.string("create.final.costDetails.watermarkIncluded")
+        }
         if watermark?.userHasWatermarkFree == true {
             return L10n.string("create.final.watermark.proIncluded")
         }

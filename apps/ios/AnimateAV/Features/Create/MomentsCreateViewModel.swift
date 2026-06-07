@@ -67,6 +67,7 @@ final class MomentsCreateViewModel: ObservableObject {
     @Published private(set) var finalExport: MomentArtifact?
     @Published private(set) var latestFinalJob: MomentRenderJob?
     @Published private(set) var renderPlan: MomentsRenderPlanResponse?
+    @Published private(set) var videoQuote: AnimateVideoQuoteResponse?
     @Published private(set) var pendingGalleryVideo: MomentsGalleryVideoRecord?
     @Published private(set) var canRetryFinalVideoDownload = false
     @Published private(set) var finalRenderStatusMessage: String?
@@ -758,6 +759,7 @@ extension MomentsCreateViewModel {
         finalExport = state.finalExport
         latestFinalJob = state.latestFinalJob
         renderPlan = state.renderPlan
+        videoQuote = state.videoQuote
         if let renderPlan = state.renderPlan {
             renderPlanInputSignature = pendingRenderPlanInputSignature
                 ?? currentFinalRenderInputSignature(momentId: renderPlan.momentId)

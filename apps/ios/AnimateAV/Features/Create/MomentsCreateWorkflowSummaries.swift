@@ -139,6 +139,7 @@ struct MomentsCreateStoryScenePresentation: Equatable, Identifiable {
 struct MomentsCreateFinalRenderSummary: Equatable {
     var creditCost = 0
     var renderPlan: MomentsRenderPlanResponse?
+    var videoQuote: AnimateVideoQuoteResponse?
     var finalExport: MomentArtifact?
     var pendingGalleryVideo: MomentsGalleryVideoRecord?
     var canRetryFinalVideoDownload = false
@@ -151,7 +152,7 @@ struct MomentsCreateFinalRenderSummary: Equatable {
     }
 
     var effectiveCreditCost: Int {
-        renderPlan?.plan.totalCreditCost ?? creditCost
+        videoQuote?.totalCreditCost ?? renderPlan?.plan.totalCreditCost ?? creditCost
     }
 }
 

@@ -7,6 +7,7 @@ final class FinalRenderWorkflow: WorkspaceObservingWorkflow {
     @Published private(set) var finalExport: MomentArtifact?
     @Published private(set) var latestFinalJob: MomentRenderJob?
     @Published private(set) var renderPlan: MomentsRenderPlanResponse?
+    @Published private(set) var videoQuote: AnimateVideoQuoteResponse?
     @Published private(set) var isGenerating = false
     @Published private(set) var pendingGalleryVideo: MomentsGalleryVideoRecord?
     @Published private(set) var canRetryFinalVideoDownload = false
@@ -18,6 +19,7 @@ final class FinalRenderWorkflow: WorkspaceObservingWorkflow {
     private let authTokenProvider: any MomentsAuthTokenProviding
     private let creditBalanceProvider: any MomentsCreditBalanceProviding
     private let finalRenderClient: MomentsFinalRenderClient
+    private let videoQuoteClient: MomentsVideoQuoteClient
     private let galleryStore: any MomentsGalleryStoring
     private let logger = Logger(subsystem: "com.avalsys.animateav", category: "final-render")
     private var downloadingArtifactIds = Set<String>()
@@ -29,12 +31,14 @@ final class FinalRenderWorkflow: WorkspaceObservingWorkflow {
         creditBalanceProvider: any MomentsCreditBalanceProviding,
         workspaceObserver: any MomentsActiveWorkspaceObserving,
         finalRenderClient: MomentsFinalRenderClient,
+        videoQuoteClient: MomentsVideoQuoteClient? = nil,
         galleryStore: any MomentsGalleryStoring = MomentsGalleryStore()
     ) {
         self.currentUserProvider = currentUserProvider
         self.authTokenProvider = authTokenProvider
         self.creditBalanceProvider = creditBalanceProvider
         self.finalRenderClient = finalRenderClient
+        self.videoQuoteClient = videoQuoteClient ?? MomentsVideoQuoteClient(baseURLString: finalRenderClient.baseURLString)
         self.galleryStore = galleryStore
         super.init(workspaceObserver: workspaceObserver)
     }
@@ -69,6 +73,38 @@ final class FinalRenderWorkflow: WorkspaceObservingWorkflow {
             && isConfigured
             && activeWorkspace?.moment != nil
             && !isGenerating
+    }
+
+    func quoteVideo(
+        form: MomentSetupForm,
+        removesWatermark: Bool = false
+    ) async {
+        guard let bearerToken = await validatedBearerTokenForFinalRender() else { return }
+
+        do {
+            videoQuote = try await videoQuoteClient.quoteVideo(
+                duration: AnimateVideoQuoteDuration(form.duration),
+                removeBranding: removesWatermark,
+                bearerToken: bearerToken
+            )
+        } catch let error as MomentsAPIError {
+            logger.error("Video quote API error code=\(error.code, privacy: .public) message=\(error.message, privacy: .public)")
+            videoQuote = nil
+            statusMessage = error.localizedDescription
+        } catch {
+            MomentsWorkflowDiagnostics.capture(
+                error,
+                feature: "moments.final_render",
+                operation: "quote_video",
+                step: "unknown",
+                data: [
+                    "duration": form.duration.rawValue,
+                    "removes_watermark": String(removesWatermark),
+                ]
+            )
+            videoQuote = nil
+            statusMessage = MomentsVideoQuoteError.quoteFailed.localizedDescription
+        }
     }
 
     func prepareFinalRenderPlan(
@@ -405,6 +441,7 @@ final class FinalRenderWorkflow: WorkspaceObservingWorkflow {
     func clearRenderPlan() {
         guard !isGenerating else { return }
         renderPlan = nil
+        videoQuote = nil
         statusMessage = nil
     }
 
@@ -422,6 +459,7 @@ final class FinalRenderWorkflow: WorkspaceObservingWorkflow {
         latestFinalJob = nil
         latestFinalJobMomentId = nil
         renderPlan = nil
+        videoQuote = nil
         pendingGalleryVideo = nil
         canRetryFinalVideoDownload = false
         statusMessage = nil

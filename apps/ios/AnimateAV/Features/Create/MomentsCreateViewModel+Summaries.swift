@@ -29,6 +29,7 @@ extension MomentsCreateViewModel {
         MomentsCreateFinalRenderSummary(
             creditCost: form.template.creditCost,
             renderPlan: currentRenderPlan,
+            videoQuote: videoQuote,
             finalExport: effectiveFinalExport,
             pendingGalleryVideo: pendingGalleryVideo,
             canRetryFinalVideoDownload: canRetryFinalVideoDownload,

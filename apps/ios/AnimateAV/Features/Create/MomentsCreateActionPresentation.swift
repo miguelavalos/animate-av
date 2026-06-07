@@ -43,7 +43,7 @@ struct MomentsCreateFinalVideoActionPresentation: Equatable {
     }
 
     var totalCreditCost: Int {
-        summary.renderPlan?.plan.totalCreditCost ?? 0
+        summary.videoQuote?.totalCreditCost ?? summary.renderPlan?.plan.totalCreditCost ?? 0
     }
 
     var totalCreditCostTitle: String {
@@ -79,7 +79,7 @@ struct MomentsCreateFinalVideoActionPresentation: Equatable {
     }
 
     var canAffordSelectedCost: Bool {
-        if let backendCost = summary.renderPlan?.plan.totalCreditCost {
+        if let backendCost = summary.videoQuote?.totalCreditCost ?? summary.renderPlan?.plan.totalCreditCost {
             return balance.spendable >= backendCost
         }
         return true

@@ -31,6 +31,7 @@ struct MomentsCreateFinalRenderState {
     let finalExport: MomentArtifact?
     let latestFinalJob: MomentRenderJob?
     let renderPlan: MomentsRenderPlanResponse?
+    var videoQuote: AnimateVideoQuoteResponse? = nil
     var pendingGalleryVideo: MomentsGalleryVideoRecord? = nil
     var canRetryFinalVideoDownload = false
     let statusMessage: String?

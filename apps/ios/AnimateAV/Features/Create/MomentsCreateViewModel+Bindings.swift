@@ -98,25 +98,30 @@ extension MomentsCreateViewModel {
     }
 
     private func bindFinalRender(_ workflow: FinalRenderWorkflow) {
-        Publishers.CombineLatest4(
+        Publishers.CombineLatest(
             Publishers.CombineLatest4(
                 workflow.$finalExport,
                 workflow.$latestFinalJob,
                 workflow.$renderPlan,
                 workflow.$pendingGalleryVideo
             ),
-            workflow.$isGenerating,
-            workflow.$statusMessage,
-            workflow.$canRetryFinalVideoDownload
+            Publishers.CombineLatest4(
+                workflow.$videoQuote,
+                workflow.$isGenerating,
+                workflow.$statusMessage,
+                workflow.$canRetryFinalVideoDownload
+            )
         )
             .receive(on: DispatchQueue.main)
-            .sink { [weak self] content, isGenerating, statusMessage, canRetryFinalVideoDownload in
+            .sink { [weak self] content, state in
                 let (finalExport, latestFinalJob, renderPlan, pendingGalleryVideo) = content
+                let (videoQuote, isGenerating, statusMessage, canRetryFinalVideoDownload) = state
                 self?.applyFinalRenderState(
                     MomentsCreateFinalRenderState(
                         finalExport: finalExport,
                         latestFinalJob: latestFinalJob,
                         renderPlan: renderPlan,
+                        videoQuote: videoQuote,
                         pendingGalleryVideo: pendingGalleryVideo,
                         canRetryFinalVideoDownload: canRetryFinalVideoDownload,
                         statusMessage: statusMessage,
