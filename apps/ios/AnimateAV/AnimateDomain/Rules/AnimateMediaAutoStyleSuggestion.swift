@@ -47,7 +47,7 @@ enum AnimateMediaAutoStyleSuggester {
         let datedMedia = media.compactMap(\.capturedAt)
         let filenames = media.map { $0.originalFilename.lowercased() }.joined(separator: " ")
         let totalBytes = media.reduce(0) { $0 + $1.byteSize }
-        let sampleCount = min(media.count, 12)
+        let sampleCount = min(media.count, 1)
         let analyses = media.compactMap(\.analysis)
         let peopleAssetCount = analyses.filter(\.hasPeople).count
         let groupAssetCount = analyses.filter { $0.sceneRole == .group }.count
@@ -76,25 +76,25 @@ enum AnimateMediaAutoStyleSuggester {
         let candidate: (AnimateVideoCreationStyleID, AnimateVideoMusicPreset, Double, String)
 
         if containsAny(filenames, keywords: ["birthday", "cumple", "anni", "bday"]) {
-            candidate = (.birthday, .warm, 0.72, "Filename hints look like a birthday set.")
+            candidate = (.birthday, .warm, 0.72, "Filename hints look like a birthday photo.")
         } else if screenshotCount >= max(2, media.count / 2) {
             candidate = (.eventRecap, .warm, 0.55, "Screenshots are safest as a simple recap.")
         } else if containsAny(filenames, keywords: ["trip", "travel", "viaje", "calama", "desert", "road", "playa", "mountain"]) {
-            candidate = (.travel, .cinematic, 0.70, "Filename hints and media set look travel oriented.")
-        } else if sceneryAssetCount >= max(3, media.count / 2) {
-            candidate = (.travel, .cinematic, 0.68, "Local image analysis sees a scenic set.")
-        } else if groupAssetCount >= max(2, media.count / 3) {
-            candidate = (.familyMoments, .warm, 0.66, "Local image analysis sees several group videos.")
-        } else if peopleAssetCount >= max(2, media.count / 2) && sceneryAssetCount < peopleAssetCount {
-            candidate = (.favoritePeople, .warm, 0.63, "Local image analysis sees people-focused videos.")
+            candidate = (.travel, .cinematic, 0.70, "Filename hints look travel oriented.")
+        } else if sceneryAssetCount >= 1 {
+            candidate = (.travel, .cinematic, 0.68, "Local image analysis sees a scenic photo.")
+        } else if groupAssetCount >= 1 {
+            candidate = (.familyMoments, .warm, 0.66, "Local image analysis sees a group photo.")
+        } else if peopleAssetCount >= 1 && sceneryAssetCount < peopleAssetCount {
+            candidate = (.favoritePeople, .warm, 0.63, "Local image analysis sees a people-focused photo.")
         } else if videoCount > 0 && videoCount >= max(1, photoCount / 3) {
             candidate = (.eventRecap, .fun, 0.64, "Several clips suggest a fast event recap.")
         } else if media.count >= 10 && dateSpan > 6 * 60 * 60 {
-            candidate = (.travel, .cinematic, 0.62, "Many videos across several hours fit a trip or day recap.")
+            candidate = (.travel, .cinematic, 0.62, "The photo metadata fits a trip or day-out vibe.")
         } else if media.count >= 6 {
-            candidate = (.familyMoments, .warm, 0.58, "A medium set works best as a warm memory recap.")
+            candidate = (.familyMoments, .warm, 0.58, "This photo works best as a warm cartoon moment.")
         } else {
-            candidate = (.eventRecap, .warm, 0.48, "Small sets are safest as a simple event recap.")
+            candidate = (.eventRecap, .warm, 0.48, "A single photo is safest as a simple cartoon moment.")
         }
 
         guard let style = styles.first(where: { $0.id == candidate.0 && $0.isEnabled }) else {

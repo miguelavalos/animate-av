@@ -36,23 +36,23 @@ final class AnimateMediaRulesTests: XCTestCase {
 
     func testRemainingSlotsNeverReturnsNegativeCount() {
         XCTAssertEqual(
-            AnimateMediaRules.remainingSlots(template: .birthdayMessage, selectedCount: 11),
+            AnimateMediaRules.remainingSlots(template: .birthdayMessage, selectedCount: 0),
+            1
+        )
+        XCTAssertEqual(
+            AnimateMediaRules.remainingSlots(template: .birthdayMessage, selectedCount: 1),
             0
         )
         XCTAssertEqual(
-            AnimateMediaRules.remainingSlots(template: .birthdayMessage, selectedCount: 12),
-            0
-        )
-        XCTAssertEqual(
-            AnimateMediaRules.remainingSlots(template: .birthdayMessage, selectedCount: 13),
+            AnimateMediaRules.remainingSlots(template: .birthdayMessage, selectedCount: 2),
             0
         )
     }
 
-    func testAutoStyleSuggestionUsesLocalSceneryAnalysisForTravel() {
-        let media = (0..<5).map { index in
+    func testAutoStyleSuggestionUsesSingleLocalSceneryImageForTravel() {
+        let media = [
             makeLocalMedia(
-                id: "00000000-0000-0000-0000-00000000010\(index)",
+                id: "00000000-0000-0000-0000-000000000101",
                 selected: true,
                 analysis: AVLocalMediaAnalysis(
                     faceCount: 0,
@@ -64,7 +64,7 @@ final class AnimateMediaRulesTests: XCTestCase {
                     sceneRole: .scenery
                 )
             )
-        }
+        ]
 
         let suggestion = AnimateMediaAutoStyleSuggester.suggest(
             media: media,
@@ -73,7 +73,8 @@ final class AnimateMediaRulesTests: XCTestCase {
 
         XCTAssertEqual(suggestion?.styleID, .travel)
         XCTAssertEqual(suggestion?.musicPreset, .cinematic)
-        XCTAssertEqual(suggestion?.metrics.sceneryAssetCount, 5)
+        XCTAssertEqual(suggestion?.metrics.sceneryAssetCount, 1)
+        XCTAssertEqual(suggestion?.metrics.sampleCount, 1)
     }
 
     private func makeLocalMedia(
