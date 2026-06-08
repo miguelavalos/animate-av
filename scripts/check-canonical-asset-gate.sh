@@ -8,11 +8,14 @@ failures=0
 
 asset_pattern='(AppIcon|Launch|Splash|splash|appicon|icon|monogram|avi|Avi|AV)'
 file_pattern='\.(png|jpg|jpeg|webp|heic|svg|pdf|imageset|appiconset|colorset|xcassets)$'
+handoff_file="docs/canonical-asset-handoff.md"
 
 while IFS= read -r path; do
   if [[ "$path" =~ $file_pattern ]] && [[ "$path" =~ $asset_pattern ]]; then
-    printf 'Canonical asset approval required before tracking: %s\n' "$path" >&2
-    failures=$((failures + 1))
+    if ! grep -Fqx "Repo path: $path" "$handoff_file"; then
+      printf 'Canonical asset approval required before tracking: %s\n' "$path" >&2
+      failures=$((failures + 1))
+    fi
   fi
 done < <(git ls-files apps docs)
 

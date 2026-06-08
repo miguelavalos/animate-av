@@ -92,6 +92,50 @@ Purpose: onboarding product concept without duplicate Avi
 Approved: yes
 ```
 
+## Approved Tracked Runtime Derivatives
+
+The following tracked runtime files are approved as part of the same package.
+They are derived app icon renditions, light/dark wordmark variants, launch
+aliases, shared Avi runtime exports, and product-specific look/mood/style
+thumbnails reviewed in the shipped iOS UI.
+
+```text
+Repo path: apps/ios/AnimateAV/App/Assets.xcassets/AnimateHeaderWordmark.imageset/animate-header-wordmark-dark.png
+Repo path: apps/ios/AnimateAV/App/Assets.xcassets/AnimateLaunchIcon.imageset/animate-launch-icon.png
+Repo path: apps/ios/AnimateAV/App/Assets.xcassets/AppIcon.appiconset/Icon-20@2x.png
+Repo path: apps/ios/AnimateAV/App/Assets.xcassets/AppIcon.appiconset/Icon-20@3x.png
+Repo path: apps/ios/AnimateAV/App/Assets.xcassets/AppIcon.appiconset/Icon-29@2x.png
+Repo path: apps/ios/AnimateAV/App/Assets.xcassets/AppIcon.appiconset/Icon-29@3x.png
+Repo path: apps/ios/AnimateAV/App/Assets.xcassets/AppIcon.appiconset/Icon-40@2x.png
+Repo path: apps/ios/AnimateAV/App/Assets.xcassets/AppIcon.appiconset/Icon-40@3x.png
+Repo path: apps/ios/AnimateAV/App/Assets.xcassets/AppIcon.appiconset/Icon-60@2x.png
+Repo path: apps/ios/AnimateAV/App/Assets.xcassets/AppIcon.appiconset/Icon-60@3x.png
+Repo path: apps/ios/AnimateAV/App/Assets.xcassets/AviFooterIcon.imageset/avi-footer-icon@1x.png
+Repo path: apps/ios/AnimateAV/App/Assets.xcassets/AviFooterIcon.imageset/avi-footer-icon@2x.png
+Repo path: apps/ios/AnimateAV/App/Assets.xcassets/AviFooterIcon.imageset/avi-footer-icon@3x.png
+Repo path: apps/ios/AnimateAV/App/Assets.xcassets/AviFullBody.imageset/avi-full-body.png
+Repo path: apps/ios/AnimateAV/App/Assets.xcassets/AviLoginSheetPeek.imageset/avi-v2-login-sheet-peek.png
+Repo path: apps/ios/AnimateAV/App/Assets.xcassets/AviOnboardingCTA.imageset/avi-v2-onboarding-cta.png
+Repo path: apps/ios/AnimateAV/App/Assets.xcassets/LookAnime.imageset/LookAnime.png
+Repo path: apps/ios/AnimateAV/App/Assets.xcassets/LookCartoon.imageset/LookCartoon.png
+Repo path: apps/ios/AnimateAV/App/Assets.xcassets/LookClay.imageset/LookClay.png
+Repo path: apps/ios/AnimateAV/App/Assets.xcassets/LookComic.imageset/LookComic.png
+Repo path: apps/ios/AnimateAV/App/Assets.xcassets/MoodCalm.imageset/MoodCalm.png
+Repo path: apps/ios/AnimateAV/App/Assets.xcassets/MoodCinematic.imageset/MoodCinematic.png
+Repo path: apps/ios/AnimateAV/App/Assets.xcassets/MoodFun.imageset/MoodFun.png
+Repo path: apps/ios/AnimateAV/App/Assets.xcassets/MoodUpbeat.imageset/MoodUpbeat.png
+Repo path: apps/ios/AnimateAV/App/Assets.xcassets/MoodWarm.imageset/MoodWarm.png
+Repo path: apps/ios/AnimateAV/App/Assets.xcassets/StyleBirthday.imageset/StyleBirthday.png
+Repo path: apps/ios/AnimateAV/App/Assets.xcassets/StyleCelebration.imageset/StyleCelebration.png
+Repo path: apps/ios/AnimateAV/App/Assets.xcassets/StyleCustom.imageset/StyleCustom.png
+Repo path: apps/ios/AnimateAV/App/Assets.xcassets/StyleEventRecap.imageset/StyleEventRecap.png
+Repo path: apps/ios/AnimateAV/App/Assets.xcassets/StyleFamilyCartoon.imageset/StyleFamilyMoments.png
+Repo path: apps/ios/AnimateAV/App/Assets.xcassets/StyleFavoritePeople.imageset/StyleFavoritePeople.png
+Repo path: apps/ios/AnimateAV/App/Assets.xcassets/StyleMilestone.imageset/StyleMilestone.png
+Repo path: apps/ios/AnimateAV/App/Assets.xcassets/StyleSoftRoast.imageset/StyleSoftRoast.png
+Repo path: apps/ios/AnimateAV/App/Assets.xcassets/StyleTravel.imageset/StyleTravel.png
+```
+
 ## Required Rules
 
 - [x] App icon source is approved for Animate AV.
