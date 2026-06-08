@@ -478,7 +478,7 @@ struct AnimateCreateBlockingPreparationView: View {
 
     private var mode: PreparationMode {
         if presentation.isCreatingVideo {
-            return .prepareMoment
+            return .prepareVideoSetup
         }
         if isPreparingFinalPlan {
             return .prepareFinalPlan
@@ -496,7 +496,7 @@ struct AnimateCreateBlockingPreparationView: View {
     }
 
     private enum PreparationMode {
-        case prepareMoment
+        case prepareVideoSetup
         case importMedia
         case prepareStory
         case uploadForVideo
@@ -505,7 +505,7 @@ struct AnimateCreateBlockingPreparationView: View {
 
         var title: String {
             switch self {
-            case .prepareMoment:
+            case .prepareVideoSetup:
                 return L10n.string("create.preparation.prepareMoment.title")
             case .importMedia:
                 return L10n.string("create.preparation.importMedia.title")
@@ -522,7 +522,7 @@ struct AnimateCreateBlockingPreparationView: View {
 
         var iconName: String {
             switch self {
-            case .prepareMoment:
+            case .prepareVideoSetup:
                 return "rectangle.stack.badge.plus"
             case .importMedia:
                 return "photo.on.rectangle.angled"
@@ -539,7 +539,7 @@ struct AnimateCreateBlockingPreparationView: View {
 
         var tint: Color {
             switch self {
-            case .prepareMoment, .importMedia, .prepareStory:
+            case .prepareVideoSetup, .importMedia, .prepareStory:
                 return AVBrandColor.accent
             case .uploadForVideo, .prepareFinalPlan:
                 return AVBrandColor.textSecondary
@@ -550,7 +550,7 @@ struct AnimateCreateBlockingPreparationView: View {
 
         func message(itemCount: Int?) -> String {
             switch self {
-            case .prepareMoment:
+            case .prepareVideoSetup:
                 return L10n.string("create.preparation.prepareMoment.detail")
             case .importMedia:
                 if let itemCount, itemCount > 0 {
