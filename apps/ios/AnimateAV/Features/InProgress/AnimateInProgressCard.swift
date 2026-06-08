@@ -13,11 +13,11 @@ struct AnimateInProgressCard: View {
     let activeWorkspace: AnimateWorkspace?
     let isDeletingVideo: Bool
     let statusMessage: String?
-    let localMediaForMoment: (AnimateVideo) -> [AnimateSelectedMedia]
-    let selectMoment: (AnimateVideo) -> Void
+    let localMediaForVideo: (AnimateVideo) -> [AnimateSelectedMedia]
+    let selectVideo: (AnimateVideo) -> Void
     let continueVideo: (AnimateContinuationRequest) -> Void
-    let requestRenameMoment: (AnimateVideo) -> Void
-    let startMoment: () -> Void
+    let requestRenameVideo: (AnimateVideo) -> Void
+    let startVideoCreation: () -> Void
     let startSignInFlow: () -> Void
     let openCredits: () -> Void
     let retryCredits: () -> Void
@@ -41,7 +41,7 @@ struct AnimateInProgressCard: View {
                 )
                 AnimateInProgressEmptyContent(
                     unavailable: unavailable,
-                    startMoment: startMoment
+                    startVideoCreation: startVideoCreation
                 )
             case .available:
                 AnimateInProgressCreditStatus(
@@ -51,17 +51,17 @@ struct AnimateInProgressCard: View {
                     retryCredits: retryCredits
                 )
                 AnimateInProgressContinueBlock(
-                    videos: continueMoments,
-                    localMediaForMoment: localMediaForMoment,
+                    videos: continueVideos,
+                    localMediaForVideo: localMediaForVideo,
                     continueVideo: continueVideo,
-                    requestRenameMoment: requestRenameMoment
+                    requestRenameVideo: requestRenameVideo
                 )
                 AnimateInProgressStatusMessage(message: statusMessage)
             }
         }
     }
 
-    private var continueMoments: [AnimateVideo] {
+    private var continueVideos: [AnimateVideo] {
         videosSummary.videos.sorted { $0.updatedAt > $1.updatedAt }
     }
 }
@@ -166,7 +166,7 @@ private struct AnimateInProgressSignedOutState: View {
 
 private struct AnimateInProgressEmptyContent: View {
     let unavailable: AnimateInProgressUnavailablePresentation
-    let startMoment: () -> Void
+    let startVideoCreation: () -> Void
 
     var body: some View {
         AnimateInProgressInlineEmptyState(
@@ -175,7 +175,7 @@ private struct AnimateInProgressEmptyContent: View {
             message: L10n.string("inProgress.empty.inProgress.detail"),
             actionTitle: L10n.string("inProgress.newMoment"),
             actionSystemImage: "plus",
-            action: startMoment
+            action: startVideoCreation
         )
     }
 }
@@ -238,9 +238,9 @@ private struct AnimateInProgressAviBlock: View {
 
 private struct AnimateInProgressContinueBlock: View {
     let videos: [AnimateVideo]
-    let localMediaForMoment: (AnimateVideo) -> [AnimateSelectedMedia]
+    let localMediaForVideo: (AnimateVideo) -> [AnimateSelectedMedia]
     let continueVideo: (AnimateContinuationRequest) -> Void
-    let requestRenameMoment: (AnimateVideo) -> Void
+    let requestRenameVideo: (AnimateVideo) -> Void
 
     var body: some View {
         if videos.isEmpty {
@@ -259,12 +259,12 @@ private struct AnimateInProgressContinueBlock: View {
                 ForEach(videos) { video in
                     AnimateAnimateVideoCard(
                         video: video,
-                        localMedia: localMediaForMoment(video),
+                        localMedia: localMediaForVideo(video),
                         continueVideo: {
                             continueVideo(AnimateContinuationRequest(video: video))
                         },
                         renameVideo: {
-                            requestRenameMoment(video)
+                            requestRenameVideo(video)
                         }
                     )
                 }

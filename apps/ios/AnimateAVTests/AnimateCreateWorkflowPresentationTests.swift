@@ -230,7 +230,7 @@ final class AnimateCreateWorkflowPresentationTests: XCTestCase {
             hasAnimateWorkspace: true,
             hasUnsavedLocalVideo: false,
             template: .birthdayMessage,
-            creationStyleTitle: "Birthday Story",
+            creationStyleTitle: "Birthday cartoon",
             toneTitle: "Warm",
             tempoTitle: "Balanced",
             occasionTitle: "Birthday for Ava",
@@ -253,7 +253,7 @@ final class AnimateCreateWorkflowPresentationTests: XCTestCase {
         XCTAssertTrue(presentation.canAddMedia)
         XCTAssertFalse(presentation.canPrepareVideoDirection)
         XCTAssertTrue(presentation.canPrepareFinalRenderPlan)
-        XCTAssertEqual(presentation.creationStyleTitle, "Birthday Story")
+        XCTAssertEqual(presentation.creationStyleTitle, "Birthday cartoon")
         XCTAssertEqual(presentation.toneTitle, "Warm")
         XCTAssertEqual(presentation.tempoTitle, "Balanced")
         XCTAssertEqual(presentation.occasionTitle, "Birthday for Ava")
@@ -268,7 +268,7 @@ final class AnimateCreateWorkflowPresentationTests: XCTestCase {
             hasAnimateWorkspace: true,
             hasUnsavedLocalVideo: true,
             template: .birthdayMessage,
-            creationStyleTitle: "Birthday Story",
+            creationStyleTitle: "Birthday cartoon",
             toneTitle: "Warm",
             tempoTitle: "Balanced",
             occasionTitle: "Birthday",
@@ -300,7 +300,7 @@ final class AnimateCreateWorkflowPresentationTests: XCTestCase {
             hasAnimateWorkspace: false,
             hasUnsavedLocalVideo: true,
             template: .birthdayMessage,
-            creationStyleTitle: "Birthday Story",
+            creationStyleTitle: "Birthday cartoon",
             toneTitle: "Warm",
             tempoTitle: "Balanced",
             occasionTitle: "Birthday",
@@ -345,7 +345,7 @@ final class AnimateCreateWorkflowPresentationTests: XCTestCase {
         XCTAssertFalse(presentation.showsBlockingPreparation)
     }
 
-    func testStorySummaryBuildsPresentedScenesFromSavedScenes() {
+    func testVideoDirectionSummaryBuildsPresentedScenesFromSavedScenes() {
         let summary = AnimateCreateVideoDirectionSummary(
             savedScenes: [
                 AnimateCreateTestFixtures.makeScene(id: "scene-2", sceneIndex: 1, caption: "Show the trip highlights."),
@@ -432,8 +432,8 @@ final class AnimateCreateWorkflowPresentationTests: XCTestCase {
         XCTAssertFalse(presentation.canShowRefreshAction)
 
         presentation.canRefreshVideoDirection = false
-        presentation.availabilityMessage = "Sign in before preparing the story."
-        XCTAssertEqual(presentation.statusMessage, "Sign in before preparing the story.")
+        presentation.availabilityMessage = "Sign in before preparing the direction."
+        XCTAssertEqual(presentation.statusMessage, "Sign in before preparing the direction.")
         XCTAssertFalse(presentation.canRunPrimaryAction)
     }
 
@@ -479,7 +479,7 @@ final class AnimateCreateWorkflowPresentationTests: XCTestCase {
         XCTAssertEqual(presentation.selectionMessage, "Use one photo for Animate AV videos.")
     }
 
-    func testStoryPresentationFormatsPreparationStateAndSortsSavedScenes() {
+    func testVideoDirectionPreparationPresentationFormatsPreparationStateAndSortsSavedScenes() {
         let presentation = AnimateCreateVideoDirectionPreparationPresentation(
             summary: AnimateCreateVideoDirectionSummary(
                 savedScenes: [

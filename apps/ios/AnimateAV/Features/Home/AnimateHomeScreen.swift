@@ -14,7 +14,7 @@ struct AnimateHomeScreen: View {
     let openCredits: () -> Void
     let retryCredits: () -> Void
     let selectTab: (AnimateRootTab) -> Void
-    let startMoment: () -> Void
+    let startVideoCreation: () -> Void
     let continueVideo: (AnimateContinuationRequest) -> Void
     private var videosSummary: AnimateInProgressSummary { viewModel.videosSummary }
     private var presentation: AnimateHomePresentation {
@@ -32,7 +32,7 @@ struct AnimateHomeScreen: View {
         openCredits: @escaping () -> Void,
         retryCredits: @escaping () -> Void,
         selectTab: @escaping (AnimateRootTab) -> Void,
-        startMoment: @escaping () -> Void,
+        startVideoCreation: @escaping () -> Void,
         continueVideo: @escaping (AnimateContinuationRequest) -> Void
     ) {
         self.openSettings = openSettings
@@ -41,7 +41,7 @@ struct AnimateHomeScreen: View {
         self.openCredits = openCredits
         self.retryCredits = retryCredits
         self.selectTab = selectTab
-        self.startMoment = startMoment
+        self.startVideoCreation = startVideoCreation
         self.continueVideo = continueVideo
     }
 
@@ -63,9 +63,9 @@ struct AnimateHomeScreen: View {
                     title: aviContextTitle,
                     detail: aviContextDetail,
                     buttonTitle: aviContextButtonTitle,
-                    hasMomentContext: createViewModel.hasRecoverableMomentContext,
+                    hasVideoContext: createViewModel.hasRecoverableMomentContext,
                     isSignedIn: viewModel.isSignedIn,
-                    action: viewModel.isSignedIn ? startMoment : startSignInFlow
+                    action: viewModel.isSignedIn ? startVideoCreation : startSignInFlow
                 )
             }
 
@@ -90,7 +90,7 @@ struct AnimateHomeScreen: View {
             AnimateHomeNextActionsCard(
                 presentation: presentation,
                 continueVideo: continueVideo,
-                startMoment: startMoment,
+                startVideoCreation: startVideoCreation,
                 selectTab: selectTab
             )
         }
@@ -142,13 +142,13 @@ private struct AnimateHomeAviContextCard: View {
     let title: String
     let detail: String
     let buttonTitle: String
-    let hasMomentContext: Bool
+    let hasVideoContext: Bool
     let isSignedIn: Bool
     let action: () -> Void
 
     private var actionSystemImage: String {
         if !isSignedIn { return "person.crop.circle" }
-        return hasMomentContext ? "video.fill" : "plus"
+        return hasVideoContext ? "video.fill" : "plus"
     }
 
     var body: some View {

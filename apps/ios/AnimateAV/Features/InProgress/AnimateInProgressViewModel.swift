@@ -95,7 +95,7 @@ final class AnimateInProgressViewModel: ObservableObject {
         .store(in: &accountCancellables)
     }
 
-    func selectMoment(_ video: AnimateVideo) {
+    func selectVideo(_ video: AnimateVideo) {
         if selectedVideoId == video.id {
             selectedVideoId = nil
             workflow?.clearAnimateWorkspace()

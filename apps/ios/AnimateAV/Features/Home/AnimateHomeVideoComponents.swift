@@ -4,7 +4,7 @@ import SwiftUI
 struct AnimateHomeLatestVideoRow: View {
     let title: String
     let detail: String
-    let openMoment: () -> Void
+    let openVideo: () -> Void
 
     var body: some View {
         AVAppShellActionRow(
@@ -13,7 +13,7 @@ struct AnimateHomeLatestVideoRow: View {
             systemImage: "clock.badge.checkmark",
             eyebrow: L10n.string("home.latestVideo.eyebrow"),
             accessibilityIdentifier: "animate.home.latestVideo",
-            action: openMoment
+            action: openVideo
         )
     }
 }

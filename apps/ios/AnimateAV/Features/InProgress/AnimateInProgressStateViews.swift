@@ -18,7 +18,7 @@ struct AnimateInProgressUnavailableState: View {
 
 struct AnimateInProgressEmptyState: View {
     let presentation: AnimateInProgressUnavailablePresentation
-    let startMoment: () -> Void
+    let startVideoCreation: () -> Void
 
     var body: some View {
         VStack(alignment: .leading, spacing: 16) {
@@ -30,7 +30,7 @@ struct AnimateInProgressEmptyState: View {
                 systemImage: "plus.app.fill",
                 isProminent: true,
                 accessibilityIdentifier: "animate.inProgress.empty.create",
-                action: startMoment
+                action: startVideoCreation
             )
 
             AVAppShellInlineMessage(

@@ -7,14 +7,14 @@ struct AnimateInProgressPresentation: Equatable {
     static func make(
         isSignedIn: Bool,
         videosSummary: AnimateInProgressSummary,
-        momentPendingDeletion: AnimateVideo?
+        videoPendingDeletion: AnimateVideo?
     ) -> AnimateInProgressPresentation {
         AnimateInProgressPresentation(
             availability: AnimateInProgressAvailability.make(
                 isSignedIn: isSignedIn,
                 videosSummary: videosSummary
             ),
-            deletionMessage: L10n.string("inProgress.deleteVideo.message", momentPendingDeletion?.title ?? L10n.string("moment.this"))
+            deletionMessage: L10n.string("inProgress.deleteVideo.message", videoPendingDeletion?.title ?? L10n.string("moment.this"))
         )
     }
 }

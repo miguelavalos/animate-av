@@ -2,10 +2,10 @@ import SwiftUI
 
 struct AnimateInProgressListRow: View {
     let row: AnimateInProgressListRowPresentation
-    let selectMoment: () -> Void
+    let selectVideo: () -> Void
 
     var body: some View {
-        Button(action: selectMoment) {
+        Button(action: selectVideo) {
             HStack(alignment: .top, spacing: 12) {
                 AnimateInProgressStatusMarker(row: row)
 

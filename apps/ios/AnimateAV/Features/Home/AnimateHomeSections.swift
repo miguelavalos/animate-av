@@ -107,7 +107,7 @@ struct AnimateHomeVideoStatusCard: View {
                 AnimateHomeLatestVideoRow(
                     title: latestVideo.title,
                     detail: AnimateVideoFormatting.compactDetail(for: latestVideo),
-                    openMoment: openInProgress
+                    openVideo: openInProgress
                 )
             } else if isSignedIn {
                 AnimateHomeEmptyVideoRow()
@@ -138,7 +138,7 @@ struct AnimateHomeVideoStatusCard: View {
 struct AnimateHomeNextActionsCard: View {
     let presentation: AnimateHomePresentation
     let continueVideo: (AnimateContinuationRequest) -> Void
-    let startMoment: () -> Void
+    let startVideoCreation: () -> Void
     let selectTab: (AnimateRootTab) -> Void
 
     var body: some View {
@@ -150,11 +150,11 @@ struct AnimateHomeNextActionsCard: View {
                 if let latestInProgressAction = presentation.latestInProgressAction {
                     homeActionRow(
                         action: latestInProgressAction,
-                        perform: continueLatestMoment
+                        perform: continueLatestVideo
                     )
                 }
 
-                homeActionRow(action: presentation.createAction, perform: startMoment)
+                homeActionRow(action: presentation.createAction, perform: startVideoCreation)
 
                 homeActionRow(action: presentation.openInProgressAction) {
                     selectTab(.inProgress)
@@ -179,7 +179,7 @@ struct AnimateHomeNextActionsCard: View {
         )
     }
 
-    private func continueLatestMoment() {
+    private func continueLatestVideo() {
         if let request = presentation.latestInProgressContinuationRequest {
             continueVideo(request)
         }

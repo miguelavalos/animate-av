@@ -5,7 +5,7 @@ import SwiftUI
 
 struct AnimateAviScreen: View {
     let selectTab: (AnimateRootTab) -> Void
-    let startMoment: () -> Void
+    let startVideoCreation: () -> Void
     let startSignInFlow: () -> Void
     @Environment(\.avCommonAppExperience) private var appExperience
     @EnvironmentObject private var viewModel: AnimateAviViewModel
@@ -52,7 +52,7 @@ struct AnimateAviScreen: View {
                 creditBalanceLoadState: viewModel.creditBalanceLoadState,
                 isSignedIn: viewModel.isSignedIn,
                 startSignInFlow: startSignInFlow,
-                startMoment: startMoment,
+                startVideoCreation: startVideoCreation,
                 selectTab: selectTab
             )
         }
@@ -66,7 +66,7 @@ private struct AnimateAviGuidanceContent: View {
     let creditBalanceLoadState: AnimateCreditBalanceLoadState
     let isSignedIn: Bool
     let startSignInFlow: () -> Void
-    let startMoment: () -> Void
+    let startVideoCreation: () -> Void
     let selectTab: (AnimateRootTab) -> Void
 
     var body: some View {
@@ -74,7 +74,7 @@ private struct AnimateAviGuidanceContent: View {
             AnimateAviSignInCard(startSignInFlow: startSignInFlow)
         }
 
-        AnimateAviPreparationCard(openCreate: startMoment)
+        AnimateAviPreparationCard(openCreate: startVideoCreation)
 
         AnimateAviCurrentFocusCard(
             workflowFocusTitle: presentation.workflowFocusTitle,

@@ -70,9 +70,9 @@ struct AnimateAppShellView: View {
             }
         )
         .overlay(alignment: .bottomTrailing) {
-            if showsNewMomentFloatingAction {
+            if showsNewVideoFloatingAction {
                 Button {
-                    startFloatingMomentAction()
+                    startFloatingVideoCreationAction()
                 } label: {
                     Image(systemName: "plus")
                         .font(.system(size: 22, weight: .black))
@@ -122,7 +122,7 @@ struct AnimateAppShellView: View {
                     openCredits: openCredits,
                     retryCredits: retryCreditBalance,
                     selectTab: selectRootTab,
-                    startMoment: startOrContinueMoment,
+                    startVideoCreation: startOrContinueVideoCreation,
                     continueVideo: { request in
                         createViewModel.continueVideo(request.video, focus: request.focus)
                         selectRootTab(.create)
@@ -144,8 +144,8 @@ struct AnimateAppShellView: View {
                         createViewModel.continueVideo(request.video, focus: request.focus)
                         selectedTab = .create
                     },
-                    startMoment: {
-                        startOrContinueMoment()
+                    startVideoCreation: {
+                        startOrContinueVideoCreation()
                     },
                     startSignInFlow: startSignInFlow,
                     openCredits: openCredits,
@@ -157,7 +157,7 @@ struct AnimateAppShellView: View {
             case .avi:
                 AnimateAviScreen(
                     selectTab: selectRootTab,
-                    startMoment: startOrContinueMoment,
+                    startVideoCreation: startOrContinueVideoCreation,
                     startSignInFlow: startSignInFlow
                 )
                     .environmentObject(aviViewModel)
@@ -187,7 +187,7 @@ struct AnimateAppShellView: View {
         return selectedTab == .create ? .inProgress : selectedTab
     }
 
-    private var showsNewMomentFloatingAction: Bool {
+    private var showsNewVideoFloatingAction: Bool {
         chromeItem == nil
             && accountController.isSignedIn
             && [.inProgress, .gallery].contains(selectedTab)
@@ -212,7 +212,7 @@ struct AnimateAppShellView: View {
         selectRootTab(.gallery)
     }
 
-    private func startOrContinueMoment() {
+    private func startOrContinueVideoCreation() {
         if createViewModel.hasLocalAnimateWorkspace {
             selectRootTab(.create)
             return
@@ -229,10 +229,10 @@ struct AnimateAppShellView: View {
             return
         }
 
-        beginNewMomentFromPreference()
+        beginNewVideoCreationFromPreference()
     }
 
-    private func startFloatingMomentAction() {
+    private func startFloatingVideoCreationAction() {
         if createViewModel.hasLocalAnimateWorkspace {
             selectRootTab(.create)
             return
@@ -242,10 +242,10 @@ struct AnimateAppShellView: View {
             createViewModel.clearSessionState()
         }
 
-        beginNewMomentFromPreference()
+        beginNewVideoCreationFromPreference()
     }
 
-    private func beginNewMomentFromPreference() {
+    private func beginNewVideoCreationFromPreference() {
         guard createViewModel.canBeginNewMoment else {
             selectRootTab(.create)
             return

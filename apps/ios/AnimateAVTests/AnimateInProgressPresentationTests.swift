@@ -6,7 +6,7 @@ final class AnimateInProgressPresentationTests: XCTestCase {
         let presentation = AnimateInProgressPresentation.make(
             isSignedIn: false,
             videosSummary: AnimateInProgressSummary(),
-            momentPendingDeletion: nil
+            videoPendingDeletion: nil
         )
 
         XCTAssertEqual(
@@ -25,7 +25,7 @@ final class AnimateInProgressPresentationTests: XCTestCase {
         let presentation = AnimateInProgressPresentation.make(
             isSignedIn: true,
             videosSummary: AnimateInProgressSummary(),
-            momentPendingDeletion: nil
+            videoPendingDeletion: nil
         )
 
         XCTAssertEqual(
@@ -46,7 +46,7 @@ final class AnimateInProgressPresentationTests: XCTestCase {
             videosSummary: AnimateInProgressSummary.make(from: [
                 makeVideo(id: "moment-1")
             ]),
-            momentPendingDeletion: nil
+            videoPendingDeletion: nil
         )
 
         XCTAssertEqual(presentation.availability, .available)
@@ -56,13 +56,13 @@ final class AnimateInProgressPresentationTests: XCTestCase {
         let fallback = AnimateInProgressPresentation.make(
             isSignedIn: true,
             videosSummary: AnimateInProgressSummary(),
-            momentPendingDeletion: nil
+            videoPendingDeletion: nil
         )
         let moment = makeVideo(id: "moment-1", title: "Family Weekend")
         let titled = AnimateInProgressPresentation.make(
             isSignedIn: true,
             videosSummary: AnimateInProgressSummary(),
-            momentPendingDeletion: moment
+            videoPendingDeletion: moment
         )
 
         XCTAssertEqual(

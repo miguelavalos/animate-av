@@ -5,13 +5,13 @@ import SwiftUI
 struct AnimateInProgressScreen: View {
     @EnvironmentObject private var viewModel: AnimateInProgressViewModel
     @EnvironmentObject private var createViewModel: AnimateCreateViewModel
-    @State private var momentPendingDeletion: AnimateVideo?
-    @State private var momentPendingRename: AnimateVideo?
+    @State private var videoPendingDeletion: AnimateVideo?
+    @State private var videoPendingRename: AnimateVideo?
     @SceneStorage("animate.inProgress.selectedAssetKind") private var selectedAssetKindRaw = AnimateInProgressAssetKind.videos.rawValue
     let balance: AnimateCreditBalance
     let creditBalanceLoadState: AnimateCreditBalanceLoadState
     let continueVideo: (AnimateContinuationRequest) -> Void
-    let startMoment: () -> Void
+    let startVideoCreation: () -> Void
     let startSignInFlow: () -> Void
     let openCredits: () -> Void
     let retryCredits: () -> Void
@@ -20,7 +20,7 @@ struct AnimateInProgressScreen: View {
         AnimateInProgressPresentation.make(
             isSignedIn: viewModel.isSignedIn,
             videosSummary: viewModel.videosSummary,
-            momentPendingDeletion: momentPendingDeletion
+            videoPendingDeletion: videoPendingDeletion
         )
     }
 
@@ -28,7 +28,7 @@ struct AnimateInProgressScreen: View {
         AnimateInProgressPresentation.make(
             isSignedIn: viewModel.isSignedIn,
             videosSummary: viewModel.imagesSummary,
-            momentPendingDeletion: nil
+            videoPendingDeletion: nil
         )
     }
 
@@ -36,7 +36,7 @@ struct AnimateInProgressScreen: View {
         balance: AnimateCreditBalance = .empty,
         creditBalanceLoadState: AnimateCreditBalanceLoadState = .loaded,
         continueVideo: @escaping (AnimateContinuationRequest) -> Void = { _ in },
-        startMoment: @escaping () -> Void = {},
+        startVideoCreation: @escaping () -> Void = {},
         startSignInFlow: @escaping () -> Void = {},
         openCredits: @escaping () -> Void = {},
         retryCredits: @escaping () -> Void = {}
@@ -44,7 +44,7 @@ struct AnimateInProgressScreen: View {
         self.balance = balance
         self.creditBalanceLoadState = creditBalanceLoadState
         self.continueVideo = continueVideo
-        self.startMoment = startMoment
+        self.startVideoCreation = startVideoCreation
         self.startSignInFlow = startSignInFlow
         self.openCredits = openCredits
         self.retryCredits = retryCredits
@@ -61,7 +61,7 @@ struct AnimateInProgressScreen: View {
                 if createViewModel.hasLocalAnimateWorkspace {
                     AnimateCurrentCreationCard(
                         selectedCount: createViewModel.mediaSelectedCount,
-                        continueCreation: startMoment
+                        continueCreation: startVideoCreation
                     )
                 }
 
@@ -75,11 +75,11 @@ struct AnimateInProgressScreen: View {
                     activeWorkspace: viewModel.activeWorkspace,
                     isDeletingVideo: viewModel.isDeletingVideo,
                     statusMessage: viewModel.statusMessage,
-                    localMediaForMoment: localMediaForMoment(_:),
-                    selectMoment: viewModel.selectMoment,
+                    localMediaForVideo: localMediaForVideo(_:),
+                    selectVideo: viewModel.selectVideo,
                     continueVideo: continueVideo,
-                    requestRenameMoment: { momentPendingRename = $0 },
-                    startMoment: startMoment,
+                    requestRenameVideo: { videoPendingRename = $0 },
+                    startVideoCreation: startVideoCreation,
                     startSignInFlow: startSignInFlow,
                     openCredits: openCredits,
                     retryCredits: retryCredits
@@ -89,7 +89,7 @@ struct AnimateInProgressScreen: View {
                     presentation: imagesPresentation,
                     videosSummary: viewModel.imagesSummary,
                     startSignInFlow: startSignInFlow,
-                    startImages: startMoment
+                    startImages: startVideoCreation
                 )
             }
         }
@@ -107,7 +107,7 @@ struct AnimateInProgressScreen: View {
         } message: {
             Text(presentation.deletionMessage)
         }
-        .sheet(item: $momentPendingRename) { video in
+        .sheet(item: $videoPendingRename) { video in
             AnimateInProgressRenameSheet(video: video) { title in
                 viewModel.renameVideo(video, title: title)
             }
@@ -117,10 +117,10 @@ struct AnimateInProgressScreen: View {
 
     private var deletionConfirmationPresented: Binding<Bool> {
         Binding(
-            get: { momentPendingDeletion != nil },
+            get: { videoPendingDeletion != nil },
             set: { isPresented in
                 if !isPresented {
-                    momentPendingDeletion = nil
+                    videoPendingDeletion = nil
                 }
             }
         )
@@ -138,20 +138,20 @@ struct AnimateInProgressScreen: View {
     }
 
     private func confirmVideoDeletion() {
-        if let momentPendingDeletion {
-            if createViewModel.activeVideoId == momentPendingDeletion.id {
+        if let videoPendingDeletion {
+            if createViewModel.activeVideoId == videoPendingDeletion.id {
                 createViewModel.clearSessionState()
             }
-            viewModel.deleteVideo(momentPendingDeletion)
+            viewModel.deleteVideo(videoPendingDeletion)
         }
-        momentPendingDeletion = nil
+        videoPendingDeletion = nil
     }
 
     private func cancelVideoDeletion() {
-        momentPendingDeletion = nil
+        videoPendingDeletion = nil
     }
 
-    private func localMediaForMoment(_ video: AnimateVideo) -> [AnimateSelectedMedia] {
+    private func localMediaForVideo(_ video: AnimateVideo) -> [AnimateSelectedMedia] {
         if createViewModel.activeVideoId == video.id {
             return createViewModel.selectedMedia
         }
@@ -238,7 +238,7 @@ private struct AnimateInProgressImagesCard: View {
                 AnimateInProgressList(
                     videosSummary: videosSummary,
                     selectedVideoId: nil,
-                    selectMoment: { _ in }
+                    selectVideo: { _ in }
                 )
             }
         }

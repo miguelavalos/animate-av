@@ -3,7 +3,7 @@ import SwiftUI
 
 struct AnimateInProgressListGroup: View {
     let group: AnimateInProgressListGroupPresentation
-    let selectMoment: (AnimateVideo) -> Void
+    let selectVideo: (AnimateVideo) -> Void
 
     var body: some View {
         VStack(alignment: .leading, spacing: 10) {
@@ -15,7 +15,7 @@ struct AnimateInProgressListGroup: View {
 
             ForEach(group.rows) { row in
                 AnimateInProgressListRow(row: row) {
-                    selectMoment(row.video)
+                    selectVideo(row.video)
                 }
             }
         }
