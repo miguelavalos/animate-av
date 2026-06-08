@@ -4,12 +4,12 @@ import XCTest
 final class AnimateStatusRulesTests: XCTestCase {
     func testGroupsCompletedVideosAsFinished() {
         let plan = makeVideo(id: "in_progress", status: "in_progress", updatedAt: 10)
-        let story = makeVideo(id: "story", status: "story_ready", updatedAt: 20)
+        let videoDirectionReady = makeVideo(id: "direction", status: "story_ready", updatedAt: 20)
         let completed = makeVideo(id: "completed", status: "gallery_ready", updatedAt: 30)
 
-        let groups = AnimateStatusRules.group([plan, story, completed])
+        let groups = AnimateStatusRules.group([plan, videoDirectionReady, completed])
 
-        XCTAssertEqual(groups.inProgress.map(\.id), ["story", "in_progress"])
+        XCTAssertEqual(groups.inProgress.map(\.id), ["direction", "in_progress"])
         XCTAssertEqual(groups.finished.map(\.id), ["completed"])
     }
 
@@ -98,7 +98,7 @@ final class AnimateStatusRulesTests: XCTestCase {
         XCTAssertEqual(action.continuationFocus, .media)
     }
 
-    func testNextActionAsksForStoryWhenMediaExistsWithoutScenes() {
+    func testNextActionAsksForVideoDirectionWhenMediaExistsWithoutScenes() {
         let action = AnimateStatusRules.nextAction(for: makeWorkspace(mediaAssets: [makeMediaAsset()]))
 
         XCTAssertEqual(action.title, "Prepare video")
@@ -107,11 +107,11 @@ final class AnimateStatusRulesTests: XCTestCase {
         XCTAssertEqual(action.continuationFocus, .story)
     }
 
-    func testNextActionAsksForFinalWhenStoryExistsWithoutFinalArtifact() {
+    func testNextActionAsksForFinalWhenVideoDirectionExistsWithoutFinalArtifact() {
         let action = AnimateStatusRules.nextAction(
             for: makeWorkspace(
                 mediaAssets: [makeMediaAsset()],
-                storyScenes: [makeStoryScene()]
+                storyScenes: [makeVideoDirectionScene()]
             )
         )
 
@@ -125,7 +125,7 @@ final class AnimateStatusRulesTests: XCTestCase {
         let action = AnimateStatusRules.nextAction(
             for: makeWorkspace(
                 mediaAssets: [makeMediaAsset()],
-                storyScenes: [makeStoryScene()],
+                storyScenes: [makeVideoDirectionScene()],
                 artifacts: [
                     makeArtifact(kind: "final_export")
                 ]
@@ -142,7 +142,7 @@ final class AnimateStatusRulesTests: XCTestCase {
         let action = AnimateStatusRules.nextAction(
             for: makeWorkspace(
                 mediaAssets: [makeMediaAsset()],
-                storyScenes: [makeStoryScene()],
+                storyScenes: [makeVideoDirectionScene()],
                 renderJobs: [makeRenderJob(kind: "final", status: "failed")]
             )
         )
@@ -204,7 +204,7 @@ final class AnimateStatusRulesTests: XCTestCase {
         )
     }
 
-    private func makeStoryScene() -> AnimateVideoDirectionScene {
+    private func makeVideoDirectionScene() -> AnimateVideoDirectionScene {
         AnimateVideoDirectionScene(
             id: "scene-1",
             sceneIndex: 0,

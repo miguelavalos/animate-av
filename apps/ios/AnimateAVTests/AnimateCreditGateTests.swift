@@ -155,7 +155,7 @@ final class AnimateCreditGateTests: XCTestCase {
         XCTAssertFalse(AnimateMediaRules.canUseSelection(template: .partyRecap, selectedCount: 2))
     }
 
-    func testStoryRulesUseSelectedConvexMediaCount() {
+    func testVideoDirectionRulesUseSelectedConvexMediaCount() {
         let assets = (0..<3).map {
             AnimateMediaAsset(
                 id: "media-\($0)",
@@ -174,8 +174,8 @@ final class AnimateCreditGateTests: XCTestCase {
         XCTAssertFalse(AnimateVideoDirectionRules.canPlan(mediaAssets: assets, template: .partyRecap))
     }
 
-    func testStoryInputSignatureTracksMediaOrderAndDirection() {
-        func storyMedia(id: String, sortOrder: Int) -> AnimateVideoDirectionMedia {
+    func testVideoDirectionInputSignatureTracksMediaOrderAndDirection() {
+        func videoDirectionMedia(id: String, sortOrder: Int) -> AnimateVideoDirectionMedia {
             AnimateVideoDirectionMedia(
                 mediaAssetId: id,
                 mediaKind: "image",
@@ -189,8 +189,8 @@ final class AnimateCreditGateTests: XCTestCase {
         form.occasion = "Trip"
         form.details = "Use the desert photos."
         let media = [
-            storyMedia(id: "media-a", sortOrder: 0),
-            storyMedia(id: "media-b", sortOrder: 1)
+            videoDirectionMedia(id: "media-a", sortOrder: 0),
+            videoDirectionMedia(id: "media-b", sortOrder: 1)
         ]
 
         let baseSignature = AnimateVideoDirectionInputSignature.make(
@@ -210,8 +210,8 @@ final class AnimateCreditGateTests: XCTestCase {
             momentId: "moment-1",
             form: form,
             selectedMedia: [
-                storyMedia(id: "media-a", sortOrder: 1),
-                storyMedia(id: "media-b", sortOrder: 0)
+                videoDirectionMedia(id: "media-a", sortOrder: 1),
+                videoDirectionMedia(id: "media-b", sortOrder: 0)
             ]
         )
         XCTAssertNotEqual(baseSignature, reorderedSignature)

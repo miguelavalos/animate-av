@@ -288,7 +288,7 @@ final class AnimateCreateViewModelVideoDirectionStateTests: XCTestCase {
         XCTAssertNil(viewModel.currentRenderPlan)
     }
 
-    func testStoryScenesClearStaleErrorAndMarkCurrentInputPrepared() {
+    func testVideoDirectionScenesClearStaleErrorAndMarkCurrentInputPrepared() {
         let viewModel = AnimateCreateViewModel()
         let media = AnimateCreateTestFixtures.makeSelectedMedia(
             id: "00000000-0000-0000-0000-000000000001"
@@ -336,7 +336,7 @@ final class AnimateCreateViewModelVideoDirectionStateTests: XCTestCase {
         XCTAssertTrue(viewModel.isVideoDirectionPreparedForCurrentInput)
     }
 
-    func testCurrentStorySignaturePrefersLocalMediaWhenWorkspaceHasUploadedMedia() {
+    func testCurrentVideoDirectionSignaturePrefersLocalMediaWhenWorkspaceHasUploadedMedia() {
         let viewModel = AnimateCreateViewModel()
         let localMedia = AnimateCreateTestFixtures.makeSelectedMedia(
             id: "00000000-0000-0000-0000-000000000001",
@@ -409,7 +409,7 @@ final class AnimateCreateViewModelVideoDirectionStateTests: XCTestCase {
         XCTAssertNotEqual(viewModel.currentVideoDirectionInputSignature(momentId: "moment-1"), backendMediaSignature)
     }
 
-    func testWorkspaceSignatureReconcilesAfterStoryScenesArriveFirst() {
+    func testWorkspaceSignatureReconcilesAfterVideoDirectionScenesArriveFirst() {
         let viewModel = AnimateCreateViewModel()
         let localMedia = AnimateCreateTestFixtures.makeSelectedMedia(
             id: "00000000-0000-0000-0000-000000000001",
@@ -418,7 +418,7 @@ final class AnimateCreateViewModelVideoDirectionStateTests: XCTestCase {
         let backendMedia = makeBackendMedia()
         let backendSignature = viewModel.currentVideoDirectionInputSignature(
             momentId: "moment-1",
-            persistedMedia: [makeStoryMedia(from: backendMedia)]
+            persistedMedia: [makeVideoDirectionMedia(from: backendMedia)]
         )
 
         viewModel.applyVideoCreationState(
@@ -472,13 +472,13 @@ final class AnimateCreateViewModelVideoDirectionStateTests: XCTestCase {
         XCTAssertTrue(viewModel.isVideoDirectionPreparedForCurrentInput)
     }
 
-    func testRestoredLocalMediaDoesNotInvalidatePreparedBackendStory() {
+    func testRestoredLocalMediaDoesNotInvalidatePreparedBackendVideoDirection() {
         let viewModel = AnimateCreateViewModel()
         let syncedLocalMedia = AnimateCreateTestFixtures.makeSelectedMedia(
             id: "00000000-0000-0000-0000-000000000001",
             sourceLocalIdentifier: "local-asset-1"
         )
-        let preparedStory = applyPreparedBackendStory(to: viewModel)
+        let preparedVideoDirection = applyPreparedBackendVideoDirection(to: viewModel)
         viewModel.applyMediaUploadState(
             AnimateCreateMediaUploadState(
                 selectedMedia: [syncedLocalMedia],
@@ -488,13 +488,13 @@ final class AnimateCreateViewModelVideoDirectionStateTests: XCTestCase {
             )
         )
 
-        XCTAssertEqual(viewModel.currentVideoDirectionInputSignature(momentId: "moment-1"), preparedStory.signature)
+        XCTAssertEqual(viewModel.currentVideoDirectionInputSignature(momentId: "moment-1"), preparedVideoDirection.signature)
         XCTAssertTrue(viewModel.isVideoDirectionPreparedForCurrentInput)
     }
 
-    func testDirectionChangeInvalidatesPreparedBackendStoryWithRestoredLocalMedia() {
+    func testDirectionChangeInvalidatesPreparedBackendVideoDirectionWithRestoredLocalMedia() {
         let viewModel = AnimateCreateViewModel()
-        applyPreparedBackendStory(to: viewModel)
+        applyPreparedBackendVideoDirection(to: viewModel)
 
         XCTAssertTrue(viewModel.isVideoDirectionPreparedForCurrentInput)
 
@@ -503,9 +503,9 @@ final class AnimateCreateViewModelVideoDirectionStateTests: XCTestCase {
         XCTAssertFalse(viewModel.isVideoDirectionPreparedForCurrentInput)
     }
 
-    func testExplicitMediaEditInvalidatesPreparedBackendStory() {
+    func testExplicitMediaEditInvalidatesPreparedBackendVideoDirection() {
         let viewModel = AnimateCreateViewModel()
-        let preparedStory = applyPreparedBackendStory(to: viewModel)
+        let preparedVideoDirection = applyPreparedBackendVideoDirection(to: viewModel)
 
         XCTAssertTrue(viewModel.isVideoDirectionPreparedForCurrentInput)
 
@@ -532,9 +532,9 @@ final class AnimateCreateViewModelVideoDirectionStateTests: XCTestCase {
                     video: AnimateCreateTestFixtures.makeVideo(
                         id: "moment-1",
                         occasion: "Birthday",
-                        storyInputSignature: preparedStory.signature
+                        storyInputSignature: preparedVideoDirection.signature
                     ),
-                    mediaAssets: [preparedStory.media],
+                    mediaAssets: [preparedVideoDirection.media],
                     storyScenes: [AnimateCreateTestFixtures.makeScene(id: "scene-1")],
                     renderJobs: [],
                     artifacts: []
@@ -551,7 +551,7 @@ final class AnimateCreateViewModelVideoDirectionStateTests: XCTestCase {
 
     func testExplicitMediaEditInvalidatesPreparedFinalRenderPlan() {
         let viewModel = AnimateCreateViewModel()
-        applyPreparedBackendStory(to: viewModel)
+        applyPreparedBackendVideoDirection(to: viewModel)
         viewModel.applyFinalRenderState(
             AnimateCreateFinalRenderState(
                 finalExport: nil,
@@ -640,7 +640,7 @@ final class AnimateCreateViewModelVideoDirectionStateTests: XCTestCase {
         XCTAssertNotNil(viewModel.finalRenderSummary.renderPlan)
     }
 
-    func testGenerateStoryShowsImmediateVideoCreationError() async {
+    func testPrepareVideoDirectionShowsImmediateVideoCreationError() async {
         let harness = AnimateVideoCreationFailureHarness(error: AnimateSyncError.notConfigured)
         let viewModel = AnimateCreateViewModel()
         viewModel.bind(
@@ -677,13 +677,13 @@ final class AnimateCreateViewModelVideoDirectionStateTests: XCTestCase {
 
         viewModel.prepareVideoDirection()
         await fulfillment(of: [harness.createAttemptExpectation], timeout: 1)
-        await waitForStoryStatusMessage(in: viewModel)
+        await waitForVideoDirectionStatusMessage(in: viewModel)
 
         XCTAssertEqual(viewModel.videoDirectionSummary.statusMessage, AnimateSyncError.notConfigured.localizedDescription)
     }
 
     @discardableResult
-    private func applyPreparedBackendStory(
+    private func applyPreparedBackendVideoDirection(
         to viewModel: AnimateCreateViewModel,
         momentId: String = "moment-1"
     ) -> (media: AnimateMediaAsset, signature: String) {
@@ -697,7 +697,7 @@ final class AnimateCreateViewModelVideoDirectionStateTests: XCTestCase {
         )
         let signature = viewModel.currentVideoDirectionInputSignature(
             momentId: momentId,
-            persistedMedia: [makeStoryMedia(from: media)]
+            persistedMedia: [makeVideoDirectionMedia(from: media)]
         )
         viewModel.applyVideoDirectionState(
             AnimateCreateVideoDirectionState(
@@ -736,7 +736,7 @@ final class AnimateCreateViewModelVideoDirectionStateTests: XCTestCase {
         )
     }
 
-    private func makeStoryMedia(from media: AnimateMediaAsset) -> AnimateVideoDirectionMedia {
+    private func makeVideoDirectionMedia(from media: AnimateMediaAsset) -> AnimateVideoDirectionMedia {
         AnimateVideoDirectionMedia(
             mediaAssetId: media.id,
             mediaKind: media.kind,
@@ -746,7 +746,7 @@ final class AnimateCreateViewModelVideoDirectionStateTests: XCTestCase {
         )
     }
 
-    private func waitForStoryStatusMessage(in viewModel: AnimateCreateViewModel) async {
+    private func waitForVideoDirectionStatusMessage(in viewModel: AnimateCreateViewModel) async {
         for _ in 0..<20 where viewModel.videoDirectionSummary.statusMessage == nil {
             try? await Task.sleep(nanoseconds: 25_000_000)
         }

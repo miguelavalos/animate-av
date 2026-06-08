@@ -248,7 +248,7 @@ final class AnimateAPIClientTests: XCTestCase {
         XCTAssertEqual(AnimateURLProtocolMock.requestCount, 2)
     }
 
-    func testStoryUsesSharedAccountAPIBaseURL() async throws {
+    func testVideoDirectionUsesSharedAccountAPIBaseURL() async throws {
         let session = makeMockSession(
             json: """
             {
@@ -282,7 +282,7 @@ final class AnimateAPIClientTests: XCTestCase {
         XCTAssertEqual(AnimateURLProtocolMock.lastRequest?.value(forHTTPHeaderField: "Authorization"), "Bearer token-1")
     }
 
-    func testStoryRetriesTransientNetworkLoss() async throws {
+    func testVideoDirectionRetriesTransientNetworkLoss() async throws {
         AnimateURLProtocolMock.failuresBeforeSuccess = 1
         let session = makeMockSession(
             json: """

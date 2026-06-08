@@ -635,7 +635,7 @@ final class AnimateCreateWorkflowPresentationTests: XCTestCase {
         XCTAssertEqual(presentation.statusMessage, "Uploading media for video creation.")
     }
 
-    func testPrimaryActionPresentationUsesCreateVideoForInternalStoryPreflight() {
+    func testPrimaryActionPresentationUsesCreateVideoForInternalVideoDirectionPreflight() {
         let presentation = AnimateCreatePrimaryActionPresentation(
             workflow: AnimateCreateWorkflowPresentation(
                 activeVideoId: "moment-1",
@@ -853,7 +853,7 @@ final class AnimateCreateWorkflowPresentationTests: XCTestCase {
         XCTAssertEqual(presentation.detail, "We couldn’t finish this video. No credits were charged.")
     }
 
-    func testRecoveryCopyCoversMediaAndStoryFailurePaths() {
+    func testRecoveryCopyCoversMediaAndVideoDirectionFailurePaths() {
         XCTAssertEqual(
             AnimateRecoveryCopy.mediaImportFailure(),
             "Couldn’t add that photo. It is still on this device; try again or choose a different image."

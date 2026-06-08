@@ -116,7 +116,7 @@ final class AnimateCreateAvailabilityPresentationTests: XCTestCase {
         )
     }
 
-    func testAvailabilityMessageFactoryFormatsStoryStates() {
+    func testAvailabilityMessageFactoryFormatsVideoDirectionStates() {
         XCTAssertEqual(
             AnimateCreateAvailabilityMessageFactory.story(
                 isSignedIn: true,
@@ -144,7 +144,7 @@ final class AnimateCreateAvailabilityPresentationTests: XCTestCase {
         )
     }
 
-    func testAvailabilityMessageFactoryFormatsFinalRenderStoryRequirement() {
+    func testAvailabilityMessageFactoryFormatsFinalRenderVideoDirectionRequirement() {
         XCTAssertEqual(
             AnimateCreateAvailabilityMessageFactory.finalRender(
                 activeVideoId: "moment-1",
