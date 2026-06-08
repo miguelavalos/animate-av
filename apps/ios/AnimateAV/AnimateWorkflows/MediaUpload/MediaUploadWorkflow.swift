@@ -394,10 +394,10 @@ final class MediaUploadWorkflow: WorkspaceObservingWorkflow {
         }
 
         if skippedDuplicateCount > 0 {
-            let momentWord = importedCount == 1
+            let itemWord = importedCount == 1
                 ? L10n.string("moment.noun.one")
                 : L10n.string("moment.noun.other")
-            return L10n.string("create.media.status.addedSkippingDuplicates", importedCount, momentWord, skippedDuplicateCount)
+            return L10n.string("create.media.status.addedSkippingDuplicates", importedCount, itemWord, skippedDuplicateCount)
         }
 
         return L10n.string("create.media.status.ready")

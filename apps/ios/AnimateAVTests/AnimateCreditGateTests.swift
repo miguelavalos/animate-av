@@ -118,7 +118,7 @@ final class AnimateCreditGateTests: XCTestCase {
     }
 
     func testContinuingSetupFormUsesVideoFieldsAndFallbacks() {
-        let moment = AnimateVideo(
+        let video = AnimateVideo(
             id: "moment-1",
             template: .birthdayMessage,
             status: "in_progress",
@@ -133,7 +133,7 @@ final class AnimateCreditGateTests: XCTestCase {
         )
 
         let form = AnimateVideoSetupForm.continuing(
-            video: moment,
+            video: video,
             templates: AnimateVideoTemplate.launchTemplates
         )
 
@@ -227,7 +227,7 @@ final class AnimateCreditGateTests: XCTestCase {
 
     func testFinalRenderRulesRequireReadyStatusAndCredits() {
         let balance = AnimateCreditBalance(proMonthly: 0, promotional: 0, purchased: 2)
-        let moment = AnimateVideo(
+        let video = AnimateVideo(
             id: "moment-1",
             template: .birthdayMessage,
             status: "story_ready",
@@ -242,7 +242,7 @@ final class AnimateCreditGateTests: XCTestCase {
         )
         XCTAssertTrue(
             AnimateFinalRenderRules.canGenerate(
-                video: moment,
+                video: video,
                 template: .birthdayMessage,
                 balance: balance
             )

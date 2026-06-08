@@ -9,11 +9,11 @@ final class AnimateInProgressObserverTests: XCTestCase {
         let observer = AnimateInProgressObserver(animateRepository: repository)
 
         observer.observeAnimateVideos(ownerUserId: "user-1")
-        let moment = makeVideo(id: "moment-1")
-        repository.sendVideos([moment])
-        await waitUntil { observer.videos == [moment] }
+        let video = makeVideo(id: "moment-1")
+        repository.sendVideos([video])
+        await waitUntil { observer.videos == [video] }
 
-        XCTAssertEqual(observer.videos, [moment])
+        XCTAssertEqual(observer.videos, [video])
         XCTAssertNil(observer.errorMessage)
         XCTAssertEqual(repository.observedOwnerUserIds, ["user-1"])
     }

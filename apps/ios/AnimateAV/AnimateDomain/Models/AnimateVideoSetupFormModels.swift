@@ -69,8 +69,8 @@ struct AnimateVideoSetupForm: Equatable {
     var title: String {
         let trimmedRecipient = recipient.trimmingCharacters(in: .whitespacesAndNewlines)
         let trimmedOccasion = occasion.trimmingCharacters(in: .whitespacesAndNewlines)
-        let momentTitle = trimmedOccasion.isEmpty ? template.title : trimmedOccasion
-        return trimmedRecipient.isEmpty ? momentTitle : "\(momentTitle) for \(trimmedRecipient)"
+        let videoTitle = trimmedOccasion.isEmpty ? template.title : trimmedOccasion
+        return trimmedRecipient.isEmpty ? videoTitle : "\(videoTitle) for \(trimmedRecipient)"
     }
 
     var canCreateVideo: Bool {

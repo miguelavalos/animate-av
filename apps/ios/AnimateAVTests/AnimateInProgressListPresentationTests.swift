@@ -32,13 +32,13 @@ final class AnimateInProgressListPresentationTests: XCTestCase {
     }
 
     func testRowPresentationFormatsVideoMetadataAndSelection() {
-        let moment = makeVideo(
+        let video = makeVideo(
             id: "moment-1",
             status: "story_ready",
             title: "Family Weekend",
             creditCost: 3,
         )
-        let row = AnimateInProgressListRowPresentation(video: moment, isSelected: true)
+        let row = AnimateInProgressListRowPresentation(video: video, isSelected: true)
 
         XCTAssertEqual(row.id, "moment-1")
         XCTAssertEqual(row.title, "Family Weekend")

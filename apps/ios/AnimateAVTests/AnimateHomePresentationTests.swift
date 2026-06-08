@@ -39,13 +39,13 @@ final class AnimateHomePresentationTests: XCTestCase {
     }
 
     func testLatestInProgressVideoAddsContinuationAction() {
-        let moment = makeVideo(id: "latest-plan", status: "story_ready", updatedAt: 20)
+        let video = makeVideo(id: "latest-plan", status: "story_ready", updatedAt: 20)
         let presentation = AnimateHomePresentation.make(
             isSignedIn: true,
             displayName: nil,
             videosSummary: AnimateInProgressSummary.make(from: [
                 makeVideo(id: "finished", status: "gallery_ready", updatedAt: 30),
-                moment
+                video
             ])
         )
 

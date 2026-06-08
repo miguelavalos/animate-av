@@ -46,8 +46,8 @@ final class AnimateInProgressViewModel: ObservableObject {
 
         workflow.activeVideoPublisher
             .receive(on: DispatchQueue.main)
-            .sink { [weak self] moment in
-                self?.activeVideo = moment
+            .sink { [weak self] video in
+                self?.activeVideo = video
             }
             .store(in: &workflowCancellables)
 

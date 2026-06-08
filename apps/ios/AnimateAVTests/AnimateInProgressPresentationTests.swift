@@ -58,11 +58,11 @@ final class AnimateInProgressPresentationTests: XCTestCase {
             videosSummary: AnimateInProgressSummary(),
             videoPendingDeletion: nil
         )
-        let moment = makeVideo(id: "moment-1", title: "Family Weekend")
+        let video = makeVideo(id: "moment-1", title: "Family Weekend")
         let titled = AnimateInProgressPresentation.make(
             isSignedIn: true,
             videosSummary: AnimateInProgressSummary(),
-            videoPendingDeletion: moment
+            videoPendingDeletion: video
         )
 
         XCTAssertEqual(

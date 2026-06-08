@@ -64,7 +64,7 @@ fi
 eval "$("$suite_root/scripts/resolve-infisical-bootstrap-env.sh" local)"
 export INFISICAL_ENVIRONMENT="$env_name"
 
-tmpdir="$(mktemp -d "$suite_root/tmp/moments-ios-config.XXXXXX")"
+tmpdir="$(mktemp -d "$suite_root/tmp/animate-ios-config.XXXXXX")"
 cleanup() {
   rm -rf "$tmpdir"
 }
@@ -164,7 +164,7 @@ escape_xcconfig_value() {
   printf '%s' "$1" | sed 's#/#$(XCCONFIG_SLASH)#g'
 }
 
-moments_convex_url="$(read_required_config ANIMATEAV_CONVEX_URL)"
+animate_convex_url="$(read_required_config ANIMATEAV_CONVEX_URL)"
 account_api_base_url="$(read_required_config ACCOUNTAV_API_BASE_URL)"
 account_publishable_key="$(read_required_config ACCOUNTAV_PUBLISHABLE_KEY)"
 revenuecat_api_key="$(read_required_config ANIMATEAV_REVENUECAT_PUBLIC_API_KEY)"
@@ -179,7 +179,7 @@ terms_url="$(read_required_config ANIMATEAV_TERMS_URL)"
 delete_account_url="$(read_required_config ACCOUNTAV_DELETE_ACCOUNT_URL)"
 open_source_url="$(read_required_config ANIMATEAV_OPEN_SOURCE_URL)"
 
-require_http_url ANIMATEAV_CONVEX_URL "$moments_convex_url"
+require_http_url ANIMATEAV_CONVEX_URL "$animate_convex_url"
 require_http_url ACCOUNTAV_API_BASE_URL "$account_api_base_url"
 require_http_url SUPPORTAV_BASE_URL "$support_base_url"
 case "$support_email_to" in
@@ -220,7 +220,7 @@ ANIMATEAV_REVENUECAT_OFFERING_ID = $revenuecat_offering_id
 ANIMATEAV_REVENUECAT_MONTHLY_PACKAGE_ID = $revenuecat_monthly_package_id
 ANIMATEAV_IOS_SENTRY_DSN = $(escape_xcconfig_value "$animateav_ios_sentry_dsn")
 ACCOUNTAV_API_BASE_URL = $(escape_xcconfig_value "$account_api_base_url")
-ANIMATEAV_CONVEX_URL = $(escape_xcconfig_value "$moments_convex_url")
+ANIMATEAV_CONVEX_URL = $(escape_xcconfig_value "$animate_convex_url")
 SUPPORTAV_BASE_URL = $(escape_xcconfig_value "$support_base_url")
 SUPPORT_EMAIL_TO = $support_email_to
 ANIMATEAV_PRIVACY_URL = $(escape_xcconfig_value "$privacy_url")
