@@ -11,7 +11,7 @@ final class AnimateCreateAvailabilityPresentationTests: XCTestCase {
             canGenerateFinalRender: true,
             canRefreshFinalRenderStatus: false,
             mediaMessage: "Media",
-            storyMessage: "Story",
+            videoDirectionMessage: "Direction",
             finalRenderMessage: "Final"
         )
 
@@ -21,7 +21,7 @@ final class AnimateCreateAvailabilityPresentationTests: XCTestCase {
         XCTAssertTrue(availability.canGenerateFinalRender)
         XCTAssertFalse(availability.canRefreshFinalRenderStatus)
         XCTAssertEqual(availability.mediaMessage, "Media")
-        XCTAssertEqual(availability.storyMessage, "Story")
+        XCTAssertEqual(availability.videoDirectionMessage, "Direction")
         XCTAssertEqual(availability.finalRenderMessage, "Final")
     }
 

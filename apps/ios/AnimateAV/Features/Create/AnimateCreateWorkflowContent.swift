@@ -21,7 +21,7 @@ struct AnimateCreateWorkflowContent: View {
                     styles: viewModel.creationStyles,
                     selectedMusicPreset: viewModel.selectedMusicPreset,
                     presentation: viewModel.workflowPresentation,
-                    isPreparingStory: viewModel.isPreparingStory,
+                    isPreparingVideoDirectionAction: viewModel.isPreparingVideoDirectionAction,
                     pickerItems: $pickerItems,
                     importPickerItems: viewModel.importPickerItems,
                     removeMedia: viewModel.removeMedia,
@@ -56,7 +56,7 @@ private struct AnimateCreateMediaFirstWorkspace: View {
     let styles: [AnimateVideoCreationStyle]
     let selectedMusicPreset: AnimateVideoMusicPreset
     let presentation: AnimateCreateWorkflowPresentation
-    let isPreparingStory: Bool
+    let isPreparingVideoDirectionAction: Bool
     @Binding var pickerItems: [PhotosPickerItem]
     let importPickerItems: ([PhotosPickerItem]) -> Void
     let removeMedia: (AnimateSelectedMedia) -> Void
@@ -385,7 +385,7 @@ private struct AnimateCreateMediaFirstWorkspace: View {
 
 struct AnimateCreateBlockingPreparationView: View {
     let presentation: AnimateCreateWorkflowPresentation
-    let isPreparingStory: Bool
+    let isPreparingVideoDirectionAction: Bool
     let isPreparingFinalPlan: Bool
 
     @State private var isAnimating = false
@@ -489,7 +489,7 @@ struct AnimateCreateBlockingPreparationView: View {
         if presentation.videoDirectionSummary.isPlanning {
             return .prepareStory
         }
-        if isPreparingStory {
+        if isPreparingVideoDirectionAction {
             return .uploadForVideo
         }
         return .importMedia
@@ -980,7 +980,7 @@ private struct AnimateCreateVideoDirectionCard: View {
             selectedDuration: .auto,
             renderPlan: presentation.finalRenderSummary.renderPlan?.plan,
             canRefreshVideoDirection: presentation.canPrepareVideoDirection,
-            availabilityMessage: presentation.storyAvailabilityMessage
+            availabilityMessage: presentation.videoDirectionAvailabilityMessage
         )
     }
 

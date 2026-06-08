@@ -22,7 +22,7 @@ struct AnimateCreateWorkflowPresentation: Equatable {
     var canGenerateFinalRender = false
     var canRefreshFinalRenderStatus = false
     var mediaAvailabilityMessage: String?
-    var storyAvailabilityMessage: String?
+    var videoDirectionAvailabilityMessage: String?
     var finalRenderAvailabilityMessage: String?
 
     var showsWorkflowCards: Bool {
@@ -140,7 +140,7 @@ struct AnimateCreateWorkflowPresentation: Equatable {
             canGenerateFinalRender: availability.canGenerateFinalRender,
             canRefreshFinalRenderStatus: availability.canRefreshFinalRenderStatus,
             mediaAvailabilityMessage: availability.mediaMessage,
-            storyAvailabilityMessage: availability.storyMessage,
+            videoDirectionAvailabilityMessage: availability.videoDirectionMessage,
             finalRenderAvailabilityMessage: availability.finalRenderMessage
         )
     }

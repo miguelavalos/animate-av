@@ -84,15 +84,15 @@ extension AnimateCreateViewModel {
 
     func generateStory() {
         guard canPrepareVideoDirection, let storyWorkflow else {
-            updateVideoDirectionStatusMessage(storyAvailabilityMessage ?? L10n.string("create.error.storyPreparationNotReady"))
+            updateVideoDirectionStatusMessage(videoDirectionAvailabilityMessage ?? L10n.string("create.error.storyPreparationNotReady"))
             return
         }
         let form = form
         let selectedMedia = selectedMedia
-        isPreparingStory = true
+        isPreparingVideoDirectionAction = true
 
         runOperation {
-            defer { self.isPreparingStory = false }
+            defer { self.isPreparingVideoDirectionAction = false }
             let momentId: String?
             if let activeVideoId = self.activeVideoId {
                 momentId = activeVideoId
@@ -241,7 +241,7 @@ extension AnimateCreateViewModel {
         guard canGenerateFinalRender else {
             failFinalVideoCommand(
                 finalRenderAvailabilityMessage
-                    ?? storyAvailabilityMessage
+                    ?? videoDirectionAvailabilityMessage
                     ?? L10n.string("create.error.videoCreationNotReady")
             )
             return

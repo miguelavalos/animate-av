@@ -62,7 +62,7 @@ final class AnimateCreateViewModel: ObservableObject {
     @Published private(set) var generatedScenes: [AnimateStorySceneResponse] = []
     @Published private(set) var videoDirectionStatusMessage: String?
     @Published private(set) var isPreparingVideoDirection = false
-    @Published var isPreparingStory = false
+    @Published var isPreparingVideoDirectionAction = false
     @Published private(set) var activeWorkspace: AnimateWorkspace?
     @Published private(set) var finalExport: AnimateArtifact?
     @Published private(set) var latestFinalJob: AnimateRenderJob?

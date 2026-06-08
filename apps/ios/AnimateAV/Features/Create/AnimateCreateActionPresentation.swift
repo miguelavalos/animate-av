@@ -267,8 +267,8 @@ struct AnimateCreatePrimaryActionPresentation: Equatable {
             }
             return availabilityMessage
         }
-        if let storyMessage = workflow.videoDirectionSummary.statusMessage, !storyMessage.isEmpty {
-            return storyMessage
+        if let videoDirectionMessage = workflow.videoDirectionSummary.statusMessage, !videoDirectionMessage.isEmpty {
+            return videoDirectionMessage
         }
         if let mediaMessage = workflow.mediaSummary.statusMessage, !mediaMessage.isEmpty {
             return mediaMessage
@@ -277,7 +277,7 @@ struct AnimateCreatePrimaryActionPresentation: Equatable {
             return availabilityMessage
         }
         if needsSignInForStory {
-            return workflow.storyAvailabilityMessage
+            return workflow.videoDirectionAvailabilityMessage
         }
         if workflow.canPrepareVideoDirection {
             return L10n.string("create.primary.continuePreflight")
@@ -381,10 +381,10 @@ struct AnimateCreatePrimaryActionPresentation: Equatable {
         }
         if hasFinalVideoIntent {
             return workflow.finalRenderAvailabilityMessage
-                ?? workflow.storyAvailabilityMessage
+                ?? workflow.videoDirectionAvailabilityMessage
                 ?? workflow.mediaAvailabilityMessage
         }
-        return workflow.finalRenderAvailabilityMessage ?? workflow.storyAvailabilityMessage
+        return workflow.finalRenderAvailabilityMessage ?? workflow.videoDirectionAvailabilityMessage
     }
 
     private static func isFinalRenderErrorMessage(_ message: String) -> Bool {

@@ -7,7 +7,7 @@ struct AnimateCreateWorkflowAvailability: Equatable {
     var canGenerateFinalRender = false
     var canRefreshFinalRenderStatus = false
     var mediaMessage: String?
-    var storyMessage: String?
+    var videoDirectionMessage: String?
     var finalRenderMessage: String?
 
     static func make(
@@ -17,7 +17,7 @@ struct AnimateCreateWorkflowAvailability: Equatable {
         canGenerateFinalRender: Bool,
         canRefreshFinalRenderStatus: Bool,
         mediaMessage: String?,
-        storyMessage: String?,
+        videoDirectionMessage: String?,
         finalRenderMessage: String?
     ) -> AnimateCreateWorkflowAvailability {
         AnimateCreateWorkflowAvailability(
@@ -27,7 +27,7 @@ struct AnimateCreateWorkflowAvailability: Equatable {
             canGenerateFinalRender: canGenerateFinalRender,
             canRefreshFinalRenderStatus: canRefreshFinalRenderStatus,
             mediaMessage: mediaMessage,
-            storyMessage: storyMessage,
+            videoDirectionMessage: videoDirectionMessage,
             finalRenderMessage: finalRenderMessage
         )
     }

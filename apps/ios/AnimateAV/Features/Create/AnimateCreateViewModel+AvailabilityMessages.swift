@@ -17,7 +17,7 @@ extension AnimateCreateViewModel {
         )
     }
 
-    var storyAvailabilityMessage: String? {
+    var videoDirectionAvailabilityMessage: String? {
         AnimateCreateAvailabilityMessageFactory.story(
             isSignedIn: isSignedIn,
             hasAnimateWorkspace: hasAnimateWorkspace,

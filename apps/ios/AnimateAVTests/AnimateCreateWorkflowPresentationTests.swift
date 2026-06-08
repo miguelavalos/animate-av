@@ -202,7 +202,7 @@ final class AnimateCreateWorkflowPresentationTests: XCTestCase {
             canGenerateFinalRender: true,
             canRefreshFinalRenderStatus: true,
             mediaAvailabilityMessage: "Add media.",
-            storyAvailabilityMessage: "Prepare story.",
+            videoDirectionAvailabilityMessage: "Prepare direction.",
             finalRenderAvailabilityMessage: "Generate final."
         )
 
@@ -218,7 +218,7 @@ final class AnimateCreateWorkflowPresentationTests: XCTestCase {
         XCTAssertTrue(presentation.canGenerateFinalRender)
         XCTAssertTrue(presentation.canRefreshFinalRenderStatus)
         XCTAssertEqual(presentation.mediaAvailabilityMessage, "Add media.")
-        XCTAssertEqual(presentation.storyAvailabilityMessage, "Prepare story.")
+        XCTAssertEqual(presentation.videoDirectionAvailabilityMessage, "Prepare direction.")
         XCTAssertEqual(presentation.finalRenderAvailabilityMessage, "Generate final.")
     }
 
@@ -245,7 +245,7 @@ final class AnimateCreateWorkflowPresentationTests: XCTestCase {
                 canGenerateFinalRender: true,
                 canRefreshFinalRenderStatus: false,
                 mediaMessage: nil,
-                storyMessage: "Prepare story.",
+                videoDirectionMessage: "Prepare direction.",
                 finalRenderMessage: nil
             )
         )
@@ -257,7 +257,7 @@ final class AnimateCreateWorkflowPresentationTests: XCTestCase {
         XCTAssertEqual(presentation.toneTitle, "Warm")
         XCTAssertEqual(presentation.tempoTitle, "Balanced")
         XCTAssertEqual(presentation.occasionTitle, "Birthday for Ava")
-        XCTAssertEqual(presentation.storyAvailabilityMessage, "Prepare story.")
+        XCTAssertEqual(presentation.videoDirectionAvailabilityMessage, "Prepare direction.")
     }
 
     func testWorkflowPresentationCarriesUnsavedLocalVideoContainmentState() {

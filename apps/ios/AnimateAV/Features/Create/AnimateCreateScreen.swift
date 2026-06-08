@@ -89,7 +89,7 @@ struct AnimateCreateScreen: View {
             isPresented: Binding(
                 get: {
                     viewModel.workflowPresentation.showsBlockingPreparation
-                        || viewModel.isPreparingStory
+                        || viewModel.isPreparingVideoDirectionAction
                         || viewModel.isPreparingFinalPlan
                 },
                 set: { _ in }
@@ -97,7 +97,7 @@ struct AnimateCreateScreen: View {
         ) {
             AnimateCreateBlockingPreparationView(
                 presentation: viewModel.workflowPresentation,
-                isPreparingStory: viewModel.isPreparingStory,
+                isPreparingVideoDirectionAction: viewModel.isPreparingVideoDirectionAction,
                 isPreparingFinalPlan: viewModel.isPreparingFinalPlan
             )
             .interactiveDismissDisabled()

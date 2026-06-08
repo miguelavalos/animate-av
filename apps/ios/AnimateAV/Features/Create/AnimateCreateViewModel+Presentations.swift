@@ -28,7 +28,7 @@ extension AnimateCreateViewModel {
             canGenerateFinalRender: canGenerateFinalRender,
             canRefreshFinalRenderStatus: canRefreshFinalRenderStatus,
             mediaMessage: mediaAvailabilityMessage,
-            storyMessage: storyAvailabilityMessage,
+            videoDirectionMessage: videoDirectionAvailabilityMessage,
             finalRenderMessage: finalRenderAvailabilityMessage
         )
     }
