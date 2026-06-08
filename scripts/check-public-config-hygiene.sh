@@ -5,7 +5,11 @@ repo_root="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 cd "$repo_root"
 
 tracked_files() {
-  git ls-files -z | grep -z -v '^scripts/check-public-config-hygiene\.sh$'
+  while IFS= read -r -d '' path; do
+    if [[ "$path" != "scripts/check-public-config-hygiene.sh" && -f "$path" ]]; then
+      printf '%s\0' "$path"
+    fi
+  done < <(git ls-files -z)
 }
 
 for forbidden_path in \

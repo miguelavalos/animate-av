@@ -177,7 +177,7 @@ final class AnimateStatusRulesTests: XCTestCase {
 
     private func makeWorkspace(
         mediaAssets: [AnimateMediaAsset] = [],
-        storyScenes: [AnimateStoryScene] = [],
+        storyScenes: [AnimateVideoDirectionScene] = [],
         renderJobs: [AnimateRenderJob] = [],
         artifacts: [AnimateArtifact] = []
     ) -> AnimateWorkspace {
@@ -204,8 +204,8 @@ final class AnimateStatusRulesTests: XCTestCase {
         )
     }
 
-    private func makeStoryScene() -> AnimateStoryScene {
-        AnimateStoryScene(
+    private func makeStoryScene() -> AnimateVideoDirectionScene {
+        AnimateVideoDirectionScene(
             id: "scene-1",
             sceneIndex: 0,
             mediaAssetIds: ["media-1"],

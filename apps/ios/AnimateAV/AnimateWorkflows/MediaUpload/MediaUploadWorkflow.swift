@@ -119,7 +119,7 @@ final class MediaUploadWorkflow: WorkspaceObservingWorkflow {
         }
     }
 
-    func persistSelectedMedia(momentId: String) async -> [AnimateStoryMedia]? {
+    func persistSelectedMedia(momentId: String) async -> [AnimateVideoDirectionMedia]? {
         await persistSelectedMedia(
             momentId: momentId,
             requiresProductStateSave: true,
@@ -141,7 +141,7 @@ final class MediaUploadWorkflow: WorkspaceObservingWorkflow {
         momentId: String,
         requiresProductStateSave: Bool,
         saveFailureMessage: String
-    ) async -> [AnimateStoryMedia]? {
+    ) async -> [AnimateVideoDirectionMedia]? {
         guard let ownerUserId = currentUserProvider.currentUserId else {
             statusMessage = L10n.string("workflow.media.signInPrepareStory")
             return nil
@@ -154,15 +154,15 @@ final class MediaUploadWorkflow: WorkspaceObservingWorkflow {
             .filter(\.selected)
             .sorted { $0.sortOrder < $1.sortOrder }
         if mediaToSave.isEmpty {
-            return activeWorkspaceStoryMedia
+            return activeWorkspaceVideoDirectionMedia
         }
         let syncedMediaBySourceIdentifier = (activeWorkspace?.mediaAssets ?? []).reduce(into: [String: AnimateMediaAsset]()) {
             guard let sourceIdentifier = $1.platformMediaAssetId else { return }
             $0[sourceIdentifier] = $1
         }
-        let alreadySyncedMedia = mediaToSave.compactMap { media -> AnimateStoryMedia? in
+        let alreadySyncedMedia = mediaToSave.compactMap { media -> AnimateVideoDirectionMedia? in
             guard let synced = syncedMediaBySourceIdentifier[media.sourceLocalIdentifier] else { return nil }
-            return AnimateStoryMedia(
+            return AnimateVideoDirectionMedia(
                 mediaAssetId: synced.id,
                 mediaKind: synced.kind,
                 sortOrder: media.sortOrder,
@@ -410,13 +410,13 @@ final class MediaUploadWorkflow: WorkspaceObservingWorkflow {
         )
     }
 
-    private var activeWorkspaceStoryMedia: [AnimateStoryMedia] {
+    private var activeWorkspaceVideoDirectionMedia: [AnimateVideoDirectionMedia] {
         let mediaAssets = activeWorkspace?.mediaAssets ?? []
         let selectedAssets = mediaAssets.filter(\.selected)
         return (selectedAssets.isEmpty ? mediaAssets : selectedAssets)
             .sorted { $0.sortOrder < $1.sortOrder }
             .map {
-                AnimateStoryMedia(
+                AnimateVideoDirectionMedia(
                     mediaAssetId: $0.id,
                     mediaKind: $0.kind,
                     sortOrder: Int($0.sortOrder),

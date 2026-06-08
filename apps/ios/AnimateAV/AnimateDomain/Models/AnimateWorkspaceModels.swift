@@ -3,7 +3,7 @@ import Foundation
 struct AnimateWorkspace: Decodable, Equatable {
     let video: AnimateVideo
     let mediaAssets: [AnimateMediaAsset]
-    let storyScenes: [AnimateStoryScene]
+    let storyScenes: [AnimateVideoDirectionScene]
     let renderJobs: [AnimateRenderJob]
     let artifacts: [AnimateArtifact]
 

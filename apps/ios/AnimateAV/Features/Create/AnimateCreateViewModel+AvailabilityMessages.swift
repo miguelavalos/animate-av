@@ -21,9 +21,9 @@ extension AnimateCreateViewModel {
         AnimateCreateAvailabilityMessageFactory.story(
             isSignedIn: isSignedIn,
             hasActiveVideoWorkspace: hasActiveVideoWorkspace,
-            isStoryPlanning: storyWorkflow?.isPlanning ?? false,
-            isStoryAvailable: storyWorkflow != nil,
-            isStoryConfigured: storyWorkflow?.isConfigured ?? false,
+            isStoryPlanning: videoDirectionWorkflow?.isPlanning ?? false,
+            isStoryAvailable: videoDirectionWorkflow != nil,
+            isStoryConfigured: videoDirectionWorkflow?.isConfigured ?? false,
             mediaAssets: effectiveActiveWorkspace?.mediaAssets,
             selectedMediaCount: mediaSelectedCount,
             template: form.template

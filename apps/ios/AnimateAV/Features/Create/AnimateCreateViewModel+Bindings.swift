@@ -6,13 +6,13 @@ extension AnimateCreateViewModel {
         accountStateProvider: any AnimateAccountStateProviding,
         videoCreationWorkflow: AnimateVideoCreationWorkflow,
         mediaUploadWorkflow: MediaUploadWorkflow,
-        storyWorkflow: StoryWorkflow,
+        videoDirectionWorkflow: VideoDirectionWorkflow,
         finalRenderWorkflow: FinalRenderWorkflow
     ) {
         bindAccount(accountStateProvider)
         bindVideoCreation(videoCreationWorkflow)
         bindMediaUpload(mediaUploadWorkflow)
-        bindStory(storyWorkflow)
+        bindVideoDirection(videoDirectionWorkflow)
         bindFinalRender(finalRenderWorkflow)
     }
 
@@ -75,7 +75,7 @@ extension AnimateCreateViewModel {
             .store(in: &cancellables)
     }
 
-    private func bindStory(_ workflow: StoryWorkflow) {
+    private func bindVideoDirection(_ workflow: VideoDirectionWorkflow) {
         Publishers.CombineLatest4(
             workflow.$activeWorkspace,
             workflow.$generatedPlan.map { $0?.scenes ?? [] },

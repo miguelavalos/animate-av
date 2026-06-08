@@ -4,7 +4,7 @@ import SwiftUI
 
 struct AnimateCreateVideoDirectionPreparationCard: View {
     let presentation: AnimateCreateVideoDirectionPreparationPresentation
-    let generateStory: () -> Void
+    let prepareVideoDirection: () -> Void
 
     var body: some View {
         AVAppShellCard {
@@ -20,7 +20,7 @@ struct AnimateCreateVideoDirectionPreparationCard: View {
                     presentation.planButtonTitle,
                     systemImage: "text.bubble.fill",
                     isDisabled: !presentation.canPrepareVideoDirection || presentation.summary.isPlanning,
-                    action: generateStory
+                    action: prepareVideoDirection
                 )
 
                 if let availabilityMessage = presentation.availabilityMessage {

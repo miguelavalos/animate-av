@@ -268,7 +268,7 @@ final class AnimateAPIClientTests: XCTestCase {
             }
             """
         )
-        let client = AnimateStoryClient(baseURLString: accountAPIBaseURL, session: session)
+        let client = AnimateVideoDirectionClient(baseURLString: accountAPIBaseURL, session: session)
 
         _ = try await client.generatePlan(
             momentId: "moment-1",
@@ -303,7 +303,7 @@ final class AnimateAPIClientTests: XCTestCase {
             }
             """
         )
-        let client = AnimateStoryClient(
+        let client = AnimateVideoDirectionClient(
             baseURLString: accountAPIBaseURL,
             session: session,
             retryPolicy: AnimateNetworkRetryPolicy(maximumRetries: 1, baseDelayNanoseconds: 1)

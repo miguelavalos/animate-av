@@ -32,7 +32,7 @@ final class AnimateCreateAvailabilityPresentationTests: XCTestCase {
             hasActiveVideoWorkspace: true,
             isImportingMedia: false,
             mediaRemainingSlots: 2,
-            storyWorkflow: nil,
+            videoDirectionWorkflow: nil,
             finalRenderWorkflow: nil,
             template: .birthdayMessage,
             selectedMediaCount: 0
@@ -52,7 +52,7 @@ final class AnimateCreateAvailabilityPresentationTests: XCTestCase {
             hasActiveVideoWorkspace: true,
             isImportingMedia: false,
             mediaRemainingSlots: 0,
-            storyWorkflow: nil,
+            videoDirectionWorkflow: nil,
             finalRenderWorkflow: nil,
             template: .birthdayMessage,
             selectedMediaCount: 0
@@ -63,7 +63,7 @@ final class AnimateCreateAvailabilityPresentationTests: XCTestCase {
             hasActiveVideoWorkspace: false,
             isImportingMedia: false,
             mediaRemainingSlots: 2,
-            storyWorkflow: nil,
+            videoDirectionWorkflow: nil,
             finalRenderWorkflow: nil,
             template: .birthdayMessage,
             selectedMediaCount: 0

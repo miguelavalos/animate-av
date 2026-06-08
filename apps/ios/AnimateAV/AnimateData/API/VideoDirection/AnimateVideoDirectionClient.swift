@@ -1,6 +1,6 @@
 import Foundation
 
-struct AnimateStoryClient {
+struct AnimateVideoDirectionClient {
     var baseURLString: String
     var session: URLSession = .shared
     var retryPolicy = AnimateNetworkRetryPolicy()
@@ -15,12 +15,12 @@ struct AnimateStoryClient {
         bearerToken: String,
         form: AnimateVideoSetupForm,
         mediaAssets: [AnimateMediaAsset]
-    ) async throws -> AnimateStoryResponse {
+    ) async throws -> AnimateVideoDirectionResponse {
         let selectedMedia = mediaAssets
             .filter(\.selected)
             .sorted { left, right in left.sortOrder < right.sortOrder }
             .map {
-                AnimateStoryMedia(
+                AnimateVideoDirectionMedia(
                     mediaAssetId: $0.id,
                     mediaKind: $0.kind,
                     sortOrder: Int($0.sortOrder),
@@ -43,10 +43,10 @@ struct AnimateStoryClient {
         ownerUserId: String,
         bearerToken: String,
         form: AnimateVideoSetupForm,
-        selectedMedia: [AnimateStoryMedia]
-    ) async throws -> AnimateStoryResponse {
+        selectedMedia: [AnimateVideoDirectionMedia]
+    ) async throws -> AnimateVideoDirectionResponse {
         guard let baseURL = URL(string: baseURLString.trimmingCharacters(in: .whitespacesAndNewlines)) else {
-            throw AnimateStoryError.apiNotConfigured
+            throw AnimateVideoDirectionError.apiNotConfigured
         }
 
         let endpoint = baseURL
@@ -56,7 +56,7 @@ struct AnimateStoryClient {
             .appendingPathComponent("story")
             .appendingPathComponent("plans")
 
-        let requestBody = AnimateStoryRequest(
+        let requestBody = AnimateVideoDirectionRequest(
             momentId: momentId,
             creationMode: form.creationMode.rawValue,
             look: form.look.rawValue,
@@ -67,7 +67,7 @@ struct AnimateStoryClient {
             occasion: form.occasion,
             details: form.details,
             media: selectedMedia,
-            idempotencyKey: "story:\(momentId):\(AnimateStoryInputSignature.make(momentId: momentId, form: form, selectedMedia: selectedMedia))"
+            idempotencyKey: "story:\(momentId):\(AnimateVideoDirectionInputSignature.make(momentId: momentId, form: form, selectedMedia: selectedMedia))"
         )
 
         var request = URLRequest(url: endpoint)
@@ -81,17 +81,17 @@ struct AnimateStoryClient {
             let apiError = AnimateAPIError.decode(
                 from: data,
                 fallbackCode: "moments_story_plan_failed",
-                fallbackMessage: AnimateStoryError.planFailed.localizedDescription
+                fallbackMessage: AnimateVideoDirectionError.planFailed.localizedDescription
             )
             throw apiError
         }
 
-        let plan = try JSONDecoder().decode(AnimateStoryResponse.self, from: data)
+        let plan = try JSONDecoder().decode(AnimateVideoDirectionResponse.self, from: data)
         if plan.status == "blocked" {
-            throw AnimateStoryError.blocked(plan.errorMessage ?? "Avi needs safer inputs before preparing this video.")
+            throw AnimateVideoDirectionError.blocked(plan.errorMessage ?? "Avi needs safer inputs before preparing this video.")
         }
         if plan.status == "provider_failed" {
-            throw AnimateStoryError.providerFailed(plan.errorMessage ?? "Video direction failed.")
+            throw AnimateVideoDirectionError.providerFailed(plan.errorMessage ?? "Video direction failed.")
         }
 
         return plan
@@ -115,7 +115,7 @@ struct AnimateStoryClient {
     }
 }
 
-enum AnimateStoryError: LocalizedError {
+enum AnimateVideoDirectionError: LocalizedError {
     case apiNotConfigured
     case planFailed
     case blocked(String)

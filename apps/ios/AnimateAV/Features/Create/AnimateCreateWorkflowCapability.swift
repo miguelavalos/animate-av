@@ -8,7 +8,7 @@ enum AnimateCreateWorkflowCapabilityFactory {
         hasActiveVideoWorkspace: Bool,
         isImportingMedia: Bool,
         mediaRemainingSlots: Int,
-        storyWorkflow: StoryWorkflow?,
+        videoDirectionWorkflow: VideoDirectionWorkflow?,
         finalRenderWorkflow: FinalRenderWorkflow?,
         creditBalanceLoadState: AnimateCreditBalanceLoadState = .loaded,
         template: AnimateVideoTemplate,
@@ -23,7 +23,7 @@ enum AnimateCreateWorkflowCapabilityFactory {
             canPrepareVideoDirection: canPrepareVideoDirection(
                 isSignedIn: isSignedIn,
                 hasActiveVideoWorkspace: hasActiveVideoWorkspace,
-                storyWorkflow: storyWorkflow,
+                videoDirectionWorkflow: videoDirectionWorkflow,
                 template: template,
                 selectedMediaCount: selectedMediaCount
             ),
@@ -54,14 +54,14 @@ enum AnimateCreateWorkflowCapabilityFactory {
     private static func canPrepareVideoDirection(
         isSignedIn: Bool,
         hasActiveVideoWorkspace: Bool,
-        storyWorkflow: StoryWorkflow?,
+        videoDirectionWorkflow: VideoDirectionWorkflow?,
         template: AnimateVideoTemplate,
         selectedMediaCount: Int
     ) -> Bool {
         guard isSignedIn else { return false }
-        guard let storyWorkflow, hasActiveVideoWorkspace else { return false }
-        return storyWorkflow.isConfigured
-            && !storyWorkflow.isPlanning
+        guard let videoDirectionWorkflow, hasActiveVideoWorkspace else { return false }
+        return videoDirectionWorkflow.isConfigured
+            && !videoDirectionWorkflow.isPlanning
             && AnimateMediaRules.availability(template: template, selectedCount: selectedMediaCount).canUseSelection
     }
 

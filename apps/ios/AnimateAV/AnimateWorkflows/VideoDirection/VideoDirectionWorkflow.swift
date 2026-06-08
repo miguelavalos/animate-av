@@ -2,36 +2,36 @@ import Foundation
 import OSLog
 
 @MainActor
-final class StoryWorkflow: WorkspaceObservingWorkflow {
-    @Published private(set) var generatedPlan: AnimateStoryResponse?
+final class VideoDirectionWorkflow: WorkspaceObservingWorkflow {
+    @Published private(set) var generatedPlan: AnimateVideoDirectionResponse?
     @Published private(set) var isPlanning = false
     @Published private(set) var statusMessage: String?
 
     private let currentUserProvider: any AnimateCurrentUserProviding
     private let authTokenProvider: any AnimateAuthTokenProviding
-    private let storyClient: AnimateStoryClient
+    private let videoDirectionClient: AnimateVideoDirectionClient
     private let logger = Logger(subsystem: "com.avalsys.animateav", category: "story")
 
     init(
         currentUserProvider: any AnimateCurrentUserProviding,
         authTokenProvider: any AnimateAuthTokenProviding,
         workspaceObserver: any AnimateActiveWorkspaceObserving,
-        storyClient: AnimateStoryClient
+        videoDirectionClient: AnimateVideoDirectionClient
     ) {
         self.currentUserProvider = currentUserProvider
         self.authTokenProvider = authTokenProvider
-        self.storyClient = storyClient
+        self.videoDirectionClient = videoDirectionClient
         super.init(workspaceObserver: workspaceObserver)
     }
 
     var isConfigured: Bool {
-        storyClient.isConfigured
+        videoDirectionClient.isConfigured
     }
 
     func canPlan(template: AnimateVideoTemplate) -> Bool {
         return currentUserProvider.currentUserId != nil
             && isConfigured
-            && AnimateStoryRules.availability(
+            && AnimateVideoDirectionRules.availability(
                 mediaAssets: activeWorkspace?.mediaAssets,
                 template: template
             ).canPlan
@@ -42,7 +42,7 @@ final class StoryWorkflow: WorkspaceObservingWorkflow {
         momentId: String,
         form: AnimateVideoSetupForm,
         selectedMedia: [AnimateSelectedMedia],
-        persistedMedia: [AnimateStoryMedia]? = nil
+        persistedMedia: [AnimateVideoDirectionMedia]? = nil
     ) async -> Bool {
         guard let ownerUserId = currentUserProvider.currentUserId else {
             statusMessage = L10n.string("workflow.story.signInPlan")
@@ -80,7 +80,7 @@ final class StoryWorkflow: WorkspaceObservingWorkflow {
         )
 
         do {
-            let plan = try await storyClient.generatePlan(
+            let plan = try await videoDirectionClient.generatePlan(
                 momentId: momentId,
                 ownerUserId: ownerUserId,
                 bearerToken: bearerToken,
@@ -93,7 +93,7 @@ final class StoryWorkflow: WorkspaceObservingWorkflow {
             guard isCurrentWorkflowGeneration(generation) else { return false }
             workspaceObserver.observeWorkspace(ownerUserId: ownerUserId, momentId: momentId)
             statusMessage = plan.helperCopy
-        } catch let error as StoryWorkflowError {
+        } catch let error as VideoDirectionWorkflowError {
             guard isCurrentWorkflowGeneration(generation) else { return false }
             logger.error("Video direction workflow failed momentId=\(momentId, privacy: .public) reason=\(error.localizedDescription, privacy: .public)")
             AnimateWorkflowDiagnostics.capture(
@@ -160,13 +160,13 @@ final class StoryWorkflow: WorkspaceObservingWorkflow {
     private func storyMedia(
         from selectedMedia: [AnimateSelectedMedia],
         fallbackMediaAssets: [AnimateMediaAsset]?
-    ) -> [AnimateStoryMedia] {
+    ) -> [AnimateVideoDirectionMedia] {
         if !selectedMedia.isEmpty {
             return selectedMedia
                 .filter(\.selected)
                 .sorted { $0.sortOrder < $1.sortOrder }
                 .map {
-                    AnimateStoryMedia(
+                    AnimateVideoDirectionMedia(
                         mediaAssetId: $0.id.uuidString,
                         mediaKind: $0.kind,
                         sortOrder: $0.sortOrder,
@@ -180,7 +180,7 @@ final class StoryWorkflow: WorkspaceObservingWorkflow {
             .filter(\.selected)
             .sorted { $0.sortOrder < $1.sortOrder }
             .map {
-                AnimateStoryMedia(
+                AnimateVideoDirectionMedia(
                     mediaAssetId: $0.id,
                     mediaKind: $0.kind,
                     sortOrder: Int($0.sortOrder),
@@ -191,8 +191,8 @@ final class StoryWorkflow: WorkspaceObservingWorkflow {
     }
 
     private func validatePlanMediaReferences(
-        _ plan: AnimateStoryResponse,
-        availableMedia: [AnimateStoryMedia]
+        _ plan: AnimateVideoDirectionResponse,
+        availableMedia: [AnimateVideoDirectionMedia]
     ) throws {
         let availableMediaIds = Set(availableMedia.map(\.mediaAssetId))
         let missingMediaIds = plan.scenes
@@ -200,7 +200,7 @@ final class StoryWorkflow: WorkspaceObservingWorkflow {
             .filter { !availableMediaIds.contains($0) }
 
         guard missingMediaIds.isEmpty else {
-            throw StoryWorkflowError.invalidMediaReferences
+            throw VideoDirectionWorkflowError.invalidMediaReferences
         }
     }
 
@@ -222,7 +222,7 @@ final class StoryWorkflow: WorkspaceObservingWorkflow {
     }
 }
 
-enum StoryWorkflowError: LocalizedError {
+enum VideoDirectionWorkflowError: LocalizedError {
     case invalidMediaReferences
     case saveFailed
 

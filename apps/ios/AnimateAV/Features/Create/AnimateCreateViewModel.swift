@@ -58,8 +58,8 @@ final class AnimateCreateViewModel: ObservableObject {
     @Published private(set) var mediaImportProgress: AnimateMediaImportProgress?
     @Published private(set) var autoStyleSuggestion: AnimateMediaAutoStyleSuggestion?
     @Published private(set) var canUndoAutoStyleSuggestion = false
-    @Published private(set) var savedScenes: [AnimateStoryScene] = []
-    @Published private(set) var generatedScenes: [AnimateStorySceneResponse] = []
+    @Published private(set) var savedScenes: [AnimateVideoDirectionScene] = []
+    @Published private(set) var generatedScenes: [AnimateVideoDirectionSceneResponse] = []
     @Published private(set) var videoDirectionStatusMessage: String?
     @Published private(set) var isPreparingVideoDirection = false
     @Published var isPreparingVideoDirectionAction = false
@@ -85,14 +85,14 @@ final class AnimateCreateViewModel: ObservableObject {
 
     private(set) var videoCreationWorkflow: AnimateVideoCreationWorkflow?
     private(set) var mediaUploadWorkflow: MediaUploadWorkflow?
-    private(set) var storyWorkflow: StoryWorkflow?
+    private(set) var videoDirectionWorkflow: VideoDirectionWorkflow?
     private(set) var finalRenderWorkflow: FinalRenderWorkflow?
     private var authTokenProvider: (any AnimateAuthTokenProviding)?
     private var imageGenerationAccountingClient: AnimateImageGenerationAccountingClient?
     let operationRunner = AnimateCreateOperationRunner()
     var cancellables = Set<AnyCancellable>()
     private var autoStyleMediaSignature: String?
-    var lastPreparedStoryInputSignature: String?
+    var lastPreparedVideoDirectionInputSignature: String?
     private var renderPlanInputSignature: String?
     private var pendingRenderPlanInputSignature: String?
     private var hasExplicitMediaEditsAfterPreparedStory = false
@@ -153,7 +153,7 @@ final class AnimateCreateViewModel: ObservableObject {
         accountStateProvider: any AnimateAccountStateProviding,
         videoCreationWorkflow: AnimateVideoCreationWorkflow,
         mediaUploadWorkflow: MediaUploadWorkflow,
-        storyWorkflow: StoryWorkflow,
+        videoDirectionWorkflow: VideoDirectionWorkflow,
         finalRenderWorkflow: FinalRenderWorkflow,
         authTokenProvider: any AnimateAuthTokenProviding,
         imageGenerationAccountingClient: AnimateImageGenerationAccountingClient
@@ -161,7 +161,7 @@ final class AnimateCreateViewModel: ObservableObject {
         cancelOperations()
         self.videoCreationWorkflow = videoCreationWorkflow
         self.mediaUploadWorkflow = mediaUploadWorkflow
-        self.storyWorkflow = storyWorkflow
+        self.videoDirectionWorkflow = videoDirectionWorkflow
         self.finalRenderWorkflow = finalRenderWorkflow
         self.authTokenProvider = authTokenProvider
         self.imageGenerationAccountingClient = imageGenerationAccountingClient
@@ -179,7 +179,7 @@ final class AnimateCreateViewModel: ObservableObject {
             accountStateProvider: accountStateProvider,
             videoCreationWorkflow: videoCreationWorkflow,
             mediaUploadWorkflow: mediaUploadWorkflow,
-            storyWorkflow: storyWorkflow,
+            videoDirectionWorkflow: videoDirectionWorkflow,
             finalRenderWorkflow: finalRenderWorkflow
         )
     }
@@ -469,8 +469,8 @@ final class AnimateCreateViewModel: ObservableObject {
         savedScenes = workspace.storyScenes
         generatedScenes = []
         videoDirectionStatusMessage = L10n.string("create.story.status.ready")
-        lastPreparedStoryInputSignature = workspace.video.storyInputSignature
-            ?? currentStoryInputSignature(momentId: workspace.video.id)
+        lastPreparedVideoDirectionInputSignature = workspace.video.storyInputSignature
+            ?? currentVideoDirectionInputSignature(momentId: workspace.video.id)
         activeWorkspace = workspace
         finalExport = workspace.latestArtifact(kind: "final_export")
         pendingGalleryVideo = nil
@@ -513,7 +513,7 @@ final class AnimateCreateViewModel: ObservableObject {
         usesCreateUITestFixture ? AnimateCreateUITestFixtures.selectedMedia : selectedMedia
     }
 
-    var effectiveSavedScenes: [AnimateStoryScene] {
+    var effectiveSavedScenes: [AnimateVideoDirectionScene] {
         effectiveActiveWorkspace?.storyScenes ?? savedScenes
     }
 
@@ -552,7 +552,7 @@ final class AnimateCreateViewModel: ObservableObject {
         continuationFocusHint = nil
         videoCreationWorkflow?.resetVideoSetup(force: force)
         mediaUploadWorkflow?.reset(force: force)
-        storyWorkflow?.reset(force: force)
+        videoDirectionWorkflow?.reset(force: force)
         finalRenderWorkflow?.reset(force: force)
         clearWorkflowSnapshots()
 
@@ -565,7 +565,7 @@ final class AnimateCreateViewModel: ObservableObject {
         canUndoAutoStyleSuggestion = false
         autoStyleUndoSelection = nil
         autoStyleMediaSignature = nil
-        lastPreparedStoryInputSignature = nil
+        lastPreparedVideoDirectionInputSignature = nil
         renderPlanInputSignature = nil
         pendingRenderPlanInputSignature = nil
         isPreparingFinalPlan = false
@@ -612,33 +612,33 @@ final class AnimateCreateViewModel: ObservableObject {
         form.tempo = style.tempo
     }
 
-    func currentStoryInputSignature(momentId: String) -> String {
-        AnimateStoryInputSignature.make(
+    func currentVideoDirectionInputSignature(momentId: String) -> String {
+        AnimateVideoDirectionInputSignature.make(
             momentId: momentId,
             form: form,
-            selectedMedia: currentStorySignatureMedia()
+            selectedMedia: currentVideoDirectionSignatureMedia()
         )
     }
 
-    func currentStoryInputSignature(
+    func currentVideoDirectionInputSignature(
         momentId: String,
-        persistedMedia: [AnimateStoryMedia]?
+        persistedMedia: [AnimateVideoDirectionMedia]?
     ) -> String {
-        AnimateStoryInputSignature.make(
+        AnimateVideoDirectionInputSignature.make(
             momentId: momentId,
             form: form,
-            selectedMedia: persistedMedia ?? currentStorySignatureMedia()
+            selectedMedia: persistedMedia ?? currentVideoDirectionSignatureMedia()
         )
     }
 
-    func preparedStoryComparisonInputSignature(momentId: String) -> String {
+    func preparedVideoDirectionComparisonInputSignature(momentId: String) -> String {
         if !hasExplicitMediaEditsAfterPreparedStory,
-           let workspaceMedia = currentWorkspaceStorySignatureMedia(),
+           let workspaceMedia = currentWorkspaceVideoDirectionSignatureMedia(),
            !workspaceMedia.isEmpty {
-            return currentStoryInputSignature(momentId: momentId, persistedMedia: workspaceMedia)
+            return currentVideoDirectionInputSignature(momentId: momentId, persistedMedia: workspaceMedia)
         }
 
-        return currentStoryInputSignature(momentId: momentId)
+        return currentVideoDirectionInputSignature(momentId: momentId)
     }
 
     func currentFinalRenderInputSignature(momentId: String, removesWatermark: Bool = false) -> String {
@@ -739,29 +739,29 @@ final class AnimateCreateViewModel: ObservableObject {
         clearStaleRenderPlan()
     }
 
-    func markPreparedStoryMediaEdited() {
+    func markPreparedVideoDirectionMediaEdited() {
         clearStaleRenderPlan()
         guard !savedScenes.isEmpty || !generatedScenes.isEmpty else { return }
         hasExplicitMediaEditsAfterPreparedStory = true
     }
 
     @discardableResult
-    func recordPreparedStoryInputSignature(_ inputSignature: String, momentId: String) -> String {
+    func recordPreparedVideoDirectionInputSignature(_ inputSignature: String, momentId: String) -> String {
         let recordedSignature: String
         if let workspaceSignature = effectiveActiveWorkspace?.video.storyInputSignature {
             recordedSignature = workspaceSignature
-        } else if currentWorkspaceStorySignatureMedia()?.isEmpty == false {
+        } else if currentWorkspaceVideoDirectionSignatureMedia()?.isEmpty == false {
             recordedSignature = inputSignature
         } else {
-            recordedSignature = currentStoryInputSignature(momentId: momentId)
+            recordedSignature = currentVideoDirectionInputSignature(momentId: momentId)
         }
-        lastPreparedStoryInputSignature = recordedSignature
+        lastPreparedVideoDirectionInputSignature = recordedSignature
         hasExplicitMediaEditsAfterPreparedStory = false
         hasLocalSetupEdits = false
         return recordedSignature
     }
 
-    private func currentStorySignatureMedia() -> [AnimateStoryMedia] {
+    private func currentVideoDirectionSignatureMedia() -> [AnimateVideoDirectionMedia] {
         let localMedia = effectiveSelectedMedia
             .filter(\.selected)
             .sorted { $0.sortOrder < $1.sortOrder }
@@ -774,7 +774,7 @@ final class AnimateCreateViewModel: ObservableObject {
             return localMedia
                 .map {
                     let syncedMedia = syncedMediaBySourceIdentifier[$0.sourceLocalIdentifier]
-                    return AnimateStoryMedia(
+                    return AnimateVideoDirectionMedia(
                         mediaAssetId: syncedMedia?.id ?? $0.id.uuidString,
                         mediaKind: syncedMedia?.kind ?? $0.kind,
                         sortOrder: $0.sortOrder,
@@ -788,7 +788,7 @@ final class AnimateCreateViewModel: ObservableObject {
             .filter(\.selected)
             .sorted { $0.sortOrder < $1.sortOrder }
             .map {
-                AnimateStoryMedia(
+                AnimateVideoDirectionMedia(
                     mediaAssetId: $0.id,
                     mediaKind: $0.kind,
                     sortOrder: Int($0.sortOrder),
@@ -824,14 +824,14 @@ final class AnimateCreateViewModel: ObservableObject {
             }
     }
 
-    private func currentWorkspaceStorySignatureMedia() -> [AnimateStoryMedia]? {
+    private func currentWorkspaceVideoDirectionSignatureMedia() -> [AnimateVideoDirectionMedia]? {
         let mediaAssets = effectiveActiveWorkspace?.mediaAssets ?? []
         guard !mediaAssets.isEmpty else { return nil }
         let selectedAssets = mediaAssets.filter(\.selected)
         return (selectedAssets.isEmpty ? mediaAssets : selectedAssets)
             .sorted { $0.sortOrder < $1.sortOrder }
             .map {
-                AnimateStoryMedia(
+                AnimateVideoDirectionMedia(
                     mediaAssetId: $0.id,
                     mediaKind: $0.kind,
                     sortOrder: Int($0.sortOrder),
@@ -894,7 +894,7 @@ extension AnimateCreateViewModel {
 
         let hasStoryScenes = !state.savedScenes.isEmpty || !state.generatedScenes.isEmpty
         if hasStoryScenes {
-            reconcilePreparedStorySignature()
+            reconcilePreparedVideoDirectionSignature()
             videoDirectionStatusMessage = nil
         } else {
             videoDirectionStatusMessage = state.statusMessage
@@ -959,22 +959,22 @@ extension AnimateCreateViewModel {
         }
     }
 
-    private func reconcilePreparedStorySignature() {
+    private func reconcilePreparedVideoDirectionSignature() {
         guard !savedScenes.isEmpty || !generatedScenes.isEmpty else { return }
         guard let activeVideoId else { return }
 
         if let workspaceSignature = effectiveActiveWorkspace?.video.storyInputSignature {
-            if lastPreparedStoryInputSignature != workspaceSignature {
+            if lastPreparedVideoDirectionInputSignature != workspaceSignature {
                 hasExplicitMediaEditsAfterPreparedStory = false
             }
-            lastPreparedStoryInputSignature = workspaceSignature
+            lastPreparedVideoDirectionInputSignature = workspaceSignature
             hasLocalSetupEdits = false
             hasUserLookOverride = false
             return
         }
 
-        if lastPreparedStoryInputSignature == nil || currentWorkspaceStorySignatureMedia()?.isEmpty == false {
-            lastPreparedStoryInputSignature = preparedStoryComparisonInputSignature(momentId: activeVideoId)
+        if lastPreparedVideoDirectionInputSignature == nil || currentWorkspaceVideoDirectionSignatureMedia()?.isEmpty == false {
+            lastPreparedVideoDirectionInputSignature = preparedVideoDirectionComparisonInputSignature(momentId: activeVideoId)
         }
     }
 

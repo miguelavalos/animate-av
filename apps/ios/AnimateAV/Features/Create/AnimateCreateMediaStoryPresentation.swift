@@ -52,7 +52,7 @@ struct AnimateCreateVideoDirectionPreparationPresentation: Equatable {
             : L10n.string("create.story.empty.needsMedia")
     }
 
-    var savedScenes: [AnimateStoryScene] {
+    var savedScenes: [AnimateVideoDirectionScene] {
         summary.savedScenes.sorted { $0.sceneIndex < $1.sceneIndex }
     }
 }

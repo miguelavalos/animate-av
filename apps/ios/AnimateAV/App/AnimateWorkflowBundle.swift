@@ -7,7 +7,7 @@ struct AnimateWorkflowBundle {
     let videosWorkflow: AnimateVideosWorkflow
     let videoCreation: AnimateVideoCreationWorkflow
     let mediaUpload: MediaUploadWorkflow
-    let story: StoryWorkflow
+    let videoDirection: VideoDirectionWorkflow
     let finalRender: FinalRenderWorkflow
 
     init(
@@ -45,11 +45,11 @@ struct AnimateWorkflowBundle {
             workspaceObserver: workspaceObserver,
             uploadClient: clients.upload
         )
-        story = StoryWorkflow(
+        videoDirection = VideoDirectionWorkflow(
             currentUserProvider: accountController,
             authTokenProvider: accountController,
             workspaceObserver: workspaceObserver,
-            storyClient: clients.story
+            videoDirectionClient: clients.videoDirection
         )
         finalRender = FinalRenderWorkflow(
             currentUserProvider: accountController,
@@ -67,7 +67,7 @@ struct AnimateWorkflowClients {
     let workspaceCommands: AnimateWorkspaceCommandClient
     let realtimeSession: AnimateRealtimeSessionClient
     let upload: AnimateUploadClient
-    let story: AnimateStoryClient
+    let videoDirection: AnimateVideoDirectionClient
     let videoQuote: AnimateVideoQuoteClient
     let imageGenerationAccounting: AnimateImageGenerationAccountingClient
     let finalRender: AnimateFinalRenderClient
@@ -76,7 +76,7 @@ struct AnimateWorkflowClients {
         workspaceCommands = AnimateWorkspaceCommandClient(baseURLString: baseURLString)
         realtimeSession = AnimateRealtimeSessionClient(baseURLString: baseURLString)
         upload = AnimateUploadClient(baseURLString: baseURLString, session: Self.makeUploadSession())
-        story = AnimateStoryClient(baseURLString: baseURLString)
+        videoDirection = AnimateVideoDirectionClient(baseURLString: baseURLString)
         videoQuote = AnimateVideoQuoteClient(baseURLString: baseURLString)
         imageGenerationAccounting = AnimateImageGenerationAccountingClient(baseURLString: baseURLString)
         finalRender = AnimateFinalRenderClient(baseURLString: baseURLString)

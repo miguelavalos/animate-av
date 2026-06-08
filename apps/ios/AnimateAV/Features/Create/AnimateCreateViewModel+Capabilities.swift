@@ -57,7 +57,7 @@ extension AnimateCreateViewModel {
             hasActiveVideoWorkspace: hasActiveVideoWorkspace,
             isImportingMedia: isImportingMedia,
             mediaRemainingSlots: mediaRemainingSlots,
-            storyWorkflow: storyWorkflow,
+            videoDirectionWorkflow: videoDirectionWorkflow,
             finalRenderWorkflow: finalRenderWorkflow,
             creditBalanceLoadState: creditBalanceLoadState,
             template: form.template,
@@ -79,10 +79,10 @@ extension AnimateCreateViewModel {
         }
         guard videoDirectionSummary.hasScenes else { return false }
         guard let activeVideoId else { return false }
-        let preparedSignature = lastPreparedStoryInputSignature ?? effectiveActiveWorkspace?.video.storyInputSignature
+        let preparedSignature = lastPreparedVideoDirectionInputSignature ?? effectiveActiveWorkspace?.video.storyInputSignature
         guard let preparedSignature else {
             return true
         }
-        return preparedStoryComparisonInputSignature(momentId: activeVideoId) == preparedSignature
+        return preparedVideoDirectionComparisonInputSignature(momentId: activeVideoId) == preparedSignature
     }
 }

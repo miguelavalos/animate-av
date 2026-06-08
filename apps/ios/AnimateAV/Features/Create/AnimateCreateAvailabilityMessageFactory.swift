@@ -60,8 +60,8 @@ enum AnimateCreateAvailabilityMessageFactory {
             )
         }
 
-        return AnimateStoryRules.availabilityMessage(
-            AnimateStoryRules.availability(
+        return AnimateVideoDirectionRules.availabilityMessage(
+            AnimateVideoDirectionRules.availability(
                 mediaAssets: mediaAssets,
                 template: template
             ),

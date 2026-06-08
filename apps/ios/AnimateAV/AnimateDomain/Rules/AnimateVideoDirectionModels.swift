@@ -1,7 +1,7 @@
 import CryptoKit
 import Foundation
 
-struct AnimateStoryMedia: Encodable {
+struct AnimateVideoDirectionMedia: Encodable {
     let mediaAssetId: String
     let mediaKind: String
     let sortOrder: Int
@@ -9,7 +9,7 @@ struct AnimateStoryMedia: Encodable {
     let moderationStatus: String
 }
 
-struct AnimateStoryRequest: Encodable {
+struct AnimateVideoDirectionRequest: Encodable {
     let appId = "animateav"
     let momentId: String
     let creationMode: String
@@ -21,16 +21,16 @@ struct AnimateStoryRequest: Encodable {
     let occasion: String
     let details: String
     let narrationVoice = "avi_clear"
-    let media: [AnimateStoryMedia]
+    let media: [AnimateVideoDirectionMedia]
     let safetyAcknowledged = true
     let idempotencyKey: String
 }
 
-enum AnimateStoryInputSignature {
+enum AnimateVideoDirectionInputSignature {
     static func make(
         momentId: String,
         form: AnimateVideoSetupForm,
-        selectedMedia: [AnimateStoryMedia]
+        selectedMedia: [AnimateVideoDirectionMedia]
     ) -> String {
         let mediaSignature = selectedMedia
             .filter(\.selected)
@@ -61,7 +61,7 @@ enum AnimateStoryInputSignature {
     }
 }
 
-struct AnimateStorySceneResponse: Decodable, Identifiable, Equatable {
+struct AnimateVideoDirectionSceneResponse: Decodable, Identifiable, Equatable {
     var id: Int { sceneIndex }
     let sceneIndex: Int
     let mediaAssetIds: [String]
@@ -75,7 +75,7 @@ struct AnimateStorySceneResponse: Decodable, Identifiable, Equatable {
     let editable: Bool
 }
 
-struct AnimateStoryResponse: Decodable, Equatable {
+struct AnimateVideoDirectionResponse: Decodable, Equatable {
     let appId: String
     let momentId: String
     let workflowRunId: String
@@ -87,11 +87,11 @@ struct AnimateStoryResponse: Decodable, Equatable {
     let errorMessage: String?
     let narrationVoice: String
     let helperCopy: String
-    let scenes: [AnimateStorySceneResponse]
+    let scenes: [AnimateVideoDirectionSceneResponse]
     let generatedAt: String
 }
 
-enum AnimateStoryRules {
+enum AnimateVideoDirectionRules {
     enum BlockReason {
         case missingMedia
         case tooFewSelectedMedia(missingCount: Int)

@@ -380,10 +380,10 @@ final class AnimateCreateViewModelStoryStateTests: XCTestCase {
             )
         )
 
-        let expectedLocalSignature = viewModel.currentStoryInputSignature(
+        let expectedLocalSignature = viewModel.currentVideoDirectionInputSignature(
             momentId: "moment-1",
             persistedMedia: [
-                AnimateStoryMedia(
+                AnimateVideoDirectionMedia(
                     mediaAssetId: localMedia.id.uuidString,
                     mediaKind: localMedia.kind,
                     sortOrder: localMedia.sortOrder,
@@ -392,10 +392,10 @@ final class AnimateCreateViewModelStoryStateTests: XCTestCase {
                 )
             ]
         )
-        let backendMediaSignature = viewModel.currentStoryInputSignature(
+        let backendMediaSignature = viewModel.currentVideoDirectionInputSignature(
             momentId: "moment-1",
             persistedMedia: [
-                AnimateStoryMedia(
+                AnimateVideoDirectionMedia(
                     mediaAssetId: "backend-media-1",
                     mediaKind: "image",
                     sortOrder: 0,
@@ -405,8 +405,8 @@ final class AnimateCreateViewModelStoryStateTests: XCTestCase {
             ]
         )
 
-        XCTAssertEqual(viewModel.currentStoryInputSignature(momentId: "moment-1"), expectedLocalSignature)
-        XCTAssertNotEqual(viewModel.currentStoryInputSignature(momentId: "moment-1"), backendMediaSignature)
+        XCTAssertEqual(viewModel.currentVideoDirectionInputSignature(momentId: "moment-1"), expectedLocalSignature)
+        XCTAssertNotEqual(viewModel.currentVideoDirectionInputSignature(momentId: "moment-1"), backendMediaSignature)
     }
 
     func testWorkspaceSignatureReconcilesAfterStoryScenesArriveFirst() {
@@ -416,7 +416,7 @@ final class AnimateCreateViewModelStoryStateTests: XCTestCase {
             sourceLocalIdentifier: "local-asset-1"
         )
         let backendMedia = makeBackendMedia()
-        let backendSignature = viewModel.currentStoryInputSignature(
+        let backendSignature = viewModel.currentVideoDirectionInputSignature(
             momentId: "moment-1",
             persistedMedia: [makeStoryMedia(from: backendMedia)]
         )
@@ -468,7 +468,7 @@ final class AnimateCreateViewModelStoryStateTests: XCTestCase {
             )
         )
 
-        XCTAssertEqual(viewModel.lastPreparedStoryInputSignature, backendSignature)
+        XCTAssertEqual(viewModel.lastPreparedVideoDirectionInputSignature, backendSignature)
         XCTAssertTrue(viewModel.isStoryPreparedForCurrentInput)
     }
 
@@ -488,7 +488,7 @@ final class AnimateCreateViewModelStoryStateTests: XCTestCase {
             )
         )
 
-        XCTAssertEqual(viewModel.currentStoryInputSignature(momentId: "moment-1"), preparedStory.signature)
+        XCTAssertEqual(viewModel.currentVideoDirectionInputSignature(momentId: "moment-1"), preparedStory.signature)
         XCTAssertTrue(viewModel.isStoryPreparedForCurrentInput)
     }
 
@@ -509,7 +509,7 @@ final class AnimateCreateViewModelStoryStateTests: XCTestCase {
 
         XCTAssertTrue(viewModel.isStoryPreparedForCurrentInput)
 
-        viewModel.markPreparedStoryMediaEdited()
+        viewModel.markPreparedVideoDirectionMediaEdited()
         viewModel.applyMediaUploadState(
             AnimateCreateMediaUploadState(
                 selectedMedia: [
@@ -564,7 +564,7 @@ final class AnimateCreateViewModelStoryStateTests: XCTestCase {
 
         XCTAssertNotNil(viewModel.currentRenderPlan)
 
-        viewModel.markPreparedStoryMediaEdited()
+        viewModel.markPreparedVideoDirectionMediaEdited()
 
         XCTAssertNil(viewModel.currentRenderPlan)
         XCTAssertNil(viewModel.finalRenderSummary.renderPlan)
@@ -647,7 +647,7 @@ final class AnimateCreateViewModelStoryStateTests: XCTestCase {
             accountStateProvider: harness,
             videoCreationWorkflow: harness.videoCreationWorkflow,
             mediaUploadWorkflow: harness.mediaUploadWorkflow,
-            storyWorkflow: harness.storyWorkflow,
+            videoDirectionWorkflow: harness.videoDirectionWorkflow,
             finalRenderWorkflow: harness.finalRenderWorkflow,
             authTokenProvider: harness,
             imageGenerationAccountingClient: AnimateImageGenerationAccountingClient(baseURLString: "https://api.example.test")
@@ -675,7 +675,7 @@ final class AnimateCreateViewModelStoryStateTests: XCTestCase {
             )
         )
 
-        viewModel.generateStory()
+        viewModel.prepareVideoDirection()
         await fulfillment(of: [harness.createAttemptExpectation], timeout: 1)
         await waitForStoryStatusMessage(in: viewModel)
 
@@ -695,7 +695,7 @@ final class AnimateCreateViewModelStoryStateTests: XCTestCase {
                 setupErrorMessage: nil
             )
         )
-        let signature = viewModel.currentStoryInputSignature(
+        let signature = viewModel.currentVideoDirectionInputSignature(
             momentId: momentId,
             persistedMedia: [makeStoryMedia(from: media)]
         )
@@ -736,8 +736,8 @@ final class AnimateCreateViewModelStoryStateTests: XCTestCase {
         )
     }
 
-    private func makeStoryMedia(from media: AnimateMediaAsset) -> AnimateStoryMedia {
-        AnimateStoryMedia(
+    private func makeStoryMedia(from media: AnimateMediaAsset) -> AnimateVideoDirectionMedia {
+        AnimateVideoDirectionMedia(
             mediaAssetId: media.id,
             mediaKind: media.kind,
             sortOrder: Int(media.sortOrder),
@@ -799,12 +799,12 @@ private final class AnimateVideoCreationFailureHarness:
         )
     }
 
-    var storyWorkflow: StoryWorkflow {
-        StoryWorkflow(
+    var videoDirectionWorkflow: VideoDirectionWorkflow {
+        VideoDirectionWorkflow(
             currentUserProvider: self,
             authTokenProvider: self,
             workspaceObserver: self,
-            storyClient: AnimateStoryClient(baseURLString: "https://api.example.com")
+            videoDirectionClient: AnimateVideoDirectionClient(baseURLString: "https://api.example.com")
         )
     }
 

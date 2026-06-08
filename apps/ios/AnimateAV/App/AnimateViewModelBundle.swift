@@ -32,7 +32,7 @@ struct AnimateViewModelBundle {
             accountStateProvider: accountController,
             videoCreationWorkflow: workflows.videoCreation,
             mediaUploadWorkflow: workflows.mediaUpload,
-            storyWorkflow: workflows.story,
+            videoDirectionWorkflow: workflows.videoDirection,
             finalRenderWorkflow: workflows.finalRender,
             authTokenProvider: authTokenProvider,
             imageGenerationAccountingClient: imageGenerationAccountingClient

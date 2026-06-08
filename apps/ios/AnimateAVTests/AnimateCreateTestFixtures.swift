@@ -76,8 +76,8 @@ enum AnimateCreateTestFixtures {
         )
     }
 
-    static func makeScene(id: String, sceneIndex: Double = 0, caption: String = "Opening") -> AnimateStoryScene {
-        AnimateStoryScene(
+    static func makeScene(id: String, sceneIndex: Double = 0, caption: String = "Opening") -> AnimateVideoDirectionScene {
+        AnimateVideoDirectionScene(
             id: id,
             sceneIndex: sceneIndex,
             mediaAssetIds: [],

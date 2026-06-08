@@ -170,13 +170,13 @@ final class AnimateCreditGateTests: XCTestCase {
             )
         }
 
-        XCTAssertFalse(AnimateStoryRules.canPlan(mediaAssets: assets, template: .birthdayMessage))
-        XCTAssertFalse(AnimateStoryRules.canPlan(mediaAssets: assets, template: .partyRecap))
+        XCTAssertFalse(AnimateVideoDirectionRules.canPlan(mediaAssets: assets, template: .birthdayMessage))
+        XCTAssertFalse(AnimateVideoDirectionRules.canPlan(mediaAssets: assets, template: .partyRecap))
     }
 
     func testStoryInputSignatureTracksMediaOrderAndDirection() {
-        func storyMedia(id: String, sortOrder: Int) -> AnimateStoryMedia {
-            AnimateStoryMedia(
+        func storyMedia(id: String, sortOrder: Int) -> AnimateVideoDirectionMedia {
+            AnimateVideoDirectionMedia(
                 mediaAssetId: id,
                 mediaKind: "image",
                 sortOrder: sortOrder,
@@ -193,12 +193,12 @@ final class AnimateCreditGateTests: XCTestCase {
             storyMedia(id: "media-b", sortOrder: 1)
         ]
 
-        let baseSignature = AnimateStoryInputSignature.make(
+        let baseSignature = AnimateVideoDirectionInputSignature.make(
             momentId: "moment-1",
             form: form,
             selectedMedia: media
         )
-        let sameInputSignature = AnimateStoryInputSignature.make(
+        let sameInputSignature = AnimateVideoDirectionInputSignature.make(
             momentId: "moment-1",
             form: form,
             selectedMedia: media.reversed()
@@ -206,7 +206,7 @@ final class AnimateCreditGateTests: XCTestCase {
 
         XCTAssertEqual(baseSignature, sameInputSignature)
 
-        let reorderedSignature = AnimateStoryInputSignature.make(
+        let reorderedSignature = AnimateVideoDirectionInputSignature.make(
             momentId: "moment-1",
             form: form,
             selectedMedia: [
@@ -217,7 +217,7 @@ final class AnimateCreditGateTests: XCTestCase {
         XCTAssertNotEqual(baseSignature, reorderedSignature)
 
         form.details = "Use the desert photos and end on the group shot."
-        let changedDirectionSignature = AnimateStoryInputSignature.make(
+        let changedDirectionSignature = AnimateVideoDirectionInputSignature.make(
             momentId: "moment-1",
             form: form,
             selectedMedia: media

@@ -4,7 +4,7 @@ import UIKit
 
 struct MediaUploadPersistenceResult {
     let savedCount: Int
-    let savedMedia: [AnimateStoryMedia]
+    let savedMedia: [AnimateVideoDirectionMedia]
     let storageBlocked: Bool
 
     var statusMessage: String {
@@ -67,7 +67,7 @@ enum MediaUploadPersistence {
 
         let savedMedia = zip(uploadedMedia, savedMediaAssetIds).map { uploaded, savedMediaAssetId in
             AnimateLocalMediaThumbnailCache.store(uploaded.media, mediaAssetId: savedMediaAssetId)
-            return AnimateStoryMedia(
+            return AnimateVideoDirectionMedia(
                 mediaAssetId: savedMediaAssetId,
                 mediaKind: uploaded.media.kind,
                 sortOrder: uploaded.media.sortOrder,

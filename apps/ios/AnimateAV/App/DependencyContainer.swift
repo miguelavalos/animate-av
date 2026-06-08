@@ -11,7 +11,7 @@ final class AnimateDependencyContainer: ObservableObject {
     let videosWorkflow: AnimateVideosWorkflow
     let videoCreationWorkflow: AnimateVideoCreationWorkflow
     let mediaUploadWorkflow: MediaUploadWorkflow
-    let storyWorkflow: StoryWorkflow
+    let videoDirectionWorkflow: VideoDirectionWorkflow
     let finalRenderWorkflow: FinalRenderWorkflow
     let homeViewModel: AnimateHomeViewModel
     let createViewModel: AnimateCreateViewModel
@@ -50,7 +50,7 @@ final class AnimateDependencyContainer: ObservableObject {
         self.videosWorkflow = workflows.videosWorkflow
         self.videoCreationWorkflow = workflows.videoCreation
         self.mediaUploadWorkflow = workflows.mediaUpload
-        self.storyWorkflow = workflows.story
+        self.videoDirectionWorkflow = workflows.videoDirection
         self.finalRenderWorkflow = workflows.finalRender
         self.realtimeSessionClient = clients.realtimeSession
         self.realtimeSessionStore = .shared

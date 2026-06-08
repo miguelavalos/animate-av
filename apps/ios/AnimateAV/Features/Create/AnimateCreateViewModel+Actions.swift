@@ -62,7 +62,7 @@ extension AnimateCreateViewModel {
             return
         }
         let template = form.template
-        markPreparedStoryMediaEdited()
+        markPreparedVideoDirectionMediaEdited()
 
         runOperation {
             await mediaUploadWorkflow.importPickerItems(
@@ -74,7 +74,7 @@ extension AnimateCreateViewModel {
     }
 
     func removeMedia(_ media: AnimateSelectedMedia) {
-        markPreparedStoryMediaEdited()
+        markPreparedVideoDirectionMediaEdited()
         mediaUploadWorkflow?.remove(media)
     }
 
@@ -82,8 +82,8 @@ extension AnimateCreateViewModel {
         mediaUploadWorkflow?.restoreLocalMediaForEditing()
     }
 
-    func generateStory() {
-        guard canPrepareVideoDirection, let storyWorkflow else {
+    func prepareVideoDirection() {
+        guard canPrepareVideoDirection, let videoDirectionWorkflow else {
             updateVideoDirectionStatusMessage(videoDirectionAvailabilityMessage ?? L10n.string("create.error.storyPreparationNotReady"))
             return
         }
@@ -110,7 +110,7 @@ extension AnimateCreateViewModel {
                 return
             }
             if self.videoDirectionSummary.hasScenes,
-               self.lastPreparedStoryInputSignature == self.preparedStoryComparisonInputSignature(momentId: momentId) {
+               self.lastPreparedVideoDirectionInputSignature == self.preparedVideoDirectionComparisonInputSignature(momentId: momentId) {
                 self.updateVideoDirectionStatusMessage(L10n.string("create.story.status.alreadyReady"))
                 return
             }
@@ -122,19 +122,19 @@ extension AnimateCreateViewModel {
                 )
                 return
             }
-            let inputSignature = self.currentStoryInputSignature(
+            let inputSignature = self.currentVideoDirectionInputSignature(
                 momentId: momentId,
                 persistedMedia: persistedMedia
             )
 
-            let didPrepareStory = await storyWorkflow.generatePlan(
+            let didPrepareVideoDirection = await videoDirectionWorkflow.generatePlan(
                 momentId: momentId,
                 form: form,
                 selectedMedia: selectedMedia,
                 persistedMedia: persistedMedia
             )
-            if didPrepareStory {
-                self.recordPreparedStoryInputSignature(inputSignature, momentId: momentId)
+            if didPrepareVideoDirection {
+                self.recordPreparedVideoDirectionInputSignature(inputSignature, momentId: momentId)
             }
         }
     }
@@ -287,10 +287,10 @@ extension AnimateCreateViewModel {
         momentId: String,
         form: AnimateVideoSetupForm,
         selectedMedia: [AnimateSelectedMedia],
-        storyWorkflow: StoryWorkflow
+        videoDirectionWorkflow: VideoDirectionWorkflow
     ) async -> Bool {
-        var inputSignature = preparedStoryComparisonInputSignature(momentId: momentId)
-        if videoDirectionSummary.hasScenes, lastPreparedStoryInputSignature == inputSignature {
+        var inputSignature = preparedVideoDirectionComparisonInputSignature(momentId: momentId)
+        if videoDirectionSummary.hasScenes, lastPreparedVideoDirectionInputSignature == inputSignature {
             updateVideoDirectionStatusMessage(L10n.string("create.story.status.alreadyReady"))
             return true
         }
@@ -300,22 +300,22 @@ extension AnimateCreateViewModel {
             updateVideoDirectionStatusMessage(mediaStatusMessage ?? AnimateRecoveryCopy.mediaStorySaveFailure())
             return false
         }
-        inputSignature = currentStoryInputSignature(
+        inputSignature = currentVideoDirectionInputSignature(
             momentId: momentId,
             persistedMedia: persistedMedia
         )
 
-        let didPrepareStory = await storyWorkflow.generatePlan(
+        let didPrepareVideoDirection = await videoDirectionWorkflow.generatePlan(
             momentId: momentId,
             form: form,
             selectedMedia: selectedMedia,
             persistedMedia: persistedMedia
         )
-        if didPrepareStory {
-            recordPreparedStoryInputSignature(inputSignature, momentId: momentId)
+        if didPrepareVideoDirection {
+            recordPreparedVideoDirectionInputSignature(inputSignature, momentId: momentId)
         }
 
-        guard videoDirectionSummary.hasScenes, lastPreparedStoryInputSignature == inputSignature else {
+        guard videoDirectionSummary.hasScenes, lastPreparedVideoDirectionInputSignature == inputSignature else {
             updateVideoDirectionStatusMessage(L10n.string("create.error.storyPreparationUnfinished"))
             return false
         }

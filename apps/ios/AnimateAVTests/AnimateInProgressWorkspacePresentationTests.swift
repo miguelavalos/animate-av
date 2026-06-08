@@ -163,7 +163,7 @@ final class AnimateInProgressWorkspacePresentationTests: XCTestCase {
     private func makeWorkspace(
         video: AnimateVideo,
         mediaAssets: [AnimateMediaAsset] = [],
-        storyScenes: [AnimateStoryScene] = [],
+        storyScenes: [AnimateVideoDirectionScene] = [],
         renderJobs: [AnimateRenderJob] = [],
         artifacts: [AnimateArtifact] = []
     ) -> AnimateWorkspace {
@@ -250,8 +250,8 @@ final class AnimateInProgressWorkspacePresentationTests: XCTestCase {
         )
     }
 
-    private func makeScene(id: String, sceneIndex: Double, caption: String) -> AnimateStoryScene {
-        AnimateStoryScene(
+    private func makeScene(id: String, sceneIndex: Double, caption: String) -> AnimateVideoDirectionScene {
+        AnimateVideoDirectionScene(
             id: id,
             sceneIndex: sceneIndex,
             mediaAssetIds: [],

@@ -85,7 +85,7 @@ enum AnimateCreateUITestFixtures {
         ]
     }
 
-    static var storyScenes: [AnimateStoryScene] {
+    static var storyScenes: [AnimateVideoDirectionScene] {
         [
             storyScene(
                 id: "scene-1",
@@ -233,8 +233,8 @@ enum AnimateCreateUITestFixtures {
         index: Double,
         caption: String,
         narration: String
-    ) -> AnimateStoryScene {
-        AnimateStoryScene(
+    ) -> AnimateVideoDirectionScene {
+        AnimateVideoDirectionScene(
             id: id,
             sceneIndex: index,
             mediaAssetIds: [],

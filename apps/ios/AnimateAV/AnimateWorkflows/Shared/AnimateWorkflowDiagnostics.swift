@@ -38,7 +38,7 @@ enum AnimateWorkflowDiagnostics {
         if let apiError = error as? AnimateAPIError {
             return apiError.code
         }
-        if let storyError = error as? StoryWorkflowError {
+        if let storyError = error as? VideoDirectionWorkflowError {
             return String(describing: storyError)
         }
         if let renderError = error as? AnimateFinalRenderError {
