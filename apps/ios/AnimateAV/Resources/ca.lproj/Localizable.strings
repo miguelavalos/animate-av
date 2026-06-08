@@ -727,7 +727,7 @@
 "create.options.anotherTheme" = "otro tema";
 "create.options.suggestionUsing" = "Usando sugerencia de Avi: %@ · %@";
 "create.storyDirection.title" = "Direcció del vídeo";
-"create.storyDirection.detail" = "Comprova el ritme i el missatge abans de gastar crèdits.";
+"create.storyDirection.detail" = "Comprova el ritme i el missatge abans de gastar Crèdits.";
 "create.storyDirection.needsStory" = "Avi necessita preparar la direcció del vídeo abans de crear-lo.";
 "create.media.itemCount" = "%d ítems";
 "create.final.createVideoTitle" = "Crear el vídeo";
@@ -887,7 +887,7 @@
 "create.workflowContent.assetUsageSkipped" = "%d usats · %d omesos";
 "create.workflowContent.assetUsageItems" = "%d de %d elements";
 "create.workflowContent.beforeVideo" = "Abans del vídeo";
-"create.workflowContent.modePending" = "Mode pendent";
+"create.workflowContent.modePending" = "Tria el camí";
 "create.workflowContent.renderPlanFallback" = "Avi comprova la foto, el missatge i la qualitat abans de crear el vídeo final.";
 "create.videoDirection.selectedSetup" = "Imatge i direcció";
 "create.videoDirection.status.ready" = "La direcció del vídeo està a punt. Crea el vídeo final o ajusta-la abans.";
@@ -1021,7 +1021,7 @@
 "create.images.action.starting" = "Iniciant màgia d’imatge";
 "create.images.action.queued" = "%d generacions d’imatge en cua.";
 "create.images.action.tooManyLooks" = "Tria menys looks";
-"create.images.action.servicePending" = "Màgia d’imatge pendent";
+"create.images.action.servicePending" = "Avi està escalfant motors";
 "gallery.video.defaultTitle" = "Vídeo Animate";
 "gallery.image.defaultTitle" = "Imatge amb estil";
 "gallery.image.download" = "Baixar imatge";

@@ -734,7 +734,7 @@
 "create.options.anotherTheme" = "another theme";
 "create.options.suggestionUsing" = "Using Avi suggestion: %@ · %@";
 "create.storyDirection.title" = "Video direction";
-"create.storyDirection.detail" = "Check the pacing and message before spending credits.";
+"create.storyDirection.detail" = "Check the pacing and message before spending Credits.";
 "create.storyDirection.needsStory" = "Avi needs to prepare the video direction before the video can be created.";
 "create.media.itemCount" = "%d items";
 "create.final.createVideoTitle" = "Create the video";
@@ -894,7 +894,7 @@
 "create.workflowContent.assetUsageSkipped" = "%d used · %d skipped";
 "create.workflowContent.assetUsageItems" = "%d of %d items";
 "create.workflowContent.beforeVideo" = "Before video";
-"create.workflowContent.modePending" = "Mode pending";
+"create.workflowContent.modePending" = "Pick a path";
 "create.workflowContent.renderPlanFallback" = "Avi checks the photo, message, and quality before creating the final video.";
 "create.videoDirection.selectedSetup" = "Image and direction";
 "create.videoDirection.status.ready" = "Video direction is ready. Create the final video or adjust it first.";
@@ -954,7 +954,7 @@
 "create.workflowContent.finalVideoInProgressTitle" = "Creating final video";
 "create.workflowContent.finalVideoInProgressDetail" = "Avi is working on this video now. You can leave this screen and come back later.";
 "create.workflowContent.renderMayTakeMinutes" = "AI video generation can take several minutes. This screen updates automatically when the final video is ready.";
-"create.workflowContent.waitingForProvider" = "Waiting for the video video service";
+"create.workflowContent.waitingForProvider" = "Waiting for the animation service";
 "create.workflowContent.editing" = "Editing";
 "create.workflowContent.aviOptions" = "Avi options";
 "create.workflowContent.aviAccessibility" = "Avi. %@";
@@ -1030,7 +1030,7 @@
 "create.images.action.starting" = "Starting image magic";
 "create.images.action.queued" = "%d image generations queued.";
 "create.images.action.tooManyLooks" = "Choose fewer looks";
-"create.images.action.servicePending" = "Image magic pending";
+"create.images.action.servicePending" = "Avi is warming up";
 "gallery.video.defaultTitle" = "Animate video";
 "gallery.image.defaultTitle" = "Stylized image";
 "gallery.image.download" = "Download image";

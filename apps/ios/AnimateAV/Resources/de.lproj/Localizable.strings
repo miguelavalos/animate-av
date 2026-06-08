@@ -889,7 +889,7 @@
 "create.workflowContent.assetUsageSkipped" = "%d verwendet · %d übersprungen";
 "create.workflowContent.assetUsageItems" = "%d von %d Elementen";
 "create.workflowContent.beforeVideo" = "Vor dem Video";
-"create.workflowContent.modePending" = "Modus ausstehend";
+"create.workflowContent.modePending" = "Weg wählen";
 "create.workflowContent.renderPlanFallback" = "Avi prüft Foto, Nachricht und Qualität, bevor das finale Video erstellt wird.";
 "create.videoDirection.selectedSetup" = "Bild und Richtung";
 "create.videoDirection.status.ready" = "Die Videorichtung ist bereit. Erstelle das finale Video oder passe sie zuerst an.";
@@ -1023,7 +1023,7 @@
 "create.images.action.starting" = "Bildmagie wird gestartet";
 "create.images.action.queued" = "%d Bildgenerierungen eingereiht.";
 "create.images.action.tooManyLooks" = "Wähle weniger Looks";
-"create.images.action.servicePending" = "Bildmagie ausstehend";
+"create.images.action.servicePending" = "Avi wärmt sich auf";
 "gallery.video.defaultTitle" = "Animate-Video";
 "gallery.image.defaultTitle" = "Stilisiertes Bild";
 "gallery.image.download" = "Bild laden";

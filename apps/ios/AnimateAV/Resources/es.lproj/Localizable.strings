@@ -734,7 +734,7 @@
 "create.options.anotherTheme" = "otro tema";
 "create.options.suggestionUsing" = "Usando sugerencia de Avi: %@ · %@";
 "create.storyDirection.title" = "Dirección del video";
-"create.storyDirection.detail" = "Comprueba el ritmo y el mensaje antes de gastar créditos.";
+"create.storyDirection.detail" = "Comprueba el ritmo y el mensaje antes de gastar Créditos.";
 "create.storyDirection.needsStory" = "Avi necesita preparar la dirección del video antes de crearlo.";
 "create.media.itemCount" = "%d ítems";
 "create.final.createVideoTitle" = "Crear el video";
@@ -894,7 +894,7 @@
 "create.workflowContent.assetUsageSkipped" = "%d usados · %d omitidos";
 "create.workflowContent.assetUsageItems" = "%d de %d elementos";
 "create.workflowContent.beforeVideo" = "Antes del video";
-"create.workflowContent.modePending" = "Mode pending";
+"create.workflowContent.modePending" = "Elige el camino";
 "create.workflowContent.renderPlanFallback" = "Avi comprueba la foto, el mensaje y la calidad antes de crear el video final.";
 "create.videoDirection.selectedSetup" = "Imagen y dirección";
 "create.videoDirection.status.ready" = "La dirección del video está lista. Crea el video final o ajústala primero.";
@@ -954,7 +954,7 @@
 "create.workflowContent.finalVideoInProgressTitle" = "Creando video final";
 "create.workflowContent.finalVideoInProgressDetail" = "Avi está trabajando en este video. Puedes salir de esta pantalla y volver más tarde.";
 "create.workflowContent.renderMayTakeMinutes" = "La generación de video con IA puede tardar varios minutos. Esta pantalla se actualiza automáticamente cuando el video final está listo.";
-"create.workflowContent.waitingForProvider" = "Esperando al servicio de video";
+"create.workflowContent.waitingForProvider" = "Esperando al servicio de animación";
 "create.workflowContent.editing" = "Edición";
 "create.workflowContent.aviOptions" = "Opciones de Avi";
 "create.workflowContent.aviAccessibility" = "Avi. %@";
@@ -1030,7 +1030,7 @@
 "create.images.action.starting" = "Iniciando magia de imagen";
 "create.images.action.queued" = "%d generaciones de imagen en cola.";
 "create.images.action.tooManyLooks" = "Elige menos looks";
-"create.images.action.servicePending" = "Magia de imagen pendiente";
+"create.images.action.servicePending" = "Avi está calentando motores";
 "gallery.video.defaultTitle" = "Video Animate";
 "gallery.image.defaultTitle" = "Imagen con estilo";
 "gallery.image.download" = "Descargar imagen";

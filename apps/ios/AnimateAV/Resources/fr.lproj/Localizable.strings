@@ -727,7 +727,7 @@
 "create.options.anotherTheme" = "un autre thème";
 "create.options.suggestionUsing" = "Suggestion d’Avi utilisée : %@ · %@";
 "create.storyDirection.title" = "Direction vidéo";
-"create.storyDirection.detail" = "Vérifie le rythme et le message avant de dépenser des crédits.";
+"create.storyDirection.detail" = "Vérifie le rythme et le message avant de dépenser des Crédits.";
 "create.storyDirection.needsStory" = "Avi doit préparer la direction vidéo avant de pouvoir créer la vidéo.";
 "create.media.itemCount" = "%d éléments";
 "create.final.createVideoTitle" = "Créer la vidéo";
@@ -887,7 +887,7 @@
 "create.workflowContent.assetUsageSkipped" = "%d utilisés · %d ignorés";
 "create.workflowContent.assetUsageItems" = "%d sur %d éléments";
 "create.workflowContent.beforeVideo" = "Avant la vidéo";
-"create.workflowContent.modePending" = "Mode en attente";
+"create.workflowContent.modePending" = "Choisir la piste";
 "create.workflowContent.renderPlanFallback" = "Avi vérifie la photo, le message et la qualité avant de créer la vidéo finale.";
 "create.videoDirection.selectedSetup" = "Image et direction";
 "create.videoDirection.status.ready" = "La direction vidéo est prête. Crée la vidéo finale ou ajuste-la d’abord.";
@@ -1021,7 +1021,7 @@
 "create.images.action.starting" = "Démarrage de la magie d’image";
 "create.images.action.queued" = "%d générations d’image en file.";
 "create.images.action.tooManyLooks" = "Choisis moins de looks";
-"create.images.action.servicePending" = "Magie d’image en attente";
+"create.images.action.servicePending" = "Avi s’échauffe";
 "gallery.video.defaultTitle" = "Vidéo Animate";
 "gallery.image.defaultTitle" = "Image stylisée";
 "gallery.image.download" = "Télécharger l'image";
