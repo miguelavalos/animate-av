@@ -9,11 +9,11 @@ final class AnimateHomeViewModel: ObservableObject {
     @Published private(set) var creditBalance = AnimateCreditBalance.empty
     @Published private(set) var creditBalanceLoadState = AnimateCreditBalanceLoadState.signedOut
 
-    private var momentsCancellables = Set<AnyCancellable>()
+    private var videosCancellables = Set<AnyCancellable>()
     private var accountCancellables = Set<AnyCancellable>()
 
     func bind(to summaryProvider: any AnimateInProgressSummaryProviding) {
-        momentsCancellables.removeAll()
+        videosCancellables.removeAll()
 
         summaryProvider.inProgressSummaryPublisher
             .removeDuplicates()
@@ -21,7 +21,7 @@ final class AnimateHomeViewModel: ObservableObject {
             .sink { [weak self] videosSummary in
                 self?.videosSummary = videosSummary
             }
-            .store(in: &momentsCancellables)
+            .store(in: &videosCancellables)
     }
 
     func bind(accountStateProvider: any AnimateAccountStateProviding) {

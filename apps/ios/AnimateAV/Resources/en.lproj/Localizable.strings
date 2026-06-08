@@ -792,9 +792,9 @@
 "workflow.media.localReady" = "Photo ready for editing.";
 "workflow.media.savedReady" = "Saved photo is ready for video preparation and creation.";
 "workflow.media.savedReadyThumbnailsPending" = "Saved photo is ready. The local thumbnail may refresh in the background.";
-"workflow.story.signInPlan" = "Sign in before planning the story.";
-"workflow.story.signInAgainPlan" = "Sign in again before planning the story.";
-"workflow.story.notConfigured" = "Story planning is not configured yet.";
+"workflow.story.signInPlan" = "Sign in before preparing the video direction.";
+"workflow.story.signInAgainPlan" = "Sign in again before preparing the video direction.";
+"workflow.story.notConfigured" = "Video direction is not configured yet.";
 "workflow.final.signInRender" = "Sign in before creating the final video.";
 "workflow.final.signInAgainRender" = "Sign in again before creating the final video.";
 "workflow.final.notConfigured" = "Final video creation is not configured for this build.";
@@ -833,7 +833,7 @@
 "create.render.phase.preparing" = "Preparing";
 "create.render.phase.uploading" = "Uploading";
 "create.render.phase.composing" = "Composing";
-"create.render.phase.rendering" = "Rendering";
+"create.render.phase.rendering" = "Animating";
 "create.render.phase.creating" = "Creating";
 "create.render.phase.saving" = "Saving";
 "create.render.detail.preparing" = "Avi is getting the video ready.";
@@ -859,7 +859,7 @@
 "create.story.empty.ready" = "Avi can prepare the animation plan from your photo.";
 "create.story.empty.needsMedia" = "Add one photo before preparing the video.";
 "create.final.status.ready" = "Final video is ready.";
-"create.story.status.alreadyReady" = "Story plan is already ready.";
+"create.story.status.alreadyReady" = "Video direction is already ready.";
 "create.final.status.startAnother" = "Start a new video when you want to create another animation.";
 "create.final.action.creating" = "Creating final video...";
 "create.final.empty.ready" = "Ready to create the final video when you are.";

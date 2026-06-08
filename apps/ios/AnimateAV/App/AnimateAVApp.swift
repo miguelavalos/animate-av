@@ -14,7 +14,7 @@ struct AnimateAVApp: App {
 
     var body: some Scene {
         WindowGroup {
-            MomentsAppBootstrapView()
+            AnimateAppBootstrapView()
                 .environmentObject(languageController)
                 .environmentObject(themeController)
                 .environmentObject(newVideoStartController)

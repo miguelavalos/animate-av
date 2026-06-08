@@ -7,7 +7,7 @@ final class AnimateInProgressObserver: ObservableObject {
     @Published private(set) var errorMessage: String?
 
     private let videosObserver: any AnimateInProgressObserving
-    private var momentsTask: Task<Void, Never>?
+    private var videosTask: Task<Void, Never>?
     private var observationGeneration = 0
     private let diagnosticsObserverName = "in_progress"
 
@@ -15,18 +15,18 @@ final class AnimateInProgressObserver: ObservableObject {
         videosObserver = animateRepository
     }
 
-    var momentsPublisher: AnyPublisher<[AnimateVideo], Never> {
+    var videosPublisher: AnyPublisher<[AnimateVideo], Never> {
         $videos.eraseToAnyPublisher()
     }
 
-    var momentsErrorPublisher: AnyPublisher<String?, Never> {
+    var videosErrorPublisher: AnyPublisher<String?, Never> {
         $errorMessage.eraseToAnyPublisher()
     }
 
     func observeAnimateVideos(ownerUserId: String?) {
         observationGeneration += 1
         let generation = observationGeneration
-        momentsTask?.cancel()
+        videosTask?.cancel()
         videos = []
         errorMessage = nil
 
@@ -36,7 +36,7 @@ final class AnimateInProgressObserver: ObservableObject {
         do {
             let updates = try videosObserver.observeAnimateVideos(ownerUserId: ownerUserId).values
 
-            momentsTask = Task { [weak self] in
+            videosTask = Task { [weak self] in
                 do {
                     for try await videos in updates {
                         await MainActor.run {
@@ -64,13 +64,13 @@ final class AnimateInProgressObserver: ObservableObject {
 
     func clearAnimateVideos() {
         observationGeneration += 1
-        momentsTask?.cancel()
+        videosTask?.cancel()
         videos = []
         errorMessage = nil
     }
 
     deinit {
-        momentsTask?.cancel()
+        videosTask?.cancel()
     }
 }
 

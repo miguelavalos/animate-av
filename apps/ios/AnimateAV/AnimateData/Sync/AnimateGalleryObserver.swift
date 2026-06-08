@@ -7,7 +7,7 @@ final class AnimateGalleryObserver: ObservableObject {
     @Published private(set) var errorMessage: String?
 
     private let videosObserver: any AnimateGalleryObserving
-    private var momentsTask: Task<Void, Never>?
+    private var videosTask: Task<Void, Never>?
     private var observationGeneration = 0
     private let diagnosticsObserverName = "gallery"
 
@@ -15,18 +15,18 @@ final class AnimateGalleryObserver: ObservableObject {
         videosObserver = animateRepository
     }
 
-    var galleryMomentsPublisher: AnyPublisher<[AnimateArtifact], Never> {
+    var galleryArtifactsPublisher: AnyPublisher<[AnimateArtifact], Never> {
         $videos.eraseToAnyPublisher()
     }
 
-    var galleryMomentsErrorPublisher: AnyPublisher<String?, Never> {
+    var galleryArtifactsErrorPublisher: AnyPublisher<String?, Never> {
         $errorMessage.eraseToAnyPublisher()
     }
 
     func observeGalleryArtifacts(ownerUserId: String?) {
         observationGeneration += 1
         let generation = observationGeneration
-        momentsTask?.cancel()
+        videosTask?.cancel()
         videos = []
         errorMessage = nil
 
@@ -36,7 +36,7 @@ final class AnimateGalleryObserver: ObservableObject {
         do {
             let updates = try videosObserver.observeGalleryArtifacts(ownerUserId: ownerUserId).values
 
-            momentsTask = Task { [weak self] in
+            videosTask = Task { [weak self] in
                 do {
                     for try await videos in updates {
                         await MainActor.run {
@@ -62,15 +62,15 @@ final class AnimateGalleryObserver: ObservableObject {
         }
     }
 
-    func clearGalleryMoments() {
+    func clearGalleryArtifacts() {
         observationGeneration += 1
-        momentsTask?.cancel()
+        videosTask?.cancel()
         videos = []
         errorMessage = nil
     }
 
     deinit {
-        momentsTask?.cancel()
+        videosTask?.cancel()
     }
 }
 

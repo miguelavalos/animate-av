@@ -809,7 +809,7 @@ final class AnimateCreateWorkflowPresentationTests: XCTestCase {
 
         let presentation = AnimateRenderRealtimePresentation(renderJob: job)
 
-        XCTAssertEqual(presentation.title, "Rendering")
+        XCTAssertEqual(presentation.title, "Animating")
         XCTAssertEqual(presentation.detail, "Rendering your video.")
         XCTAssertEqual(presentation.progressFraction ?? -1, 0.42, accuracy: 0.001)
         XCTAssertEqual(presentation.systemImage, "gearshape.2.fill")

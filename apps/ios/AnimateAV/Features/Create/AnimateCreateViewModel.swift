@@ -2,7 +2,7 @@ import Combine
 import CryptoKit
 import Foundation
 
-enum MomentsFinalVideoCommandState: Equatable {
+enum AnimateFinalVideoCommandState: Equatable {
     case idle
     case validating(String)
     case preparingPlan(String)
@@ -78,7 +78,7 @@ final class AnimateCreateViewModel: ObservableObject {
     @Published private(set) var finalRenderStatusMessage: String?
     @Published private(set) var isGeneratingFinalRender = false
     @Published private(set) var isPreparingFinalPlan = false
-    @Published private(set) var finalVideoCommandState = MomentsFinalVideoCommandState.idle
+    @Published private(set) var finalVideoCommandState = AnimateFinalVideoCommandState.idle
     @Published var pendingFocus: AnimateContinuationFocus?
     @Published private(set) var continuationFocusHint: AnimateContinuationFocus?
     @Published var mediaPickerOpenRequest = 0
@@ -691,7 +691,7 @@ final class AnimateCreateViewModel: ObservableObject {
         isPreparingFinalPlan = false
     }
 
-    func beginFinalVideoCommand(_ state: MomentsFinalVideoCommandState) {
+    func beginFinalVideoCommand(_ state: AnimateFinalVideoCommandState) {
         finalVideoCommandState = state
     }
 

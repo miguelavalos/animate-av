@@ -675,9 +675,9 @@
 "recovery.mediaUploadUnavailable" = "L’envoi de la photo n’est pas encore prêt. Ta photo reste sur cet appareil ; réessaie dans un instant.";
 "recovery.mediaStorySaveFailure" = "Impossible d’enregistrer la photo pour la vidéo. Ta photo reste sur cet appareil ; réessaie ou choisis une autre image.";
 "recovery.mediaVideoSaveFailure" = "Impossible d’enregistrer les médias pour créer la vidéo. Tes photos et vidéos restent sur cet appareil ; réessaie ou choisis d’autres éléments.";
-"recovery.storyStartFailure" = "Impossible de lancer cette vidéo pour cette histoire. Aucun crédit n’a été utilisé. Réessaie.";
-"recovery.storyFailure" = "Avi n’a pas pu préparer l’histoire maintenant. Aucun crédit de vidéo finale n’a été utilisé. Réessaie.";
-"recovery.renderStartFailure" = "Impossible de lancer la création de la vidéo. Aucun crédit de vidéo finale n’a été utilisé. Réessaie dans un instant.";
+"recovery.storyStartFailure" = "Impossible de lancer cette vidéo. Aucun crédit n’a été utilisé. Réessaie.";
+"recovery.storyFailure" = "Avi n’a pas pu préparer la vidéo maintenant. Aucun crédit n’a été utilisé. Réessaie.";
+"recovery.renderStartFailure" = "Impossible de lancer la création de la vidéo. Aucun crédit n’a été utilisé. Réessaie dans un instant.";
 "recovery.renderRefreshFailure" = "Impossible d’actualiser le statut de la vidéo. Les crédits ne sont finalisés que lorsque la vidéo est prête. Réessaie.";
 "recovery.failedRenderDetail" = "La création de la vidéo a rencontré un problème. Les crédits réservés seront libérés si la vidéo n’a pas été terminée. Réessaie ou contacte le support.";
 "media.item.singular" = "élément";
@@ -788,8 +788,8 @@
 "workflow.story.signInPlan" = "Connecte-toi avant de préparer la direction vidéo.";
 "workflow.story.signInAgainPlan" = "Reconnecte-toi avant de préparer la direction vidéo.";
 "workflow.story.notConfigured" = "La direction vidéo n’est pas encore configurée.";
-"workflow.final.signInRender" = "Connecte-toi avant de rendre l’export final.";
-"workflow.final.signInAgainRender" = "Reconnecte-toi avant de rendre l’export final.";
+"workflow.final.signInRender" = "Connecte-toi avant de créer la vidéo finale.";
+"workflow.final.signInAgainRender" = "Reconnecte-toi avant de créer la vidéo finale.";
 "workflow.final.notConfigured" = "Le vidéo finale n’est pas configuré pour cette build.";
 "workflow.final.preparing" = "Avi prépare l’export final.";
 "workflow.final.checkingPlan" = "Vérification de l’image et des crédits.";
@@ -806,9 +806,9 @@
 "workflow.final.saveLocalFailed" = "La vidéo finale est prête, mais elle n’a pas encore pu être enregistrée localement.";
 "workflow.final.downloadBeforeGallery" = "Télécharge la vidéo finale avant de la déplacer vers la galerie.";
 "workflow.final.movedToGallery" = "Vidéo finale déplacée vers la galerie.";
-"workflow.final.missingMoment" = "Démarre ou continue une vidéo avant de rendre l’export final.";
-"workflow.final.addCredits" = "Ajoute des crédits avant le vidéo finale.";
-"workflow.final.notReady" = "L’export final n’est pas prêt à être rendu.";
+"workflow.final.missingMoment" = "Démarre ou continue une vidéo avant de créer la vidéo finale.";
+"workflow.final.addCredits" = "Ajoute des crédits avant la vidéo finale.";
+"workflow.final.notReady" = "La vidéo finale n’est pas encore prête.";
 
 "create.summary.media.added" = "%d ajoutés";
 "create.summary.story.scene" = "%d scène";

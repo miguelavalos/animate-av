@@ -88,10 +88,10 @@ struct AnimateStoryClient {
 
         let plan = try JSONDecoder().decode(AnimateStoryResponse.self, from: data)
         if plan.status == "blocked" {
-            throw AnimateStoryError.blocked(plan.errorMessage ?? "Avi needs safer inputs before planning this story.")
+            throw AnimateStoryError.blocked(plan.errorMessage ?? "Avi needs safer inputs before preparing this video.")
         }
         if plan.status == "provider_failed" {
-            throw AnimateStoryError.providerFailed(plan.errorMessage ?? "Story plan failed.")
+            throw AnimateStoryError.providerFailed(plan.errorMessage ?? "Video direction failed.")
         }
 
         return plan
@@ -123,8 +123,8 @@ enum AnimateStoryError: LocalizedError {
 
     var errorDescription: String? {
         switch self {
-        case .apiNotConfigured: "Story planning is not configured for this build."
-        case .planFailed: "Story plan request failed."
+        case .apiNotConfigured: "Video direction is not configured for this build."
+        case .planFailed: "Video direction request failed."
         case .blocked(let message): message
         case .providerFailed(let message): message
         }

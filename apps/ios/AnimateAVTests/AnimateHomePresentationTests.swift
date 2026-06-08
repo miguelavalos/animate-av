@@ -39,12 +39,12 @@ final class AnimateHomePresentationTests: XCTestCase {
     }
 
     func testLatestInProgressVideoAddsContinuationAction() {
-        let moment = makeMoment(id: "latest-plan", status: "story_ready", updatedAt: 20)
+        let moment = makeVideo(id: "latest-plan", status: "story_ready", updatedAt: 20)
         let presentation = AnimateHomePresentation.make(
             isSignedIn: true,
             displayName: nil,
             videosSummary: AnimateInProgressSummary.make(from: [
-                makeMoment(id: "finished", status: "gallery_ready", updatedAt: 30),
+                makeVideo(id: "finished", status: "gallery_ready", updatedAt: 30),
                 moment
             ])
         )
@@ -62,8 +62,8 @@ final class AnimateHomePresentationTests: XCTestCase {
             isSignedIn: true,
             displayName: nil,
             videosSummary: AnimateInProgressSummary.make(from: [
-                makeMoment(id: "one", status: "in_progress", updatedAt: 10),
-                makeMoment(id: "two", status: "gallery_ready", updatedAt: 20)
+                makeVideo(id: "one", status: "in_progress", updatedAt: 10),
+                makeVideo(id: "two", status: "gallery_ready", updatedAt: 20)
             ])
         )
 
@@ -82,7 +82,7 @@ final class AnimateHomePresentationTests: XCTestCase {
             isSignedIn: true,
             displayName: nil,
             videosSummary: AnimateInProgressSummary.make(from: [
-                makeMoment(id: "one", status: "in_progress", updatedAt: 10)
+                makeVideo(id: "one", status: "in_progress", updatedAt: 10)
             ])
         )
 
@@ -96,7 +96,7 @@ final class AnimateHomePresentationTests: XCTestCase {
         )
     }
 
-    private func makeMoment(id: String, status: String, updatedAt: Double) -> AnimateVideo {
+    private func makeVideo(id: String, status: String, updatedAt: Double) -> AnimateVideo {
         AnimateVideo(
             id: id,
             template: .birthdayMessage,

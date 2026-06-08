@@ -9,7 +9,7 @@ final class AnimateGalleryViewModel: ObservableObject {
 
     private var galleryCancellables = Set<AnyCancellable>()
     private let galleryStore: any AnimateGalleryStoring
-    private let galleryMomentsProvider: (any AnimateGalleryListProviding)?
+    private let galleryArtifactsProvider: (any AnimateGalleryListProviding)?
     private let authTokenProvider: (any AnimateAuthTokenProviding)?
     private let finalRenderClient: AnimateFinalRenderClient?
     private var remoteArtifacts: [AnimateArtifact] = []
@@ -17,12 +17,12 @@ final class AnimateGalleryViewModel: ObservableObject {
 
     init(
         galleryStore: any AnimateGalleryStoring = AnimateGalleryStore(),
-        galleryMomentsProvider: (any AnimateGalleryListProviding)? = nil,
+        galleryArtifactsProvider: (any AnimateGalleryListProviding)? = nil,
         authTokenProvider: (any AnimateAuthTokenProviding)? = nil,
         finalRenderClient: AnimateFinalRenderClient? = nil
     ) {
         self.galleryStore = galleryStore
-        self.galleryMomentsProvider = galleryMomentsProvider
+        self.galleryArtifactsProvider = galleryArtifactsProvider
         self.authTokenProvider = authTokenProvider
         self.finalRenderClient = finalRenderClient
         refreshVideos()
@@ -32,14 +32,14 @@ final class AnimateGalleryViewModel: ObservableObject {
                 self?.refreshVideos()
             }
             .store(in: &galleryCancellables)
-        galleryMomentsProvider?.galleryMomentsPublisher
+        galleryArtifactsProvider?.galleryArtifactsPublisher
             .sink { [weak self] artifacts in
                 self?.remoteArtifacts = artifacts
                 self?.refreshVideos()
                 self?.refreshImages()
             }
             .store(in: &galleryCancellables)
-        galleryMomentsProvider?.galleryMomentsErrorPublisher
+        galleryArtifactsProvider?.galleryArtifactsErrorPublisher
             .sink { [weak self] message in
                 self?.statusMessage = message
             }

@@ -20,8 +20,8 @@ final class AnimateAviViewModelTests: XCTestCase {
         let presentation = AnimateAviPresentation.make(
             isSignedIn: true,
             videosSummary: AnimateInProgressSummary.make(from: [
-                makeMoment(id: "active-1", status: "story_ready", updatedAt: 20),
-                makeMoment(id: "done-1", status: "gallery_ready", updatedAt: 10)
+                makeVideo(id: "active-1", status: "story_ready", updatedAt: 20),
+                makeVideo(id: "done-1", status: "gallery_ready", updatedAt: 10)
             ]),
             creditBalance: .empty
         )
@@ -90,7 +90,7 @@ final class AnimateAviViewModelTests: XCTestCase {
     }
 
     func testViewModelExposesPresentationFromBoundState() {
-        let summaryProvider = AviMomentsSummaryProvider()
+        let summaryProvider = AviVideosSummaryProvider()
         let accountProvider = AviAccountStateProvider()
         let viewModel = AnimateAviViewModel()
         viewModel.bind(to: summaryProvider)
@@ -102,7 +102,7 @@ final class AnimateAviViewModelTests: XCTestCase {
         )
         summaryProvider.summary.send(
             AnimateInProgressSummary.make(from: [
-                makeMoment(id: "active-1", status: "story_ready", updatedAt: 20)
+                makeVideo(id: "active-1", status: "story_ready", updatedAt: 20)
             ])
         )
 
@@ -110,7 +110,7 @@ final class AnimateAviViewModelTests: XCTestCase {
         XCTAssertTrue(viewModel.presentation.creditGuidanceMessage.contains("1 credit available"))
     }
 
-    private func makeMoment(id: String, status: String, updatedAt: Double) -> AnimateVideo {
+    private func makeVideo(id: String, status: String, updatedAt: Double) -> AnimateVideo {
         AnimateVideo(
             id: id,
             template: .birthdayMessage,
@@ -127,7 +127,7 @@ final class AnimateAviViewModelTests: XCTestCase {
     }
 }
 
-private final class AviMomentsSummaryProvider: AnimateInProgressSummaryProviding {
+private final class AviVideosSummaryProvider: AnimateInProgressSummaryProviding {
     let summary = CurrentValueSubject<AnimateInProgressSummary, Never>(AnimateInProgressSummary())
 
     var inProgressSummaryPublisher: AnyPublisher<AnimateInProgressSummary, Never> {

@@ -5,8 +5,8 @@ final class AnimateInProgressListPresentationTests: XCTestCase {
     func testSummaryPillsUseVideoSummaryCounts() {
         let presentation = AnimateInProgressListPresentation.make(
             videosSummary: AnimateInProgressSummary.make(from: [
-                makeMoment(id: "active", status: "story_ready", updatedAt: 20),
-                makeMoment(id: "done", status: "gallery_ready", updatedAt: 10)
+                makeVideo(id: "active", status: "story_ready", updatedAt: 20),
+                makeVideo(id: "done", status: "gallery_ready", updatedAt: 10)
             ]),
             selectedVideoId: nil
         )
@@ -19,9 +19,9 @@ final class AnimateInProgressListPresentationTests: XCTestCase {
     func testGroupsOmitEmptySectionsAndPreserveStatusRulesOrder() {
         let presentation = AnimateInProgressListPresentation.make(
             videosSummary: AnimateInProgressSummary.make(from: [
-                makeMoment(id: "older-active", status: "in_progress", updatedAt: 10),
-                makeMoment(id: "newer-active", status: "story_ready", updatedAt: 30),
-                makeMoment(id: "done", status: "gallery_ready", updatedAt: 20)
+                makeVideo(id: "older-active", status: "in_progress", updatedAt: 10),
+                makeVideo(id: "newer-active", status: "story_ready", updatedAt: 30),
+                makeVideo(id: "done", status: "gallery_ready", updatedAt: 20)
             ]),
             selectedVideoId: nil
         )
@@ -32,7 +32,7 @@ final class AnimateInProgressListPresentationTests: XCTestCase {
     }
 
     func testRowPresentationFormatsVideoMetadataAndSelection() {
-        let moment = makeMoment(
+        let moment = makeVideo(
             id: "moment-1",
             status: "story_ready",
             title: "Family Weekend",
@@ -53,7 +53,7 @@ final class AnimateInProgressListPresentationTests: XCTestCase {
 
     func testFinishedRowUsesFinishedMarkerAndCollapsedAccessoryWhenNotSelected() {
         let row = AnimateInProgressListRowPresentation(
-            video: makeMoment(id: "done", status: "gallery_ready"),
+            video: makeVideo(id: "done", status: "gallery_ready"),
             isSelected: false
         )
 
@@ -62,7 +62,7 @@ final class AnimateInProgressListPresentationTests: XCTestCase {
         XCTAssertEqual(row.accessorySystemImage, "chevron.right.circle")
     }
 
-    private func makeMoment(
+    private func makeVideo(
         id: String,
         status: String,
         title: String? = nil,

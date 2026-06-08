@@ -3,7 +3,7 @@ import Foundation
 @MainActor
 struct AnimateWorkflowBundle {
     let videoDeletion: AnimateVideoDeletionWorkflow
-    let momentWorkspaceSelection: AnimateWorkspaceSelectionWorkflow
+    let workspaceSelection: AnimateWorkspaceSelectionWorkflow
     let videosWorkflow: AnimateVideosWorkflow
     let videoCreation: AnimateVideoCreationWorkflow
     let mediaUpload: MediaUploadWorkflow
@@ -15,17 +15,17 @@ struct AnimateWorkflowBundle {
         animateRepository: AnimateRepository,
         videosObserver: AnimateInProgressObserver,
         workspaceObserver: AnimateWorkspaceObserver,
-        clients: MomentsWorkflowClients
+        clients: AnimateWorkflowClients
     ) {
         videoDeletion = AnimateVideoDeletionWorkflow(
             currentUserProvider: accountController,
             authTokenProvider: accountController,
             videoDeleter: clients.workspaceCommands
         )
-        momentWorkspaceSelection = AnimateWorkspaceSelectionWorkflow(workspaceObserver: workspaceObserver)
+        workspaceSelection = AnimateWorkspaceSelectionWorkflow(workspaceObserver: workspaceObserver)
         videosWorkflow = AnimateVideosWorkflow(
             videosObserver: videosObserver,
-            workspaceSelectionWorkflow: momentWorkspaceSelection,
+            workspaceSelectionWorkflow: workspaceSelection,
             videoDeletionWorkflow: videoDeletion,
             videoTitleUpdater: clients.workspaceCommands,
             currentUserProvider: accountController,
@@ -63,7 +63,7 @@ struct AnimateWorkflowBundle {
     }
 }
 
-struct MomentsWorkflowClients {
+struct AnimateWorkflowClients {
     let workspaceCommands: AnimateWorkspaceCommandClient
     let realtimeSession: AnimateRealtimeSessionClient
     let upload: AnimateUploadClient

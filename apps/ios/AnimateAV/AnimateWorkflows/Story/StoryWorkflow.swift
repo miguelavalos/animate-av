@@ -95,7 +95,7 @@ final class StoryWorkflow: WorkspaceObservingWorkflow {
             statusMessage = plan.helperCopy
         } catch let error as StoryWorkflowError {
             guard isCurrentWorkflowGeneration(generation) else { return false }
-            logger.error("Story plan workflow failed momentId=\(momentId, privacy: .public) reason=\(error.localizedDescription, privacy: .public)")
+            logger.error("Video direction workflow failed momentId=\(momentId, privacy: .public) reason=\(error.localizedDescription, privacy: .public)")
             AnimateWorkflowDiagnostics.capture(
                 error,
                 feature: "animate.story",
@@ -111,7 +111,7 @@ final class StoryWorkflow: WorkspaceObservingWorkflow {
             return false
         } catch let error as LocalizedError {
             guard isCurrentWorkflowGeneration(generation) else { return false }
-            logger.error("Story plan request failed momentId=\(momentId, privacy: .public) error=\(String(describing: error), privacy: .public)")
+            logger.error("Video direction request failed momentId=\(momentId, privacy: .public) error=\(String(describing: error), privacy: .public)")
             AnimateWorkflowDiagnostics.capture(
                 error,
                 feature: "animate.story",
@@ -127,7 +127,7 @@ final class StoryWorkflow: WorkspaceObservingWorkflow {
             return false
         } catch {
             guard isCurrentWorkflowGeneration(generation) else { return false }
-            logger.error("Story plan failed momentId=\(momentId, privacy: .public) error=\(String(describing: error), privacy: .public)")
+            logger.error("Video direction failed momentId=\(momentId, privacy: .public) error=\(String(describing: error), privacy: .public)")
             AnimateWorkflowDiagnostics.capture(
                 error,
                 feature: "animate.story",

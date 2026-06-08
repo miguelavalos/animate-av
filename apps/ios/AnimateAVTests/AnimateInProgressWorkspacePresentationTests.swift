@@ -4,7 +4,7 @@ import XCTest
 final class AnimateInProgressWorkspacePresentationTests: XCTestCase {
     func testWorkspaceDetailPresentationFormatsTitleActionAndContinuationRequest() {
         let workspace = makeWorkspace(
-            video: makeMoment(title: "Family Weekend"),
+            video: makeVideo(title: "Family Weekend"),
             mediaAssets: [
                 makeMediaAsset(id: "media-1", kind: "image", sortOrder: 0, selected: true, moderationStatus: "approved")
             ]
@@ -20,7 +20,7 @@ final class AnimateInProgressWorkspacePresentationTests: XCTestCase {
 
     func testWorkspaceDetailPresentationUsesFailedRenderContinuationFocus() {
         let workspace = makeWorkspace(
-            video: makeMoment(title: "Family Weekend"),
+            video: makeVideo(title: "Family Weekend"),
             renderJobs: [
                 makeRenderJob(id: "job-1", kind: "final", status: "failed", updatedAt: 20)
             ]
@@ -35,7 +35,7 @@ final class AnimateInProgressWorkspacePresentationTests: XCTestCase {
     func testWorkspaceHeaderPresentationFormatsTitleUpdateAndCounts() {
         let presentation = AnimateInProgressWorkspaceHeaderPresentation(
             workspace: makeWorkspace(
-                video: makeMoment(title: "Family Weekend", updatedAt: 1_781_592_000_000),
+                video: makeVideo(title: "Family Weekend", updatedAt: 1_781_592_000_000),
                 mediaAssets: [
                     makeMediaAsset(id: "media-1", kind: "image", sortOrder: 0, selected: true, moderationStatus: "approved")
                 ],
@@ -56,7 +56,7 @@ final class AnimateInProgressWorkspacePresentationTests: XCTestCase {
     func testWorkspaceHeaderPresentationFormatsPluralCounts() {
         let presentation = AnimateInProgressWorkspaceHeaderPresentation(
             workspace: makeWorkspace(
-                video: makeMoment(title: "Family Weekend"),
+                video: makeVideo(title: "Family Weekend"),
                 mediaAssets: [
                     makeMediaAsset(id: "media-1", kind: "image", sortOrder: 0, selected: true, moderationStatus: "approved"),
                     makeMediaAsset(id: "media-2", kind: "video", sortOrder: 1, selected: false, moderationStatus: "pending")
@@ -78,7 +78,7 @@ final class AnimateInProgressWorkspacePresentationTests: XCTestCase {
     func testWorkspaceSummaryPresentationFormatsStatusArtifactsAndLatestJob() {
         let presentation = AnimateInProgressWorkspaceSummaryPresentation(
             workspace: makeWorkspace(
-                video: makeMoment(status: "story_ready"),
+                video: makeVideo(status: "story_ready"),
                 renderJobs: [
                     makeRenderJob(id: "old", kind: "final", status: "queued", updatedAt: 10),
                     makeRenderJob(id: "new", kind: "final", status: "failed", updatedAt: 20)
@@ -98,7 +98,7 @@ final class AnimateInProgressWorkspacePresentationTests: XCTestCase {
 
     func testWorkspaceSummaryPresentationUsesFallbacksWhenNoArtifactsOrJobsExist() {
         let presentation = AnimateInProgressWorkspaceSummaryPresentation(
-            workspace: makeWorkspace(video: makeMoment(status: "in_progress"))
+            workspace: makeWorkspace(video: makeVideo(status: "in_progress"))
         )
 
         XCTAssertEqual(presentation.tiles.map(\.value), ["In Progress", "Not ready", "Not started"])
@@ -176,7 +176,7 @@ final class AnimateInProgressWorkspacePresentationTests: XCTestCase {
         )
     }
 
-    private func makeMoment(
+    private func makeVideo(
         status: String = "in_progress",
         title: String = "moment-1",
         updatedAt: Double = 10
@@ -210,7 +210,7 @@ final class AnimateInProgressWorkspacePresentationTests: XCTestCase {
 
     func testWorkspaceLookupsFindLatestArtifactAndRenderJob() {
         let workspace = makeWorkspace(
-            video: makeMoment(),
+            video: makeVideo(),
             renderJobs: [
                 makeRenderJob(id: "final", kind: "final", status: "queued", updatedAt: 30),
                 makeRenderJob(id: "final-old", kind: "final", status: "queued", updatedAt: 10),

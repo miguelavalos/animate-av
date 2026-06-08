@@ -151,7 +151,7 @@ final class AnimateCreateAvailabilityPresentationTests: XCTestCase {
                 isFinalRenderAvailable: true,
                 isFinalRenderGenerating: false,
                 isFinalRenderConfigured: true,
-                video: AnimateCreateTestFixtures.makeMoment(id: "moment-1"),
+                video: AnimateCreateTestFixtures.makeVideo(id: "moment-1"),
                 template: .birthdayMessage,
                 balance: AnimateCreditBalance(proMonthly: 4, promotional: 0, purchased: 0)
             ),
@@ -166,7 +166,7 @@ final class AnimateCreateAvailabilityPresentationTests: XCTestCase {
                 isFinalRenderAvailable: true,
                 isFinalRenderGenerating: false,
                 isFinalRenderConfigured: true,
-                video: AnimateCreateTestFixtures.makeMoment(id: "moment-1", status: "story_ready"),
+                video: AnimateCreateTestFixtures.makeVideo(id: "moment-1", status: "story_ready"),
                 template: .birthdayMessage,
                 balance: .empty,
                 creditBalanceLoadState: .loading
@@ -182,7 +182,7 @@ final class AnimateCreateAvailabilityPresentationTests: XCTestCase {
                 isFinalRenderAvailable: true,
                 isFinalRenderGenerating: false,
                 isFinalRenderConfigured: true,
-                video: AnimateCreateTestFixtures.makeMoment(id: "moment-1", status: "story_ready"),
+                video: AnimateCreateTestFixtures.makeVideo(id: "moment-1", status: "story_ready"),
                 template: .birthdayMessage,
                 balance: .empty,
                 creditBalanceLoadState: .offline

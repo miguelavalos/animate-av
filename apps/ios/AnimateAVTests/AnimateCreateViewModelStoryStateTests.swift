@@ -138,7 +138,7 @@ final class AnimateCreateViewModelStoryStateTests: XCTestCase {
         let workflow = harness.finalRenderWorkflow
         harness.publishWorkspace(
             AnimateWorkspace(
-                video: AnimateCreateTestFixtures.makeMoment(id: "moment-1"),
+                video: AnimateCreateTestFixtures.makeVideo(id: "moment-1"),
                 mediaAssets: [
                     AnimateCreateTestFixtures.makeMediaAsset(
                         id: "backend-media-1",
@@ -362,7 +362,7 @@ final class AnimateCreateViewModelStoryStateTests: XCTestCase {
         viewModel.applyStoryState(
             AnimateCreateStoryState(
                 activeWorkspace: AnimateWorkspace(
-                    video: AnimateCreateTestFixtures.makeMoment(id: "moment-1"),
+                    video: AnimateCreateTestFixtures.makeVideo(id: "moment-1"),
                     mediaAssets: [
                         AnimateCreateTestFixtures.makeMediaAsset(
                             id: "backend-media-1",
@@ -451,7 +451,7 @@ final class AnimateCreateViewModelStoryStateTests: XCTestCase {
         viewModel.applyStoryState(
             AnimateCreateStoryState(
                 activeWorkspace: AnimateWorkspace(
-                    video: AnimateCreateTestFixtures.makeMoment(
+                    video: AnimateCreateTestFixtures.makeVideo(
                         id: "moment-1",
                         occasion: "Birthday",
                         storyInputSignature: backendSignature
@@ -529,7 +529,7 @@ final class AnimateCreateViewModelStoryStateTests: XCTestCase {
         viewModel.applyStoryState(
             AnimateCreateStoryState(
                 activeWorkspace: AnimateWorkspace(
-                    video: AnimateCreateTestFixtures.makeMoment(
+                    video: AnimateCreateTestFixtures.makeVideo(
                         id: "moment-1",
                         occasion: "Birthday",
                         storyInputSignature: preparedStory.signature
@@ -607,7 +607,7 @@ final class AnimateCreateViewModelStoryStateTests: XCTestCase {
         viewModel.applyStoryState(
             AnimateCreateStoryState(
                 activeWorkspace: AnimateWorkspace(
-                    video: AnimateCreateTestFixtures.makeMoment(
+                    video: AnimateCreateTestFixtures.makeVideo(
                         id: "moment-1",
                         template: .partyRecap,
                         theme: "eventRecap",
@@ -702,7 +702,7 @@ final class AnimateCreateViewModelStoryStateTests: XCTestCase {
         viewModel.applyStoryState(
             AnimateCreateStoryState(
                 activeWorkspace: AnimateWorkspace(
-                    video: AnimateCreateTestFixtures.makeMoment(
+                    video: AnimateCreateTestFixtures.makeVideo(
                         id: momentId,
                         occasion: "Birthday",
                         storyInputSignature: signature

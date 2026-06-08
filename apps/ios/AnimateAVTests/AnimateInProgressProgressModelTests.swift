@@ -45,7 +45,7 @@ final class AnimateInProgressProgressModelTests: XCTestCase {
         artifacts: [AnimateArtifact] = []
     ) -> AnimateWorkspace {
         AnimateWorkspace(
-            video: makeMoment(id: "moment-1", status: "in_progress", updatedAt: 10),
+            video: makeVideo(id: "moment-1", status: "in_progress", updatedAt: 10),
             mediaAssets: mediaAssets,
             storyScenes: storyScenes,
             renderJobs: renderJobs,
@@ -53,7 +53,7 @@ final class AnimateInProgressProgressModelTests: XCTestCase {
         )
     }
 
-    private func makeMoment(id: String, status: String, updatedAt: Double) -> AnimateVideo {
+    private func makeVideo(id: String, status: String, updatedAt: Double) -> AnimateVideo {
         AnimateVideo(
             id: id,
             template: .birthdayMessage,

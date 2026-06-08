@@ -327,8 +327,8 @@ final class AccountController: ObservableObject {
     }
 
     private func diagnosticsErrorCode(for error: Error) -> String {
-        if let momentsError = error as? AnimateAPIError {
-            return momentsError.code
+        if let videoError = error as? AnimateAPIError {
+            return videoError.code
         }
         return String(describing: type(of: error))
     }

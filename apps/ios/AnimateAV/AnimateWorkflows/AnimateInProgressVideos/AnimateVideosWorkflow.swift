@@ -14,7 +14,7 @@ final class AnimateVideosWorkflow: ObservableObject {
     private let currentUserProvider: any AnimateCurrentUserProviding
     private let authTokenProvider: any AnimateAuthTokenProviding
     private var currentOwnerUserId: String?
-    private var optimisticMomentTitles: [String: String] = [:]
+    private var optimisticVideoTitles: [String: String] = [:]
     private var cancellables = Set<AnyCancellable>()
 
     init(
@@ -32,14 +32,14 @@ final class AnimateVideosWorkflow: ObservableObject {
         self.currentUserProvider = currentUserProvider
         self.authTokenProvider = authTokenProvider
 
-        videosObserver.momentsPublisher
+        videosObserver.videosPublisher
             .receive(on: DispatchQueue.main)
             .sink { [weak self] videos in
                 self?.apply(videos)
             }
             .store(in: &cancellables)
 
-        videosObserver.momentsErrorPublisher
+        videosObserver.videosErrorPublisher
             .receive(on: DispatchQueue.main)
             .sink { [weak self] message in
                 self?.applyVideoListError(message)
@@ -93,8 +93,8 @@ final class AnimateVideosWorkflow: ObservableObject {
     func renameVideo(_ video: AnimateVideo, title: String) async -> Bool {
         let trimmedTitle = title.trimmingCharacters(in: .whitespacesAndNewlines)
         guard !trimmedTitle.isEmpty else { return false }
-        let previousTitle = optimisticMomentTitles[video.id]
-        optimisticMomentTitles[video.id] = trimmedTitle
+        let previousTitle = optimisticVideoTitles[video.id]
+        optimisticVideoTitles[video.id] = trimmedTitle
         applyOptimisticTitle(momentId: video.id, title: trimmedTitle)
 
         do {
@@ -136,9 +136,9 @@ final class AnimateVideosWorkflow: ObservableObject {
 
     private func apply(_ videos: [AnimateVideo]) {
         let renamedVideos = videos.map { video in
-            guard let title = optimisticMomentTitles[video.id] else { return video }
+            guard let title = optimisticVideoTitles[video.id] else { return video }
             if video.title == title {
-                optimisticMomentTitles[video.id] = nil
+                optimisticVideoTitles[video.id] = nil
                 return video
             }
             return video.renamed(title)
@@ -155,12 +155,12 @@ final class AnimateVideosWorkflow: ObservableObject {
 
     private func restoreOptimisticTitle(momentId: String, previousTitle: String?) {
         if let previousTitle {
-            optimisticMomentTitles[momentId] = previousTitle
+            optimisticVideoTitles[momentId] = previousTitle
             applyOptimisticTitle(momentId: momentId, title: previousTitle)
             return
         }
 
-        optimisticMomentTitles[momentId] = nil
+        optimisticVideoTitles[momentId] = nil
     }
 
     private func applyVideoListError(_ message: String?) {

@@ -9,8 +9,8 @@ final class AnimateInProgressObserverTests: XCTestCase {
         let observer = AnimateInProgressObserver(animateRepository: repository)
 
         observer.observeAnimateVideos(ownerUserId: "user-1")
-        let moment = makeMoment(id: "moment-1")
-        repository.sendMoments([moment])
+        let moment = makeVideo(id: "moment-1")
+        repository.sendVideos([moment])
         await waitUntil { observer.videos == [moment] }
 
         XCTAssertEqual(observer.videos, [moment])
@@ -23,7 +23,7 @@ final class AnimateInProgressObserverTests: XCTestCase {
         let observer = AnimateInProgressObserver(animateRepository: repository)
 
         observer.observeAnimateVideos(ownerUserId: "user-1")
-        repository.sendMoments([makeMoment(id: "moment-1")])
+        repository.sendVideos([makeVideo(id: "moment-1")])
         await waitUntil { !observer.videos.isEmpty }
 
         observer.observeAnimateVideos(ownerUserId: nil)
@@ -34,7 +34,7 @@ final class AnimateInProgressObserverTests: XCTestCase {
     }
 
     func testInProgressObserverPublishesObservationErrors() {
-        let repository = MockAnimateRepository(momentsError: TestObservationError.videos)
+        let repository = MockAnimateRepository(videoError: TestObservationError.videos)
         let observer = AnimateInProgressObserver(animateRepository: repository)
 
         observer.observeAnimateVideos(ownerUserId: "user-1")
@@ -48,17 +48,17 @@ final class AnimateInProgressObserverTests: XCTestCase {
         let observer = AnimateInProgressObserver(animateRepository: repository)
 
         observer.observeAnimateVideos(ownerUserId: "user-1")
-        let firstSubject = repository.momentsSubjects[0]
-        let firstMoment = makeMoment(id: "moment-1")
+        let firstSubject = repository.videoSubjects[0]
+        let firstMoment = makeVideo(id: "moment-1")
         firstSubject.send([firstMoment])
         await waitUntil { observer.videos == [firstMoment] }
 
         observer.observeAnimateVideos(ownerUserId: "user-2")
-        let secondMoment = makeMoment(id: "moment-2")
-        repository.sendMoments([secondMoment])
+        let secondMoment = makeVideo(id: "moment-2")
+        repository.sendVideos([secondMoment])
         await waitUntil { observer.videos == [secondMoment] }
 
-        firstSubject.send([makeMoment(id: "stale-moment")])
+        firstSubject.send([makeVideo(id: "stale-moment")])
         try? await Task.sleep(nanoseconds: 20_000_000)
 
         XCTAssertEqual(observer.videos, [secondMoment])
@@ -70,7 +70,7 @@ final class AnimateInProgressObserverTests: XCTestCase {
         let observer = AnimateWorkspaceObserver(animateRepository: repository)
 
         observer.observeWorkspace(ownerUserId: "user-1", momentId: "moment-1")
-        let workspace = makeWorkspace(video: makeMoment(id: "moment-1"))
+        let workspace = makeWorkspace(video: makeVideo(id: "moment-1"))
         repository.sendWorkspace(workspace)
         await waitUntil { observer.activeWorkspace == workspace }
 
@@ -86,7 +86,7 @@ final class AnimateInProgressObserverTests: XCTestCase {
         let observer = AnimateWorkspaceObserver(animateRepository: repository)
 
         observer.observeWorkspace(ownerUserId: "user-1", momentId: "moment-1")
-        repository.sendWorkspace(makeWorkspace(video: makeMoment(id: "moment-1")))
+        repository.sendWorkspace(makeWorkspace(video: makeVideo(id: "moment-1")))
         await waitUntil { observer.activeWorkspace != nil }
 
         observer.observeWorkspace(ownerUserId: "user-1", momentId: nil)
@@ -114,16 +114,16 @@ final class AnimateInProgressObserverTests: XCTestCase {
 
         observer.observeWorkspace(ownerUserId: "user-1", momentId: "moment-1")
         let firstSubject = repository.workspaceSubjects[0]
-        let firstWorkspace = makeWorkspace(video: makeMoment(id: "moment-1"))
+        let firstWorkspace = makeWorkspace(video: makeVideo(id: "moment-1"))
         firstSubject.send(firstWorkspace)
         await waitUntil { observer.activeWorkspace == firstWorkspace }
 
         observer.observeWorkspace(ownerUserId: "user-1", momentId: "moment-2")
-        let secondWorkspace = makeWorkspace(video: makeMoment(id: "moment-2"))
+        let secondWorkspace = makeWorkspace(video: makeVideo(id: "moment-2"))
         repository.sendWorkspace(secondWorkspace)
         await waitUntil { observer.activeWorkspace == secondWorkspace }
 
-        firstSubject.send(makeWorkspace(video: makeMoment(id: "stale-moment")))
+        firstSubject.send(makeWorkspace(video: makeVideo(id: "stale-moment")))
         try? await Task.sleep(nanoseconds: 20_000_000)
 
         XCTAssertEqual(observer.activeWorkspace, secondWorkspace)
@@ -156,7 +156,7 @@ final class AnimateInProgressObserverTests: XCTestCase {
         )
     }
 
-    private func makeMoment(id: String) -> AnimateVideo {
+    private func makeVideo(id: String) -> AnimateVideo {
         AnimateVideo(
             id: id,
             template: .birthdayMessage,
@@ -175,26 +175,26 @@ final class AnimateInProgressObserverTests: XCTestCase {
 
 @MainActor
 private final class MockAnimateRepository: AnimateInProgressObserving {
-    private(set) var momentsSubjects: [CurrentValueSubject<[AnimateVideo], Error>] = []
+    private(set) var videoSubjects: [CurrentValueSubject<[AnimateVideo], Error>] = []
     private(set) var observedOwnerUserIds: [String] = []
-    private let momentsError: Error?
+    private let videoError: Error?
 
-    init(momentsError: Error? = nil) {
-        self.momentsError = momentsError
+    init(videoError: Error? = nil) {
+        self.videoError = videoError
     }
 
     func observeAnimateVideos(ownerUserId: String) throws -> AnyPublisher<[AnimateVideo], Error> {
         observedOwnerUserIds.append(ownerUserId)
-        if let momentsError {
-            throw momentsError
+        if let videoError {
+            throw videoError
         }
         let subject = CurrentValueSubject<[AnimateVideo], Error>([])
-        momentsSubjects.append(subject)
+        videoSubjects.append(subject)
         return subject.eraseToAnyPublisher()
     }
 
-    func sendMoments(_ videos: [AnimateVideo]) {
-        momentsSubjects.last?.send(videos)
+    func sendVideos(_ videos: [AnimateVideo]) {
+        videoSubjects.last?.send(videos)
     }
 }
 

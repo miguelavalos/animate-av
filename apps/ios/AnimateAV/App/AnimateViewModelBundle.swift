@@ -11,7 +11,7 @@ struct AnimateViewModelBundle {
     init(
         accountController: AccountController,
         workflows: AnimateWorkflowBundle,
-        galleryMomentsProvider: any AnimateGalleryListProviding,
+        galleryArtifactsProvider: any AnimateGalleryListProviding,
         authTokenProvider: any AnimateAuthTokenProviding,
         imageGenerationAccountingClient: AnimateImageGenerationAccountingClient,
         finalRenderClient: AnimateFinalRenderClient
@@ -20,7 +20,7 @@ struct AnimateViewModelBundle {
         create = AnimateCreateViewModel()
         inProgress = AnimateInProgressViewModel()
         gallery = AnimateGalleryViewModel(
-            galleryMomentsProvider: galleryMomentsProvider,
+            galleryArtifactsProvider: galleryArtifactsProvider,
             authTokenProvider: authTokenProvider,
             finalRenderClient: finalRenderClient
         )

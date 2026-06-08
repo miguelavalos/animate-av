@@ -3,9 +3,9 @@ import XCTest
 
 final class AnimateStatusRulesTests: XCTestCase {
     func testGroupsCompletedVideosAsFinished() {
-        let plan = makeMoment(id: "in_progress", status: "in_progress", updatedAt: 10)
-        let story = makeMoment(id: "story", status: "story_ready", updatedAt: 20)
-        let completed = makeMoment(id: "completed", status: "gallery_ready", updatedAt: 30)
+        let plan = makeVideo(id: "in_progress", status: "in_progress", updatedAt: 10)
+        let story = makeVideo(id: "story", status: "story_ready", updatedAt: 20)
+        let completed = makeVideo(id: "completed", status: "gallery_ready", updatedAt: 30)
 
         let groups = AnimateStatusRules.group([plan, story, completed])
 
@@ -14,10 +14,10 @@ final class AnimateStatusRulesTests: XCTestCase {
     }
 
     func testGroupsSortVideosByLatestUpdateWithinEachSection() {
-        let olderInProgress = makeMoment(id: "older-plan", status: "in_progress", updatedAt: 10)
-        let newerInProgress = makeMoment(id: "newer-plan", status: "story_ready", updatedAt: 30)
-        let olderFinished = makeMoment(id: "older-finished", status: "gallery_ready", updatedAt: 20)
-        let newerFinished = makeMoment(id: "newer-finished", status: "gallery_ready", updatedAt: 40)
+        let olderInProgress = makeVideo(id: "older-plan", status: "in_progress", updatedAt: 10)
+        let newerInProgress = makeVideo(id: "newer-plan", status: "story_ready", updatedAt: 30)
+        let olderFinished = makeVideo(id: "older-finished", status: "gallery_ready", updatedAt: 20)
+        let newerFinished = makeVideo(id: "newer-finished", status: "gallery_ready", updatedAt: 40)
 
         let groups = AnimateStatusRules.group([
             olderInProgress,
@@ -31,9 +31,9 @@ final class AnimateStatusRulesTests: XCTestCase {
     }
 
     func testListSummaryCountsAndLatestVideoUseStatusRules() {
-        let oldest = makeMoment(id: "oldest", status: "gallery_ready", updatedAt: 10)
-        let newest = makeMoment(id: "newest", status: "story_ready", updatedAt: 30)
-        let middle = makeMoment(id: "middle", status: "gallery_ready", updatedAt: 20)
+        let oldest = makeVideo(id: "oldest", status: "gallery_ready", updatedAt: 10)
+        let newest = makeVideo(id: "newest", status: "story_ready", updatedAt: 30)
+        let middle = makeVideo(id: "middle", status: "gallery_ready", updatedAt: 20)
 
         let summary = AnimateInProgressSummary.make(from: [oldest, newest, middle])
 
@@ -45,9 +45,9 @@ final class AnimateStatusRulesTests: XCTestCase {
     }
 
     func testListSummarySeparatesAnimateVideoAndImageJobs() {
-        let video = makeMoment(id: "video", status: "running", updatedAt: 10, assetKind: "video")
-        let image = makeMoment(id: "image", status: "running", updatedAt: 20, assetKind: "image")
-        let completedImage = makeMoment(id: "completed-image", status: "completed", updatedAt: 30, assetKind: "image")
+        let video = makeVideo(id: "video", status: "running", updatedAt: 10, assetKind: "video")
+        let image = makeVideo(id: "image", status: "running", updatedAt: 20, assetKind: "image")
+        let completedImage = makeVideo(id: "completed-image", status: "completed", updatedAt: 30, assetKind: "image")
 
         let summary = AnimateInProgressSummary.make(from: [video, image, completedImage])
 
@@ -59,9 +59,9 @@ final class AnimateStatusRulesTests: XCTestCase {
     }
 
     func testListSummaryExposesLatestInProgressContinuationRequest() {
-        let olderInProgress = makeMoment(id: "older-plan", status: "in_progress", updatedAt: 10)
-        let newestFinished = makeMoment(id: "newest-finished", status: "gallery_ready", updatedAt: 30)
-        let latestInProgress = makeMoment(id: "latest-plan", status: "story_ready", updatedAt: 20)
+        let olderInProgress = makeVideo(id: "older-plan", status: "in_progress", updatedAt: 10)
+        let newestFinished = makeVideo(id: "newest-finished", status: "gallery_ready", updatedAt: 30)
+        let latestInProgress = makeVideo(id: "latest-plan", status: "story_ready", updatedAt: 20)
 
         let summary = AnimateInProgressSummary.make(from: [olderInProgress, newestFinished, latestInProgress])
 
@@ -153,7 +153,7 @@ final class AnimateStatusRulesTests: XCTestCase {
         XCTAssertEqual(action.continuationFocus, .finalRender)
     }
 
-    private func makeMoment(
+    private func makeVideo(
         id: String,
         status: String,
         updatedAt: Double,
@@ -182,7 +182,7 @@ final class AnimateStatusRulesTests: XCTestCase {
         artifacts: [AnimateArtifact] = []
     ) -> AnimateWorkspace {
         AnimateWorkspace(
-            video: makeMoment(id: "moment-1", status: "in_progress", updatedAt: 10),
+            video: makeVideo(id: "moment-1", status: "in_progress", updatedAt: 10),
             mediaAssets: mediaAssets,
             storyScenes: storyScenes,
             renderJobs: renderJobs,

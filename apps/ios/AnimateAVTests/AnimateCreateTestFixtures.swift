@@ -2,7 +2,7 @@ import Foundation
 @testable import AnimateAV
 
 enum AnimateCreateTestFixtures {
-    static func makeMoment(
+    static func makeVideo(
         id: String,
         template: AnimateVideoTemplateID = .birthdayMessage,
         creationMode: String = "quick",

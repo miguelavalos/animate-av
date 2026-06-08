@@ -30,8 +30,8 @@ protocol AnimateGalleryObserving {
 
 @MainActor
 protocol AnimateInProgressListProviding {
-    var momentsPublisher: AnyPublisher<[AnimateVideo], Never> { get }
-    var momentsErrorPublisher: AnyPublisher<String?, Never> { get }
+    var videosPublisher: AnyPublisher<[AnimateVideo], Never> { get }
+    var videosErrorPublisher: AnyPublisher<String?, Never> { get }
 
     func observeAnimateVideos(ownerUserId: String?)
     func clearAnimateVideos()
@@ -39,11 +39,11 @@ protocol AnimateInProgressListProviding {
 
 @MainActor
 protocol AnimateGalleryListProviding {
-    var galleryMomentsPublisher: AnyPublisher<[AnimateArtifact], Never> { get }
-    var galleryMomentsErrorPublisher: AnyPublisher<String?, Never> { get }
+    var galleryArtifactsPublisher: AnyPublisher<[AnimateArtifact], Never> { get }
+    var galleryArtifactsErrorPublisher: AnyPublisher<String?, Never> { get }
 
     func observeGalleryArtifacts(ownerUserId: String?)
-    func clearGalleryMoments()
+    func clearGalleryArtifacts()
 }
 
 @MainActor

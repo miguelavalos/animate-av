@@ -1,13 +1,13 @@
 import Foundation
 
 @MainActor
-final class MomentsDependencyContainer: ObservableObject {
+final class AnimateDependencyContainer: ObservableObject {
     let accountController: AccountController
     let videosObserver: AnimateInProgressObserver
     let galleryObserver: AnimateGalleryObserver
     let workspaceObserver: AnimateWorkspaceObserver
     let videoDeletionWorkflow: AnimateVideoDeletionWorkflow
-    let momentWorkspaceSelectionWorkflow: AnimateWorkspaceSelectionWorkflow
+    let workspaceSelectionWorkflow: AnimateWorkspaceSelectionWorkflow
     let videosWorkflow: AnimateVideosWorkflow
     let videoCreationWorkflow: AnimateVideoCreationWorkflow
     let mediaUploadWorkflow: MediaUploadWorkflow
@@ -30,7 +30,7 @@ final class MomentsDependencyContainer: ObservableObject {
         galleryObserver: AnimateGalleryObserver? = nil,
         workspaceObserver: AnimateWorkspaceObserver? = nil
     ) {
-        let clients = MomentsWorkflowClients(baseURLString: AppConfig.animateAPIBaseURL)
+        let clients = AnimateWorkflowClients(baseURLString: AppConfig.animateAPIBaseURL)
         self.accountController = accountController
         let resolvedVideosObserver = videosObserver ?? AnimateInProgressObserver(animateRepository: animateRepository)
         let resolvedGalleryObserver = galleryObserver ?? AnimateGalleryObserver(animateRepository: animateRepository)
@@ -46,7 +46,7 @@ final class MomentsDependencyContainer: ObservableObject {
             clients: clients
         )
         self.videoDeletionWorkflow = workflows.videoDeletion
-        self.momentWorkspaceSelectionWorkflow = workflows.momentWorkspaceSelection
+        self.workspaceSelectionWorkflow = workflows.workspaceSelection
         self.videosWorkflow = workflows.videosWorkflow
         self.videoCreationWorkflow = workflows.videoCreation
         self.mediaUploadWorkflow = workflows.mediaUpload
@@ -57,7 +57,7 @@ final class MomentsDependencyContainer: ObservableObject {
         let viewModels = AnimateViewModelBundle(
             accountController: accountController,
             workflows: workflows,
-            galleryMomentsProvider: resolvedGalleryObserver,
+            galleryArtifactsProvider: resolvedGalleryObserver,
             authTokenProvider: accountController,
             imageGenerationAccountingClient: clients.imageGenerationAccounting,
             finalRenderClient: clients.finalRender

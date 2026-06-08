@@ -1,9 +1,9 @@
 import AVLaunchFoundation
 import SwiftUI
 
-struct MomentsAppBootstrapView: View {
+struct AnimateAppBootstrapView: View {
     @Environment(\.scenePhase) private var scenePhase
-    @StateObject private var dependencies = MomentsDependencyContainer()
+    @StateObject private var dependencies = AnimateDependencyContainer()
     @State private var selectedTab: AnimateRootTab = .home
     @State private var authOptionsArePresented = false
     @State private var authenticationWasSkipped = false
