@@ -937,9 +937,9 @@ extension AnimateCreateViewModel {
     }
 
     private func syncFormWithActiveWorkspace(_ workspace: AnimateWorkspace?) {
-        guard let moment = workspace?.video else { return }
-        guard moment.id == activeVideoId else { return }
-        guard let continuedForm = AnimateVideoSetupForm.continuing(video: moment, templates: templates) else { return }
+        guard let video = workspace?.video else { return }
+        guard video.id == activeVideoId else { return }
+        guard let continuedForm = AnimateVideoSetupForm.continuing(video: video, templates: templates) else { return }
         if hasLocalSetupEdits {
             if continuedForm.matchesPersistedSetup(of: form) {
                 hasLocalSetupEdits = false
@@ -953,7 +953,7 @@ extension AnimateCreateViewModel {
             selectedCreationStyle = continuedStyle
             selectedMusicPreset = continuedStyle.allowedMusic.first(where: { $0 == continuedStyle.defaultMusic }) ?? continuedStyle.defaultMusic
         }
-        if let continuedStyle = creationStyles.first(where: { $0.id.rawValue == moment.theme }) {
+        if let continuedStyle = creationStyles.first(where: { $0.id.rawValue == video.theme }) {
             selectedCreationStyle = continuedStyle
             selectedMusicPreset = continuedStyle.allowedMusic.first(where: { $0 == continuedStyle.defaultMusic }) ?? continuedStyle.defaultMusic
         }

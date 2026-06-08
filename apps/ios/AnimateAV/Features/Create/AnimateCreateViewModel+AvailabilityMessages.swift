@@ -18,12 +18,12 @@ extension AnimateCreateViewModel {
     }
 
     var videoDirectionAvailabilityMessage: String? {
-        AnimateCreateAvailabilityMessageFactory.story(
+        AnimateCreateAvailabilityMessageFactory.videoDirection(
             isSignedIn: isSignedIn,
             hasActiveVideoWorkspace: hasActiveVideoWorkspace,
-            isStoryPlanning: videoDirectionWorkflow?.isPlanning ?? false,
-            isStoryAvailable: videoDirectionWorkflow != nil,
-            isStoryConfigured: videoDirectionWorkflow?.isConfigured ?? false,
+            isVideoDirectionPlanning: videoDirectionWorkflow?.isPlanning ?? false,
+            isVideoDirectionAvailable: videoDirectionWorkflow != nil,
+            isVideoDirectionConfigured: videoDirectionWorkflow?.isConfigured ?? false,
             mediaAssets: effectiveActiveWorkspace?.mediaAssets,
             selectedMediaCount: mediaSelectedCount,
             template: form.template

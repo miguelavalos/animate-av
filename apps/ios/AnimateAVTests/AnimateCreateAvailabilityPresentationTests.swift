@@ -74,9 +74,9 @@ final class AnimateCreateAvailabilityPresentationTests: XCTestCase {
     }
 
     func testAvailabilityCopyUsesSingularAndPluralCreditMessages() {
-        XCTAssertEqual(AnimateCreateAvailabilityCopy.momentSignInRequired, "Sign in before starting a video.")
+        XCTAssertEqual(AnimateCreateAvailabilityCopy.videoCreationSignInRequired, "Sign in before starting a video.")
         XCTAssertEqual(AnimateCreateAvailabilityCopy.mediaTemplateFull, "Avi has the photo for this video.")
-        XCTAssertEqual(AnimateCreateAvailabilityCopy.storyMissingMedia, "Add one photo before preparing the video.")
+        XCTAssertEqual(AnimateCreateAvailabilityCopy.videoDirectionMissingMedia, "Add one photo before preparing the video.")
         XCTAssertEqual(
             AnimateCreateAvailabilityCopy.finalRenderMissingVideoWorkspace,
             "Wait for this video to sync before creating the final video."
@@ -118,12 +118,12 @@ final class AnimateCreateAvailabilityPresentationTests: XCTestCase {
 
     func testAvailabilityMessageFactoryFormatsVideoDirectionStates() {
         XCTAssertEqual(
-            AnimateCreateAvailabilityMessageFactory.story(
+            AnimateCreateAvailabilityMessageFactory.videoDirection(
                 isSignedIn: true,
                 hasActiveVideoWorkspace: true,
-                isStoryPlanning: false,
-                isStoryAvailable: true,
-                isStoryConfigured: true,
+                isVideoDirectionPlanning: false,
+                isVideoDirectionAvailable: true,
+                isVideoDirectionConfigured: true,
                 mediaAssets: [],
                 selectedMediaCount: 0,
                 template: .birthdayMessage
@@ -131,12 +131,12 @@ final class AnimateCreateAvailabilityPresentationTests: XCTestCase {
             "Add 1 more photo before preparing the video."
         )
         XCTAssertNil(
-            AnimateCreateAvailabilityMessageFactory.story(
+            AnimateCreateAvailabilityMessageFactory.videoDirection(
                 isSignedIn: true,
                 hasActiveVideoWorkspace: true,
-                isStoryPlanning: true,
-                isStoryAvailable: true,
-                isStoryConfigured: false,
+                isVideoDirectionPlanning: true,
+                isVideoDirectionAvailable: true,
+                isVideoDirectionConfigured: false,
                 mediaAssets: [],
                 selectedMediaCount: 0,
                 template: .birthdayMessage

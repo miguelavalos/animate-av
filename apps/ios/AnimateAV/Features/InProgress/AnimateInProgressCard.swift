@@ -226,8 +226,8 @@ private struct AnimateInProgressAviBlock: View {
     }
 
     private var message: String {
-        if let moment = videosSummary.latestAnimateVideo {
-            return L10n.string("inProgress.avi.momentInProgress.message", moment.title)
+        if let video = videosSummary.latestAnimateVideo {
+            return L10n.string("inProgress.avi.momentInProgress.message", video.title)
         }
         if videosSummary.finishedCount > 0 {
             return L10n.string("inProgress.avi.galleryStarts.message")

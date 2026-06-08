@@ -8,8 +8,8 @@ enum AnimateCreateAvailabilityMessageFactory {
         setupFormAvailability: AnimateVideoSetupRules.Availability
     ) -> String? {
         if isSetupLocked { return nil }
-        if !isSignedIn { return AnimateCreateAvailabilityCopy.momentSignInRequired }
-        if !isVideoCreationConfigured { return AnimateCreateAvailabilityCopy.momentSyncNotConfigured }
+        if !isSignedIn { return AnimateCreateAvailabilityCopy.videoCreationSignInRequired }
+        if !isVideoCreationConfigured { return AnimateCreateAvailabilityCopy.videoCreationSyncNotConfigured }
         return AnimateVideoSetupRules.availabilityMessage(setupFormAvailability)
     }
 
@@ -26,21 +26,21 @@ enum AnimateCreateAvailabilityMessageFactory {
         return nil
     }
 
-    static func story(
+    static func videoDirection(
         isSignedIn: Bool,
         hasActiveVideoWorkspace: Bool,
-        isStoryPlanning: Bool,
-        isStoryAvailable: Bool,
-        isStoryConfigured: Bool,
+        isVideoDirectionPlanning: Bool,
+        isVideoDirectionAvailable: Bool,
+        isVideoDirectionConfigured: Bool,
         mediaAssets: [AnimateMediaAsset]?,
         selectedMediaCount: Int,
         template: AnimateVideoTemplate
     ) -> String? {
-        guard isSignedIn else { return AnimateCreateAvailabilityCopy.storySignInRequired }
+        guard isSignedIn else { return AnimateCreateAvailabilityCopy.videoDirectionSignInRequired }
         guard hasActiveVideoWorkspace else { return AnimateCreateAvailabilityCopy.videoDirectionMissingVideo }
-        guard isStoryAvailable else { return AnimateCreateAvailabilityCopy.storyUnavailable }
-        if isStoryPlanning { return nil }
-        if !isStoryConfigured { return AnimateCreateAvailabilityCopy.storyNotConfigured }
+        guard isVideoDirectionAvailable else { return AnimateCreateAvailabilityCopy.videoDirectionUnavailable }
+        if isVideoDirectionPlanning { return nil }
+        if !isVideoDirectionConfigured { return AnimateCreateAvailabilityCopy.videoDirectionNotConfigured }
 
         if selectedMediaCount > 0 {
             let availability = AnimateMediaRules.availability(template: template, selectedCount: selectedMediaCount)
@@ -65,7 +65,7 @@ enum AnimateCreateAvailabilityMessageFactory {
                 mediaAssets: mediaAssets,
                 template: template
             ),
-            missingMediaMessage: AnimateCreateAvailabilityCopy.storyMissingMedia
+            missingMediaMessage: AnimateCreateAvailabilityCopy.videoDirectionMissingMedia
         )
     }
 
