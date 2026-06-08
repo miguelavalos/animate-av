@@ -16,23 +16,6 @@ struct AnimateCreateIntroCard: View {
     }
 }
 
-struct AnimateCreateActiveMomentCard: View {
-    let activeVideo: AnimateVideo?
-
-    var body: some View {
-        if let activeVideo {
-            AVAppShellCard {
-                AVAppShellInfoRow(
-                    title: activeVideo.title,
-                    detail: AnimateVideoFormatting.updatedAt(activeVideo),
-                    systemImage: "rectangle.stack",
-                    eyebrow: AnimateVideoFormatting.statusTitle(activeVideo)
-                )
-            }
-        }
-    }
-}
-
 struct AnimateCreateContinuationHintCard: View {
     let focus: AnimateContinuationFocus?
     let dismiss: () -> Void
