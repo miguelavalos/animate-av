@@ -1,4 +1,5 @@
 import AVBrandFoundation
+import CryptoKit
 import PhotosUI
 import SwiftUI
 import UIKit
@@ -68,7 +69,7 @@ struct AnimateCreateImagesWorkspace: View {
     private var canSubmit: Bool {
         selectedImage != nil
             && selectedImageData != nil
-            && selectedSourceImageLocalIdentifier != nil
+            && selectedSourceImageLocalIdentifier?.isEmpty == false
             && !selectedLooks.isEmpty
             && imageGenerationAvailability?.availableImages ?? 0 >= selectedLooks.count
             && !isStartingImageGeneration
@@ -156,12 +157,29 @@ struct AnimateCreateImagesWorkspace: View {
             let data = try? await item.loadTransferable(type: Data.self)
             let image = data.flatMap(UIImage.init(data:))
             let uploadData = image?.jpegData(compressionQuality: 0.95)
+            let sourceIdentifier = uploadData.map {
+                Self.sourceLocalIdentifier(itemIdentifier: item.itemIdentifier, imageData: $0)
+            }
             await MainActor.run {
                 selectedImage = image
                 selectedImageData = uploadData
+                selectedSourceImageLocalIdentifier = sourceIdentifier
                 isLoadingImage = false
             }
         }
+    }
+
+    private static func sourceLocalIdentifier(itemIdentifier: String?, imageData: Data) -> String {
+        if let itemIdentifier = itemIdentifier?.trimmingCharacters(in: .whitespacesAndNewlines),
+           !itemIdentifier.isEmpty {
+            return itemIdentifier
+        }
+
+        let digest = SHA256.hash(data: imageData)
+            .prefix(12)
+            .map { String(format: "%02x", $0) }
+            .joined()
+        return "animate-image-\(digest)"
     }
 }
 

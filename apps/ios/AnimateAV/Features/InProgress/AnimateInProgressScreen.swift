@@ -12,6 +12,7 @@ struct AnimateInProgressScreen: View {
     let creditBalanceLoadState: AnimateCreditBalanceLoadState
     let continueVideo: (AnimateContinuationRequest) -> Void
     let startVideoCreation: () -> Void
+    let startImageCreation: () -> Void
     let startSignInFlow: () -> Void
     let openCredits: () -> Void
     let retryCredits: () -> Void
@@ -37,6 +38,7 @@ struct AnimateInProgressScreen: View {
         creditBalanceLoadState: AnimateCreditBalanceLoadState = .loaded,
         continueVideo: @escaping (AnimateContinuationRequest) -> Void = { _ in },
         startVideoCreation: @escaping () -> Void = {},
+        startImageCreation: @escaping () -> Void = {},
         startSignInFlow: @escaping () -> Void = {},
         openCredits: @escaping () -> Void = {},
         retryCredits: @escaping () -> Void = {}
@@ -45,6 +47,7 @@ struct AnimateInProgressScreen: View {
         self.creditBalanceLoadState = creditBalanceLoadState
         self.continueVideo = continueVideo
         self.startVideoCreation = startVideoCreation
+        self.startImageCreation = startImageCreation
         self.startSignInFlow = startSignInFlow
         self.openCredits = openCredits
         self.retryCredits = retryCredits
@@ -89,7 +92,7 @@ struct AnimateInProgressScreen: View {
                     presentation: imagesPresentation,
                     videosSummary: viewModel.imagesSummary,
                     startSignInFlow: startSignInFlow,
-                    startImages: startVideoCreation
+                    startImages: startImageCreation
                 )
             }
         }

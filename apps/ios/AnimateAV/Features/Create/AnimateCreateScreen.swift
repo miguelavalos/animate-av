@@ -10,6 +10,7 @@ struct AnimateCreateScreen: View {
     @State private var showsAutomaticPhotoPicker = false
     @State private var handledAutomaticPhotoPickerRequest = 0
     @State private var workflowErrorAlertMessage: String?
+    @Binding private var requestedAssetKind: AnimateCreateAssetKind?
     let startSignInFlow: () -> Void
     let openCredits: () -> Void
     let cancelCreation: () -> Void
@@ -21,12 +22,14 @@ struct AnimateCreateScreen: View {
         openCredits: @escaping () -> Void,
         cancelCreation: @escaping () -> Void,
         finishFinalVideoToGallery: @escaping () -> Void,
+        requestedAssetKind: Binding<AnimateCreateAssetKind?> = .constant(nil),
         bottomSafeAreaPadding: CGFloat = 82
     ) {
         self.startSignInFlow = startSignInFlow
         self.openCredits = openCredits
         self.cancelCreation = cancelCreation
         self.finishFinalVideoToGallery = finishFinalVideoToGallery
+        _requestedAssetKind = requestedAssetKind
         self.bottomSafeAreaPadding = bottomSafeAreaPadding
     }
 
@@ -64,8 +67,12 @@ struct AnimateCreateScreen: View {
         .safeAreaPadding(.top, 12)
         .safeAreaPadding(.bottom, bottomSafeAreaPadding)
         .task {
+            applyRequestedAssetKindIfNeeded()
             redirectEmptyCreateIfNeeded()
             openAutomaticPhotoPickerIfRequested(viewModel.mediaPickerOpenRequest)
+        }
+        .onChange(of: requestedAssetKind) { _, _ in
+            applyRequestedAssetKindIfNeeded()
         }
         .onChange(of: viewModel.workflowPresentation.showsMediaFirstWorkspace) { _, showsWorkspace in
             guard !showsWorkspace else { return }
@@ -144,6 +151,12 @@ struct AnimateCreateScreen: View {
         cancelCreation()
     }
 
+    private func applyRequestedAssetKindIfNeeded() {
+        guard let requestedAssetKind else { return }
+        selectedAssetKindRaw = requestedAssetKind.rawValue
+        self.requestedAssetKind = nil
+    }
+
     private func openAutomaticPhotoPickerIfRequested(_ request: Int) {
         guard request > handledAutomaticPhotoPickerRequest,
               viewModel.workflowPresentation.mediaSummary.selectedCount == 0 else { return }
@@ -205,7 +218,7 @@ private struct AnimateCreateAssetKindPill: View {
     }
 }
 
-private enum AnimateCreateAssetKind: String, CaseIterable, Identifiable {
+enum AnimateCreateAssetKind: String, CaseIterable, Identifiable {
     case video
     case images
 

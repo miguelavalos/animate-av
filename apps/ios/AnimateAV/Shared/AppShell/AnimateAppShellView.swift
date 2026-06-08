@@ -18,6 +18,7 @@ struct AnimateAppShellView: View {
     @State private var creditsPaywallIsPresented = false
     @State private var navigationPath = NavigationPath()
     @State private var navigationStackResetID = UUID()
+    @State private var requestedCreateAssetKind: AnimateCreateAssetKind?
 
     var body: some View {
         appScaffold
@@ -134,6 +135,7 @@ struct AnimateAppShellView: View {
                     openCredits: openCredits,
                     cancelCreation: cancelCreation,
                     finishFinalVideoToGallery: finishFinalVideoToGallery,
+                    requestedAssetKind: $requestedCreateAssetKind,
                     bottomSafeAreaPadding: 82
                 )
             case .inProgress:
@@ -146,6 +148,9 @@ struct AnimateAppShellView: View {
                     },
                     startVideoCreation: {
                         startOrContinueVideoCreation()
+                    },
+                    startImageCreation: {
+                        startImageCreation()
                     },
                     startSignInFlow: startSignInFlow,
                     openCredits: openCredits,
@@ -213,6 +218,8 @@ struct AnimateAppShellView: View {
     }
 
     private func startOrContinueVideoCreation() {
+        requestedCreateAssetKind = .video
+
         if createViewModel.hasLocalAnimateWorkspace {
             selectRootTab(.create)
             return
@@ -245,7 +252,13 @@ struct AnimateAppShellView: View {
         beginNewVideoCreationFromPreference()
     }
 
+    private func startImageCreation() {
+        requestedCreateAssetKind = .images
+        selectRootTab(.create)
+    }
+
     private func beginNewVideoCreationFromPreference() {
+        requestedCreateAssetKind = .video
         guard createViewModel.canBeginNewVideoCreation else {
             selectRootTab(.create)
             return
