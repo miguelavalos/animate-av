@@ -1708,7 +1708,7 @@ private struct AnimateCreateGuidedVoiceTile: View {
                 Image(profile.portraitAssetName)
                     .resizable()
                     .scaledToFill()
-                .frame(width: 56, height: 56)
+                .frame(width: 60, height: 60)
                 .clipShape(Circle())
                 .overlay {
                     Circle()
@@ -1721,12 +1721,12 @@ private struct AnimateCreateGuidedVoiceTile: View {
                         .font(.system(size: 12, weight: .black))
                         .foregroundStyle(AVBrandColor.textPrimary)
                         .minimumScaleFactor(0.72)
-                        .fixedSize(horizontal: false, vertical: true)
+                        .lineLimit(1)
                     Text(profile.detail)
                         .font(.system(size: 10, weight: .bold))
                         .foregroundStyle(AVBrandColor.textSecondary)
-                        .minimumScaleFactor(0.78)
-                        .fixedSize(horizontal: false, vertical: true)
+                        .minimumScaleFactor(0.64)
+                        .lineLimit(1)
                 }
                 .frame(maxWidth: .infinity, alignment: .leading)
 
@@ -1734,7 +1734,7 @@ private struct AnimateCreateGuidedVoiceTile: View {
                     .font(.system(size: 15, weight: .black))
                     .foregroundStyle(isSelected ? AVBrandColor.accent : AVBrandColor.textSecondary)
             }
-            .padding(9)
+            .padding(8)
             .frame(height: 84)
             .background(isSelected ? AVBrandColor.accent.opacity(0.08) : AVBrandColor.cardSurface, in: RoundedRectangle(cornerRadius: 12, style: .continuous))
             .overlay(
