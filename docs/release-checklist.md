@@ -26,6 +26,8 @@ in the private AVALSYS suite.
 - [ ] No signing material, provisioning profiles, team IDs, keys, tokens, or
   private URLs are tracked.
 - [ ] Public Markdown links are valid.
+- [ ] Public copy hygiene passes: no legacy credit phrasing, technical photo
+  wording, or copied prior-product naming in public app copy/docs.
 - [ ] Public screenshots, if any, contain no private user data, account data,
   request IDs, receipts, or internal logs.
 - [ ] Final icons, splash assets, AV marks, and Avi artwork are added only after
