@@ -997,7 +997,7 @@
 "create.assetKind.video" = "Video";
 "create.assetKind.images" = "Images";
 "create.images.title" = "Make cartoon images";
-"create.images.subtitle" = "Pick one photo, choose a few looks, and Avi will queue the image magic.";
+"create.images.subtitle" = "Pick one photo, choose a few looks, and Avi will make the image magic.";
 "create.images.source.title" = "Photo";
 "create.images.source.detail" = "Use one clear photo. Images are generated without branding.";
 "create.images.source.choose" = "Choose";

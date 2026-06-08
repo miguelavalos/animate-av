@@ -915,7 +915,7 @@ private struct AnimateCreateVideoDirectionCard: View {
             selectedStyle.title,
             selectedMusicPreset.title,
             selectedLook.title,
-            mediaDetail
+            mediaDetail.trimmingCharacters(in: CharacterSet(charactersIn: ".!?"))
         )
     }
 
@@ -1320,7 +1320,7 @@ private struct AnimateCreateCompactAviGuide: View {
             }
         }
         .accessibilityElement(children: .combine)
-        .accessibilityLabel(L10n.string("create.workflowContent.aviAccessibility", message))
+        .accessibilityLabel("\(title). \(message)")
     }
 
     private var title: String {

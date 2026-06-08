@@ -38,7 +38,7 @@ enum AnimateCreateUITestFixtures {
             tone: "warm",
             tempo: "balanced",
             occasion: "Portrait animation",
-            details: "Keep the animation warm, expressive, and focused on the source image.",
+            details: "Keep the animation warm, expressive, and focused on the photo.",
             storyInputSignature: nil,
             durationSeconds: 5,
             creditCost: 1,
@@ -90,14 +90,14 @@ enum AnimateCreateUITestFixtures {
             storyScene(
                 id: "scene-1",
                 index: 0,
-                caption: "A warm opening with the birthday table and first hug.",
-                narration: "We begin with the quiet details that made the day feel personal."
+                caption: "Avi sketches the portrait into a bright cartoon close-up.",
+                narration: "We start with a playful hello and let the photo come to life."
             ),
             storyScene(
                 id: "scene-2",
                 index: 1,
-                caption: "A quick lift into candles, laughter, and the beach toast.",
-                narration: "The middle keeps the pace bright while still feeling intimate."
+                caption: "The character waves, smiles, and lands on the celebration message.",
+                narration: "Then the motion, voice, and style turn it into a tiny animated greeting."
             )
         ]
     }
@@ -172,7 +172,7 @@ enum AnimateCreateUITestFixtures {
                 rendererMode: "image_to_video",
                 renderOptionId: "animate_short",
                 renderOptionTitle: "Short animation",
-                userMessage: "Avi will animate the source image with audio and render an up to 5 second video.",
+                userMessage: "Avi will animate the photo with audio into an up to 5 second cartoon video.",
                 qualityWarnings: []
             ),
             canCreateVideo: hasCredits,

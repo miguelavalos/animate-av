@@ -266,7 +266,7 @@ final class AnimateCreateViewModel: ObservableObject {
                 }
             } catch {
                 await MainActor.run {
-                    self?.imageGenerationAvailabilityMessage = error.localizedDescription
+                    self?.imageGenerationAvailabilityMessage = self?.imageGenerationMessage(for: error)
                     self?.isLoadingImageGenerationAvailability = false
                 }
             }
@@ -342,7 +342,7 @@ final class AnimateCreateViewModel: ObservableObject {
                 }
             } catch {
                 await MainActor.run {
-                    self?.imageGenerationAvailabilityMessage = error.localizedDescription
+                    self?.imageGenerationAvailabilityMessage = self?.imageGenerationMessage(for: error)
                     self?.isStartingImageGeneration = false
                 }
             }
@@ -387,11 +387,27 @@ final class AnimateCreateViewModel: ObservableObject {
                 }
             } catch {
                 await MainActor.run {
-                    self?.imageGenerationAvailabilityMessage = error.localizedDescription
+                    self?.imageGenerationAvailabilityMessage = self?.imageGenerationMessage(for: error)
                     self?.isPurchasingImageGenerationPack = false
                 }
             }
         }
+    }
+
+    private func imageGenerationMessage(for error: Error) -> String {
+        if let accountingError = error as? AnimateImageGenerationAccountingError {
+            switch accountingError {
+            case .signInRequired:
+                return L10n.string("create.images.balance.signIn")
+            case .apiNotConfigured, .availabilityFailed, .startFailed, .sourceUploadFailed, .packPurchaseFailed:
+                break
+            }
+        }
+        if let apiError = error as? AnimateAPIError,
+           apiError.code == "unauthorized" || apiError.code == "moments_sign_in_required" || apiError.code == "moments_auth_token_missing" {
+            return L10n.string("create.images.balance.signIn")
+        }
+        return error.localizedDescription
     }
 
     func prepareNewVideoCreation() {

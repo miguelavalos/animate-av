@@ -168,7 +168,7 @@ enum AnimateCreateTestFixtures {
                 rendererMode: "image_to_video",
                 renderOptionId: "animate_short",
                 renderOptionTitle: "Short animation",
-                userMessage: "Avi will animate the source image.",
+                userMessage: "Avi will animate the photo.",
                 qualityWarnings: ["One item may be cropped."]
             ),
             canCreateVideo: canCreateVideo,

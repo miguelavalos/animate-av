@@ -339,7 +339,7 @@ enum AnimateImageGenerationAccountingError: LocalizedError {
         case .signInRequired: "Sign in to load image generation balance."
         case .availabilityFailed: "Avi could not load image generation balance."
         case .startFailed: "Avi could not start image generation."
-        case .sourceUploadFailed: "Avi could not upload the source image."
+        case .sourceUploadFailed: "Avi could not upload the photo."
         case .packPurchaseFailed: "Avi could not get image generations."
         }
     }
