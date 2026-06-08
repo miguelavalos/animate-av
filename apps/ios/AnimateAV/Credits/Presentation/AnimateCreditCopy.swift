@@ -1,5 +1,5 @@
 enum AnimateCreditCopy {
-    static let monthlyVideoCreditsIncluded = 6
+    static let monthlyCreditsIncluded = 6
 
     static func noun(_ count: Int) -> String {
         count == 1 ? L10n.string("credits.noun.one") : L10n.string("credits.noun.other")
@@ -84,7 +84,7 @@ enum AnimateCreditCopy {
 
     static func proMonthlyDetail(_ balance: AnimateCreditBalance) -> String {
         guard let summary = balance.walletSummary else {
-            return L10n.string("credits.proMonthly.detail", balance.proMonthly, monthlyVideoCreditsIncluded)
+            return L10n.string("credits.proMonthly.detail", balance.proMonthly, monthlyCreditsIncluded)
         }
 
         if summary.plan.includesMonthlyCredits {
