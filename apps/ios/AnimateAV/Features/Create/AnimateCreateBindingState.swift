@@ -19,7 +19,7 @@ struct AnimateCreateMediaUploadState {
     let importProgress: AnimateMediaImportProgress?
 }
 
-struct AnimateCreateStoryState {
+struct AnimateCreateVideoDirectionState {
     let activeWorkspace: AnimateWorkspace?
     let savedScenes: [AnimateVideoDirectionScene]
     let generatedScenes: [AnimateVideoDirectionSceneResponse]

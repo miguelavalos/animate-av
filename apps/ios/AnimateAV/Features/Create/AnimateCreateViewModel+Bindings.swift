@@ -84,8 +84,8 @@ extension AnimateCreateViewModel {
         )
             .receive(on: DispatchQueue.main)
             .sink { [weak self] activeWorkspace, generatedScenes, statusMessage, isPlanning in
-                self?.applyStoryState(
-                    AnimateCreateStoryState(
+                self?.applyVideoDirectionState(
+                    AnimateCreateVideoDirectionState(
                         activeWorkspace: activeWorkspace,
                         savedScenes: activeWorkspace?.storyScenes ?? [],
                         generatedScenes: generatedScenes,

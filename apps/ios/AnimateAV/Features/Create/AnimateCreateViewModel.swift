@@ -95,7 +95,7 @@ final class AnimateCreateViewModel: ObservableObject {
     var lastPreparedVideoDirectionInputSignature: String?
     private var renderPlanInputSignature: String?
     private var pendingRenderPlanInputSignature: String?
-    private var hasExplicitMediaEditsAfterPreparedStory = false
+    private var hasExplicitMediaEditsAfterPreparedVideoDirection = false
     private var hasLocalSetupEdits = false
     private var hasUserStyleOverride = false
     private var hasUserLookOverride = false
@@ -569,7 +569,7 @@ final class AnimateCreateViewModel: ObservableObject {
         renderPlanInputSignature = nil
         pendingRenderPlanInputSignature = nil
         isPreparingFinalPlan = false
-        hasExplicitMediaEditsAfterPreparedStory = false
+        hasExplicitMediaEditsAfterPreparedVideoDirection = false
         hasLocalSetupEdits = false
         hasUserStyleOverride = false
         hasUserLookOverride = false
@@ -632,7 +632,7 @@ final class AnimateCreateViewModel: ObservableObject {
     }
 
     func preparedVideoDirectionComparisonInputSignature(momentId: String) -> String {
-        if !hasExplicitMediaEditsAfterPreparedStory,
+        if !hasExplicitMediaEditsAfterPreparedVideoDirection,
            let workspaceMedia = currentWorkspaceVideoDirectionSignatureMedia(),
            !workspaceMedia.isEmpty {
             return currentVideoDirectionInputSignature(momentId: momentId, persistedMedia: workspaceMedia)
@@ -742,7 +742,7 @@ final class AnimateCreateViewModel: ObservableObject {
     func markPreparedVideoDirectionMediaEdited() {
         clearStaleRenderPlan()
         guard !savedScenes.isEmpty || !generatedScenes.isEmpty else { return }
-        hasExplicitMediaEditsAfterPreparedStory = true
+        hasExplicitMediaEditsAfterPreparedVideoDirection = true
     }
 
     @discardableResult
@@ -756,7 +756,7 @@ final class AnimateCreateViewModel: ObservableObject {
             recordedSignature = currentVideoDirectionInputSignature(momentId: momentId)
         }
         lastPreparedVideoDirectionInputSignature = recordedSignature
-        hasExplicitMediaEditsAfterPreparedStory = false
+        hasExplicitMediaEditsAfterPreparedVideoDirection = false
         hasLocalSetupEdits = false
         return recordedSignature
     }
@@ -884,7 +884,7 @@ extension AnimateCreateViewModel {
         updateAutoStyleSuggestion(for: state.selectedMedia)
     }
 
-    func applyStoryState(_ state: AnimateCreateStoryState) {
+    func applyVideoDirectionState(_ state: AnimateCreateVideoDirectionState) {
         guard !usesCreateUITestFixture else { return }
         activeWorkspace = state.activeWorkspace
         syncFormWithActiveWorkspace(state.activeWorkspace)
@@ -965,7 +965,7 @@ extension AnimateCreateViewModel {
 
         if let workspaceSignature = effectiveActiveWorkspace?.video.storyInputSignature {
             if lastPreparedVideoDirectionInputSignature != workspaceSignature {
-                hasExplicitMediaEditsAfterPreparedStory = false
+                hasExplicitMediaEditsAfterPreparedVideoDirection = false
             }
             lastPreparedVideoDirectionInputSignature = workspaceSignature
             hasLocalSetupEdits = false
@@ -980,7 +980,7 @@ extension AnimateCreateViewModel {
 
     private func updateAutoStyleSuggestion(for media: [AnimateSelectedMedia]) {
         guard canEditCreationOptions else { return }
-        guard !videoDirectionSummary.hasScenes || hasExplicitMediaEditsAfterPreparedStory else { return }
+        guard !videoDirectionSummary.hasScenes || hasExplicitMediaEditsAfterPreparedVideoDirection else { return }
         let signature = mediaSignature(media)
         guard signature != autoStyleMediaSignature else { return }
         autoStyleMediaSignature = signature

@@ -52,7 +52,7 @@
 		33E7263E97155D86C53B4B45 /* AnimateCreateImagesWorkspace.swift in Sources */ = {isa = PBXBuildFile; fileRef = AAC4117AE936523A8C09F76A /* AnimateCreateImagesWorkspace.swift */; };
 		341F84E928EE02D54921E395 /* AnimateLaunchContext.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BDA94180CA012FB17377C31 /* AnimateLaunchContext.swift */; };
 		358C5FCCDE6CC2DF37BAE66F /* AnimateCreditGate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 59154E3BD15B101B72FCC2B1 /* AnimateCreditGate.swift */; };
-		37034520E17939E7B91285BE /* AnimateCreateStoryCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2BA6B92E448EA6CCB116290A /* AnimateCreateStoryCard.swift */; };
+		37034520E17939E7B91285BE /* AnimateCreateVideoDirectionCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2BA6B92E448EA6CCB116290A /* AnimateCreateVideoDirectionCard.swift */; };
 		3A2DE7E59802CBA3904FACA2 /* AnimateInProgressListPresentationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B46BA26B84DB49B0BC110BB2 /* AnimateInProgressListPresentationTests.swift */; };
 		3A75E3D14ABFA0DD6A8962FA /* AnimateGalleryVideoRecord.swift in Sources */ = {isa = PBXBuildFile; fileRef = 56630E8B223B76F4F4135175 /* AnimateGalleryVideoRecord.swift */; };
 		3B335EBE477CFD214D5C67F2 /* AnimateInProgressObserverTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2623A097E21D115672B0A17 /* AnimateInProgressObserverTests.swift */; };
@@ -84,7 +84,7 @@
 		58EB17751A168FF474147F0B /* AnimateRootTab.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5095314F8AF17187BDFE4708 /* AnimateRootTab.swift */; };
 		595FF45D6DE8043E4425A404 /* AnimateProfileScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = 349182D5412B86549143E168 /* AnimateProfileScreen.swift */; };
 		5960984DE0874D91A769DB54 /* AnimateInProgressViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0593B2BF4FB3BD4E3615D4D0 /* AnimateInProgressViewModel.swift */; };
-		5C3132D7FEE5F43A230A1350 /* AnimateInProgressStoryPresentation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 96EE0BE8E634A54ACF473C35 /* AnimateInProgressStoryPresentation.swift */; };
+		5C3132D7FEE5F43A230A1350 /* AnimateInProgressVideoDirectionPresentation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 96EE0BE8E634A54ACF473C35 /* AnimateInProgressVideoDirectionPresentation.swift */; };
 		5CA454E4B3FCC14C03130F80 /* AnimateAppShellView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 671708948EFE325820D59A4A /* AnimateAppShellView.swift */; };
 		5CEBF46CE267E0F17F6EA9D5 /* AnimateUploadClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24003299FC7911EE6CC7C98F /* AnimateUploadClient.swift */; };
 		5CEEB17AD4FD574F2A57198D /* AnimateCreditProducts.swift in Sources */ = {isa = PBXBuildFile; fileRef = 29816ADEF6A7D83AB53CB866 /* AnimateCreditProducts.swift */; };
@@ -99,8 +99,8 @@
 		6D279F04925C53142ED4C1DC /* AnimateHomeSections.swift in Sources */ = {isa = PBXBuildFile; fileRef = 46A8E1CD7E8934A0A2A040E3 /* AnimateHomeSections.swift */; };
 		6D5D5BD5339D26DD6F12652E /* AnimateCreateMediaRows.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C62F720B42062CB275C3737 /* AnimateCreateMediaRows.swift */; };
 		731F954334106C5675E17033 /* AnimateRecoveryCopy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 57E85C5F37D0B4A1B8336ACC /* AnimateRecoveryCopy.swift */; };
-		76113D8A090AE8107719456E /* AnimateCreateViewModelStoryStateTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 157006A1EAABEE8BA9D2CEDD /* AnimateCreateViewModelStoryStateTests.swift */; };
-		7788931E91C9C17446907832 /* AnimateCreateStoryRows.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FB1C58BE9FF2E561C66A837 /* AnimateCreateStoryRows.swift */; };
+		76113D8A090AE8107719456E /* AnimateCreateViewModelVideoDirectionStateTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 157006A1EAABEE8BA9D2CEDD /* AnimateCreateViewModelVideoDirectionStateTests.swift */; };
+		7788931E91C9C17446907832 /* AnimateCreateVideoDirectionRows.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FB1C58BE9FF2E561C66A837 /* AnimateCreateVideoDirectionRows.swift */; };
 		7926C41F0370411EE767800B /* AnimateInProgressList.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1A3FBA0C9FC14DBBC3FF5A2 /* AnimateInProgressList.swift */; };
 		7C974AAD23174DA7D10ADC09 /* AnimateNewVideoStartControllerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 06B13485A04681D3768A9381 /* AnimateNewVideoStartControllerTests.swift */; };
 		7F4B09040E9F9462EF971CC5 /* AnimateInProgressArtifactSections.swift in Sources */ = {isa = PBXBuildFile; fileRef = 594AB414E479ECA3A7EBC574 /* AnimateInProgressArtifactSections.swift */; };
@@ -133,7 +133,7 @@
 		A8E259107A207D6090E9F4C9 /* AnimateCreateUITestFixtures.swift in Sources */ = {isa = PBXBuildFile; fileRef = 79B67CA893C58B6BD0AF30C8 /* AnimateCreateUITestFixtures.swift */; };
 		A9267DC77312AE1731D1E312 /* AppBootstrap.swift in Sources */ = {isa = PBXBuildFile; fileRef = 55BA167F7BDCE70C049B8882 /* AppBootstrap.swift */; };
 		A9BDD20EE3872AE7F1766B0F /* AnimateVideoQuoteClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 332CDA9BB82C5AF8F43AB6CE /* AnimateVideoQuoteClient.swift */; };
-		AA7635558DE1A322F9512C40 /* AnimateCreateMediaStoryPresentation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2B3F6709AC2EC204F3629A72 /* AnimateCreateMediaStoryPresentation.swift */; };
+		AA7635558DE1A322F9512C40 /* AnimateCreateVideoDirectionPresentation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2B3F6709AC2EC204F3629A72 /* AnimateCreateVideoDirectionPresentation.swift */; };
 		AB3B1CFD17EBA3F3371A5B27 /* AccountAV in Frameworks */ = {isa = PBXBuildFile; productRef = 170F851F22E531B8ED7B029E /* AccountAV */; };
 		ADC53786F68E0AB12A036B38 /* AnimateAVApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = B3B81C0C7359119782FDDBD1 /* AnimateAVApp.swift */; };
 		AED1092B47E33393127AC1E4 /* AnimateRealtimeSessionStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E86A9C4D08A75025E31C0D7 /* AnimateRealtimeSessionStore.swift */; };
@@ -225,7 +225,7 @@
 		102A029AF84242C78C1593FE /* AnimateVideoDirectionModels.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnimateVideoDirectionModels.swift; sourceTree = "<group>"; };
 		11F37F6D3E50B15D24DA625E /* MediaUploadPersistence.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MediaUploadPersistence.swift; sourceTree = "<group>"; };
 		14E0872EE9B7956B31286670 /* AnimateCreateProgressComponents.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnimateCreateProgressComponents.swift; sourceTree = "<group>"; };
-		157006A1EAABEE8BA9D2CEDD /* AnimateCreateViewModelStoryStateTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnimateCreateViewModelStoryStateTests.swift; sourceTree = "<group>"; };
+		157006A1EAABEE8BA9D2CEDD /* AnimateCreateViewModelVideoDirectionStateTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnimateCreateViewModelVideoDirectionStateTests.swift; sourceTree = "<group>"; };
 		15B4B1517C76E0DAFBD8F13B /* AnimateCreditGateTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnimateCreditGateTests.swift; sourceTree = "<group>"; };
 		18DB6E9D33734AB4316174E4 /* AnimateFormatting.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnimateFormatting.swift; sourceTree = "<group>"; };
 		19FC0994E47515FC672C7EE5 /* AnimateWorkflowBundle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnimateWorkflowBundle.swift; sourceTree = "<group>"; };
@@ -240,8 +240,8 @@
 		275D027023F688743FC87C14 /* AnimateInProgressProgressModelTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnimateInProgressProgressModelTests.swift; sourceTree = "<group>"; };
 		29816ADEF6A7D83AB53CB866 /* AnimateCreditProducts.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnimateCreditProducts.swift; sourceTree = "<group>"; };
 		29D314035C53B3F66BCA44FE /* AnimateInProgressWorkspacePresentation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnimateInProgressWorkspacePresentation.swift; sourceTree = "<group>"; };
-		2B3F6709AC2EC204F3629A72 /* AnimateCreateMediaStoryPresentation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnimateCreateMediaStoryPresentation.swift; sourceTree = "<group>"; };
-		2BA6B92E448EA6CCB116290A /* AnimateCreateStoryCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnimateCreateStoryCard.swift; sourceTree = "<group>"; };
+		2B3F6709AC2EC204F3629A72 /* AnimateCreateVideoDirectionPresentation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnimateCreateVideoDirectionPresentation.swift; sourceTree = "<group>"; };
+		2BA6B92E448EA6CCB116290A /* AnimateCreateVideoDirectionCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnimateCreateVideoDirectionCard.swift; sourceTree = "<group>"; };
 		2C62F720B42062CB275C3737 /* AnimateCreateMediaRows.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnimateCreateMediaRows.swift; sourceTree = "<group>"; };
 		2D59629D3D06A0E090C6C25E /* AnimateContinuation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnimateContinuation.swift; sourceTree = "<group>"; };
 		2E4689EF1994C5A673E18015 /* AnimateInProgressArtifactPresentation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnimateInProgressArtifactPresentation.swift; sourceTree = "<group>"; };
@@ -287,7 +287,7 @@
 		6D097A65EEB07E101FA2ED49 /* AnimateFinalRenderClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnimateFinalRenderClient.swift; sourceTree = "<group>"; };
 		6EF64CAD0EC05383DA966154 /* AnimateRenderJob.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnimateRenderJob.swift; sourceTree = "<group>"; };
 		6F5BB43445BF882C80965138 /* AnimateAppPreferences.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnimateAppPreferences.swift; sourceTree = "<group>"; };
-		6FB1C58BE9FF2E561C66A837 /* AnimateCreateStoryRows.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnimateCreateStoryRows.swift; sourceTree = "<group>"; };
+		6FB1C58BE9FF2E561C66A837 /* AnimateCreateVideoDirectionRows.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnimateCreateVideoDirectionRows.swift; sourceTree = "<group>"; };
 		7189B0ED1BAA65ADEC6B7747 /* SignInActionsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignInActionsView.swift; sourceTree = "<group>"; };
 		721A782AE8ED97A7C47D9FAC /* DependencyContainer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DependencyContainer.swift; sourceTree = "<group>"; };
 		7296847B1F3F8A757F813AE8 /* AnimateAviGuidanceCards.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnimateAviGuidanceCards.swift; sourceTree = "<group>"; };
@@ -320,7 +320,7 @@
 		9464AF74E88DC959236D7C4F /* AnimateInProgressDetailComponents.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnimateInProgressDetailComponents.swift; sourceTree = "<group>"; };
 		955B03CF582923D0473F8D91 /* account-av */ = {isa = PBXFileReference; lastKnownFileType = folder; name = "account-av"; path = "../../../account-av"; sourceTree = SOURCE_ROOT; };
 		96ED7D51080F1DF098DD426E /* AnimateInProgressWorkspaceChrome.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnimateInProgressWorkspaceChrome.swift; sourceTree = "<group>"; };
-		96EE0BE8E634A54ACF473C35 /* AnimateInProgressStoryPresentation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnimateInProgressStoryPresentation.swift; sourceTree = "<group>"; };
+		96EE0BE8E634A54ACF473C35 /* AnimateInProgressVideoDirectionPresentation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnimateInProgressVideoDirectionPresentation.swift; sourceTree = "<group>"; };
 		971903B1A68E9CFC3CBEA68B /* AnimateCreateWorkflowContent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnimateCreateWorkflowContent.swift; sourceTree = "<group>"; };
 		98C635FA97FC6673CD774829 /* LaunchScreen.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = LaunchScreen.storyboard; sourceTree = "<group>"; };
 		997EC84FF4B9D435F97DCDCB /* AnimateVideoSetupFormModels.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnimateVideoSetupFormModels.swift; sourceTree = "<group>"; };
@@ -514,14 +514,14 @@
 				AAC4117AE936523A8C09F76A /* AnimateCreateImagesWorkspace.swift */,
 				9FFDE855F5F008B8E7E94FEB /* AnimateCreateMediaCard.swift */,
 				2C62F720B42062CB275C3737 /* AnimateCreateMediaRows.swift */,
-				2B3F6709AC2EC204F3629A72 /* AnimateCreateMediaStoryPresentation.swift */,
+				2B3F6709AC2EC204F3629A72 /* AnimateCreateVideoDirectionPresentation.swift */,
 				E2E751F7DADF2B2D30303248 /* AnimateCreateOperationRunner.swift */,
 				E295EF5914D1F014D4184BC8 /* AnimateCreateOverviewCards.swift */,
 				14E0872EE9B7956B31286670 /* AnimateCreateProgressComponents.swift */,
 				8EB6D17FEF3139999ED41086 /* AnimateCreateRenderRows.swift */,
 				A21A163F667B6C8882B0AC49 /* AnimateCreateScreen.swift */,
-				2BA6B92E448EA6CCB116290A /* AnimateCreateStoryCard.swift */,
-				6FB1C58BE9FF2E561C66A837 /* AnimateCreateStoryRows.swift */,
+				2BA6B92E448EA6CCB116290A /* AnimateCreateVideoDirectionCard.swift */,
+				6FB1C58BE9FF2E561C66A837 /* AnimateCreateVideoDirectionRows.swift */,
 				79B67CA893C58B6BD0AF30C8 /* AnimateCreateUITestFixtures.swift */,
 				80F90A17D43E7641BD095D1C /* AnimateCreateViewModel.swift */,
 				4A46ED29ECE2F042F63F5EFA /* AnimateCreateViewModel+Actions.swift */,
@@ -791,7 +791,7 @@
 				C13E1D534FFAD38AA5BFDAB0 /* AnimateAviViewModelTests.swift */,
 				7C029E23218DAE1E7E873DDE /* AnimateCreateAvailabilityPresentationTests.swift */,
 				C3DF6F578EA73CED7A3827ED /* AnimateCreateTestFixtures.swift */,
-				157006A1EAABEE8BA9D2CEDD /* AnimateCreateViewModelStoryStateTests.swift */,
+				157006A1EAABEE8BA9D2CEDD /* AnimateCreateViewModelVideoDirectionStateTests.swift */,
 				43CCBAF7B7D00CE258D044D1 /* AnimateCreateWorkflowPresentationTests.swift */,
 				15B4B1517C76E0DAFBD8F13B /* AnimateCreditGateTests.swift */,
 				0D86C1829E17BD8791BBAFFB /* AnimateHomePresentationTests.swift */,
@@ -991,7 +991,7 @@
 				D89F138D1A3CD5D2E2AD49FD /* AnimateInProgressScreen.swift */,
 				9C4D5B0FFF8567809321E897 /* AnimateInProgressSelectedDetail.swift */,
 				E537C87F0760B13F00233FE9 /* AnimateInProgressStateViews.swift */,
-				96EE0BE8E634A54ACF473C35 /* AnimateInProgressStoryPresentation.swift */,
+				96EE0BE8E634A54ACF473C35 /* AnimateInProgressVideoDirectionPresentation.swift */,
 				0593B2BF4FB3BD4E3615D4D0 /* AnimateInProgressViewModel.swift */,
 				96ED7D51080F1DF098DD426E /* AnimateInProgressWorkspaceChrome.swift */,
 				CF8AF85459BB2D640533641A /* AnimateInProgressWorkspaceDetail.swift */,
@@ -1163,14 +1163,14 @@
 				33E7263E97155D86C53B4B45 /* AnimateCreateImagesWorkspace.swift in Sources */,
 				3E9C81C293494BF25246E326 /* AnimateCreateMediaCard.swift in Sources */,
 				6D5D5BD5339D26DD6F12652E /* AnimateCreateMediaRows.swift in Sources */,
-				AA7635558DE1A322F9512C40 /* AnimateCreateMediaStoryPresentation.swift in Sources */,
+				AA7635558DE1A322F9512C40 /* AnimateCreateVideoDirectionPresentation.swift in Sources */,
 				8E0B4599436F33822BEC2B74 /* AnimateCreateOperationRunner.swift in Sources */,
 				D2411288F4C6A78D5C6667F5 /* AnimateCreateOverviewCards.swift in Sources */,
 				5F3FFB909883497AF46C271B /* AnimateCreateProgressComponents.swift in Sources */,
 				D12698A1AEB513D2F682936F /* AnimateCreateRenderRows.swift in Sources */,
 				58008EE897078DF18B5C230B /* AnimateCreateScreen.swift in Sources */,
-				37034520E17939E7B91285BE /* AnimateCreateStoryCard.swift in Sources */,
-				7788931E91C9C17446907832 /* AnimateCreateStoryRows.swift in Sources */,
+				37034520E17939E7B91285BE /* AnimateCreateVideoDirectionCard.swift in Sources */,
+				7788931E91C9C17446907832 /* AnimateCreateVideoDirectionRows.swift in Sources */,
 				A8E259107A207D6090E9F4C9 /* AnimateCreateUITestFixtures.swift in Sources */,
 				2079A0068B6FE71BA6D4BF63 /* AnimateCreateViewModel+Actions.swift in Sources */,
 				0121B530FC613A47379E2987 /* AnimateCreateViewModel+AvailabilityMessages.swift in Sources */,
@@ -1228,7 +1228,7 @@
 				A7B560053719A022A8D16EC2 /* AnimateInProgressScreen.swift in Sources */,
 				903CA6A1A8111EDF3C74CFE6 /* AnimateInProgressSelectedDetail.swift in Sources */,
 				2F2EEEDA0A4D594A4DE9C847 /* AnimateInProgressStateViews.swift in Sources */,
-				5C3132D7FEE5F43A230A1350 /* AnimateInProgressStoryPresentation.swift in Sources */,
+				5C3132D7FEE5F43A230A1350 /* AnimateInProgressVideoDirectionPresentation.swift in Sources */,
 				9D48B7DA1A09F0EEE569BE53 /* AnimateInProgressSummary.swift in Sources */,
 				6B76F816E195555ED41A3576 /* AnimateInProgressVideosWorkflowContracts.swift in Sources */,
 				5960984DE0874D91A769DB54 /* AnimateInProgressViewModel.swift in Sources */,
@@ -1304,7 +1304,7 @@
 				2A31F7F2A6009726BFD0CB23 /* AnimateAviViewModelTests.swift in Sources */,
 				BA153D9C6487188B021B1E5D /* AnimateCreateAvailabilityPresentationTests.swift in Sources */,
 				CD621B0615636F6DEA0FE6C5 /* AnimateCreateTestFixtures.swift in Sources */,
-				76113D8A090AE8107719456E /* AnimateCreateViewModelStoryStateTests.swift in Sources */,
+				76113D8A090AE8107719456E /* AnimateCreateViewModelVideoDirectionStateTests.swift in Sources */,
 				49034F4A18106C0AE7DFCB0D /* AnimateCreateWorkflowPresentationTests.swift in Sources */,
 				CA6CE16BF556481E87DB262D /* AnimateCreditGateTests.swift in Sources */,
 				20A90E05CEE6D8718191978D /* AnimateHomePresentationTests.swift in Sources */,

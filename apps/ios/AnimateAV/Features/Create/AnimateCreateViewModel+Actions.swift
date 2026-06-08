@@ -283,7 +283,7 @@ extension AnimateCreateViewModel {
         return await videoCreationWorkflow.updateVideoSetup(momentId: momentId, form: form)
     }
 
-    private func prepareStoryIfNeeded(
+    private func prepareVideoDirectionIfNeeded(
         momentId: String,
         form: AnimateVideoSetupForm,
         selectedMedia: [AnimateSelectedMedia],

@@ -73,7 +73,7 @@ extension AnimateCreateViewModel {
         return latestFinalJob.canEditSetup != true
     }
 
-    var isStoryPreparedForCurrentInput: Bool {
+    var isVideoDirectionPreparedForCurrentInput: Bool {
         if usesCreateUITestFixture {
             return true
         }
