@@ -10,7 +10,7 @@ extension AnimateCreateViewModel {
 
     var mediaAvailabilityMessage: String? {
         AnimateCreateAvailabilityMessageFactory.media(
-            hasAnimateWorkspace: hasAnimateWorkspace,
+            hasActiveVideoWorkspace: hasActiveVideoWorkspace,
             isImportingMedia: isImportingMedia,
             isMediaUploadConfigured: mediaUploadWorkflow?.isConfigured ?? false,
             mediaRemainingSlots: mediaRemainingSlots
@@ -20,7 +20,7 @@ extension AnimateCreateViewModel {
     var videoDirectionAvailabilityMessage: String? {
         AnimateCreateAvailabilityMessageFactory.story(
             isSignedIn: isSignedIn,
-            hasAnimateWorkspace: hasAnimateWorkspace,
+            hasActiveVideoWorkspace: hasActiveVideoWorkspace,
             isStoryPlanning: storyWorkflow?.isPlanning ?? false,
             isStoryAvailable: storyWorkflow != nil,
             isStoryConfigured: storyWorkflow?.isConfigured ?? false,

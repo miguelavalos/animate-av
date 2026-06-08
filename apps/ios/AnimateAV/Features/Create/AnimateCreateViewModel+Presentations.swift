@@ -4,7 +4,7 @@ extension AnimateCreateViewModel {
             activeVideoId: activeVideoId,
             isSignedIn: isSignedIn,
             isCreatingVideo: isCreatingVideo,
-            hasAnimateWorkspace: hasAnimateWorkspace,
+            hasActiveVideoWorkspace: hasActiveVideoWorkspace,
             hasUnsavedLocalVideo: hasLocalAnimateWorkspace,
             template: form.template,
             creationStyleTitle: selectedCreationStyle.title,

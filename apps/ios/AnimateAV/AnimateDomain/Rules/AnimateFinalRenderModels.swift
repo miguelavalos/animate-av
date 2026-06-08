@@ -228,14 +228,14 @@ enum AnimateFinalRenderRules {
 
     static func availabilityMessage(
         _ availability: Availability,
-        missingMomentMessage: String,
+        missingVideoMessage: String,
         insufficientCreditsMessage: String
     ) -> String? {
         switch availability.blockReason {
         case nil:
             return nil
         case .missingVideo:
-            return missingMomentMessage
+            return missingVideoMessage
         case .insufficientCredits:
             return insufficientCreditsMessage
         case .storyNotReady:

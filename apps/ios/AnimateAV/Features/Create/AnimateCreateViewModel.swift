@@ -113,7 +113,7 @@ final class AnimateCreateViewModel: ObservableObject {
         activeVideo?.id ?? workflowActiveVideoId
     }
 
-    var hasAnimateWorkspace: Bool {
+    var hasActiveVideoWorkspace: Bool {
         activeVideoId != nil || isLocalVideoCreationStarted
     }
 

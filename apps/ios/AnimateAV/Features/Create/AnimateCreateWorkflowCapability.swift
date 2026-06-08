@@ -5,7 +5,7 @@ enum AnimateCreateWorkflowCapabilityFactory {
     static func make(
         activeVideoId: String?,
         isSignedIn: Bool,
-        hasAnimateWorkspace: Bool,
+        hasActiveVideoWorkspace: Bool,
         isImportingMedia: Bool,
         mediaRemainingSlots: Int,
         storyWorkflow: StoryWorkflow?,
@@ -16,13 +16,13 @@ enum AnimateCreateWorkflowCapabilityFactory {
     ) -> AnimateCreateWorkflowCapability {
         AnimateCreateWorkflowCapability(
             canAddMedia: canAddMedia(
-                hasAnimateWorkspace: hasAnimateWorkspace,
+                hasActiveVideoWorkspace: hasActiveVideoWorkspace,
                 isImportingMedia: isImportingMedia,
                 mediaRemainingSlots: mediaRemainingSlots
             ),
             canPrepareVideoDirection: canPrepareVideoDirection(
                 isSignedIn: isSignedIn,
-                hasAnimateWorkspace: hasAnimateWorkspace,
+                hasActiveVideoWorkspace: hasActiveVideoWorkspace,
                 storyWorkflow: storyWorkflow,
                 template: template,
                 selectedMediaCount: selectedMediaCount
@@ -42,24 +42,24 @@ enum AnimateCreateWorkflowCapabilityFactory {
     }
 
     private static func canAddMedia(
-        hasAnimateWorkspace: Bool,
+        hasActiveVideoWorkspace: Bool,
         isImportingMedia: Bool,
         mediaRemainingSlots: Int
     ) -> Bool {
-        hasAnimateWorkspace
+        hasActiveVideoWorkspace
             && !isImportingMedia
             && mediaRemainingSlots > 0
     }
 
     private static func canPrepareVideoDirection(
         isSignedIn: Bool,
-        hasAnimateWorkspace: Bool,
+        hasActiveVideoWorkspace: Bool,
         storyWorkflow: StoryWorkflow?,
         template: AnimateVideoTemplate,
         selectedMediaCount: Int
     ) -> Bool {
         guard isSignedIn else { return false }
-        guard let storyWorkflow, hasAnimateWorkspace else { return false }
+        guard let storyWorkflow, hasActiveVideoWorkspace else { return false }
         return storyWorkflow.isConfigured
             && !storyWorkflow.isPlanning
             && AnimateMediaRules.availability(template: template, selectedCount: selectedMediaCount).canUseSelection

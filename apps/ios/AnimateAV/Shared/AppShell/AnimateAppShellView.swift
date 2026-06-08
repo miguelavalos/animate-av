@@ -218,7 +218,7 @@ struct AnimateAppShellView: View {
             return
         }
 
-        if createViewModel.hasAnimateWorkspace {
+        if createViewModel.hasActiveVideoWorkspace {
             selectRootTab(.create)
             return
         }

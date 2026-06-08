@@ -31,7 +31,7 @@ extension AnimateCreateViewModel {
             updateSetupErrorMessage(L10n.string("create.error.waitBeforeDiscard"))
             return
         }
-        guard hasAnimateWorkspace || hasRecoverableVideoContext else {
+        guard hasActiveVideoWorkspace || hasRecoverableVideoContext else {
             updateSetupErrorMessage(L10n.string("create.error.noActiveMoment"))
             return
         }

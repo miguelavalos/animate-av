@@ -14,12 +14,12 @@ enum AnimateCreateAvailabilityMessageFactory {
     }
 
     static func media(
-        hasAnimateWorkspace: Bool,
+        hasActiveVideoWorkspace: Bool,
         isImportingMedia: Bool,
         isMediaUploadConfigured: Bool,
         mediaRemainingSlots: Int
     ) -> String? {
-        if !hasAnimateWorkspace { return AnimateCreateAvailabilityCopy.mediaMissingMoment }
+        if !hasActiveVideoWorkspace { return AnimateCreateAvailabilityCopy.mediaMissingVideo }
         if isImportingMedia { return nil }
         if !isMediaUploadConfigured { return AnimateCreateAvailabilityCopy.mediaUploadNotConfigured }
         if mediaRemainingSlots == 0 { return AnimateCreateAvailabilityCopy.mediaTemplateFull }
@@ -28,7 +28,7 @@ enum AnimateCreateAvailabilityMessageFactory {
 
     static func story(
         isSignedIn: Bool,
-        hasAnimateWorkspace: Bool,
+        hasActiveVideoWorkspace: Bool,
         isStoryPlanning: Bool,
         isStoryAvailable: Bool,
         isStoryConfigured: Bool,
@@ -37,7 +37,7 @@ enum AnimateCreateAvailabilityMessageFactory {
         template: AnimateVideoTemplate
     ) -> String? {
         guard isSignedIn else { return AnimateCreateAvailabilityCopy.storySignInRequired }
-        guard hasAnimateWorkspace else { return AnimateCreateAvailabilityCopy.storyMissingMoment }
+        guard hasActiveVideoWorkspace else { return AnimateCreateAvailabilityCopy.videoDirectionMissingVideo }
         guard isStoryAvailable else { return AnimateCreateAvailabilityCopy.storyUnavailable }
         if isStoryPlanning { return nil }
         if !isStoryConfigured { return AnimateCreateAvailabilityCopy.storyNotConfigured }
@@ -79,7 +79,7 @@ enum AnimateCreateAvailabilityMessageFactory {
         balance: AnimateCreditBalance,
         creditBalanceLoadState: AnimateCreditBalanceLoadState = .loaded
     ) -> String? {
-        guard activeVideoId != nil else { return AnimateCreateAvailabilityCopy.finalRenderMissingMoment }
+        guard activeVideoId != nil else { return AnimateCreateAvailabilityCopy.finalRenderMissingVideo }
         guard isFinalRenderAvailable else { return AnimateCreateAvailabilityCopy.finalRenderUnavailable }
         if isFinalRenderGenerating { return nil }
         if !isFinalRenderConfigured { return AnimateCreateAvailabilityCopy.finalRenderNotConfigured }
@@ -93,7 +93,7 @@ enum AnimateCreateAvailabilityMessageFactory {
         }
         return AnimateFinalRenderRules.availabilityMessage(
             availability,
-            missingMomentMessage: AnimateCreateAvailabilityCopy.finalRenderMissingWorkspace,
+            missingVideoMessage: AnimateCreateAvailabilityCopy.finalRenderMissingVideoWorkspace,
             insufficientCreditsMessage: AnimateCreateAvailabilityCopy.finalRenderInsufficientCredits(
                 missingCredits: missingCredits(template: template, balance: balance)
             )

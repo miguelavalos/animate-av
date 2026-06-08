@@ -4,7 +4,7 @@ struct AnimateCreateWorkflowPresentation: Equatable {
     var activeVideoId: String?
     var isSignedIn = false
     var isCreatingVideo = false
-    var hasAnimateWorkspace = false
+    var hasActiveVideoWorkspace = false
     var hasUnsavedLocalVideo = false
     var template: AnimateVideoTemplate
     var creationStyleTitle = ""
@@ -26,11 +26,11 @@ struct AnimateCreateWorkflowPresentation: Equatable {
     var finalRenderAvailabilityMessage: String?
 
     var showsWorkflowCards: Bool {
-        hasAnimateWorkspace
+        hasActiveVideoWorkspace
     }
 
     var showsMediaFirstWorkspace: Bool {
-        hasAnimateWorkspace
+        hasActiveVideoWorkspace
             || hasUnsavedLocalVideo
             || mediaSummary.selectedCount > 0
             || !mediaSummary.syncedMediaAssets.isEmpty
@@ -104,7 +104,7 @@ struct AnimateCreateWorkflowPresentation: Equatable {
         activeVideoId: String?,
         isSignedIn: Bool,
         isCreatingVideo: Bool,
-        hasAnimateWorkspace: Bool,
+        hasActiveVideoWorkspace: Bool,
         hasUnsavedLocalVideo: Bool,
         template: AnimateVideoTemplate,
         creationStyleTitle: String,
@@ -122,7 +122,7 @@ struct AnimateCreateWorkflowPresentation: Equatable {
             activeVideoId: activeVideoId,
             isSignedIn: isSignedIn,
             isCreatingVideo: isCreatingVideo,
-            hasAnimateWorkspace: hasAnimateWorkspace,
+            hasActiveVideoWorkspace: hasActiveVideoWorkspace,
             hasUnsavedLocalVideo: hasUnsavedLocalVideo,
             template: template,
             creationStyleTitle: creationStyleTitle,

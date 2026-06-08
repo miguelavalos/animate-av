@@ -656,7 +656,7 @@ final class FinalRenderWorkflow: WorkspaceObservingWorkflow {
     private func generateBlockMessage(_ availability: AnimateFinalRenderRules.Availability) -> String {
         AnimateFinalRenderRules.availabilityMessage(
             availability,
-            missingMomentMessage: L10n.string("workflow.final.missingMoment"),
+            missingVideoMessage: L10n.string("workflow.final.missingMoment"),
             insufficientCreditsMessage: L10n.string("workflow.final.addCredits")
         ) ?? L10n.string("workflow.final.notReady")
     }

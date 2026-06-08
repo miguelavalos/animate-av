@@ -29,7 +29,7 @@ final class AnimateCreateAvailabilityPresentationTests: XCTestCase {
         let capability = AnimateCreateWorkflowCapabilityFactory.make(
             activeVideoId: "moment-1",
             isSignedIn: true,
-            hasAnimateWorkspace: true,
+            hasActiveVideoWorkspace: true,
             isImportingMedia: false,
             mediaRemainingSlots: 2,
             storyWorkflow: nil,
@@ -49,7 +49,7 @@ final class AnimateCreateAvailabilityPresentationTests: XCTestCase {
         let withoutSlots = AnimateCreateWorkflowCapabilityFactory.make(
             activeVideoId: "moment-1",
             isSignedIn: true,
-            hasAnimateWorkspace: true,
+            hasActiveVideoWorkspace: true,
             isImportingMedia: false,
             mediaRemainingSlots: 0,
             storyWorkflow: nil,
@@ -57,10 +57,10 @@ final class AnimateCreateAvailabilityPresentationTests: XCTestCase {
             template: .birthdayMessage,
             selectedMediaCount: 0
         )
-        let withoutMoment = AnimateCreateWorkflowCapabilityFactory.make(
+        let withoutVideo = AnimateCreateWorkflowCapabilityFactory.make(
             activeVideoId: nil,
             isSignedIn: true,
-            hasAnimateWorkspace: false,
+            hasActiveVideoWorkspace: false,
             isImportingMedia: false,
             mediaRemainingSlots: 2,
             storyWorkflow: nil,
@@ -70,7 +70,7 @@ final class AnimateCreateAvailabilityPresentationTests: XCTestCase {
         )
 
         XCTAssertFalse(withoutSlots.canAddMedia)
-        XCTAssertFalse(withoutMoment.canAddMedia)
+        XCTAssertFalse(withoutVideo.canAddMedia)
     }
 
     func testAvailabilityCopyUsesSingularAndPluralCreditMessages() {
@@ -78,7 +78,7 @@ final class AnimateCreateAvailabilityPresentationTests: XCTestCase {
         XCTAssertEqual(AnimateCreateAvailabilityCopy.mediaTemplateFull, "Avi has the photo for this video.")
         XCTAssertEqual(AnimateCreateAvailabilityCopy.storyMissingMedia, "Add one photo before preparing the video.")
         XCTAssertEqual(
-            AnimateCreateAvailabilityCopy.finalRenderMissingWorkspace,
+            AnimateCreateAvailabilityCopy.finalRenderMissingVideoWorkspace,
             "Wait for this video to sync before creating the final video."
         )
         XCTAssertEqual(
@@ -90,16 +90,16 @@ final class AnimateCreateAvailabilityPresentationTests: XCTestCase {
     func testAvailabilityMessageFactoryFormatsMediaStates() {
         XCTAssertEqual(
             AnimateCreateAvailabilityMessageFactory.media(
-                hasAnimateWorkspace: false,
+                hasActiveVideoWorkspace: false,
                 isImportingMedia: false,
                 isMediaUploadConfigured: true,
                 mediaRemainingSlots: 2
             ),
-            AnimateCreateAvailabilityCopy.mediaMissingMoment
+            AnimateCreateAvailabilityCopy.mediaMissingVideo
         )
         XCTAssertNil(
             AnimateCreateAvailabilityMessageFactory.media(
-                hasAnimateWorkspace: true,
+                hasActiveVideoWorkspace: true,
                 isImportingMedia: true,
                 isMediaUploadConfigured: false,
                 mediaRemainingSlots: 0
@@ -107,7 +107,7 @@ final class AnimateCreateAvailabilityPresentationTests: XCTestCase {
         )
         XCTAssertEqual(
             AnimateCreateAvailabilityMessageFactory.media(
-                hasAnimateWorkspace: true,
+                hasActiveVideoWorkspace: true,
                 isImportingMedia: false,
                 isMediaUploadConfigured: true,
                 mediaRemainingSlots: 0
@@ -120,7 +120,7 @@ final class AnimateCreateAvailabilityPresentationTests: XCTestCase {
         XCTAssertEqual(
             AnimateCreateAvailabilityMessageFactory.story(
                 isSignedIn: true,
-                hasAnimateWorkspace: true,
+                hasActiveVideoWorkspace: true,
                 isStoryPlanning: false,
                 isStoryAvailable: true,
                 isStoryConfigured: true,
@@ -133,7 +133,7 @@ final class AnimateCreateAvailabilityPresentationTests: XCTestCase {
         XCTAssertNil(
             AnimateCreateAvailabilityMessageFactory.story(
                 isSignedIn: true,
-                hasAnimateWorkspace: true,
+                hasActiveVideoWorkspace: true,
                 isStoryPlanning: true,
                 isStoryAvailable: true,
                 isStoryConfigured: false,

@@ -8,7 +8,7 @@ final class AnimateCreateWorkflowPresentationTests: XCTestCase {
             workflow: AnimateCreateWorkflowPresentation(
                 activeVideoId: "moment-1",
                 isSignedIn: true,
-                hasAnimateWorkspace: true,
+                hasActiveVideoWorkspace: true,
                 template: .birthdayMessage,
                 balance: AnimateCreditBalance(proMonthly: 0, promotional: 1, purchased: 0),
                 mediaSummary: AnimateCreateMediaSummary(
@@ -34,7 +34,7 @@ final class AnimateCreateWorkflowPresentationTests: XCTestCase {
             workflow: AnimateCreateWorkflowPresentation(
                 activeVideoId: "moment-1",
                 isSignedIn: true,
-                hasAnimateWorkspace: true,
+                hasActiveVideoWorkspace: true,
                 template: .birthdayMessage,
                 balance: AnimateCreditBalance(proMonthly: 0, promotional: 1, purchased: 0),
                 mediaSummary: AnimateCreateMediaSummary(
@@ -75,7 +75,7 @@ final class AnimateCreateWorkflowPresentationTests: XCTestCase {
         )
         let presentation = AnimateCreateWorkflowPresentation(
             activeVideoId: "moment-1",
-            hasAnimateWorkspace: true,
+            hasActiveVideoWorkspace: true,
             template: .birthdayMessage,
             balance: .empty,
             mediaSummary: AnimateCreateMediaSummary(),
@@ -98,7 +98,7 @@ final class AnimateCreateWorkflowPresentationTests: XCTestCase {
         )
         let presentation = AnimateCreateWorkflowPresentation(
             activeVideoId: "moment-1",
-            hasAnimateWorkspace: true,
+            hasActiveVideoWorkspace: true,
             template: .birthdayMessage,
             balance: .empty,
             mediaSummary: AnimateCreateMediaSummary(),
@@ -128,7 +128,7 @@ final class AnimateCreateWorkflowPresentationTests: XCTestCase {
         )
         let presentation = AnimateCreateWorkflowPresentation(
             activeVideoId: "moment-1",
-            hasAnimateWorkspace: true,
+            hasActiveVideoWorkspace: true,
             template: .birthdayMessage,
             balance: .empty,
             mediaSummary: AnimateCreateMediaSummary(),
@@ -154,7 +154,7 @@ final class AnimateCreateWorkflowPresentationTests: XCTestCase {
         )
         let presentation = AnimateCreateWorkflowPresentation(
             activeVideoId: "moment-1",
-            hasAnimateWorkspace: true,
+            hasActiveVideoWorkspace: true,
             template: .birthdayMessage,
             balance: .empty,
             mediaSummary: AnimateCreateMediaSummary(),
@@ -190,7 +190,7 @@ final class AnimateCreateWorkflowPresentationTests: XCTestCase {
 
         let presentation = AnimateCreateWorkflowPresentation(
             activeVideoId: "moment-1",
-            hasAnimateWorkspace: true,
+            hasActiveVideoWorkspace: true,
             template: .birthdayMessage,
             balance: AnimateCreditBalance(proMonthly: 0, promotional: 2, purchased: 0),
             mediaSummary: mediaSummary,
@@ -227,7 +227,7 @@ final class AnimateCreateWorkflowPresentationTests: XCTestCase {
             activeVideoId: "moment-1",
             isSignedIn: true,
             isCreatingVideo: false,
-            hasAnimateWorkspace: true,
+            hasActiveVideoWorkspace: true,
             hasUnsavedLocalVideo: false,
             template: .birthdayMessage,
             creationStyleTitle: "Birthday cartoon",
@@ -265,7 +265,7 @@ final class AnimateCreateWorkflowPresentationTests: XCTestCase {
             activeVideoId: nil,
             isSignedIn: true,
             isCreatingVideo: false,
-            hasAnimateWorkspace: true,
+            hasActiveVideoWorkspace: true,
             hasUnsavedLocalVideo: true,
             template: .birthdayMessage,
             creationStyleTitle: "Birthday cartoon",
@@ -297,7 +297,7 @@ final class AnimateCreateWorkflowPresentationTests: XCTestCase {
             activeVideoId: nil,
             isSignedIn: true,
             isCreatingVideo: false,
-            hasAnimateWorkspace: false,
+            hasActiveVideoWorkspace: false,
             hasUnsavedLocalVideo: true,
             template: .birthdayMessage,
             creationStyleTitle: "Birthday cartoon",
@@ -551,7 +551,7 @@ final class AnimateCreateWorkflowPresentationTests: XCTestCase {
         let workflow = AnimateCreateWorkflowPresentation(
             activeVideoId: "moment-1",
             isSignedIn: true,
-            hasAnimateWorkspace: true,
+            hasActiveVideoWorkspace: true,
             template: .birthdayMessage,
             balance: AnimateCreditBalance(proMonthly: 0, promotional: 3, purchased: 0),
             mediaSummary: AnimateCreateMediaSummary(
@@ -587,7 +587,7 @@ final class AnimateCreateWorkflowPresentationTests: XCTestCase {
         let workflow = AnimateCreateWorkflowPresentation(
             activeVideoId: "moment-1",
             isSignedIn: true,
-            hasAnimateWorkspace: true,
+            hasActiveVideoWorkspace: true,
             template: .birthdayMessage,
             balance: AnimateCreditBalance(proMonthly: 0, promotional: 3, purchased: 0),
             mediaSummary: AnimateCreateMediaSummary(
@@ -611,7 +611,7 @@ final class AnimateCreateWorkflowPresentationTests: XCTestCase {
             workflow: AnimateCreateWorkflowPresentation(
                 activeVideoId: "moment-1",
                 isSignedIn: true,
-                hasAnimateWorkspace: true,
+                hasActiveVideoWorkspace: true,
                 template: .birthdayMessage,
                 balance: AnimateCreditBalance(proMonthly: 0, promotional: 2, purchased: 0),
                 mediaSummary: AnimateCreateMediaSummary(
@@ -640,7 +640,7 @@ final class AnimateCreateWorkflowPresentationTests: XCTestCase {
             workflow: AnimateCreateWorkflowPresentation(
                 activeVideoId: "moment-1",
                 isSignedIn: true,
-                hasAnimateWorkspace: true,
+                hasActiveVideoWorkspace: true,
                 template: .birthdayMessage,
                 balance: AnimateCreditBalance(proMonthly: 0, promotional: 2, purchased: 0),
                 mediaSummary: AnimateCreateMediaSummary(
@@ -665,7 +665,7 @@ final class AnimateCreateWorkflowPresentationTests: XCTestCase {
             workflow: AnimateCreateWorkflowPresentation(
                 activeVideoId: "moment-1",
                 isSignedIn: true,
-                hasAnimateWorkspace: true,
+                hasActiveVideoWorkspace: true,
                 template: .birthdayMessage,
                 balance: AnimateCreditBalance(proMonthly: 0, promotional: 3, purchased: 0),
                 mediaSummary: AnimateCreateMediaSummary(
@@ -698,7 +698,7 @@ final class AnimateCreateWorkflowPresentationTests: XCTestCase {
             workflow: AnimateCreateWorkflowPresentation(
                 activeVideoId: "moment-1",
                 isSignedIn: true,
-                hasAnimateWorkspace: true,
+                hasActiveVideoWorkspace: true,
                 template: .birthdayMessage,
                 balance: AnimateCreditBalance(proMonthly: 0, promotional: 0, purchased: 0),
                 mediaSummary: AnimateCreateMediaSummary(
@@ -732,7 +732,7 @@ final class AnimateCreateWorkflowPresentationTests: XCTestCase {
             workflow: AnimateCreateWorkflowPresentation(
                 activeVideoId: "moment-1",
                 isSignedIn: true,
-                hasAnimateWorkspace: true,
+                hasActiveVideoWorkspace: true,
                 template: .birthdayMessage,
                 balance: AnimateCreditBalance(proMonthly: 0, promotional: 5, purchased: 0),
                 mediaSummary: AnimateCreateMediaSummary(
@@ -767,7 +767,7 @@ final class AnimateCreateWorkflowPresentationTests: XCTestCase {
             workflow: AnimateCreateWorkflowPresentation(
                 activeVideoId: "moment-1",
                 isSignedIn: true,
-                hasAnimateWorkspace: true,
+                hasActiveVideoWorkspace: true,
                 template: .birthdayMessage,
                 balance: AnimateCreditBalance(proMonthly: 0, promotional: 3, purchased: 0),
                 mediaSummary: AnimateCreateMediaSummary(
