@@ -129,7 +129,7 @@ Repo path: apps/ios/AnimateAV/App/Assets.xcassets/StyleBirthday.imageset/StyleBi
 Repo path: apps/ios/AnimateAV/App/Assets.xcassets/StyleCelebration.imageset/StyleCelebration.png
 Repo path: apps/ios/AnimateAV/App/Assets.xcassets/StyleCustom.imageset/StyleCustom.png
 Repo path: apps/ios/AnimateAV/App/Assets.xcassets/StyleEventRecap.imageset/StyleEventRecap.png
-Repo path: apps/ios/AnimateAV/App/Assets.xcassets/StyleFamilyCartoon.imageset/StyleFamilyMoments.png
+Repo path: apps/ios/AnimateAV/App/Assets.xcassets/StyleFamilyCartoon.imageset/StyleFamilyCartoon.png
 Repo path: apps/ios/AnimateAV/App/Assets.xcassets/StyleFavoritePeople.imageset/StyleFavoritePeople.png
 Repo path: apps/ios/AnimateAV/App/Assets.xcassets/StyleMilestone.imageset/StyleMilestone.png
 Repo path: apps/ios/AnimateAV/App/Assets.xcassets/StyleSoftRoast.imageset/StyleSoftRoast.png
