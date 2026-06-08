@@ -66,6 +66,8 @@ struct AnimateVideoDirectionClient {
             mediaUse: form.mediaUse.rawValue,
             occasion: form.occasion,
             details: form.details,
+            narrationVoice: form.details.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty ? "none" : form.voiceProfile.rawValue,
+            voiceTone: form.voiceTone.rawValue,
             media: selectedMedia,
             idempotencyKey: "story:\(momentId):\(AnimateVideoDirectionInputSignature.make(momentId: momentId, form: form, selectedMedia: selectedMedia))"
         )

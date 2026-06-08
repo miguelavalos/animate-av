@@ -73,6 +73,7 @@ final class AnimateCreateViewModel: ObservableObject {
     @Published private(set) var isStartingImageGeneration = false
     @Published private(set) var isPurchasingImageGenerationPack = false
     @Published private(set) var imageGenerationAvailabilityMessage: String?
+    @Published private(set) var imageGenerationQueueNonce = UUID()
     @Published private(set) var pendingGalleryVideo: AnimateGalleryVideoRecord?
     @Published private(set) var canRetryFinalVideoDownload = false
     @Published private(set) var finalRenderStatusMessage: String?
@@ -338,6 +339,7 @@ final class AnimateCreateViewModel: ObservableObject {
                 await MainActor.run {
                     self?.imageGenerationAvailability = response.availability
                     self?.imageGenerationAvailabilityMessage = L10n.string("create.images.action.queued", response.jobs.count)
+                    self?.imageGenerationQueueNonce = UUID()
                     self?.isStartingImageGeneration = false
                 }
             } catch {
@@ -658,6 +660,8 @@ final class AnimateCreateViewModel: ObservableObject {
             finalForm.look.rawValue,
             finalForm.theme.rawValue,
             finalForm.tone.rawValue,
+            finalForm.voiceProfile.rawValue,
+            finalForm.voiceTone.rawValue,
             finalForm.duration.rawValue,
             finalForm.mediaUse.rawValue,
             finalForm.occasion.trimmingCharacters(in: .whitespacesAndNewlines),
@@ -731,6 +735,21 @@ final class AnimateCreateViewModel: ObservableObject {
     func selectLook(_ look: AnimateVideoLook) {
         form.look = look
         hasUserLookOverride = true
+        markLocalSetupEdited()
+    }
+
+    func updateVideoMessage(_ message: String) {
+        form.details = String(message.prefix(180))
+        markLocalSetupEdited()
+    }
+
+    func updateVoiceProfile(_ profile: AnimateVideoVoiceProfile) {
+        form.voiceProfile = profile
+        markLocalSetupEdited()
+    }
+
+    func updateVoiceTone(_ tone: AnimateVideoVoiceTone) {
+        form.voiceTone = tone
         markLocalSetupEdited()
     }
 

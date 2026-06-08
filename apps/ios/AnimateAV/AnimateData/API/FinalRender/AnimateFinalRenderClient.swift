@@ -91,6 +91,8 @@ struct AnimateFinalRenderClient {
             details: Self.nonBlankOptional(form.details),
             message: messageFields.message,
             script: messageFields.script,
+            narrationVoice: Self.narrationVoiceIdentifier(form),
+            voiceTone: form.voiceTone.rawValue,
             creditCost: nil,
             removeWatermark: removesWatermark,
             renderOptionId: nil
@@ -156,6 +158,8 @@ struct AnimateFinalRenderClient {
             details: Self.nonBlankOptional(form.details),
             message: messageFields.message,
             script: messageFields.script,
+            narrationVoice: Self.narrationVoiceIdentifier(form),
+            voiceTone: form.voiceTone.rawValue,
             creditCost: nil,
             removeWatermark: removesWatermark,
             renderOptionId: renderOptionId,
@@ -294,6 +298,11 @@ struct AnimateFinalRenderClient {
         }
 
         return (message: nonBlankOptional(form.occasion), script: nil)
+    }
+
+    private static func narrationVoiceIdentifier(_ form: AnimateVideoSetupForm) -> String? {
+        guard nonBlankOptional(form.details) != nil else { return nil }
+        return form.voiceProfile.rawValue
     }
 
     private static func nonBlankIdentifiers(_ values: [String]) -> [String]? {

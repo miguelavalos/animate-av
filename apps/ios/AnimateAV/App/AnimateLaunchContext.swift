@@ -4,6 +4,7 @@ struct AnimateLaunchContext {
     enum Tab: String {
         case home
         case create
+        case createImage
         case inProgress
         case avi
     }

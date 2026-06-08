@@ -146,9 +146,9 @@ struct AnimateCreatePrimaryActionPresentation: Equatable {
         if hasFinalVideoIntent {
             return finalVideoAction.hasRenderPlan
                 ? L10n.string("create.final.readyToCreateTitle")
-                : L10n.string("common.continue")
+                : L10n.string("create.primary.continueWithVideo")
         }
-        return L10n.string("common.continue")
+        return L10n.string("create.primary.continueWithVideo")
     }
 
     var buttonTitle: String {
@@ -178,12 +178,12 @@ struct AnimateCreatePrimaryActionPresentation: Equatable {
             }
             return finalVideoAction.hasRenderPlan
                 ? finalVideoAction.primaryTitle
-                : L10n.string("common.continue")
+                : L10n.string("create.primary.continueWithVideo")
         }
         if needsSignInForVideoDirection {
             return L10n.string("common.signIn")
         }
-        return finalVideoAction.primaryTitle
+        return L10n.string("create.primary.continueWithVideo")
     }
 
     var buttonIconName: String {

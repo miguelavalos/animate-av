@@ -50,31 +50,21 @@ struct AnimateSharedMediaSummaryStack: View {
     }
 
     var body: some View {
-        ZStack(alignment: .bottomTrailing) {
-            ZStack {
-                ForEach(Array(items.prefix(4).enumerated()), id: \.element.id) { index, item in
-                    AnimateSharedMediaThumbnailContent(item: item, size: 74)
-                        .frame(width: 74, height: 74)
-                        .clipShape(RoundedRectangle(cornerRadius: 8, style: .continuous))
-                        .overlay {
-                            RoundedRectangle(cornerRadius: 8, style: .continuous)
-                                .stroke(.white.opacity(0.95), lineWidth: 2)
-                        }
-                        .shadow(color: AVBrandColor.ink.opacity(0.09), radius: 6, x: 0, y: 3)
-                        .offset(x: CGFloat(index) * -6, y: CGFloat(index) * 3)
-                        .rotationEffect(.degrees(Double(index - 1) * -2.0))
-                }
+        ZStack {
+            ForEach(Array(items.prefix(4).enumerated()), id: \.element.id) { index, item in
+                AnimateSharedMediaThumbnailContent(item: item, size: 74)
+                    .frame(width: 74, height: 74)
+                    .clipShape(RoundedRectangle(cornerRadius: 8, style: .continuous))
+                    .overlay {
+                        RoundedRectangle(cornerRadius: 8, style: .continuous)
+                            .stroke(.white.opacity(0.95), lineWidth: 2)
+                    }
+                    .shadow(color: AVBrandColor.ink.opacity(0.09), radius: 6, x: 0, y: 3)
+                    .offset(x: CGFloat(index) * -6, y: CGFloat(index) * 3)
+                    .rotationEffect(.degrees(Double(index - 1) * -2.0))
             }
-            .frame(width: 92, height: 92, alignment: .center)
-
-            Text("\(items.count)")
-                .font(.system(size: 11, weight: .black))
-                .foregroundStyle(.white)
-                .padding(.horizontal, 8)
-                .padding(.vertical, 5)
-                .background(.black.opacity(0.52), in: Capsule())
-                .padding(4)
         }
+        .frame(width: 92, height: 92, alignment: .center)
         .frame(width: 92, height: 92)
     }
 }

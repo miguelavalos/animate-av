@@ -33,6 +33,9 @@ struct AnimateCreateWorkflowContent: View {
                     undoAutoStyleSuggestion: viewModel.undoAutoStyleSuggestion,
                     openPickerRequest: 0,
                     consumeOpenPickerRequest: {},
+                    updateMessage: viewModel.updateVideoMessage,
+                    updateVoiceProfile: viewModel.updateVoiceProfile,
+                    updateVoiceTone: viewModel.updateVoiceTone,
                     discardVideoCreation: viewModel.discardVideoCreation,
                     startSignInFlow: startSignInFlow,
                     openCredits: openCredits,
@@ -68,6 +71,9 @@ private struct AnimateCreateMediaFirstWorkspace: View {
     let undoAutoStyleSuggestion: () -> Void
     let openPickerRequest: Int
     let consumeOpenPickerRequest: () -> Void
+    let updateMessage: (String) -> Void
+    let updateVoiceProfile: (AnimateVideoVoiceProfile) -> Void
+    let updateVoiceTone: (AnimateVideoVoiceTone) -> Void
     let discardVideoCreation: () -> Void
     let startSignInFlow: () -> Void
     let openCredits: () -> Void
@@ -105,6 +111,8 @@ private struct AnimateCreateMediaFirstWorkspace: View {
                         AnimateCreateLockedFinalRenderScene(presentation: presentation)
                             .padding(.top, 28)
                     } else {
+                        AnimateCreateVideoHeader()
+
                         AnimateCreateCompactAviGuide(
                             presentation: presentation
                         )
@@ -115,8 +123,7 @@ private struct AnimateCreateMediaFirstWorkspace: View {
                     } else if hasMediaSelection {
                         AnimateCreateVideoDirectionCard(
                             presentation: presentation,
-                            selectedLook: form.look,
-                            note: form.details,
+                            form: $form,
                             selectedStyle: selectedStyle,
                             selectedMusicPreset: selectedMusicPreset,
                             autoStyleSuggestion: autoStyleSuggestion,
@@ -124,11 +131,17 @@ private struct AnimateCreateMediaFirstWorkspace: View {
                             styles: styles,
                             useAutoStyleSuggestion: useAutoStyleSuggestion,
                             undoAutoStyleSuggestion: undoAutoStyleSuggestion,
+                            selectStyle: selectStyle,
+                            selectLook: selectLook,
                             editMedia: { showsCompactMediaManager = true },
                             changeTheme: { showsThemeChooser = true },
                             changeLook: { showsLookChooser = true },
                             changeVoice: { showsVoiceChooser = true },
                             editNote: { showsAviNoteEditor = true },
+                            updateMessage: updateMessage,
+                            updateVoiceProfile: updateVoiceProfile,
+                            updateVoiceTone: updateVoiceTone,
+                            createVideo: primaryFinalRenderAction,
                             discardVideoCreation: { showsDiscardVideoConfirmation = true }
                         )
                     } else if hasFinalVideoState {
@@ -366,7 +379,8 @@ private struct AnimateCreateMediaFirstWorkspace: View {
     }
 
     private var showsPrimaryActionBar: Bool {
-        showsWorkflowDashboard && !presentation.isFinalRenderEditingLocked
+        (showsFinalVideoCompletion || showsFinalVideoRecovery || presentation.finalRenderSummary.latestFinalJob != nil)
+            && !presentation.isFinalRenderEditingLocked
     }
 
     private var bottomContentPadding: CGFloat {
@@ -732,8 +746,7 @@ private struct AnimateCreateFinalVideoRecoveryScene: View {
 
 private struct AnimateCreateVideoDirectionCard: View {
     let presentation: AnimateCreateWorkflowPresentation
-    let selectedLook: AnimateVideoLook
-    let note: String
+    @Binding var form: AnimateVideoSetupForm
     let selectedStyle: AnimateVideoCreationStyle
     let selectedMusicPreset: AnimateVideoMusicPreset
     let autoStyleSuggestion: AnimateMediaAutoStyleSuggestion?
@@ -741,12 +754,39 @@ private struct AnimateCreateVideoDirectionCard: View {
     let styles: [AnimateVideoCreationStyle]
     let useAutoStyleSuggestion: () -> Void
     let undoAutoStyleSuggestion: () -> Void
+    let selectStyle: (AnimateVideoCreationStyle) -> Void
+    let selectLook: (AnimateVideoLook) -> Void
     let editMedia: () -> Void
     let changeTheme: () -> Void
     let changeLook: () -> Void
     let changeVoice: () -> Void
     let editNote: () -> Void
+    let updateMessage: (String) -> Void
+    let updateVoiceProfile: (AnimateVideoVoiceProfile) -> Void
+    let updateVoiceTone: (AnimateVideoVoiceTone) -> Void
+    let createVideo: () -> Void
     let discardVideoCreation: () -> Void
+
+    @State private var step: GuidedStep = .look
+    @State private var activeGuidedSheet: GuidedStep?
+    @State private var selectedScriptIdea: ScriptIdea = .none
+    @State private var isGuidedFlowComplete = false
+    @State private var lookPageIndex = 0
+
+    private let looksPerPage = 8
+    private let minimumMessageCharacterCount = 3
+
+    private var lookPageCount: Int {
+        max(1, (AnimateVideoLook.selectorOrder.count + looksPerPage - 1) / looksPerPage)
+    }
+
+    private var visibleLooks: [AnimateVideoLook] {
+        let startIndex = lookPageIndex * looksPerPage
+        let endIndex = min(startIndex + looksPerPage, AnimateVideoLook.selectorOrder.count)
+        guard startIndex < endIndex else { return [] }
+        return Array(AnimateVideoLook.selectorOrder[startIndex..<endIndex])
+    }
+
     var body: some View {
         AVAppShellCard {
             VStack(alignment: .leading, spacing: 11) {
@@ -769,8 +809,8 @@ private struct AnimateCreateVideoDirectionCard: View {
                             Text(L10n.string("create.storyDirection.title"))
                                 .font(.system(size: 20, weight: .black))
                                 .foregroundStyle(AVBrandColor.textPrimary)
-                                .lineLimit(1)
-                                .minimumScaleFactor(0.82)
+                                .lineLimit(2)
+                                .fixedSize(horizontal: false, vertical: true)
                         }
 
                         Text(videoDirection.statusMessage)
@@ -815,63 +855,10 @@ private struct AnimateCreateVideoDirectionCard: View {
                     .accessibilityLabel(L10n.string("create.videoDirection.menu.accessibility"))
                 }
 
-                AnimateCreateVideoDirectionDecisionSummary(
-                    isUserAdjusted: isUserAdjustedFromAvi,
-                    title: decisionSummaryTitle,
-                    detail: decisionSummaryDetail,
-                    aviSuggestionDetail: aviSuggestionSummaryDetail
-                )
-
-                VStack(alignment: .leading, spacing: 7) {
-                    Text(L10n.string("create.videoDirection.selectedSetup"))
-                        .font(.system(size: 11, weight: .black))
-                        .foregroundStyle(AVBrandColor.textSecondary)
-                        .textCase(.uppercase)
-
-                    VStack(spacing: 0) {
-                        AnimateCreateVideoDirectionSummaryRow(
-                            title: L10n.string("create.workflowContent.mediaSelected"),
-                            value: videoDirection.mediaCountTitle,
-                            detail: mediaDetail,
-                            systemImage: "photo.stack",
-                            action: editMedia
-                        )
-                        AnimateCreateOptionDivider()
-                        AnimateCreateVideoDirectionSummaryRow(
-                            title: L10n.string("create.workflowContent.theme"),
-                            value: selectedStyle.title,
-                            detail: selectedStyle.subtitle,
-                            systemImage: "paintpalette.fill",
-                            action: changeTheme
-                        )
-                        AnimateCreateOptionDivider()
-                        AnimateCreateVideoDirectionSummaryRow(
-                            title: L10n.string("create.guide.look.title"),
-                            value: selectedLook.title,
-                            detail: selectedLook.subtitle,
-                            systemImage: selectedLook.systemImage,
-                            action: changeLook
-                        )
-                        AnimateCreateOptionDivider()
-                        AnimateCreateVideoDirectionSummaryRow(
-                            title: L10n.string("create.workflowContent.tone"),
-                            value: selectedMusicPreset.title,
-                            detail: L10n.string("create.guide.voice.detail"),
-                            systemImage: "sparkles",
-                            action: changeVoice
-                        )
-                        AnimateCreateOptionDivider()
-                        AnimateCreateVideoDirectionSummaryRow(
-                            title: L10n.string("create.note.field.title"),
-                            value: noteTitle,
-                            detail: noteDetail,
-                            systemImage: "text.bubble.fill",
-                            action: editNote
-                        )
-                    }
-                    .padding(.horizontal, 10)
-                    .padding(.vertical, 4)
-                    .background(AVBrandColor.neutral100.opacity(0.58), in: RoundedRectangle(cornerRadius: 10, style: .continuous))
+                if isGuidedFlowComplete {
+                    guidedSummary
+                } else {
+                    guidedPendingSummary
                 }
 
                 if presentation.videoDirectionSummary.isPlanning {
@@ -882,6 +869,442 @@ private struct AnimateCreateVideoDirectionCard: View {
 
             }
         }
+        .sheet(item: $activeGuidedSheet) { sheetStep in
+            AnimateCreateGuidedStepSheet(
+                footer: { continueButton },
+                content: {
+                guidedStepContent(sheetStep)
+                }
+            )
+            .presentationDetents([.large])
+            .presentationDragIndicator(.visible)
+        }
+        .onAppear {
+            guard !isGuidedFlowComplete, activeGuidedSheet == nil else { return }
+            activeGuidedSheet = step
+        }
+        .onChange(of: form.details) { _, newValue in
+            if step == .voice && newValue.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
+                step = .scriptIdea
+                isGuidedFlowComplete = false
+                activeGuidedSheet = .scriptIdea
+            }
+        }
+    }
+
+    private var guidedProgressHeader: some View {
+        HStack(spacing: 8) {
+            ForEach(activeSteps) { item in
+                Capsule()
+                    .fill(step == item ? AVBrandColor.accent : AVBrandColor.mutedSurface)
+                    .frame(height: 5)
+            }
+        }
+        .accessibilityHidden(true)
+    }
+
+    private var guidedSummary: some View {
+        VStack(alignment: .leading, spacing: 10) {
+            stepHeader(
+                L10n.string("create.guided.summary.title"),
+                L10n.string("create.guided.summary.detail")
+            )
+
+            AnimateCreateVideoDirectionDecisionSummary(
+                isUserAdjusted: isUserAdjustedFromAvi,
+                title: decisionSummaryTitle,
+                detail: decisionSummaryDetail,
+                aviSuggestionDetail: aviSuggestionSummaryDetail
+            )
+
+            VStack(spacing: 8) {
+                summaryEditRow(
+                    title: L10n.string("create.guided.summary.look"),
+                    detail: form.look.title,
+                    icon: "paintbrush.pointed.fill",
+                    editStep: .look
+                )
+                summaryEditRow(
+                    title: L10n.string("create.guided.summary.message"),
+                    detail: hasMessage ? form.details : L10n.string("create.guided.script.none"),
+                    icon: "text.bubble.fill",
+                    editStep: .scriptIdea
+                )
+                if hasMessage {
+                    summaryEditRow(
+                        title: L10n.string("create.guided.summary.voice"),
+                        detail: "\(form.voiceProfile.title) · \(form.voiceTone.title)",
+                        icon: "waveform",
+                        editStep: .voice
+                    )
+                }
+            }
+
+            summaryCreateVideoAction
+        }
+    }
+
+    private var guidedPendingSummary: some View {
+        VStack(alignment: .leading, spacing: 10) {
+            stepHeader(
+                L10n.string("create.guided.summary.title"),
+                L10n.string("create.guided.summary.detail")
+            )
+
+            VStack(spacing: 8) {
+                summaryEditRow(
+                    title: L10n.string("create.guided.summary.look"),
+                    detail: form.look.title,
+                    icon: "paintbrush.pointed.fill",
+                    editStep: .look
+                )
+                summaryEditRow(
+                    title: L10n.string("create.guided.summary.message"),
+                    detail: hasMessage ? form.details : L10n.string("create.guided.script.none"),
+                    icon: "text.bubble.fill",
+                    editStep: .scriptIdea
+                )
+                if hasMessage {
+                    summaryEditRow(
+                        title: L10n.string("create.guided.summary.voice"),
+                        detail: "\(form.voiceProfile.title) · \(form.voiceTone.title)",
+                        icon: "waveform",
+                        editStep: .voice
+                    )
+                }
+            }
+
+            Button {
+                continueStep()
+            } label: {
+                Text(continueButtonTitle)
+                    .font(.system(size: 15, weight: .black))
+                    .frame(maxWidth: .infinity)
+                    .frame(height: 44)
+            }
+            .buttonStyle(AnimateCreateSoftActionButtonStyle())
+        }
+    }
+
+    private var summaryCreateVideoAction: some View {
+        VStack(alignment: .leading, spacing: 10) {
+            HStack(alignment: .center, spacing: 10) {
+                Image(systemName: "video.fill")
+                    .font(.system(size: 14, weight: .black))
+                    .foregroundStyle(.white)
+                    .frame(width: 32, height: 32)
+                    .background(AVBrandColor.textPrimary, in: Circle())
+
+                VStack(alignment: .leading, spacing: 3) {
+                    Text(L10n.string("create.guided.summary.createVideo.title"))
+                        .font(.system(size: 14, weight: .black))
+                        .foregroundStyle(AVBrandColor.textPrimary)
+                        .fixedSize(horizontal: false, vertical: true)
+
+                    Text(L10n.string("create.guided.summary.createVideo.detail"))
+                        .font(.system(size: 12, weight: .semibold))
+                        .foregroundStyle(AVBrandColor.textSecondary)
+                        .lineLimit(2)
+                        .fixedSize(horizontal: false, vertical: true)
+                }
+                .frame(maxWidth: .infinity, alignment: .leading)
+            }
+
+            Button(action: createVideo) {
+                Label(L10n.string("create.guided.summary.createVideo.button"), systemImage: "video.fill")
+                    .font(.system(size: 15, weight: .black))
+                    .lineLimit(1)
+                    .minimumScaleFactor(0.82)
+                    .frame(maxWidth: .infinity)
+                    .frame(height: 46)
+            }
+            .disabled(!primaryActionPresentation.canRunPrimaryAction)
+            .buttonStyle(AnimateCreateSoftActionButtonStyle())
+            .opacity(primaryActionPresentation.canRunPrimaryAction ? 1 : 0.72)
+        }
+        .padding(.horizontal, 12)
+        .padding(.vertical, 12)
+        .background(.ultraThinMaterial, in: RoundedRectangle(cornerRadius: 20, style: .continuous))
+        .overlay {
+            RoundedRectangle(cornerRadius: 20, style: .continuous)
+                .stroke(AVBrandColor.glassStroke.opacity(0.82), lineWidth: 1)
+        }
+        .shadow(color: AVBrandColor.glassShadow.opacity(0.7), radius: 12, y: 3)
+    }
+
+    private func summaryEditRow(title: String, detail: String, icon: String, editStep: GuidedStep) -> some View {
+        Button {
+            step = editStep
+            activeGuidedSheet = editStep
+        } label: {
+            HStack(spacing: 10) {
+                Image(systemName: icon)
+                    .font(.system(size: 13, weight: .black))
+                    .foregroundStyle(AVBrandColor.accent)
+                    .frame(width: 30, height: 30)
+                    .background(AVBrandColor.accent.opacity(0.10), in: Circle())
+
+                VStack(alignment: .leading, spacing: 2) {
+                    Text(title)
+                        .font(.system(size: 12, weight: .black))
+                        .foregroundStyle(AVBrandColor.textPrimary)
+                    Text(detail)
+                        .font(.caption.weight(.semibold))
+                        .foregroundStyle(AVBrandColor.textSecondary)
+                        .lineLimit(2)
+                        .fixedSize(horizontal: false, vertical: true)
+                }
+                .frame(maxWidth: .infinity, alignment: .leading)
+
+                Image(systemName: "chevron.right")
+                    .font(.system(size: 11, weight: .black))
+                    .foregroundStyle(AVBrandColor.textSecondary.opacity(0.7))
+            }
+            .padding(10)
+            .background(AVBrandColor.mutedSurface, in: RoundedRectangle(cornerRadius: 10, style: .continuous))
+        }
+        .buttonStyle(.plain)
+    }
+
+    @ViewBuilder
+    private func guidedStepContent(_ sheetStep: GuidedStep) -> some View {
+        switch sheetStep {
+        case .look:
+            VStack(alignment: .leading, spacing: 10) {
+                stepHeader(L10n.string("create.guided.look.title"), L10n.string("create.guided.look.detail"))
+                AnimateCreateTwoColumnGrid(items: visibleLooks, verticalSpacing: 10, itemHeight: 92) { look in
+                    AnimateCreateGuidedLookTile(
+                        look: look,
+                        isSelected: form.look == look,
+                        select: { selectLook(look) }
+                    )
+                }
+                HStack(spacing: 10) {
+                    Button {
+                        withAnimation(.spring(response: 0.28, dampingFraction: 0.88)) {
+                            lookPageIndex = max(0, lookPageIndex - 1)
+                        }
+                    } label: {
+                        Label(L10n.string("create.images.looks.previousPage"), systemImage: "chevron.left.circle.fill")
+                            .font(.system(size: 14, weight: .black))
+                            .lineLimit(1)
+                            .minimumScaleFactor(0.75)
+                            .frame(maxWidth: .infinity)
+                            .frame(height: 44)
+                    }
+                    .buttonStyle(AnimateCreateSoftActionButtonStyle())
+                    .disabled(lookPageIndex == 0)
+
+                    Text(L10n.string("create.images.looks.page", lookPageIndex + 1, lookPageCount))
+                        .font(.system(size: 12, weight: .black))
+                        .foregroundStyle(AVBrandColor.textSecondary)
+                        .frame(minWidth: 48)
+
+                    Button {
+                        withAnimation(.spring(response: 0.28, dampingFraction: 0.88)) {
+                            lookPageIndex = min(lookPageCount - 1, lookPageIndex + 1)
+                        }
+                    } label: {
+                        Label(L10n.string("create.images.looks.nextPage"), systemImage: "chevron.right.circle.fill")
+                            .font(.system(size: 14, weight: .black))
+                            .lineLimit(1)
+                            .minimumScaleFactor(0.75)
+                            .frame(maxWidth: .infinity)
+                            .frame(height: 44)
+                    }
+                    .buttonStyle(AnimateCreateSoftActionButtonStyle())
+                    .disabled(lookPageIndex >= lookPageCount - 1)
+                }
+                selectedLookStrip
+            }
+        case .scriptIdea:
+            VStack(alignment: .leading, spacing: 10) {
+                stepHeader(L10n.string("create.guided.script.title"), L10n.string("create.guided.script.detail"))
+                LazyVGrid(columns: Array(repeating: GridItem(.flexible(), spacing: 8), count: 2), spacing: 8) {
+                    ForEach(ScriptIdea.allCases) { idea in
+                        AnimateCreateGuidedScriptIdeaTile(
+                            idea: idea,
+                            isSelected: selectedScriptIdea == idea,
+                            select: {
+                                selectedScriptIdea = idea
+                                applyScriptIdea(idea)
+                            }
+                        )
+                    }
+                }
+            }
+        case .scriptMessage:
+            VStack(alignment: .leading, spacing: 10) {
+                stepHeader(L10n.string("create.guided.message.title"), L10n.string("create.guided.message.detail"))
+                VStack(alignment: .leading, spacing: 8) {
+                    HStack {
+                        Text(L10n.string("create.guided.script.message"))
+                            .font(.system(size: 12, weight: .black))
+                        Spacer()
+                        Button {
+                            updateMessage("")
+                        } label: {
+                            Label(L10n.string("create.guided.message.clear"), systemImage: "xmark.circle.fill")
+                                .font(.system(size: 12, weight: .black))
+                                .labelStyle(.titleAndIcon)
+                        }
+                        .buttonStyle(.plain)
+                        .foregroundStyle(AVBrandColor.textSecondary)
+                        .disabled(!hasMessage)
+                        .opacity(hasMessage ? 1 : 0.45)
+                        Text("\(form.details.count)/180")
+                            .font(.caption.weight(.bold))
+                            .foregroundStyle(AVBrandColor.textSecondary)
+                    }
+                    TextEditor(text: Binding(
+                        get: { form.details },
+                        set: { updateMessage($0) }
+                    ))
+                    .font(.system(size: 15, weight: .semibold))
+                    .frame(minHeight: 210)
+                    .padding(10)
+                    .background(AVBrandColor.cardSurface, in: RoundedRectangle(cornerRadius: 14, style: .continuous))
+                    .overlay {
+                        RoundedRectangle(cornerRadius: 14, style: .continuous)
+                            .stroke(AVBrandColor.borderSubtle.opacity(0.7), lineWidth: 1)
+                    }
+                    Text(L10n.string("create.guided.script.tip"))
+                        .font(.caption.weight(.semibold))
+                        .foregroundStyle(AVBrandColor.textSecondary)
+                    if !canContinueMessageStep {
+                        Text(L10n.string("create.guided.message.minimum", minimumMessageCharacterCount))
+                            .font(.caption.weight(.bold))
+                            .foregroundStyle(AVBrandColor.textSecondary)
+                            .fixedSize(horizontal: false, vertical: true)
+                    }
+                }
+            }
+        case .voice:
+            VStack(alignment: .leading, spacing: 10) {
+                stepHeader(L10n.string("create.guided.voice.title"), L10n.string("create.guided.voice.detail"))
+                LazyVGrid(columns: Array(repeating: GridItem(.flexible(), spacing: 8), count: 2), spacing: 8) {
+                    ForEach(AnimateVideoVoiceProfile.selectorOrder) { profile in
+                        AnimateCreateGuidedVoiceTile(
+                            profile: profile,
+                            isSelected: form.voiceProfile == profile,
+                            select: { updateVoiceProfile(profile) }
+                        )
+                    }
+                }
+                AnimateCreateVoiceTonePicker(
+                    selectedTone: form.voiceTone,
+                    selectTone: updateVoiceTone
+                )
+            }
+        }
+    }
+
+    private var selectedLookStrip: some View {
+        HStack(spacing: 9) {
+            Image(systemName: form.look.systemImage)
+                .font(.system(size: 13, weight: .black))
+                .foregroundStyle(AVBrandColor.accent)
+                .frame(width: 28, height: 28)
+                .background(AVBrandColor.accent.opacity(0.10), in: Circle())
+            VStack(alignment: .leading, spacing: 2) {
+                Text(L10n.string("create.guided.look.selected", form.look.title))
+                    .font(.system(size: 12, weight: .black))
+                    .foregroundStyle(AVBrandColor.textPrimary)
+                Text(form.look.subtitle)
+                    .font(.caption.weight(.semibold))
+                    .foregroundStyle(AVBrandColor.textSecondary)
+                    .lineLimit(2)
+            }
+        }
+        .padding(10)
+        .background(AVBrandColor.mutedSurface, in: RoundedRectangle(cornerRadius: 10, style: .continuous))
+    }
+
+    private var continueButton: some View {
+        Button(action: continueStep) {
+            Text(continueButtonTitle)
+                .font(.system(size: 15, weight: .black))
+                .frame(maxWidth: .infinity)
+                .frame(height: 44)
+        }
+        .disabled(step == .scriptMessage && !canContinueMessageStep)
+        .buttonStyle(AnimateCreateSoftActionButtonStyle())
+        .opacity(step == .scriptMessage && !canContinueMessageStep ? 0.62 : 1)
+    }
+
+    private func stepHeader(_ title: String, _ detail: String) -> some View {
+        VStack(alignment: .leading, spacing: 2) {
+            Text(title)
+                .font(.system(size: 18, weight: .black))
+                .foregroundStyle(AVBrandColor.textPrimary)
+            Text(detail)
+                .font(.system(size: 13, weight: .semibold))
+                .foregroundStyle(AVBrandColor.textSecondary)
+        }
+    }
+
+    private var activeSteps: [GuidedStep] {
+        hasMessage ? [.look, .scriptIdea, .scriptMessage, .voice] : [.look, .scriptIdea]
+    }
+
+    private var hasMessage: Bool {
+        !form.details.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty
+    }
+
+    private var canContinueMessageStep: Bool {
+        form.details.trimmingCharacters(in: .whitespacesAndNewlines).count >= minimumMessageCharacterCount
+    }
+
+    private func continueStep() {
+        switch step {
+        case .look:
+            step = .scriptIdea
+            activeGuidedSheet = .scriptIdea
+        case .scriptIdea:
+            if hasMessage {
+                step = .scriptMessage
+                activeGuidedSheet = .scriptMessage
+            } else {
+                isGuidedFlowComplete = true
+                activeGuidedSheet = nil
+            }
+        case .scriptMessage:
+            if canContinueMessageStep {
+                step = .voice
+                activeGuidedSheet = .voice
+            } else {
+                isGuidedFlowComplete = true
+                activeGuidedSheet = nil
+            }
+        case .voice:
+            isGuidedFlowComplete = true
+            activeGuidedSheet = nil
+        }
+    }
+
+    private var continueButtonTitle: String {
+        switch step {
+        case .look:
+            return L10n.string("create.guided.continue.message")
+        case .scriptIdea:
+            return hasMessage
+                ? L10n.string("create.guided.continue.editMessage")
+                : L10n.string("create.guided.continue.finish")
+        case .scriptMessage:
+            return hasMessage
+                ? L10n.string("create.guided.continue.voice")
+                : L10n.string("create.guided.continue.finish")
+        case .voice:
+            return L10n.string("create.guided.continue.finish")
+        }
+    }
+
+    private func applyScriptIdea(_ idea: ScriptIdea) {
+        if let style = styles.first(where: { $0.id == idea.styleID }) {
+            selectStyle(style)
+        }
+        updateMessage(idea.defaultMessage)
+        form.occasion = idea.title
     }
 
     private var isUserAdjustedFromAvi: Bool {
@@ -906,7 +1329,7 @@ private struct AnimateCreateVideoDirectionCard: View {
                 "create.videoDirection.summary.userDetail",
                 selectedStyle.title,
                 selectedMusicPreset.title,
-                selectedLook.title
+                form.look.title
             )
         }
 
@@ -914,7 +1337,7 @@ private struct AnimateCreateVideoDirectionCard: View {
             "create.videoDirection.summary.aviDetail",
             selectedStyle.title,
             selectedMusicPreset.title,
-            selectedLook.title,
+            form.look.title,
             mediaDetail.trimmingCharacters(in: CharacterSet(charactersIn: ".!?"))
         )
     }
@@ -928,7 +1351,7 @@ private struct AnimateCreateVideoDirectionCard: View {
             "create.videoDirection.summary.aviProposalDetail",
             styleTitle,
             autoStyleSuggestion.musicPreset.title,
-            selectedLook.title
+            form.look.title
         )
     }
 
@@ -950,16 +1373,6 @@ private struct AnimateCreateVideoDirectionCard: View {
         return L10n.string("create.mediaCard.selectionMessage")
     }
 
-    private var noteTitle: String {
-        note.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty
-            ? L10n.string("create.note.field.subtitle")
-            : L10n.string("create.note.title")
-    }
-
-    private var noteDetail: String {
-        let trimmed = note.trimmingCharacters(in: .whitespacesAndNewlines)
-        return trimmed.isEmpty ? L10n.string("create.note.placeholder") : trimmed
-    }
 
     private var discardActionTitle: String {
         presentation.hasUnsavedLocalVideo ? L10n.string("create.discard.closeDraft") : L10n.string("create.discard.current")
@@ -984,6 +1397,40 @@ private struct AnimateCreateVideoDirectionCard: View {
         )
     }
 
+    private var primaryActionPresentation: AnimateCreatePrimaryActionPresentation {
+        AnimateCreatePrimaryActionPresentation(workflow: presentation)
+    }
+
+}
+
+private struct AnimateCreateGuidedStepSheet<Content: View, Footer: View>: View {
+    @ViewBuilder let footer: () -> Footer
+    @ViewBuilder let content: () -> Content
+
+    var body: some View {
+        NavigationStack {
+            ScrollView {
+                VStack(alignment: .leading, spacing: 14) {
+                    content()
+                }
+                .padding(.horizontal, 20)
+                .padding(.top, 22)
+                .padding(.bottom, 104)
+            }
+            .background(AnimateTheme.shellBackground.ignoresSafeArea())
+            .safeAreaInset(edge: .bottom) {
+                VStack(spacing: 0) {
+                    Divider()
+                        .opacity(0.45)
+                    footer()
+                        .padding(.horizontal, 20)
+                        .padding(.top, 12)
+                        .padding(.bottom, 12)
+                        .background(.ultraThinMaterial)
+                }
+            }
+        }
+    }
 }
 
 private struct AnimateCreateVideoDirectionDecisionSummary: View {
@@ -1033,6 +1480,345 @@ private struct AnimateCreateVideoDirectionDecisionSummary: View {
         .padding(.horizontal, 10)
         .padding(.vertical, 9)
         .background(AVBrandColor.accent.opacity(0.07), in: RoundedRectangle(cornerRadius: 10, style: .continuous))
+    }
+}
+
+private enum GuidedStep: String, CaseIterable, Identifiable {
+    case look
+    case scriptIdea
+    case scriptMessage
+    case voice
+
+    var id: String { rawValue }
+
+    var title: String {
+        switch self {
+        case .look: L10n.string("create.guided.look.tab")
+        case .scriptIdea: L10n.string("create.guided.script.tab")
+        case .scriptMessage: L10n.string("create.guided.message.tab")
+        case .voice: L10n.string("create.guided.voice.tab")
+        }
+    }
+}
+
+private enum ScriptIdea: String, CaseIterable, Identifiable {
+    case none
+    case birthday
+    case congratulations
+    case love
+    case missYou
+    case holiday
+    case motivation
+    case funny
+
+    var id: String { rawValue }
+
+    var title: String {
+        switch self {
+        case .none: L10n.string("create.guided.script.none")
+        case .birthday: L10n.string("create.guided.script.birthday")
+        case .congratulations: L10n.string("create.guided.script.congratulations")
+        case .love: L10n.string("create.guided.script.love")
+        case .missYou: L10n.string("create.guided.script.missYou")
+        case .holiday: L10n.string("create.guided.script.holiday")
+        case .motivation: L10n.string("create.guided.script.motivation")
+        case .funny: L10n.string("create.guided.script.funny")
+        }
+    }
+
+    var systemImage: String {
+        switch self {
+        case .none: "speaker.slash.fill"
+        case .birthday: "gift.fill"
+        case .congratulations: "party.popper.fill"
+        case .love: "heart.fill"
+        case .missYou: "paperplane.fill"
+        case .holiday: "sparkles"
+        case .motivation: "bolt.heart.fill"
+        case .funny: "face.smiling.fill"
+        }
+    }
+
+    var accentColor: Color {
+        switch self {
+        case .none: AVBrandColor.textSecondary
+        case .birthday: .pink
+        case .congratulations: .orange
+        case .love: .red
+        case .missYou: .blue
+        case .holiday: .purple
+        case .motivation: .teal
+        case .funny: AVBrandColor.accent
+        }
+    }
+
+    var defaultMessage: String {
+        switch self {
+        case .none: ""
+        case .birthday: L10n.string("create.guided.script.birthday.message")
+        case .congratulations: L10n.string("create.guided.script.congratulations.message")
+        case .love: L10n.string("create.guided.script.love.message")
+        case .missYou: L10n.string("create.guided.script.missYou.message")
+        case .holiday: L10n.string("create.guided.script.holiday.message")
+        case .motivation: L10n.string("create.guided.script.motivation.message")
+        case .funny: L10n.string("create.guided.script.funny.message")
+        }
+    }
+
+    var previewText: String {
+        switch self {
+        case .none: L10n.string("create.guided.script.none.preview")
+        default: defaultMessage
+        }
+    }
+
+    var styleID: AnimateVideoCreationStyleID {
+        switch self {
+        case .none, .motivation:
+            return .celebration
+        case .birthday:
+            return .birthday
+        case .congratulations:
+            return .milestone
+        case .love, .missYou:
+            return .favoritePeople
+        case .holiday:
+            return .familyMoments
+        case .funny:
+            return .softRoast
+        }
+    }
+}
+
+private struct AnimateCreateGuidedLookTile: View {
+    let look: AnimateVideoLook
+    let isSelected: Bool
+    let select: () -> Void
+
+    var body: some View {
+        GeometryReader { proxy in
+            Button(action: select) {
+                tileContent(width: proxy.size.width)
+            }
+            .buttonStyle(.plain)
+        }
+        .frame(height: 92)
+    }
+
+    private func tileContent(width: CGFloat) -> some View {
+            ZStack(alignment: .bottomLeading) {
+                Image(look.assetName)
+                    .resizable()
+                    .scaledToFill()
+                    .frame(width: width, height: 92)
+                    .clipped()
+
+                LinearGradient(
+                    colors: [
+                        .black.opacity(0.02),
+                        .black.opacity(0.58),
+                        .black.opacity(0.78)
+                    ],
+                    startPoint: .top,
+                    endPoint: .bottom
+                )
+
+                Text(look.title)
+                    .font(.system(size: 12, weight: .black))
+                    .foregroundStyle(.white)
+                    .lineLimit(2)
+                    .minimumScaleFactor(0.72)
+                    .shadow(color: .black.opacity(0.45), radius: 4, y: 1)
+                    .padding(9)
+
+                if isSelected {
+                    Image(systemName: "checkmark.circle.fill")
+                        .font(.system(size: 20, weight: .black))
+                        .foregroundStyle(.white, AVBrandColor.accent)
+                        .padding(7)
+                        .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topTrailing)
+                }
+            }
+            .frame(width: width, height: 92)
+            .clipShape(RoundedRectangle(cornerRadius: 12, style: .continuous))
+            .contentShape(RoundedRectangle(cornerRadius: 12, style: .continuous))
+            .overlay {
+                RoundedRectangle(cornerRadius: 12, style: .continuous)
+                    .stroke(isSelected ? AVBrandColor.accent : AVBrandColor.borderSubtle.opacity(0.58), lineWidth: isSelected ? 2 : 1)
+            }
+            .shadow(color: AVBrandColor.ink.opacity(isSelected ? 0.14 : 0.08), radius: isSelected ? 8 : 4, y: isSelected ? 4 : 2)
+    }
+}
+
+private struct AnimateCreateGuidedScriptIdeaTile: View {
+    let idea: ScriptIdea
+    let isSelected: Bool
+    let select: () -> Void
+
+    var body: some View {
+        Button(action: select) {
+            VStack(alignment: .leading, spacing: 9) {
+                HStack(alignment: .center, spacing: 8) {
+                    Image(systemName: idea.systemImage)
+                        .font(.system(size: 17, weight: .black))
+                        .foregroundStyle(isSelected ? .white : idea.accentColor)
+                        .frame(width: 34, height: 34)
+                        .background(isSelected ? idea.accentColor : idea.accentColor.opacity(0.12), in: RoundedRectangle(cornerRadius: 9, style: .continuous))
+
+                    Spacer(minLength: 0)
+
+                    Image(systemName: isSelected ? "checkmark.circle.fill" : "circle")
+                        .font(.system(size: 15, weight: .black))
+                        .foregroundStyle(isSelected ? AVBrandColor.accent : AVBrandColor.textSecondary.opacity(0.8))
+                }
+
+                Text(idea.title)
+                    .font(.system(size: 13, weight: .black))
+                    .foregroundStyle(AVBrandColor.textPrimary)
+                    .lineLimit(1)
+                    .minimumScaleFactor(0.78)
+
+                Text(idea.previewText)
+                    .font(.system(size: 11, weight: .semibold))
+                    .foregroundStyle(AVBrandColor.textSecondary)
+                    .lineLimit(2)
+                    .fixedSize(horizontal: false, vertical: true)
+            }
+            .frame(maxWidth: .infinity, alignment: .leading)
+            .frame(height: 104, alignment: .topLeading)
+            .padding(10)
+            .background(isSelected ? AVBrandColor.accent.opacity(0.08) : AVBrandColor.cardSurface, in: RoundedRectangle(cornerRadius: 12, style: .continuous))
+            .overlay(
+                RoundedRectangle(cornerRadius: 12, style: .continuous)
+                    .stroke(isSelected ? AVBrandColor.accent : AVBrandColor.borderSubtle.opacity(0.75), lineWidth: isSelected ? 2 : 1)
+            )
+        }
+        .buttonStyle(.plain)
+    }
+}
+
+private struct AnimateCreateGuidedVoiceTile: View {
+    let profile: AnimateVideoVoiceProfile
+    let isSelected: Bool
+    let select: () -> Void
+
+    var body: some View {
+        Button(action: select) {
+            HStack(spacing: 10) {
+                Image(profile.portraitAssetName)
+                    .resizable()
+                    .scaledToFill()
+                .frame(width: 56, height: 56)
+                .clipShape(Circle())
+                .overlay {
+                    Circle()
+                        .stroke(isSelected ? AVBrandColor.accent : .white.opacity(0.92), lineWidth: isSelected ? 2 : 1)
+                }
+                .shadow(color: AVBrandColor.ink.opacity(0.10), radius: 5, y: 2)
+
+                VStack(alignment: .leading, spacing: 2) {
+                    Text(profile.title)
+                        .font(.system(size: 12, weight: .black))
+                        .foregroundStyle(AVBrandColor.textPrimary)
+                        .minimumScaleFactor(0.72)
+                        .fixedSize(horizontal: false, vertical: true)
+                    Text(profile.detail)
+                        .font(.system(size: 10, weight: .bold))
+                        .foregroundStyle(AVBrandColor.textSecondary)
+                        .minimumScaleFactor(0.78)
+                        .fixedSize(horizontal: false, vertical: true)
+                }
+                .frame(maxWidth: .infinity, alignment: .leading)
+
+                Image(systemName: isSelected ? "checkmark.circle.fill" : "circle")
+                    .font(.system(size: 15, weight: .black))
+                    .foregroundStyle(isSelected ? AVBrandColor.accent : AVBrandColor.textSecondary)
+            }
+            .padding(9)
+            .frame(height: 84)
+            .background(isSelected ? AVBrandColor.accent.opacity(0.08) : AVBrandColor.cardSurface, in: RoundedRectangle(cornerRadius: 12, style: .continuous))
+            .overlay(
+                RoundedRectangle(cornerRadius: 12, style: .continuous)
+                    .stroke(isSelected ? AVBrandColor.accent : AVBrandColor.borderSubtle.opacity(0.75), lineWidth: isSelected ? 2 : 1)
+            )
+        }
+        .buttonStyle(.plain)
+    }
+}
+
+private struct AnimateCreateVoiceTonePicker: View {
+    let selectedTone: AnimateVideoVoiceTone
+    let selectTone: (AnimateVideoVoiceTone) -> Void
+
+    var body: some View {
+        VStack(alignment: .leading, spacing: 8) {
+            Text(L10n.string("create.voiceTone.section.title"))
+                .font(.system(size: 12, weight: .black))
+                .foregroundStyle(AVBrandColor.textPrimary)
+
+            LazyVGrid(columns: Array(repeating: GridItem(.flexible(), spacing: 8), count: 2), spacing: 8) {
+                ForEach(AnimateVideoVoiceTone.allCases) { tone in
+                    Button {
+                        selectTone(tone)
+                    } label: {
+                        HStack(spacing: 8) {
+                            Image(systemName: tone.systemImage)
+                                .font(.system(size: 13, weight: .black))
+                                .frame(width: 22)
+
+                            Text(tone.title)
+                                .font(.system(size: 12, weight: .black))
+                                .minimumScaleFactor(0.78)
+                                .fixedSize(horizontal: false, vertical: true)
+                        }
+                        .foregroundStyle(selectedTone == tone ? AVBrandColor.textInverse : AVBrandColor.textSecondary)
+                        .frame(maxWidth: .infinity)
+                        .frame(height: 52)
+                        .background(selectedTone == tone ? AVBrandColor.accent : AVBrandColor.cardSurface, in: RoundedRectangle(cornerRadius: 12, style: .continuous))
+                        .overlay(
+                            RoundedRectangle(cornerRadius: 12, style: .continuous)
+                                .stroke(selectedTone == tone ? AVBrandColor.accent : AVBrandColor.borderSubtle.opacity(0.7), lineWidth: 1)
+                        )
+                    }
+                    .buttonStyle(.plain)
+                }
+            }
+            .padding(5)
+            .background(AVBrandColor.mutedSurface, in: RoundedRectangle(cornerRadius: 16, style: .continuous))
+        }
+        .padding(.top, 2)
+    }
+}
+
+private struct AnimateCreateGuidedChoiceTile: View {
+    let title: String
+    let isSelected: Bool
+    let select: () -> Void
+
+    var body: some View {
+        Button(action: select) {
+            HStack(spacing: 8) {
+                Image(systemName: isSelected ? "checkmark.circle.fill" : "circle")
+                    .font(.system(size: 14, weight: .black))
+                    .foregroundStyle(isSelected ? AVBrandColor.accent : AVBrandColor.textSecondary)
+
+                Text(title)
+                    .font(.system(size: 12, weight: .black))
+                    .foregroundStyle(AVBrandColor.textPrimary)
+                    .lineLimit(1)
+                    .minimumScaleFactor(0.78)
+
+                Spacer(minLength: 0)
+            }
+            .padding(.horizontal, 10)
+            .frame(height: 40)
+            .background(isSelected ? AVBrandColor.accent.opacity(0.08) : AVBrandColor.cardSurface, in: RoundedRectangle(cornerRadius: 10, style: .continuous))
+            .overlay(
+                RoundedRectangle(cornerRadius: 10, style: .continuous)
+                    .stroke(isSelected ? AVBrandColor.accent : AVBrandColor.borderSubtle.opacity(0.75), lineWidth: isSelected ? 2 : 1)
+            )
+        }
+        .buttonStyle(.plain)
     }
 }
 
@@ -1266,8 +2052,8 @@ private struct AnimateCreateVideoDirectionSummaryRow: View {
                     Text(value)
                         .font(.system(size: 14, weight: .black))
                         .foregroundStyle(AVBrandColor.textPrimary)
-                        .lineLimit(1)
-                        .minimumScaleFactor(0.78)
+                        .lineLimit(2)
+                        .fixedSize(horizontal: false, vertical: true)
 
                     Text(detail)
                         .font(.caption2)
@@ -1287,6 +2073,22 @@ private struct AnimateCreateVideoDirectionSummaryRow: View {
             .contentShape(RoundedRectangle(cornerRadius: 8, style: .continuous))
         }
         .buttonStyle(.plain)
+    }
+}
+
+private struct AnimateCreateVideoHeader: View {
+    var body: some View {
+        VStack(alignment: .leading, spacing: 6) {
+            Text(L10n.string("create.video.title"))
+                .font(.system(size: 30, weight: .black))
+                .foregroundStyle(AVBrandColor.textPrimary)
+
+            Text(L10n.string("create.video.subtitle"))
+                .font(AVBrandTypography.body)
+                .foregroundStyle(AVBrandColor.textSecondary)
+                .fixedSize(horizontal: false, vertical: true)
+        }
+        .frame(maxWidth: .infinity, alignment: .leading)
     }
 }
 
@@ -1408,7 +2210,8 @@ private struct AnimateCreatePrimaryActionBar: View {
                         Text(primaryActionPresentation.title)
                             .font(.system(size: 14, weight: .black))
                             .foregroundStyle(AVBrandColor.textPrimary)
-                            .lineLimit(1)
+                            .lineLimit(2)
+                            .fixedSize(horizontal: false, vertical: true)
 
                         Text(primaryActionPresentation.statusMessage ?? L10n.string("create.primary.creditPreflight"))
                             .font(.system(size: 12, weight: .semibold))

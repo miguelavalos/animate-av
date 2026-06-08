@@ -199,6 +199,7 @@ final class AccountController: ObservableObject {
             return
         }
 
+        let previousCreditBalanceLoadState = creditBalanceLoadState
         creditBalanceLoadState = .loading
         do {
             guard let token = try await currentBackendBearerToken(for: user) else {
@@ -209,6 +210,14 @@ final class AccountController: ObservableObject {
             isAccountSessionTemporarilyUnavailable = false
             persistLastKnownAccountUser(user)
         } catch {
+            guard !error.isNetworkRequestCancellation else {
+                addAccountBreadcrumb(
+                    "credit_balance_cancelled",
+                    data: ["operation": "credit_balance"]
+                )
+                creditBalanceLoadState = previousCreditBalanceLoadState == .loading ? .unavailable : previousCreditBalanceLoadState
+                return
+            }
             captureAccountError(error, operation: "credit_balance")
             creditBalanceLoadState = AnimateCreditBalanceLoadState.failureState(for: error)
             errorMessage = error.localizedDescription
@@ -369,6 +378,20 @@ private extension Error {
 
         if let underlying = nsError.userInfo[NSUnderlyingErrorKey] as? Error {
             return underlying.isAuthCancellation
+        }
+
+        return false
+    }
+
+    var isNetworkRequestCancellation: Bool {
+        let nsError = self as NSError
+        if nsError.domain == NSURLErrorDomain,
+           nsError.code == NSURLErrorCancelled {
+            return true
+        }
+
+        if let underlying = nsError.userInfo[NSUnderlyingErrorKey] as? Error {
+            return underlying.isNetworkRequestCancellation
         }
 
         return false

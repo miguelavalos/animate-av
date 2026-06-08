@@ -16,6 +16,7 @@ struct AnimateInProgressScreen: View {
     let startSignInFlow: () -> Void
     let openCredits: () -> Void
     let retryCredits: () -> Void
+    let preferredAssetKindRaw: String?
 
     private var presentation: AnimateInProgressPresentation {
         AnimateInProgressPresentation.make(
@@ -36,6 +37,7 @@ struct AnimateInProgressScreen: View {
     init(
         balance: AnimateCreditBalance = .empty,
         creditBalanceLoadState: AnimateCreditBalanceLoadState = .loaded,
+        preferredAssetKindRaw: String? = nil,
         continueVideo: @escaping (AnimateContinuationRequest) -> Void = { _ in },
         startVideoCreation: @escaping () -> Void = {},
         startImageCreation: @escaping () -> Void = {},
@@ -45,6 +47,7 @@ struct AnimateInProgressScreen: View {
     ) {
         self.balance = balance
         self.creditBalanceLoadState = creditBalanceLoadState
+        self.preferredAssetKindRaw = preferredAssetKindRaw
         self.continueVideo = continueVideo
         self.startVideoCreation = startVideoCreation
         self.startImageCreation = startImageCreation
@@ -96,6 +99,12 @@ struct AnimateInProgressScreen: View {
                 )
             }
         }
+        .onAppear {
+            applyPreferredAssetKind()
+        }
+        .onChange(of: preferredAssetKindRaw) { _, _ in
+            applyPreferredAssetKind()
+        }
         .confirmationDialog(
             L10n.string("inProgress.deleteVideo.title"),
             isPresented: deletionConfirmationPresented,
@@ -138,6 +147,13 @@ struct AnimateInProgressScreen: View {
             get: { selectedAssetKind },
             set: { selectedAssetKindRaw = $0.rawValue }
         )
+    }
+
+    private func applyPreferredAssetKind() {
+        guard let preferredAssetKindRaw,
+              AnimateInProgressAssetKind(rawValue: preferredAssetKindRaw) != nil
+        else { return }
+        selectedAssetKindRaw = preferredAssetKindRaw
     }
 
     private func confirmVideoDeletion() {

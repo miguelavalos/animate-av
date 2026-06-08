@@ -20,7 +20,8 @@ struct AnimateVideoDirectionRequest: Encodable {
     let mediaUse: String
     let occasion: String
     let details: String
-    let narrationVoice = "avi_clear"
+    let narrationVoice: String
+    let voiceTone: String
     let media: [AnimateVideoDirectionMedia]
     let safetyAcknowledged = true
     let idempotencyKey: String
@@ -49,6 +50,8 @@ enum AnimateVideoDirectionInputSignature {
             form.look.rawValue,
             form.theme.rawValue,
             form.tone.rawValue,
+            form.voiceProfile.rawValue,
+            form.voiceTone.rawValue,
             form.duration.rawValue,
             form.mediaUse.rawValue,
             form.occasion.trimmingCharacters(in: .whitespacesAndNewlines),

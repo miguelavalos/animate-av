@@ -147,6 +147,8 @@ private extension AnimateRootTab {
             self = .home
         case .create:
             self = .create
+        case .createImage:
+            self = .createImage
         case .inProgress:
             self = .inProgress
         case .avi:

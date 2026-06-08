@@ -2,6 +2,7 @@ import AVAppShellFoundation
 import AVBrandFoundation
 import AVSettingsFoundation
 import SwiftUI
+import UIKit
 
 struct AnimateAppShellView: View {
     @Binding var selectedTab: AnimateRootTab
@@ -12,17 +13,20 @@ struct AnimateAppShellView: View {
     @EnvironmentObject private var inProgressViewModel: AnimateInProgressViewModel
     @EnvironmentObject private var galleryViewModel: AnimateGalleryViewModel
     @EnvironmentObject private var aviViewModel: AnimateAviViewModel
-    @EnvironmentObject private var newVideoStartController: AnimateNewVideoStartController
     @Environment(\.avCommonAppExperience) private var appExperience
     @State private var chromeItem: AVAppShellChromeItem?
     @State private var creditsPaywallIsPresented = false
     @State private var navigationPath = NavigationPath()
     @State private var navigationStackResetID = UUID()
-    @State private var requestedCreateAssetKind: AnimateCreateAssetKind?
+    @State private var imageDraftImage: UIImage?
+    @State private var imageDraftData: Data?
+    @State private var imageDraftSourceIdentifier: String?
+    @State private var imageDraftLooks: Set<AnimateCreateImageLook> = []
+    @State private var inProgressPreferredAssetKindRaw: String?
 
     var body: some View {
         appScaffold
-        .sheet(isPresented: $creditsPaywallIsPresented) {
+            .sheet(isPresented: $creditsPaywallIsPresented) {
             AnimateCreditsPaywallView(
                 balance: accountController.creditBalance,
                 isSignedIn: accountController.isSignedIn,
@@ -37,6 +41,12 @@ struct AnimateAppShellView: View {
                 dismiss: { creditsPaywallIsPresented = false }
             )
         }
+        .onChange(of: createViewModel.imageGenerationQueueNonce) { _, _ in
+            clearImageDraft()
+            galleryViewModel.refreshImages()
+            inProgressPreferredAssetKindRaw = "images"
+            selectRootTab(.inProgress)
+        }
     }
 
     private var appScaffold: some View {
@@ -49,7 +59,7 @@ struct AnimateAppShellView: View {
             footerConfiguration: appExperience.footerConfiguration,
             onSelectTab: { tab in
                 chromeItem = nil
-                selectRootTab(tab)
+                selectFooterTab(tab)
             },
             onSelectAssistant: {
                 chromeItem = nil
@@ -64,7 +74,7 @@ struct AnimateAppShellView: View {
                     screen(for: selectedTab)
                 }
                 .id(navigationStackResetID)
-                .safeAreaPadding(.bottom, selectedTab == .create ? 132 : 96)
+                .safeAreaPadding(.bottom, [.create, .createImage].contains(selectedTab) ? 132 : 96)
             },
             footerPlayer: {
                 EmptyView()
@@ -135,13 +145,35 @@ struct AnimateAppShellView: View {
                     openCredits: openCredits,
                     cancelCreation: cancelCreation,
                     finishFinalVideoToGallery: finishFinalVideoToGallery,
-                    requestedAssetKind: $requestedCreateAssetKind,
                     bottomSafeAreaPadding: 82
                 )
+            case .createImage:
+                AnimateCreateImagesWorkspace(
+                    balance: accountController.creditBalance,
+                    creditBalanceLoadState: accountController.creditBalanceLoadState,
+                    imageGenerationAvailability: createViewModel.imageGenerationAvailability,
+                    isLoadingImageGenerationAvailability: createViewModel.isLoadingImageGenerationAvailability,
+                    isStartingImageGeneration: createViewModel.isStartingImageGeneration,
+                    isPurchasingImageGenerationPack: createViewModel.isPurchasingImageGenerationPack,
+                    imageGenerationAvailabilityMessage: createViewModel.imageGenerationAvailabilityMessage,
+                    selectedImage: $imageDraftImage,
+                    selectedImageData: $imageDraftData,
+                    selectedSourceImageLocalIdentifier: $imageDraftSourceIdentifier,
+                    selectedLooks: $imageDraftLooks,
+                    refreshImageGenerationAvailability: createViewModel.refreshImageGenerationAvailability,
+                    startImageGeneration: createViewModel.startImageGeneration,
+                    purchaseImageGenerationPack: createViewModel.purchaseImageGenerationPack,
+                    openCredits: openCredits,
+                    cancelCreation: cancelImageCreation
+                )
+                .safeAreaPadding(.horizontal, 20)
+                .safeAreaPadding(.top, 12)
+                .safeAreaPadding(.bottom, 82)
             case .inProgress:
                 AnimateInProgressScreen(
                     balance: accountController.creditBalance,
                     creditBalanceLoadState: accountController.creditBalanceLoadState,
+                    preferredAssetKindRaw: inProgressPreferredAssetKindRaw,
                     continueVideo: { request in
                         createViewModel.continueVideo(request.video, focus: request.focus)
                         selectedTab = .create
@@ -157,7 +189,10 @@ struct AnimateAppShellView: View {
                     retryCredits: retryCreditBalance
                 )
             case .gallery:
-                AnimateGalleryScreen()
+                AnimateGalleryScreen(
+                    startVideoCreation: startOrContinueVideoCreation,
+                    startImageCreation: startImageCreation
+                )
                     .environmentObject(galleryViewModel)
             case .avi:
                 AnimateAviScreen(
@@ -189,23 +224,34 @@ struct AnimateAppShellView: View {
 
     private var footerSelectedTab: AnimateRootTab {
         guard chromeItem == nil else { return .profile }
-        return selectedTab == .create ? .inProgress : selectedTab
+        return selectedTab
     }
 
     private var showsNewVideoFloatingAction: Bool {
         chromeItem == nil
             && accountController.isSignedIn
-            && [.inProgress, .gallery].contains(selectedTab)
-            && !createViewModel.hasLocalAnimateWorkspace
+            && selectedTab == .gallery
+            && !hasSingleVideoDraftContext
     }
 
     private var hasAviActiveContext: Bool {
+        hasSingleVideoDraftContext
+    }
+
+    private var hasSingleVideoDraftContext: Bool {
         createViewModel.hasRecoverableVideoContext
+            || createViewModel.hasLocalAnimateWorkspace
+            || inProgressViewModel.videosSummary.latestAnimateVideo != nil
     }
 
     private func cancelCreation() {
         createViewModel.clearSessionState()
-        selectRootTab(.inProgress)
+        selectRootTab(.home)
+    }
+
+    private func cancelImageCreation() {
+        clearImageDraft()
+        selectRootTab(.home)
     }
 
     private func finishFinalVideoToGallery() {
@@ -218,8 +264,6 @@ struct AnimateAppShellView: View {
     }
 
     private func startOrContinueVideoCreation() {
-        requestedCreateAssetKind = .video
-
         if createViewModel.hasLocalAnimateWorkspace {
             selectRootTab(.create)
             return
@@ -240,57 +284,45 @@ struct AnimateAppShellView: View {
     }
 
     private func startFloatingVideoCreationAction() {
-        if createViewModel.hasLocalAnimateWorkspace {
-            selectRootTab(.create)
-            return
-        }
-
-        if createViewModel.activeVideoId != nil {
-            createViewModel.clearSessionState()
-        }
-
-        beginNewVideoCreationFromPreference()
+        startOrContinueVideoCreation()
     }
 
     private func startImageCreation() {
-        requestedCreateAssetKind = .images
-        selectRootTab(.create)
+        selectRootTab(.createImage)
     }
 
     private func beginNewVideoCreationFromPreference() {
-        requestedCreateAssetKind = .video
         guard createViewModel.canBeginNewVideoCreation else {
             selectRootTab(.create)
             return
         }
 
-        let startPreference = newVideoStartController.currentPreference
         createViewModel.beginNewVideoCreation()
         selectRootTab(.create)
-        requestStartPickerAfterCreateNavigation(startPreference)
-    }
-
-    private func requestStartPickerAfterCreateNavigation(_ preference: AnimateNewVideoStartPreference) {
-        guard preference != .askEveryTime else { return }
-
-        Task { @MainActor in
-            try? await Task.sleep(nanoseconds: 500_000_000)
-            guard selectedTab == .create,
-                  createViewModel.workflowPresentation.mediaSummary.selectedCount == 0
-            else { return }
-
-            switch preference {
-            case .askEveryTime:
-                break
-            case .photosOrClips:
-                createViewModel.requestMediaPickerOpen()
-            }
-        }
     }
 
     private func selectRootTab(_ tab: AnimateRootTab) {
+        guard selectedTab != tab || chromeItem != nil else { return }
         navigationPath = NavigationPath()
         navigationStackResetID = UUID()
         selectedTab = tab
+    }
+
+    private func selectFooterTab(_ tab: AnimateRootTab) {
+        switch tab {
+        case .create:
+            startOrContinueVideoCreation()
+        case .createImage:
+            startImageCreation()
+        default:
+            selectRootTab(tab)
+        }
+    }
+
+    private func clearImageDraft() {
+        imageDraftImage = nil
+        imageDraftData = nil
+        imageDraftSourceIdentifier = nil
+        imageDraftLooks = []
     }
 }

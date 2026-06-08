@@ -5,6 +5,9 @@ import AVKit
 import SwiftUI
 
 struct AnimateGalleryScreen: View {
+    let startVideoCreation: () -> Void
+    let startImageCreation: () -> Void
+
     @EnvironmentObject private var viewModel: AnimateGalleryViewModel
     @State private var videoPendingDeletion: AnimateGalleryVideoPresentation?
     @State private var selectedVideo: AnimateGalleryVideoPlayerItem?
@@ -34,7 +37,10 @@ struct AnimateGalleryScreen: View {
                     AnimateGalleryEmptyState(
                         systemImage: "play.square.stack.fill",
                         title: L10n.string("gallery.empty.title"),
-                        detail: L10n.string("gallery.empty.detail")
+                        detail: L10n.string("gallery.empty.detail"),
+                        actionTitle: L10n.string("gallery.empty.createVideo"),
+                        actionSystemImage: "play.rectangle.fill",
+                        action: startVideoCreation
                     )
                 } else {
                     LazyVStack(spacing: 12) {
@@ -64,7 +70,10 @@ struct AnimateGalleryScreen: View {
                     AnimateGalleryEmptyState(
                         systemImage: "photo.stack.fill",
                         title: L10n.string("gallery.images.empty.title"),
-                        detail: L10n.string("gallery.images.empty.detail")
+                        detail: L10n.string("gallery.images.empty.detail"),
+                        actionTitle: L10n.string("gallery.images.empty.createImages"),
+                        actionSystemImage: "photo.fill",
+                        action: startImageCreation
                     )
                 } else {
                     LazyVStack(spacing: 12) {
@@ -305,9 +314,12 @@ private struct AnimateGalleryEmptyState: View {
     let systemImage: String
     let title: String
     let detail: String
+    let actionTitle: String
+    let actionSystemImage: String
+    let action: () -> Void
 
     var body: some View {
-        VStack(alignment: .center, spacing: 14) {
+        VStack(alignment: .center, spacing: 16) {
             Image(systemName: systemImage)
                 .font(.system(size: 34, weight: .bold))
                 .foregroundStyle(AVBrandColor.accent)
@@ -325,6 +337,18 @@ private struct AnimateGalleryEmptyState: View {
                     .multilineTextAlignment(.center)
                     .fixedSize(horizontal: false, vertical: true)
             }
+
+            Button(action: action) {
+                Label(actionTitle, systemImage: actionSystemImage)
+                    .font(.system(size: 15, weight: .black))
+                    .foregroundStyle(AVBrandColor.textInverse)
+                    .lineLimit(1)
+                    .minimumScaleFactor(0.82)
+                    .frame(maxWidth: .infinity)
+                    .frame(height: 48)
+            }
+            .buttonStyle(.borderedProminent)
+            .tint(AVBrandColor.textPrimary)
         }
         .padding(24)
         .frame(maxWidth: .infinity)

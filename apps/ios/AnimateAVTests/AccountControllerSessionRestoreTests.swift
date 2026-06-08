@@ -32,6 +32,25 @@ final class AccountControllerSessionRestoreTests: XCTestCase {
         XCTAssertFalse(accountService.didSignOut)
     }
 
+    func testCancelledCreditBalanceRefreshKeepsPreviousLoadedState() async {
+        let user = AccountAVUser(id: "user-1", displayName: "User One", emailAddress: "user@example.com")
+        AccountControllerURLProtocol.profileUser = user
+        let controller = AccountController(
+            service: StubAVAccountService(user: user),
+            accountProfileClient: accountProfileClient(),
+            balanceClient: balanceClient(),
+            purchaseService: StubAnimatePurchaseService(),
+            userDefaults: isolatedUserDefaults()
+        )
+        await controller.syncFromAccountProvider()
+        XCTAssertEqual(controller.creditBalanceLoadState, .loaded)
+
+        AccountControllerURLProtocol.balanceError = URLError(.cancelled)
+        await controller.refreshCreditBalance()
+
+        XCTAssertEqual(controller.creditBalanceLoadState, .loaded)
+    }
+
     func testLastKnownUserPreservesColdStartDuringTemporarySessionFailure() async {
         let userDefaults = isolatedUserDefaults()
         let user = AccountAVUser(id: "cached-user", displayName: "Cached User", emailAddress: "cached@example.com")
@@ -333,6 +352,7 @@ private final class CapturingAnimatePurchaseService: AnimatePurchaseServicing {
 private final class AccountControllerURLProtocol: URLProtocol {
     nonisolated(unsafe) static var profileUser = AccountAVUser(id: "user-1", displayName: "User One", emailAddress: "user@example.com")
     nonisolated(unsafe) static var profileStatusCode = 200
+    nonisolated(unsafe) static var balanceError: Error?
 
     override class func canInit(with request: URLRequest) -> Bool {
         true
@@ -344,6 +364,12 @@ private final class AccountControllerURLProtocol: URLProtocol {
 
     override func startLoading() {
         let path = request.url?.path ?? ""
+        if path == "/v1/apps/animateav/credits/balance",
+           let balanceError = Self.balanceError {
+            client?.urlProtocol(self, didFailWithError: balanceError)
+            return
+        }
+
         let statusCode = path == "/v1/me" ? Self.profileStatusCode : 200
         let responseJSON = Self.responseJSON(for: path)
         let response = HTTPURLResponse(
@@ -362,6 +388,7 @@ private final class AccountControllerURLProtocol: URLProtocol {
     static func reset() {
         profileUser = AccountAVUser(id: "user-1", displayName: "User One", emailAddress: "user@example.com")
         profileStatusCode = 200
+        balanceError = nil
     }
 
     private static func responseJSON(for path: String) -> String {

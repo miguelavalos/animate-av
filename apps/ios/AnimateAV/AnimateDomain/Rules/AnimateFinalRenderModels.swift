@@ -39,6 +39,8 @@ struct AnimateRenderPlanRequest: Encodable {
     let details: String?
     let message: String?
     let script: String?
+    let narrationVoice: String?
+    let voiceTone: String?
     let creditCost: Int?
     let removeWatermark: Bool
     let renderOptionId: String?
@@ -60,6 +62,8 @@ struct AnimateConfirmFinalRenderRequest: Encodable {
     let details: String?
     let message: String?
     let script: String?
+    let narrationVoice: String?
+    let voiceTone: String?
     let creditCost: Int?
     let removeWatermark: Bool
     let renderOptionId: String?

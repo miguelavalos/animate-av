@@ -24,24 +24,21 @@ struct AnimateCreditsPaywallView: View {
     @State private var isClaimingPromo = false
     @State private var purchasingProductID: String?
     @State private var isRestoringPurchases = false
-    @State private var showsBalanceDetails = false
-    @State private var showsPromoClaim = false
+    @State private var showsPromoSheet = false
 
     var body: some View {
         NavigationStack {
             ScrollView {
                 VStack(alignment: .leading, spacing: AVBrandSpacing.md) {
                     header
-                    balanceOverview
 
                     if isSignedIn {
+                        compactBalanceOverview
                         purchaseCatalogStatus
                         if purchasesAreAvailable {
                             monthlyPlan
                             creditPacks
-                            restoreAndLegal
                         }
-                        promoClaim
                     } else {
                         signInRequired
                     }
@@ -49,6 +46,8 @@ struct AnimateCreditsPaywallView: View {
                     if let statusMessage {
                         AVPaywallStatusRow(systemImage: "info.circle.fill", message: statusMessage)
                     }
+
+                    footerActions
                 }
                 .padding(.horizontal, 20)
                 .padding(.top, 18)
@@ -68,6 +67,25 @@ struct AnimateCreditsPaywallView: View {
             guard isSignedIn else { return }
             await loadPurchaseProducts()
         }
+        .sheet(isPresented: $showsPromoSheet) {
+            NavigationStack {
+                ScrollView {
+                    promoClaim
+                        .padding(20)
+                }
+                .background(AnimateTheme.shellBackground.ignoresSafeArea())
+                .navigationTitle(L10n.string("paywall.promo.title"))
+                .navigationBarTitleDisplayMode(.inline)
+                .toolbar {
+                    ToolbarItem(placement: .cancellationAction) {
+                        Button(L10n.string("common.done")) {
+                            showsPromoSheet = false
+                        }
+                    }
+                }
+            }
+            .presentationDetents([.medium])
+        }
     }
 
     private var header: some View {
@@ -82,51 +100,35 @@ struct AnimateCreditsPaywallView: View {
         )
     }
 
-    private var balanceOverview: some View {
-        VStack(alignment: .leading, spacing: AVBrandSpacing.sm) {
-            HStack(alignment: .firstTextBaseline) {
-                Text(L10n.string("paywall.wallet.title"))
-                    .font(.system(size: 18, weight: .black, design: .rounded))
+    private var compactBalanceOverview: some View {
+        HStack(spacing: AVBrandSpacing.sm) {
+            Image(systemName: "bolt.circle.fill")
+                .font(.system(size: 22, weight: .black))
+                .foregroundStyle(AVBrandColor.accent)
+                .frame(width: 34, height: 34)
+                .background(AVBrandColor.mutedSurface, in: Circle())
+
+            VStack(alignment: .leading, spacing: 2) {
+                Text(balanceTitle)
+                    .font(.system(size: 14, weight: .black, design: .rounded))
                     .foregroundStyle(AVBrandColor.textPrimary)
                     .lineLimit(1)
-                    .minimumScaleFactor(0.8)
+                    .minimumScaleFactor(0.78)
 
-                Spacer()
-
-                Text(L10n.string("paywall.wallet.startAt"))
-                    .font(.system(size: 11, weight: .black, design: .rounded))
-                    .foregroundStyle(AVBrandColor.accent)
-                    .lineLimit(1)
-                    .minimumScaleFactor(0.75)
+                Text(L10n.string("credits.videoCredits.title"))
+                    .font(.system(size: 11, weight: .bold, design: .rounded))
+                    .foregroundStyle(AVBrandColor.textSecondary)
             }
 
-            AnimateCreditsPrimaryBalanceTile(title: L10n.string("credits.videoCredits.title"), value: balance.spendable, detail: balanceTitle)
+            Spacer()
 
-            if isSignedIn {
-                Button {
-                    withAnimation(.easeInOut(duration: 0.18)) {
-                        showsBalanceDetails.toggle()
-                    }
-                } label: {
-                    Label(showsBalanceDetails ? L10n.string("paywall.wallet.hideDetails") : L10n.string("paywall.wallet.viewDetails"), systemImage: showsBalanceDetails ? "chevron.up" : "chevron.down")
-                        .font(.system(size: 12, weight: .black, design: .rounded))
-                        .foregroundStyle(AVBrandColor.textSecondary)
-                }
-                .buttonStyle(.plain)
-
-                if showsBalanceDetails {
-                    HStack(spacing: AVBrandSpacing.sm) {
-                        ForEach(AnimateCreditCopy.detailRows(for: balance)) { row in
-                            AnimateCreditsBalanceTile(row: row)
-                        }
-                    }
-                    .transition(.opacity.combined(with: .move(edge: .top)))
-                }
-            }
+            Text("\(balance.spendable)")
+                .font(.system(size: 24, weight: .black, design: .rounded))
+                .foregroundStyle(AVBrandColor.textPrimary)
+                .monospacedDigit()
         }
         .padding(AVBrandSpacing.md)
         .background(AVBrandColor.cardSurface, in: RoundedRectangle(cornerRadius: AVBrandRadius.card, style: .continuous))
-        .shadow(color: AVBrandColor.softShadow.opacity(0.14), radius: 12, y: 6)
     }
 
     private var creditPacks: some View {
@@ -177,58 +179,43 @@ struct AnimateCreditsPaywallView: View {
 
     private var promoClaim: some View {
         VStack(alignment: .leading, spacing: AVBrandSpacing.sm) {
-            Button {
-                withAnimation(.easeInOut(duration: 0.18)) {
-                    showsPromoClaim.toggle()
-                }
-            } label: {
-                HStack {
-                    sectionHeader(title: L10n.string("paywall.promo.title"), detail: L10n.string("paywall.promo.detail"))
-                    Spacer(minLength: AVBrandSpacing.sm)
-                    Image(systemName: showsPromoClaim ? "chevron.up" : "chevron.down")
-                        .font(.system(size: 12, weight: .black))
-                        .foregroundStyle(AVBrandColor.textSecondary)
-                }
-            }
-            .buttonStyle(.plain)
+            sectionHeader(title: L10n.string("paywall.promo.title"), detail: L10n.string("paywall.promo.detail"))
 
-            if showsPromoClaim {
-                HStack(spacing: AVBrandSpacing.sm) {
-                    Image(systemName: "gift.fill")
-                        .font(.system(size: 15, weight: .black))
-                        .foregroundStyle(AVBrandColor.accent)
+            HStack(spacing: AVBrandSpacing.sm) {
+                Image(systemName: "gift.fill")
+                    .font(.system(size: 15, weight: .black))
+                    .foregroundStyle(AVBrandColor.accent)
 
-                    TextField(L10n.string("paywall.promo.placeholder"), text: $promoCode)
-                        .textInputAutocapitalization(.characters)
-                        .autocorrectionDisabled()
-                        .font(AVBrandTypography.bodyStrong)
-                        .padding(.horizontal, AVBrandSpacing.md)
-                        .frame(height: 46)
-                        .background(AVBrandColor.cardSurface, in: RoundedRectangle(cornerRadius: AVBrandRadius.control, style: .continuous))
+                TextField(L10n.string("paywall.promo.placeholder"), text: $promoCode)
+                    .textInputAutocapitalization(.characters)
+                    .autocorrectionDisabled()
+                    .font(AVBrandTypography.bodyStrong)
+                    .padding(.horizontal, AVBrandSpacing.md)
+                    .frame(height: 46)
+                    .background(AVBrandColor.cardSurface, in: RoundedRectangle(cornerRadius: AVBrandRadius.control, style: .continuous))
 
-                    Button(action: claimPromo) {
-                        ZStack {
-                            if isClaimingPromo {
-                                ProgressView()
-                                    .tint(AVBrandColor.textInverse)
-                            } else {
-                                Image(systemName: "arrow.right")
-                                    .font(.system(size: 17, weight: .black))
-                                    .foregroundStyle(AVBrandColor.textInverse)
-                            }
+                Button(action: claimPromo) {
+                    ZStack {
+                        if isClaimingPromo {
+                            ProgressView()
+                                .tint(AVBrandColor.textInverse)
+                        } else {
+                            Image(systemName: "arrow.right")
+                                .font(.system(size: 17, weight: .black))
+                                .foregroundStyle(AVBrandColor.textInverse)
                         }
-                        .frame(width: 46, height: 46)
-                        .background(AVBrandColor.accent, in: RoundedRectangle(cornerRadius: AVBrandRadius.control, style: .continuous))
                     }
-                    .disabled(normalizedPromoCode.isEmpty || isClaimingPromo)
-                    .accessibilityLabel(L10n.string("paywall.promo.claim"))
-                    .accessibilityIdentifier("animate.credits.claimPromo")
+                    .frame(width: 46, height: 46)
+                    .background(AVBrandColor.accent, in: RoundedRectangle(cornerRadius: AVBrandRadius.control, style: .continuous))
                 }
-
-                Text(L10n.string("paywall.promo.optional"))
-                    .font(AVBrandTypography.captionStrong)
-                    .foregroundStyle(AVBrandColor.textSecondary)
+                .disabled(normalizedPromoCode.isEmpty || isClaimingPromo)
+                .accessibilityLabel(L10n.string("paywall.promo.claim"))
+                .accessibilityIdentifier("animate.credits.claimPromo")
             }
+
+            Text(L10n.string("paywall.promo.optional"))
+                .font(AVBrandTypography.captionStrong)
+                .foregroundStyle(AVBrandColor.textSecondary)
 
             if let promoStatusMessage {
                 HStack(alignment: .firstTextBaseline, spacing: AVBrandSpacing.xs) {
@@ -248,45 +235,80 @@ struct AnimateCreditsPaywallView: View {
         .background(AVBrandColor.mutedSurface, in: RoundedRectangle(cornerRadius: AVBrandRadius.card, style: .continuous))
     }
 
-    private var restoreAndLegal: some View {
-        VStack(spacing: AVBrandSpacing.md) {
+    private var footerActions: some View {
+        VStack(spacing: AVBrandSpacing.sm) {
             Text(L10n.string("paywall.legal.renewal"))
                 .font(.system(size: 11, weight: .semibold, design: .rounded))
                 .foregroundStyle(AVBrandColor.textSecondary)
                 .multilineTextAlignment(.center)
                 .fixedSize(horizontal: false, vertical: true)
 
-            Button {
-                restorePreviousPurchases()
-            } label: {
-                HStack(spacing: AVBrandSpacing.xs) {
-                    if isRestoringPurchases {
-                        ProgressView()
-                            .controlSize(.mini)
-                            .tint(AVBrandColor.textSecondary)
+            VStack(spacing: 6) {
+                if isSignedIn {
+                    HStack(alignment: .firstTextBaseline, spacing: 8) {
+                        footerButton(L10n.string("paywall.promo.link"), accessibilityIdentifier: "animate.credits.showPromo") {
+                            showsPromoSheet = true
+                        }
+                        footerSeparator
+                        restoreFooterButton
                     }
-
-                    Text(L10n.string("paywall.restore.title"))
-                        .font(.system(size: 12, weight: .bold, design: .rounded))
-                        .foregroundStyle(AVBrandColor.textSecondary)
+                    .frame(maxWidth: .infinity, alignment: .center)
+                } else {
+                    restoreFooterButton
+                        .frame(maxWidth: .infinity, alignment: .center)
                 }
-            }
-            .buttonStyle(.plain)
-            .disabled(isRestoringPurchases || purchasingProductID != nil)
-            .accessibilityIdentifier("animate.credits.restore")
 
-            AVPaywallLegalLinks(
-                links: [
-                    AVPaywallLegalLink(title: L10n.string("paywall.terms"), accessibilityIdentifier: "animate.credits.terms") {
+                HStack(alignment: .firstTextBaseline, spacing: 8) {
+                    footerButton(L10n.string("paywall.terms"), accessibilityIdentifier: "animate.credits.terms") {
                         openURL(AppConfig.termsURL)
-                    },
-                    AVPaywallLegalLink(title: L10n.string("paywall.privacy"), accessibilityIdentifier: "animate.credits.privacy") {
+                    }
+                    footerSeparator
+                    footerButton(L10n.string("paywall.privacy"), accessibilityIdentifier: "animate.credits.privacy") {
                         openURL(AppConfig.privacyPolicyURL)
                     }
-                ]
-            )
+                }
+                .frame(maxWidth: .infinity, alignment: .center)
+            }
+            .font(.system(size: 12, weight: .bold, design: .rounded))
+            .foregroundStyle(AVBrandColor.textSecondary)
         }
         .frame(maxWidth: .infinity, alignment: .center)
+    }
+
+    private func footerButton(_ title: String, accessibilityIdentifier: String, action: @escaping () -> Void) -> some View {
+        Button(action: action) {
+            Text(title)
+                .multilineTextAlignment(.center)
+                .fixedSize(horizontal: false, vertical: true)
+        }
+            .buttonStyle(.plain)
+            .accessibilityIdentifier(accessibilityIdentifier)
+    }
+
+    private var footerSeparator: some View {
+        Text("·")
+            .foregroundStyle(AVBrandColor.textSecondary.opacity(0.72))
+    }
+
+    private var restoreFooterButton: some View {
+        Button {
+            restorePreviousPurchases()
+        } label: {
+            HStack(spacing: 4) {
+                if isRestoringPurchases {
+                    ProgressView()
+                        .controlSize(.mini)
+                        .tint(AVBrandColor.textSecondary)
+                }
+
+                Text(L10n.string("paywall.restore.title"))
+                    .multilineTextAlignment(.center)
+                    .fixedSize(horizontal: false, vertical: true)
+            }
+        }
+        .buttonStyle(.plain)
+        .disabled(isRestoringPurchases || purchasingProductID != nil || !isSignedIn)
+        .accessibilityIdentifier("animate.credits.restore")
     }
 
     @ViewBuilder

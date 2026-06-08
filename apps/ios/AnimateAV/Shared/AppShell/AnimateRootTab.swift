@@ -4,6 +4,7 @@ import Foundation
 enum AnimateRootTab: String, CaseIterable, Identifiable {
     case home
     case create
+    case createImage
     case inProgress
     case gallery
     case avi
@@ -11,7 +12,7 @@ enum AnimateRootTab: String, CaseIterable, Identifiable {
 
     var id: String { rawValue }
 
-    static let footerTabs: [AnimateRootTab] = [.home, .inProgress, .gallery]
+    static let footerTabs: [AnimateRootTab] = [.home, .create, .createImage, .gallery]
 
     var shellTab: AVAppShellTab<AnimateRootTab> {
         switch self {
@@ -25,9 +26,16 @@ enum AnimateRootTab: String, CaseIterable, Identifiable {
         case .create:
             AVAppShellTab(
                 id: self,
-                title: L10n.string("tab.create"),
-                systemImage: "plus.app.fill",
+                title: L10n.string("tab.createVideo"),
+                systemImage: "play.rectangle.fill",
                 accessibilityIdentifier: "animate.tab.create"
+            )
+        case .createImage:
+            AVAppShellTab(
+                id: self,
+                title: L10n.string("tab.createImage"),
+                systemImage: "photo.fill",
+                accessibilityIdentifier: "animate.tab.createImage"
             )
         case .inProgress:
             AVAppShellTab(
