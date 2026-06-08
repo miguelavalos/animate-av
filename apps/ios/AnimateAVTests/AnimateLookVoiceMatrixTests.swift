@@ -20,6 +20,14 @@ final class AnimateLookVoiceMatrixTests: XCTestCase {
         }
     }
 
+    func testEachLookHasStableUniquePreviewAsset() {
+        let assetNames = AnimateVideoLook.selectorOrder.map(\.assetName)
+
+        XCTAssertEqual(assetNames.count, 32)
+        XCTAssertEqual(Set(assetNames).count, assetNames.count)
+        XCTAssertTrue(assetNames.allSatisfy { $0.hasPrefix("Look") })
+    }
+
     func testSelectingLookAppliesDefaultVoiceWhenVoiceWasNotManuallyChanged() {
         let viewModel = AnimateCreateViewModel()
 

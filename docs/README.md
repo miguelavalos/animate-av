@@ -25,6 +25,10 @@ handoff values belong in the private AVALSYS suite.
   technical evidence template.
 - [canonical-asset-handoff.md](canonical-asset-handoff.md): public-safe asset
   approval record before adding final client artwork.
+- [look-preview-assets.md](look-preview-assets.md): naming and generation
+  convention for look selector preview assets.
+- [look-preview-handoff-prompt.md](look-preview-handoff-prompt.md): continuation
+  prompt for finishing GPT Image 2 look previews on another machine.
 - [app-store-screenshots.md](app-store-screenshots.md): public screenshot safety
   rules for non-secret captures.
 
