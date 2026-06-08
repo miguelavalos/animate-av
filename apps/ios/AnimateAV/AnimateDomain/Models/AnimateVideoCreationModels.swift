@@ -113,6 +113,19 @@ enum AnimateVideoLook: String, CaseIterable, Identifiable, Codable {
         ]
     }
 
+    var defaultVoiceProfile: AnimateVideoVoiceProfile {
+        guard let lookIndex = Self.selectorOrder.firstIndex(of: self) else {
+            return .adultWoman
+        }
+
+        let voiceOrder = AnimateVideoVoiceProfile.selectorOrder
+        guard !voiceOrder.isEmpty else {
+            return .adultWoman
+        }
+
+        return voiceOrder[lookIndex % voiceOrder.count]
+    }
+
     var title: String {
         switch self {
         case .anime: L10n.string("create.look.anime.title")

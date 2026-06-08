@@ -100,6 +100,7 @@ final class AnimateCreateViewModel: ObservableObject {
     private var hasLocalSetupEdits = false
     private var hasUserStyleOverride = false
     private var hasUserLookOverride = false
+    private var hasUserVoiceOverride = false
     private var autoStyleUndoSelection: (style: AnimateVideoCreationStyle, musicPreset: AnimateVideoMusicPreset, form: AnimateVideoSetupForm)?
 
     var activeVideo: AnimateVideo? {
@@ -418,6 +419,7 @@ final class AnimateCreateViewModel: ObservableObject {
         isLocalVideoCreationStarted = false
         hasLocalSetupEdits = false
         hasUserLookOverride = false
+        hasUserVoiceOverride = false
     }
 
     func continueVideo(_ video: AnimateVideo, focus: AnimateContinuationFocus = .video) {
@@ -426,6 +428,7 @@ final class AnimateCreateViewModel: ObservableObject {
         isLocalVideoCreationStarted = false
         hasLocalSetupEdits = false
         hasUserLookOverride = false
+        hasUserVoiceOverride = false
         pendingFocus = focus
         continuationFocusHint = focus
 
@@ -575,6 +578,7 @@ final class AnimateCreateViewModel: ObservableObject {
         hasLocalSetupEdits = false
         hasUserStyleOverride = false
         hasUserLookOverride = false
+        hasUserVoiceOverride = false
         applyStyleDefaults(selectedCreationStyle)
     }
 
@@ -734,6 +738,9 @@ final class AnimateCreateViewModel: ObservableObject {
 
     func selectLook(_ look: AnimateVideoLook) {
         form.look = look
+        if !hasUserVoiceOverride {
+            form.voiceProfile = look.defaultVoiceProfile
+        }
         hasUserLookOverride = true
         markLocalSetupEdited()
     }
@@ -745,6 +752,7 @@ final class AnimateCreateViewModel: ObservableObject {
 
     func updateVoiceProfile(_ profile: AnimateVideoVoiceProfile) {
         form.voiceProfile = profile
+        hasUserVoiceOverride = true
         markLocalSetupEdited()
     }
 
@@ -963,6 +971,7 @@ extension AnimateCreateViewModel {
             if continuedForm.matchesPersistedSetup(of: form) {
                 hasLocalSetupEdits = false
                 hasUserLookOverride = false
+                hasUserVoiceOverride = false
             }
             return
         }
@@ -989,6 +998,7 @@ extension AnimateCreateViewModel {
             lastPreparedVideoDirectionInputSignature = workspaceSignature
             hasLocalSetupEdits = false
             hasUserLookOverride = false
+            hasUserVoiceOverride = false
             return
         }
 
