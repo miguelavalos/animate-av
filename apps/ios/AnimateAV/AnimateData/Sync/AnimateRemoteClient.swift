@@ -29,6 +29,7 @@ struct AnimateRemoteClient {
             ],
             yielding: [AnimateVideoJob].self
         )
+        .receive(on: DispatchQueue.main)
         .map { jobs in
             jobs.map(\.inProgressMoment)
         }
@@ -43,6 +44,7 @@ struct AnimateRemoteClient {
             ],
             yielding: [AnimateImageJob].self
         )
+        .receive(on: DispatchQueue.main)
         .map { jobs in
             jobs.map(\.inProgressMoment)
         }
@@ -162,6 +164,7 @@ struct AnimateRemoteClient {
             ],
             yielding: [AnimateArtifact].self
         )
+        .receive(on: DispatchQueue.main)
         .mapError { $0 as Error }
         .eraseToAnyPublisher()
     }
@@ -182,6 +185,7 @@ struct AnimateRemoteClient {
             ],
             yielding: AnimateWorkspace?.self
         )
+        .receive(on: DispatchQueue.main)
         .mapError { $0 as Error }
         .eraseToAnyPublisher()
     }

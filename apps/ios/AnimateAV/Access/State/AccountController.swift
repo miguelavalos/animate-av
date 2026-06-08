@@ -1,5 +1,6 @@
 import AccountAV
 import AVDiagnosticsFoundation
+import AuthenticationServices
 import Combine
 import Foundation
 
@@ -178,7 +179,7 @@ final class AccountController: ObservableObject {
 
     func restorePurchases() async throws -> AnimatePurchaseResult {
         guard let user else {
-            throw AnimateAPIError(code: "moments_sign_in_required", message: L10n.string("access.signInRequired.restore"))
+            throw AnimateAPIError(code: "animate_sign_in_required", message: L10n.string("access.signInRequired.restore"))
         }
         guard !isPurchaseInProgress else {
             return AnimatePurchaseResult(status: .cancelled, productId: nil, transactionId: nil)
@@ -297,6 +298,10 @@ final class AccountController: ObservableObject {
             addAccountBreadcrumb("auth_operation_completed")
             await syncFromAccountProvider()
         } catch {
+            guard !error.isAuthCancellation else {
+                addAccountBreadcrumb("auth_operation_cancelled")
+                throw error
+            }
             captureAccountError(error, operation: "auth_operation")
             errorMessage = error.localizedDescription
             throw error
@@ -331,6 +336,42 @@ final class AccountController: ObservableObject {
             return videoError.code
         }
         return String(describing: type(of: error))
+    }
+}
+
+private extension Error {
+    var isAuthCancellation: Bool {
+        let nsError = self as NSError
+        if nsError.domain == ASAuthorizationError.errorDomain,
+           nsError.code == ASAuthorizationError.Code.canceled.rawValue {
+            return true
+        }
+
+        if nsError.domain.contains("AuthenticationServices"),
+           nsError.code == ASAuthorizationError.Code.unknown.rawValue {
+            return true
+        }
+
+        if nsError.domain == ASWebAuthenticationSessionError.errorDomain,
+           nsError.code == ASWebAuthenticationSessionError.Code.canceledLogin.rawValue {
+            return true
+        }
+
+        if nsError.domain == NSURLErrorDomain,
+           nsError.code == NSURLErrorCancelled {
+            return true
+        }
+
+        let description = nsError.localizedDescription.lowercased()
+        if description.contains("cancel") || description.contains("cancelad") {
+            return true
+        }
+
+        if let underlying = nsError.userInfo[NSUnderlyingErrorKey] as? Error {
+            return underlying.isAuthCancellation
+        }
+
+        return false
     }
 }
 
@@ -398,7 +439,7 @@ struct AnimateCreditBalanceClient {
 
     func fetchBalance(bearerToken: String) async throws -> AnimateCreditBalance {
         guard let url = URL(string: "\(baseURLString)/v1/apps/animateav/credits/balance") else {
-            throw AnimateAPIError(code: "invalid_moments_api_url", message: L10n.string("access.apiURLMissing"))
+            throw AnimateAPIError(code: "invalid_animate_api_url", message: L10n.string("access.apiURLMissing"))
         }
 
         var request = URLRequest(url: url)
@@ -409,7 +450,7 @@ struct AnimateCreditBalanceClient {
         if let httpResponse = response as? HTTPURLResponse, !(200..<300).contains(httpResponse.statusCode) {
             throw AnimateAPIError.decode(
                 from: data,
-                fallbackCode: "moments_credit_balance_failed",
+                fallbackCode: "animate_credit_balance_failed",
                 fallbackMessage: "Animate AV credit balance could not be loaded."
             )
         }
