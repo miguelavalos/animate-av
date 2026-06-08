@@ -14,7 +14,7 @@ final class AnimateVideoCreationWorkflow: ObservableObject {
     private let videoDeleter: any AnimateVideoDeleting
     private let workspaceObserver: any AnimateActiveWorkspaceObserving
     private var workflowGeneration = WorkflowGeneration()
-    private let logger = Logger(subsystem: "com.avalsys.animateav", category: "moment-creation")
+    private let logger = Logger(subsystem: "com.avalsys.animateav", category: "video-creation")
 
     init(
         currentUserProvider: any AnimateCurrentUserProviding,
@@ -82,7 +82,7 @@ final class AnimateVideoCreationWorkflow: ObservableObject {
             return momentId
         } catch {
             guard workflowGeneration.isCurrent(generation) else { return nil }
-            logger.error("Moment creation failed reason=\(String(describing: error), privacy: .public)")
+            logger.error("Video creation failed reason=\(String(describing: error), privacy: .public)")
             errorMessage = error.localizedDescription
             isCreatingVideo = false
             return nil
@@ -118,7 +118,7 @@ final class AnimateVideoCreationWorkflow: ObservableObject {
             isCreatingVideo = false
             return true
         } catch {
-            logger.error("Moment setup update failed reason=\(String(describing: error), privacy: .public)")
+            logger.error("Video setup update failed reason=\(String(describing: error), privacy: .public)")
             errorMessage = error.localizedDescription
             isCreatingVideo = false
             return false

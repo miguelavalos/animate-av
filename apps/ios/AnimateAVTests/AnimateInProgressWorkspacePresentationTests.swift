@@ -125,8 +125,8 @@ final class AnimateInProgressWorkspacePresentationTests: XCTestCase {
             makeMediaAsset(id: "first", kind: "image", sortOrder: 0, selected: true, moderationStatus: "approved")
         ]
 
-        let localItems = MomentsSharedMediaItem.preferred(localMedia: localMedia, syncedMedia: syncedMedia)
-        let syncedItems = MomentsSharedMediaItem.preferred(localMedia: [], syncedMedia: syncedMedia)
+        let localItems = AnimateSharedMediaItem.preferred(localMedia: localMedia, syncedMedia: syncedMedia)
+        let syncedItems = AnimateSharedMediaItem.preferred(localMedia: [], syncedMedia: syncedMedia)
 
         XCTAssertEqual(localItems.map(\.id), ["00000000-0000-0000-0000-000000000001"])
         XCTAssertEqual(syncedItems.map(\.id), ["first", "second"])

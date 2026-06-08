@@ -230,7 +230,7 @@ final class AccountController: ObservableObject {
     private func resolveInternalAccountUser(providerUser: AccountAVUser) async -> AccountAVUser? {
         do {
             guard let token = try await service.getToken() else {
-                return MomentsUITestEnvironment.current.hasAccountOverride ? providerUser : nil
+                return AnimateUITestEnvironment.current.hasAccountOverride ? providerUser : nil
             }
             return try await accountProfileClient.fetchCurrentUser(bearerToken: token)
         } catch {
@@ -244,7 +244,7 @@ final class AccountController: ObservableObject {
         if let token = try await service.getToken() {
             return token
         }
-        if MomentsUITestEnvironment.current.hasAccountOverride {
+        if AnimateUITestEnvironment.current.hasAccountOverride {
             return user.id
         }
         return nil
@@ -259,7 +259,7 @@ final class AccountController: ObservableObject {
 
     private static func lastKnownAccountUser(from userDefaults: UserDefaults) -> AccountAVUser? {
         guard let data = userDefaults.data(forKey: "animateav.account.lastKnownUser"),
-              let snapshot = try? JSONDecoder().decode(MomentsLastKnownAccountUser.self, from: data) else {
+              let snapshot = try? JSONDecoder().decode(AnimateLastKnownAccountUser.self, from: data) else {
             return nil
         }
         return snapshot.accountUser
@@ -267,7 +267,7 @@ final class AccountController: ObservableObject {
 
     private func persistLastKnownAccountUser(_ user: AccountAVUser?) {
         guard let user else { return }
-        let snapshot = MomentsLastKnownAccountUser(user: user)
+        let snapshot = AnimateLastKnownAccountUser(user: user)
         guard let data = try? JSONEncoder().encode(snapshot) else { return }
         userDefaults.set(data, forKey: lastKnownAccountUserKey)
     }
@@ -334,7 +334,7 @@ final class AccountController: ObservableObject {
     }
 }
 
-private struct MomentsLastKnownAccountUser: Codable {
+private struct AnimateLastKnownAccountUser: Codable {
     let id: String
     let displayName: String
     let emailAddress: String?

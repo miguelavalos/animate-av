@@ -36,7 +36,7 @@
 		21539CDC35A57C878E2FF60B /* AnimateCreateViewModel+Bindings.swift in Sources */ = {isa = PBXBuildFile; fileRef = CC27713AE02B13847FA1E575 /* AnimateCreateViewModel+Bindings.swift */; };
 		23DD0162B888AC3B19ADAA58 /* AnimateWorkflowBundle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19FC0994E47515FC672C7EE5 /* AnimateWorkflowBundle.swift */; };
 		251DB9F4742A6899AA8D826A /* AnimateInProgressWorkspacePresentation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 29D314035C53B3F66BCA44FE /* AnimateInProgressWorkspacePresentation.swift */; };
-		255EE835B9439B135F950751 /* MomentsAppPreferences.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F5BB43445BF882C80965138 /* MomentsAppPreferences.swift */; };
+		255EE835B9439B135F950751 /* AnimateAppPreferences.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F5BB43445BF882C80965138 /* AnimateAppPreferences.swift */; };
 		25FDEA10E1866873449D14CA /* AccountController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A46B7887BA17BECA78D03777 /* AccountController.swift */; };
 		27C7010B33F0AA0BDBA2D530 /* AnimateRevenueCatPurchaseService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7642F835D8EB2313438BB1C5 /* AnimateRevenueCatPurchaseService.swift */; };
 		27FCC18D0DBBCC01BF29C343 /* AnimateAviScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = A61BA7E27A2E8D0127BA0575 /* AnimateAviScreen.swift */; };
@@ -286,7 +286,7 @@
 		6AC8B88C818743B0DB8AB260 /* AnimateCreditBalanceLoadState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnimateCreditBalanceLoadState.swift; sourceTree = "<group>"; };
 		6D097A65EEB07E101FA2ED49 /* AnimateFinalRenderClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnimateFinalRenderClient.swift; sourceTree = "<group>"; };
 		6EF64CAD0EC05383DA966154 /* AnimateRenderJob.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnimateRenderJob.swift; sourceTree = "<group>"; };
-		6F5BB43445BF882C80965138 /* MomentsAppPreferences.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MomentsAppPreferences.swift; sourceTree = "<group>"; };
+		6F5BB43445BF882C80965138 /* AnimateAppPreferences.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnimateAppPreferences.swift; sourceTree = "<group>"; };
 		6FB1C58BE9FF2E561C66A837 /* AnimateCreateStoryRows.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnimateCreateStoryRows.swift; sourceTree = "<group>"; };
 		7189B0ED1BAA65ADEC6B7747 /* SignInActionsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignInActionsView.swift; sourceTree = "<group>"; };
 		721A782AE8ED97A7C47D9FAC /* DependencyContainer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DependencyContainer.swift; sourceTree = "<group>"; };
@@ -821,7 +821,7 @@
 		A4E183605791A769A2B99AFA /* Preferences */ = {
 			isa = PBXGroup;
 			children = (
-				6F5BB43445BF882C80965138 /* MomentsAppPreferences.swift */,
+				6F5BB43445BF882C80965138 /* AnimateAppPreferences.swift */,
 			);
 			path = Preferences;
 			sourceTree = "<group>";
@@ -1287,7 +1287,7 @@
 				F0A7AD1FCE8952404C978F42 /* MediaPickerImport.swift in Sources */,
 				DC1CE6E488683A4C2FE19DA8 /* MediaUploadPersistence.swift in Sources */,
 				DBA0B7DC4FC4C2CCDB1EAE40 /* MediaUploadWorkflow.swift in Sources */,
-				255EE835B9439B135F950751 /* MomentsAppPreferences.swift in Sources */,
+				255EE835B9439B135F950751 /* AnimateAppPreferences.swift in Sources */,
 				410A4B24B909A3ACA4B481CB /* SignInActionsView.swift in Sources */,
 				3EAADBB39CF82D2BD2CC29AC /* StoryWorkflow.swift in Sources */,
 				312FEEAEDF3C3AA0B59BDFCA /* WorkflowGeneration.swift in Sources */,

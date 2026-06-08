@@ -4,7 +4,7 @@ import Photos
 import SwiftUI
 import UIKit
 
-enum MomentsSharedMediaItem: Identifiable, Equatable {
+enum AnimateSharedMediaItem: Identifiable, Equatable {
     case local(AnimateSelectedMedia)
     case synced(AnimateMediaAsset)
 
@@ -30,7 +30,7 @@ enum MomentsSharedMediaItem: Identifiable, Equatable {
         AnimateStatusRules.displayKind(kind)
     }
 
-    static func preferred(localMedia: [AnimateSelectedMedia], syncedMedia: [AnimateMediaAsset]) -> [MomentsSharedMediaItem] {
+    static func preferred(localMedia: [AnimateSelectedMedia], syncedMedia: [AnimateMediaAsset]) -> [AnimateSharedMediaItem] {
         if !localMedia.isEmpty {
             return localMedia.map(Self.local)
         }
@@ -41,19 +41,19 @@ enum MomentsSharedMediaItem: Identifiable, Equatable {
     }
 }
 
-struct MomentsSharedMediaSummaryStack: View {
+struct AnimateSharedMediaSummaryStack: View {
     let localMedia: [AnimateSelectedMedia]
     let syncedMedia: [AnimateMediaAsset]
 
-    private var items: [MomentsSharedMediaItem] {
-        MomentsSharedMediaItem.preferred(localMedia: localMedia, syncedMedia: syncedMedia)
+    private var items: [AnimateSharedMediaItem] {
+        AnimateSharedMediaItem.preferred(localMedia: localMedia, syncedMedia: syncedMedia)
     }
 
     var body: some View {
         ZStack(alignment: .bottomTrailing) {
             ZStack {
                 ForEach(Array(items.prefix(4).enumerated()), id: \.element.id) { index, item in
-                    MomentsSharedMediaThumbnailContent(item: item, size: 74)
+                    AnimateSharedMediaThumbnailContent(item: item, size: 74)
                         .frame(width: 74, height: 74)
                         .clipShape(RoundedRectangle(cornerRadius: 8, style: .continuous))
                         .overlay {
@@ -79,21 +79,21 @@ struct MomentsSharedMediaSummaryStack: View {
     }
 }
 
-struct MomentsSharedMediaStrip: View {
+struct AnimateSharedMediaStrip: View {
     let localMedia: [AnimateSelectedMedia]
     let syncedMedia: [AnimateMediaAsset]
     var maxCount = 12
     var tileSize: CGFloat = 58
 
-    private var items: [MomentsSharedMediaItem] {
-        Array(MomentsSharedMediaItem.preferred(localMedia: localMedia, syncedMedia: syncedMedia).prefix(maxCount))
+    private var items: [AnimateSharedMediaItem] {
+        Array(AnimateSharedMediaItem.preferred(localMedia: localMedia, syncedMedia: syncedMedia).prefix(maxCount))
     }
 
     var body: some View {
         ScrollView(.horizontal) {
             HStack(spacing: 9) {
                 ForEach(Array(items.enumerated()), id: \.element.id) { index, item in
-                    MomentsSharedMediaIndexedTile(item: item, index: index, size: tileSize)
+                    AnimateSharedMediaIndexedTile(item: item, index: index, size: tileSize)
                 }
             }
             .padding(.vertical, 2)
@@ -102,7 +102,7 @@ struct MomentsSharedMediaStrip: View {
     }
 }
 
-struct MomentsSharedSyncedMediaGrid: View {
+struct AnimateSharedSyncedMediaGrid: View {
     let mediaAssets: [AnimateMediaAsset]
     var minimumTileWidth: CGFloat = 72
     var spacing: CGFloat = 8
@@ -118,20 +118,20 @@ struct MomentsSharedSyncedMediaGrid: View {
     var body: some View {
         LazyVGrid(columns: columns, alignment: .leading, spacing: spacing) {
             ForEach(Array(sortedMediaAssets.enumerated()), id: \.element.id) { index, media in
-                MomentsSharedMediaIndexedTile(item: .synced(media), index: index, size: minimumTileWidth)
+                AnimateSharedMediaIndexedTile(item: .synced(media), index: index, size: minimumTileWidth)
             }
         }
     }
 }
 
-struct MomentsSharedMediaIndexedTile: View {
-    let item: MomentsSharedMediaItem
+struct AnimateSharedMediaIndexedTile: View {
+    let item: AnimateSharedMediaItem
     let index: Int
     var size: CGFloat = 58
 
     var body: some View {
         ZStack(alignment: .bottomLeading) {
-            MomentsSharedMediaThumbnailContent(item: item, size: size)
+            AnimateSharedMediaThumbnailContent(item: item, size: size)
 
             Text("\(index + 1)")
                 .font(.system(size: 10, weight: .black))
@@ -151,8 +151,8 @@ struct MomentsSharedMediaIndexedTile: View {
     }
 }
 
-struct MomentsSharedMediaThumbnailContent: View {
-    let item: MomentsSharedMediaItem
+struct AnimateSharedMediaThumbnailContent: View {
+    let item: AnimateSharedMediaItem
     var size: CGFloat?
 
     var body: some View {
@@ -171,12 +171,12 @@ struct MomentsSharedMediaThumbnailContent: View {
                 .resizable()
                 .scaledToFill()
         } else {
-            MomentsSharedMediaFallbackThumbnail(kind: media.kind, size: size)
+            AnimateSharedMediaFallbackThumbnail(kind: media.kind, size: size)
         }
     }
 }
 
-struct MomentsSharedMediaFallbackThumbnail: View {
+struct AnimateSharedMediaFallbackThumbnail: View {
     let kind: String
     var size: CGFloat?
 

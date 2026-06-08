@@ -21,10 +21,10 @@ struct AnimateLaunchContext {
     }
 }
 
-struct MomentsUITestEnvironment {
+struct AnimateUITestEnvironment {
     let environment: [String: String]
 
-    static let current = MomentsUITestEnvironment(environment: ProcessInfo.processInfo.environment)
+    static let current = AnimateUITestEnvironment(environment: ProcessInfo.processInfo.environment)
 
     var isEnabled: Bool {
         environment["ANIMATEAV_UI_TESTS"] == "1"

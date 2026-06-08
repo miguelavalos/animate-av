@@ -18,7 +18,7 @@ struct AnimateInProgressMediaSection: View {
                     message: presentation.emptyMessage
                 )
             } else {
-                MomentsSharedSyncedMediaGrid(mediaAssets: mediaAssets)
+            AnimateSharedSyncedMediaGrid(mediaAssets: mediaAssets)
             }
         }
     }

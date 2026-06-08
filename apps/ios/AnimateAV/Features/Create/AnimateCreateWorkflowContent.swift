@@ -751,7 +751,7 @@ private struct AnimateCreateVideoDirectionCard: View {
         AVAppShellCard {
             VStack(alignment: .leading, spacing: 11) {
                 HStack(alignment: .center, spacing: 14) {
-                    MomentsSharedMediaSummaryStack(
+                    AnimateSharedMediaSummaryStack(
                         localMedia: presentation.mediaSummary.selectedMedia,
                         syncedMedia: mediaPresentation.syncedMediaAssets
                     )

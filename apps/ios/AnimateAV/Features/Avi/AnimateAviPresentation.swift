@@ -48,7 +48,7 @@ struct AnimateAviPresentation: Equatable {
             return L10n.string("avi.focus.signIn.message")
         }
         if videosSummary.inProgressCount > 0 {
-            return L10n.string("avi.focus.inProgress.message", videosSummary.inProgressCount, inProgressMomentLabel(videosSummary))
+            return L10n.string("avi.focus.inProgress.message", videosSummary.inProgressCount, inProgressVideoLabel(videosSummary))
         }
         if videosSummary.finishedCount > 0 {
             return L10n.string("avi.focus.finished.message")
@@ -77,7 +77,7 @@ struct AnimateAviPresentation: Equatable {
         return L10n.string("avi.credits.available.message", AnimateCreditCopy.countTitle(creditBalance.spendable))
     }
 
-    private static func inProgressMomentLabel(_ videosSummary: AnimateInProgressSummary) -> String {
+    private static func inProgressVideoLabel(_ videosSummary: AnimateInProgressSummary) -> String {
         videosSummary.inProgressCount == 1 ? L10n.string("moment.noun.one") : L10n.string("moment.noun.other")
     }
 }

@@ -343,7 +343,7 @@ private struct AnimateAnimateVideoCard: View {
     @ViewBuilder
     private var mediaPreview: some View {
         if !localMedia.isEmpty {
-            MomentsSharedMediaSummaryStack(localMedia: localMedia, syncedMedia: [])
+            AnimateSharedMediaSummaryStack(localMedia: localMedia, syncedMedia: [])
         } else if video.mediaPreview.isEmpty {
             ZStack {
                 RoundedRectangle(cornerRadius: 16, style: .continuous)
@@ -354,7 +354,7 @@ private struct AnimateAnimateVideoCard: View {
             }
             .frame(width: 92, height: 92)
         } else {
-            MomentsSharedMediaSummaryStack(localMedia: [], syncedMedia: video.mediaPreview)
+            AnimateSharedMediaSummaryStack(localMedia: [], syncedMedia: video.mediaPreview)
         }
     }
 

@@ -10,7 +10,7 @@ enum AnimateCreateUITestFixtures {
         case full
 
         static var current: Mode? {
-            guard let fixture = MomentsUITestEnvironment.current.createFixture else { return nil }
+            guard let fixture = AnimateUITestEnvironment.current.createFixture else { return nil }
             return Mode(rawValue: fixture)
         }
     }

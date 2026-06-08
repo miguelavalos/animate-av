@@ -44,10 +44,10 @@ struct AnimateProfileScreen: View {
         }
         .toolbar(.hidden, for: .navigationBar)
         .sheet(isPresented: $isShowingLocalDataActions) {
-            MomentsLocalDataMaintenanceSheet(
+            AnimateLocalDataMaintenanceSheet(
                 clearTitle: localized("profile.local.clear.title"),
                 clearDetail: localized("profile.local.clear.detail"),
-                onConfirmClear: clearLocalMomentData
+                onConfirmClear: clearLocalVideoData
             )
             .presentationDetents([.medium, .large])
             .presentationDragIndicator(.visible)
@@ -86,7 +86,7 @@ struct AnimateProfileScreen: View {
         if accountController.isSignedIn {
             creditsCard
         }
-        momentsProCard
+        animateProCard
         if accountController.isSignedIn {
             accountSafetyCard
         }
@@ -280,10 +280,10 @@ struct AnimateProfileScreen: View {
         }
     }
 
-    private var momentsProCard: some View {
+    private var animateProCard: some View {
         AVSettingsSectionCard(
             title: localized("profile.pro.title"),
-            subtitle: momentsProSubtitle
+            subtitle: animateProSubtitle
         ) {
             VStack(alignment: .leading, spacing: 12) {
                 AVSettingsInfoRow(
@@ -516,7 +516,7 @@ struct AnimateProfileScreen: View {
         }
     }
 
-    private var momentsProSubtitle: String {
+    private var animateProSubtitle: String {
         if accountController.isSignedIn {
             guard accountController.creditBalanceLoadState.hasLoadedBalance else {
                 return AnimateCreditCopy.balanceStatusDetail(accountController.creditBalanceLoadState)
@@ -564,7 +564,7 @@ struct AnimateProfileScreen: View {
         }
     }
 
-    private func clearLocalMomentData() {
+    private func clearLocalVideoData() {
         guard isClearingLocalData == false else { return }
         isClearingLocalData = true
         createViewModel.clearSessionState()
@@ -578,7 +578,7 @@ struct AnimateProfileScreen: View {
     }
 }
 
-private struct MomentsLocalDataMaintenanceSheet: View {
+private struct AnimateLocalDataMaintenanceSheet: View {
     let clearTitle: String
     let clearDetail: String
     let onConfirmClear: () -> Void

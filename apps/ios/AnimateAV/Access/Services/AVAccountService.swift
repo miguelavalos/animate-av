@@ -74,12 +74,12 @@ struct DefaultAVAccountService: AVAccountService {
     }
 
     private static var uiTestAccountUser: AccountAVUser? {
-        guard MomentsUITestEnvironment.current.hasAccountOverride else { return nil }
+        guard AnimateUITestEnvironment.current.hasAccountOverride else { return nil }
 
         return AccountAVUser(
-            id: MomentsUITestEnvironment.accountUserId,
-            displayName: MomentsUITestEnvironment.accountUserDisplayName,
-            emailAddress: MomentsUITestEnvironment.accountUserEmailAddress
+            id: AnimateUITestEnvironment.accountUserId,
+            displayName: AnimateUITestEnvironment.accountUserDisplayName,
+            emailAddress: AnimateUITestEnvironment.accountUserEmailAddress
         )
     }
 }
