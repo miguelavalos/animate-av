@@ -1177,9 +1177,9 @@
 "create.look.fantasyQuest.subtitle" = "Bright fantasy with an adventure feel.";
 "create.look.miniAvatar.title" = "Mini avatar";
 "create.look.miniAvatar.subtitle" = "Compact figure with a collectible finish.";
-"create.voiceProfile.childGirl.title" = "Child girl";
+"create.voiceProfile.childGirl.title" = "Girl";
 "create.voiceProfile.childGirl.detail" = "Child";
-"create.voiceProfile.childBoy.title" = "Child boy";
+"create.voiceProfile.childBoy.title" = "Boy";
 "create.voiceProfile.childBoy.detail" = "Child";
 "create.voiceProfile.teenGirl.title" = "Girl";
 "create.voiceProfile.teenGirl.detail" = "Teen";
