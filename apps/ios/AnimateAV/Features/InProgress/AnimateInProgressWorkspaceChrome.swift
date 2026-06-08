@@ -48,11 +48,11 @@ struct AnimateInProgressContinueButton: View {
 
 struct AnimateInProgressDeleteButton: View {
     let isDeletingVideo: Bool
-    let requestDeleteMoment: () -> Void
+    let requestDeleteVideo: () -> Void
 
     var body: some View {
         Button(role: .destructive) {
-            requestDeleteMoment()
+            requestDeleteVideo()
         } label: {
             Label(isDeletingVideo ? L10n.string("inProgress.deleteVideo.deleting") : L10n.string("inProgress.deleteVideo.shortButton"), systemImage: "trash")
                 .frame(maxWidth: .infinity)

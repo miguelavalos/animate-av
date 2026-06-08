@@ -49,19 +49,19 @@ final class AnimateInProgressObserverTests: XCTestCase {
 
         observer.observeAnimateVideos(ownerUserId: "user-1")
         let firstSubject = repository.videoSubjects[0]
-        let firstMoment = makeVideo(id: "moment-1")
-        firstSubject.send([firstMoment])
-        await waitUntil { observer.videos == [firstMoment] }
+        let firstVideo = makeVideo(id: "moment-1")
+        firstSubject.send([firstVideo])
+        await waitUntil { observer.videos == [firstVideo] }
 
         observer.observeAnimateVideos(ownerUserId: "user-2")
-        let secondMoment = makeVideo(id: "moment-2")
-        repository.sendVideos([secondMoment])
-        await waitUntil { observer.videos == [secondMoment] }
+        let secondVideo = makeVideo(id: "moment-2")
+        repository.sendVideos([secondVideo])
+        await waitUntil { observer.videos == [secondVideo] }
 
         firstSubject.send([makeVideo(id: "stale-moment")])
         try? await Task.sleep(nanoseconds: 20_000_000)
 
-        XCTAssertEqual(observer.videos, [secondMoment])
+        XCTAssertEqual(observer.videos, [secondVideo])
         XCTAssertEqual(repository.observedOwnerUserIds, ["user-1", "user-2"])
     }
 
@@ -238,7 +238,7 @@ private enum TestObservationError: LocalizedError {
     var errorDescription: String? {
         switch self {
         case .videos:
-            "Moment observation failed."
+            "Video observation failed."
         case .workspace:
             "Workspace observation failed."
         }

@@ -4,7 +4,7 @@ struct AnimateInProgressWorkspaceDetail: View {
     let workspace: AnimateWorkspace
     let isDeletingVideo: Bool
     let continueVideo: (AnimateContinuationRequest) -> Void
-    let requestDeleteMoment: (AnimateVideo) -> Void
+    let requestDeleteVideo: (AnimateVideo) -> Void
     private var presentation: AnimateInProgressWorkspaceDetailPresentation {
         AnimateInProgressWorkspaceDetailPresentation(workspace: workspace)
     }
@@ -29,7 +29,7 @@ struct AnimateInProgressWorkspaceDetail: View {
             }
             if workspace.activeFinalRenderJob == nil {
                 AnimateInProgressDeleteButton(isDeletingVideo: isDeletingVideo) {
-                    requestDeleteMoment(workspace.video)
+                    requestDeleteVideo(workspace.video)
                 }
             }
         }

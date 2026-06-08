@@ -263,7 +263,7 @@ final class AnimateCreditGateTests: XCTestCase {
             )
         )
 
-        let staleStoryMoment = AnimateVideo(
+        let staleDirectionVideo = AnimateVideo(
             id: moment.id,
             template: moment.template,
             status: "in_progress",
@@ -276,11 +276,11 @@ final class AnimateCreditGateTests: XCTestCase {
             creditCost: moment.creditCost,
             updatedAt: moment.updatedAt
         )
-        XCTAssertFalse(AnimateFinalRenderRules.canPreparePlan(video: staleStoryMoment))
-        XCTAssertTrue(AnimateFinalRenderRules.canPreparePlan(video: staleStoryMoment, storySceneCount: 1))
+        XCTAssertFalse(AnimateFinalRenderRules.canPreparePlan(video: staleDirectionVideo))
+        XCTAssertTrue(AnimateFinalRenderRules.canPreparePlan(video: staleDirectionVideo, storySceneCount: 1))
         XCTAssertTrue(
             AnimateFinalRenderRules.canGenerate(
-                video: staleStoryMoment,
+                video: staleDirectionVideo,
                 template: .birthdayMessage,
                 balance: balance,
                 storySceneCount: 1

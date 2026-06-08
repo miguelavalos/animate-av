@@ -6,7 +6,7 @@ struct AnimateInProgressSelectedDetail: View {
     let activeWorkspace: AnimateWorkspace?
     let isDeletingVideo: Bool
     let continueVideo: (AnimateContinuationRequest) -> Void
-    let requestDeleteMoment: (AnimateVideo) -> Void
+    let requestDeleteVideo: (AnimateVideo) -> Void
 
     var body: some View {
         if isLoadingAnimateWorkspace {
@@ -20,7 +20,7 @@ struct AnimateInProgressSelectedDetail: View {
                 workspace: activeWorkspace,
                 isDeletingVideo: isDeletingVideo,
                 continueVideo: continueVideo,
-                requestDeleteMoment: requestDeleteMoment
+                requestDeleteVideo: requestDeleteVideo
             )
         }
     }
