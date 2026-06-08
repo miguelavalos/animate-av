@@ -133,8 +133,8 @@ final class AnimateInProgressWorkspacePresentationTests: XCTestCase {
         XCTAssertEqual(syncedItems.map(\.displayKind), ["Image", "Video"])
     }
 
-    func testStorySectionPresentationFormatsTitleEmptyStateAndRows() {
-        let presentation = AnimateInProgressStorySectionPresentation(storyScenes: [
+    func testVideoDirectionSectionPresentationFormatsTitleEmptyStateAndRows() {
+        let presentation = AnimateInProgressVideoDirectionSectionPresentation(storyScenes: [
             makeScene(id: "scene-2", sceneIndex: 1, caption: "Second beat"),
             makeScene(id: "scene-1", sceneIndex: 0, caption: "Opening beat")
         ])
@@ -142,7 +142,7 @@ final class AnimateInProgressWorkspacePresentationTests: XCTestCase {
         XCTAssertEqual(presentation.title, "Direction")
         XCTAssertEqual(presentation.emptySystemImage, "text.bubble")
         XCTAssertEqual(presentation.emptyMessage, "Prepare the video after this photo is ready.")
-        XCTAssertEqual(presentation.storyScenes.map(\.id), ["scene-1", "scene-2"])
+        XCTAssertEqual(presentation.videoDirectionScenes.map(\.id), ["scene-1", "scene-2"])
     }
 
     func testMediaAssetPresentationSortsBySortOrderAndFormatsRows() {
@@ -196,8 +196,8 @@ final class AnimateInProgressWorkspacePresentationTests: XCTestCase {
         )
     }
 
-    func testStoryScenePresentationSortsBySceneIndexAndFormatsRows() {
-        let presentations = AnimateInProgressStoryScenePresentation.sorted([
+    func testVideoDirectionScenePresentationSortsBySceneIndexAndFormatsRows() {
+        let presentations = AnimateInProgressVideoDirectionScenePresentation.sorted([
             makeScene(id: "scene-2", sceneIndex: 1, caption: "Second beat"),
             makeScene(id: "scene-1", sceneIndex: 0, caption: "Opening beat")
         ])

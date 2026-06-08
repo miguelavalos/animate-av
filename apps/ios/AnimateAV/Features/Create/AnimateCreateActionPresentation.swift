@@ -128,9 +128,9 @@ struct AnimateCreatePrimaryActionPresentation: Equatable {
                 || canPrepareVideoPlan
                 || canPrepareLocalVideoPlan
                 || workflow.canPrepareVideoDirection
-                || needsSignInForStory
+                || needsSignInForVideoDirection
         }
-        return workflow.canPrepareVideoDirection || needsSignInForStory
+        return workflow.canPrepareVideoDirection || needsSignInForVideoDirection
     }
 
     var showsPrimaryActionButton: Bool {
@@ -180,7 +180,7 @@ struct AnimateCreatePrimaryActionPresentation: Equatable {
                 ? finalVideoAction.primaryTitle
                 : L10n.string("common.continue")
         }
-        if needsSignInForStory {
+        if needsSignInForVideoDirection {
             return L10n.string("common.signIn")
         }
         return finalVideoAction.primaryTitle
@@ -210,7 +210,7 @@ struct AnimateCreatePrimaryActionPresentation: Equatable {
             }
             return finalVideoAction.primaryIconName
         }
-        if needsSignInForStory {
+        if needsSignInForVideoDirection {
             return "person.crop.circle.badge.checkmark"
         }
         return finalVideoAction.primaryIconName
@@ -276,7 +276,7 @@ struct AnimateCreatePrimaryActionPresentation: Equatable {
         if !canRunPrimaryAction {
             return availabilityMessage
         }
-        if needsSignInForStory {
+        if needsSignInForVideoDirection {
             return workflow.videoDirectionAvailabilityMessage
         }
         if workflow.canPrepareVideoDirection {
@@ -314,7 +314,7 @@ struct AnimateCreatePrimaryActionPresentation: Equatable {
         if workflow.finalRenderSummary.latestFinalJob != nil {
             return "video.fill"
         }
-        if needsSignInForStory {
+        if needsSignInForVideoDirection {
             return "person.crop.circle.badge.checkmark"
         }
         if hasFinalVideoIntent {
@@ -357,7 +357,7 @@ struct AnimateCreatePrimaryActionPresentation: Equatable {
             && workflow.finalRenderSummary.renderPlan == nil
     }
 
-    var needsSignInForStory: Bool {
+    var needsSignInForVideoDirection: Bool {
         !workflow.isSignedIn
             && workflow.mediaSummary.effectiveMediaCount > 0
             && !workflow.videoDirectionSummary.isPlanning

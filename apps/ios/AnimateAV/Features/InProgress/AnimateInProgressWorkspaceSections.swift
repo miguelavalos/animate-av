@@ -18,31 +18,31 @@ struct AnimateInProgressMediaSection: View {
                     message: presentation.emptyMessage
                 )
             } else {
-            AnimateSharedSyncedMediaGrid(mediaAssets: mediaAssets)
+                AnimateSharedSyncedMediaGrid(mediaAssets: mediaAssets)
             }
         }
     }
 }
 
-struct AnimateInProgressStorySection: View {
+struct AnimateInProgressVideoDirectionSection: View {
     let storyScenes: [AnimateStoryScene]
 
-    private var presentation: AnimateInProgressStorySectionPresentation {
-        AnimateInProgressStorySectionPresentation(storyScenes: storyScenes)
+    private var presentation: AnimateInProgressVideoDirectionSectionPresentation {
+        AnimateInProgressVideoDirectionSectionPresentation(storyScenes: storyScenes)
     }
 
     var body: some View {
         VStack(alignment: .leading, spacing: 6) {
             AVAppShellSectionHeader(title: presentation.title)
 
-            if presentation.storyScenes.isEmpty {
+            if presentation.videoDirectionScenes.isEmpty {
                 AnimateInProgressEmptySectionRow(
                     systemImage: presentation.emptySystemImage,
                     message: presentation.emptyMessage
                 )
             } else {
-                ForEach(presentation.storyScenes) { storyScene in
-                    AnimateInProgressStorySceneRow(presentation: storyScene)
+                ForEach(presentation.videoDirectionScenes) { videoDirectionScene in
+                    AnimateInProgressVideoDirectionSceneRow(presentation: videoDirectionScene)
                 }
             }
         }
@@ -70,8 +70,8 @@ struct AnimateInProgressMediaAssetRow: View {
     }
 }
 
-struct AnimateInProgressStorySceneRow: View {
-    let presentation: AnimateInProgressStoryScenePresentation
+struct AnimateInProgressVideoDirectionSceneRow: View {
+    let presentation: AnimateInProgressVideoDirectionScenePresentation
 
     var body: some View {
         AVAppShellInfoRow(

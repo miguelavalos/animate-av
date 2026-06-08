@@ -456,31 +456,3 @@ struct AnimateInProgressInlineEmptyState: View {
         )
     }
 }
-
-private struct AnimateInProgressGalleryEmptyState: View {
-    var body: some View {
-        AnimateInProgressInlineEmptyState(
-            systemImage: "play.square.stack.fill",
-            title: L10n.string("gallery.empty.shortTitle"),
-            message: L10n.string("gallery.empty.downloadDetail"),
-            actionTitle: nil,
-            actionSystemImage: nil,
-            action: nil
-        )
-    }
-}
-
-private struct AnimateInProgressNoMomentsEmptyState: View {
-    let startMoment: (() -> Void)?
-
-    var body: some View {
-        AnimateInProgressInlineEmptyState(
-            systemImage: "photo.badge.plus",
-            title: L10n.string("inProgress.empty.inProgress.title"),
-            message: L10n.string("inProgress.empty.inProgress.detail"),
-            actionTitle: startMoment == nil ? nil : L10n.string("inProgress.newMoment"),
-            actionSystemImage: "plus",
-            action: startMoment
-        )
-    }
-}

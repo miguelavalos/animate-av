@@ -1527,7 +1527,7 @@ private struct AnimateCreatePrimaryActionBar: View {
         } else if presentation.finalRenderSummary.latestFinalJob != nil {
             return
         } else if primaryActionPresentation.hasFinalVideoIntent {
-            if primaryActionPresentation.needsSignInForStory {
+            if primaryActionPresentation.needsSignInForVideoDirection {
                 startSignInFlow()
             } else if primaryActionPresentation.needsCreditsForPreparedPlan {
                 openCreateVideoConfirmation()
@@ -1536,7 +1536,7 @@ private struct AnimateCreatePrimaryActionBar: View {
             } else {
                 generateFinalRender()
             }
-        } else if primaryActionPresentation.needsSignInForStory {
+        } else if primaryActionPresentation.needsSignInForVideoDirection {
             startSignInFlow()
         }
     }

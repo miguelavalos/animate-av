@@ -22,7 +22,7 @@ struct AnimateInProgressWorkspaceDetail: View {
             AnimateInProgressFinalExportSection(artifacts: workspace.artifacts)
 
             AnimateInProgressMediaSection(mediaAssets: workspace.mediaAssets)
-            AnimateInProgressStorySection(storyScenes: workspace.storyScenes)
+            AnimateInProgressVideoDirectionSection(storyScenes: workspace.storyScenes)
             AnimateInProgressRenderJobsSection(renderJobs: workspace.renderJobs)
             AnimateInProgressContinueButton(action: presentation.nextAction) {
                 continueVideo(presentation.continuationRequest)
