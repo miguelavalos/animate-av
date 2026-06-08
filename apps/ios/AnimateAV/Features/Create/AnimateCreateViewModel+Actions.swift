@@ -4,13 +4,13 @@ import SwiftUI
 
 extension AnimateCreateViewModel {
     @discardableResult
-    func beginNewMoment(openMediaPicker: Bool = false) -> Bool {
-        guard canBeginNewMoment else {
+    func beginNewVideoCreation(openMediaPicker: Bool = false) -> Bool {
+        guard canBeginNewVideoCreation else {
             updateSetupErrorMessage(setupAvailabilityMessage ?? L10n.string("create.error.startWhenReady"))
             return false
         }
         prepareNewVideoCreation()
-        isLocalMomentStarted = true
+        isLocalVideoCreationStarted = true
         pendingFocus = .media
         if openMediaPicker {
             mediaPickerOpenRequest += 1
@@ -22,7 +22,7 @@ extension AnimateCreateViewModel {
         mediaPickerOpenRequest += 1
     }
 
-    func discardMoment() {
+    func discardVideoCreation() {
         guard !isBusy else {
             updateSetupErrorMessage(L10n.string("create.error.waitBeforeDiscard"))
             return
@@ -31,23 +31,23 @@ extension AnimateCreateViewModel {
             updateSetupErrorMessage(L10n.string("create.error.waitBeforeDiscard"))
             return
         }
-        guard hasAnimateWorkspace || hasRecoverableMomentContext else {
+        guard hasAnimateWorkspace || hasRecoverableVideoContext else {
             updateSetupErrorMessage(L10n.string("create.error.noActiveMoment"))
             return
         }
         if hasLocalAnimateWorkspace {
-            resetActiveMoment(force: true)
+            resetActiveVideoCreation(force: true)
             return
         }
         guard let videoCreationWorkflow else {
-            resetActiveMoment(force: true)
+            resetActiveVideoCreation(force: true)
             return
         }
 
         runOperation {
             let discarded = await videoCreationWorkflow.discardActiveVideo(momentId: self.activeVideoId)
             if discarded {
-                self.resetActiveMoment(force: true)
+                self.resetActiveVideoCreation(force: true)
             } else if let message = videoCreationWorkflow.errorMessage {
                 self.updateSetupErrorMessage(message)
             } else {
@@ -99,7 +99,7 @@ extension AnimateCreateViewModel {
             } else if let videoCreationWorkflow = self.videoCreationWorkflow {
                 momentId = await videoCreationWorkflow.createVideo(form: form)
                 if momentId != nil {
-                    self.isLocalMomentStarted = false
+                    self.isLocalVideoCreationStarted = false
                 }
             } else {
                 momentId = nil
@@ -272,7 +272,7 @@ extension AnimateCreateViewModel {
         }
         let momentId = await videoCreationWorkflow.createVideo(form: form)
         if momentId != nil {
-            isLocalMomentStarted = false
+            isLocalVideoCreationStarted = false
         }
         return momentId
     }

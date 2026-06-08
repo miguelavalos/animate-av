@@ -52,7 +52,7 @@ struct AnimateAppShellView: View {
             },
             onSelectAssistant: {
                 chromeItem = nil
-                if createViewModel.hasRecoverableMomentContext {
+                if createViewModel.hasRecoverableVideoContext {
                     selectRootTab(.create)
                 } else {
                     selectRootTab(.avi)
@@ -195,7 +195,7 @@ struct AnimateAppShellView: View {
     }
 
     private var hasAviActiveContext: Bool {
-        createViewModel.hasRecoverableMomentContext
+        createViewModel.hasRecoverableVideoContext
     }
 
     private func cancelCreation() {
@@ -246,13 +246,13 @@ struct AnimateAppShellView: View {
     }
 
     private func beginNewVideoCreationFromPreference() {
-        guard createViewModel.canBeginNewMoment else {
+        guard createViewModel.canBeginNewVideoCreation else {
             selectRootTab(.create)
             return
         }
 
         let startPreference = newVideoStartController.currentPreference
-        createViewModel.beginNewMoment()
+        createViewModel.beginNewVideoCreation()
         selectRootTab(.create)
         requestStartPickerAfterCreateNavigation(startPreference)
     }

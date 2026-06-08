@@ -1,5 +1,5 @@
 extension AnimateCreateViewModel {
-    var canBeginNewMoment: Bool {
+    var canBeginNewVideoCreation: Bool {
         !isSetupLocked && !isBusy
     }
 

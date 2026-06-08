@@ -80,7 +80,7 @@ final class AnimateCreateViewModelStoryStateTests: XCTestCase {
 
     func testBeginNewVideoWithoutPickerRequestShowsMediaChoice() {
         let viewModel = AnimateCreateViewModel()
-        viewModel.beginNewMoment()
+        viewModel.beginNewVideoCreation()
 
         XCTAssertTrue(viewModel.hasLocalAnimateWorkspace)
         XCTAssertEqual(viewModel.mediaPickerOpenRequest, 0)
@@ -89,7 +89,7 @@ final class AnimateCreateViewModelStoryStateTests: XCTestCase {
 
     func testBeginNewVideoCanExplicitlyOpenPhotoPicker() {
         let viewModel = AnimateCreateViewModel()
-        viewModel.beginNewMoment(openMediaPicker: true)
+        viewModel.beginNewVideoCreation(openMediaPicker: true)
 
         XCTAssertTrue(viewModel.hasLocalAnimateWorkspace)
         XCTAssertEqual(viewModel.mediaPickerOpenRequest, 1)
@@ -661,7 +661,7 @@ final class AnimateCreateViewModelStoryStateTests: XCTestCase {
                 creditBalanceLoadState: .loaded
             )
         )
-        viewModel.beginNewMoment(openMediaPicker: false)
+        viewModel.beginNewVideoCreation(openMediaPicker: false)
         viewModel.applyMediaUploadState(
             AnimateCreateMediaUploadState(
                 selectedMedia: [
@@ -763,7 +763,7 @@ private final class AnimateVideoCreationFailureHarness:
     AnimateVideoDeleting,
     AnimateActiveWorkspaceObserving
 {
-    let createAttemptExpectation = XCTestExpectation(description: "Moment creation attempted")
+    let createAttemptExpectation = XCTestExpectation(description: "Video creation attempted")
     private let creationError: Error
     private let signedInSubject = CurrentValueSubject<Bool, Never>(true)
     private let currentUserSubject = CurrentValueSubject<String?, Never>("user-1")

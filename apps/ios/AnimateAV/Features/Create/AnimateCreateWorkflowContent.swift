@@ -33,7 +33,7 @@ struct AnimateCreateWorkflowContent: View {
                     undoAutoStyleSuggestion: viewModel.undoAutoStyleSuggestion,
                     openPickerRequest: 0,
                     consumeOpenPickerRequest: {},
-                    discardMoment: viewModel.discardMoment,
+                    discardVideoCreation: viewModel.discardVideoCreation,
                     startSignInFlow: startSignInFlow,
                     openCredits: openCredits,
                     prepareFinalRenderPlan: viewModel.prepareFinalVideoPlanFromCurrentSelection,
@@ -68,7 +68,7 @@ private struct AnimateCreateMediaFirstWorkspace: View {
     let undoAutoStyleSuggestion: () -> Void
     let openPickerRequest: Int
     let consumeOpenPickerRequest: () -> Void
-    let discardMoment: () -> Void
+    let discardVideoCreation: () -> Void
     let startSignInFlow: () -> Void
     let openCredits: () -> Void
     let prepareFinalRenderPlan: (Bool) -> Void
@@ -82,7 +82,7 @@ private struct AnimateCreateMediaFirstWorkspace: View {
     @State private var showsAviNoteEditor = false
     @State private var showsCreateVideoConfirmation = false
     @State private var waitsForFinalRenderPlan = false
-    @State private var showsDiscardMomentConfirmation = false
+    @State private var showsDiscardVideoConfirmation = false
     @State private var showsCompactPhotoPicker = false
     @State private var showsCompactMediaManager = false
     @State private var handledOpenPickerRequest = 0
@@ -98,7 +98,7 @@ private struct AnimateCreateMediaFirstWorkspace: View {
                     } else if showsFinalVideoRecovery {
                         AnimateCreateFinalVideoRecoveryScene(
                             presentation: presentation,
-                            discardMoment: { showsDiscardMomentConfirmation = true }
+                            discardVideoCreation: { showsDiscardVideoConfirmation = true }
                         )
                         .padding(.top, 28)
                     } else if presentation.isFinalRenderEditingLocked {
@@ -129,7 +129,7 @@ private struct AnimateCreateMediaFirstWorkspace: View {
                             changeLook: { showsLookChooser = true },
                             changeVoice: { showsVoiceChooser = true },
                             editNote: { showsAviNoteEditor = true },
-                            discardMoment: { showsDiscardMomentConfirmation = true }
+                            discardVideoCreation: { showsDiscardVideoConfirmation = true }
                         )
                     } else if hasFinalVideoState {
                         EmptyView()
@@ -228,10 +228,10 @@ private struct AnimateCreateMediaFirstWorkspace: View {
         .onChange(of: openPickerRequest) { _, newValue in
             openCompactPickerIfRequested(newValue)
         }
-        .alert(L10n.string("create.discard.confirmTitle"), isPresented: $showsDiscardMomentConfirmation) {
+        .alert(L10n.string("create.discard.confirmTitle"), isPresented: $showsDiscardVideoConfirmation) {
             Button(L10n.string("create.discard.keep"), role: .cancel) {}
             Button(discardConfirmationActionTitle, role: .destructive) {
-                discardCurrentMoment()
+                discardCurrentVideoCreation()
             }
         } message: {
             Text(discardConfirmationMessage)
@@ -322,8 +322,8 @@ private struct AnimateCreateMediaFirstWorkspace: View {
         }
     }
 
-    private func discardCurrentMoment() {
-        discardMoment()
+    private func discardCurrentVideoCreation() {
+        discardVideoCreation()
     }
 
     private var discardConfirmationActionTitle: String {
@@ -666,7 +666,7 @@ private struct AnimateCreateFinalVideoReadyScene: View {
 
 private struct AnimateCreateFinalVideoRecoveryScene: View {
     let presentation: AnimateCreateWorkflowPresentation
-    let discardMoment: () -> Void
+    let discardVideoCreation: () -> Void
 
     var body: some View {
         VStack(spacing: 18) {
@@ -708,7 +708,7 @@ private struct AnimateCreateFinalVideoRecoveryScene: View {
                     .padding(.horizontal, 24)
             }
 
-            Button(role: .destructive, action: discardMoment) {
+            Button(role: .destructive, action: discardVideoCreation) {
                 Label(L10n.string("create.final.recovery.discard"), systemImage: "trash")
                     .font(.system(size: 14, weight: .black))
                     .frame(maxWidth: 240)
@@ -746,7 +746,7 @@ private struct AnimateCreateVideoDirectionCard: View {
     let changeLook: () -> Void
     let changeVoice: () -> Void
     let editNote: () -> Void
-    let discardMoment: () -> Void
+    let discardVideoCreation: () -> Void
     var body: some View {
         AVAppShellCard {
             VStack(alignment: .leading, spacing: 11) {
@@ -787,7 +787,7 @@ private struct AnimateCreateVideoDirectionCard: View {
                                 Label(L10n.string("create.media.editTitle"), systemImage: "photo.stack")
                             }
                             if canShowDiscardAction {
-                                Button(role: .destructive, action: discardMoment) {
+                                Button(role: .destructive, action: discardVideoCreation) {
                                     Label(discardActionTitle, systemImage: discardActionIconName)
                                 }
                             }

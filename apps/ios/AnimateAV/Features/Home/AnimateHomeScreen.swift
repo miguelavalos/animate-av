@@ -63,7 +63,7 @@ struct AnimateHomeScreen: View {
                     title: aviContextTitle,
                     detail: aviContextDetail,
                     buttonTitle: aviContextButtonTitle,
-                    hasVideoContext: createViewModel.hasRecoverableMomentContext,
+                    hasVideoContext: createViewModel.hasRecoverableVideoContext,
                     isSignedIn: viewModel.isSignedIn,
                     action: viewModel.isSignedIn ? startVideoCreation : startSignInFlow
                 )
@@ -100,7 +100,7 @@ struct AnimateHomeScreen: View {
 
     private var aviContextTitle: String {
         guard viewModel.isSignedIn else { return L10n.string("home.avi.signIn.title") }
-        if createViewModel.hasRecoverableMomentContext {
+        if createViewModel.hasRecoverableVideoContext {
             if createViewModel.finalRenderSummary.latestFinalJob != nil || createViewModel.finalRenderSummary.isGenerating {
                 return L10n.string("home.avi.creating.title")
             }
@@ -116,7 +116,7 @@ struct AnimateHomeScreen: View {
         guard viewModel.isSignedIn else {
             return L10n.string("home.avi.signIn.detail")
         }
-        if createViewModel.hasRecoverableMomentContext {
+        if createViewModel.hasRecoverableVideoContext {
             let count = createViewModel.mediaSelectedCount
             if createViewModel.finalRenderSummary.latestFinalJob != nil || createViewModel.finalRenderSummary.isGenerating {
                 return createViewModel.finalRenderSummary.statusMessage ?? L10n.string("home.avi.creating.detail")
@@ -134,7 +134,7 @@ struct AnimateHomeScreen: View {
 
     private var aviContextButtonTitle: String {
         guard viewModel.isSignedIn else { return L10n.string("common.signIn") }
-        return createViewModel.hasRecoverableMomentContext ? L10n.string("common.continue") : L10n.string("common.create")
+        return createViewModel.hasRecoverableVideoContext ? L10n.string("common.continue") : L10n.string("common.create")
     }
 }
 

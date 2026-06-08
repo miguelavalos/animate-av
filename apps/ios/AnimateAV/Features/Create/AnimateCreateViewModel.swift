@@ -48,9 +48,9 @@ final class AnimateCreateViewModel: ObservableObject {
     @Published var selectedMusicPreset = AnimateVideoCreationStyle.launchStyles[0].defaultMusic
     @Published var form = AnimateVideoSetupForm(template: AnimateVideoTemplate.launchTemplates[0])
     @Published private(set) var isCreatingVideo = false
-    @Published private(set) var isContinuingMoment = false
-    @Published var isLocalMomentStarted = false
-    @Published private(set) var workflowActiveMomentId: String?
+    @Published private(set) var isContinuingVideoCreation = false
+    @Published var isLocalVideoCreationStarted = false
+    @Published private(set) var workflowActiveVideoId: String?
     @Published private(set) var setupErrorMessage: String?
     @Published private(set) var selectedMedia: [AnimateSelectedMedia] = []
     @Published private(set) var mediaStatusMessage: String?
@@ -110,14 +110,14 @@ final class AnimateCreateViewModel: ObservableObject {
     }
 
     var activeVideoId: String? {
-        activeVideo?.id ?? workflowActiveMomentId
+        activeVideo?.id ?? workflowActiveVideoId
     }
 
     var hasAnimateWorkspace: Bool {
-        activeVideoId != nil || isLocalMomentStarted
+        activeVideoId != nil || isLocalVideoCreationStarted
     }
 
-    var hasRecoverableMomentContext: Bool {
+    var hasRecoverableVideoContext: Bool {
         activeVideoId != nil
             || !selectedMedia.isEmpty
             || isImportingMedia
@@ -130,7 +130,7 @@ final class AnimateCreateViewModel: ObservableObject {
     }
 
     var hasLocalAnimateWorkspace: Bool {
-        activeVideoId == nil && isLocalMomentStarted
+        activeVideoId == nil && isLocalVideoCreationStarted
     }
 
     var hasPendingLocalSetupEdits: Bool {
@@ -233,7 +233,7 @@ final class AnimateCreateViewModel: ObservableObject {
     }
 
     func clearSessionState() {
-        resetActiveMoment(force: true)
+        resetActiveVideoCreation(force: true)
         imageGenerationAvailability = nil
         imageGenerationAvailabilityMessage = nil
         isLoadingImageGenerationAvailability = false
@@ -411,17 +411,17 @@ final class AnimateCreateViewModel: ObservableObject {
     }
 
     func prepareNewVideoCreation() {
-        isContinuingMoment = false
+        isContinuingVideoCreation = false
         continuationFocusHint = nil
-        isLocalMomentStarted = false
+        isLocalVideoCreationStarted = false
         hasLocalSetupEdits = false
         hasUserLookOverride = false
     }
 
     func continueVideo(_ video: AnimateVideo, focus: AnimateContinuationFocus = .video) {
         cancelOperations()
-        isContinuingMoment = true
-        isLocalMomentStarted = false
+        isContinuingVideoCreation = true
+        isLocalVideoCreationStarted = false
         hasLocalSetupEdits = false
         hasUserLookOverride = false
         pendingFocus = focus
@@ -461,8 +461,8 @@ final class AnimateCreateViewModel: ObservableObject {
         )
         isSignedIn = true
         balance = AnimateCreateUITestFixtures.balance(for: fixtureMode)
-        isContinuingMoment = true
-        workflowActiveMomentId = workspace.video.id
+        isContinuingVideoCreation = true
+        workflowActiveVideoId = workspace.video.id
         setupErrorMessage = nil
         selectedMedia = AnimateCreateUITestFixtures.selectedMedia
         mediaStatusMessage = L10n.string("create.media.fixture.synced")
@@ -544,10 +544,10 @@ final class AnimateCreateViewModel: ObservableObject {
         activeUITestFixtureMode != nil
     }
 
-    func resetActiveMoment(force: Bool) {
+    func resetActiveVideoCreation(force: Bool) {
         cancelOperations()
-        isContinuingMoment = false
-        isLocalMomentStarted = false
+        isContinuingVideoCreation = false
+        isLocalVideoCreationStarted = false
         pendingFocus = nil
         continuationFocusHint = nil
         videoCreationWorkflow?.resetVideoSetup(force: force)
@@ -583,7 +583,7 @@ final class AnimateCreateViewModel: ObservableObject {
     }
 
     private func clearWorkflowSnapshots() {
-        workflowActiveMomentId = nil
+        workflowActiveVideoId = nil
         activeWorkspace = nil
         selectedMedia = []
         savedScenes = []
@@ -864,12 +864,12 @@ extension AnimateCreateViewModel {
 
     func applyVideoCreationState(_ state: AnimateCreateVideoCreationState) {
         guard !usesCreateUITestFixture else { return }
-        let previousActiveMomentId = workflowActiveMomentId
+        let previousActiveVideoId = workflowActiveVideoId
         isCreatingVideo = state.isCreatingVideo
-        workflowActiveMomentId = state.activeVideoId
+        workflowActiveVideoId = state.activeVideoId
         setupErrorMessage = state.setupErrorMessage
 
-        if previousActiveMomentId == nil, state.activeVideoId != nil {
+        if previousActiveVideoId == nil, state.activeVideoId != nil {
             pendingFocus = .media
             continuationFocusHint = nil
         }

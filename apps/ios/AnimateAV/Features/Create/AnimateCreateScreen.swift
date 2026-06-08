@@ -139,7 +139,7 @@ struct AnimateCreateScreen: View {
     private func redirectEmptyCreateIfNeeded() {
         guard selectedAssetKind == .video,
               !viewModel.workflowPresentation.showsMediaFirstWorkspace,
-              !viewModel.isContinuingMoment
+              !viewModel.isContinuingVideoCreation
         else { return }
         cancelCreation()
     }
