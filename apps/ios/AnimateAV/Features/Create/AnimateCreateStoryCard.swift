@@ -2,8 +2,8 @@ import AVAppShellFoundation
 import AVBrandFoundation
 import SwiftUI
 
-struct AnimateCreateStoryCard: View {
-    let presentation: AnimateCreateStoryPresentation
+struct AnimateCreateVideoDirectionPreparationCard: View {
+    let presentation: AnimateCreateVideoDirectionPreparationPresentation
     let generateStory: () -> Void
 
     var body: some View {
@@ -14,12 +14,12 @@ struct AnimateCreateStoryCard: View {
                     detail: L10n.string("create.story.plan.detail")
                 )
 
-                AnimateCreateStoryScenesSection(presentation: presentation)
+                AnimateCreateVideoDirectionScenesSection(presentation: presentation)
 
                 AVAppShellPrimaryButton(
                     presentation.planButtonTitle,
                     systemImage: "text.bubble.fill",
-                    isDisabled: !presentation.canPlanStory || presentation.summary.isPlanning,
+                    isDisabled: !presentation.canPrepareVideoDirection || presentation.summary.isPlanning,
                     action: generateStory
                 )
 
@@ -27,8 +27,8 @@ struct AnimateCreateStoryCard: View {
                     AVAppShellInlineMessage(message: availabilityMessage)
                 }
 
-                if let storyStatusMessage = presentation.summary.statusMessage {
-                    Text(storyStatusMessage)
+                if let videoDirectionStatusMessage = presentation.summary.statusMessage {
+                    Text(videoDirectionStatusMessage)
                         .font(.caption)
                         .foregroundStyle(.secondary)
                 }
@@ -37,13 +37,13 @@ struct AnimateCreateStoryCard: View {
     }
 }
 
-private struct AnimateCreateStoryScenesSection: View {
-    let presentation: AnimateCreateStoryPresentation
+private struct AnimateCreateVideoDirectionScenesSection: View {
+    let presentation: AnimateCreateVideoDirectionPreparationPresentation
 
     var body: some View {
         if !presentation.savedScenes.isEmpty {
             ForEach(presentation.savedScenes) { scene in
-                AnimateCreateStorySceneRow(
+                AnimateCreateVideoDirectionSceneRow(
                     index: Int(scene.sceneIndex),
                     caption: scene.caption,
                     narration: scene.narrationText ?? ""
@@ -51,7 +51,7 @@ private struct AnimateCreateStoryScenesSection: View {
             }
         } else if !presentation.summary.generatedScenes.isEmpty {
             ForEach(presentation.summary.generatedScenes) { scene in
-                AnimateCreateStorySceneRow(
+                AnimateCreateVideoDirectionSceneRow(
                     index: scene.sceneIndex,
                     caption: scene.caption,
                     narration: scene.narrationText

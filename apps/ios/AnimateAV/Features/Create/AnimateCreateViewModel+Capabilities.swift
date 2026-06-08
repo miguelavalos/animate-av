@@ -10,7 +10,7 @@ extension AnimateCreateViewModel {
     var isBusy: Bool {
         isCreatingVideo
             || isImportingMedia
-            || isPlanningStory
+            || isPreparingVideoDirection
             || isGeneratingFinalRender
             || finalVideoCommandState.isRunning
     }
@@ -19,8 +19,8 @@ extension AnimateCreateViewModel {
         !isFinalRenderEditingLocked && workflowCapability.canAddMedia
     }
 
-    var canPlanStory: Bool {
-        !isFinalRenderEditingLocked && workflowCapability.canPlanStory
+    var canPrepareVideoDirection: Bool {
+        !isFinalRenderEditingLocked && workflowCapability.canPrepareVideoDirection
     }
 
     var canPrepareFinalRenderPlan: Bool {
@@ -41,7 +41,7 @@ extension AnimateCreateViewModel {
         if let fixtureMode = activeUITestFixtureMode {
             return AnimateCreateWorkflowCapability(
                 canAddMedia: false,
-                canPlanStory: false,
+                canPrepareVideoDirection: false,
                 canPrepareFinalRenderPlan: fixtureMode != .full
                     && !isBusy,
                 canGenerateFinalRender: fixtureMode != .full
@@ -77,7 +77,7 @@ extension AnimateCreateViewModel {
         if usesCreateUITestFixture {
             return true
         }
-        guard storySummary.hasScenes else { return false }
+        guard videoDirectionSummary.hasScenes else { return false }
         guard let activeVideoId else { return false }
         let preparedSignature = lastPreparedStoryInputSignature ?? effectiveActiveWorkspace?.video.storyInputSignature
         guard let preparedSignature else {

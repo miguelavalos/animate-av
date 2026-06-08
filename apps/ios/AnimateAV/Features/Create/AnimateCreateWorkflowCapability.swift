@@ -20,7 +20,7 @@ enum AnimateCreateWorkflowCapabilityFactory {
                 isImportingMedia: isImportingMedia,
                 mediaRemainingSlots: mediaRemainingSlots
             ),
-            canPlanStory: canPlanStory(
+            canPrepareVideoDirection: canPrepareVideoDirection(
                 isSignedIn: isSignedIn,
                 hasAnimateWorkspace: hasAnimateWorkspace,
                 storyWorkflow: storyWorkflow,
@@ -51,7 +51,7 @@ enum AnimateCreateWorkflowCapabilityFactory {
             && mediaRemainingSlots > 0
     }
 
-    private static func canPlanStory(
+    private static func canPrepareVideoDirection(
         isSignedIn: Bool,
         hasAnimateWorkspace: Bool,
         storyWorkflow: StoryWorkflow?,

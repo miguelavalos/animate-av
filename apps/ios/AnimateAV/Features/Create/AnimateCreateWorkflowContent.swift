@@ -159,7 +159,7 @@ private struct AnimateCreateMediaFirstWorkspace: View {
                 .frame(maxHeight: .infinity, alignment: .bottom)
             }
         }
-        .animation(.spring(response: 0.38, dampingFraction: 0.86), value: presentation.storySummary.hasScenes)
+        .animation(.spring(response: 0.38, dampingFraction: 0.86), value: presentation.videoDirectionSummary.hasScenes)
         .photosPicker(
             isPresented: $showsCompactPhotoPicker,
             selection: $pickerItems,
@@ -486,7 +486,7 @@ struct AnimateCreateBlockingPreparationView: View {
         if presentation.finalRenderSummary.isGenerating {
             return .createVideo
         }
-        if presentation.storySummary.isPlanning {
+        if presentation.videoDirectionSummary.isPlanning {
             return .prepareStory
         }
         if isPreparingStory {
@@ -815,7 +815,7 @@ private struct AnimateCreateVideoDirectionCard: View {
                     .accessibilityLabel(L10n.string("create.videoDirection.menu.accessibility"))
                 }
 
-                AnimateCreateVideoDirectionSummary(
+                AnimateCreateVideoDirectionDecisionSummary(
                     isUserAdjusted: isUserAdjustedFromAvi,
                     title: decisionSummaryTitle,
                     detail: decisionSummaryDetail,
@@ -874,7 +874,7 @@ private struct AnimateCreateVideoDirectionCard: View {
                     .background(AVBrandColor.neutral100.opacity(0.58), in: RoundedRectangle(cornerRadius: 10, style: .continuous))
                 }
 
-                if presentation.storySummary.isPlanning {
+                if presentation.videoDirectionSummary.isPlanning {
                     ProgressView()
                         .tint(AVBrandColor.accent)
                         .frame(maxWidth: .infinity, alignment: .leading)
@@ -943,7 +943,7 @@ private struct AnimateCreateVideoDirectionCard: View {
     }
 
     private var iconColor: Color {
-        presentation.storySummary.hasScenes ? AVBrandColor.accent : AVBrandColor.textPrimary
+        presentation.videoDirectionSummary.hasScenes ? AVBrandColor.accent : AVBrandColor.textPrimary
     }
 
     private var mediaDetail: String {
@@ -976,17 +976,17 @@ private struct AnimateCreateVideoDirectionCard: View {
     private var videoDirection: AnimateCreateVideoDirectionPresentation {
         AnimateCreateVideoDirectionPresentation(
             mediaSummary: presentation.mediaSummary,
-            storySummary: presentation.storySummary,
+            videoDirectionSummary: presentation.videoDirectionSummary,
             selectedDuration: .auto,
             renderPlan: presentation.finalRenderSummary.renderPlan?.plan,
-            canRefreshStory: presentation.canPlanStory,
+            canRefreshVideoDirection: presentation.canPrepareVideoDirection,
             availabilityMessage: presentation.storyAvailabilityMessage
         )
     }
 
 }
 
-private struct AnimateCreateVideoDirectionSummary: View {
+private struct AnimateCreateVideoDirectionDecisionSummary: View {
     let isUserAdjusted: Bool
     let title: String
     let detail: String
@@ -1330,13 +1330,13 @@ private struct AnimateCreateCompactAviGuide: View {
         if let realtimeStatus = presentation.finalRenderSummary.realtimeStatus {
             return realtimeStatus.title
         }
-        if presentation.storySummary.isPlanning {
+        if presentation.videoDirectionSummary.isPlanning {
             return L10n.string("create.aviStatus.preparing.title")
         }
         if presentation.finalRenderSummary.latestFinalJob != nil {
             return L10n.string("create.aviStatus.working.title")
         }
-        if presentation.storySummary.hasScenes
+        if presentation.videoDirectionSummary.hasScenes
             || presentation.finalRenderSummary.renderPlan != nil
             || presentation.canPrepareFinalRenderPlan
             || presentation.canGenerateFinalRender {
@@ -1352,13 +1352,13 @@ private struct AnimateCreateCompactAviGuide: View {
         if presentation.finalRenderSummary.finalExport != nil {
             return L10n.string("create.aviStatus.exportReady.detail")
         }
-        if presentation.storySummary.isPlanning {
-            return presentation.storySummary.statusMessage ?? L10n.string("create.aviStatus.preparing.detail")
+        if presentation.videoDirectionSummary.isPlanning {
+            return presentation.videoDirectionSummary.statusMessage ?? L10n.string("create.aviStatus.preparing.detail")
         }
         if let realtimeStatus = presentation.finalRenderSummary.realtimeStatus {
             return realtimeStatus.detail
         }
-        if presentation.storySummary.hasScenes
+        if presentation.videoDirectionSummary.hasScenes
             || presentation.finalRenderSummary.renderPlan != nil
             || presentation.canPrepareFinalRenderPlan
             || presentation.canGenerateFinalRender {

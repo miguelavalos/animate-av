@@ -16,12 +16,12 @@ extension AnimateCreateViewModel {
         )
     }
 
-    var storySummary: AnimateCreateStorySummary {
-        AnimateCreateStorySummary(
+    var videoDirectionSummary: AnimateCreateVideoDirectionSummary {
+        AnimateCreateVideoDirectionSummary(
             savedScenes: effectiveSavedScenes,
             generatedScenes: generatedScenes,
-            isPlanning: isPlanningStory,
-            statusMessage: storyStatusMessage
+            isPlanning: isPreparingVideoDirection,
+            statusMessage: videoDirectionStatusMessage
         )
     }
 

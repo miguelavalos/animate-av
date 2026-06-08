@@ -14,7 +14,7 @@ final class AnimateCreateWorkflowPresentationTests: XCTestCase {
                 mediaSummary: AnimateCreateMediaSummary(
                     selectedMedia: [AnimateCreateTestFixtures.makeSelectedMedia(id: "00000000-0000-0000-0000-000000000001")]
                 ),
-                storySummary: AnimateCreateStorySummary(),
+                videoDirectionSummary: AnimateCreateVideoDirectionSummary(),
                 finalRenderSummary: AnimateCreateFinalRenderSummary(
                     creditCost: 1,
                     renderPlan: AnimateCreateTestFixtures.makeRenderPlan(totalCreditCost: 1)
@@ -40,7 +40,7 @@ final class AnimateCreateWorkflowPresentationTests: XCTestCase {
                 mediaSummary: AnimateCreateMediaSummary(
                     selectedMedia: [AnimateCreateTestFixtures.makeSelectedMedia(id: "00000000-0000-0000-0000-000000000001")]
                 ),
-                storySummary: AnimateCreateStorySummary(),
+                videoDirectionSummary: AnimateCreateVideoDirectionSummary(),
                 finalRenderSummary: AnimateCreateFinalRenderSummary(
                     creditCost: 1,
                     statusMessage: "Creating final video."
@@ -59,7 +59,7 @@ final class AnimateCreateWorkflowPresentationTests: XCTestCase {
             template: .birthdayMessage,
             balance: .empty,
             mediaSummary: AnimateCreateMediaSummary(),
-            storySummary: AnimateCreateStorySummary(),
+            videoDirectionSummary: AnimateCreateVideoDirectionSummary(),
             finalRenderSummary: AnimateCreateFinalRenderSummary()
         )
 
@@ -79,7 +79,7 @@ final class AnimateCreateWorkflowPresentationTests: XCTestCase {
             template: .birthdayMessage,
             balance: .empty,
             mediaSummary: AnimateCreateMediaSummary(),
-            storySummary: AnimateCreateStorySummary(),
+            videoDirectionSummary: AnimateCreateVideoDirectionSummary(),
             finalRenderSummary: AnimateCreateFinalRenderSummary(latestFinalJob: activeFinalJob)
         )
 
@@ -102,7 +102,7 @@ final class AnimateCreateWorkflowPresentationTests: XCTestCase {
             template: .birthdayMessage,
             balance: .empty,
             mediaSummary: AnimateCreateMediaSummary(),
-            storySummary: AnimateCreateStorySummary(),
+            videoDirectionSummary: AnimateCreateVideoDirectionSummary(),
             finalRenderSummary: AnimateCreateFinalRenderSummary(latestFinalJob: activeFinalJob)
         )
 
@@ -132,7 +132,7 @@ final class AnimateCreateWorkflowPresentationTests: XCTestCase {
             template: .birthdayMessage,
             balance: .empty,
             mediaSummary: AnimateCreateMediaSummary(),
-            storySummary: AnimateCreateStorySummary(),
+            videoDirectionSummary: AnimateCreateVideoDirectionSummary(),
             finalRenderSummary: AnimateCreateFinalRenderSummary(
                 creditCost: 2,
                 renderPlan: oneCreditPlan,
@@ -158,7 +158,7 @@ final class AnimateCreateWorkflowPresentationTests: XCTestCase {
             template: .birthdayMessage,
             balance: .empty,
             mediaSummary: AnimateCreateMediaSummary(),
-            storySummary: AnimateCreateStorySummary(),
+            videoDirectionSummary: AnimateCreateVideoDirectionSummary(),
             finalRenderSummary: AnimateCreateFinalRenderSummary(latestFinalJob: editableFinalJob)
         )
 
@@ -174,7 +174,7 @@ final class AnimateCreateWorkflowPresentationTests: XCTestCase {
             isImporting: true,
             statusMessage: "Importing media."
         )
-        let storySummary = AnimateCreateStorySummary(
+        let videoDirectionSummary = AnimateCreateVideoDirectionSummary(
             savedScenes: [AnimateCreateTestFixtures.makeScene(id: "scene-1")],
             generatedScenes: [],
             isPlanning: true,
@@ -194,10 +194,10 @@ final class AnimateCreateWorkflowPresentationTests: XCTestCase {
             template: .birthdayMessage,
             balance: AnimateCreditBalance(proMonthly: 0, promotional: 2, purchased: 0),
             mediaSummary: mediaSummary,
-            storySummary: storySummary,
+            videoDirectionSummary: videoDirectionSummary,
             finalRenderSummary: finalRenderSummary,
             canAddMedia: true,
-            canPlanStory: true,
+            canPrepareVideoDirection: true,
             canPrepareFinalRenderPlan: true,
             canGenerateFinalRender: true,
             canRefreshFinalRenderStatus: true,
@@ -210,10 +210,10 @@ final class AnimateCreateWorkflowPresentationTests: XCTestCase {
         XCTAssertEqual(presentation.activeVideoId, "moment-1")
         XCTAssertEqual(presentation.template, .birthdayMessage)
         XCTAssertEqual(presentation.mediaSummary, mediaSummary)
-        XCTAssertEqual(presentation.storySummary, storySummary)
+        XCTAssertEqual(presentation.videoDirectionSummary, videoDirectionSummary)
         XCTAssertEqual(presentation.finalRenderSummary, finalRenderSummary)
         XCTAssertTrue(presentation.canAddMedia)
-        XCTAssertTrue(presentation.canPlanStory)
+        XCTAssertTrue(presentation.canPrepareVideoDirection)
         XCTAssertTrue(presentation.canPrepareFinalRenderPlan)
         XCTAssertTrue(presentation.canGenerateFinalRender)
         XCTAssertTrue(presentation.canRefreshFinalRenderStatus)
@@ -236,11 +236,11 @@ final class AnimateCreateWorkflowPresentationTests: XCTestCase {
             occasionTitle: "Birthday for Ava",
             balance: AnimateCreditBalance(proMonthly: 0, promotional: 1, purchased: 0),
             mediaSummary: AnimateCreateMediaSummary(),
-            storySummary: AnimateCreateStorySummary(),
+            videoDirectionSummary: AnimateCreateVideoDirectionSummary(),
             finalRenderSummary: AnimateCreateFinalRenderSummary(),
             availability: AnimateCreateWorkflowAvailability(
                 canAddMedia: true,
-                canPlanStory: false,
+                canPrepareVideoDirection: false,
                 canPrepareFinalRenderPlan: true,
                 canGenerateFinalRender: true,
                 canRefreshFinalRenderStatus: false,
@@ -251,7 +251,7 @@ final class AnimateCreateWorkflowPresentationTests: XCTestCase {
         )
 
         XCTAssertTrue(presentation.canAddMedia)
-        XCTAssertFalse(presentation.canPlanStory)
+        XCTAssertFalse(presentation.canPrepareVideoDirection)
         XCTAssertTrue(presentation.canPrepareFinalRenderPlan)
         XCTAssertEqual(presentation.creationStyleTitle, "Birthday Story")
         XCTAssertEqual(presentation.toneTitle, "Warm")
@@ -276,11 +276,11 @@ final class AnimateCreateWorkflowPresentationTests: XCTestCase {
             mediaSummary: AnimateCreateMediaSummary(
                 selectedMedia: [AnimateCreateTestFixtures.makeSelectedMedia(id: "00000000-0000-0000-0000-000000000001")]
             ),
-            storySummary: AnimateCreateStorySummary(),
+            videoDirectionSummary: AnimateCreateVideoDirectionSummary(),
             finalRenderSummary: AnimateCreateFinalRenderSummary(),
             availability: AnimateCreateWorkflowAvailability(
                 canAddMedia: true,
-                canPlanStory: false,
+                canPrepareVideoDirection: false,
                 canPrepareFinalRenderPlan: false,
                 canGenerateFinalRender: false,
                 canRefreshFinalRenderStatus: false
@@ -306,11 +306,11 @@ final class AnimateCreateWorkflowPresentationTests: XCTestCase {
             occasionTitle: "Birthday",
             balance: .empty,
             mediaSummary: AnimateCreateMediaSummary(),
-            storySummary: AnimateCreateStorySummary(),
+            videoDirectionSummary: AnimateCreateVideoDirectionSummary(),
             finalRenderSummary: AnimateCreateFinalRenderSummary(),
             availability: AnimateCreateWorkflowAvailability(
                 canAddMedia: true,
-                canPlanStory: false,
+                canPrepareVideoDirection: false,
                 canPrepareFinalRenderPlan: false,
                 canGenerateFinalRender: false,
                 canRefreshFinalRenderStatus: false
@@ -327,26 +327,26 @@ final class AnimateCreateWorkflowPresentationTests: XCTestCase {
             template: .birthdayMessage,
             balance: .empty,
             mediaSummary: AnimateCreateMediaSummary(isImporting: true),
-            storySummary: AnimateCreateStorySummary(),
+            videoDirectionSummary: AnimateCreateVideoDirectionSummary(),
             finalRenderSummary: AnimateCreateFinalRenderSummary()
         )
 
         XCTAssertTrue(presentation.showsBlockingPreparation)
 
         presentation.mediaSummary = AnimateCreateMediaSummary()
-        presentation.storySummary = AnimateCreateStorySummary(isPlanning: true)
+        presentation.videoDirectionSummary = AnimateCreateVideoDirectionSummary(isPlanning: true)
         XCTAssertTrue(presentation.showsBlockingPreparation)
 
         presentation.finalRenderSummary = AnimateCreateFinalRenderSummary(isGenerating: true)
         XCTAssertTrue(presentation.showsBlockingPreparation)
 
-        presentation.storySummary = AnimateCreateStorySummary()
+        presentation.videoDirectionSummary = AnimateCreateVideoDirectionSummary()
         presentation.finalRenderSummary = AnimateCreateFinalRenderSummary()
         XCTAssertFalse(presentation.showsBlockingPreparation)
     }
 
     func testStorySummaryBuildsPresentedScenesFromSavedScenes() {
-        let summary = AnimateCreateStorySummary(
+        let summary = AnimateCreateVideoDirectionSummary(
             savedScenes: [
                 AnimateCreateTestFixtures.makeScene(id: "scene-2", sceneIndex: 1, caption: "Show the trip highlights."),
                 AnimateCreateTestFixtures.makeScene(id: "scene-1", sceneIndex: 0, caption: "Open with the arrival.")
@@ -366,7 +366,7 @@ final class AnimateCreateWorkflowPresentationTests: XCTestCase {
                     AnimateCreateTestFixtures.makeSelectedMedia(id: "00000000-0000-0000-0000-000000000002")
                 ]
             ),
-            storySummary: AnimateCreateStorySummary(
+            videoDirectionSummary: AnimateCreateVideoDirectionSummary(
                 savedScenes: [
                     AnimateCreateTestFixtures.makeScene(id: "scene-1", sceneIndex: 0),
                     AnimateCreateTestFixtures.makeScene(id: "scene-2", sceneIndex: 1),
@@ -375,7 +375,7 @@ final class AnimateCreateWorkflowPresentationTests: XCTestCase {
                 ]
             ),
             selectedDuration: .auto,
-            canRefreshStory: true
+            canRefreshVideoDirection: true
         )
 
         XCTAssertEqual(
@@ -397,11 +397,11 @@ final class AnimateCreateWorkflowPresentationTests: XCTestCase {
             mediaSummary: AnimateCreateMediaSummary(
                 selectedMedia: [AnimateCreateTestFixtures.makeSelectedMedia(id: "00000000-0000-0000-0000-000000000001")]
             ),
-            storySummary: AnimateCreateStorySummary(
+            videoDirectionSummary: AnimateCreateVideoDirectionSummary(
                 savedScenes: [AnimateCreateTestFixtures.makeScene(id: "scene-1")]
             ),
             selectedDuration: .auto,
-            canRefreshStory: false,
+            canRefreshVideoDirection: false,
             availabilityMessage: "Improve with Avi is cooling down."
         )
 
@@ -419,9 +419,9 @@ final class AnimateCreateWorkflowPresentationTests: XCTestCase {
             mediaSummary: AnimateCreateMediaSummary(
                 selectedMedia: [AnimateCreateTestFixtures.makeSelectedMedia(id: "00000000-0000-0000-0000-000000000001")]
             ),
-            storySummary: AnimateCreateStorySummary(),
+            videoDirectionSummary: AnimateCreateVideoDirectionSummary(),
             selectedDuration: .auto,
-            canRefreshStory: true
+            canRefreshVideoDirection: true
         )
 
         XCTAssertEqual(presentation.statusMessage, "Ready for Avi to prepare the video direction.")
@@ -431,7 +431,7 @@ final class AnimateCreateWorkflowPresentationTests: XCTestCase {
         XCTAssertTrue(presentation.canRunPrimaryAction)
         XCTAssertFalse(presentation.canShowRefreshAction)
 
-        presentation.canRefreshStory = false
+        presentation.canRefreshVideoDirection = false
         presentation.availabilityMessage = "Sign in before preparing the story."
         XCTAssertEqual(presentation.statusMessage, "Sign in before preparing the story.")
         XCTAssertFalse(presentation.canRunPrimaryAction)
@@ -480,8 +480,8 @@ final class AnimateCreateWorkflowPresentationTests: XCTestCase {
     }
 
     func testStoryPresentationFormatsPreparationStateAndSortsSavedScenes() {
-        let presentation = AnimateCreateStoryPresentation(
-            summary: AnimateCreateStorySummary(
+        let presentation = AnimateCreateVideoDirectionPreparationPresentation(
+            summary: AnimateCreateVideoDirectionSummary(
                 savedScenes: [
                     AnimateCreateTestFixtures.makeScene(id: "scene-2", sceneIndex: 1),
                     AnimateCreateTestFixtures.makeScene(id: "scene-1", sceneIndex: 0)
@@ -490,14 +490,14 @@ final class AnimateCreateWorkflowPresentationTests: XCTestCase {
                 isPlanning: true,
                 statusMessage: "Planning."
             ),
-            canPlanStory: true,
+            canPrepareVideoDirection: true,
             availabilityMessage: "Ready."
         )
 
         XCTAssertEqual(presentation.planButtonTitle, "Preparing video...")
         XCTAssertEqual(presentation.emptyMessage, "Avi can prepare the animation plan from your photo.")
         XCTAssertEqual(presentation.savedScenes.map(\.id), ["scene-1", "scene-2"])
-        XCTAssertTrue(presentation.canPlanStory)
+        XCTAssertTrue(presentation.canPrepareVideoDirection)
         XCTAssertEqual(presentation.availabilityMessage, "Ready.")
     }
 
@@ -557,7 +557,7 @@ final class AnimateCreateWorkflowPresentationTests: XCTestCase {
             mediaSummary: AnimateCreateMediaSummary(
                 selectedMedia: [AnimateCreateTestFixtures.makeSelectedMedia(id: "00000000-0000-0000-0000-000000000001")]
             ),
-            storySummary: AnimateCreateStorySummary(),
+            videoDirectionSummary: AnimateCreateVideoDirectionSummary(),
             finalRenderSummary: AnimateCreateFinalRenderSummary(
                 creditCost: 2,
                 renderPlan: unavailablePlan
@@ -593,7 +593,7 @@ final class AnimateCreateWorkflowPresentationTests: XCTestCase {
             mediaSummary: AnimateCreateMediaSummary(
                 selectedMedia: [AnimateCreateTestFixtures.makeSelectedMedia(id: "00000000-0000-0000-0000-000000000001")]
             ),
-            storySummary: AnimateCreateStorySummary(),
+            videoDirectionSummary: AnimateCreateVideoDirectionSummary(),
             finalRenderSummary: AnimateCreateFinalRenderSummary(latestFinalJob: failedJob),
             canPrepareFinalRenderPlan: true,
             canGenerateFinalRender: true
@@ -619,9 +619,9 @@ final class AnimateCreateWorkflowPresentationTests: XCTestCase {
                     isImporting: true,
                     statusMessage: "Uploading media for video creation."
                 ),
-                storySummary: AnimateCreateStorySummary(),
+                videoDirectionSummary: AnimateCreateVideoDirectionSummary(),
                 finalRenderSummary: AnimateCreateFinalRenderSummary(creditCost: 2),
-                canPlanStory: false,
+                canPrepareVideoDirection: false,
                 canPrepareFinalRenderPlan: false,
                 canGenerateFinalRender: false
             )
@@ -646,9 +646,9 @@ final class AnimateCreateWorkflowPresentationTests: XCTestCase {
                 mediaSummary: AnimateCreateMediaSummary(
                     selectedMedia: [AnimateCreateTestFixtures.makeSelectedMedia(id: "00000000-0000-0000-0000-000000000001")]
                 ),
-                storySummary: AnimateCreateStorySummary(),
+                videoDirectionSummary: AnimateCreateVideoDirectionSummary(),
                 finalRenderSummary: AnimateCreateFinalRenderSummary(creditCost: 2),
-                canPlanStory: true,
+                canPrepareVideoDirection: true,
                 canPrepareFinalRenderPlan: false,
                 canGenerateFinalRender: false
             )
@@ -671,14 +671,14 @@ final class AnimateCreateWorkflowPresentationTests: XCTestCase {
                 mediaSummary: AnimateCreateMediaSummary(
                     syncedMediaAssets: [AnimateCreateTestFixtures.makeMediaAsset(id: "media-1")]
                 ),
-                storySummary: AnimateCreateStorySummary(
+                videoDirectionSummary: AnimateCreateVideoDirectionSummary(
                     savedScenes: [AnimateCreateTestFixtures.makeScene(id: "scene-1")]
                 ),
                 finalRenderSummary: AnimateCreateFinalRenderSummary(
                     creditCost: 2,
                     renderPlan: AnimateCreateTestFixtures.makeRenderPlan()
                 ),
-                canPlanStory: false,
+                canPrepareVideoDirection: false,
                 canPrepareFinalRenderPlan: false,
                 canGenerateFinalRender: true
             )
@@ -704,7 +704,7 @@ final class AnimateCreateWorkflowPresentationTests: XCTestCase {
                 mediaSummary: AnimateCreateMediaSummary(
                     syncedMediaAssets: [AnimateCreateTestFixtures.makeMediaAsset(id: "media-1")]
                 ),
-                storySummary: AnimateCreateStorySummary(
+                videoDirectionSummary: AnimateCreateVideoDirectionSummary(
                     savedScenes: [AnimateCreateTestFixtures.makeScene(id: "scene-1")]
                 ),
                 finalRenderSummary: AnimateCreateFinalRenderSummary(
@@ -714,7 +714,7 @@ final class AnimateCreateWorkflowPresentationTests: XCTestCase {
                         createVideoBlockers: ["insufficient_credits"]
                     )
                 ),
-                canPlanStory: false,
+                canPrepareVideoDirection: false,
                 canPrepareFinalRenderPlan: false,
                 canGenerateFinalRender: false
             )
@@ -738,7 +738,7 @@ final class AnimateCreateWorkflowPresentationTests: XCTestCase {
                 mediaSummary: AnimateCreateMediaSummary(
                     syncedMediaAssets: [AnimateCreateTestFixtures.makeMediaAsset(id: "media-1")]
                 ),
-                storySummary: AnimateCreateStorySummary(
+                videoDirectionSummary: AnimateCreateVideoDirectionSummary(
                     savedScenes: [AnimateCreateTestFixtures.makeScene(id: "scene-1")]
                 ),
                 finalRenderSummary: AnimateCreateFinalRenderSummary(
@@ -749,7 +749,7 @@ final class AnimateCreateWorkflowPresentationTests: XCTestCase {
                         createVideoBlockers: ["provider_adapter_unavailable", "insufficient_credits"]
                     )
                 ),
-                canPlanStory: false,
+                canPrepareVideoDirection: false,
                 canPrepareFinalRenderPlan: true,
                 canGenerateFinalRender: false
             )
@@ -773,7 +773,7 @@ final class AnimateCreateWorkflowPresentationTests: XCTestCase {
                 mediaSummary: AnimateCreateMediaSummary(
                     syncedMediaAssets: [AnimateCreateTestFixtures.makeMediaAsset(id: "media-1")]
                 ),
-                storySummary: AnimateCreateStorySummary(
+                videoDirectionSummary: AnimateCreateVideoDirectionSummary(
                     savedScenes: [AnimateCreateTestFixtures.makeScene(id: "scene-1")]
                 ),
                 finalRenderSummary: AnimateCreateFinalRenderSummary(
@@ -781,7 +781,7 @@ final class AnimateCreateWorkflowPresentationTests: XCTestCase {
                     renderPlan: AnimateCreateTestFixtures.makeRenderPlan(),
                     statusMessage: "The video plan changed. Review the latest plan before creating the video."
                 ),
-                canPlanStory: false,
+                canPrepareVideoDirection: false,
                 canPrepareFinalRenderPlan: false,
                 canGenerateFinalRender: true
             )
@@ -885,7 +885,7 @@ final class AnimateCreateWorkflowPresentationTests: XCTestCase {
         )
 
         XCTAssertEqual(summary.mediaDetail, "2 added")
-        XCTAssertEqual(summary.storyDetail, "1 scene")
+        XCTAssertEqual(summary.videoDirectionDetail, "1 scene")
     }
 
     func testCreateUITestFixturesExposePreRenderStates() {

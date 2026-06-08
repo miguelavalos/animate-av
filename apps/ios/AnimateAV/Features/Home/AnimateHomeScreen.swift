@@ -104,7 +104,7 @@ struct AnimateHomeScreen: View {
             if createViewModel.finalRenderSummary.latestFinalJob != nil || createViewModel.finalRenderSummary.isGenerating {
                 return L10n.string("home.avi.creating.title")
             }
-            if createViewModel.storySummary.isPlanning {
+            if createViewModel.videoDirectionSummary.isPlanning {
                 return L10n.string("home.avi.preparing.title")
             }
             return L10n.string("home.avi.currentVideo.title")
@@ -121,7 +121,7 @@ struct AnimateHomeScreen: View {
             if createViewModel.finalRenderSummary.latestFinalJob != nil || createViewModel.finalRenderSummary.isGenerating {
                 return createViewModel.finalRenderSummary.statusMessage ?? L10n.string("home.avi.creating.detail")
             }
-            if createViewModel.storySummary.isPlanning {
+            if createViewModel.videoDirectionSummary.isPlanning {
                 return L10n.string("home.avi.preparing.detail")
             }
             if count > 0 {

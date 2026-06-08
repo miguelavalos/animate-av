@@ -16,7 +16,7 @@ struct AnimateCreateWorkspaceProgress: View {
             )
             AVAppShellProgressRow(
                 title: L10n.string("moment.progress.story"),
-                detail: summary.storyDetail,
+                detail: summary.videoDirectionDetail,
                 systemImage: "text.bubble",
                 isComplete: summary.sceneCount > 0,
             )

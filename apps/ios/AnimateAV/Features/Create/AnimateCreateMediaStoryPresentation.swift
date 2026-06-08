@@ -37,9 +37,9 @@ struct AnimateCreateMediaPresentation: Equatable {
     }
 }
 
-struct AnimateCreateStoryPresentation: Equatable {
-    var summary: AnimateCreateStorySummary
-    var canPlanStory = false
+struct AnimateCreateVideoDirectionPreparationPresentation: Equatable {
+    var summary: AnimateCreateVideoDirectionSummary
+    var canPrepareVideoDirection = false
     var availabilityMessage: String?
 
     var planButtonTitle: String {
@@ -47,7 +47,7 @@ struct AnimateCreateStoryPresentation: Equatable {
     }
 
     var emptyMessage: String {
-        canPlanStory
+        canPrepareVideoDirection
             ? L10n.string("create.story.empty.ready")
             : L10n.string("create.story.empty.needsMedia")
     }
@@ -59,20 +59,20 @@ struct AnimateCreateStoryPresentation: Equatable {
 
 struct AnimateCreateVideoDirectionPresentation: Equatable {
     var mediaSummary: AnimateCreateMediaSummary
-    var storySummary: AnimateCreateStorySummary
+    var videoDirectionSummary: AnimateCreateVideoDirectionSummary
     var selectedDuration: AnimateVideoDuration
     var renderPlan: AnimateRenderPlan?
-    var canRefreshStory = false
+    var canRefreshVideoDirection = false
     var availabilityMessage: String?
 
     var statusMessage: String {
-        if storySummary.hasScenes {
+        if videoDirectionSummary.hasScenes {
             return L10n.string("create.videoDirection.status.ready")
         }
-        if storySummary.isPlanning {
-            return storySummary.statusMessage ?? L10n.string("create.videoDirection.status.improving")
+        if videoDirectionSummary.isPlanning {
+            return videoDirectionSummary.statusMessage ?? L10n.string("create.videoDirection.status.improving")
         }
-        if mediaCount > 0, canRefreshStory {
+        if mediaCount > 0, canRefreshVideoDirection {
             return L10n.string("create.videoDirection.status.readyToPrepare")
         }
         if mediaCount > 0 {
@@ -82,10 +82,10 @@ struct AnimateCreateVideoDirectionPresentation: Equatable {
     }
 
     var modeTitle: String {
-        if storySummary.isPlanning {
+        if videoDirectionSummary.isPlanning {
             return L10n.string("create.videoDirection.pill.working")
         }
-        if storySummary.hasScenes {
+        if videoDirectionSummary.hasScenes {
             return L10n.string("create.videoDirection.pill.story")
         }
         if mediaCount > 0 {
@@ -118,13 +118,13 @@ struct AnimateCreateVideoDirectionPresentation: Equatable {
     }
 
     var primaryActionTitle: String {
-        storySummary.hasScenes
+        videoDirectionSummary.hasScenes
             ? L10n.string("create.videoDirection.action.refresh")
             : L10n.string("create.videoDirection.action.prepare")
     }
 
     var primaryActionIconName: String {
-        storySummary.hasScenes ? "sparkles" : "wand.and.stars"
+        videoDirectionSummary.hasScenes ? "sparkles" : "wand.and.stars"
     }
 
     var editActionTitle: String {
@@ -132,27 +132,27 @@ struct AnimateCreateVideoDirectionPresentation: Equatable {
     }
 
     var iconName: String {
-        if storySummary.hasScenes { return "rectangle.stack.fill" }
-        if storySummary.isPlanning { return "sparkles" }
+        if videoDirectionSummary.hasScenes { return "rectangle.stack.fill" }
+        if videoDirectionSummary.isPlanning { return "sparkles" }
         return "wand.and.stars"
     }
 
     var canRunPrimaryAction: Bool {
-        !storySummary.isPlanning
+        !videoDirectionSummary.isPlanning
             && mediaCount > 0
-            && canRefreshStory
+            && canRefreshVideoDirection
     }
 
     var canShowRefreshAction: Bool {
-        storySummary.hasScenes && canRunPrimaryAction
+        videoDirectionSummary.hasScenes && canRunPrimaryAction
     }
 
-    var visibleScenes: [AnimateCreateStoryScenePresentation] {
-        Array(storySummary.presentedScenes.prefix(2))
+    var visibleScenes: [AnimateCreateVideoDirectionScenePresentation] {
+        Array(videoDirectionSummary.presentedScenes.prefix(2))
     }
 
     var remainingSceneCount: Int {
-        max(storySummary.presentedScenes.count - visibleScenes.count, 0)
+        max(videoDirectionSummary.presentedScenes.count - visibleScenes.count, 0)
     }
 
     var remainingSceneTitle: String? {

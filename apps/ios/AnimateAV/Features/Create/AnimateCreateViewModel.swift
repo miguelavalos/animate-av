@@ -60,8 +60,8 @@ final class AnimateCreateViewModel: ObservableObject {
     @Published private(set) var canUndoAutoStyleSuggestion = false
     @Published private(set) var savedScenes: [AnimateStoryScene] = []
     @Published private(set) var generatedScenes: [AnimateStorySceneResponse] = []
-    @Published private(set) var storyStatusMessage: String?
-    @Published private(set) var isPlanningStory = false
+    @Published private(set) var videoDirectionStatusMessage: String?
+    @Published private(set) var isPreparingVideoDirection = false
     @Published var isPreparingStory = false
     @Published private(set) var activeWorkspace: AnimateWorkspace?
     @Published private(set) var finalExport: AnimateArtifact?
@@ -121,7 +121,7 @@ final class AnimateCreateViewModel: ObservableObject {
         activeVideoId != nil
             || !selectedMedia.isEmpty
             || isImportingMedia
-            || isPlanningStory
+            || isPreparingVideoDirection
             || !savedScenes.isEmpty
             || !generatedScenes.isEmpty
             || finalExport != nil
@@ -141,7 +141,7 @@ final class AnimateCreateViewModel: ObservableObject {
         [
             setupErrorMessage,
             mediaStatusMessage,
-            storyStatusMessage,
+            videoDirectionStatusMessage,
             finalVideoCommandFailureMessage,
             finalRenderAlertMessage
         ]
@@ -468,7 +468,7 @@ final class AnimateCreateViewModel: ObservableObject {
         mediaStatusMessage = L10n.string("create.media.fixture.synced")
         savedScenes = workspace.storyScenes
         generatedScenes = []
-        storyStatusMessage = L10n.string("create.story.status.ready")
+        videoDirectionStatusMessage = L10n.string("create.story.status.ready")
         lastPreparedStoryInputSignature = workspace.video.storyInputSignature
             ?? currentStoryInputSignature(momentId: workspace.video.id)
         activeWorkspace = workspace
@@ -589,7 +589,7 @@ final class AnimateCreateViewModel: ObservableObject {
         savedScenes = []
         generatedScenes = []
         mediaStatusMessage = nil
-        storyStatusMessage = nil
+        videoDirectionStatusMessage = nil
         finalExport = nil
         latestFinalJob = nil
         renderPlan = nil
@@ -890,19 +890,19 @@ extension AnimateCreateViewModel {
         syncFormWithActiveWorkspace(state.activeWorkspace)
         savedScenes = state.savedScenes
         generatedScenes = state.generatedScenes
-        isPlanningStory = state.isPlanning
+        isPreparingVideoDirection = state.isPlanning
 
         let hasStoryScenes = !state.savedScenes.isEmpty || !state.generatedScenes.isEmpty
         if hasStoryScenes {
             reconcilePreparedStorySignature()
-            storyStatusMessage = nil
+            videoDirectionStatusMessage = nil
         } else {
-            storyStatusMessage = state.statusMessage
+            videoDirectionStatusMessage = state.statusMessage
         }
     }
 
-    func updateStoryStatusMessage(_ message: String?) {
-        storyStatusMessage = message
+    func updateVideoDirectionStatusMessage(_ message: String?) {
+        videoDirectionStatusMessage = message
     }
 
     func updateSetupErrorMessage(_ message: String?) {
@@ -980,7 +980,7 @@ extension AnimateCreateViewModel {
 
     private func updateAutoStyleSuggestion(for media: [AnimateSelectedMedia]) {
         guard canEditCreationOptions else { return }
-        guard !storySummary.hasScenes || hasExplicitMediaEditsAfterPreparedStory else { return }
+        guard !videoDirectionSummary.hasScenes || hasExplicitMediaEditsAfterPreparedStory else { return }
         let signature = mediaSignature(media)
         guard signature != autoStyleMediaSignature else { return }
         autoStyleMediaSignature = signature

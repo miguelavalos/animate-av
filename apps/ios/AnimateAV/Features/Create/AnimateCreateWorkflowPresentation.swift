@@ -14,10 +14,10 @@ struct AnimateCreateWorkflowPresentation: Equatable {
     var balance: AnimateCreditBalance
     var creditBalanceLoadState = AnimateCreditBalanceLoadState.loaded
     var mediaSummary: AnimateCreateMediaSummary
-    var storySummary: AnimateCreateStorySummary
+    var videoDirectionSummary: AnimateCreateVideoDirectionSummary
     var finalRenderSummary: AnimateCreateFinalRenderSummary
     var canAddMedia = false
-    var canPlanStory = false
+    var canPrepareVideoDirection = false
     var canPrepareFinalRenderPlan = false
     var canGenerateFinalRender = false
     var canRefreshFinalRenderStatus = false
@@ -42,11 +42,11 @@ struct AnimateCreateWorkflowPresentation: Equatable {
             return .finalVideo
         }
 
-        if !storySummary.savedScenes.isEmpty || !storySummary.generatedScenes.isEmpty {
+        if !videoDirectionSummary.savedScenes.isEmpty || !videoDirectionSummary.generatedScenes.isEmpty {
             return .finalVideo
         }
 
-        if canPlanStory {
+        if canPrepareVideoDirection {
             return .story
         }
 
@@ -56,7 +56,7 @@ struct AnimateCreateWorkflowPresentation: Equatable {
     var showsBlockingPreparation: Bool {
         isCreatingVideo
             || mediaSummary.isImporting
-            || storySummary.isPlanning
+            || videoDirectionSummary.isPlanning
             || finalRenderSummary.isGenerating
     }
 
@@ -114,7 +114,7 @@ struct AnimateCreateWorkflowPresentation: Equatable {
         balance: AnimateCreditBalance,
         creditBalanceLoadState: AnimateCreditBalanceLoadState = .loaded,
         mediaSummary: AnimateCreateMediaSummary,
-        storySummary: AnimateCreateStorySummary,
+        videoDirectionSummary: AnimateCreateVideoDirectionSummary,
         finalRenderSummary: AnimateCreateFinalRenderSummary,
         availability: AnimateCreateWorkflowAvailability
     ) -> AnimateCreateWorkflowPresentation {
@@ -132,10 +132,10 @@ struct AnimateCreateWorkflowPresentation: Equatable {
             balance: balance,
             creditBalanceLoadState: creditBalanceLoadState,
             mediaSummary: mediaSummary,
-            storySummary: storySummary,
+            videoDirectionSummary: videoDirectionSummary,
             finalRenderSummary: finalRenderSummary,
             canAddMedia: availability.canAddMedia,
-            canPlanStory: availability.canPlanStory,
+            canPrepareVideoDirection: availability.canPrepareVideoDirection,
             canPrepareFinalRenderPlan: availability.canPrepareFinalRenderPlan,
             canGenerateFinalRender: availability.canGenerateFinalRender,
             canRefreshFinalRenderStatus: availability.canRefreshFinalRenderStatus,

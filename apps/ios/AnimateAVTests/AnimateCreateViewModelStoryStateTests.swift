@@ -319,7 +319,7 @@ final class AnimateCreateViewModelStoryStateTests: XCTestCase {
             )
         )
 
-        XCTAssertEqual(viewModel.storySummary.statusMessage, AnimateRecoveryCopy.storyFailure())
+        XCTAssertEqual(viewModel.videoDirectionSummary.statusMessage, AnimateRecoveryCopy.storyFailure())
         XCTAssertFalse(viewModel.isStoryPreparedForCurrentInput)
 
         viewModel.applyStoryState(
@@ -332,7 +332,7 @@ final class AnimateCreateViewModelStoryStateTests: XCTestCase {
             )
         )
 
-        XCTAssertNil(viewModel.storySummary.statusMessage)
+        XCTAssertNil(viewModel.videoDirectionSummary.statusMessage)
         XCTAssertTrue(viewModel.isStoryPreparedForCurrentInput)
     }
 
@@ -679,7 +679,7 @@ final class AnimateCreateViewModelStoryStateTests: XCTestCase {
         await fulfillment(of: [harness.createAttemptExpectation], timeout: 1)
         await waitForStoryStatusMessage(in: viewModel)
 
-        XCTAssertEqual(viewModel.storySummary.statusMessage, AnimateSyncError.notConfigured.localizedDescription)
+        XCTAssertEqual(viewModel.videoDirectionSummary.statusMessage, AnimateSyncError.notConfigured.localizedDescription)
     }
 
     @discardableResult
@@ -747,7 +747,7 @@ final class AnimateCreateViewModelStoryStateTests: XCTestCase {
     }
 
     private func waitForStoryStatusMessage(in viewModel: AnimateCreateViewModel) async {
-        for _ in 0..<20 where viewModel.storySummary.statusMessage == nil {
+        for _ in 0..<20 where viewModel.videoDirectionSummary.statusMessage == nil {
             try? await Task.sleep(nanoseconds: 25_000_000)
         }
     }

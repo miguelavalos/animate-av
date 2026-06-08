@@ -127,10 +127,10 @@ struct AnimateCreatePrimaryActionPresentation: Equatable {
             return workflow.canGenerateFinalRender
                 || canPrepareVideoPlan
                 || canPrepareLocalVideoPlan
-                || workflow.canPlanStory
+                || workflow.canPrepareVideoDirection
                 || needsSignInForStory
         }
-        return workflow.canPlanStory || needsSignInForStory
+        return workflow.canPrepareVideoDirection || needsSignInForStory
     }
 
     var showsPrimaryActionButton: Bool {
@@ -224,8 +224,8 @@ struct AnimateCreatePrimaryActionPresentation: Equatable {
         if workflow.finalRenderSummary.isGenerating {
             return workflow.finalRenderSummary.statusMessage ?? L10n.string("create.final.action.creating")
         }
-        if workflow.storySummary.isPlanning {
-            return workflow.storySummary.statusMessage ?? L10n.string("create.preparation.prepareStory.progress")
+        if workflow.videoDirectionSummary.isPlanning {
+            return workflow.videoDirectionSummary.statusMessage ?? L10n.string("create.preparation.prepareStory.progress")
         }
         if workflow.mediaSummary.isImporting {
             return workflow.mediaSummary.statusMessage ?? L10n.string("workflow.media.uploading")
@@ -262,12 +262,12 @@ struct AnimateCreatePrimaryActionPresentation: Equatable {
                !finalStatusMessage.isEmpty {
                 return finalStatusMessage
             }
-            if workflow.canGenerateFinalRender || canPrepareVideoPlan || canPrepareLocalVideoPlan || workflow.canPlanStory {
+            if workflow.canGenerateFinalRender || canPrepareVideoPlan || canPrepareLocalVideoPlan || workflow.canPrepareVideoDirection {
                 return L10n.string("create.primary.continuePreflight")
             }
             return availabilityMessage
         }
-        if let storyMessage = workflow.storySummary.statusMessage, !storyMessage.isEmpty {
+        if let storyMessage = workflow.videoDirectionSummary.statusMessage, !storyMessage.isEmpty {
             return storyMessage
         }
         if let mediaMessage = workflow.mediaSummary.statusMessage, !mediaMessage.isEmpty {
@@ -279,7 +279,7 @@ struct AnimateCreatePrimaryActionPresentation: Equatable {
         if needsSignInForStory {
             return workflow.storyAvailabilityMessage
         }
-        if workflow.canPlanStory {
+        if workflow.canPrepareVideoDirection {
             return L10n.string("create.primary.continuePreflight")
         }
         return nil
@@ -325,7 +325,7 @@ struct AnimateCreatePrimaryActionPresentation: Equatable {
 
     var hasFinalVideoIntent: Bool {
         workflow.mediaSummary.effectiveMediaCount > 0
-            || workflow.storySummary.hasScenes
+            || workflow.videoDirectionSummary.hasScenes
             || workflow.finalRenderSummary.renderPlan != nil
             || workflow.finalRenderSummary.latestFinalJob != nil
             || workflow.finalRenderSummary.finalExport != nil
@@ -334,7 +334,7 @@ struct AnimateCreatePrimaryActionPresentation: Equatable {
 
     var isBusy: Bool {
         workflow.mediaSummary.isImporting
-            || workflow.storySummary.isPlanning
+            || workflow.videoDirectionSummary.isPlanning
             || workflow.finalRenderSummary.isGenerating
     }
 
@@ -360,7 +360,7 @@ struct AnimateCreatePrimaryActionPresentation: Equatable {
     var needsSignInForStory: Bool {
         !workflow.isSignedIn
             && workflow.mediaSummary.effectiveMediaCount > 0
-            && !workflow.storySummary.isPlanning
+            && !workflow.videoDirectionSummary.isPlanning
     }
 
     var needsCreditsForPreparedPlan: Bool {

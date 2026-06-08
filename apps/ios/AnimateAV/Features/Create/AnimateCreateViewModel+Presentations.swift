@@ -14,7 +14,7 @@ extension AnimateCreateViewModel {
             balance: balance,
             creditBalanceLoadState: creditBalanceLoadState,
             mediaSummary: mediaSummary,
-            storySummary: storySummary,
+            videoDirectionSummary: videoDirectionSummary,
             finalRenderSummary: finalRenderSummary,
             availability: workflowAvailability
         )
@@ -23,7 +23,7 @@ extension AnimateCreateViewModel {
     var workflowAvailability: AnimateCreateWorkflowAvailability {
         AnimateCreateWorkflowAvailability.make(
             canAddMedia: canAddMedia,
-            canPlanStory: canPlanStory,
+            canPrepareVideoDirection: canPrepareVideoDirection,
             canPrepareFinalRenderPlan: canPrepareFinalRenderPlan,
             canGenerateFinalRender: canGenerateFinalRender,
             canRefreshFinalRenderStatus: canRefreshFinalRenderStatus,

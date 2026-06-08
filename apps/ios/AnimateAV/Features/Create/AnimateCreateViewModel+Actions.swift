@@ -83,8 +83,8 @@ extension AnimateCreateViewModel {
     }
 
     func generateStory() {
-        guard canPlanStory, let storyWorkflow else {
-            updateStoryStatusMessage(storyAvailabilityMessage ?? L10n.string("create.error.storyPreparationNotReady"))
+        guard canPrepareVideoDirection, let storyWorkflow else {
+            updateVideoDirectionStatusMessage(storyAvailabilityMessage ?? L10n.string("create.error.storyPreparationNotReady"))
             return
         }
         let form = form
@@ -106,18 +106,18 @@ extension AnimateCreateViewModel {
             }
 
             guard let momentId else {
-                self.updateStoryStatusMessage(self.videoCreationFailureMessage())
+                self.updateVideoDirectionStatusMessage(self.videoCreationFailureMessage())
                 return
             }
-            if self.storySummary.hasScenes,
+            if self.videoDirectionSummary.hasScenes,
                self.lastPreparedStoryInputSignature == self.preparedStoryComparisonInputSignature(momentId: momentId) {
-                self.updateStoryStatusMessage(L10n.string("create.story.status.alreadyReady"))
+                self.updateVideoDirectionStatusMessage(L10n.string("create.story.status.alreadyReady"))
                 return
             }
 
             let persistedMedia = await self.mediaUploadWorkflow?.persistSelectedMedia(momentId: momentId)
             guard persistedMedia != nil || selectedMedia.isEmpty else {
-                self.updateStoryStatusMessage(self.mediaStatusMessage
+                self.updateVideoDirectionStatusMessage(self.mediaStatusMessage
                     ?? AnimateRecoveryCopy.mediaStorySaveFailure()
                 )
                 return
@@ -290,14 +290,14 @@ extension AnimateCreateViewModel {
         storyWorkflow: StoryWorkflow
     ) async -> Bool {
         var inputSignature = preparedStoryComparisonInputSignature(momentId: momentId)
-        if storySummary.hasScenes, lastPreparedStoryInputSignature == inputSignature {
-            updateStoryStatusMessage(L10n.string("create.story.status.alreadyReady"))
+        if videoDirectionSummary.hasScenes, lastPreparedStoryInputSignature == inputSignature {
+            updateVideoDirectionStatusMessage(L10n.string("create.story.status.alreadyReady"))
             return true
         }
 
         let persistedMedia = await mediaUploadWorkflow?.persistSelectedMedia(momentId: momentId)
         guard persistedMedia != nil || selectedMedia.isEmpty else {
-            updateStoryStatusMessage(mediaStatusMessage ?? AnimateRecoveryCopy.mediaStorySaveFailure())
+            updateVideoDirectionStatusMessage(mediaStatusMessage ?? AnimateRecoveryCopy.mediaStorySaveFailure())
             return false
         }
         inputSignature = currentStoryInputSignature(
@@ -315,8 +315,8 @@ extension AnimateCreateViewModel {
             recordPreparedStoryInputSignature(inputSignature, momentId: momentId)
         }
 
-        guard storySummary.hasScenes, lastPreparedStoryInputSignature == inputSignature else {
-            updateStoryStatusMessage(L10n.string("create.error.storyPreparationUnfinished"))
+        guard videoDirectionSummary.hasScenes, lastPreparedStoryInputSignature == inputSignature else {
+            updateVideoDirectionStatusMessage(L10n.string("create.error.storyPreparationUnfinished"))
             return false
         }
         return true

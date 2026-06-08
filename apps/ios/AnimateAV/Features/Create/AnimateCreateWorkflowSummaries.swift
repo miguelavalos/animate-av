@@ -10,7 +10,7 @@ struct AnimateCreateWorkspaceSummary: Equatable {
         L10n.string("create.summary.media.added", mediaCount)
     }
 
-    var storyDetail: String {
+    var videoDirectionDetail: String {
         L10n.string(sceneCount == 1 ? "create.summary.story.scene" : "create.summary.story.scenes", sceneCount)
     }
 
@@ -81,7 +81,7 @@ struct AnimateMediaImportProgress: Equatable {
     }
 }
 
-struct AnimateCreateStorySummary: Equatable {
+struct AnimateCreateVideoDirectionSummary: Equatable {
     var savedScenes: [AnimateStoryScene] = []
     var generatedScenes: [AnimateStorySceneResponse] = []
     var isPlanning = false
@@ -91,12 +91,12 @@ struct AnimateCreateStorySummary: Equatable {
         !savedScenes.isEmpty || !generatedScenes.isEmpty
     }
 
-    var presentedScenes: [AnimateCreateStoryScenePresentation] {
+    var presentedScenes: [AnimateCreateVideoDirectionScenePresentation] {
         if !savedScenes.isEmpty {
             return savedScenes
                 .sorted { $0.sceneIndex < $1.sceneIndex }
                 .map {
-                    AnimateCreateStoryScenePresentation(
+                    AnimateCreateVideoDirectionScenePresentation(
                         title: Self.sceneTitle(Int($0.sceneIndex)),
                         caption: $0.caption,
                         detail: $0.narrationText
@@ -107,7 +107,7 @@ struct AnimateCreateStorySummary: Equatable {
         return generatedScenes
             .sorted { $0.sceneIndex < $1.sceneIndex }
             .map {
-                AnimateCreateStoryScenePresentation(
+                AnimateCreateVideoDirectionScenePresentation(
                     title: Self.sceneTitle($0.sceneIndex),
                     caption: $0.caption,
                     detail: $0.narrationText
@@ -129,7 +129,7 @@ struct AnimateCreateStorySummary: Equatable {
     }
 }
 
-struct AnimateCreateStoryScenePresentation: Equatable, Identifiable {
+struct AnimateCreateVideoDirectionScenePresentation: Equatable, Identifiable {
     var id: String { "\(title)-\(caption)" }
     let title: String
     let caption: String

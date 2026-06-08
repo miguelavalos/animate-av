@@ -2,7 +2,7 @@ import Foundation
 
 struct AnimateCreateWorkflowAvailability: Equatable {
     var canAddMedia = false
-    var canPlanStory = false
+    var canPrepareVideoDirection = false
     var canPrepareFinalRenderPlan = false
     var canGenerateFinalRender = false
     var canRefreshFinalRenderStatus = false
@@ -12,7 +12,7 @@ struct AnimateCreateWorkflowAvailability: Equatable {
 
     static func make(
         canAddMedia: Bool,
-        canPlanStory: Bool,
+        canPrepareVideoDirection: Bool,
         canPrepareFinalRenderPlan: Bool,
         canGenerateFinalRender: Bool,
         canRefreshFinalRenderStatus: Bool,
@@ -22,7 +22,7 @@ struct AnimateCreateWorkflowAvailability: Equatable {
     ) -> AnimateCreateWorkflowAvailability {
         AnimateCreateWorkflowAvailability(
             canAddMedia: canAddMedia,
-            canPlanStory: canPlanStory,
+            canPrepareVideoDirection: canPrepareVideoDirection,
             canPrepareFinalRenderPlan: canPrepareFinalRenderPlan,
             canGenerateFinalRender: canGenerateFinalRender,
             canRefreshFinalRenderStatus: canRefreshFinalRenderStatus,

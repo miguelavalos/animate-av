@@ -6,7 +6,7 @@ final class AnimateCreateAvailabilityPresentationTests: XCTestCase {
     func testWorkflowAvailabilityBuilderCarriesCapabilitiesAndMessages() {
         let availability = AnimateCreateWorkflowAvailability.make(
             canAddMedia: true,
-            canPlanStory: false,
+            canPrepareVideoDirection: false,
             canPrepareFinalRenderPlan: true,
             canGenerateFinalRender: true,
             canRefreshFinalRenderStatus: false,
@@ -16,7 +16,7 @@ final class AnimateCreateAvailabilityPresentationTests: XCTestCase {
         )
 
         XCTAssertTrue(availability.canAddMedia)
-        XCTAssertFalse(availability.canPlanStory)
+        XCTAssertFalse(availability.canPrepareVideoDirection)
         XCTAssertTrue(availability.canPrepareFinalRenderPlan)
         XCTAssertTrue(availability.canGenerateFinalRender)
         XCTAssertFalse(availability.canRefreshFinalRenderStatus)
@@ -39,7 +39,7 @@ final class AnimateCreateAvailabilityPresentationTests: XCTestCase {
         )
 
         XCTAssertTrue(capability.canAddMedia)
-        XCTAssertFalse(capability.canPlanStory)
+        XCTAssertFalse(capability.canPrepareVideoDirection)
         XCTAssertFalse(capability.canPrepareFinalRenderPlan)
         XCTAssertFalse(capability.canGenerateFinalRender)
         XCTAssertFalse(capability.canRefreshFinalRenderStatus)
