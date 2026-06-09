@@ -56,7 +56,7 @@ struct AnimateAppShellView: View {
             assistantID: .avi,
             assistant: footerAssistant,
             hasAssistantActiveContext: selectedTab != .avi && hasAviActiveContext,
-            footerConfiguration: appExperience.footerConfiguration,
+            footerConfiguration: footerConfiguration,
             onSelectTab: { tab in
                 chromeItem = nil
                 selectFooterTab(tab)
@@ -108,6 +108,17 @@ struct AnimateAppShellView: View {
             experience: appExperience,
             accessibilityIdentifier: "animate.tab.avi",
             activeContextSystemImage: "video.fill"
+        )
+    }
+
+    private var footerConfiguration: AVAppShellFooterConfiguration {
+        guard selectedTab == .create else {
+            return appExperience.footerConfiguration
+        }
+
+        return AVAppShellFooterConfiguration(
+            backdropHeight: 104,
+            playerTabSpacing: appExperience.footerConfiguration.playerTabSpacing
         )
     }
 

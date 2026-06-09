@@ -181,7 +181,6 @@ private struct AnimateCreateMediaFirstWorkspace: View {
                     primaryActionBarBackdrop
                 }
                 .frame(maxHeight: .infinity, alignment: .bottom)
-                .offset(y: 18)
             }
         }
         .animation(.spring(response: 0.38, dampingFraction: 0.86), value: presentation.videoDirectionSummary.hasScenes)
