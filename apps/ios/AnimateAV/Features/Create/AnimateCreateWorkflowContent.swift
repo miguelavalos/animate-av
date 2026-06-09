@@ -2302,16 +2302,9 @@ private struct AnimateCreatePrimaryActionBar: View {
             .background(AVBrandColor.elevatedSurface, in: RoundedRectangle(cornerRadius: 20, style: .continuous))
             .overlay {
                 RoundedRectangle(cornerRadius: 20, style: .continuous)
-                    .stroke(
-                        LinearGradient(
-                            colors: [AVBrandColor.glassStroke, AVBrandColor.accent.opacity(0.12)],
-                            startPoint: .topLeading,
-                            endPoint: .bottomTrailing
-                        ),
-                        lineWidth: 1
-                    )
+                    .stroke(AVBrandColor.borderSubtle.opacity(0.56), lineWidth: 1)
             }
-            .shadow(color: AVBrandColor.glassShadow.opacity(0.72), radius: 8, y: 2)
+            .shadow(color: AVBrandColor.ink.opacity(0.08), radius: 6, y: 2)
         }
     }
 
@@ -2448,21 +2441,14 @@ private struct AnimateCreateFinalVideoButtonStyle: ButtonStyle {
             .foregroundStyle(.white)
             .padding(.horizontal, 18)
             .background(
-                LinearGradient(
-                    colors: [
-                        AVBrandColor.accent.opacity(isEnabled ? 1 : 0.52),
-                        AVBrandColor.accent.opacity(isEnabled ? 0.82 : 0.42)
-                    ],
-                    startPoint: .topLeading,
-                    endPoint: .bottomTrailing
-                ),
+                AVBrandColor.accent.opacity(isEnabled ? 1 : 0.46),
                 in: Capsule()
             )
             .overlay {
                 Capsule()
-                    .stroke(Color.white.opacity(configuration.isPressed ? 0.26 : 0.18), lineWidth: 1)
+                    .stroke(Color.white.opacity(configuration.isPressed ? 0.30 : 0.22), lineWidth: 1)
             }
-            .shadow(color: AVBrandColor.accent.opacity(isEnabled ? 0.26 : 0), radius: 14, y: 6)
+            .shadow(color: AVBrandColor.ink.opacity(isEnabled ? 0.10 : 0), radius: 4, y: 2)
             .scaleEffect(configuration.isPressed ? 0.98 : 1)
             .opacity(isEnabled ? 1 : 0.72)
     }
