@@ -40,6 +40,7 @@ struct AnimateCreateWorkflowContent: View {
                     discardVideoCreation: viewModel.discardVideoCreation,
                     startSignInFlow: startSignInFlow,
                     openCredits: openCredits,
+                    prepareVideoDirection: viewModel.prepareVideoDirection,
                     prepareFinalRenderPlan: viewModel.prepareFinalVideoPlanFromCurrentSelection,
                     submitFinalVideoConfirmation: viewModel.submitFinalVideoConfirmation,
                     retryFinalVideoDownload: viewModel.retryFinalVideoDownload,
@@ -79,6 +80,7 @@ private struct AnimateCreateMediaFirstWorkspace: View {
     let discardVideoCreation: () -> Void
     let startSignInFlow: () -> Void
     let openCredits: () -> Void
+    let prepareVideoDirection: () -> Void
     let prepareFinalRenderPlan: (Bool) -> Void
     let submitFinalVideoConfirmation: (Bool) -> Void
     let retryFinalVideoDownload: () -> Void
@@ -96,6 +98,7 @@ private struct AnimateCreateMediaFirstWorkspace: View {
     @State private var handledOpenPickerRequest = 0
     @State private var handledOpenAlbumRequest = 0
     @State private var continueGuidedFlowRequest = 0
+    @State private var isVideoSetupGuideComplete = false
 
     var body: some View {
         ZStack {
@@ -147,6 +150,7 @@ private struct AnimateCreateMediaFirstWorkspace: View {
                             updateVoiceTone: updateVoiceTone,
                             createVideo: primaryFinalRenderAction,
                             continueGuidedFlowRequest: continueGuidedFlowRequest,
+                            isGuidedFlowComplete: $isVideoSetupGuideComplete,
                             discardVideoCreation: { showsDiscardVideoConfirmation = true }
                         )
                     } else if hasFinalVideoState {
@@ -171,8 +175,10 @@ private struct AnimateCreateMediaFirstWorkspace: View {
                         presentation: presentation,
                         startSignInFlow: startSignInFlow,
                         openCredits: openCredits,
+                        prepareVideoDirection: prepareVideoDirection,
                         generateFinalRender: primaryFinalRenderAction,
                         continueVideoSetup: continueVideoSetup,
+                        isVideoSetupGuideComplete: isVideoSetupGuideComplete,
                         openCreateVideoConfirmation: { showsCreateVideoConfirmation = true },
                         retryFinalVideoDownload: retryFinalVideoDownload,
                         finishFinalVideoToGallery: finishFinalVideoToGallery
@@ -197,6 +203,11 @@ private struct AnimateCreateMediaFirstWorkspace: View {
             guard !newItems.isEmpty else { return }
             importPickerItems(newItems)
             pickerItems = []
+        }
+        .onChange(of: selectedLook) { _, newValue in
+            if newValue == nil {
+                isVideoSetupGuideComplete = false
+            }
         }
         .navigationDestination(isPresented: $showsCompactMediaManager) {
             AnimateCreateMediaManagerSheet(
@@ -802,12 +813,12 @@ private struct AnimateCreateVideoDirectionCard: View {
     let updateVoiceTone: (AnimateVideoVoiceTone) -> Void
     let createVideo: () -> Void
     let continueGuidedFlowRequest: Int
+    @Binding var isGuidedFlowComplete: Bool
     let discardVideoCreation: () -> Void
 
     @State private var step: GuidedStep = .look
     @State private var activeGuidedSheet: GuidedStep?
     @State private var selectedScriptIdea: ScriptIdea = .none
-    @State private var isGuidedFlowComplete = false
     @State private var lookPageIndex = 0
     @State private var handledContinueGuidedFlowRequest = 0
 
@@ -2208,8 +2219,10 @@ private struct AnimateCreatePrimaryActionBar: View {
     let presentation: AnimateCreateWorkflowPresentation
     let startSignInFlow: () -> Void
     let openCredits: () -> Void
+    let prepareVideoDirection: () -> Void
     let generateFinalRender: () -> Void
     let continueVideoSetup: () -> Void
+    let isVideoSetupGuideComplete: Bool
     let openCreateVideoConfirmation: () -> Void
     let retryFinalVideoDownload: () -> Void
     let finishFinalVideoToGallery: () -> Void
@@ -2240,14 +2253,14 @@ private struct AnimateCreatePrimaryActionBar: View {
 
                     VStack(alignment: .leading, spacing: 3) {
                         if showsPrimaryHeaderTitle {
-                            Text(primaryActionPresentation.title)
+                            Text(primaryTitle)
                                 .font(.system(size: 14, weight: .black))
                                 .foregroundStyle(AVBrandColor.textPrimary)
                                 .lineLimit(2)
                                 .fixedSize(horizontal: false, vertical: true)
                         }
 
-                        Text(primaryActionPresentation.statusMessage ?? L10n.string("create.primary.creditPreflight"))
+                        Text(primaryStatusMessage)
                             .font(.system(size: 12, weight: .semibold))
                             .foregroundStyle(statusColor)
                             .lineLimit(2)
@@ -2259,7 +2272,7 @@ private struct AnimateCreatePrimaryActionBar: View {
 
                 if primaryActionPresentation.showsPrimaryActionButton {
                     Button(action: primaryAction) {
-                        Label(primaryActionPresentation.buttonTitle, systemImage: primaryActionPresentation.buttonIconName)
+                        Label(primaryButtonTitle, systemImage: primaryButtonIconName)
                             .font(.system(size: 15, weight: .black))
                             .lineLimit(1)
                             .minimumScaleFactor(0.8)
@@ -2337,6 +2350,31 @@ private struct AnimateCreatePrimaryActionBar: View {
         return AVBrandColor.textSecondary
     }
 
+    private var primaryTitle: String {
+        guideIsReadyToPrepareDirection ? L10n.string("create.primary.continueWithVideo") : primaryActionPresentation.title
+    }
+
+    private var primaryButtonTitle: String {
+        guideIsReadyToPrepareDirection ? L10n.string("create.primary.continueWithVideo") : primaryActionPresentation.buttonTitle
+    }
+
+    private var primaryButtonIconName: String {
+        guideIsReadyToPrepareDirection ? "video.fill" : primaryActionPresentation.buttonIconName
+    }
+
+    private var primaryStatusMessage: String {
+        guideIsReadyToPrepareDirection
+            ? L10n.string("create.primary.continuePreflight")
+            : primaryActionPresentation.statusMessage ?? L10n.string("create.primary.creditPreflight")
+    }
+
+    private var guideIsReadyToPrepareDirection: Bool {
+        primaryActionPresentation.hasFinalVideoIntent
+            && !primaryActionPresentation.hasCompletedVideoDirection
+            && primaryActionPresentation.hasSelectedVideoLook
+            && isVideoSetupGuideComplete
+    }
+
     private var primaryHeaderColor: Color {
         if presentation.finalRenderSummary.pendingGalleryVideo != nil {
             return AVBrandColor.accent
@@ -2351,7 +2389,7 @@ private struct AnimateCreatePrimaryActionBar: View {
     }
 
     private var showsPrimaryHeaderTitle: Bool {
-        primaryActionPresentation.title != primaryActionPresentation.buttonTitle
+        primaryTitle != primaryButtonTitle
     }
 
     private func primaryAction() {
@@ -2369,7 +2407,11 @@ private struct AnimateCreatePrimaryActionBar: View {
             if primaryActionPresentation.needsSignInForVideoDirection {
                 startSignInFlow()
             } else if !primaryActionPresentation.hasCompletedVideoDirection {
-                continueVideoSetup()
+                if guideIsReadyToPrepareDirection {
+                    prepareVideoDirection()
+                } else {
+                    continueVideoSetup()
+                }
             } else if primaryActionPresentation.needsCreditsForPreparedPlan {
                 openCreateVideoConfirmation()
             } else if primaryActionPresentation.finalVideoAction.hasRenderPlan {
