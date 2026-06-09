@@ -145,7 +145,7 @@ enum AnimateCreateTestFixtures {
     }
 
     static func makeRenderPlan(
-        momentId: String = "moment-1",
+        videoId: String = "video-1",
         canCreateVideo: Bool = true,
         totalCreditCost: Int = 2,
         minimumDurationMs: Int = 16_000,
@@ -156,7 +156,7 @@ enum AnimateCreateTestFixtures {
     ) -> AnimateRenderPlanResponse {
         AnimateRenderPlanResponse(
             appId: "animateav",
-            momentId: momentId,
+            videoId: videoId,
             planId: "plan-1",
             plan: AnimateRenderPlan(
                 schemaVersion: 1,
@@ -180,4 +180,33 @@ enum AnimateCreateTestFixtures {
         )
     }
 
+}
+
+extension AnimateVideo {
+    func withStoryInputSignature(_ signature: String?) -> AnimateVideo {
+        AnimateVideo(
+            id: id,
+            template: template,
+            creationMode: creationMode,
+            look: look,
+            theme: theme,
+            mood: mood,
+            duration: duration,
+            mediaUse: mediaUse,
+            status: status,
+            title: title,
+            tone: tone,
+            tempo: tempo,
+            occasion: occasion,
+            details: details,
+            storyInputSignature: signature,
+            durationSeconds: durationSeconds,
+            creditCost: creditCost,
+            updatedAt: updatedAt,
+            mediaCount: mediaCount,
+            mediaPreview: mediaPreview,
+            finalExport: finalExport,
+            assetKind: assetKind
+        )
+    }
 }

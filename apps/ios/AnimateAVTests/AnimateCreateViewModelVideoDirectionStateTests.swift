@@ -52,7 +52,7 @@ final class AnimateCreateViewModelVideoDirectionStateTests: XCTestCase {
             AnimateCreateFinalRenderState(
                 finalExport: nil,
                 latestFinalJob: nil,
-                renderPlan: AnimateCreateTestFixtures.makeRenderPlan(momentId: "moment-1"),
+                renderPlan: AnimateCreateTestFixtures.makeRenderPlan(videoId: "video-1"),
                 statusMessage: L10n.string("workflow.final.tryAgain"),
                 isGenerating: false
             )
@@ -70,7 +70,7 @@ final class AnimateCreateViewModelVideoDirectionStateTests: XCTestCase {
         let finalExport = AnimateCreateTestFixtures.makeArtifact(id: "artifact-1", kind: "final_export")
         let galleryVideo = AnimateGalleryVideoRecord(
             id: "artifact-1",
-            momentId: "moment-1",
+            videoId: "video-1",
             artifactId: "artifact-1",
             title: "Travel",
             r2Key: "animateav/artifact-1.mp4",
@@ -145,7 +145,7 @@ final class AnimateCreateViewModelVideoDirectionStateTests: XCTestCase {
             id: "convex-artifact-doc",
             workflowArtifactId: "workflow-artifact-1",
             kind: "final_export",
-            r2Key: "animateav/user/moment/final-exports/workflow-artifact-1.mp4",
+            r2Key: "animateav/user/video/final-exports/workflow-artifact-1.mp4",
             status: "available",
             hasWatermark: false,
             expiresAt: 0
@@ -159,7 +159,7 @@ final class AnimateCreateViewModelVideoDirectionStateTests: XCTestCase {
         let workflow = harness.finalRenderWorkflow
         harness.publishWorkspace(
             AnimateWorkspace(
-                video: AnimateCreateTestFixtures.makeVideo(id: "moment-1"),
+                video: AnimateCreateTestFixtures.makeVideo(id: "video-1"),
                 mediaAssets: [
                     AnimateCreateTestFixtures.makeMediaAsset(
                         id: "backend-media-1",
@@ -175,7 +175,7 @@ final class AnimateCreateViewModelVideoDirectionStateTests: XCTestCase {
         await Task.yield()
 
         await workflow.prepareFinalRenderPlan(
-            momentId: "moment-1",
+            videoId: "video-1",
             template: .birthdayMessage,
             creationStyle: nil,
             form: AnimateVideoSetupForm(template: .birthdayMessage),
@@ -192,7 +192,7 @@ final class AnimateCreateViewModelVideoDirectionStateTests: XCTestCase {
         let workflow = harness.finalRenderWorkflow
         harness.publishWorkspace(
             AnimateWorkspace(
-                video: AnimateCreateTestFixtures.makeVideo(id: "moment-1"),
+                video: AnimateCreateTestFixtures.makeVideo(id: "video-1"),
                 mediaAssets: [
                     AnimateCreateTestFixtures.makeMediaAsset(
                         id: "backend-media-1",
@@ -207,7 +207,7 @@ final class AnimateCreateViewModelVideoDirectionStateTests: XCTestCase {
         await Task.yield()
 
         await workflow.prepareFinalRenderPlan(
-            momentId: "moment-1",
+            videoId: "video-1",
             template: .birthdayMessage,
             creationStyle: nil,
             form: AnimateVideoSetupForm(template: .birthdayMessage),
@@ -218,19 +218,19 @@ final class AnimateCreateViewModelVideoDirectionStateTests: XCTestCase {
     }
 
     func testFinalRenderPlanWithoutWatermarkIsCurrentForWatermarkedRender() {
-        let plan = AnimateCreateTestFixtures.makeRenderPlan(momentId: "moment-1")
+        let plan = AnimateCreateTestFixtures.makeRenderPlan(videoId: "video-1")
 
         XCTAssertFalse(
             FinalRenderWorkflow.needsRenderPlanForFinalRender(
                 renderPlan: plan,
-                momentId: "moment-1",
+                videoId: "video-1",
                 removesWatermark: false
             )
         )
         XCTAssertTrue(
             FinalRenderWorkflow.needsRenderPlanForFinalRender(
                 renderPlan: plan,
-                momentId: "moment-1",
+                videoId: "video-1",
                 removesWatermark: true
             )
         )
@@ -246,10 +246,10 @@ final class AnimateCreateViewModelVideoDirectionStateTests: XCTestCase {
             finalRenderSession: URLSession(configuration: configuration)
         )
         let workflow = harness.finalRenderWorkflow
-        let plan = AnimateCreateTestFixtures.makeRenderPlan(momentId: "moment-1")
+        let plan = AnimateCreateTestFixtures.makeRenderPlan(videoId: "video-1")
         harness.publishWorkspace(
             AnimateWorkspace(
-                video: AnimateCreateTestFixtures.makeVideo(id: "moment-1"),
+                video: AnimateCreateTestFixtures.makeVideo(id: "video-1"),
                 mediaAssets: [
                     AnimateCreateTestFixtures.makeMediaAsset(id: "backend-media-1", hasUploadId: true)
                 ],
@@ -262,7 +262,7 @@ final class AnimateCreateViewModelVideoDirectionStateTests: XCTestCase {
         workflow.usePreparedRenderPlan(plan)
 
         await workflow.confirmPreparedFinalRender(
-            momentId: "moment-1",
+            videoId: "video-1",
             template: .birthdayMessage,
             creationStyle: nil,
             form: AnimateVideoSetupForm(template: .birthdayMessage),
@@ -316,11 +316,11 @@ final class AnimateCreateViewModelVideoDirectionStateTests: XCTestCase {
             imageGenerationAccountingClient: AnimateImageGenerationAccountingClient(baseURLString: "https://api.example.test")
         )
         viewModel.continueVideo(
-            AnimateCreateTestFixtures.makeVideo(id: "moment-1", status: "story_ready"),
+            AnimateCreateTestFixtures.makeVideo(id: "video-1", status: "story_ready"),
             focus: .video
         )
         let workspace = AnimateWorkspace(
-            video: AnimateCreateTestFixtures.makeVideo(id: "moment-1", status: "story_ready"),
+            video: AnimateCreateTestFixtures.makeVideo(id: "video-1", status: "story_ready"),
             mediaAssets: [
                 AnimateCreateTestFixtures.makeMediaAsset(
                     id: "backend-media-1",
@@ -360,7 +360,7 @@ final class AnimateCreateViewModelVideoDirectionStateTests: XCTestCase {
             )
         )
         let existingRenderPlan = AnimateCreateTestFixtures.makeRenderPlan(
-            momentId: "moment-1",
+            videoId: "video-1",
             totalCreditCost: 1,
             plannedAssetCount: 1,
             usedAssetCount: 1
@@ -392,7 +392,7 @@ final class AnimateCreateViewModelVideoDirectionStateTests: XCTestCase {
 
     func testVisibleFinalRenderPlanCanBeConfirmedEvenWhenLocalSignatureChanged() {
         let viewModel = AnimateCreateViewModel()
-        let plan = AnimateCreateTestFixtures.makeRenderPlan(momentId: "moment-1")
+        let plan = AnimateCreateTestFixtures.makeRenderPlan(videoId: "video-1")
 
         viewModel.applyFinalRenderState(
             AnimateCreateFinalRenderState(
@@ -404,15 +404,15 @@ final class AnimateCreateViewModelVideoDirectionStateTests: XCTestCase {
             )
         )
 
-        XCTAssertTrue(viewModel.hasConfirmableRenderPlan(momentId: "moment-1"))
-        XCTAssertEqual(viewModel.confirmableRenderPlan(momentId: "moment-1")?.planId, plan.planId)
-        XCTAssertFalse(viewModel.hasConfirmableRenderPlan(momentId: "other-moment"))
+        XCTAssertTrue(viewModel.hasConfirmableRenderPlan(videoId: "video-1"))
+        XCTAssertEqual(viewModel.confirmableRenderPlan(videoId: "video-1")?.planId, plan.planId)
+        XCTAssertFalse(viewModel.hasConfirmableRenderPlan(videoId: "other-video"))
     }
 
     func testBlockedFinalRenderPlanCannotBeConfirmed() {
         let viewModel = AnimateCreateViewModel()
         let plan = AnimateCreateTestFixtures.makeRenderPlan(
-            momentId: "moment-1",
+            videoId: "video-1",
             canCreateVideo: false
         )
 
@@ -426,7 +426,7 @@ final class AnimateCreateViewModelVideoDirectionStateTests: XCTestCase {
             )
         )
 
-        XCTAssertFalse(viewModel.hasConfirmableRenderPlan(momentId: "moment-1"))
+        XCTAssertFalse(viewModel.hasConfirmableRenderPlan(videoId: "video-1"))
     }
 
     func testFinalVideoActionUsesBackendVideoQuoteCostWhenAvailable() {
@@ -466,7 +466,7 @@ final class AnimateCreateViewModelVideoDirectionStateTests: XCTestCase {
     func testInsufficientCreditRenderPlanClearsWhenBalanceCanCoverCost() {
         let viewModel = AnimateCreateViewModel()
         let plan = AnimateCreateTestFixtures.makeRenderPlan(
-            momentId: "moment-1",
+            videoId: "video-1",
             canCreateVideo: false,
             totalCreditCost: 2,
             createVideoBlockers: ["insufficient_credits"]
@@ -503,7 +503,7 @@ final class AnimateCreateViewModelVideoDirectionStateTests: XCTestCase {
         viewModel.applyVideoCreationState(
             AnimateCreateVideoCreationState(
                 isCreatingVideo: false,
-                activeVideoId: "moment-1",
+                activeVideoId: "video-1",
                 setupErrorMessage: nil
             )
         )
@@ -552,7 +552,7 @@ final class AnimateCreateViewModelVideoDirectionStateTests: XCTestCase {
         viewModel.applyVideoCreationState(
             AnimateCreateVideoCreationState(
                 isCreatingVideo: false,
-                activeVideoId: "moment-1",
+                activeVideoId: "video-1",
                 setupErrorMessage: nil
             )
         )
@@ -568,7 +568,7 @@ final class AnimateCreateViewModelVideoDirectionStateTests: XCTestCase {
         viewModel.applyVideoDirectionState(
             AnimateCreateVideoDirectionState(
                 activeWorkspace: AnimateWorkspace(
-                    video: AnimateCreateTestFixtures.makeVideo(id: "moment-1"),
+                    video: AnimateCreateTestFixtures.makeVideo(id: "video-1"),
                     mediaAssets: [
                         AnimateCreateTestFixtures.makeMediaAsset(
                             id: "backend-media-1",
@@ -587,7 +587,7 @@ final class AnimateCreateViewModelVideoDirectionStateTests: XCTestCase {
         )
 
         let expectedLocalSignature = viewModel.currentVideoDirectionInputSignature(
-            momentId: "moment-1",
+            videoId: "video-1",
             persistedMedia: [
                 AnimateVideoDirectionMedia(
                     mediaAssetId: localMedia.id.uuidString,
@@ -599,7 +599,7 @@ final class AnimateCreateViewModelVideoDirectionStateTests: XCTestCase {
             ]
         )
         let backendMediaSignature = viewModel.currentVideoDirectionInputSignature(
-            momentId: "moment-1",
+            videoId: "video-1",
             persistedMedia: [
                 AnimateVideoDirectionMedia(
                     mediaAssetId: "backend-media-1",
@@ -611,8 +611,8 @@ final class AnimateCreateViewModelVideoDirectionStateTests: XCTestCase {
             ]
         )
 
-        XCTAssertEqual(viewModel.currentVideoDirectionInputSignature(momentId: "moment-1"), expectedLocalSignature)
-        XCTAssertNotEqual(viewModel.currentVideoDirectionInputSignature(momentId: "moment-1"), backendMediaSignature)
+        XCTAssertEqual(viewModel.currentVideoDirectionInputSignature(videoId: "video-1"), expectedLocalSignature)
+        XCTAssertNotEqual(viewModel.currentVideoDirectionInputSignature(videoId: "video-1"), backendMediaSignature)
     }
 
     func testWorkspaceSignatureReconcilesAfterVideoDirectionScenesArriveFirst() {
@@ -622,15 +622,21 @@ final class AnimateCreateViewModelVideoDirectionStateTests: XCTestCase {
             sourceLocalIdentifier: "local-asset-1"
         )
         let backendMedia = makeBackendMedia()
+        let video = AnimateCreateTestFixtures.makeVideo(
+            id: "video-1",
+            occasion: "Birthday"
+        )
+        viewModel.form = AnimateVideoSetupForm.continuing(video: video, templates: viewModel.templates)
+            ?? viewModel.form
         let backendSignature = viewModel.currentVideoDirectionInputSignature(
-            momentId: "moment-1",
+            videoId: "video-1",
             persistedMedia: [makeVideoDirectionMedia(from: backendMedia)]
         )
 
         viewModel.applyVideoCreationState(
             AnimateCreateVideoCreationState(
                 isCreatingVideo: false,
-                activeVideoId: "moment-1",
+                activeVideoId: "video-1",
                 setupErrorMessage: nil
             )
         )
@@ -657,11 +663,7 @@ final class AnimateCreateViewModelVideoDirectionStateTests: XCTestCase {
         viewModel.applyVideoDirectionState(
             AnimateCreateVideoDirectionState(
                 activeWorkspace: AnimateWorkspace(
-                    video: AnimateCreateTestFixtures.makeVideo(
-                        id: "moment-1",
-                        occasion: "Birthday",
-                        storyInputSignature: backendSignature
-                    ),
+                    video: video.withStoryInputSignature(backendSignature),
                     mediaAssets: [backendMedia],
                     storyScenes: [AnimateCreateTestFixtures.makeScene(id: "scene-1")],
                     renderJobs: [],
@@ -694,7 +696,7 @@ final class AnimateCreateViewModelVideoDirectionStateTests: XCTestCase {
             )
         )
 
-        XCTAssertEqual(viewModel.currentVideoDirectionInputSignature(momentId: "moment-1"), preparedVideoDirection.signature)
+        XCTAssertEqual(viewModel.currentVideoDirectionInputSignature(videoId: "video-1"), preparedVideoDirection.signature)
         XCTAssertTrue(viewModel.isVideoDirectionPreparedForCurrentInput)
     }
 
@@ -704,7 +706,7 @@ final class AnimateCreateViewModelVideoDirectionStateTests: XCTestCase {
 
         XCTAssertTrue(viewModel.isVideoDirectionPreparedForCurrentInput)
 
-        viewModel.form.details = "Make this more cinematic."
+        viewModel.form.occasion = "Make this more cinematic."
 
         XCTAssertFalse(viewModel.isVideoDirectionPreparedForCurrentInput)
     }
@@ -736,7 +738,7 @@ final class AnimateCreateViewModelVideoDirectionStateTests: XCTestCase {
             AnimateCreateVideoDirectionState(
                 activeWorkspace: AnimateWorkspace(
                     video: AnimateCreateTestFixtures.makeVideo(
-                        id: "moment-1",
+                        id: "video-1",
                         occasion: "Birthday",
                         storyInputSignature: preparedVideoDirection.signature
                     ),
@@ -785,7 +787,7 @@ final class AnimateCreateViewModelVideoDirectionStateTests: XCTestCase {
         viewModel.applyVideoCreationState(
             AnimateCreateVideoCreationState(
                 isCreatingVideo: false,
-                activeVideoId: "moment-1",
+                activeVideoId: "video-1",
                 setupErrorMessage: nil
             )
         )
@@ -795,6 +797,36 @@ final class AnimateCreateViewModelVideoDirectionStateTests: XCTestCase {
                 statusMessage: nil,
                 isImporting: false,
                 importProgress: nil
+            )
+        )
+        let video = AnimateCreateTestFixtures.makeVideo(
+            id: "video-1",
+            template: .partyRecap,
+            theme: "eventRecap",
+            mood: "warm",
+            duration: "auto",
+            mediaUse: "aviPick",
+            occasion: "Event Recap",
+            details: ""
+        )
+        viewModel.applyVideoDirectionState(
+            AnimateCreateVideoDirectionState(
+                activeWorkspace: AnimateWorkspace(
+                    video: video,
+                    mediaAssets: [
+                        AnimateCreateTestFixtures.makeMediaAsset(
+                            id: "backend-media-1",
+                            sourceLocalIdentifier: "local-asset-1"
+                        )
+                    ],
+                    storyScenes: [],
+                    renderJobs: [],
+                    artifacts: []
+                ),
+                savedScenes: [],
+                generatedScenes: [],
+                statusMessage: nil,
+                isPlanning: false
             )
         )
         viewModel.applyFinalRenderState(
@@ -807,22 +839,13 @@ final class AnimateCreateViewModelVideoDirectionStateTests: XCTestCase {
             )
         )
 
-        let signatureBeforeSync = viewModel.currentFinalRenderInputSignatureSource(momentId: "moment-1")
+        let signatureBeforeSync = viewModel.currentFinalRenderInputSignatureSource(videoId: "video-1")
         XCTAssertNotNil(viewModel.currentRenderPlan)
 
         viewModel.applyVideoDirectionState(
             AnimateCreateVideoDirectionState(
                 activeWorkspace: AnimateWorkspace(
-                    video: AnimateCreateTestFixtures.makeVideo(
-                        id: "moment-1",
-                        template: .partyRecap,
-                        theme: "eventRecap",
-                        mood: "warm",
-                        duration: "auto",
-                        mediaUse: "aviPick",
-                        occasion: "Event Recap",
-                        details: ""
-                    ),
+                    video: video,
                     mediaAssets: [
                         AnimateCreateTestFixtures.makeMediaAsset(
                             id: "backend-media-1",
@@ -840,7 +863,7 @@ final class AnimateCreateViewModelVideoDirectionStateTests: XCTestCase {
             )
         )
 
-        let signatureAfterSync = viewModel.currentFinalRenderInputSignatureSource(momentId: "moment-1")
+        let signatureAfterSync = viewModel.currentFinalRenderInputSignatureSource(videoId: "video-1")
         XCTAssertEqual(signatureBeforeSync, signatureAfterSync, "\(viewModel.form)")
         XCTAssertNotNil(viewModel.currentRenderPlan)
         XCTAssertNotNil(viewModel.finalRenderSummary.renderPlan)
@@ -885,30 +908,30 @@ final class AnimateCreateViewModelVideoDirectionStateTests: XCTestCase {
         await fulfillment(of: [harness.createAttemptExpectation], timeout: 1)
         await waitForVideoDirectionStatusMessage(in: viewModel)
 
-        XCTAssertEqual(viewModel.videoDirectionSummary.statusMessage, AnimateSyncError.notConfigured.localizedDescription)
+        XCTAssertEqual(viewModel.videoDirectionSummary.statusMessage, L10n.string("workflow.video.tryAgain"))
     }
 
     private static let confirmFinalRenderJSON = """
     {
       "appId": "animateav",
-      "momentId": "moment-1",
+      "videoId": "video-1",
       "planId": "plan-1",
       "reservation": {
         "id": "reservation-1",
         "appId": "animateav",
         "userId": "user-1",
-        "momentId": "moment-1",
+        "videoId": "video-1",
         "workflowRunId": null,
         "amount": 2,
         "status": "reserved",
-        "idempotencyKey": "final-confirm:moment-1:plan-1:birthdayMessage:watermarked",
+        "idempotencyKey": "final-confirm:video-1:plan-1:birthdayMessage:watermarked",
         "expiresAt": "2026-06-16T16:00:00Z",
         "createdAt": "2026-05-16T16:00:00Z",
         "updatedAt": "2026-05-16T16:00:00Z"
       },
       "workflow": {
         "appId": "animateav",
-        "momentId": "moment-1",
+        "videoId": "video-1",
         "renderJobId": "render-1",
         "workflowRunId": "workflow-1",
         "status": "running",
@@ -916,7 +939,7 @@ final class AnimateCreateViewModelVideoDirectionStateTests: XCTestCase {
       },
       "renderPlan": {
         "appId": "animateav",
-        "momentId": "moment-1",
+        "videoId": "video-1",
         "planId": "plan-1",
         "canCreateVideo": true,
         "createVideoBlockers": [],
@@ -924,8 +947,8 @@ final class AnimateCreateViewModelVideoDirectionStateTests: XCTestCase {
         "plan": {
           "schemaVersion": 1,
           "secondsPerCredit": 15,
-          "renderOptionId": "standard_moment",
-          "renderOptionTitle": "Standard Moment",
+          "renderOptionId": "standard_video",
+          "renderOptionTitle": "Standard Video",
           "creditCost": 2,
           "totalCreditCost": 2,
           "targetDurationMs": 30000,
@@ -966,7 +989,7 @@ final class AnimateCreateViewModelVideoDirectionStateTests: XCTestCase {
     private static let renderPlanWithoutBrandingJSON = """
     {
       "appId": "animateav",
-      "momentId": "moment-1",
+      "videoId": "video-1",
       "planId": "plan-without-branding-1",
       "watermark": {
         "includedForPro": true,
@@ -1000,24 +1023,24 @@ final class AnimateCreateViewModelVideoDirectionStateTests: XCTestCase {
     private static let confirmFinalRenderWithoutBrandingJSON = """
     {
       "appId": "animateav",
-      "momentId": "moment-1",
+      "videoId": "video-1",
       "planId": "plan-without-branding-1",
       "reservation": {
         "id": "reservation-without-branding-1",
         "appId": "animateav",
         "userId": "user-1",
-        "momentId": "moment-1",
+        "videoId": "video-1",
         "workflowRunId": null,
         "amount": 2,
         "status": "reserved",
-        "idempotencyKey": "final-confirm:moment-1:plan-without-branding-1:birthdayMessage:without-branding",
+        "idempotencyKey": "final-confirm:video-1:plan-without-branding-1:birthdayMessage:without-branding",
         "expiresAt": "2026-06-16T16:00:00Z",
         "createdAt": "2026-05-16T16:00:00Z",
         "updatedAt": "2026-05-16T16:00:00Z"
       },
       "workflow": {
         "appId": "animateav",
-        "momentId": "moment-1",
+        "videoId": "video-1",
         "renderJobId": "render-without-branding-1",
         "workflowRunId": "workflow-without-branding-1",
         "status": "running",
@@ -1025,7 +1048,7 @@ final class AnimateCreateViewModelVideoDirectionStateTests: XCTestCase {
       },
       "renderPlan": {
         "appId": "animateav",
-        "momentId": "moment-1",
+        "videoId": "video-1",
         "planId": "plan-without-branding-1",
         "watermark": {
           "includedForPro": true,
@@ -1061,28 +1084,30 @@ final class AnimateCreateViewModelVideoDirectionStateTests: XCTestCase {
     @discardableResult
     private func applyPreparedBackendVideoDirection(
         to viewModel: AnimateCreateViewModel,
-        momentId: String = "moment-1"
+        videoId: String = "video-1"
     ) -> (media: AnimateMediaAsset, signature: String) {
         let media = makeBackendMedia()
+        let video = AnimateCreateTestFixtures.makeVideo(
+            id: videoId,
+            occasion: "Birthday"
+        )
+        viewModel.form = AnimateVideoSetupForm.continuing(video: video, templates: viewModel.templates)
+            ?? viewModel.form
         viewModel.applyVideoCreationState(
             AnimateCreateVideoCreationState(
                 isCreatingVideo: false,
-                activeVideoId: momentId,
+                activeVideoId: videoId,
                 setupErrorMessage: nil
             )
         )
         let signature = viewModel.currentVideoDirectionInputSignature(
-            momentId: momentId,
+            videoId: videoId,
             persistedMedia: [makeVideoDirectionMedia(from: media)]
         )
         viewModel.applyVideoDirectionState(
             AnimateCreateVideoDirectionState(
                 activeWorkspace: AnimateWorkspace(
-                    video: AnimateCreateTestFixtures.makeVideo(
-                        id: momentId,
-                        occasion: "Birthday",
-                        storyInputSignature: signature
-                    ),
+                    video: video.withStoryInputSignature(signature),
                     mediaAssets: [media],
                     storyScenes: [AnimateCreateTestFixtures.makeScene(id: "scene-1")],
                     renderJobs: [],
@@ -1257,11 +1282,11 @@ private final class AnimateVideoCreationFailureHarness:
         throw creationError
     }
 
-    func updateVideoSetup(bearerToken: String, momentId: String, form: AnimateVideoSetupForm) async throws {}
+    func updateVideoSetup(bearerToken: String, videoId: String, form: AnimateVideoSetupForm) async throws {}
 
-    func deleteVideo(bearerToken: String, momentId: String) async throws {}
+    func deleteVideo(bearerToken: String, videoId: String) async throws {}
 
-    func observeWorkspace(ownerUserId: String?, momentId: String?) {}
+    func observeWorkspace(ownerUserId: String?, videoId: String?) {}
 
     func clearWorkspace() {
         workspaceSubject.send(nil)
@@ -1286,7 +1311,7 @@ private struct TestGalleryStore: AnimateGalleryStoring {
     func containsImage(artifactId: String) -> Bool { false }
     func saveDownloadedVideo(
         temporaryFileURL: URL,
-        momentId: String,
+        videoId: String,
         artifactId: String,
         title: String,
         r2Key: String,
@@ -1294,7 +1319,7 @@ private struct TestGalleryStore: AnimateGalleryStoring {
     ) throws -> AnimateGalleryVideoRecord {
         AnimateGalleryVideoRecord(
             id: artifactId,
-            momentId: momentId,
+            videoId: videoId,
             artifactId: artifactId,
             title: title,
             r2Key: r2Key,

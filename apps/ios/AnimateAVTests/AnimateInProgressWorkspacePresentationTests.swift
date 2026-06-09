@@ -178,11 +178,11 @@ final class AnimateInProgressWorkspacePresentationTests: XCTestCase {
 
     private func makeVideo(
         status: String = "in_progress",
-        title: String = "moment-1",
+        title: String = "video-1",
         updatedAt: Double = 10
     ) -> AnimateVideo {
         AnimateVideo(
-            id: "moment-1",
+            id: "video-1",
             template: .birthdayMessage,
             status: status,
             title: title,

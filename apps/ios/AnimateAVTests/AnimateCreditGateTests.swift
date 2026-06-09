@@ -119,7 +119,7 @@ final class AnimateCreditGateTests: XCTestCase {
 
     func testContinuingSetupFormUsesVideoFieldsAndFallbacks() {
         let video = AnimateVideo(
-            id: "moment-1",
+            id: "video-1",
             template: .birthdayMessage,
             status: "in_progress",
             title: "Birthday",
@@ -187,6 +187,7 @@ final class AnimateCreditGateTests: XCTestCase {
 
         var form = AnimateVideoSetupForm(template: .birthdayMessage)
         form.occasion = "Trip"
+        form.hasMessage = true
         form.details = "Use the desert photos."
         let media = [
             videoDirectionMedia(id: "media-a", sortOrder: 0),
@@ -194,12 +195,12 @@ final class AnimateCreditGateTests: XCTestCase {
         ]
 
         let baseSignature = AnimateVideoDirectionInputSignature.make(
-            momentId: "moment-1",
+            videoId: "video-1",
             form: form,
             selectedMedia: media
         )
         let sameInputSignature = AnimateVideoDirectionInputSignature.make(
-            momentId: "moment-1",
+            videoId: "video-1",
             form: form,
             selectedMedia: media.reversed()
         )
@@ -207,7 +208,7 @@ final class AnimateCreditGateTests: XCTestCase {
         XCTAssertEqual(baseSignature, sameInputSignature)
 
         let reorderedSignature = AnimateVideoDirectionInputSignature.make(
-            momentId: "moment-1",
+            videoId: "video-1",
             form: form,
             selectedMedia: [
                 videoDirectionMedia(id: "media-a", sortOrder: 1),
@@ -218,7 +219,7 @@ final class AnimateCreditGateTests: XCTestCase {
 
         form.details = "Use the desert photos and end on the group shot."
         let changedDirectionSignature = AnimateVideoDirectionInputSignature.make(
-            momentId: "moment-1",
+            videoId: "video-1",
             form: form,
             selectedMedia: media
         )
@@ -228,7 +229,7 @@ final class AnimateCreditGateTests: XCTestCase {
     func testFinalRenderRulesRequireReadyStatusAndCredits() {
         let balance = AnimateCreditBalance(proMonthly: 0, promotional: 0, purchased: 2)
         let video = AnimateVideo(
-            id: "moment-1",
+            id: "video-1",
             template: .birthdayMessage,
             status: "story_ready",
             title: "Birthday",

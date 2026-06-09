@@ -4,6 +4,8 @@ enum AnimateCreateUITestFixtures {
     enum Mode: String {
         case storyReady = "story_ready"
         case videoPlanReady = "video_plan_ready"
+        case videoPlanReadyNoMessage = "video_plan_ready_no_message"
+        case videoPlanReadyWithMessage = "video_plan_ready_with_message"
         case videoPlanInsufficientCredits = "video_plan_insufficient_credits"
         case finalQueued = "final_queued"
         case finalRunning = "final_running"
@@ -68,7 +70,7 @@ enum AnimateCreateUITestFixtures {
         switch mode {
         case .videoPlanInsufficientCredits:
             return .empty
-        case .storyReady, .videoPlanReady, .finalQueued, .finalRunning, .full:
+        case .storyReady, .videoPlanReady, .videoPlanReadyNoMessage, .videoPlanReadyWithMessage, .finalQueued, .finalRunning, .full:
             return AnimateCreditBalance(proMonthly: 4, promotional: 1, purchased: 3)
         }
     }
@@ -108,7 +110,7 @@ enum AnimateCreateUITestFixtures {
 
     static func renderJobs(for mode: Mode) -> [AnimateRenderJob] {
         switch mode {
-        case .storyReady, .videoPlanReady, .videoPlanInsufficientCredits:
+        case .storyReady, .videoPlanReady, .videoPlanReadyNoMessage, .videoPlanReadyWithMessage, .videoPlanInsufficientCredits:
             return []
         case .finalQueued:
             return [
@@ -131,7 +133,7 @@ enum AnimateCreateUITestFixtures {
 
     static func artifacts(for mode: Mode) -> [AnimateArtifact] {
         switch mode {
-        case .storyReady, .videoPlanReady, .videoPlanInsufficientCredits:
+        case .storyReady, .videoPlanReady, .videoPlanReadyNoMessage, .videoPlanReadyWithMessage, .videoPlanInsufficientCredits:
             return []
         case .finalQueued, .finalRunning:
             return []
@@ -148,6 +150,7 @@ enum AnimateCreateUITestFixtures {
 
     static func renderPlan(for mode: Mode) -> AnimateRenderPlanResponse {
         let hasCredits = mode != .videoPlanInsufficientCredits
+        let creditCost = mode == .videoPlanReadyWithMessage ? 2 : 1
         return AnimateRenderPlanResponse(
             appId: "animateav",
             videoId: videoId,
@@ -163,8 +166,8 @@ enum AnimateCreateUITestFixtures {
                 schemaVersion: 1,
                 minimumDurationMs: 5_000,
                 targetDurationMs: 5_000,
-                creditCost: 1,
-                totalCreditCost: 1,
+                creditCost: creditCost,
+                totalCreditCost: creditCost,
                 secondsPerCredit: 5,
                 plannedAssetCount: 1,
                 usedAssetCount: 1,
@@ -187,7 +190,7 @@ enum AnimateCreateUITestFixtures {
             return "gallery_ready"
         case .finalQueued, .finalRunning:
             return "rendering"
-        case .storyReady, .videoPlanReady, .videoPlanInsufficientCredits:
+        case .storyReady, .videoPlanReady, .videoPlanReadyNoMessage, .videoPlanReadyWithMessage, .videoPlanInsufficientCredits:
             return "story_ready"
         }
     }

@@ -466,14 +466,27 @@ final class AnimateCreateViewModel: ObservableObject {
 
         let workspace = AnimateCreateUITestFixtures.workspace(for: fixtureMode)
         let template = templates.first(where: { $0.id == workspace.video.template }) ?? AnimateVideoTemplate.birthdayMessage
+        let fixtureHasMessage = fixtureMode == .videoPlanReadyWithMessage
         form = AnimateVideoSetupForm(
             template: template,
             occasion: workspace.video.occasion ?? "Birthday",
             recipient: "Ava",
             tone: AnimateVideoSetupTone(rawValue: workspace.video.tone ?? "") ?? .warm,
             tempo: AnimateVideoSetupTempo(rawValue: workspace.video.tempo ?? "") ?? .balanced,
-            details: workspace.video.details ?? ""
+            details: fixtureHasMessage ? "Que tengas una fiesta llena de luz, cariño y magia." : ""
         )
+        form.look = .crayonKids
+        form.theme = .travel
+        form.hasMessage = fixtureHasMessage
+        form.audioEnabled = true
+        form.musicEnabled = true
+        form.voiceEnabled = fixtureHasMessage
+        form.voiceProfile = .adultWoman
+        form.voiceTone = .warm
+        selectedVideoLook = form.look
+        selectedCreationStyle = creationStyles.first(where: { $0.id == form.theme })
+            ?? AnimateVideoCreationStyle.launchStyles[0]
+        selectedMusicPreset = selectedCreationStyle.defaultMusic
         isSignedIn = true
         balance = AnimateCreateUITestFixtures.balance(for: fixtureMode)
         isContinuingVideoCreation = true
@@ -491,7 +504,7 @@ final class AnimateCreateViewModel: ObservableObject {
         pendingGalleryVideo = nil
         latestFinalJob = workspace.latestRenderJob(kind: "final")
         switch fixtureMode {
-        case .videoPlanReady, .videoPlanInsufficientCredits:
+        case .videoPlanReady, .videoPlanReadyNoMessage, .videoPlanReadyWithMessage, .videoPlanInsufficientCredits:
             renderPlan = AnimateCreateUITestFixtures.renderPlan(for: fixtureMode)
         case .storyReady, .finalQueued, .finalRunning, .full:
             renderPlan = nil
@@ -501,7 +514,7 @@ final class AnimateCreateViewModel: ObservableObject {
             switch fixtureMode {
             case .storyReady:
                 return nil
-            case .videoPlanReady:
+            case .videoPlanReady, .videoPlanReadyNoMessage, .videoPlanReadyWithMessage:
                 return L10n.string("workflow.final.planReady")
             case .videoPlanInsufficientCredits:
                 return L10n.string("create.final.blocker.insufficientCredits")
@@ -513,8 +526,14 @@ final class AnimateCreateViewModel: ObservableObject {
                 return L10n.string("create.final.status.ready")
             }
         }()
-        pendingFocus = .video
-        continuationFocusHint = .video
+        switch fixtureMode {
+        case .videoPlanReady, .videoPlanReadyNoMessage, .videoPlanReadyWithMessage, .videoPlanInsufficientCredits:
+            pendingFocus = nil
+            continuationFocusHint = nil
+        case .storyReady, .finalQueued, .finalRunning, .full:
+            pendingFocus = .video
+            continuationFocusHint = .video
+        }
     }
 
     var effectiveActiveWorkspace: AnimateWorkspace? {

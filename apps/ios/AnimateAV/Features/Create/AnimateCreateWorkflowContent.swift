@@ -246,6 +246,7 @@ private struct AnimateCreateMediaFirstWorkspace: View {
             .presentationDragIndicator(.visible)
         }
         .onChange(of: presentation.finalRenderSummary.renderPlan?.planId) { _, _ in
+            markVideoSetupGuideCompleteIfFinalPlanExists()
             presentCreateVideoConfirmationIfReady()
         }
         .onChange(of: presentation.finalRenderSummary.latestFinalJob?.id) { _, jobId in
@@ -266,6 +267,7 @@ private struct AnimateCreateMediaFirstWorkspace: View {
             }
         }
         .onAppear {
+            markVideoSetupGuideCompleteIfFinalPlanExists()
             openCompactPickerIfRequested(openPickerRequest)
         }
         .onChange(of: openPickerRequest) { _, newValue in
@@ -361,6 +363,11 @@ private struct AnimateCreateMediaFirstWorkspace: View {
               finalVideoAction.canShowConfirmationSheet else { return }
         waitsForFinalRenderPlan = false
         showsCreateVideoConfirmation = true
+    }
+
+    private func markVideoSetupGuideCompleteIfFinalPlanExists() {
+        guard presentation.finalRenderSummary.renderPlan != nil else { return }
+        isVideoSetupGuideComplete = true
     }
 
     private func continueFromCompletedVideoSetupGuide() {

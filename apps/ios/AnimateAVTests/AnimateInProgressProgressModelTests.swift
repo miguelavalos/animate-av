@@ -45,7 +45,7 @@ final class AnimateInProgressProgressModelTests: XCTestCase {
         artifacts: [AnimateArtifact] = []
     ) -> AnimateWorkspace {
         AnimateWorkspace(
-            video: makeVideo(id: "moment-1", status: "in_progress", updatedAt: 10),
+            video: makeVideo(id: "video-1", status: "in_progress", updatedAt: 10),
             mediaAssets: mediaAssets,
             storyScenes: storyScenes,
             renderJobs: renderJobs,
@@ -73,7 +73,7 @@ final class AnimateInProgressProgressModelTests: XCTestCase {
         AnimateArtifact(
             id: "\(kind)-1",
             kind: kind,
-            r2Key: "animateav/user/moment/\(kind).mp4",
+            r2Key: "animateav/user/video/\(kind).mp4",
             status: status,
             hasWatermark: false,
             expiresAt: 1_781_592_000_000

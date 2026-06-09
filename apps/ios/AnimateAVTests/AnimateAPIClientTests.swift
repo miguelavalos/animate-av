@@ -13,7 +13,7 @@ final class AnimateAPIClientTests: XCTestCase {
             json: """
             {
               "appId": "animateav",
-              "momentId": "moment-1",
+              "videoId": "video-1",
               "mediaAssetId": "media-1",
               "uploadId": "upload-1",
               "uploadUrl": "https://uploads.example.com/media-1",
@@ -39,7 +39,7 @@ final class AnimateAPIClientTests: XCTestCase {
             selected: true
         )
 
-        _ = try await client.prepareUpload(momentId: "moment-1", bearerToken: "token-1", media: media)
+        _ = try await client.prepareUpload(videoId: "video-1", bearerToken: "token-1", media: media)
 
         XCTAssertEqual(AnimateURLProtocolMock.lastRequest?.url?.absoluteString, "\(accountAPIBaseURL)/v1/apps/animateav/media/prepare-upload")
         XCTAssertEqual(AnimateURLProtocolMock.lastRequest?.value(forHTTPHeaderField: "Authorization"), "Bearer token-1")
@@ -51,7 +51,7 @@ final class AnimateAPIClientTests: XCTestCase {
             json: """
             {
               "appId": "animateav",
-              "momentId": "moment-1",
+              "videoId": "video-1",
               "mediaAssetId": "media-1",
               "uploadId": "upload-1",
               "uploadUrl": "https://uploads.example.com/media-1",
@@ -81,7 +81,7 @@ final class AnimateAPIClientTests: XCTestCase {
             selected: true
         )
 
-        _ = try await client.prepareUpload(momentId: "moment-1", bearerToken: "token-1", media: media)
+        _ = try await client.prepareUpload(videoId: "video-1", bearerToken: "token-1", media: media)
 
         XCTAssertEqual(AnimateURLProtocolMock.requestCount, 2)
     }
@@ -105,7 +105,7 @@ final class AnimateAPIClientTests: XCTestCase {
         )
         let prepared = AnimatePreparedUpload(
             appId: "animateav",
-            momentId: "moment-1",
+            videoId: "video-1",
             mediaAssetId: "media-1",
             uploadId: "upload-1",
             uploadUrl: uploadURL,
@@ -113,7 +113,7 @@ final class AnimateAPIClientTests: XCTestCase {
             method: "PUT",
             headers: [
                 "content-type": "image/jpeg",
-                "x-appsav-videos-moment-id": "moment-1",
+                "x-appsav-videos-video-id": "video-1",
                 "x-appsav-videos-media-asset-id": "media-1"
             ],
             expiresAt: "2026-05-16T17:00:00Z",
@@ -125,7 +125,7 @@ final class AnimateAPIClientTests: XCTestCase {
         XCTAssertEqual(AnimateURLProtocolMock.lastRequest?.url?.absoluteString, uploadURL.absoluteString)
         XCTAssertEqual(AnimateURLProtocolMock.lastRequest?.httpMethod, "PUT")
         XCTAssertNil(AnimateURLProtocolMock.lastRequest?.value(forHTTPHeaderField: "Authorization"))
-        XCTAssertEqual(AnimateURLProtocolMock.lastRequest?.value(forHTTPHeaderField: "x-appsav-videos-moment-id"), "moment-1")
+        XCTAssertEqual(AnimateURLProtocolMock.lastRequest?.value(forHTTPHeaderField: "x-appsav-videos-video-id"), "video-1")
     }
 
     func testUploadWithoutSignedURLFailsBeforeSavingMedia() async throws {
@@ -146,7 +146,7 @@ final class AnimateAPIClientTests: XCTestCase {
         )
         let prepared = AnimatePreparedUpload(
             appId: "animateav",
-            momentId: "moment-1",
+            videoId: "video-1",
             mediaAssetId: "media-1",
             uploadId: "upload-1",
             uploadUrl: nil,
@@ -170,7 +170,7 @@ final class AnimateAPIClientTests: XCTestCase {
     func testDirectUploadCompletesPreparedUploadAfterR2Put() async throws {
         let session = makeMockSession(json: uploadCompletionJSON)
         let client = AnimateUploadClient(baseURLString: accountAPIBaseURL, session: session)
-        let uploadURL = URL(string: "https://account-1.r2.cloudflarestorage.com/appsav-assets-preview/animateav/user/moment/source/media-1?X-Amz-Signature=test")!
+        let uploadURL = URL(string: "https://account-1.r2.cloudflarestorage.com/appsav-assets-preview/animateav/user/video/source/media-1?X-Amz-Signature=test")!
         let completionURL = URL(string: "\(accountAPIBaseURL)/v1/apps/animateav/uploads/upload-1/complete")!
         let media = AnimateSelectedMedia(
             id: UUID(uuidString: "00000000-0000-0000-0000-000000000010")!,
@@ -187,7 +187,7 @@ final class AnimateAPIClientTests: XCTestCase {
         )
         let prepared = AnimatePreparedUpload(
             appId: "animateav",
-            momentId: "moment-1",
+            videoId: "video-1",
             mediaAssetId: "media-1",
             uploadId: "upload-1",
             uploadUrl: uploadURL,
@@ -232,7 +232,7 @@ final class AnimateAPIClientTests: XCTestCase {
         )
         let prepared = AnimatePreparedUpload(
             appId: "animateav",
-            momentId: "moment-1",
+            videoId: "video-1",
             mediaAssetId: "media-1",
             uploadId: "upload-1",
             uploadUrl: uploadURL,
@@ -253,7 +253,7 @@ final class AnimateAPIClientTests: XCTestCase {
             json: """
             {
               "appId": "animateav",
-              "momentId": "moment-1",
+              "videoId": "video-1",
               "workflowRunId": "workflow-1",
               "status": "ready",
               "provider": "mock",
@@ -271,7 +271,7 @@ final class AnimateAPIClientTests: XCTestCase {
         let client = AnimateVideoDirectionClient(baseURLString: accountAPIBaseURL, session: session)
 
         _ = try await client.generatePlan(
-            momentId: "moment-1",
+            videoId: "video-1",
             ownerUserId: "user-1",
             bearerToken: "token-1",
             form: AnimateVideoSetupForm(template: .birthdayMessage),
@@ -288,7 +288,7 @@ final class AnimateAPIClientTests: XCTestCase {
             json: """
             {
               "appId": "animateav",
-              "momentId": "moment-1",
+              "videoId": "video-1",
               "workflowRunId": "workflow-1",
               "status": "ready",
               "provider": "mock",
@@ -310,7 +310,7 @@ final class AnimateAPIClientTests: XCTestCase {
         )
 
         _ = try await client.generatePlan(
-            momentId: "moment-1",
+            videoId: "video-1",
             ownerUserId: "user-1",
             bearerToken: "token-1",
             form: AnimateVideoSetupForm(template: .birthdayMessage),
@@ -325,7 +325,7 @@ final class AnimateAPIClientTests: XCTestCase {
             json: """
             {
               "appId": "animateav",
-              "momentId": "moment-1",
+              "videoId": "video-1",
               "planId": "plan-1",
               "canCreateVideo": true,
               "createVideoBlockers": [],
@@ -333,8 +333,8 @@ final class AnimateAPIClientTests: XCTestCase {
               "plan": {
                 "schemaVersion": 1,
                 "secondsPerCredit": 15,
-                "renderOptionId": "short_moment",
-                "renderOptionTitle": "Short Moment",
+                "renderOptionId": "short_video",
+                "renderOptionTitle": "Short Video",
                 "creationMode": "quick",
                 "look": "real",
                 "theme": "travel",
@@ -367,7 +367,7 @@ final class AnimateAPIClientTests: XCTestCase {
         form.details = ""
 
         _ = try await client.prepareRenderPlan(
-            momentId: "moment-1",
+            videoId: "video-1",
             bearerToken: "token-1",
             template: .partyRecap,
             creationStyle: nil,
@@ -387,7 +387,7 @@ final class AnimateAPIClientTests: XCTestCase {
         XCTAssertNil(json["details"])
         XCTAssertNil(json["message"])
         XCTAssertNil(json["script"])
-        XCTAssertEqual(json["narrationVoice"] as? String, AnimateVideoVoiceProfile.adultWoman.rawValue)
+        XCTAssertNil(json["narrationVoice"])
         XCTAssertEqual(json["selectedSourceLocalIdentifiers"] as? [String], ["local-1", "local-2"])
         XCTAssertEqual(json["sourceImageUploadId"] as? String, "source-upload-1")
         XCTAssertNil(json["generatedImageArtifactId"])
@@ -399,7 +399,7 @@ final class AnimateAPIClientTests: XCTestCase {
             json: """
             {
               "appId": "animateav",
-              "momentId": "moment-1",
+              "videoId": "video-1",
               "planId": "plan-1",
               "canCreateVideo": true,
               "createVideoBlockers": [],
@@ -407,8 +407,8 @@ final class AnimateAPIClientTests: XCTestCase {
               "plan": {
                 "schemaVersion": 1,
                 "secondsPerCredit": 15,
-                "renderOptionId": "short_moment",
-                "renderOptionTitle": "Short Moment",
+                "renderOptionId": "short_video",
+                "renderOptionTitle": "Short Video",
                 "creationMode": "quick",
                 "look": "cartoon",
                 "theme": "celebration",
@@ -435,9 +435,11 @@ final class AnimateAPIClientTests: XCTestCase {
         form.look = .cartoon
         form.occasion = "Birthday"
         form.details = "Happy birthday, Ana. Your photo turns into a watercolor celebration."
+        form.hasMessage = true
+        form.voiceEnabled = true
 
         _ = try await client.prepareRenderPlan(
-            momentId: "moment-1",
+            videoId: "video-1",
             bearerToken: "token-1",
             template: .birthdayMessage,
             creationStyle: nil,
@@ -449,9 +451,13 @@ final class AnimateAPIClientTests: XCTestCase {
         let body = try XCTUnwrap(AnimateURLProtocolMock.lastRequestBody)
         let json = try XCTUnwrap(JSONSerialization.jsonObject(with: body) as? [String: Any])
         XCTAssertEqual(json["occasion"] as? String, "Birthday")
-        XCTAssertEqual(json["details"] as? String, "Happy birthday, Ana. Your photo turns into a watercolor celebration.")
+        XCTAssertNil(json["details"])
         XCTAssertNil(json["message"])
-        XCTAssertEqual(json["script"] as? String, "Happy birthday, Ana. Your photo turns into a watercolor celebration.")
+        XCTAssertNil(json["script"])
+        XCTAssertEqual(json["hasMessage"] as? Bool, true)
+        XCTAssertEqual(json["messageText"] as? String, "Happy birthday, Ana. Your photo turns into a watercolor celebration.")
+        XCTAssertEqual(json["voiceEnabled"] as? Bool, true)
+        XCTAssertEqual(json["voiceType"] as? String, AnimateVideoVoiceProfile.adultWoman.rawValue)
         XCTAssertEqual(json["narrationVoice"] as? String, AnimateVideoVoiceProfile.adultWoman.rawValue)
     }
 
@@ -460,24 +466,24 @@ final class AnimateAPIClientTests: XCTestCase {
             json: """
             {
               "appId": "animateav",
-              "momentId": "moment-1",
+              "videoId": "video-1",
               "planId": "plan-1",
               "reservation": {
                 "id": "reservation-1",
                 "appId": "animateav",
                 "userId": "user-1",
-                "momentId": "moment-1",
+                "videoId": "video-1",
                 "workflowRunId": null,
                 "amount": 2,
                 "status": "reserved",
-                "idempotencyKey": "final-confirm:moment-1:birthdayMessage:watermarked:operation-1",
+                "idempotencyKey": "final-confirm:video-1:birthdayMessage:watermarked:operation-1",
                 "expiresAt": "2026-06-16T16:00:00Z",
                 "createdAt": "2026-05-16T16:00:00Z",
                 "updatedAt": "2026-05-16T16:00:00Z"
               },
               "workflow": {
                 "appId": "animateav",
-                "momentId": "moment-1",
+                "videoId": "video-1",
                 "renderJobId": "render-1",
                 "workflowRunId": "workflow-1",
                 "status": "running",
@@ -485,7 +491,7 @@ final class AnimateAPIClientTests: XCTestCase {
               },
               "renderPlan": {
                 "appId": "animateav",
-                "momentId": "moment-1",
+                "videoId": "video-1",
                 "planId": "plan-1",
                 "canCreateVideo": true,
                 "createVideoBlockers": [],
@@ -493,8 +499,8 @@ final class AnimateAPIClientTests: XCTestCase {
                 "plan": {
                   "schemaVersion": 1,
                   "secondsPerCredit": 15,
-                  "renderOptionId": "standard_moment",
-                  "renderOptionTitle": "Standard Moment",
+                  "renderOptionId": "standard_video",
+                  "renderOptionTitle": "Standard Video",
                   "creationMode": "quick",
                   "look": "real",
                   "theme": "birthday",
@@ -519,18 +525,23 @@ final class AnimateAPIClientTests: XCTestCase {
         )
         let client = AnimateFinalRenderClient(baseURLString: accountAPIBaseURL, session: session)
 
+        var form = AnimateVideoSetupForm(template: .birthdayMessage)
+        form.details = "Happy birthday, Ana."
+        form.hasMessage = true
+        form.voiceEnabled = true
+
         let confirmation = try await client.confirmFinalRender(
-            momentId: "moment-1",
+            videoId: "video-1",
             bearerToken: "token-1",
             template: .birthdayMessage,
             creationStyle: nil,
-            form: AnimateVideoSetupForm(template: .birthdayMessage),
+            form: form,
             removesWatermark: false,
             selectedSourceLocalIdentifiers: ["local-1", "local-2"],
             sourceImageUploadId: "source-upload-1",
             generatedImageArtifactId: nil,
             planId: "plan-1",
-            renderOptionId: "standard_moment"
+            renderOptionId: "standard_video"
         )
 
         XCTAssertEqual(AnimateURLProtocolMock.lastRequest?.url?.absoluteString, "\(accountAPIBaseURL)/v1/apps/animateav/renders/final/confirm")
@@ -573,8 +584,8 @@ final class AnimateAPIClientTests: XCTestCase {
         let client = AnimateVideoQuoteClient(baseURLString: accountAPIBaseURL, session: session)
 
         let quote = try await client.quoteVideo(
-            message: "Happy birthday Ana",
-            script: nil,
+            hasMessage: true,
+            messageText: "Happy birthday Ana",
             removeBranding: true,
             bearerToken: "token-1"
         )
@@ -586,7 +597,9 @@ final class AnimateAPIClientTests: XCTestCase {
         let json = try XCTUnwrap(JSONSerialization.jsonObject(with: body) as? [String: Any])
         XCTAssertEqual(json["appId"] as? String, "animateav")
         XCTAssertNil(json["duration"])
-        XCTAssertEqual(json["message"] as? String, "Happy birthday Ana")
+        XCTAssertEqual(json["hasMessage"] as? Bool, true)
+        XCTAssertEqual(json["messageText"] as? String, "Happy birthday Ana")
+        XCTAssertNil(json["message"])
         XCTAssertNil(json["script"])
         XCTAssertEqual(json["removeBranding"] as? Bool, true)
         XCTAssertEqual(quote.baseCreditCost, 2)
@@ -838,10 +851,10 @@ final class AnimateAPIClientTests: XCTestCase {
             json: """
             {
               "appId": "animateav",
-              "momentId": "moment-1",
+              "videoId": "video-1",
               "artifactId": "artifact-1",
               "artifactKind": "final_export",
-              "downloadUrl": "https://account-1.r2.cloudflarestorage.com/videos-bucket/animateav/user/moment-1/final%20exports/artifact-1.mp4?X-Amz-Signature=test",
+              "downloadUrl": "https://account-1.r2.cloudflarestorage.com/videos-bucket/animateav/user/video-1/final%20exports/artifact-1.mp4?X-Amz-Signature=test",
               "method": "GET",
               "headers": {},
               "expiresAt": "2026-05-16T17:00:00Z",
@@ -852,7 +865,7 @@ final class AnimateAPIClientTests: XCTestCase {
         let client = AnimateFinalRenderClient(baseURLString: accountAPIBaseURL, session: session)
 
         let response = try await client.prepareFinalArtifactDownload(
-            momentId: "moment-1",
+            videoId: "video-1",
             artifactId: "artifact-1",
             bearerToken: "token-1"
         )
@@ -869,7 +882,7 @@ final class AnimateAPIClientTests: XCTestCase {
             json: """
             {
               "appId": "animateav",
-              "momentId": "moment-1",
+              "videoId": "video-1",
               "renderJobId": "render-1",
               "workflowRunId": "workflow-1",
               "renderKind": "final",
@@ -901,7 +914,7 @@ final class AnimateAPIClientTests: XCTestCase {
             json: """
             {
               "error": {
-                "code": "moments_render_not_found",
+                "code": "videos_render_not_found",
                 "message": "Render job was not found."
               }
             }
@@ -931,7 +944,7 @@ final class AnimateAPIClientTests: XCTestCase {
               "hasProFeatures": true,
               "proSource": "promo",
               "proExpiresAt": "2026-06-25T00:00:00.000Z",
-              "canStartMoment": true,
+              "canStartVideo": true,
               "minimumRenderCredits": 1,
               "generatedAt": "2026-05-26T10:00:00.000Z"
             }
@@ -969,7 +982,7 @@ final class AnimateAPIClientTests: XCTestCase {
                 "hasProFeatures": false,
                 "proSource": "none",
                 "proExpiresAt": null,
-                "canStartMoment": true,
+                "canStartVideo": true,
                 "minimumRenderCredits": 1,
                 "generatedAt": "2026-05-27T10:00:00.000Z"
               },
@@ -996,10 +1009,10 @@ final class AnimateAPIClientTests: XCTestCase {
         """
         {
           "appId": "animateav",
-          "momentId": "moment-1",
+          "videoId": "video-1",
           "mediaAssetId": "media-1",
           "uploadId": "upload-1",
-          "storageKey": "uploads/moment-1/media-1.jpg",
+          "storageKey": "uploads/video-1/media-1.jpg",
           "status": "uploaded",
           "uploadedAt": "2026-05-16T16:00:00Z",
           "bytesReceived": 4

@@ -9,7 +9,7 @@ final class AnimateInProgressObserverTests: XCTestCase {
         let observer = AnimateInProgressObserver(animateRepository: repository)
 
         observer.observeAnimateVideos(ownerUserId: "user-1")
-        let video = makeVideo(id: "moment-1")
+        let video = makeVideo(id: "video-1")
         repository.sendVideos([video])
         await waitUntil { observer.videos == [video] }
 
@@ -23,7 +23,7 @@ final class AnimateInProgressObserverTests: XCTestCase {
         let observer = AnimateInProgressObserver(animateRepository: repository)
 
         observer.observeAnimateVideos(ownerUserId: "user-1")
-        repository.sendVideos([makeVideo(id: "moment-1")])
+        repository.sendVideos([makeVideo(id: "video-1")])
         await waitUntil { !observer.videos.isEmpty }
 
         observer.observeAnimateVideos(ownerUserId: nil)
@@ -49,16 +49,16 @@ final class AnimateInProgressObserverTests: XCTestCase {
 
         observer.observeAnimateVideos(ownerUserId: "user-1")
         let firstSubject = repository.videoSubjects[0]
-        let firstVideo = makeVideo(id: "moment-1")
+        let firstVideo = makeVideo(id: "video-1")
         firstSubject.send([firstVideo])
         await waitUntil { observer.videos == [firstVideo] }
 
         observer.observeAnimateVideos(ownerUserId: "user-2")
-        let secondVideo = makeVideo(id: "moment-2")
+        let secondVideo = makeVideo(id: "video-2")
         repository.sendVideos([secondVideo])
         await waitUntil { observer.videos == [secondVideo] }
 
-        firstSubject.send([makeVideo(id: "stale-moment")])
+        firstSubject.send([makeVideo(id: "stale-video")])
         try? await Task.sleep(nanoseconds: 20_000_000)
 
         XCTAssertEqual(observer.videos, [secondVideo])
@@ -69,15 +69,15 @@ final class AnimateInProgressObserverTests: XCTestCase {
         let repository = MockWorkspaceRepository()
         let observer = AnimateWorkspaceObserver(animateRepository: repository)
 
-        observer.observeWorkspace(ownerUserId: "user-1", momentId: "moment-1")
-        let workspace = makeWorkspace(video: makeVideo(id: "moment-1"))
+        observer.observeWorkspace(ownerUserId: "user-1", videoId: "video-1")
+        let workspace = makeWorkspace(video: makeVideo(id: "video-1"))
         repository.sendWorkspace(workspace)
         await waitUntil { observer.activeWorkspace == workspace }
 
         XCTAssertEqual(observer.activeWorkspace, workspace)
         XCTAssertNil(observer.errorMessage)
         XCTAssertEqual(repository.observedRequests, [
-            WorkspaceRequest(ownerUserId: "user-1", momentId: "moment-1")
+            WorkspaceRequest(ownerUserId: "user-1", videoId: "video-1")
         ])
     }
 
@@ -85,16 +85,16 @@ final class AnimateInProgressObserverTests: XCTestCase {
         let repository = MockWorkspaceRepository()
         let observer = AnimateWorkspaceObserver(animateRepository: repository)
 
-        observer.observeWorkspace(ownerUserId: "user-1", momentId: "moment-1")
-        repository.sendWorkspace(makeWorkspace(video: makeVideo(id: "moment-1")))
+        observer.observeWorkspace(ownerUserId: "user-1", videoId: "video-1")
+        repository.sendWorkspace(makeWorkspace(video: makeVideo(id: "video-1")))
         await waitUntil { observer.activeWorkspace != nil }
 
-        observer.observeWorkspace(ownerUserId: "user-1", momentId: nil)
+        observer.observeWorkspace(ownerUserId: "user-1", videoId: nil)
 
         XCTAssertNil(observer.activeWorkspace)
         XCTAssertNil(observer.errorMessage)
         XCTAssertEqual(repository.observedRequests, [
-            WorkspaceRequest(ownerUserId: "user-1", momentId: "moment-1")
+            WorkspaceRequest(ownerUserId: "user-1", videoId: "video-1")
         ])
     }
 
@@ -102,7 +102,7 @@ final class AnimateInProgressObserverTests: XCTestCase {
         let repository = MockWorkspaceRepository(workspaceError: TestObservationError.workspace)
         let observer = AnimateWorkspaceObserver(animateRepository: repository)
 
-        observer.observeWorkspace(ownerUserId: "user-1", momentId: "moment-1")
+        observer.observeWorkspace(ownerUserId: "user-1", videoId: "video-1")
 
         XCTAssertNil(observer.activeWorkspace)
         XCTAssertEqual(observer.errorMessage, TestObservationError.workspace.localizedDescription)
@@ -112,24 +112,24 @@ final class AnimateInProgressObserverTests: XCTestCase {
         let repository = MockWorkspaceRepository()
         let observer = AnimateWorkspaceObserver(animateRepository: repository)
 
-        observer.observeWorkspace(ownerUserId: "user-1", momentId: "moment-1")
+        observer.observeWorkspace(ownerUserId: "user-1", videoId: "video-1")
         let firstSubject = repository.workspaceSubjects[0]
-        let firstWorkspace = makeWorkspace(video: makeVideo(id: "moment-1"))
+        let firstWorkspace = makeWorkspace(video: makeVideo(id: "video-1"))
         firstSubject.send(firstWorkspace)
         await waitUntil { observer.activeWorkspace == firstWorkspace }
 
-        observer.observeWorkspace(ownerUserId: "user-1", momentId: "moment-2")
-        let secondWorkspace = makeWorkspace(video: makeVideo(id: "moment-2"))
+        observer.observeWorkspace(ownerUserId: "user-1", videoId: "video-2")
+        let secondWorkspace = makeWorkspace(video: makeVideo(id: "video-2"))
         repository.sendWorkspace(secondWorkspace)
         await waitUntil { observer.activeWorkspace == secondWorkspace }
 
-        firstSubject.send(makeWorkspace(video: makeVideo(id: "stale-moment")))
+        firstSubject.send(makeWorkspace(video: makeVideo(id: "stale-video")))
         try? await Task.sleep(nanoseconds: 20_000_000)
 
         XCTAssertEqual(observer.activeWorkspace, secondWorkspace)
         XCTAssertEqual(repository.observedRequests, [
-            WorkspaceRequest(ownerUserId: "user-1", momentId: "moment-1"),
-            WorkspaceRequest(ownerUserId: "user-1", momentId: "moment-2")
+            WorkspaceRequest(ownerUserId: "user-1", videoId: "video-1"),
+            WorkspaceRequest(ownerUserId: "user-1", videoId: "video-2")
         ])
     }
 
@@ -210,9 +210,9 @@ private final class MockWorkspaceRepository: AnimateWorkspaceObserving {
 
     func observeAnimateWorkspace(
         ownerUserId: String,
-        momentId: String
+        videoId: String
     ) throws -> AnyPublisher<AnimateWorkspace?, Error> {
-        observedRequests.append(WorkspaceRequest(ownerUserId: ownerUserId, momentId: momentId))
+        observedRequests.append(WorkspaceRequest(ownerUserId: ownerUserId, videoId: videoId))
         if let workspaceError {
             throw workspaceError
         }
@@ -228,7 +228,7 @@ private final class MockWorkspaceRepository: AnimateWorkspaceObserving {
 
 private struct WorkspaceRequest: Equatable {
     var ownerUserId: String
-    var momentId: String
+    var videoId: String
 }
 
 private enum TestObservationError: LocalizedError {

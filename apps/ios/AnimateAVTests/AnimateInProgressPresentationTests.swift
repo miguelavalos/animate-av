@@ -44,7 +44,7 @@ final class AnimateInProgressPresentationTests: XCTestCase {
         let presentation = AnimateInProgressPresentation.make(
             isSignedIn: true,
             videosSummary: AnimateInProgressSummary.make(from: [
-                makeVideo(id: "moment-1")
+                makeVideo(id: "video-1")
             ]),
             videoPendingDeletion: nil
         )
@@ -58,7 +58,7 @@ final class AnimateInProgressPresentationTests: XCTestCase {
             videosSummary: AnimateInProgressSummary(),
             videoPendingDeletion: nil
         )
-        let video = makeVideo(id: "moment-1", title: "Family Weekend")
+        let video = makeVideo(id: "video-1", title: "Family Weekend")
         let titled = AnimateInProgressPresentation.make(
             isSignedIn: true,
             videosSummary: AnimateInProgressSummary(),
