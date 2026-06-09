@@ -824,22 +824,10 @@ private struct AnimateCreateVideoDirectionCard: View {
     @State private var step: GuidedStep = .look
     @State private var activeGuidedSheet: GuidedStep?
     @State private var selectedScriptIdea: ScriptIdea = .none
-    @State private var lookPageIndex = 0
+    @State private var guidedLookFamily: AnimateVideoLookFamily?
     @State private var handledContinueGuidedFlowRequest = 0
 
-    private let looksPerPage = 8
     private let minimumMessageCharacterCount = 3
-
-    private var lookPageCount: Int {
-        max(1, (AnimateVideoLook.selectorOrder.count + looksPerPage - 1) / looksPerPage)
-    }
-
-    private var visibleLooks: [AnimateVideoLook] {
-        let startIndex = lookPageIndex * looksPerPage
-        let endIndex = min(startIndex + looksPerPage, AnimateVideoLook.selectorOrder.count)
-        guard startIndex < endIndex else { return [] }
-        return Array(AnimateVideoLook.selectorOrder[startIndex..<endIndex])
-    }
 
     var body: some View {
         AVAppShellCard {
@@ -1110,56 +1098,53 @@ private struct AnimateCreateVideoDirectionCard: View {
         switch sheetStep {
         case .look:
             VStack(alignment: .leading, spacing: 10) {
-                stepHeader(L10n.string("create.guided.look.title"), L10n.string("create.guided.look.detail"))
-                AnimateCreateTwoColumnGrid(items: visibleLooks, verticalSpacing: 10, itemHeight: 92) { look in
-                    AnimateCreateGuidedLookTile(
-                        look: look,
-                        isSelected: selectedLook == look,
-                        select: {
-                            selectLook(look)
-                            if selectedScriptIdea == .none {
-                                completeGuideWithoutMessage()
+                if let family = activeGuidedLookFamily {
+                    Button {
+                        withAnimation(.spring(response: 0.28, dampingFraction: 0.88)) {
+                            guidedLookFamily = nil
+                        }
+                    } label: {
+                        Label(L10n.string("create.look.family.back"), systemImage: "chevron.left.circle.fill")
+                            .font(.system(size: 13, weight: .black))
+                            .foregroundStyle(AVBrandColor.textSecondary)
+                    }
+                    .buttonStyle(.plain)
+
+                    stepHeader(family.title, family.subtitle)
+                    AnimateCreateTwoColumnGrid(items: family.looks, verticalSpacing: 10, itemHeight: 92) { look in
+                        AnimateCreateGuidedLookTile(
+                            look: look,
+                            isSelected: selectedLook == look,
+                            select: {
+                                selectLook(look)
+                                if selectedScriptIdea == .none {
+                                    completeGuideWithoutMessage()
+                                }
                             }
-                        }
-                    )
-                }
-                HStack(spacing: 10) {
-                    Button {
-                        withAnimation(.spring(response: 0.28, dampingFraction: 0.88)) {
-                            lookPageIndex = max(0, lookPageIndex - 1)
-                        }
-                    } label: {
-                        Label(L10n.string("create.images.looks.previousPage"), systemImage: "chevron.left.circle.fill")
-                            .font(.system(size: 14, weight: .black))
-                            .lineLimit(1)
-                            .minimumScaleFactor(0.75)
-                            .frame(maxWidth: .infinity)
-                            .frame(height: 44)
+                        )
                     }
-                    .buttonStyle(AnimateCreateSoftActionButtonStyle())
-                    .disabled(lookPageIndex == 0)
-
-                    Text(L10n.string("create.images.looks.page", lookPageIndex + 1, lookPageCount))
-                        .font(.system(size: 12, weight: .black))
-                        .foregroundStyle(AVBrandColor.textSecondary)
-                        .frame(minWidth: 48)
-
-                    Button {
-                        withAnimation(.spring(response: 0.28, dampingFraction: 0.88)) {
-                            lookPageIndex = min(lookPageCount - 1, lookPageIndex + 1)
-                        }
-                    } label: {
-                        Label(L10n.string("create.images.looks.nextPage"), systemImage: "chevron.right.circle.fill")
-                            .font(.system(size: 14, weight: .black))
-                            .lineLimit(1)
-                            .minimumScaleFactor(0.75)
-                            .frame(maxWidth: .infinity)
-                            .frame(height: 44)
+                } else {
+                    stepHeader(L10n.string("create.guided.look.title"), L10n.string("create.guided.look.detail"))
+                    AnimateCreateTwoColumnGrid(items: AnimateVideoLook.families, verticalSpacing: 10, itemHeight: 104) { family in
+                        AnimateCreateLookFamilyTile(
+                            family: family,
+                            isSelected: family.looks.contains(where: { $0 == selectedLook }),
+                            select: {
+                                withAnimation(.spring(response: 0.28, dampingFraction: 0.88)) {
+                                    guidedLookFamily = family
+                                }
+                            }
+                        )
                     }
-                    .buttonStyle(AnimateCreateSoftActionButtonStyle())
-                    .disabled(lookPageIndex >= lookPageCount - 1)
+                    if selectedLook != nil {
+                        selectedLookStrip
+                    }
                 }
-                selectedLookStrip
+            }
+            .onAppear {
+                if guidedLookFamily == nil, selectedLook != nil {
+                    guidedLookFamily = AnimateVideoLook.family(containing: selectedLook)
+                }
             }
         case .scriptIdea:
             VStack(alignment: .leading, spacing: 10) {
@@ -1246,6 +1231,10 @@ private struct AnimateCreateVideoDirectionCard: View {
         }
     }
 
+    private var activeGuidedLookFamily: AnimateVideoLookFamily? {
+        guidedLookFamily
+    }
+
     private var selectedLookStrip: some View {
         HStack(spacing: 9) {
             Image(systemName: selectedLook?.systemImage ?? "paintbrush.pointed.fill")
@@ -1254,10 +1243,10 @@ private struct AnimateCreateVideoDirectionCard: View {
                 .frame(width: 28, height: 28)
                 .background(AVBrandColor.accent.opacity(0.10), in: Circle())
             VStack(alignment: .leading, spacing: 2) {
-                Text(selectedLook.map { L10n.string("create.guided.look.selected", $0.title) } ?? "Elige un look")
+                Text(selectedLook.map { L10n.string("create.guided.look.selected", $0.title) } ?? L10n.string("create.guided.look.noneSelected.title"))
                     .font(.system(size: 12, weight: .black))
                     .foregroundStyle(AVBrandColor.textPrimary)
-                Text(selectedLook?.subtitle ?? "Ningún look seleccionado todavía.")
+                Text(selectedLook?.subtitle ?? L10n.string("create.guided.look.noneSelected.detail"))
                     .font(.caption.weight(.semibold))
                     .foregroundStyle(AVBrandColor.textSecondary)
                     .lineLimit(2)
@@ -3460,6 +3449,7 @@ private struct AnimateCreateLookChooserPage: View {
     let dismiss: () -> Void
 
     @State private var setupLook: AnimateVideoLook?
+    @State private var selectedFamily: AnimateVideoLookFamily?
 
     init(
         selectedLook: AnimateVideoLook?,
@@ -3470,6 +3460,7 @@ private struct AnimateCreateLookChooserPage: View {
         self.selectLook = selectLook
         self.dismiss = dismiss
         _setupLook = State(initialValue: selectedLook)
+        _selectedFamily = State(initialValue: selectedLook.map { AnimateVideoLook.family(containing: $0) })
     }
 
     var body: some View {
@@ -3511,12 +3502,46 @@ private struct AnimateCreateLookChooserPage: View {
                             }
                         }
 
-                        AnimateCreateTwoColumnGrid(items: AnimateVideoLook.selectorOrder) { look in
-                            AnimateCreateLookImageTile(
-                                look: look,
-                                isSelected: setupLook == look,
-                                selectLook: { setupLook = look }
-                            )
+                        if let selectedFamily {
+                            Button {
+                                withAnimation(.spring(response: 0.28, dampingFraction: 0.88)) {
+                                    self.selectedFamily = nil
+                                }
+                            } label: {
+                                Label(L10n.string("create.look.family.back"), systemImage: "chevron.left.circle.fill")
+                                    .font(.system(size: 13, weight: .black))
+                                    .foregroundStyle(AVBrandColor.textSecondary)
+                            }
+                            .buttonStyle(.plain)
+
+                            VStack(alignment: .leading, spacing: 4) {
+                                Text(selectedFamily.title)
+                                    .font(.system(size: 20, weight: .black))
+                                    .foregroundStyle(AVBrandColor.textPrimary)
+                                Text(selectedFamily.subtitle)
+                                    .font(.system(size: 13, weight: .semibold))
+                                    .foregroundStyle(AVBrandColor.textSecondary)
+                            }
+
+                            AnimateCreateTwoColumnGrid(items: selectedFamily.looks) { look in
+                                AnimateCreateLookImageTile(
+                                    look: look,
+                                    isSelected: setupLook == look,
+                                    selectLook: { setupLook = look }
+                                )
+                            }
+                        } else {
+                            AnimateCreateTwoColumnGrid(items: AnimateVideoLook.families, itemHeight: 118) { family in
+                                AnimateCreateLookFamilyTile(
+                                    family: family,
+                                    isSelected: family.looks.contains(where: { $0 == setupLook }),
+                                    select: {
+                                        withAnimation(.spring(response: 0.28, dampingFraction: 0.88)) {
+                                            selectedFamily = family
+                                        }
+                                    }
+                                )
+                            }
                         }
                     }
                     .padding(.horizontal, 20)
@@ -3545,6 +3570,64 @@ private struct AnimateCreateLookChooserPage: View {
         guard let setupLook else { return }
         selectLook(setupLook)
         dismiss()
+    }
+}
+
+private struct AnimateCreateLookFamilyTile: View {
+    let family: AnimateVideoLookFamily
+    let isSelected: Bool
+    let select: () -> Void
+
+    var body: some View {
+        GeometryReader { proxy in
+            Button(action: select) {
+                ZStack(alignment: .bottomLeading) {
+                    Image(family.heroAssetName)
+                        .resizable()
+                        .scaledToFill()
+                        .frame(width: proxy.size.width, height: proxy.size.height)
+                        .clipped()
+
+                    LinearGradient(
+                        colors: [.black.opacity(0.04), .black.opacity(0.50), .black.opacity(0.82)],
+                        startPoint: .top,
+                        endPoint: .bottom
+                    )
+
+                    VStack(alignment: .leading, spacing: 4) {
+                        HStack(spacing: 6) {
+                            Image(systemName: isSelected ? "checkmark.circle.fill" : family.systemImage)
+                                .font(.system(size: 14, weight: .black))
+                                .foregroundStyle(.white, AVBrandColor.accent)
+                                .accessibilityHidden(true)
+
+                            Text(family.title)
+                                .font(.system(size: 13, weight: .black))
+                                .foregroundStyle(.white)
+                                .lineLimit(1)
+                                .minimumScaleFactor(0.72)
+                        }
+
+                        Text(family.subtitle)
+                            .font(.system(size: 10, weight: .bold))
+                            .foregroundStyle(.white.opacity(0.84))
+                            .lineLimit(2)
+                            .minimumScaleFactor(0.72)
+                    }
+                    .padding(10)
+                    .frame(maxWidth: .infinity, alignment: .leading)
+                }
+                .clipShape(RoundedRectangle(cornerRadius: 8, style: .continuous))
+                .contentShape(RoundedRectangle(cornerRadius: 8, style: .continuous))
+                .overlay {
+                    RoundedRectangle(cornerRadius: 8, style: .continuous)
+                        .stroke(isSelected ? AVBrandColor.accent : AVBrandColor.borderSubtle.opacity(0.7), lineWidth: isSelected ? 2 : 1)
+                }
+                .shadow(color: AVBrandColor.ink.opacity(isSelected ? 0.12 : 0.05), radius: isSelected ? 8 : 4, x: 0, y: 3)
+            }
+            .buttonStyle(.plain)
+            .accessibilityLabel(L10n.string("create.look.family.accessibility", family.title))
+        }
     }
 }
 

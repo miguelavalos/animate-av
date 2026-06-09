@@ -38,119 +38,73 @@ enum AnimateCreateImageLook: String, CaseIterable, Identifiable {
     case rubberHose
     case fantasyQuest
     case miniAvatar
+    case kawaiiPop
+    case graphicNovel
+    case sundayStrip
+    case inkWash
+    case shonenAction
+    case cozySliceOfLife
+    case magicalFantasyAnime
+    case cyberAnime
+    case shojoRomance
+    case superDeformed
+    case animeWatercolor
+    case charcoal
+    case oilPainting
+    case inkMarker
+    case crayonKids
+    case acrylicPoster
+    case lowPoly
+    case voxelWorld
+    case synthwave
+    case glitchArt
+    case isometricGame
+    case sciFiSpace
+    case steampunk
+    case pirateStory
+    case fairytale
+    case mythicEpic
+    case feltCraft
+    case collageCutout
+    case cardboardTheater
+    case origami
+    case stainedGlass
+    case embroideredTextile
 
     var id: String { rawValue }
 
     static var selectorOrder: [AnimateCreateImageLook] {
-        [
-            .cartoon,
-            .anime,
-            .cinematic3d,
-            .watercolor,
-            .comic,
-            .manga,
-            .clay,
-            .paperCut,
-            .plush,
-            .sticker,
-            .pixel,
-            .neon,
-            .storybook,
-            .yellowComedy,
-            .soft3d,
-            .darkFantasy,
-            .vintagePoster,
-            .pencilSketch,
-            .editorialCaricature,
-            .euroComic,
-            .americanComic,
-            .stopMotion,
-            .blackWhiteManga,
-            .toyFigure,
-            .chibi,
-            .flatVector,
-            .pastelDream,
-            .heroicComic,
-            .noirInk,
-            .rubberHose,
-            .fantasyQuest,
-            .miniAvatar
-        ]
+        AnimateVideoLook.selectorOrder.compactMap { AnimateCreateImageLook(rawValue: $0.rawValue) }
     }
 
-    var title: String {
-        switch self {
-        case .anime: L10n.string("create.look.anime.title")
-        case .cartoon: L10n.string("create.look.cartoon.title")
-        case .comic: L10n.string("create.look.comic.title")
-        case .clay: L10n.string("create.look.clay.title")
-        case .watercolor: L10n.string("create.look.watercolor.title")
-        case .cinematic3d: L10n.string("create.look.cinematic3d.title")
-        case .manga: L10n.string("create.look.manga.title")
-        case .paperCut: L10n.string("create.look.paperCut.title")
-        case .plush: L10n.string("create.look.plush.title")
-        case .sticker: L10n.string("create.look.sticker.title")
-        case .pixel: L10n.string("create.look.pixel.title")
-        case .neon: L10n.string("create.look.neon.title")
-        case .storybook: L10n.string("create.look.storybook.title")
-        case .yellowComedy: L10n.string("create.look.yellowComedy.title")
-        case .soft3d: L10n.string("create.look.soft3d.title")
-        case .darkFantasy: L10n.string("create.look.darkFantasy.title")
-        case .vintagePoster: L10n.string("create.look.vintagePoster.title")
-        case .pencilSketch: L10n.string("create.look.pencilSketch.title")
-        case .editorialCaricature: L10n.string("create.look.editorialCaricature.title")
-        case .euroComic: L10n.string("create.look.euroComic.title")
-        case .americanComic: L10n.string("create.look.americanComic.title")
-        case .stopMotion: L10n.string("create.look.stopMotion.title")
-        case .blackWhiteManga: L10n.string("create.look.blackWhiteManga.title")
-        case .toyFigure: L10n.string("create.look.toyFigure.title")
-        case .chibi: L10n.string("create.look.chibi.title")
-        case .flatVector: L10n.string("create.look.flatVector.title")
-        case .pastelDream: L10n.string("create.look.pastelDream.title")
-        case .heroicComic: L10n.string("create.look.heroicComic.title")
-        case .noirInk: L10n.string("create.look.noirInk.title")
-        case .rubberHose: L10n.string("create.look.rubberHose.title")
-        case .fantasyQuest: L10n.string("create.look.fantasyQuest.title")
-        case .miniAvatar: L10n.string("create.look.miniAvatar.title")
+    fileprivate static var families: [AnimateCreateImageLookFamily] {
+        AnimateVideoLook.families.map { family in
+            AnimateCreateImageLookFamily(
+                id: family.id,
+                title: family.title,
+                subtitle: family.subtitle,
+                looks: family.looks.compactMap { AnimateCreateImageLook(rawValue: $0.rawValue) },
+                heroAssetName: family.heroAssetName,
+                systemImage: family.systemImage
+            )
         }
     }
 
-    var assetName: String {
-        switch self {
-        case .anime: "LookAnime"
-        case .cartoon: "LookCartoon"
-        case .comic: "LookComic"
-        case .clay: "LookClay"
-        case .watercolor: "LookCartoon"
-        case .cinematic3d: "LookClay"
-        case .manga: "LookAnime"
-        case .paperCut: "LookComic"
-        case .plush: "LookClay"
-        case .sticker: "LookCartoon"
-        case .pixel: "LookComic"
-        case .neon: "LookAnime"
-        case .storybook: "LookCartoon"
-        case .yellowComedy: "LookCartoon"
-        case .soft3d: "LookClay"
-        case .darkFantasy: "LookAnime"
-        case .vintagePoster: "LookComic"
-        case .pencilSketch: "LookComic"
-        case .editorialCaricature: "LookComic"
-        case .euroComic: "LookComic"
-        case .americanComic: "LookComic"
-        case .stopMotion: "LookClay"
-        case .blackWhiteManga: "LookAnime"
-        case .toyFigure: "LookClay"
-        case .chibi: "LookAnime"
-        case .flatVector: "LookCartoon"
-        case .pastelDream: "LookCartoon"
-        case .heroicComic: "LookComic"
-        case .noirInk: "LookComic"
-        case .rubberHose: "LookCartoon"
-        case .fantasyQuest: "LookAnime"
-        case .miniAvatar: "LookClay"
-        }
+    var title: String { videoLook.title }
+    var assetName: String { videoLook.assetName }
+
+    private var videoLook: AnimateVideoLook {
+        AnimateVideoLook(rawValue: rawValue) ?? .cartoon
     }
+}
+
+private struct AnimateCreateImageLookFamily: Identifiable {
+    let id: String
+    let title: String
+    let subtitle: String
+    let looks: [AnimateCreateImageLook]
+    let heroAssetName: String
+    let systemImage: String
 }
 
 struct AnimateCreateImagesWorkspace: View {
@@ -743,20 +697,7 @@ private struct AnimateCreateImagesLookSheet: View {
     let selectionLimit: Int
 
     @Environment(\.dismiss) private var dismiss
-    @State private var pageIndex = 0
-
-    private let looksPerPage = 8
-
-    private var pageCount: Int {
-        max(1, (AnimateCreateImageLook.selectorOrder.count + looksPerPage - 1) / looksPerPage)
-    }
-
-    private var visibleLooks: [AnimateCreateImageLook] {
-        let startIndex = pageIndex * looksPerPage
-        let endIndex = min(startIndex + looksPerPage, AnimateCreateImageLook.selectorOrder.count)
-        guard startIndex < endIndex else { return [] }
-        return Array(AnimateCreateImageLook.selectorOrder[startIndex..<endIndex])
-    }
+    @State private var selectedFamily: AnimateCreateImageLookFamily?
 
     var body: some View {
         NavigationStack {
@@ -778,53 +719,52 @@ private struct AnimateCreateImagesLookSheet: View {
                             .padding(.top, 2)
                     }
 
-                    AnimateCreateImagesTwoColumnGrid(items: visibleLooks, verticalSpacing: 10, itemHeight: 92) { look in
+                    if let selectedFamily {
                         Button {
-                            toggle(look)
+                            withAnimation(.spring(response: 0.28, dampingFraction: 0.88)) {
+                                self.selectedFamily = nil
+                            }
                         } label: {
-                            AnimateCreateImageLookTile(
-                                look: look,
-                                isSelected: selectedLooks.contains(look)
-                            )
+                            Label(L10n.string("create.look.family.back"), systemImage: "chevron.left.circle.fill")
+                                .font(.system(size: 13, weight: .black))
+                                .foregroundStyle(AVBrandColor.textSecondary)
                         }
                         .buttonStyle(.plain)
-                    }
 
-                    HStack(spacing: 10) {
-                        Button {
-                            withAnimation(.spring(response: 0.28, dampingFraction: 0.88)) {
-                                pageIndex = max(0, pageIndex - 1)
-                            }
-                        } label: {
-                            Label(L10n.string("create.images.looks.previousPage"), systemImage: "chevron.left.circle.fill")
-                                .font(.system(size: 14, weight: .black))
-                                .lineLimit(1)
-                                .minimumScaleFactor(0.75)
-                                .frame(maxWidth: .infinity)
-                                .frame(height: 44)
+                        VStack(alignment: .leading, spacing: 4) {
+                            Text(selectedFamily.title)
+                                .font(.system(size: 20, weight: .black))
+                                .foregroundStyle(AVBrandColor.textPrimary)
+                            Text(selectedFamily.subtitle)
+                                .font(.system(size: 13, weight: .semibold))
+                                .foregroundStyle(AVBrandColor.textSecondary)
                         }
-                        .buttonStyle(AnimateCreateSoftActionButtonStyle())
-                        .disabled(pageIndex == 0)
 
-                        Text(L10n.string("create.images.looks.page", pageIndex + 1, pageCount))
-                            .font(.system(size: 12, weight: .black))
-                            .foregroundStyle(AVBrandColor.textSecondary)
-                            .frame(minWidth: 48)
-
-                        Button {
-                            withAnimation(.spring(response: 0.28, dampingFraction: 0.88)) {
-                                pageIndex = min(pageCount - 1, pageIndex + 1)
+                        AnimateCreateImagesTwoColumnGrid(items: selectedFamily.looks, verticalSpacing: 10, itemHeight: 92) { look in
+                            Button {
+                                toggle(look)
+                            } label: {
+                                AnimateCreateImageLookTile(
+                                    look: look,
+                                    isSelected: selectedLooks.contains(look)
+                                )
                             }
-                        } label: {
-                            Label(L10n.string("create.images.looks.nextPage"), systemImage: "chevron.right.circle.fill")
-                                .font(.system(size: 14, weight: .black))
-                                .lineLimit(1)
-                                .minimumScaleFactor(0.75)
-                                .frame(maxWidth: .infinity)
-                                .frame(height: 44)
+                            .buttonStyle(.plain)
                         }
-                        .buttonStyle(AnimateCreateSoftActionButtonStyle())
-                        .disabled(pageIndex >= pageCount - 1)
+                    } else {
+                        AnimateCreateImagesTwoColumnGrid(items: AnimateCreateImageLook.families, verticalSpacing: 10, itemHeight: 104) { family in
+                            Button {
+                                withAnimation(.spring(response: 0.28, dampingFraction: 0.88)) {
+                                    selectedFamily = family
+                                }
+                            } label: {
+                                AnimateCreateImageLookFamilyTile(
+                                    family: family,
+                                    isSelected: family.looks.contains(where: selectedLooks.contains)
+                                )
+                            }
+                            .buttonStyle(.plain)
+                        }
                     }
                 }
                 .padding(.horizontal, 20)
@@ -852,9 +792,6 @@ private struct AnimateCreateImagesLookSheet: View {
                     .padding(.bottom, 12)
                     .background(.ultraThinMaterial)
                 }
-            }
-            .onChange(of: pageCount) { _, newPageCount in
-                pageIndex = min(pageIndex, max(0, newPageCount - 1))
             }
             .toolbar {
                 ToolbarItem(placement: .topBarTrailing) {
@@ -913,6 +850,60 @@ private struct AnimateCreateImagesTwoColumnGrid<Item: Identifiable, Content: Vie
             GridItem(.fixed(itemWidth), spacing: horizontalSpacing, alignment: .top),
             GridItem(.fixed(itemWidth), spacing: 0, alignment: .top)
         ]
+    }
+}
+
+private struct AnimateCreateImageLookFamilyTile: View {
+    let family: AnimateCreateImageLookFamily
+    let isSelected: Bool
+
+    var body: some View {
+        GeometryReader { proxy in
+            ZStack(alignment: .bottomLeading) {
+                Image(family.heroAssetName)
+                    .resizable()
+                    .scaledToFill()
+                    .frame(width: proxy.size.width, height: proxy.size.height)
+                    .clipped()
+
+                LinearGradient(
+                    colors: [.black.opacity(0.04), .black.opacity(0.50), .black.opacity(0.82)],
+                    startPoint: .top,
+                    endPoint: .bottom
+                )
+
+                VStack(alignment: .leading, spacing: 4) {
+                    HStack(spacing: 6) {
+                        Image(systemName: isSelected ? "checkmark.circle.fill" : family.systemImage)
+                            .font(.system(size: 14, weight: .black))
+                            .foregroundStyle(.white, AVBrandColor.accent)
+                            .accessibilityHidden(true)
+
+                        Text(family.title)
+                            .font(.system(size: 13, weight: .black))
+                            .foregroundStyle(.white)
+                            .lineLimit(1)
+                            .minimumScaleFactor(0.72)
+                    }
+
+                    Text(family.subtitle)
+                        .font(.system(size: 10, weight: .bold))
+                        .foregroundStyle(.white.opacity(0.84))
+                        .lineLimit(2)
+                        .minimumScaleFactor(0.72)
+                }
+                .padding(10)
+                .frame(maxWidth: .infinity, alignment: .leading)
+            }
+            .clipShape(RoundedRectangle(cornerRadius: 8, style: .continuous))
+            .contentShape(RoundedRectangle(cornerRadius: 8, style: .continuous))
+            .overlay {
+                RoundedRectangle(cornerRadius: 8, style: .continuous)
+                    .stroke(isSelected ? AVBrandColor.accent : AVBrandColor.borderSubtle.opacity(0.7), lineWidth: isSelected ? 2 : 1)
+            }
+            .shadow(color: AVBrandColor.ink.opacity(isSelected ? 0.12 : 0.05), radius: isSelected ? 8 : 4, x: 0, y: 3)
+        }
+        .accessibilityLabel(L10n.string("create.look.family.accessibility", family.title))
     }
 }
 

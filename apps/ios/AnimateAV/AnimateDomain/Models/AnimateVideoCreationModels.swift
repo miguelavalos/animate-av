@@ -40,6 +40,15 @@ enum AnimateVideoMusicPreset: String, CaseIterable, Identifiable {
     }
 }
 
+struct AnimateVideoLookFamily: Identifiable, Equatable {
+    let id: String
+    let title: String
+    let subtitle: String
+    let looks: [AnimateVideoLook]
+    let heroAssetName: String
+    let systemImage: String
+}
+
 enum AnimateVideoLook: String, CaseIterable, Identifiable, Codable {
     case anime
     case cartoon
@@ -73,44 +82,120 @@ enum AnimateVideoLook: String, CaseIterable, Identifiable, Codable {
     case rubberHose
     case fantasyQuest
     case miniAvatar
+    case kawaiiPop
+    case graphicNovel
+    case sundayStrip
+    case inkWash
+    case shonenAction
+    case cozySliceOfLife
+    case magicalFantasyAnime
+    case cyberAnime
+    case shojoRomance
+    case superDeformed
+    case animeWatercolor
+    case charcoal
+    case oilPainting
+    case inkMarker
+    case crayonKids
+    case acrylicPoster
+    case lowPoly
+    case voxelWorld
+    case synthwave
+    case glitchArt
+    case isometricGame
+    case sciFiSpace
+    case steampunk
+    case pirateStory
+    case fairytale
+    case mythicEpic
+    case feltCraft
+    case collageCutout
+    case cardboardTheater
+    case origami
+    case stainedGlass
+    case embroideredTextile
 
     var id: String { rawValue }
 
-    static var selectorOrder: [AnimateVideoLook] {
+    static var families: [AnimateVideoLookFamily] {
         [
-            .cartoon,
-            .anime,
-            .cinematic3d,
-            .watercolor,
-            .comic,
-            .manga,
-            .clay,
-            .paperCut,
-            .plush,
-            .sticker,
-            .pixel,
-            .neon,
-            .storybook,
-            .yellowComedy,
-            .soft3d,
-            .darkFantasy,
-            .vintagePoster,
-            .pencilSketch,
-            .editorialCaricature,
-            .euroComic,
-            .americanComic,
-            .stopMotion,
-            .blackWhiteManga,
-            .toyFigure,
-            .chibi,
-            .flatVector,
-            .pastelDream,
-            .heroicComic,
-            .noirInk,
-            .rubberHose,
-            .fantasyQuest,
-            .miniAvatar
+            family(
+                id: "popular",
+                looks: [.cartoon, .anime, .cinematic3d, .comic, .manga, .clay, .watercolor, .paperCut],
+                heroAssetName: "LookCartoon",
+                systemImage: "sparkles"
+            ),
+            family(
+                id: "cuteSocial",
+                looks: [.plush, .sticker, .chibi, .miniAvatar, .toyFigure, .soft3d, .kawaiiPop, .rubberHose],
+                heroAssetName: "LookPlush",
+                systemImage: "heart.fill"
+            ),
+            family(
+                id: "comicsInk",
+                looks: [.americanComic, .euroComic, .heroicComic, .noirInk, .editorialCaricature, .graphicNovel, .sundayStrip, .inkWash],
+                heroAssetName: "LookComic",
+                systemImage: "text.bubble.fill"
+            ),
+            family(
+                id: "animeManga",
+                looks: [.shonenAction, .cozySliceOfLife, .magicalFantasyAnime, .cyberAnime, .blackWhiteManga, .shojoRomance, .superDeformed, .animeWatercolor],
+                heroAssetName: "LookAnime",
+                systemImage: "bolt.fill"
+            ),
+            family(
+                id: "paintedHandmade",
+                looks: [.pencilSketch, .charcoal, .oilPainting, .pastelDream, .storybook, .inkMarker, .crayonKids, .acrylicPoster],
+                heroAssetName: "LookWatercolor",
+                systemImage: "paintbrush.pointed.fill"
+            ),
+            family(
+                id: "digitalGame",
+                looks: [.pixel, .neon, .flatVector, .lowPoly, .voxelWorld, .synthwave, .glitchArt, .isometricGame],
+                heroAssetName: "LookPixel",
+                systemImage: "gamecontroller.fill"
+            ),
+            family(
+                id: "fantasyWorlds",
+                looks: [.fantasyQuest, .darkFantasy, .sciFiSpace, .steampunk, .pirateStory, .fairytale, .mythicEpic, .yellowComedy],
+                heroAssetName: "LookFantasyQuest",
+                systemImage: "wand.and.stars"
+            ),
+            family(
+                id: "craftTexture",
+                looks: [.stopMotion, .feltCraft, .collageCutout, .cardboardTheater, .origami, .stainedGlass, .embroideredTextile, .vintagePoster],
+                heroAssetName: "LookStopMotion",
+                systemImage: "scissors"
+            )
         ]
+    }
+
+    static var selectorOrder: [AnimateVideoLook] {
+        families.flatMap(\.looks)
+    }
+
+    static func family(containing look: AnimateVideoLook?) -> AnimateVideoLookFamily {
+        guard let look,
+              let family = families.first(where: { $0.looks.contains(look) }) else {
+            return families[0]
+        }
+        return family
+    }
+
+    private static func family(
+        id: String,
+        looks: [AnimateVideoLook],
+        heroAssetName: String,
+        systemImage: String
+    ) -> AnimateVideoLookFamily {
+        AnimateVideoLookFamily(
+            id: id,
+            title: L10n.string("create.look.family.\(id).title"),
+            subtitle: L10n.string("create.look.family.\(id).subtitle"),
+            looks: looks,
+            heroAssetName: heroAssetName,
+            systemImage: systemImage
+        )
     }
 
     var defaultVoiceProfile: AnimateVideoVoiceProfile {
@@ -127,77 +212,11 @@ enum AnimateVideoLook: String, CaseIterable, Identifiable, Codable {
     }
 
     var title: String {
-        switch self {
-        case .anime: L10n.string("create.look.anime.title")
-        case .cartoon: L10n.string("create.look.cartoon.title")
-        case .comic: L10n.string("create.look.comic.title")
-        case .clay: L10n.string("create.look.clay.title")
-        case .watercolor: L10n.string("create.look.watercolor.title")
-        case .cinematic3d: L10n.string("create.look.cinematic3d.title")
-        case .manga: L10n.string("create.look.manga.title")
-        case .paperCut: L10n.string("create.look.paperCut.title")
-        case .plush: L10n.string("create.look.plush.title")
-        case .sticker: L10n.string("create.look.sticker.title")
-        case .pixel: L10n.string("create.look.pixel.title")
-        case .neon: L10n.string("create.look.neon.title")
-        case .storybook: L10n.string("create.look.storybook.title")
-        case .yellowComedy: L10n.string("create.look.yellowComedy.title")
-        case .soft3d: L10n.string("create.look.soft3d.title")
-        case .darkFantasy: L10n.string("create.look.darkFantasy.title")
-        case .vintagePoster: L10n.string("create.look.vintagePoster.title")
-        case .pencilSketch: L10n.string("create.look.pencilSketch.title")
-        case .editorialCaricature: L10n.string("create.look.editorialCaricature.title")
-        case .euroComic: L10n.string("create.look.euroComic.title")
-        case .americanComic: L10n.string("create.look.americanComic.title")
-        case .stopMotion: L10n.string("create.look.stopMotion.title")
-        case .blackWhiteManga: L10n.string("create.look.blackWhiteManga.title")
-        case .toyFigure: L10n.string("create.look.toyFigure.title")
-        case .chibi: L10n.string("create.look.chibi.title")
-        case .flatVector: L10n.string("create.look.flatVector.title")
-        case .pastelDream: L10n.string("create.look.pastelDream.title")
-        case .heroicComic: L10n.string("create.look.heroicComic.title")
-        case .noirInk: L10n.string("create.look.noirInk.title")
-        case .rubberHose: L10n.string("create.look.rubberHose.title")
-        case .fantasyQuest: L10n.string("create.look.fantasyQuest.title")
-        case .miniAvatar: L10n.string("create.look.miniAvatar.title")
-        }
+        L10n.string("create.look.\(rawValue).title")
     }
 
     var subtitle: String {
-        switch self {
-        case .anime: L10n.string("create.look.anime.subtitle")
-        case .cartoon: L10n.string("create.look.cartoon.subtitle")
-        case .comic: L10n.string("create.look.comic.subtitle")
-        case .clay: L10n.string("create.look.clay.subtitle")
-        case .watercolor: L10n.string("create.look.watercolor.subtitle")
-        case .cinematic3d: L10n.string("create.look.cinematic3d.subtitle")
-        case .manga: L10n.string("create.look.manga.subtitle")
-        case .paperCut: L10n.string("create.look.paperCut.subtitle")
-        case .plush: L10n.string("create.look.plush.subtitle")
-        case .sticker: L10n.string("create.look.sticker.subtitle")
-        case .pixel: L10n.string("create.look.pixel.subtitle")
-        case .neon: L10n.string("create.look.neon.subtitle")
-        case .storybook: L10n.string("create.look.storybook.subtitle")
-        case .yellowComedy: L10n.string("create.look.yellowComedy.subtitle")
-        case .soft3d: L10n.string("create.look.soft3d.subtitle")
-        case .darkFantasy: L10n.string("create.look.darkFantasy.subtitle")
-        case .vintagePoster: L10n.string("create.look.vintagePoster.subtitle")
-        case .pencilSketch: L10n.string("create.look.pencilSketch.subtitle")
-        case .editorialCaricature: L10n.string("create.look.editorialCaricature.subtitle")
-        case .euroComic: L10n.string("create.look.euroComic.subtitle")
-        case .americanComic: L10n.string("create.look.americanComic.subtitle")
-        case .stopMotion: L10n.string("create.look.stopMotion.subtitle")
-        case .blackWhiteManga: L10n.string("create.look.blackWhiteManga.subtitle")
-        case .toyFigure: L10n.string("create.look.toyFigure.subtitle")
-        case .chibi: L10n.string("create.look.chibi.subtitle")
-        case .flatVector: L10n.string("create.look.flatVector.subtitle")
-        case .pastelDream: L10n.string("create.look.pastelDream.subtitle")
-        case .heroicComic: L10n.string("create.look.heroicComic.subtitle")
-        case .noirInk: L10n.string("create.look.noirInk.subtitle")
-        case .rubberHose: L10n.string("create.look.rubberHose.subtitle")
-        case .fantasyQuest: L10n.string("create.look.fantasyQuest.subtitle")
-        case .miniAvatar: L10n.string("create.look.miniAvatar.subtitle")
-        }
+        L10n.string("create.look.\(rawValue).subtitle")
     }
 
     var assetName: String {
@@ -234,43 +253,69 @@ enum AnimateVideoLook: String, CaseIterable, Identifiable, Codable {
         case .rubberHose: "LookRubberHose"
         case .fantasyQuest: "LookFantasyQuest"
         case .miniAvatar: "LookMiniAvatar"
+        case .kawaiiPop, .shonenAction, .cozySliceOfLife,
+             .magicalFantasyAnime, .cyberAnime, .shojoRomance, .superDeformed,
+             .animeWatercolor:
+            "LookAnime"
+        case .graphicNovel, .sundayStrip, .inkWash, .charcoal,
+             .inkMarker, .collageCutout, .cardboardTheater, .origami,
+             .stainedGlass, .embroideredTextile:
+            "LookComic"
+        case .oilPainting, .crayonKids, .acrylicPoster,
+             .fairytale, .mythicEpic:
+            "LookWatercolor"
+        case .lowPoly, .voxelWorld, .synthwave, .glitchArt, .isometricGame,
+             .sciFiSpace, .steampunk, .pirateStory, .feltCraft:
+            "LookCartoon"
         }
     }
 
     var systemImage: String {
         switch self {
-        case .anime: "sparkles"
-        case .cartoon: "face.smiling.fill"
-        case .comic: "text.bubble.fill"
-        case .clay: "cube.fill"
-        case .watercolor: "paintbrush.pointed.fill"
-        case .cinematic3d: "camera.aperture"
-        case .manga: "bolt.fill"
-        case .paperCut: "scissors"
-        case .plush: "heart.fill"
-        case .sticker: "seal.fill"
-        case .pixel: "square.grid.3x3.fill"
-        case .neon: "wand.and.stars"
-        case .storybook: "book.closed.fill"
-        case .yellowComedy: "face.smiling.inverse"
-        case .soft3d: "sparkles.rectangle.stack.fill"
-        case .darkFantasy: "moon.stars.fill"
-        case .vintagePoster: "photo.artframe"
-        case .pencilSketch: "pencil.tip"
-        case .editorialCaricature: "person.crop.square.filled.and.at.rectangle"
-        case .euroComic: "bubble.left.and.text.bubble.right.fill"
-        case .americanComic: "burst.fill"
-        case .stopMotion: "camera.fill"
-        case .blackWhiteManga: "circle.lefthalf.filled"
-        case .toyFigure: "figure.stand"
-        case .chibi: "face.smiling.fill"
-        case .flatVector: "square.on.circle.fill"
-        case .pastelDream: "cloud.sun.fill"
-        case .heroicComic: "shield.lefthalf.filled"
-        case .noirInk: "drop.fill"
-        case .rubberHose: "hands.sparkles.fill"
-        case .fantasyQuest: "wand.and.stars.inverse"
-        case .miniAvatar: "person.crop.circle.fill"
+        case .anime, .shonenAction, .cozySliceOfLife, .magicalFantasyAnime,
+             .cyberAnime, .shojoRomance, .superDeformed, .animeWatercolor:
+            "sparkles"
+        case .cartoon, .rubberHose:
+            "face.smiling.fill"
+        case .comic, .americanComic, .euroComic, .heroicComic,
+             .graphicNovel, .sundayStrip:
+            "text.bubble.fill"
+        case .clay, .soft3d, .toyFigure, .lowPoly, .voxelWorld:
+            "cube.fill"
+        case .watercolor, .pastelDream, .oilPainting,
+             .acrylicPoster:
+            "paintbrush.pointed.fill"
+        case .cinematic3d:
+            "camera.aperture"
+        case .manga, .blackWhiteManga:
+            "bolt.fill"
+        case .paperCut, .collageCutout, .cardboardTheater, .origami:
+            "scissors"
+        case .plush, .kawaiiPop, .feltCraft, .embroideredTextile:
+            "heart.fill"
+        case .sticker:
+            "seal.fill"
+        case .pixel, .flatVector, .isometricGame:
+            "square.grid.3x3.fill"
+        case .neon, .synthwave:
+            "wand.and.stars"
+        case .storybook, .fairytale:
+            "book.closed.fill"
+        case .yellowComedy, .chibi, .miniAvatar:
+            "person.crop.circle.fill"
+        case .darkFantasy, .fantasyQuest, .sciFiSpace, .steampunk, .pirateStory,
+             .mythicEpic:
+            "moon.stars.fill"
+        case .vintagePoster:
+            "photo.artframe"
+        case .pencilSketch, .charcoal, .inkMarker, .crayonKids:
+            "pencil.tip"
+        case .editorialCaricature:
+            "person.crop.square.filled.and.at.rectangle"
+        case .stopMotion:
+            "camera.fill"
+        case .noirInk, .inkWash, .glitchArt, .stainedGlass:
+            "drop.fill"
         }
     }
 
