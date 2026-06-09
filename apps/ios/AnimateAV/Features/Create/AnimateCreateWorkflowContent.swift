@@ -2257,7 +2257,6 @@ private struct AnimateCreatePrimaryActionBar: View {
                     }
                     .disabled(!primaryActionPresentation.canRunPrimaryAction)
                     .buttonStyle(AnimateCreateFinalVideoButtonStyle())
-                    .opacity(primaryActionPresentation.canRunPrimaryAction ? 1 : 0.72)
                 }
 
                 if let uploadProgress = presentation.mediaSummary.importProgress,
@@ -2439,20 +2438,12 @@ private struct AnimateCreateFinalVideoButtonStyle: ButtonStyle {
         configuration.label
             .foregroundStyle(.white)
             .padding(.horizontal, 18)
-            .background(buttonFill, in: RoundedRectangle(cornerRadius: 12, style: .continuous))
-            .overlay {
-                RoundedRectangle(cornerRadius: 12, style: .continuous)
-                    .stroke(buttonStroke, lineWidth: 1)
+            .background {
+                RoundedRectangle(cornerRadius: 8, style: .continuous)
+                    .fill(isEnabled ? Color(red: 0.37, green: 0.74, blue: 0.24) : Color(red: 0.88, green: 0.90, blue: 0.86))
             }
-            .scaleEffect(configuration.isPressed ? 0.99 : 1)
-    }
-
-    private var buttonFill: Color {
-        isEnabled ? AVBrandColor.accent : AVBrandColor.mutedSurface
-    }
-
-    private var buttonStroke: Color {
-        isEnabled ? AVBrandColor.accent : AVBrandColor.borderSubtle.opacity(0.64)
+            .contentShape(RoundedRectangle(cornerRadius: 8, style: .continuous))
+            .brightness(configuration.isPressed && isEnabled ? -0.04 : 0)
     }
 }
 
