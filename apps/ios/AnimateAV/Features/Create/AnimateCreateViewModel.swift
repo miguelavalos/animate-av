@@ -1136,5 +1136,12 @@ extension AnimateCreateViewModel {
             || lowercased.contains("not available")
             || lowercased.contains("sign in again")
             || lowercased.contains("try again")
+            || lowercased.contains("no se")
+            || lowercased.contains("inténtalo")
+            || lowercased.contains("intentalo")
+            || lowercased.contains("problema")
+            || lowercased.contains("error")
+            || lowercased.contains("falló")
+            || lowercased.contains("fallo")
     }
 }

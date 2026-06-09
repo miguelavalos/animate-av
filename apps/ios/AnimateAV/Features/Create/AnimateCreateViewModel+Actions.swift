@@ -84,11 +84,13 @@ extension AnimateCreateViewModel {
 
     func prepareVideoDirection() {
         guard canPrepareVideoDirection, let videoDirectionWorkflow else {
-            updateVideoDirectionStatusMessage(videoDirectionAvailabilityMessage ?? L10n.string("create.error.storyPreparationNotReady"))
+            failVideoDirectionPreparation(videoDirectionAvailabilityMessage ?? L10n.string("create.error.storyPreparationNotReady"))
             return
         }
         let form = form
         let selectedMedia = selectedMedia
+        updateSetupErrorMessage(nil)
+        updateVideoDirectionStatusMessage(nil)
         isPreparingVideoDirectionAction = true
 
         runOperation {
@@ -106,7 +108,7 @@ extension AnimateCreateViewModel {
             }
 
             guard let momentId else {
-                self.updateVideoDirectionStatusMessage(self.videoCreationFailureMessage())
+                self.failVideoDirectionPreparation(self.videoCreationFailureMessage())
                 return
             }
             if self.videoDirectionSummary.hasScenes,
@@ -117,7 +119,7 @@ extension AnimateCreateViewModel {
 
             let persistedMedia = await self.mediaUploadWorkflow?.persistSelectedMedia(momentId: momentId)
             guard persistedMedia != nil || selectedMedia.isEmpty else {
-                self.updateVideoDirectionStatusMessage(self.mediaStatusMessage
+                self.failVideoDirectionPreparation(self.mediaStatusMessage
                     ?? AnimateRecoveryCopy.mediaStorySaveFailure()
                 )
                 return
@@ -135,6 +137,15 @@ extension AnimateCreateViewModel {
             )
             if didPrepareVideoDirection {
                 self.recordPreparedVideoDirectionInputSignature(inputSignature, momentId: momentId)
+            }
+            guard didPrepareVideoDirection else {
+                self.failVideoDirectionPreparation(AnimateRecoveryCopy.storyFailure())
+                return
+            }
+            guard self.videoDirectionSummary.hasScenes,
+                  self.lastPreparedVideoDirectionInputSignature == inputSignature else {
+                self.failVideoDirectionPreparation(L10n.string("create.error.storyPreparationUnfinished"))
+                return
             }
         }
     }
@@ -316,7 +327,7 @@ extension AnimateCreateViewModel {
         }
 
         guard videoDirectionSummary.hasScenes, lastPreparedVideoDirectionInputSignature == inputSignature else {
-            updateVideoDirectionStatusMessage(L10n.string("create.error.storyPreparationUnfinished"))
+            failVideoDirectionPreparation(L10n.string("create.error.storyPreparationUnfinished"))
             return false
         }
         return true
@@ -355,6 +366,11 @@ extension AnimateCreateViewModel {
     private var activeFormContext: (momentId: String, form: AnimateVideoSetupForm)? {
         guard let activeVideoId else { return nil }
         return (activeVideoId, form)
+    }
+
+    private func failVideoDirectionPreparation(_ message: String) {
+        updateVideoDirectionStatusMessage(message)
+        updateSetupErrorMessage(message)
     }
 
     private func videoCreationFailureMessage() -> String {
