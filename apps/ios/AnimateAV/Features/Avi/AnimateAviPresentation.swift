@@ -78,6 +78,6 @@ struct AnimateAviPresentation: Equatable {
     }
 
     private static func inProgressVideoLabel(_ videosSummary: AnimateInProgressSummary) -> String {
-        videosSummary.inProgressCount == 1 ? L10n.string("moment.noun.one") : L10n.string("moment.noun.other")
+        videosSummary.inProgressCount == 1 ? L10n.string("video.noun.one") : L10n.string("video.noun.other")
     }
 }

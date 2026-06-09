@@ -32,11 +32,11 @@ final class AnimateVideoDeletionWorkflow: ObservableObject {
     func deleteVideo(_ video: AnimateVideo) async -> Bool {
         guard !isDeletingVideo else { return false }
         guard let ownerUserId = currentUserProvider.currentUserId else {
-            errorMessage = "Sign in before deleting a moment."
+            errorMessage = "Sign in before deleting a video."
             return false
         }
         guard let bearerToken = try? await authTokenProvider.currentBearerToken() else {
-            errorMessage = "Sign in again before deleting a moment."
+            errorMessage = "Sign in again before deleting a video."
             return false
         }
         _ = ownerUserId

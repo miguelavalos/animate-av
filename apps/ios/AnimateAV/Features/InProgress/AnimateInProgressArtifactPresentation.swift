@@ -1,9 +1,9 @@
 import Foundation
 
 struct AnimateInProgressRenderJobsSectionPresentation: Equatable {
-    let title = L10n.string("moment.activity.title")
+    let title = L10n.string("video.activity.title")
     let emptySystemImage = "gearshape.2"
-    let emptyMessage = L10n.string("moment.activity.empty")
+    let emptyMessage = L10n.string("video.activity.empty")
     let jobs: [AnimateInProgressRenderJobPresentation]
 
     init(renderJobs: [AnimateRenderJob]) {
@@ -19,9 +19,9 @@ struct AnimateInProgressArtifactSectionPresentation: Equatable {
 
     static func finalExport(artifacts: [AnimateArtifact]) -> AnimateInProgressArtifactSectionPresentation {
         AnimateInProgressArtifactSectionPresentation(
-            title: L10n.string("moment.artifact.final.title"),
+            title: L10n.string("video.artifact.final.title"),
             emptySystemImage: "video.fill",
-            emptyMessage: L10n.string("moment.artifact.final.empty"),
+            emptyMessage: L10n.string("video.artifact.final.empty"),
             artifact: AnimateInProgressArtifactPresentation.finalExport(in: artifacts)
         )
     }
@@ -38,7 +38,7 @@ struct AnimateInProgressArtifactPresentation: Equatable {
     init(artifact: AnimateArtifact) {
         status = artifact.status
         kindTitle = AnimateStatusRules.displayKind(artifact.kind)
-        watermarkTitle = artifact.hasWatermark == true ? L10n.string("moment.artifact.included") : L10n.string("moment.artifact.none")
+        watermarkTitle = artifact.hasWatermark == true ? L10n.string("video.artifact.included") : L10n.string("video.artifact.none")
         expiresAtTitle = AnimateDateFormatting.formattedDate(milliseconds: artifact.expiresAt)
         storageKey = artifact.r2Key
         actionDetail = AnimateRecoveryCopy.artifactActionDetail(kind: artifact.kind, status: artifact.status)
@@ -66,8 +66,8 @@ struct AnimateInProgressRenderJobPresentation: Identifiable, Equatable {
         id = renderJob.id
         status = renderJob.status
         kindTitle = AnimateStatusRules.displayKind(renderJob.kind)
-        providerTitle = renderJob.provider == nil ? L10n.string("moment.job.notRecorded") : L10n.string("moment.job.recorded")
-        modelTitle = renderJob.model == nil ? L10n.string("moment.job.notRecorded") : L10n.string("moment.job.configured")
+        providerTitle = renderJob.provider == nil ? L10n.string("video.job.notRecorded") : L10n.string("video.job.recorded")
+        modelTitle = renderJob.model == nil ? L10n.string("video.job.notRecorded") : L10n.string("video.job.configured")
         createdAtTitle = AnimateDateFormatting.formattedDate(milliseconds: renderJob.createdAt)
         updatedAtTitle = AnimateDateFormatting.formattedDate(milliseconds: renderJob.updatedAt)
         workflowRunId = renderJob.workflowRunId

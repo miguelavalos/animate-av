@@ -21,17 +21,17 @@ struct AnimateInProgressWorkspaceSummaryPresentation: Equatable {
 
         tiles = [
             AnimateInProgressSummaryTilePresentation(
-                title: L10n.string("moment.summary.status"),
+                title: L10n.string("video.summary.status"),
                 value: AnimateStatusRules.displayTitle(for: workspace.video.status),
                 systemImage: "circle.dashed"
             ),
             AnimateInProgressSummaryTilePresentation(
-                title: L10n.string("moment.summary.final"),
+                title: L10n.string("video.summary.final"),
                 value: Self.summaryValue(for: finalExport),
                 systemImage: "video.fill"
             ),
             AnimateInProgressSummaryTilePresentation(
-                title: L10n.string("moment.summary.latestJob"),
+                title: L10n.string("video.summary.latestJob"),
                 value: Self.latestJobValue(latestRenderJob),
                 systemImage: "gearshape.2"
             )
@@ -39,12 +39,12 @@ struct AnimateInProgressWorkspaceSummaryPresentation: Equatable {
     }
 
     private static func latestJobValue(_ latestRenderJob: AnimateRenderJob?) -> String {
-        guard let latestRenderJob else { return L10n.string("moment.progress.notStarted") }
+        guard let latestRenderJob else { return L10n.string("video.progress.notStarted") }
         return "\(AnimateStatusRules.displayKind(latestRenderJob.kind)) · \(AnimateStatusRules.displayTitle(for: latestRenderJob.status))"
     }
 
     private static func summaryValue(for artifact: AnimateArtifact?) -> String {
-        guard let artifact else { return L10n.string("moment.progress.notReady") }
+        guard let artifact else { return L10n.string("video.progress.notReady") }
         return AnimateStatusRules.displayTitle(for: artifact.status)
     }
 }

@@ -6,26 +6,26 @@ struct AnimateInProgressProgressModel {
     init(workspace: AnimateWorkspace) {
         phases = [
             AnimateInProgressProgressPhase(
-                title: L10n.string("moment.progress.moment"),
+                title: L10n.string("video.progress.video"),
                 detail: AnimateStatusRules.displayTitle(for: workspace.video.status),
                 systemImage: "doc.text",
                 state: .complete
             ),
             AnimateInProgressProgressPhase(
-                title: L10n.string("moment.progress.media"),
-                detail: workspace.mediaAssets.isEmpty ? L10n.string("moment.progress.noMedia") : L10n.string("moment.progress.assets", workspace.mediaAssets.count),
+                title: L10n.string("video.progress.media"),
+                detail: workspace.mediaAssets.isEmpty ? L10n.string("video.progress.noMedia") : L10n.string("video.progress.assets", workspace.mediaAssets.count),
                 systemImage: "photo.on.rectangle",
                 state: workspace.mediaAssets.isEmpty ? .waiting : .complete
             ),
             AnimateInProgressProgressPhase(
-                title: L10n.string("moment.progress.story"),
-                detail: workspace.storyScenes.isEmpty ? L10n.string("moment.progress.notReady") : L10n.string("moment.progress.scenes", workspace.storyScenes.count),
+                title: L10n.string("video.progress.story"),
+                detail: workspace.storyScenes.isEmpty ? L10n.string("video.progress.notReady") : L10n.string("video.progress.scenes", workspace.storyScenes.count),
                 systemImage: "text.bubble",
                 state: workspace.storyScenes.isEmpty ? .waiting : .complete
             ),
             AnimateInProgressProgressPhase(
-                title: L10n.string("moment.progress.createVideo"),
-                detail: Self.renderDetail(workspace: workspace, kind: "final", fallback: L10n.string("moment.progress.notCreated")),
+                title: L10n.string("video.progress.createVideo"),
+                detail: Self.renderDetail(workspace: workspace, kind: "final", fallback: L10n.string("video.progress.notCreated")),
                 systemImage: "video.fill",
                 state: Self.renderState(workspace: workspace, kind: "final", artifactKind: "final_export")
             )

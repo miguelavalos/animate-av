@@ -1,9 +1,9 @@
 import Foundation
 
 struct AnimateInProgressMediaSectionPresentation: Equatable {
-    let title = L10n.string("moment.media.title")
+    let title = L10n.string("video.media.title")
     let emptySystemImage = "photo.badge.plus"
-    let emptyMessage = L10n.string("moment.media.empty")
+    let emptyMessage = L10n.string("video.media.empty")
     let mediaAssets: [AnimateInProgressMediaAssetPresentation]
 
     init(mediaAssets: [AnimateMediaAsset]) {

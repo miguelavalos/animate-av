@@ -15,13 +15,13 @@ struct AnimateCreateWorkspaceProgress: View {
                 isComplete: summary.mediaCount >= minimumMediaCount,
             )
             AVAppShellProgressRow(
-                title: L10n.string("moment.progress.story"),
+                title: L10n.string("video.progress.story"),
                 detail: summary.videoDirectionDetail,
                 systemImage: "text.bubble",
                 isComplete: summary.sceneCount > 0,
             )
             AVAppShellProgressRow(
-                title: L10n.string("moment.artifact.final.title"),
+                title: L10n.string("video.artifact.final.title"),
                 detail: summary.hasFinalExport ? L10n.string("create.status.ready") : L10n.string("create.progress.finalNotMade"),
                 systemImage: "square.and.arrow.up",
                 isComplete: summary.hasFinalExport,

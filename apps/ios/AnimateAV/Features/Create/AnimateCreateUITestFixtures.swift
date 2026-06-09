@@ -15,7 +15,7 @@ enum AnimateCreateUITestFixtures {
         }
     }
 
-    static let videoId = "videos-ui-moment-1"
+    static let videoId = "videos-ui-video-1"
 
     static var mode: Mode? {
         Mode.current
@@ -26,14 +26,14 @@ enum AnimateCreateUITestFixtures {
     }
 
     static var video: AnimateVideo {
-        moment(for: .full)
+        video(for: .full)
     }
 
-    static func moment(for mode: Mode) -> AnimateVideo {
+    static func video(for mode: Mode) -> AnimateVideo {
         AnimateVideo(
             id: videoId,
             template: .birthdayMessage,
-            status: momentStatus(for: mode),
+            status: videoStatus(for: mode),
             title: "Animated Portrait",
             tone: "warm",
             tempo: "balanced",
@@ -52,7 +52,7 @@ enum AnimateCreateUITestFixtures {
 
     static func workspace(for mode: Mode) -> AnimateWorkspace {
         AnimateWorkspace(
-            video: moment(for: mode),
+            video: video(for: mode),
             mediaAssets: mediaAssets,
             storyScenes: storyScenes,
             renderJobs: renderJobs(for: mode),
@@ -137,7 +137,7 @@ enum AnimateCreateUITestFixtures {
             return []
         case .full:
             return [
-                artifact(id: "final-artifact-1", kind: "final_export", key: "animateav/ui-test/moment-1/final/final-1.mp4", hasWatermark: false)
+                artifact(id: "final-artifact-1", kind: "final_export", key: "animateav/ui-test/video-1/final/final-1.mp4", hasWatermark: false)
             ]
         }
     }
@@ -181,7 +181,7 @@ enum AnimateCreateUITestFixtures {
         )
     }
 
-    private static func momentStatus(for mode: Mode) -> String {
+    private static func videoStatus(for mode: Mode) -> String {
         switch mode {
         case .full:
             return "gallery_ready"

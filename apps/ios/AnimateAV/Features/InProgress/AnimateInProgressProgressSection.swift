@@ -6,7 +6,7 @@ struct AnimateInProgressProgressSection: View {
 
     var body: some View {
         VStack(alignment: .leading, spacing: 8) {
-            AVAppShellSectionHeader(title: L10n.string("moment.progress.title"))
+            AVAppShellSectionHeader(title: L10n.string("video.progress.title"))
 
             VStack(alignment: .leading, spacing: 10) {
                 ForEach(AnimateInProgressProgressModel(workspace: workspace).phases) { phase in

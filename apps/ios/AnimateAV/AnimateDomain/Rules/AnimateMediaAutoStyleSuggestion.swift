@@ -94,7 +94,7 @@ enum AnimateMediaAutoStyleSuggester {
         } else if media.count >= 6 {
             candidate = (.familyScenes, .warm, 0.58, "This photo works best as a warm cartoon scene.")
         } else {
-            candidate = (.eventRecap, .warm, 0.48, "A single photo is safest as a simple cartoon moment.")
+            candidate = (.eventRecap, .warm, 0.48, "A single photo is safest as a simple cartoon video.")
         }
 
         guard let style = styles.first(where: { $0.id == candidate.0 && $0.isEnabled }) else {

@@ -14,7 +14,7 @@ struct AnimateInProgressPresentation: Equatable {
                 isSignedIn: isSignedIn,
                 videosSummary: videosSummary
             ),
-            deletionMessage: L10n.string("inProgress.deleteVideo.message", videoPendingDeletion?.title ?? L10n.string("moment.this"))
+            deletionMessage: L10n.string("inProgress.deleteVideo.message", videoPendingDeletion?.title ?? L10n.string("video.this"))
         )
     }
 }

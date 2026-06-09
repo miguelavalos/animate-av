@@ -20,13 +20,13 @@ enum AnimateStatusRules {
 
     static func displayTitle(for status: String) -> String {
         if status == "story_ready" {
-            return L10n.string("moment.status.storyReady")
+            return L10n.string("video.status.storyReady")
         }
         if status == "final_render_pending" || status == "final_rendering" {
-            return L10n.string("moment.status.creatingVideo")
+            return L10n.string("video.status.creatingVideo")
         }
         if status == "gallery_ready" {
-            return L10n.string("moment.status.videoReady")
+            return L10n.string("video.status.videoReady")
         }
         return status
             .replacingOccurrences(of: "_", with: " ")
@@ -42,49 +42,49 @@ enum AnimateStatusRules {
     static func nextAction(for workspace: AnimateWorkspace) -> AnimateNextAction {
         if let failedJob = workspace.renderJobs.latest(where: { isFailureStatus($0.status) }) {
             return AnimateNextAction(
-                title: L10n.string("moment.nextAction.videoAttention.title"),
-                message: L10n.string("moment.nextAction.videoAttention.message", displayKind(failedJob.kind)),
+                title: L10n.string("video.nextAction.videoAttention.title"),
+                message: L10n.string("video.nextAction.videoAttention.message", displayKind(failedJob.kind)),
                 systemImage: "exclamationmark.triangle",
-                primaryButtonTitle: L10n.string("moment.nextAction.openInCreate"),
+                primaryButtonTitle: L10n.string("video.nextAction.openInCreate"),
                 continuationFocus: focus(forFailedJobKind: failedJob.kind)
             )
         }
 
         if workspace.mediaAssets.isEmpty {
             return AnimateNextAction(
-                title: L10n.string("moment.nextAction.addMedia.title"),
-                message: L10n.string("moment.nextAction.addMedia.message"),
+                title: L10n.string("video.nextAction.addMedia.title"),
+                message: L10n.string("video.nextAction.addMedia.message"),
                 systemImage: "photo.badge.plus",
-                primaryButtonTitle: L10n.string("moment.nextAction.addMedia.button"),
+                primaryButtonTitle: L10n.string("video.nextAction.addMedia.button"),
                 continuationFocus: .media
             )
         }
 
         if workspace.storyScenes.isEmpty {
             return AnimateNextAction(
-                title: L10n.string("moment.nextAction.prepareStory.title"),
-                message: L10n.string("moment.nextAction.prepareStory.message"),
+                title: L10n.string("video.nextAction.prepareStory.title"),
+                message: L10n.string("video.nextAction.prepareStory.message"),
                 systemImage: "text.bubble",
-                primaryButtonTitle: L10n.string("moment.nextAction.prepareStory.button"),
+                primaryButtonTitle: L10n.string("video.nextAction.prepareStory.button"),
                 continuationFocus: .story
             )
         }
 
         if !workspace.artifacts.containsAvailable(kind: "final_export") {
             return AnimateNextAction(
-                title: L10n.string("moment.nextAction.createVideo.title"),
-                message: L10n.string("moment.nextAction.createVideo.message"),
+                title: L10n.string("video.nextAction.createVideo.title"),
+                message: L10n.string("video.nextAction.createVideo.message"),
                 systemImage: "video.fill",
-                primaryButtonTitle: L10n.string("moment.nextAction.createVideo.button"),
+                primaryButtonTitle: L10n.string("video.nextAction.createVideo.button"),
                 continuationFocus: .finalRender
             )
         }
 
         return AnimateNextAction(
             title: L10n.string("library.finished.title"),
-            message: L10n.string("moment.nextAction.finished.message"),
+            message: L10n.string("video.nextAction.finished.message"),
             systemImage: "checkmark.circle",
-            primaryButtonTitle: L10n.string("moment.nextAction.openInCreate"),
+            primaryButtonTitle: L10n.string("video.nextAction.openInCreate"),
             continuationFocus: .finalRender
         )
     }

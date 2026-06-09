@@ -21,17 +21,17 @@ struct AnimateInProgressArtifactDetail: View {
                 spacing: 8
             ) {
                 AVAppShellMetadataItem(
-                    title: L10n.string("moment.artifact.watermark"),
+                    title: L10n.string("video.artifact.watermark"),
                     value: presentation.watermarkTitle
                 )
                 AVAppShellMetadataItem(
-                    title: L10n.string("moment.artifact.expires"),
+                    title: L10n.string("video.artifact.expires"),
                     value: presentation.expiresAtTitle
                 )
             }
 
             AVAppShellIdentifierRow(
-                title: L10n.string("moment.artifact.storageKey"),
+                title: L10n.string("video.artifact.storageKey"),
                 value: presentation.storageKey,
                 lineLimit: 3
             )
@@ -64,19 +64,19 @@ struct AnimateInProgressRenderJobRow: View {
                 spacing: 8
             ) {
                 AVAppShellMetadataItem(
-                    title: L10n.string("moment.job.videoService"),
+                    title: L10n.string("video.job.videoService"),
                     value: presentation.providerTitle
                 )
                 AVAppShellMetadataItem(
-                    title: L10n.string("moment.job.videoProfile"),
+                    title: L10n.string("video.job.videoProfile"),
                     value: presentation.modelTitle
                 )
                 AVAppShellMetadataItem(
-                    title: L10n.string("moment.job.created"),
+                    title: L10n.string("video.job.created"),
                     value: presentation.createdAtTitle
                 )
                 AVAppShellMetadataItem(
-                    title: L10n.string("moment.job.updated"),
+                    title: L10n.string("video.job.updated"),
                     value: presentation.updatedAtTitle
                 )
             }
@@ -87,9 +87,9 @@ struct AnimateInProgressRenderJobRow: View {
             )
 
             VStack(alignment: .leading, spacing: 6) {
-                AVAppShellIdentifierRow(title: L10n.string("moment.job.id"), value: presentation.id)
-                AVAppShellIdentifierRow(title: L10n.string("moment.job.workflow"), value: presentation.workflowRunId)
-                AVAppShellIdentifierRow(title: L10n.string("moment.job.supportReference"), value: presentation.providerRequestId)
+                AVAppShellIdentifierRow(title: L10n.string("video.job.id"), value: presentation.id)
+                AVAppShellIdentifierRow(title: L10n.string("video.job.workflow"), value: presentation.workflowRunId)
+                AVAppShellIdentifierRow(title: L10n.string("video.job.supportReference"), value: presentation.providerRequestId)
             }
         }
     }
@@ -102,7 +102,7 @@ private struct AnimateInProgressRenderJobErrorBlock: View {
     var body: some View {
         if let errorMessage, !errorMessage.isEmpty {
             VStack(alignment: .leading, spacing: 3) {
-                Text(errorCode ?? L10n.string("moment.job.videoError"))
+                Text(errorCode ?? L10n.string("video.job.videoError"))
                     .font(.caption2.weight(.semibold))
                     .foregroundStyle(.red)
                 Text(errorMessage)

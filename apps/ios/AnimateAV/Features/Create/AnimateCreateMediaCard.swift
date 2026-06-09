@@ -261,7 +261,7 @@ private struct AnimateCreateMediaEmptyState: View {
                 .accessibilityHidden(true)
 
                 VStack(spacing: 4) {
-                    Text(L10n.string("moment.progress.noMedia"))
+                    Text(L10n.string("video.progress.noMedia"))
                         .font(.system(size: 17, weight: .black))
                         .foregroundStyle(AVBrandColor.textPrimary)
 

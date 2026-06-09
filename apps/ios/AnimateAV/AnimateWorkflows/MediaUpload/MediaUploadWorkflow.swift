@@ -14,7 +14,7 @@ final class MediaUploadWorkflow: WorkspaceObservingWorkflow {
     private let authTokenProvider: any AnimateAuthTokenProviding
     private let uploadClient: AnimateUploadClient
     private let logger = Logger(subsystem: "com.avalsys.animateav", category: "media-upload")
-    private var restoredWorkspaceMomentId: String?
+    private var restoredWorkspaceVideoId: String?
     private var persistenceTimeoutTask: Task<Void, Never>?
 
     init(
@@ -101,7 +101,7 @@ final class MediaUploadWorkflow: WorkspaceObservingWorkflow {
     override func workspaceDidChange(_ workspace: AnimateWorkspace?) {
         guard selectedMedia.isEmpty,
               let workspace,
-              restoredWorkspaceMomentId != workspace.video.id,
+              restoredWorkspaceVideoId != workspace.video.id,
               !workspace.mediaAssets.isEmpty else { return }
 
         Task { [weak self] in
@@ -112,7 +112,7 @@ final class MediaUploadWorkflow: WorkspaceObservingWorkflow {
     func restoreLocalMediaForEditing() {
         guard selectedMedia.isEmpty,
               let activeWorkspace,
-              restoredWorkspaceMomentId != activeWorkspace.video.id,
+              restoredWorkspaceVideoId != activeWorkspace.video.id,
               !activeWorkspace.mediaAssets.isEmpty else { return }
 
         Task { [weak self, activeWorkspace] in
@@ -297,7 +297,7 @@ final class MediaUploadWorkflow: WorkspaceObservingWorkflow {
         importProgress = nil
         selectedMedia = []
         statusMessage = nil
-        restoredWorkspaceMomentId = nil
+        restoredWorkspaceVideoId = nil
         clearActiveWorkspace()
     }
 
@@ -313,7 +313,7 @@ final class MediaUploadWorkflow: WorkspaceObservingWorkflow {
             let restoredMedia = try await MediaPickerImport.loadLocalMediaAssets(workspace.mediaAssets)
             guard activeWorkspace?.video.id == workspace.video.id, selectedMedia.isEmpty else { return }
             if restoredMedia.count == expectedSelectedCount {
-                restoredWorkspaceMomentId = workspace.video.id
+                restoredWorkspaceVideoId = workspace.video.id
                 selectedMedia = restoredMedia
                 statusMessage = L10n.string("workflow.media.localReady")
             } else if restoredMedia.isEmpty, expectedSelectedCount > 0 {
@@ -439,8 +439,8 @@ final class MediaUploadWorkflow: WorkspaceObservingWorkflow {
 
         if skippedDuplicateCount > 0 {
             let itemWord = importedCount == 1
-                ? L10n.string("moment.noun.one")
-                : L10n.string("moment.noun.other")
+                ? L10n.string("video.noun.one")
+                : L10n.string("video.noun.other")
             return L10n.string("create.media.status.addedSkippingDuplicates", importedCount, itemWord, skippedDuplicateCount)
         }
 

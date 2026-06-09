@@ -8,7 +8,7 @@ struct AnimateWorkspace: Decodable, Equatable {
     let artifacts: [AnimateArtifact]
 
     private enum CodingKeys: String, CodingKey {
-        case video = "moment"
+        case video
         case mediaAssets
         case storyScenes
         case renderJobs

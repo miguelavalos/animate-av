@@ -17,7 +17,7 @@ enum AnimateVideoFormatting {
     }
 
     static func storyUsage(_ video: AnimateVideo) -> String {
-        L10n.string("moment.kind.story")
+        L10n.string("video.kind.story")
     }
 
     static func statusTitle(_ video: AnimateVideo) -> String {

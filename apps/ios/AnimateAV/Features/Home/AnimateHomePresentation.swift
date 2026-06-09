@@ -66,10 +66,10 @@ struct AnimateHomePresentation {
 
     private static func videoStatusDetail(videosSummary: AnimateInProgressSummary) -> String {
         if videosSummary.hasVideos {
-            return L10n.string("home.momentStatus.synced", videosSummary.videoCount, videoLabel(videosSummary.videoCount))
+            return L10n.string("home.videoStatus.synced", videosSummary.videoCount, videoLabel(videosSummary.videoCount))
         }
 
-        return L10n.string("home.momentStatus.empty")
+        return L10n.string("home.videoStatus.empty")
     }
 
     private static func aviBriefDetail(isSignedIn: Bool, videosSummary: AnimateInProgressSummary) -> String {
@@ -89,6 +89,6 @@ struct AnimateHomePresentation {
     }
 
     private static func videoLabel(_ count: Int) -> String {
-        count == 1 ? L10n.string("moment.noun.one") : L10n.string("moment.noun.other")
+        count == 1 ? L10n.string("video.noun.one") : L10n.string("video.noun.other")
     }
 }
