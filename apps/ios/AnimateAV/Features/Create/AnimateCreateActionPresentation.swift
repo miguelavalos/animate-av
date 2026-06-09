@@ -115,8 +115,10 @@ struct AnimateCreatePrimaryActionPresentation: Equatable {
             return false
         }
         if hasFinalVideoIntent {
-            guard hasCompletedVideoDirection else {
-                return false
+            if !hasCompletedVideoDirection {
+                return workflow.mediaSummary.effectiveMediaCount > 0
+                    || workflow.canPrepareVideoDirection
+                    || needsSignInForVideoDirection
             }
             if needsCreditsForPreparedPlan {
                 return true

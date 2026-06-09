@@ -93,6 +93,7 @@ private struct AnimateCreateMediaFirstWorkspace: View {
     @State private var showsCompactMediaManager = false
     @State private var handledOpenPickerRequest = 0
     @State private var handledOpenAlbumRequest = 0
+    @State private var continueGuidedFlowRequest = 0
 
     var body: some View {
         ZStack {
@@ -142,6 +143,7 @@ private struct AnimateCreateMediaFirstWorkspace: View {
                             updateVoiceProfile: updateVoiceProfile,
                             updateVoiceTone: updateVoiceTone,
                             createVideo: primaryFinalRenderAction,
+                            continueGuidedFlowRequest: continueGuidedFlowRequest,
                             discardVideoCreation: { showsDiscardVideoConfirmation = true }
                         )
                     } else if hasFinalVideoState {
@@ -167,6 +169,7 @@ private struct AnimateCreateMediaFirstWorkspace: View {
                         startSignInFlow: startSignInFlow,
                         openCredits: openCredits,
                         generateFinalRender: primaryFinalRenderAction,
+                        continueVideoSetup: continueVideoSetup,
                         openCreateVideoConfirmation: { showsCreateVideoConfirmation = true },
                         retryFinalVideoDownload: retryFinalVideoDownload,
                         finishFinalVideoToGallery: finishFinalVideoToGallery
@@ -331,6 +334,10 @@ private struct AnimateCreateMediaFirstWorkspace: View {
             waitsForFinalRenderPlan = true
             prepareFinalRenderPlan(false)
         }
+    }
+
+    private func continueVideoSetup() {
+        continueGuidedFlowRequest += 1
     }
 
     private func openCompactPickerIfRequested(_ request: Int) {
@@ -803,6 +810,7 @@ private struct AnimateCreateVideoDirectionCard: View {
     let updateVoiceProfile: (AnimateVideoVoiceProfile) -> Void
     let updateVoiceTone: (AnimateVideoVoiceTone) -> Void
     let createVideo: () -> Void
+    let continueGuidedFlowRequest: Int
     let discardVideoCreation: () -> Void
 
     @State private var step: GuidedStep = .look
@@ -810,6 +818,7 @@ private struct AnimateCreateVideoDirectionCard: View {
     @State private var selectedScriptIdea: ScriptIdea = .none
     @State private var isGuidedFlowComplete = false
     @State private var lookPageIndex = 0
+    @State private var handledContinueGuidedFlowRequest = 0
 
     private let looksPerPage = 8
     private let minimumMessageCharacterCount = 3
@@ -928,6 +937,11 @@ private struct AnimateCreateVideoDirectionCard: View {
                 activeGuidedSheet = .scriptIdea
             }
         }
+        .onChange(of: continueGuidedFlowRequest) { _, request in
+            guard request > handledContinueGuidedFlowRequest else { return }
+            handledContinueGuidedFlowRequest = request
+            continueStep()
+        }
     }
 
     private var guidedProgressHeader: some View {
@@ -1012,15 +1026,6 @@ private struct AnimateCreateVideoDirectionCard: View {
                 }
             }
 
-            Button {
-                continueStep()
-            } label: {
-                Text(continueButtonTitle)
-                    .font(.system(size: 15, weight: .black))
-                    .frame(maxWidth: .infinity)
-                    .frame(height: 44)
-            }
-            .buttonStyle(AnimateCreateSoftActionButtonStyle())
         }
     }
 
@@ -2205,6 +2210,7 @@ private struct AnimateCreatePrimaryActionBar: View {
     let startSignInFlow: () -> Void
     let openCredits: () -> Void
     let generateFinalRender: () -> Void
+    let continueVideoSetup: () -> Void
     let openCreateVideoConfirmation: () -> Void
     let retryFinalVideoDownload: () -> Void
     let finishFinalVideoToGallery: () -> Void
@@ -2365,6 +2371,8 @@ private struct AnimateCreatePrimaryActionBar: View {
         } else if primaryActionPresentation.hasFinalVideoIntent {
             if primaryActionPresentation.needsSignInForVideoDirection {
                 startSignInFlow()
+            } else if !primaryActionPresentation.hasCompletedVideoDirection {
+                continueVideoSetup()
             } else if primaryActionPresentation.needsCreditsForPreparedPlan {
                 openCreateVideoConfirmation()
             } else if primaryActionPresentation.finalVideoAction.hasRenderPlan {
