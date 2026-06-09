@@ -33,7 +33,8 @@ struct AnimateUploadClient: Sendable {
         let (data, response) = try await retryingData(for: request)
         guard let httpResponse = response as? HTTPURLResponse, 200..<300 ~= httpResponse.statusCode else {
             let statusCode = (response as? HTTPURLResponse)?.statusCode ?? -1
-            logger.error("prepare-upload failed status=\(statusCode, privacy: .public)")
+            let errorBody = String(data: data, encoding: .utf8) ?? ""
+            logger.error("prepare-upload failed status=\(statusCode, privacy: .public) body=\(errorBody, privacy: .public)")
             throw AnimateAPIError.decode(
                 from: data,
                 fallbackCode: "animate_upload_prepare_failed",
