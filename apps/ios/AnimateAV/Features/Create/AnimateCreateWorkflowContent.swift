@@ -424,20 +424,8 @@ private struct AnimateCreateMediaFirstWorkspace: View {
     }
 
     private var primaryActionBarBackdrop: some View {
-        VStack(spacing: 0) {
-            Rectangle()
-                .fill(AnimateTheme.shellBackground.opacity(0))
-                .frame(height: 28)
-            Rectangle()
-                .fill(AnimateTheme.shellBackground.opacity(0.96))
-        }
-        .frame(height: 150)
-        .overlay(alignment: .top) {
-            Rectangle()
-                .fill(AVBrandColor.borderSubtle.opacity(0.28))
-                .frame(height: 1)
-                .offset(y: 34)
-        }
+        Color.clear
+            .frame(height: 0)
         .allowsHitTesting(false)
     }
 }
