@@ -878,6 +878,8 @@
 "workflow.video.signInContinue" = "Sign in before continuing a video.";
 "workflow.video.signInDiscard" = "Sign in before discarding a video.";
 "workflow.video.setupNotReady" = "Setup is not ready to create.";
+"workflow.video.tryAgain" = "We couldn’t update this video. Please try again.";
+"workflow.video.contactSupport" = "There is a service problem. Try again later or contact support.";
 "workflow.media.templateFull" = "Avi has the photo for this video.";
 "workflow.media.noNewMedia" = "No new image added.";
 "workflow.media.noAlbumPhotos" = "No photos found in that album.";

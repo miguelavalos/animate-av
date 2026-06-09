@@ -873,6 +873,8 @@
 "workflow.video.signInContinue" = "Melde dich an, bevor du ein Video fortsetzt.";
 "workflow.video.signInDiscard" = "Melde dich an, bevor du ein Video verwirfst.";
 "workflow.video.setupNotReady" = "Der Entwurf ist noch nicht bereit zum Erstellen.";
+"workflow.video.tryAgain" = "Wir konnten dieses Video nicht aktualisieren. Bitte versuche es erneut.";
+"workflow.video.contactSupport" = "Es gibt ein Serviceproblem. Versuche es später erneut oder kontaktiere den Support.";
 "workflow.media.templateFull" = "Avi hat das Foto für dieses Video.";
 "workflow.media.noNewMedia" = "Kein neues Bild hinzugefügt.";
 "workflow.media.noAlbumPhotos" = "Keine Fotos in diesem Album gefunden.";

@@ -878,6 +878,8 @@
 "workflow.video.signInContinue" = "Inicia sesión antes de continuar un video.";
 "workflow.video.signInDiscard" = "Inicia sesión antes de descartar un video.";
 "workflow.video.setupNotReady" = "El video aún no está listo para crearse.";
+"workflow.video.tryAgain" = "No pudimos actualizar este video. Inténtalo de nuevo.";
+"workflow.video.contactSupport" = "Hay un problema del servicio. Inténtalo de nuevo más tarde o contacta con soporte.";
 "workflow.media.templateFull" = "Avi tiene la foto para este video.";
 "workflow.media.noNewMedia" = "No se añadió una imagen nueva.";
 "workflow.media.noAlbumPhotos" = "No se encontraron fotos en ese álbum.";

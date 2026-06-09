@@ -871,6 +871,8 @@
 "workflow.video.signInContinue" = "Inicia sessió abans de continuar un vídeo.";
 "workflow.video.signInDiscard" = "Inicia sessió abans de descartar un vídeo.";
 "workflow.video.setupNotReady" = "L’esborrany encara no està llest per crear-se.";
+"workflow.video.tryAgain" = "No hem pogut actualitzar aquest vídeo. Torna-ho a provar.";
+"workflow.video.contactSupport" = "Hi ha un problema del servei. Torna-ho a provar més tard o contacta amb suport.";
 "workflow.media.templateFull" = "Avi té la foto per a aquest vídeo.";
 "workflow.media.noNewMedia" = "No s’ha afegit cap imatge nova.";
 "workflow.media.noAlbumPhotos" = "No s’han trobat fotos en aquest àlbum.";

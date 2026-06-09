@@ -871,6 +871,8 @@
 "workflow.video.signInContinue" = "Connecte-toi avant de continuer une vidéo.";
 "workflow.video.signInDiscard" = "Connecte-toi avant de supprimer une vidéo.";
 "workflow.video.setupNotReady" = "Le brouillon n’est pas encore prêt à être créé.";
+"workflow.video.tryAgain" = "Nous n’avons pas pu mettre à jour cette vidéo. Réessayez.";
+"workflow.video.contactSupport" = "Un problème de service est survenu. Réessayez plus tard ou contactez le support.";
 "workflow.media.templateFull" = "Avi a la photo pour cette vidéo.";
 "workflow.media.noNewMedia" = "Aucune nouvelle image ajoutée.";
 "workflow.media.noAlbumPhotos" = "Aucune photo trouvée dans cet album.";

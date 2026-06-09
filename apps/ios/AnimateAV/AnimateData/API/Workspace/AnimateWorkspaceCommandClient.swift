@@ -76,7 +76,7 @@ struct AnimateWorkspaceCommandClient {
             throw AnimateAPIError.decode(
                 from: data,
                 fallbackCode: "moments_workspace_command_failed",
-                fallbackMessage: "Video update failed."
+                fallbackMessage: L10n.string("workflow.video.tryAgain")
             )
         }
 

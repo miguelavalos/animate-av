@@ -83,7 +83,7 @@ final class AnimateVideoCreationWorkflow: ObservableObject {
         } catch {
             guard workflowGeneration.isCurrent(generation) else { return nil }
             logger.error("Video creation failed reason=\(String(describing: error), privacy: .public)")
-            errorMessage = error.localizedDescription
+            errorMessage = videoWorkflowMessage(for: error)
             isCreatingVideo = false
             return nil
         }
@@ -119,7 +119,7 @@ final class AnimateVideoCreationWorkflow: ObservableObject {
             return true
         } catch {
             logger.error("Video setup update failed reason=\(String(describing: error), privacy: .public)")
-            errorMessage = error.localizedDescription
+            errorMessage = videoWorkflowMessage(for: error)
             isCreatingVideo = false
             return false
         }
@@ -172,7 +172,7 @@ final class AnimateVideoCreationWorkflow: ObservableObject {
             return true
         } catch {
             guard workflowGeneration.isCurrent(generation) else { return false }
-            errorMessage = error.localizedDescription
+            errorMessage = videoWorkflowMessage(for: error)
             isCreatingVideo = false
             return false
         }
@@ -180,5 +180,18 @@ final class AnimateVideoCreationWorkflow: ObservableObject {
 
     private func createVideoBlockMessage(_ availability: AnimateVideoSetupRules.Availability) -> String {
         AnimateVideoSetupRules.availabilityMessage(availability) ?? L10n.string("workflow.video.setupNotReady")
+    }
+
+    private func videoWorkflowMessage(for error: Error) -> String {
+        if let apiError = error as? AnimateAPIError {
+            if apiError.code == "unauthorized" || apiError.code == "moments_sign_in_required" || apiError.code == "moments_auth_token_missing" {
+                return L10n.string("workflow.story.signInAgainPlan")
+            }
+            if apiError.isLikelyConfigurationOrServerContractError {
+                return L10n.string("workflow.video.contactSupport")
+            }
+            return L10n.string("workflow.video.tryAgain")
+        }
+        return L10n.string("workflow.video.tryAgain")
     }
 }
