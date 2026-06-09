@@ -3,9 +3,14 @@ import Foundation
 protocol AnimateGalleryStoring {
     func loadRecords() -> [AnimateGalleryVideoRecord]
     func saveRecords(_ records: [AnimateGalleryVideoRecord])
+    func loadImageRecords() -> [AnimateGalleryImageRecord]
+    func saveImageRecords(_ records: [AnimateGalleryImageRecord])
     func localFileExists(for record: AnimateGalleryVideoRecord) -> Bool
     func localFileURL(for record: AnimateGalleryVideoRecord) -> URL
+    func localFileExists(for record: AnimateGalleryImageRecord) -> Bool
+    func localFileURL(for record: AnimateGalleryImageRecord) -> URL
     func contains(artifactId: String) -> Bool
+    func containsImage(artifactId: String) -> Bool
     func saveDownloadedVideo(
         temporaryFileURL: URL,
         momentId: String,
@@ -14,9 +19,19 @@ protocol AnimateGalleryStoring {
         r2Key: String,
         createdAt: Date
     ) throws -> AnimateGalleryVideoRecord
+    func saveDownloadedImage(
+        temporaryFileURL: URL,
+        artifactId: String,
+        title: String,
+        look: String?,
+        r2Key: String,
+        createdAt: Date
+    ) throws -> AnimateGalleryImageRecord
     func addRecord(_ record: AnimateGalleryVideoRecord)
+    func addImageRecord(_ record: AnimateGalleryImageRecord)
     func renameRecord(_ record: AnimateGalleryVideoRecord, title: String)
     func deleteRecord(_ record: AnimateGalleryVideoRecord, deleteLocalFile: Bool)
+    func deleteImageRecord(_ record: AnimateGalleryImageRecord, deleteLocalFile: Bool)
 }
 
 struct AnimateGalleryStore: AnimateGalleryStoring {
@@ -39,6 +54,19 @@ struct AnimateGalleryStore: AnimateGalleryStoring {
     }
 
     func saveRecords(_ records: [AnimateGalleryVideoRecord]) {
+        save(records, to: recordsURL)
+    }
+
+    func loadImageRecords() -> [AnimateGalleryImageRecord] {
+        guard let data = try? Data(contentsOf: imageRecordsURL) else { return [] }
+        return (try? JSONDecoder().decode([AnimateGalleryImageRecord].self, from: data)) ?? []
+    }
+
+    func saveImageRecords(_ records: [AnimateGalleryImageRecord]) {
+        save(records, to: imageRecordsURL)
+    }
+
+    private func save<T: Encodable>(_ records: T, to url: URL) {
         do {
             try fileManager.createDirectory(
                 at: baseDirectory,
@@ -60,8 +88,20 @@ struct AnimateGalleryStore: AnimateGalleryStoring {
         baseDirectory.appendingPathComponent(record.localRelativePath)
     }
 
+    func localFileExists(for record: AnimateGalleryImageRecord) -> Bool {
+        fileManager.fileExists(atPath: localFileURL(for: record).path)
+    }
+
+    func localFileURL(for record: AnimateGalleryImageRecord) -> URL {
+        baseDirectory.appendingPathComponent(record.localRelativePath)
+    }
+
     func contains(artifactId: String) -> Bool {
         loadRecords().contains { $0.artifactId == artifactId }
+    }
+
+    func containsImage(artifactId: String) -> Bool {
+        loadImageRecords().contains { $0.artifactId == artifactId }
     }
 
     func saveDownloadedVideo(
@@ -95,9 +135,44 @@ struct AnimateGalleryStore: AnimateGalleryStoring {
         return record
     }
 
+    func saveDownloadedImage(
+        temporaryFileURL: URL,
+        artifactId: String,
+        title: String,
+        look: String?,
+        r2Key: String,
+        createdAt: Date = Date()
+    ) throws -> AnimateGalleryImageRecord {
+        try fileManager.createDirectory(
+            at: imagesDirectory,
+            withIntermediateDirectories: true
+        )
+        let localRelativePath = "Images/\(Self.safeFilename(artifactId)).jpg"
+        let destinationURL = baseDirectory.appendingPathComponent(localRelativePath)
+        if fileManager.fileExists(atPath: destinationURL.path) {
+            try fileManager.removeItem(at: destinationURL)
+        }
+        try fileManager.moveItem(at: temporaryFileURL, to: destinationURL)
+
+        return AnimateGalleryImageRecord(
+            id: artifactId,
+            artifactId: artifactId,
+            title: title,
+            look: look,
+            r2Key: r2Key,
+            localRelativePath: localRelativePath,
+            createdAt: createdAt.timeIntervalSince1970 * 1000
+        )
+    }
+
     func addRecord(_ record: AnimateGalleryVideoRecord) {
         let remainingRecords = loadRecords().filter { $0.artifactId != record.artifactId }
         saveRecords([record] + remainingRecords)
+    }
+
+    func addImageRecord(_ record: AnimateGalleryImageRecord) {
+        let remainingRecords = loadImageRecords().filter { $0.artifactId != record.artifactId }
+        saveImageRecords([record] + remainingRecords)
     }
 
     func renameRecord(_ record: AnimateGalleryVideoRecord, title: String) {
@@ -117,12 +192,28 @@ struct AnimateGalleryStore: AnimateGalleryStoring {
         saveRecords(remainingRecords)
     }
 
+    func deleteImageRecord(_ record: AnimateGalleryImageRecord, deleteLocalFile: Bool = true) {
+        let remainingRecords = loadImageRecords().filter { $0.id != record.id }
+        if deleteLocalFile {
+            try? fileManager.removeItem(at: localFileURL(for: record))
+        }
+        saveImageRecords(remainingRecords)
+    }
+
     private var recordsURL: URL {
         baseDirectory.appendingPathComponent("gallery-records.json")
     }
 
+    private var imageRecordsURL: URL {
+        baseDirectory.appendingPathComponent("gallery-image-records.json")
+    }
+
     private var videosDirectory: URL {
         baseDirectory.appendingPathComponent("Videos", isDirectory: true)
+    }
+
+    private var imagesDirectory: URL {
+        baseDirectory.appendingPathComponent("Images", isDirectory: true)
     }
 
     private static func defaultBaseDirectory(fileManager: FileManager) -> URL {

@@ -13,8 +13,8 @@ final class AnimateGalleryViewModel: ObservableObject {
     private let authTokenProvider: (any AnimateAuthTokenProviding)?
     private let finalRenderClient: AnimateFinalRenderClient?
     private var remoteArtifacts: [AnimateArtifact] = []
-    private var downloadedImageURLs: [String: URL] = [:]
     private var downloadingImageIds = Set<String>()
+    private var dismissedRemoteImageIds = Set<String>()
 
     init(
         galleryStore: any AnimateGalleryStoring = AnimateGalleryStore(),
@@ -27,10 +27,12 @@ final class AnimateGalleryViewModel: ObservableObject {
         self.authTokenProvider = authTokenProvider
         self.finalRenderClient = finalRenderClient
         refreshVideos()
+        refreshImages()
         NotificationCenter.default.publisher(for: AnimateGalleryStore.didChangeNotification)
             .receive(on: DispatchQueue.main)
             .sink { [weak self] _ in
                 self?.refreshVideos()
+                self?.refreshImages()
             }
             .store(in: &galleryCancellables)
         galleryArtifactsProvider?.galleryArtifactsPublisher
@@ -93,22 +95,61 @@ final class AnimateGalleryViewModel: ObservableObject {
     }
 
     func refreshImages() {
-        images = remoteArtifacts
-            .filter { $0.kind == "generated_image" }
-            .map { artifact in
-                let artifactId = artifact.workflowArtifactId ?? artifact.id
-                return AnimateGalleryImagePresentation(
-                    artifact: artifact,
-                    localFileURL: downloadedImageURLs[artifactId]
-                )
+        var presentations = galleryStore.loadImageRecords().map { record in
+            let remoteArtifact = remoteArtifacts.first {
+                $0.id == record.artifactId || $0.workflowArtifactId == record.artifactId
             }
-            .sorted { $0.artifact.createdAt > $1.artifact.createdAt }
+            let localFileURL = galleryStore.localFileExists(for: record)
+                ? galleryStore.localFileURL(for: record)
+                : nil
+            return AnimateGalleryImagePresentation(
+                record: record,
+                remoteArtifact: remoteArtifact,
+                localFileURL: localFileURL
+            )
+        }
+
+        for artifact in remoteArtifacts where artifact.kind == "generated_image" {
+            let artifactId = artifact.workflowArtifactId ?? artifact.id
+            guard !dismissedRemoteImageIds.contains(artifactId) else { continue }
+            let alreadyPresented = presentations.contains { presentation in
+                presentation.record?.artifactId == artifactId
+                    || presentation.remoteArtifact?.id == artifact.id
+                    || presentation.remoteArtifact?.workflowArtifactId == artifactId
+            }
+            guard !alreadyPresented, !galleryStore.containsImage(artifactId: artifactId) else { continue }
+
+            presentations.append(
+                AnimateGalleryImagePresentation(
+                    record: nil,
+                    remoteArtifact: artifact,
+                    localFileURL: nil
+                )
+            )
+        }
+
+        images = presentations
+            .sorted { lhs, rhs in
+                let lhsCreatedAt = lhs.record?.createdAt ?? lhs.remoteArtifact?.createdAt ?? 0
+                let rhsCreatedAt = rhs.record?.createdAt ?? rhs.remoteArtifact?.createdAt ?? 0
+                return lhsCreatedAt > rhsCreatedAt
+            }
         preloadMissingImages()
     }
 
     func deleteVideo(_ video: AnimateGalleryVideoPresentation) {
         galleryStore.deleteRecord(video.record, deleteLocalFile: true)
         refreshVideos()
+    }
+
+    func deleteImage(_ image: AnimateGalleryImagePresentation) {
+        if let record = image.record {
+            galleryStore.deleteImageRecord(record, deleteLocalFile: true)
+        } else {
+            dismissedRemoteImageIds.insert(image.id)
+        }
+        downloadingImageIds.remove(image.id)
+        refreshImages()
     }
 
     func renameVideo(_ video: AnimateGalleryVideoPresentation, title: String) {
@@ -173,8 +214,15 @@ final class AnimateGalleryViewModel: ObservableObject {
             }
             return
         }
-        let artifactId = image.artifact.workflowArtifactId ?? image.artifact.id
-        guard downloadedImageURLs[artifactId] == nil,
+        guard let remoteArtifact = image.remoteArtifact else {
+            if reportStatus {
+                statusMessage = L10n.string("gallery.image.downloadUnavailable")
+            }
+            return
+        }
+
+        let artifactId = remoteArtifact.workflowArtifactId ?? remoteArtifact.id
+        guard !galleryStore.containsImage(artifactId: artifactId),
               !downloadingImageIds.contains(artifactId)
         else { return }
 
@@ -193,11 +241,17 @@ final class AnimateGalleryViewModel: ObservableObject {
                     bearerToken: bearerToken
                 )
                 let temporaryFileURL = try await finalRenderClient.downloadFinalArtifact(from: download)
-                let localURL = FileManager.default.temporaryDirectory
-                    .appendingPathComponent("\(artifactId).jpg")
-                try? FileManager.default.removeItem(at: localURL)
-                try FileManager.default.moveItem(at: temporaryFileURL, to: localURL)
-                self?.downloadedImageURLs[artifactId] = localURL
+                let record = try self?.galleryStore.saveDownloadedImage(
+                    temporaryFileURL: temporaryFileURL,
+                    artifactId: artifactId,
+                    title: L10n.string("gallery.image.defaultTitle"),
+                    look: remoteArtifact.look ?? image.lookTitle,
+                    r2Key: download.r2Key ?? remoteArtifact.r2Key,
+                    createdAt: Date(timeIntervalSince1970: remoteArtifact.createdAt / 1000)
+                )
+                if let record {
+                    self?.galleryStore.addImageRecord(record)
+                }
                 self?.downloadingImageIds.remove(artifactId)
                 if reportStatus {
                     self?.statusMessage = L10n.string("gallery.image.downloaded")

@@ -339,6 +339,12 @@
 "gallery.delete.button" = "Eliminar de este dispositivo";
 "gallery.delete.message" = "Esto elimina el archivo local del video y el registro de Galería de este dispositivo.";
 "gallery.delete.title" = "¿Eliminar video de Galería?";
+"gallery.delete.video.button" = "Eliminar video";
+"gallery.delete.video.message" = "Esto elimina el video de este dispositivo.";
+"gallery.delete.video.title" = "¿Eliminar video?";
+"gallery.delete.image.button" = "Eliminar imagen";
+"gallery.delete.image.message" = "Esto elimina la imagen de este dispositivo.";
+"gallery.delete.image.title" = "¿Eliminar imagen?";
 "gallery.rename.placeholder" = "Nombre del video";
 "gallery.rename.title" = "Renombrar video";
 "gallery.empty.detail" = "Crea tu primer video y Avi lo dejará aquí cuando esté listo.";

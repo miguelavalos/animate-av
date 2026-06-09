@@ -339,6 +339,12 @@
 "gallery.delete.button" = "Delete from this device";
 "gallery.delete.message" = "This removes the local video file and Gallery record from this device.";
 "gallery.delete.title" = "Delete Gallery video?";
+"gallery.delete.video.button" = "Delete video";
+"gallery.delete.video.message" = "This removes the video from this device.";
+"gallery.delete.video.title" = "Delete video?";
+"gallery.delete.image.button" = "Delete image";
+"gallery.delete.image.message" = "This removes the image from this device.";
+"gallery.delete.image.title" = "Delete image?";
 "gallery.rename.placeholder" = "Video name";
 "gallery.rename.title" = "Rename video";
 "gallery.empty.detail" = "Create your first video and Avi will keep it here when it is ready.";

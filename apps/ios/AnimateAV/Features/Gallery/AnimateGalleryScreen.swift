@@ -9,7 +9,7 @@ struct AnimateGalleryScreen: View {
     let startImageCreation: () -> Void
 
     @EnvironmentObject private var viewModel: AnimateGalleryViewModel
-    @State private var videoPendingDeletion: AnimateGalleryVideoPresentation?
+    @State private var pendingDeletion: AnimateGalleryDeletionTarget?
     @State private var selectedVideo: AnimateGalleryVideoPlayerItem?
     @State private var selectedImage: AnimateGalleryImagePresentation?
     @State private var videoPendingInfo: AnimateGalleryVideoPresentation?
@@ -61,7 +61,7 @@ struct AnimateGalleryScreen: View {
                                     videoPendingInfo = video
                                 },
                                 deleteVideo: {
-                                    videoPendingDeletion = video
+                                    pendingDeletion = .video(video)
                                 }
                             )
                         }
@@ -89,24 +89,27 @@ struct AnimateGalleryScreen: View {
                         },
                         downloadImage: { image in
                             viewModel.downloadImage(image)
+                        },
+                        deleteImage: { image in
+                            pendingDeletion = .image(image)
                         }
                     )
                 }
             }
         }
         .confirmationDialog(
-            L10n.string("gallery.delete.title"),
+            pendingDeletion?.title ?? L10n.string("gallery.delete.title"),
             isPresented: deletionConfirmationPresented,
             titleVisibility: .visible
         ) {
-            Button(L10n.string("gallery.delete.button"), role: .destructive) {
+            Button(pendingDeletion?.buttonTitle ?? L10n.string("gallery.delete.button"), role: .destructive) {
                 confirmDeletion()
             }
             Button(L10n.string("common.cancel"), role: .cancel) {
-                videoPendingDeletion = nil
+                pendingDeletion = nil
             }
         } message: {
-            Text(L10n.string("gallery.delete.message"))
+            Text(pendingDeletion?.message ?? L10n.string("gallery.delete.message"))
         }
         .sheet(item: $selectedVideo) { item in
             AnimateGalleryVideoPlayerSheet(item: item)
@@ -127,10 +130,10 @@ struct AnimateGalleryScreen: View {
 
     private var deletionConfirmationPresented: Binding<Bool> {
         Binding(
-            get: { videoPendingDeletion != nil },
+            get: { pendingDeletion != nil },
             set: { isPresented in
                 if !isPresented {
-                    videoPendingDeletion = nil
+                    pendingDeletion = nil
                 }
             }
         )
@@ -148,10 +151,15 @@ struct AnimateGalleryScreen: View {
     }
 
     private func confirmDeletion() {
-        if let videoPendingDeletion {
-            viewModel.deleteVideo(videoPendingDeletion)
+        switch pendingDeletion {
+        case let .video(video):
+            viewModel.deleteVideo(video)
+        case let .image(image):
+            viewModel.deleteImage(image)
+        case nil:
+            break
         }
-        videoPendingDeletion = nil
+        pendingDeletion = nil
     }
 }
 
@@ -207,6 +215,7 @@ private struct AnimateGalleryImagesGrid: View {
     let images: [AnimateGalleryImagePresentation]
     let openImage: (AnimateGalleryImagePresentation) -> Void
     let downloadImage: (AnimateGalleryImagePresentation) -> Void
+    let deleteImage: (AnimateGalleryImagePresentation) -> Void
 
     private let horizontalSpacing: CGFloat = 12
     private let verticalSpacing: CGFloat = 14
@@ -218,7 +227,8 @@ private struct AnimateGalleryImagesGrid: View {
                     image: image,
                     tileWidth: itemWidth,
                     openImage: { openImage(image) },
-                    downloadImage: { downloadImage(image) }
+                    downloadImage: { downloadImage(image) },
+                    deleteImage: { deleteImage(image) }
                 )
                 .frame(width: itemWidth, alignment: .top)
                 .clipped()
@@ -249,6 +259,7 @@ private struct AnimateGalleryImageTile: View {
     let tileWidth: CGFloat
     let openImage: () -> Void
     let downloadImage: () -> Void
+    let deleteImage: () -> Void
 
     var body: some View {
         VStack(alignment: .leading, spacing: 7) {
@@ -265,7 +276,8 @@ private struct AnimateGalleryImageTile: View {
 
                     AnimateGalleryImageMenu(
                         image: image,
-                        downloadImage: downloadImage
+                        downloadImage: downloadImage,
+                        deleteImage: deleteImage
                     )
                     .padding(7)
                 }
@@ -291,6 +303,7 @@ private struct AnimateGalleryImageTile: View {
 private struct AnimateGalleryImageMenu: View {
     let image: AnimateGalleryImagePresentation
     let downloadImage: () -> Void
+    let deleteImage: () -> Void
 
     var body: some View {
         Menu {
@@ -304,6 +317,10 @@ private struct AnimateGalleryImageMenu: View {
                 ShareLink(item: localFileURL) {
                     Label(L10n.string("common.share"), systemImage: "square.and.arrow.up")
                 }
+            }
+
+            Button(role: .destructive, action: deleteImage) {
+                Label(L10n.string("common.delete"), systemImage: "trash")
             }
         } label: {
             Image(systemName: "ellipsis")
@@ -515,6 +532,47 @@ private struct AnimateGalleryVideoRow: View {
             openVideo()
         } else if video.canDownload {
             downloadVideo()
+        }
+    }
+}
+
+private enum AnimateGalleryDeletionTarget: Identifiable {
+    case video(AnimateGalleryVideoPresentation)
+    case image(AnimateGalleryImagePresentation)
+
+    var id: String {
+        switch self {
+        case let .video(video):
+            "video:\(video.id)"
+        case let .image(image):
+            "image:\(image.id)"
+        }
+    }
+
+    var title: String {
+        switch self {
+        case .video:
+            L10n.string("gallery.delete.video.title")
+        case .image:
+            L10n.string("gallery.delete.image.title")
+        }
+    }
+
+    var message: String {
+        switch self {
+        case .video:
+            L10n.string("gallery.delete.video.message")
+        case .image:
+            L10n.string("gallery.delete.image.message")
+        }
+    }
+
+    var buttonTitle: String {
+        switch self {
+        case .video:
+            L10n.string("gallery.delete.video.button")
+        case .image:
+            L10n.string("gallery.delete.image.button")
         }
     }
 }

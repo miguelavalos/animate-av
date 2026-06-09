@@ -337,6 +337,12 @@
 "gallery.delete.button" = "Supprimer de cet appareil";
 "gallery.delete.message" = "Cela supprime le fichier vidéo local et l’entrée de galerie de cet appareil.";
 "gallery.delete.title" = "Supprimer la vidéo de la galerie ?";
+"gallery.delete.video.button" = "Supprimer la vidéo";
+"gallery.delete.video.message" = "Cela supprime la vidéo de cet appareil.";
+"gallery.delete.video.title" = "Supprimer la vidéo ?";
+"gallery.delete.image.button" = "Supprimer l’image";
+"gallery.delete.image.message" = "Cela supprime l’image de cet appareil.";
+"gallery.delete.image.title" = "Supprimer l’image ?";
 "gallery.rename.placeholder" = "Nom de la vidéo";
 "gallery.rename.title" = "Renommer la vidéo";
 "gallery.empty.detail" = "Crée ta première vidéo et Avi la gardera ici dès qu’elle sera prête.";

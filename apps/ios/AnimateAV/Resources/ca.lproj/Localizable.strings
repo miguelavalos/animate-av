@@ -337,6 +337,12 @@
 "gallery.delete.button" = "Elimina d’aquest dispositiu";
 "gallery.delete.message" = "Això elimina el fitxer de vídeo local i el registre de galeria d’aquest dispositiu.";
 "gallery.delete.title" = "Vols eliminar el vídeo de la galeria?";
+"gallery.delete.video.button" = "Elimina el vídeo";
+"gallery.delete.video.message" = "Això elimina el vídeo d’aquest dispositiu.";
+"gallery.delete.video.title" = "Vols eliminar el vídeo?";
+"gallery.delete.image.button" = "Elimina la imatge";
+"gallery.delete.image.message" = "Això elimina la imatge d’aquest dispositiu.";
+"gallery.delete.image.title" = "Vols eliminar la imatge?";
 "gallery.rename.placeholder" = "Nom del vídeo";
 "gallery.rename.title" = "Canvia el nom del vídeo";
 "gallery.empty.detail" = "Crea el primer vídeo i l’Avi el deixarà aquí quan estigui llest.";

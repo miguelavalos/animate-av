@@ -67,6 +67,34 @@ struct AnimateGalleryVideoPresentation: Identifiable, Equatable {
     }
 }
 
+struct AnimateGalleryImageRecord: Identifiable, Codable, Equatable {
+    let id: String
+    let artifactId: String
+    let title: String
+    let look: String?
+    let r2Key: String
+    let localRelativePath: String
+    let createdAt: Double
+
+    init(
+        id: String,
+        artifactId: String,
+        title: String,
+        look: String?,
+        r2Key: String,
+        localRelativePath: String,
+        createdAt: Double
+    ) {
+        self.id = id
+        self.artifactId = artifactId
+        self.title = title
+        self.look = look
+        self.r2Key = r2Key
+        self.localRelativePath = localRelativePath
+        self.createdAt = createdAt
+    }
+}
+
 enum AnimateGalleryVideoAvailability: String, Equatable {
     case savedOnDevice
     case localFileMissing
@@ -76,20 +104,25 @@ enum AnimateGalleryVideoAvailability: String, Equatable {
 }
 
 struct AnimateGalleryImagePresentation: Identifiable, Equatable {
-    let artifact: AnimateArtifact
+    let record: AnimateGalleryImageRecord?
+    let remoteArtifact: AnimateArtifact?
     let localFileURL: URL?
 
-    var id: String { artifact.workflowArtifactId ?? artifact.id }
-    var title: String { L10n.string("gallery.image.defaultTitle") }
+    var id: String { record?.id ?? remoteArtifact?.workflowArtifactId ?? remoteArtifact?.id ?? UUID().uuidString }
+    var title: String { record?.title ?? L10n.string("gallery.image.defaultTitle") }
     var lookTitle: String {
-        let rawLook = artifact.look ?? parsedLookFromTitle
+        let rawLook = record?.look ?? remoteArtifact?.look ?? parsedLookFromTitle
         guard let rawLook else { return title }
 
         return rawLook.formattedAnimateLookTitle
     }
     var canDownload: Bool {
-        artifact.status == "available"
-            && artifact.expiresAt > Date().timeIntervalSince1970 * 1000
+        guard localFileURL == nil,
+              let remoteArtifact
+        else { return false }
+
+        return remoteArtifact.status == "available"
+            && remoteArtifact.expiresAt > Date().timeIntervalSince1970 * 1000
     }
     var availabilityTitle: String {
         if localFileURL != nil {
@@ -101,7 +134,7 @@ struct AnimateGalleryImagePresentation: Identifiable, Equatable {
     }
 
     private var parsedLookFromTitle: String? {
-        guard let title = artifact.title,
+        guard let title = remoteArtifact?.title,
               title.hasPrefix("Animate AV "),
               title.hasSuffix(" image")
         else { return nil }

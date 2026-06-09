@@ -209,6 +209,12 @@
 "gallery.delete.button" = "Von diesem Gerät löschen";
 "gallery.delete.message" = "Dadurch werden die lokale Videodatei und der Galerie-Eintrag von diesem Gerät entfernt.";
 "gallery.delete.title" = "Galerie-Video löschen?";
+"gallery.delete.video.button" = "Video löschen";
+"gallery.delete.video.message" = "Dadurch wird das Video von diesem Gerät entfernt.";
+"gallery.delete.video.title" = "Video löschen?";
+"gallery.delete.image.button" = "Bild löschen";
+"gallery.delete.image.message" = "Dadurch wird das Bild von diesem Gerät entfernt.";
+"gallery.delete.image.title" = "Bild löschen?";
 "gallery.rename.placeholder" = "Videoname";
 "gallery.rename.title" = "Video umbenennen";
 "gallery.empty.detail" = "Erstelle dein erstes Video, und Avi legt es hier ab, sobald es bereit ist.";
