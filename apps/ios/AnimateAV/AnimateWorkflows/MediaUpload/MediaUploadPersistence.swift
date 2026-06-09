@@ -23,6 +23,7 @@ struct MediaUploadPersistenceResult {
 
 enum MediaUploadPersistence {
     private static let uploadConcurrencyLimit = 3
+    private static let perMediaUploadTimeoutNanoseconds: UInt64 = 60_000_000_000
 
     private struct UploadedMedia {
         let media: AnimateSelectedMedia
@@ -102,18 +103,20 @@ enum MediaUploadPersistence {
                 let media = mediaItems[nextIndex]
                 nextIndex += 1
                 group.addTask {
-                    let prepared = try await uploadClient.prepareUpload(
-                        momentId: momentId,
-                        bearerToken: bearerToken,
-                        media: media
-                    )
+                    try await withUploadTimeout {
+                        let prepared = try await uploadClient.prepareUpload(
+                            momentId: momentId,
+                            bearerToken: bearerToken,
+                            media: media
+                        )
 
-                    let completion = try await uploadClient.upload(
-                        media: media,
-                        preparedUpload: prepared
-                    )
+                        let completion = try await uploadClient.upload(
+                            media: media,
+                            preparedUpload: prepared
+                        )
 
-                    return UploadedMedia(media: media, preparedUpload: prepared, uploadCompletion: completion)
+                        return UploadedMedia(media: media, preparedUpload: prepared, uploadCompletion: completion)
+                    }
                 }
             }
 
@@ -135,6 +138,26 @@ enum MediaUploadPersistence {
         }
 
         return uploadedMedia.sorted { $0.media.sortOrder < $1.media.sortOrder }
+    }
+
+    private static func withUploadTimeout<T: Sendable>(
+        operation: @escaping @Sendable () async throws -> T
+    ) async throws -> T {
+        try await withThrowingTaskGroup(of: T.self) { group in
+            group.addTask {
+                try await operation()
+            }
+            group.addTask {
+                try await Task.sleep(nanoseconds: perMediaUploadTimeoutNanoseconds)
+                throw AnimateUploadError.uploadFailed
+            }
+
+            guard let result = try await group.next() else {
+                throw CancellationError()
+            }
+            group.cancelAll()
+            return result
+        }
     }
 }
 

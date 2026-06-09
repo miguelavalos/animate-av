@@ -15,6 +15,7 @@ final class MediaUploadWorkflow: WorkspaceObservingWorkflow {
     private let uploadClient: AnimateUploadClient
     private let logger = Logger(subsystem: "com.avalsys.animateav", category: "media-upload")
     private var restoredWorkspaceMomentId: String?
+    private var persistenceTimeoutTask: Task<Void, Never>?
 
     init(
         currentUserProvider: any AnimateCurrentUserProviding,
@@ -182,6 +183,7 @@ final class MediaUploadWorkflow: WorkspaceObservingWorkflow {
         isImporting = true
         importProgress = AnimateMediaImportProgress(completedCount: 0, totalCount: pendingMediaToSave.count)
         statusMessage = L10n.string("workflow.media.uploading")
+        startPersistenceTimeout(generation: generation, fallbackMessage: saveFailureMessage)
         AnimateMediaUploadDiagnostics.addBreadcrumb(
             operation: "persist",
             source: "selected_media",
@@ -210,6 +212,7 @@ final class MediaUploadWorkflow: WorkspaceObservingWorkflow {
                 shouldContinue: { isCurrentWorkflowGeneration(generation) }
             )
             guard isCurrentWorkflowGeneration(generation) else { return nil }
+            cancelPersistenceTimeout()
             statusMessage = result.statusMessage
             isImporting = false
             importProgress = nil
@@ -219,6 +222,7 @@ final class MediaUploadWorkflow: WorkspaceObservingWorkflow {
             return (alreadySyncedMedia + result.savedMedia).sorted { $0.sortOrder < $1.sortOrder }
         } catch AnimateUploadError.signedUploadUnavailable {
             guard isCurrentWorkflowGeneration(generation) else { return nil }
+            cancelPersistenceTimeout()
             AnimateMediaUploadDiagnostics.capturePersistenceError(
                 AnimateUploadError.signedUploadUnavailable,
                 step: "signed_upload_unavailable",
@@ -236,6 +240,7 @@ final class MediaUploadWorkflow: WorkspaceObservingWorkflow {
             return nil
         } catch let error as AnimateAPIError {
             guard isCurrentWorkflowGeneration(generation) else { return nil }
+            cancelPersistenceTimeout()
             AnimateMediaUploadDiagnostics.capturePersistenceError(
                 error,
                 step: "api",
@@ -253,6 +258,7 @@ final class MediaUploadWorkflow: WorkspaceObservingWorkflow {
             return nil
         } catch {
             guard isCurrentWorkflowGeneration(generation) else { return nil }
+            cancelPersistenceTimeout()
             AnimateMediaUploadDiagnostics.capturePersistenceError(
                 error,
                 step: "unknown",
@@ -283,6 +289,7 @@ final class MediaUploadWorkflow: WorkspaceObservingWorkflow {
 
     func reset(force: Bool = false) {
         guard force || !isImporting else { return }
+        cancelPersistenceTimeout()
         advanceWorkflowGeneration()
         isImporting = false
         importProgress = nil
@@ -323,6 +330,7 @@ final class MediaUploadWorkflow: WorkspaceObservingWorkflow {
     }
 
     private func beginImport(totalCount: Int) {
+        cancelPersistenceTimeout()
         isImporting = true
         importProgress = AnimateMediaImportProgress(completedCount: 0, totalCount: max(totalCount, 0))
         statusMessage = nil
@@ -336,8 +344,32 @@ final class MediaUploadWorkflow: WorkspaceObservingWorkflow {
     }
 
     private func endImport() {
+        cancelPersistenceTimeout()
         isImporting = false
         importProgress = nil
+    }
+
+    private func startPersistenceTimeout(generation: Int, fallbackMessage: String) {
+        cancelPersistenceTimeout()
+        persistenceTimeoutTask = Task { [weak self] in
+            try? await Task.sleep(nanoseconds: 60_000_000_000)
+            guard !Task.isCancelled else { return }
+            await MainActor.run {
+                guard let self,
+                      self.isCurrentWorkflowGeneration(generation),
+                      self.isImporting else { return }
+                self.advanceWorkflowGeneration()
+                self.isImporting = false
+                self.importProgress = nil
+                self.statusMessage = fallbackMessage
+                self.logger.error("Media persistence timed out")
+            }
+        }
+    }
+
+    private func cancelPersistenceTimeout() {
+        persistenceTimeoutTask?.cancel()
+        persistenceTimeoutTask = nil
     }
 
     private func normalizeOrder() {

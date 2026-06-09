@@ -307,6 +307,10 @@ private struct AnimateCreateMediaFirstWorkspace: View {
         )
     }
 
+    private var primaryActionPresentation: AnimateCreatePrimaryActionPresentation {
+        AnimateCreatePrimaryActionPresentation(workflow: presentation)
+    }
+
     private func primaryFinalRenderAction() {
         if finalVideoAction.hasRenderPlan {
             showsCreateVideoConfirmation = true
@@ -379,7 +383,10 @@ private struct AnimateCreateMediaFirstWorkspace: View {
     }
 
     private var showsPrimaryActionBar: Bool {
-        (showsFinalVideoCompletion || showsFinalVideoRecovery || presentation.finalRenderSummary.latestFinalJob != nil)
+        (showsFinalVideoCompletion
+            || showsFinalVideoRecovery
+            || presentation.finalRenderSummary.latestFinalJob != nil
+            || primaryActionPresentation.hasFinalVideoIntent)
             && !presentation.isFinalRenderEditingLocked
     }
 
@@ -1010,17 +1017,6 @@ private struct AnimateCreateVideoDirectionCard: View {
                 .frame(maxWidth: .infinity, alignment: .leading)
             }
 
-            Button(action: createVideo) {
-                Label(L10n.string("create.guided.summary.createVideo.button"), systemImage: "video.fill")
-                    .font(.system(size: 15, weight: .black))
-                    .lineLimit(1)
-                    .minimumScaleFactor(0.82)
-                    .frame(maxWidth: .infinity)
-                    .frame(height: 46)
-            }
-            .disabled(!primaryActionPresentation.canRunPrimaryAction)
-            .buttonStyle(AnimateCreateSoftActionButtonStyle())
-            .opacity(primaryActionPresentation.canRunPrimaryAction ? 1 : 0.72)
         }
         .padding(.horizontal, 12)
         .padding(.vertical, 12)
@@ -2207,11 +2203,13 @@ private struct AnimateCreatePrimaryActionBar: View {
                         .background(primaryHeaderColor, in: Circle())
 
                     VStack(alignment: .leading, spacing: 3) {
-                        Text(primaryActionPresentation.title)
-                            .font(.system(size: 14, weight: .black))
-                            .foregroundStyle(AVBrandColor.textPrimary)
-                            .lineLimit(2)
-                            .fixedSize(horizontal: false, vertical: true)
+                        if showsPrimaryHeaderTitle {
+                            Text(primaryActionPresentation.title)
+                                .font(.system(size: 14, weight: .black))
+                                .foregroundStyle(AVBrandColor.textPrimary)
+                                .lineLimit(2)
+                                .fixedSize(horizontal: false, vertical: true)
+                        }
 
                         Text(primaryActionPresentation.statusMessage ?? L10n.string("create.primary.creditPreflight"))
                             .font(.system(size: 12, weight: .semibold))
@@ -2316,6 +2314,10 @@ private struct AnimateCreatePrimaryActionBar: View {
             return AVBrandColor.textSecondary
         }
         return AVBrandColor.textPrimary
+    }
+
+    private var showsPrimaryHeaderTitle: Bool {
+        primaryActionPresentation.title != primaryActionPresentation.buttonTitle
     }
 
     private func primaryAction() {

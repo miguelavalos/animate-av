@@ -167,6 +167,9 @@ struct AnimateCreatePrimaryActionPresentation: Equatable {
         if workflow.finalRenderSummary.isGenerating {
             return L10n.string("create.final.creating")
         }
+        if workflow.mediaSummary.isImporting {
+            return workflow.mediaSummary.statusMessage ?? L10n.string("workflow.media.uploading")
+        }
         if hasFinalVideoIntent, needsCreditsForPreparedPlan {
             return L10n.string("credits.get.title")
         }
