@@ -303,7 +303,7 @@ final class AnimateCreateViewModel: ObservableObject {
               let imageGenerationAccountingClient,
               imageGenerationAccountingClient.isConfigured
         else {
-            imageGenerationAvailabilityMessage = AnimateImageGenerationAccountingError.apiNotConfigured.localizedDescription
+            imageGenerationAvailabilityMessage = L10n.string("create.images.error.contactSupport")
             return
         }
 
@@ -402,15 +402,22 @@ final class AnimateCreateViewModel: ObservableObject {
             switch accountingError {
             case .signInRequired:
                 return L10n.string("create.images.balance.signIn")
-            case .apiNotConfigured, .availabilityFailed, .startFailed, .sourceUploadFailed, .packPurchaseFailed:
-                break
+            case .apiNotConfigured:
+                return L10n.string("create.images.error.contactSupport")
+            case .availabilityFailed, .startFailed, .sourceUploadFailed, .packPurchaseFailed:
+                return L10n.string("create.images.error.tryAgain")
             }
         }
-        if let apiError = error as? AnimateAPIError,
-           apiError.code == "unauthorized" || apiError.code == "moments_sign_in_required" || apiError.code == "moments_auth_token_missing" {
-            return L10n.string("create.images.balance.signIn")
+        if let apiError = error as? AnimateAPIError {
+            if apiError.code == "unauthorized" || apiError.code == "moments_sign_in_required" || apiError.code == "moments_auth_token_missing" {
+                return L10n.string("create.images.balance.signIn")
+            }
+            if apiError.isLikelyConfigurationOrServerContractError {
+                return L10n.string("create.images.error.contactSupport")
+            }
+            return L10n.string("create.images.error.tryAgain")
         }
-        return error.localizedDescription
+        return L10n.string("create.images.error.tryAgain")
     }
 
     func prepareNewVideoCreation() {

@@ -536,6 +536,8 @@
 "app.splash.status" = "Preparant l'estudi";
 "app.splash.tagline" = "Vídeos privats de records";
 "common.close" = "Tancar";
+"common.info" = "Info";
+"common.more" = "Més accions";
 "common.ok" = "OK";
 "common.tryAgain" = "Torna-ho a provar.";
 "create.continuation.dismiss" = "Tancar suggeriment de continuació";
@@ -875,6 +877,7 @@
 "workflow.media.signInPrepareStory" = "Inicia sessió abans de continuar.";
 "workflow.media.signInAgainPrepareStory" = "Torna a iniciar sessió abans de continuar.";
 "workflow.media.uploading" = "Pujant imatge per crear el vídeo.";
+"workflow.media.error.contactSupport" = "Hi ha un problema del servei. Torna-ho a provar més tard o contacta amb suport.";
 "workflow.media.uploadingProgress" = "Pujant imatge %d de %d.";
 "workflow.media.localReady" = "La imatge local està llesta per editar.";
 "workflow.media.savedReady" = "La imatge guardada està llesta per preparar el vídeo i crear-lo.";
@@ -903,6 +906,16 @@
 "workflow.final.missingMoment" = "Inicia o continua un vídeo abans de crear l’exportació final.";
 "workflow.final.addCredits" = "Afegeix crèdits abans del vídeo final.";
 "workflow.final.notReady" = "L’exportació final encara no està llesta per crear-se.";
+"workflow.final.tryAgain" = "El workflow de vídeo no s’ha pogut completar. Torna-ho a provar.";
+"workflow.final.contactSupport" = "Hi ha un problema del servei. Torna-ho a provar més tard o contacta amb suport.";
+"gallery.info.title" = "Info";
+"gallery.info.look" = "Look";
+"gallery.info.titleLabel" = "Títol";
+"gallery.info.availability" = "Disponibilitat";
+"gallery.info.created" = "Creat";
+"gallery.info.moment" = "ID de vídeo";
+"gallery.info.artifact" = "ID d’artifact";
+"gallery.info.storage" = "Clau de storage";
 
 "create.summary.media.added" = "%d afegits";
 "create.summary.story.scene" = "%d escena";
@@ -1145,6 +1158,8 @@
 "create.images.actionDock.blocked.detail" = "Tria una foto i comprova que tens prou generacions d’imatge.";
 "create.images.actionDock.starting.title" = "Creant imatges";
 "create.images.actionDock.starting.detail" = "Avi està enviant aquest lot a la cua d’imatges.";
+"create.images.error.tryAgain" = "No s’ha pogut completar la generació d’imatges. Torna-ho a provar.";
+"create.images.error.contactSupport" = "Hi ha un problema del servei. Torna-ho a provar més tard o contacta amb suport.";
 "gallery.video.defaultTitle" = "Vídeo Animate";
 "gallery.image.defaultTitle" = "Imatge amb estil";
 "gallery.image.download" = "Baixar imatge";

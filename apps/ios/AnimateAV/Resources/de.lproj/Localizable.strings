@@ -538,6 +538,8 @@
 "app.splash.status" = "Studio wird vorbereitet";
 "app.splash.tagline" = "Private animierte Videos";
 "common.close" = "Schließen";
+"common.info" = "Info";
+"common.more" = "Weitere Aktionen";
 "common.ok" = "OK";
 "common.tryAgain" = "Bitte versuche es erneut.";
 "create.continuation.dismiss" = "Fortsetzungshinweis schließen";
@@ -877,6 +879,7 @@
 "workflow.media.signInPrepareStory" = "Melde dich an, bevor du fortfährst.";
 "workflow.media.signInAgainPrepareStory" = "Melde dich erneut an, bevor du fortfährst.";
 "workflow.media.uploading" = "Bild wird hochgeladen, um das Video zu erstellen.";
+"workflow.media.error.contactSupport" = "Es gibt ein Serviceproblem. Versuche es später erneut oder kontaktiere den Support.";
 "workflow.media.uploadingProgress" = "Bild %d von %d wird hochgeladen.";
 "workflow.media.localReady" = "Das lokale Bild ist zur Bearbeitung bereit.";
 "workflow.media.savedReady" = "Das gespeicherte Bild ist bereit, um das Video vorzubereiten und zu erstellen.";
@@ -905,6 +908,16 @@
 "workflow.final.missingMoment" = "Starte oder setze ein Video fort, bevor du den finalen Export erstellst.";
 "workflow.final.addCredits" = "Füge Credits vor dem finalen Video hinzu.";
 "workflow.final.notReady" = "Der finale Export ist noch nicht bereit zum Video creationn.";
+"workflow.final.tryAgain" = "Der Video-Workflow konnte nicht abgeschlossen werden. Bitte versuche es erneut.";
+"workflow.final.contactSupport" = "Es gibt ein Serviceproblem. Versuche es später erneut oder kontaktiere den Support.";
+"gallery.info.title" = "Info";
+"gallery.info.look" = "Look";
+"gallery.info.titleLabel" = "Titel";
+"gallery.info.availability" = "Verfügbarkeit";
+"gallery.info.created" = "Erstellt";
+"gallery.info.moment" = "Video-ID";
+"gallery.info.artifact" = "Artifact-ID";
+"gallery.info.storage" = "Storage-Key";
 
 "create.summary.media.added" = "%d hinzugefügt";
 "create.summary.story.scene" = "%d Szene";
@@ -1147,6 +1160,8 @@
 "create.images.actionDock.blocked.detail" = "Wähle ein Foto und prüfe, ob genug Bildgenerierungen verfügbar sind.";
 "create.images.actionDock.starting.title" = "Bilder werden erstellt";
 "create.images.actionDock.starting.detail" = "Avi sendet diesen Stapel an die Bildwarteschlange.";
+"create.images.error.tryAgain" = "Die Bildgenerierung konnte nicht abgeschlossen werden. Bitte versuche es erneut.";
+"create.images.error.contactSupport" = "Es gibt ein Serviceproblem. Bitte versuche es später erneut oder kontaktiere den Support.";
 "gallery.video.defaultTitle" = "Animate-Video";
 "gallery.image.defaultTitle" = "Stilisiertes Bild";
 "gallery.image.download" = "Bild laden";

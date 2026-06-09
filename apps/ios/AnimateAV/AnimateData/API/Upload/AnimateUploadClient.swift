@@ -122,6 +122,11 @@ struct AnimateUploadClient: Sendable {
                 guard let httpResponse = response as? HTTPURLResponse, 200..<300 ~= httpResponse.statusCode else {
                     let statusCode = (response as? HTTPURLResponse)?.statusCode ?? -1
                     logger.error("upload request failed status=\(statusCode, privacy: .public) attempt=\(attempt, privacy: .public)")
+                    if shouldRetryUpload(statusCode: statusCode, attempt: attempt) {
+                        attempt += 1
+                        try await Task.sleep(nanoseconds: uploadRetryPolicy.delayNanoseconds(forAttempt: attempt))
+                        continue
+                    }
                     throw AnimateAPIError.decode(
                         from: responseData,
                         fallbackCode: "moments_upload_failed",
@@ -155,6 +160,11 @@ struct AnimateUploadClient: Sendable {
                 try await Task.sleep(nanoseconds: networkRetryPolicy.delayNanoseconds(forAttempt: attempt))
             }
         }
+    }
+
+    private func shouldRetryUpload(statusCode: Int, attempt: Int) -> Bool {
+        guard attempt < uploadRetryPolicy.maximumRetries else { return false }
+        return statusCode == 408 || statusCode == 429 || 500..<600 ~= statusCode
     }
 }
 

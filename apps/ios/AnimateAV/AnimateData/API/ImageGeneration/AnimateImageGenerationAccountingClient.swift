@@ -149,9 +149,7 @@ struct AnimateImageGenerationAccountingClient {
         }
         request.httpBody = data
 
-        let (responseData, response) = try await retryPolicy.run {
-            try await session.data(for: request)
-        }
+        let (responseData, response) = try await uploadDataWithRetry(request: request)
         guard let httpResponse = response as? HTTPURLResponse, 200..<300 ~= httpResponse.statusCode else {
             throw AnimateAPIError.decode(
                 from: responseData,
@@ -198,6 +196,30 @@ struct AnimateImageGenerationAccountingClient {
         }
 
         return try JSONDecoder().decode(AnimateImageGenerationPackPurchaseResponse.self, from: data)
+    }
+
+    private func uploadDataWithRetry(request: URLRequest) async throws -> (Data, URLResponse) {
+        var attempt = 0
+
+        while true {
+            let (data, response) = try await retryPolicy.run {
+                try await session.data(for: request)
+            }
+
+            guard let httpResponse = response as? HTTPURLResponse,
+                  shouldRetryUpload(statusCode: httpResponse.statusCode),
+                  attempt < retryPolicy.maximumRetries
+            else {
+                return (data, response)
+            }
+
+            attempt += 1
+            try await Task.sleep(nanoseconds: retryPolicy.delayNanoseconds(forAttempt: attempt))
+        }
+    }
+
+    private func shouldRetryUpload(statusCode: Int) -> Bool {
+        statusCode == 408 || statusCode == 429 || 500..<600 ~= statusCode
     }
 }
 

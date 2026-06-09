@@ -247,7 +247,7 @@ final class MediaUploadWorkflow: WorkspaceObservingWorkflow {
             logger.error(
                 "Media persistence failed apiCode=\(error.code, privacy: .public) selected=\(mediaToSave.count, privacy: .public) pending=\(pendingMediaToSave.count, privacy: .public)"
             )
-            statusMessage = saveFailureMessage
+            statusMessage = mediaUploadMessage(for: error, fallback: saveFailureMessage)
             isImporting = false
             importProgress = nil
             return nil
@@ -269,6 +269,16 @@ final class MediaUploadWorkflow: WorkspaceObservingWorkflow {
             importProgress = nil
             return nil
         }
+    }
+
+    private func mediaUploadMessage(for error: AnimateAPIError, fallback: String) -> String {
+        if error.code == "unauthorized" || error.code == "moments_sign_in_required" || error.code == "moments_auth_token_missing" {
+            return L10n.string("workflow.media.signInAgainPrepareStory")
+        }
+        if error.isLikelyConfigurationOrServerContractError {
+            return L10n.string("workflow.media.error.contactSupport")
+        }
+        return fallback
     }
 
     func reset(force: Bool = false) {

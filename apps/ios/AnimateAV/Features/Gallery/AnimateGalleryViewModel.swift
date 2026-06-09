@@ -14,6 +14,7 @@ final class AnimateGalleryViewModel: ObservableObject {
     private let finalRenderClient: AnimateFinalRenderClient?
     private var remoteArtifacts: [AnimateArtifact] = []
     private var downloadedImageURLs: [String: URL] = [:]
+    private var downloadingImageIds = Set<String>()
 
     init(
         galleryStore: any AnimateGalleryStoring = AnimateGalleryStore(),
@@ -102,6 +103,7 @@ final class AnimateGalleryViewModel: ObservableObject {
                 )
             }
             .sorted { $0.artifact.createdAt > $1.artifact.createdAt }
+        preloadMissingImages()
     }
 
     func deleteVideo(_ video: AnimateGalleryVideoPresentation) {
@@ -158,21 +160,34 @@ final class AnimateGalleryViewModel: ObservableObject {
     }
 
     func downloadImage(_ image: AnimateGalleryImagePresentation) {
+        downloadImage(image, reportStatus: true)
+    }
+
+    private func downloadImage(_ image: AnimateGalleryImagePresentation, reportStatus: Bool) {
         guard image.canDownload else { return }
         guard let authTokenProvider,
               let finalRenderClient
         else {
-            statusMessage = L10n.string("gallery.image.downloadUnavailable")
+            if reportStatus {
+                statusMessage = L10n.string("gallery.image.downloadUnavailable")
+            }
             return
         }
+        let artifactId = image.artifact.workflowArtifactId ?? image.artifact.id
+        guard downloadedImageURLs[artifactId] == nil,
+              !downloadingImageIds.contains(artifactId)
+        else { return }
 
+        downloadingImageIds.insert(artifactId)
         Task { [weak self] in
             do {
                 guard let bearerToken = try await authTokenProvider.currentBearerToken() else {
-                    self?.statusMessage = L10n.string("workflow.final.signInAgainSaveLocal")
+                    if reportStatus {
+                        self?.statusMessage = L10n.string("workflow.final.signInAgainSaveLocal")
+                    }
+                    self?.downloadingImageIds.remove(artifactId)
                     return
                 }
-                let artifactId = image.artifact.workflowArtifactId ?? image.artifact.id
                 let download = try await finalRenderClient.prepareImageArtifactDownload(
                     artifactId: artifactId,
                     bearerToken: bearerToken
@@ -183,11 +198,23 @@ final class AnimateGalleryViewModel: ObservableObject {
                 try? FileManager.default.removeItem(at: localURL)
                 try FileManager.default.moveItem(at: temporaryFileURL, to: localURL)
                 self?.downloadedImageURLs[artifactId] = localURL
-                self?.statusMessage = L10n.string("gallery.image.downloaded")
+                self?.downloadingImageIds.remove(artifactId)
+                if reportStatus {
+                    self?.statusMessage = L10n.string("gallery.image.downloaded")
+                }
                 self?.refreshImages()
             } catch {
-                self?.statusMessage = L10n.string("gallery.image.downloadFailed")
+                self?.downloadingImageIds.remove(artifactId)
+                if reportStatus {
+                    self?.statusMessage = L10n.string("gallery.image.downloadFailed")
+                }
             }
+        }
+    }
+
+    private func preloadMissingImages() {
+        for image in images where image.localFileURL == nil && image.canDownload {
+            downloadImage(image, reportStatus: false)
         }
     }
 

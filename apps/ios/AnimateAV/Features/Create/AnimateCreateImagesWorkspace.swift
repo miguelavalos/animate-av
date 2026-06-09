@@ -302,11 +302,11 @@ struct AnimateCreateImagesWorkspace: View {
         if isStartingImageGeneration {
             return L10n.string("create.images.actionDock.starting.detail")
         }
-        if canSubmit {
-            return L10n.string("create.images.actionDock.ready.detail")
-        }
         if let imageGenerationAvailabilityMessage, !imageGenerationAvailabilityMessage.isEmpty {
             return imageGenerationAvailabilityMessage
+        }
+        if canSubmit {
+            return L10n.string("create.images.actionDock.ready.detail")
         }
         return L10n.string("create.images.actionDock.blocked.detail")
     }
@@ -380,16 +380,39 @@ private struct AnimateCreateImagesActionDock: View {
                 .frame(maxWidth: .infinity, alignment: .leading)
             }
 
-            Button(action: action) {
-                Label(buttonTitle, systemImage: isStarting ? "sparkles" : "photo.stack.fill")
-                    .font(.system(size: 15, weight: .black))
-                    .lineLimit(1)
-                    .minimumScaleFactor(0.8)
-                    .frame(maxWidth: .infinity)
-                    .frame(height: 46)
-            }
-            .disabled(!canSubmit)
-            .buttonStyle(AnimateCreateImagesSoftActionButtonStyle())
+            Label(buttonTitle, systemImage: isStarting ? "sparkles" : "photo.stack.fill")
+                .font(.system(size: 15, weight: .black))
+                .foregroundStyle(canSubmit ? AVBrandColor.textPrimary : AVBrandColor.textSecondary.opacity(0.55))
+                .lineLimit(1)
+                .minimumScaleFactor(0.8)
+                .frame(maxWidth: .infinity)
+                .frame(height: 46)
+                .padding(.horizontal, 18)
+                .background(
+                    LinearGradient(
+                        colors: [
+                            AVBrandColor.accent.opacity(canSubmit ? 0.16 : 0.07),
+                            AVBrandColor.mutedSurface.opacity(canSubmit ? 0.92 : 0.62)
+                        ],
+                        startPoint: .topLeading,
+                        endPoint: .bottomTrailing
+                    ),
+                    in: Capsule()
+                )
+                .overlay {
+                    Capsule()
+                        .stroke(AVBrandColor.glassStroke.opacity(canSubmit ? 0.78 : 0.45), lineWidth: 1)
+                }
+                .contentShape(Capsule())
+                .onTapGesture {
+                    guard canSubmit else { return }
+                    action()
+                }
+                .accessibilityAddTraits(.isButton)
+                .accessibilityAction {
+                    guard canSubmit else { return }
+                    action()
+                }
             .opacity(canSubmit ? 1 : 0.72)
         }
         .padding(.horizontal, 12)
@@ -1008,11 +1031,11 @@ private struct AnimateCreateImagesBalanceCard: View {
         if isLoadingImageGenerationAvailability {
             return L10n.string("create.images.balance.loading")
         }
+        if let imageGenerationAvailabilityMessage, !imageGenerationAvailabilityMessage.isEmpty {
+            return imageGenerationAvailabilityMessage
+        }
         if let imageGenerationAvailability {
             return availabilityDetail(imageGenerationAvailability)
-        }
-        if let imageGenerationAvailabilityMessage {
-            return imageGenerationAvailabilityMessage
         }
 
         return switch creditBalanceLoadState {

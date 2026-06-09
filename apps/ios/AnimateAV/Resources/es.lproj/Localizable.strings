@@ -538,6 +538,8 @@
 "app.splash.status" = "Preparando tu estudio";
 "app.splash.tagline" = "Videos animados privados";
 "common.close" = "Cerrar";
+"common.info" = "Info";
+"common.more" = "Más acciones";
 "common.ok" = "OK";
 "common.tryAgain" = "Inténtalo de nuevo.";
 "create.continuation.dismiss" = "Cerrar sugerencia de continuación";
@@ -882,6 +884,7 @@
 "workflow.media.signInPrepareStory" = "Inicia sesión antes de continuar.";
 "workflow.media.signInAgainPrepareStory" = "Vuelve a iniciar sesión antes de continuar.";
 "workflow.media.uploading" = "Subiendo imagen para crear el video.";
+"workflow.media.error.contactSupport" = "Hay un problema del servicio. Inténtalo de nuevo más tarde o contacta con soporte.";
 "workflow.media.uploadingProgress" = "Subiendo imagen %d de %d.";
 "workflow.media.localReady" = "La imagen local está lista para editar.";
 "workflow.media.savedReady" = "La imagen guardada está lista para preparar el video y crearlo.";
@@ -910,6 +913,16 @@
 "workflow.final.missingMoment" = "Inicia o continúa un video antes de crear el video final.";
 "workflow.final.addCredits" = "Añade créditos antes de crear el video final.";
 "workflow.final.notReady" = "El video final aún no está listo para crearse.";
+"workflow.final.tryAgain" = "El workflow de video no pudo terminar. Inténtalo de nuevo.";
+"workflow.final.contactSupport" = "Hay un problema del servicio. Inténtalo de nuevo más tarde o contacta con soporte.";
+"gallery.info.title" = "Info";
+"gallery.info.look" = "Look";
+"gallery.info.titleLabel" = "Título";
+"gallery.info.availability" = "Disponibilidad";
+"gallery.info.created" = "Creado";
+"gallery.info.moment" = "ID de video";
+"gallery.info.artifact" = "ID de artifact";
+"gallery.info.storage" = "Clave de storage";
 
 "create.summary.media.added" = "%d añadidos";
 "create.summary.story.scene" = "%d escena";
@@ -1154,6 +1167,8 @@
 "create.images.actionDock.blocked.detail" = "Elige una foto y comprueba que tienes generaciones de imagen suficientes.";
 "create.images.actionDock.starting.title" = "Creando imágenes";
 "create.images.actionDock.starting.detail" = "Avi está enviando este lote a la cola de imágenes.";
+"create.images.error.tryAgain" = "No pudimos completar la generación. Inténtalo de nuevo.";
+"create.images.error.contactSupport" = "Hay un problema del servicio. Inténtalo de nuevo más tarde o contacta con soporte.";
 "gallery.video.defaultTitle" = "Video Animate";
 "gallery.image.defaultTitle" = "Imagen con estilo";
 "gallery.image.download" = "Descargar imagen";

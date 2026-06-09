@@ -48,6 +48,7 @@ struct AnimateGalleryVideoPresentation: Identifiable, Equatable {
 
     var id: String { record.id }
     var title: String { record.title }
+    var lookTitle: String { remoteArtifact?.look?.formattedAnimateLookTitle ?? record.title }
     var isLocalFileAvailable: Bool { availability == .savedOnDevice }
     var canDownload: Bool { availability == .downloadAvailable }
     var availabilityTitle: String {
@@ -80,6 +81,12 @@ struct AnimateGalleryImagePresentation: Identifiable, Equatable {
 
     var id: String { artifact.workflowArtifactId ?? artifact.id }
     var title: String { L10n.string("gallery.image.defaultTitle") }
+    var lookTitle: String {
+        let rawLook = artifact.look ?? parsedLookFromTitle
+        guard let rawLook else { return title }
+
+        return rawLook.formattedAnimateLookTitle
+    }
     var canDownload: Bool {
         artifact.status == "available"
             && artifact.expiresAt > Date().timeIntervalSince1970 * 1000
@@ -91,5 +98,27 @@ struct AnimateGalleryImagePresentation: Identifiable, Equatable {
         return canDownload
             ? L10n.string("gallery.image.downloadAvailable")
             : L10n.string("gallery.image.downloadUnavailable")
+    }
+
+    private var parsedLookFromTitle: String? {
+        guard let title = artifact.title,
+              title.hasPrefix("Animate AV "),
+              title.hasSuffix(" image")
+        else { return nil }
+
+        return String(title.dropFirst("Animate AV ".count).dropLast(" image".count))
+    }
+
+}
+
+private extension String {
+    var formattedAnimateLookTitle: String {
+        replacingOccurrences(of: "-", with: " ")
+            .replacingOccurrences(of: "_", with: " ")
+            .split(separator: " ")
+            .map { word in
+                word.prefix(1).uppercased() + word.dropFirst()
+            }
+            .joined(separator: " ")
     }
 }

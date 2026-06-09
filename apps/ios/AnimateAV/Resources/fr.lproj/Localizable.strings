@@ -536,6 +536,8 @@
 "app.splash.status" = "Préparation du studio";
 "app.splash.tagline" = "Vidéos animées privées";
 "common.close" = "Fermer";
+"common.info" = "Info";
+"common.more" = "Plus d’actions";
 "common.ok" = "OK";
 "common.tryAgain" = "Réessaie.";
 "create.continuation.dismiss" = "Fermer l'indice de reprise";
@@ -875,6 +877,7 @@
 "workflow.media.signInPrepareStory" = "Connecte-toi avant de continuer.";
 "workflow.media.signInAgainPrepareStory" = "Reconnecte-toi avant de continuer.";
 "workflow.media.uploading" = "Envoi de l’image pour créer la vidéo.";
+"workflow.media.error.contactSupport" = "Un problème de service est survenu. Réessayez plus tard ou contactez le support.";
 "workflow.media.uploadingProgress" = "Envoi de l’image %d sur %d.";
 "workflow.media.localReady" = "L’image locale est prête pour l’édition.";
 "workflow.media.savedReady" = "L’image enregistrée est prête pour préparer la vidéo et la créer.";
@@ -903,6 +906,16 @@
 "workflow.final.missingMoment" = "Démarre ou continue une vidéo avant de créer la vidéo finale.";
 "workflow.final.addCredits" = "Ajoute des crédits avant la vidéo finale.";
 "workflow.final.notReady" = "La vidéo finale n’est pas encore prête.";
+"workflow.final.tryAgain" = "Le workflow vidéo n’a pas pu se terminer. Réessayez.";
+"workflow.final.contactSupport" = "Un problème de service est survenu. Réessayez plus tard ou contactez le support.";
+"gallery.info.title" = "Info";
+"gallery.info.look" = "Look";
+"gallery.info.titleLabel" = "Titre";
+"gallery.info.availability" = "Disponibilité";
+"gallery.info.created" = "Créé";
+"gallery.info.moment" = "ID vidéo";
+"gallery.info.artifact" = "ID artifact";
+"gallery.info.storage" = "Clé de storage";
 
 "create.summary.media.added" = "%d ajoutés";
 "create.summary.story.scene" = "%d scène";
@@ -1145,6 +1158,8 @@
 "create.images.actionDock.blocked.detail" = "Choisis une photo et vérifie que tu as assez de générations d’image.";
 "create.images.actionDock.starting.title" = "Création des images";
 "create.images.actionDock.starting.detail" = "Avi envoie ce lot dans la file d’images.";
+"create.images.error.tryAgain" = "La génération d’image n’a pas pu être terminée. Réessaie.";
+"create.images.error.contactSupport" = "Il y a un problème de service. Réessaie plus tard ou contacte le support.";
 "gallery.video.defaultTitle" = "Vidéo Animate";
 "gallery.image.defaultTitle" = "Image stylisée";
 "gallery.image.download" = "Télécharger l'image";

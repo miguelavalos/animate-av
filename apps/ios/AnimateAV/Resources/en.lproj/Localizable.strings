@@ -538,6 +538,8 @@
 "app.splash.status" = "Preparing your studio";
 "app.splash.tagline" = "Private cartoon videos";
 "common.close" = "Close";
+"common.info" = "Info";
+"common.more" = "More actions";
 "common.ok" = "OK";
 "common.tryAgain" = "Please try again.";
 "create.continuation.dismiss" = "Dismiss continuation hint";
@@ -882,6 +884,7 @@
 "workflow.media.signInPrepareStory" = "Sign in before continuing.";
 "workflow.media.signInAgainPrepareStory" = "Sign in again before continuing.";
 "workflow.media.uploading" = "Uploading image for video creation.";
+"workflow.media.error.contactSupport" = "There is a service problem. Try again later or contact support.";
 "workflow.media.uploadingProgress" = "Uploading image %d of %d.";
 "workflow.media.localReady" = "Photo ready for editing.";
 "workflow.media.savedReady" = "Saved photo is ready for video preparation and creation.";
@@ -910,6 +913,16 @@
 "workflow.final.missingMoment" = "Start or continue a video before creating the final video.";
 "workflow.final.addCredits" = "Add credits before creating the final video.";
 "workflow.final.notReady" = "Final video is not ready to create.";
+"workflow.final.tryAgain" = "The video workflow could not finish. Please try again.";
+"workflow.final.contactSupport" = "There is a service problem. Try again later or contact support.";
+"gallery.info.title" = "Info";
+"gallery.info.look" = "Look";
+"gallery.info.titleLabel" = "Title";
+"gallery.info.availability" = "Availability";
+"gallery.info.created" = "Created";
+"gallery.info.moment" = "Video ID";
+"gallery.info.artifact" = "Artifact ID";
+"gallery.info.storage" = "Storage key";
 
 "create.summary.media.added" = "%d added";
 "create.summary.story.scene" = "%d scene";
@@ -1154,6 +1167,8 @@
 "create.images.actionDock.blocked.detail" = "Choose a photo and make sure you have enough image generations.";
 "create.images.actionDock.starting.title" = "Creating images";
 "create.images.actionDock.starting.detail" = "Avi is sending this batch to the image queue.";
+"create.images.error.tryAgain" = "Image generation could not be completed. Please try again.";
+"create.images.error.contactSupport" = "There is a service problem. Please try again later or contact support.";
 "gallery.video.defaultTitle" = "Animate video";
 "gallery.image.defaultTitle" = "Stylized image";
 "gallery.image.download" = "Download image";

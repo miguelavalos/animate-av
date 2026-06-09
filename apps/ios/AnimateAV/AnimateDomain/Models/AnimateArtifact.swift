@@ -5,6 +5,8 @@ struct AnimateArtifact: Identifiable, Decodable, Equatable {
     let workflowArtifactId: String?
     let kind: String
     let r2Key: String
+    let title: String?
+    let look: String?
     let status: String
     let hasWatermark: Bool?
     let expiresAt: Double
@@ -15,6 +17,8 @@ struct AnimateArtifact: Identifiable, Decodable, Equatable {
         workflowArtifactId: String? = nil,
         kind: String,
         r2Key: String,
+        title: String? = nil,
+        look: String? = nil,
         status: String,
         hasWatermark: Bool?,
         expiresAt: Double,
@@ -24,6 +28,8 @@ struct AnimateArtifact: Identifiable, Decodable, Equatable {
         self.workflowArtifactId = workflowArtifactId
         self.kind = kind
         self.r2Key = r2Key
+        self.title = title
+        self.look = look
         self.status = status
         self.hasWatermark = hasWatermark
         self.expiresAt = expiresAt
@@ -35,6 +41,8 @@ struct AnimateArtifact: Identifiable, Decodable, Equatable {
         case workflowArtifactId
         case kind
         case r2Key
+        case title
+        case look
         case status
         case hasWatermark
         case expiresAt
@@ -48,6 +56,8 @@ struct AnimateArtifact: Identifiable, Decodable, Equatable {
         workflowArtifactId = try container.decodeIfPresent(String.self, forKey: .workflowArtifactId)
         kind = try container.decode(String.self, forKey: .kind)
         r2Key = try container.decode(String.self, forKey: .r2Key)
+        title = try container.decodeIfPresent(String.self, forKey: .title)
+        look = try container.decodeIfPresent(String.self, forKey: .look)
         status = try container.decode(String.self, forKey: .status)
         hasWatermark = try container.decodeIfPresent(Bool.self, forKey: .hasWatermark)
         expiresAt = try container.decodeIfPresent(Double.self, forKey: .expiresAt) ?? 0

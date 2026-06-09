@@ -96,7 +96,7 @@ final class FinalRenderWorkflow: WorkspaceObservingWorkflow {
         } catch let error as AnimateAPIError {
             logger.error("Video quote API error code=\(error.code, privacy: .public) message=\(error.message, privacy: .public)")
             videoQuote = nil
-            statusMessage = error.localizedDescription
+            statusMessage = finalRenderMessage(for: error)
         } catch {
             AnimateWorkflowDiagnostics.capture(
                 error,
@@ -187,7 +187,7 @@ final class FinalRenderWorkflow: WorkspaceObservingWorkflow {
                 ]
             )
             renderPlan = nil
-            statusMessage = error.localizedDescription
+            statusMessage = finalRenderMessage(for: error)
         } catch {
             guard isCurrentWorkflowGeneration(generation) else { return }
             AnimateWorkflowDiagnostics.capture(
@@ -296,7 +296,7 @@ final class FinalRenderWorkflow: WorkspaceObservingWorkflow {
             if error.code == "moments_render_plan_stale" {
                 self.renderPlan = nil
             }
-            statusMessage = error.localizedDescription
+            statusMessage = finalRenderMessage(for: error)
         } catch {
             guard isCurrentWorkflowGeneration(generation) else { return }
             AnimateWorkflowDiagnostics.capture(
@@ -350,6 +350,22 @@ final class FinalRenderWorkflow: WorkspaceObservingWorkflow {
             return nil
         }
         return bearerToken
+    }
+
+    private func finalRenderMessage(for error: AnimateAPIError) -> String {
+        if error.code == "unauthorized" || error.code == "moments_sign_in_required" || error.code == "moments_auth_token_missing" {
+            return L10n.string("workflow.final.signInAgainRender")
+        }
+        if error.code == "insufficient_credits" || error.code == "moments_insufficient_credits" {
+            return L10n.string("workflow.final.addCredits")
+        }
+        if error.code == "moments_render_plan_stale" {
+            return L10n.string("workflow.final.tryAgain")
+        }
+        if error.isLikelyConfigurationOrServerContractError {
+            return L10n.string("workflow.final.contactSupport")
+        }
+        return L10n.string("workflow.final.tryAgain")
     }
 
     private func prepareRenderPlanWithUploadVisibilityRetry(
