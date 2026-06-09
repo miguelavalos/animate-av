@@ -676,12 +676,16 @@ final class AnimateCreateViewModel: ObservableObject {
             finalForm.look.rawValue,
             finalForm.theme.rawValue,
             finalForm.tone.rawValue,
+            "\(finalForm.hasMessage)",
+            finalForm.activeMessageText ?? "",
+            "\(finalForm.audioEnabled)",
+            "\(finalForm.musicEnabled)",
+            "\(finalForm.voiceEnabled)",
             finalForm.voiceProfile.rawValue,
             finalForm.voiceTone.rawValue,
             finalForm.duration.rawValue,
             finalForm.mediaUse.rawValue,
             finalForm.occasion.trimmingCharacters(in: .whitespacesAndNewlines),
-            finalForm.details.trimmingCharacters(in: .whitespacesAndNewlines),
             mediaSignature,
             "\(removesWatermark)"
         ].joined(separator: "|")
@@ -760,17 +764,23 @@ final class AnimateCreateViewModel: ObservableObject {
 
     func updateVideoMessage(_ message: String) {
         form.details = String(message.prefix(180))
+        form.hasMessage = !form.details.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty
+        if !form.hasMessage {
+            form.voiceEnabled = false
+        }
         markLocalSetupEdited()
     }
 
     func updateVoiceProfile(_ profile: AnimateVideoVoiceProfile) {
         form.voiceProfile = profile
+        form.voiceEnabled = form.hasMessage && form.audioEnabled
         hasUserVoiceOverride = true
         markLocalSetupEdited()
     }
 
     func updateVoiceTone(_ tone: AnimateVideoVoiceTone) {
         form.voiceTone = tone
+        form.voiceEnabled = form.hasMessage && form.audioEnabled
         markLocalSetupEdited()
     }
 

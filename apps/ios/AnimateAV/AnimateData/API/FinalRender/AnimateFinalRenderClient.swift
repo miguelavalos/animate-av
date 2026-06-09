@@ -128,7 +128,7 @@ struct AnimateFinalRenderClient {
             .appendingPathComponent("animateav")
             .appendingPathComponent("renders")
             .appendingPathComponent("plan")
-        let messageFields = Self.videoMessageFields(form)
+        let message = Self.videoMessageIntent(form)
         let body = AnimateRenderPlanRequest(
             videoId: videoId,
             creationMode: form.creationMode.rawValue,
@@ -140,12 +140,18 @@ struct AnimateFinalRenderClient {
             selectedSourceLocalIdentifiers: Self.nonBlankIdentifiers(selectedSourceLocalIdentifiers),
             sourceImageUploadId: Self.nonBlankOptional(sourceImageUploadId),
             generatedImageArtifactId: Self.nonBlankOptional(generatedImageArtifactId),
+            hasMessage: message.hasMessage,
+            messageText: message.messageText,
+            audioEnabled: message.audioEnabled,
+            musicEnabled: message.musicEnabled,
+            voiceEnabled: message.voiceEnabled,
+            voiceType: message.voiceType,
             occasion: Self.nonBlankOptional(form.occasion),
-            details: Self.nonBlankOptional(form.details),
-            message: messageFields.message,
-            script: messageFields.script,
-            narrationVoice: Self.narrationVoiceIdentifier(form),
-            voiceTone: form.voiceTone.rawValue,
+            details: nil,
+            message: nil,
+            script: nil,
+            narrationVoice: message.voiceType,
+            voiceTone: message.voiceTone,
             creditCost: nil,
             removeWatermark: removesWatermark,
             renderOptionId: nil
@@ -193,7 +199,7 @@ struct AnimateFinalRenderClient {
             .appendingPathComponent("renders")
             .appendingPathComponent("final")
             .appendingPathComponent("confirm")
-        let messageFields = Self.videoMessageFields(form)
+        let message = Self.videoMessageIntent(form)
         let body = AnimateConfirmFinalRenderRequest(
             videoId: videoId,
             creationMode: form.creationMode.rawValue,
@@ -205,12 +211,18 @@ struct AnimateFinalRenderClient {
             selectedSourceLocalIdentifiers: Self.nonBlankIdentifiers(selectedSourceLocalIdentifiers),
             sourceImageUploadId: Self.nonBlankOptional(sourceImageUploadId),
             generatedImageArtifactId: Self.nonBlankOptional(generatedImageArtifactId),
+            hasMessage: message.hasMessage,
+            messageText: message.messageText,
+            audioEnabled: message.audioEnabled,
+            musicEnabled: message.musicEnabled,
+            voiceEnabled: message.voiceEnabled,
+            voiceType: message.voiceType,
             occasion: Self.nonBlankOptional(form.occasion),
-            details: Self.nonBlankOptional(form.details),
-            message: messageFields.message,
-            script: messageFields.script,
-            narrationVoice: Self.narrationVoiceIdentifier(form),
-            voiceTone: form.voiceTone.rawValue,
+            details: nil,
+            message: nil,
+            script: nil,
+            narrationVoice: message.voiceType,
+            voiceTone: message.voiceTone,
             creditCost: nil,
             removeWatermark: removesWatermark,
             renderOptionId: renderOptionId,
@@ -335,16 +347,26 @@ struct AnimateFinalRenderClient {
         return trimmed
     }
 
-    private static func videoMessageFields(_ form: AnimateVideoSetupForm) -> (message: String?, script: String?) {
-        if let script = nonBlankOptional(form.details) {
-            return (message: nil, script: script)
-        }
-
-        return (message: nonBlankOptional(form.occasion), script: nil)
-    }
-
-    private static func narrationVoiceIdentifier(_ form: AnimateVideoSetupForm) -> String? {
-        return form.voiceProfile.rawValue
+    private static func videoMessageIntent(_ form: AnimateVideoSetupForm) -> (
+        hasMessage: Bool,
+        messageText: String?,
+        audioEnabled: Bool,
+        musicEnabled: Bool,
+        voiceEnabled: Bool,
+        voiceType: String?,
+        voiceTone: String?
+    ) {
+        let messageText = form.activeMessageText
+        let voiceProfile = form.activeVoiceProfile
+        return (
+            hasMessage: messageText != nil,
+            messageText: messageText,
+            audioEnabled: form.audioEnabled,
+            musicEnabled: form.audioEnabled && form.musicEnabled,
+            voiceEnabled: voiceProfile != nil,
+            voiceType: voiceProfile?.rawValue,
+            voiceTone: voiceProfile == nil ? nil : form.voiceTone.rawValue
+        )
     }
 
     private static func nonBlankIdentifiers(_ values: [String]) -> [String]? {

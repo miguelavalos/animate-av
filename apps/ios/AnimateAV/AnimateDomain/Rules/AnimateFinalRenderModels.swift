@@ -35,6 +35,12 @@ struct AnimateRenderPlanRequest: Encodable {
     let selectedSourceLocalIdentifiers: [String]?
     let sourceImageUploadId: String?
     let generatedImageArtifactId: String?
+    let hasMessage: Bool
+    let messageText: String?
+    let audioEnabled: Bool
+    let musicEnabled: Bool
+    let voiceEnabled: Bool
+    let voiceType: String?
     let occasion: String?
     let details: String?
     let message: String?
@@ -58,6 +64,12 @@ struct AnimateConfirmFinalRenderRequest: Encodable {
     let selectedSourceLocalIdentifiers: [String]?
     let sourceImageUploadId: String?
     let generatedImageArtifactId: String?
+    let hasMessage: Bool
+    let messageText: String?
+    let audioEnabled: Bool
+    let musicEnabled: Bool
+    let voiceEnabled: Bool
+    let voiceType: String?
     let occasion: String?
     let details: String?
     let message: String?

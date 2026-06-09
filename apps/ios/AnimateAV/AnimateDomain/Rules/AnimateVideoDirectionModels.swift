@@ -50,12 +50,16 @@ enum AnimateVideoDirectionInputSignature {
             form.look.rawValue,
             form.theme.rawValue,
             form.tone.rawValue,
+            "\(form.hasMessage)",
+            form.activeMessageText ?? "",
+            "\(form.audioEnabled)",
+            "\(form.musicEnabled)",
+            "\(form.voiceEnabled)",
             form.voiceProfile.rawValue,
             form.voiceTone.rawValue,
             form.duration.rawValue,
             form.mediaUse.rawValue,
             form.occasion.trimmingCharacters(in: .whitespacesAndNewlines),
-            form.details.trimmingCharacters(in: .whitespacesAndNewlines),
             mediaSignature
         ].joined(separator: "\u{1F}")
 

@@ -203,8 +203,23 @@ struct AnimateVideoSetupForm: Equatable {
     var tone: AnimateVideoSetupTone = .warm
     var tempo: AnimateVideoSetupTempo = .balanced
     var details = ""
+    var hasMessage = false
+    var audioEnabled = true
+    var musicEnabled = true
+    var voiceEnabled = false
     var voiceProfile: AnimateVideoVoiceProfile = .adultWoman
     var voiceTone: AnimateVideoVoiceTone = .warm
+
+    var activeMessageText: String? {
+        guard hasMessage else { return nil }
+        let trimmed = details.trimmingCharacters(in: .whitespacesAndNewlines)
+        return trimmed.isEmpty ? nil : trimmed
+    }
+
+    var activeVoiceProfile: AnimateVideoVoiceProfile? {
+        guard hasMessage, audioEnabled, voiceEnabled, activeMessageText != nil else { return nil }
+        return voiceProfile
+    }
 
     var title: String {
         let trimmedRecipient = recipient.trimmingCharacters(in: .whitespacesAndNewlines)
@@ -238,6 +253,8 @@ struct AnimateVideoSetupForm: Equatable {
         form.theme = AnimateVideoCreationStyleID(rawValue: video.theme) ?? .celebration
         form.duration = AnimateVideoDuration(rawValue: video.duration) ?? .auto
         form.mediaUse = AnimateVideoMediaUse(rawValue: video.mediaUse) ?? .aviPick
+        form.hasMessage = !(video.details ?? "").trimmingCharacters(in: .whitespacesAndNewlines).isEmpty
+        form.voiceEnabled = form.hasMessage
         return form
     }
 
@@ -251,6 +268,10 @@ struct AnimateVideoSetupForm: Equatable {
             && tone == other.tone
             && tempo == other.tempo
             && details.trimmingCharacters(in: .whitespacesAndNewlines) == other.details.trimmingCharacters(in: .whitespacesAndNewlines)
+            && hasMessage == other.hasMessage
+            && audioEnabled == other.audioEnabled
+            && musicEnabled == other.musicEnabled
+            && voiceEnabled == other.voiceEnabled
             && voiceProfile == other.voiceProfile
             && voiceTone == other.voiceTone
     }

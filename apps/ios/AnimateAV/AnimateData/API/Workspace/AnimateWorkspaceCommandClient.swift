@@ -102,7 +102,7 @@ private struct AnimateWorkspaceSetupCommand: Encodable {
         mediaUse = form.mediaUse.rawValue
         title = form.title
         occasion = form.occasion
-        details = form.details
+        details = form.activeMessageText
     }
 }
 

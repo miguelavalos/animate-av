@@ -11,8 +11,8 @@ struct AnimateVideoQuoteClient {
 
     func quoteVideo(
         duration: AnimateVideoQuoteDuration? = nil,
-        message: String?,
-        script: String?,
+        hasMessage: Bool,
+        messageText: String?,
         removeBranding: Bool,
         bearerToken: String
     ) async throws -> AnimateVideoQuoteResponse {
@@ -28,8 +28,10 @@ struct AnimateVideoQuoteClient {
             .appendingPathComponent("quotes")
         let body = AnimateVideoQuoteRequest(
             duration: duration,
-            message: Self.nonBlankOptional(message),
-            script: Self.nonBlankOptional(script),
+            hasMessage: hasMessage,
+            messageText: hasMessage ? Self.nonBlankOptional(messageText) : nil,
+            message: nil,
+            script: nil,
             removeBranding: removeBranding
         )
 
@@ -66,6 +68,8 @@ enum AnimateVideoQuoteDuration: String, Codable, Equatable {
 struct AnimateVideoQuoteRequest: Encodable, Equatable {
     let appId = "animateav"
     let duration: AnimateVideoQuoteDuration?
+    let hasMessage: Bool
+    let messageText: String?
     let message: String?
     let script: String?
     let removeBranding: Bool

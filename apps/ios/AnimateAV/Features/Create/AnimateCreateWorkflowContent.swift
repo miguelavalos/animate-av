@@ -101,7 +101,6 @@ private struct AnimateCreateMediaFirstWorkspace: View {
     @State private var handledOpenAlbumRequest = 0
     @State private var continueGuidedFlowRequest = 0
     @State private var isVideoSetupGuideComplete = false
-    @State private var shouldPrepareFinalPlanAfterDirection = false
 
     var body: some View {
         ZStack {
@@ -210,13 +209,7 @@ private struct AnimateCreateMediaFirstWorkspace: View {
         .onChange(of: selectedLook) { _, newValue in
             if newValue == nil {
                 isVideoSetupGuideComplete = false
-                shouldPrepareFinalPlanAfterDirection = false
             }
-        }
-        .onChange(of: presentation.videoDirectionSummary.hasScenes) { _, hasScenes in
-            guard hasScenes, shouldPrepareFinalPlanAfterDirection else { return }
-            shouldPrepareFinalPlanAfterDirection = false
-            primaryFinalRenderAction()
         }
         .navigationDestination(isPresented: $showsCompactMediaManager) {
             AnimateCreateMediaManagerSheet(
@@ -367,7 +360,6 @@ private struct AnimateCreateMediaFirstWorkspace: View {
         if presentation.videoDirectionSummary.hasScenes {
             primaryFinalRenderAction()
         } else {
-            shouldPrepareFinalPlanAfterDirection = true
             prepareVideoDirection()
         }
     }
@@ -940,13 +932,6 @@ private struct AnimateCreateVideoDirectionCard: View {
             guard !isGuidedFlowComplete, activeGuidedSheet == nil else { return }
             activeGuidedSheet = guideState.step
         }
-        .onChange(of: form.details) { _, newValue in
-            if guideState.step == .voice && newValue.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
-                guideState.step = .scriptIdea
-                isGuidedFlowComplete = false
-                activeGuidedSheet = .scriptIdea
-            }
-        }
         .onChange(of: continueGuidedFlowRequest) { _, request in
             guard request > handledContinueGuidedFlowRequest else { return }
             handledContinueGuidedFlowRequest = request
@@ -1293,7 +1278,7 @@ private struct AnimateCreateVideoDirectionCard: View {
     }
 
     private var hasMessage: Bool {
-        !form.details.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty
+        form.hasMessage
     }
 
     private var selectedLookTitle: String {
@@ -1338,6 +1323,8 @@ private struct AnimateCreateVideoDirectionCard: View {
         if let style = styles.first(where: { $0.id == idea.styleID }) {
             selectStyle(style)
         }
+        form.hasMessage = idea != .none
+        form.voiceEnabled = idea != .none && form.audioEnabled
         updateMessage(idea.defaultMessage)
         form.occasion = idea.title
     }
