@@ -2297,7 +2297,7 @@ private struct AnimateCreatePrimaryActionBar: View {
             }
             .padding(.horizontal, 12)
             .padding(.vertical, 10)
-            .background(AVBrandColor.elevatedSurface, in: RoundedRectangle(cornerRadius: 20, style: .continuous))
+            .background(Color.white, in: RoundedRectangle(cornerRadius: 20, style: .continuous))
             .overlay {
                 RoundedRectangle(cornerRadius: 20, style: .continuous)
                     .stroke(AVBrandColor.borderSubtle.opacity(0.56), lineWidth: 1)
@@ -2439,16 +2439,20 @@ private struct AnimateCreateFinalVideoButtonStyle: ButtonStyle {
         configuration.label
             .foregroundStyle(.white)
             .padding(.horizontal, 18)
-            .background(
-                AVBrandColor.accent.opacity(isEnabled ? 1 : 0.46),
-                in: Capsule()
-            )
+            .background(buttonFill, in: RoundedRectangle(cornerRadius: 12, style: .continuous))
             .overlay {
-                Capsule()
-                    .stroke(Color.white.opacity(configuration.isPressed ? 0.30 : 0.22), lineWidth: 1)
+                RoundedRectangle(cornerRadius: 12, style: .continuous)
+                    .stroke(buttonStroke, lineWidth: 1)
             }
-            .scaleEffect(configuration.isPressed ? 0.98 : 1)
-            .opacity(isEnabled ? 1 : 0.72)
+            .scaleEffect(configuration.isPressed ? 0.99 : 1)
+    }
+
+    private var buttonFill: Color {
+        isEnabled ? AVBrandColor.accent : AVBrandColor.mutedSurface
+    }
+
+    private var buttonStroke: Color {
+        isEnabled ? AVBrandColor.accent : AVBrandColor.borderSubtle.opacity(0.64)
     }
 }
 
