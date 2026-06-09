@@ -844,8 +844,8 @@
 "create.guided.summary.look" = "Look";
 "create.guided.summary.message" = "Message";
 "create.guided.summary.voice" = "Voice";
-"create.guided.summary.createVideo.title" = "Ready to create video";
-"create.guided.summary.createVideo.detail" = "You’ll confirm the cost before it starts.";
+"create.guided.summary.createVideo.title" = "Plan reviewed";
+"create.guided.summary.createVideo.detail" = "Look and message are set. Use the action below when you are ready.";
 "create.guided.summary.createVideo.button" = "Create video";
 "create.videoDirection.summary.aviTitle" = "Avi selected";
 "create.videoDirection.summary.aviDetail" = "%@, %@, and %@. Avi selected this setup for the photo: %@.";

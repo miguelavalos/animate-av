@@ -257,9 +257,14 @@ private struct AnimateCreateMediaFirstWorkspace: View {
                 showsCreateVideoConfirmation = false
             }
         }
-        .onChange(of: presentation.finalRenderSummary.isGenerating) { _, isGenerating in
-            guard waitsForFinalRenderPlan, !isGenerating, presentation.finalRenderSummary.renderPlan == nil else { return }
-            waitsForFinalRenderPlan = false
+        .onChange(of: presentation.finalRenderSummary.isPreparingPlan) { _, isPreparingPlan in
+            guard waitsForFinalRenderPlan, !isPreparingPlan else { return }
+            if finalVideoAction.canShowConfirmationSheet {
+                waitsForFinalRenderPlan = false
+                showsCreateVideoConfirmation = true
+            } else if presentation.finalRenderSummary.renderPlan == nil {
+                waitsForFinalRenderPlan = false
+            }
         }
         .onAppear {
             openCompactPickerIfRequested(openPickerRequest)
@@ -1034,7 +1039,7 @@ private struct AnimateCreateVideoDirectionCard: View {
     private var summaryCreateVideoAction: some View {
         VStack(alignment: .leading, spacing: 10) {
             HStack(alignment: .center, spacing: 10) {
-                Image(systemName: "video.fill")
+                Image(systemName: "checklist.checked")
                     .font(.system(size: 14, weight: .black))
                     .foregroundStyle(.white)
                     .frame(width: 32, height: 32)
@@ -1110,7 +1115,12 @@ private struct AnimateCreateVideoDirectionCard: View {
                     AnimateCreateGuidedLookTile(
                         look: look,
                         isSelected: selectedLook == look,
-                        select: { selectLook(look) }
+                        select: {
+                            selectLook(look)
+                            if selectedScriptIdea == .none {
+                                completeGuideWithoutMessage()
+                            }
+                        }
                     )
                 }
                 HStack(spacing: 10) {
@@ -1162,6 +1172,9 @@ private struct AnimateCreateVideoDirectionCard: View {
                             select: {
                                 selectedScriptIdea = idea
                                 applyScriptIdea(idea)
+                                if idea == .none {
+                                    completeGuideWithoutMessage()
+                                }
                             }
                         )
                     }
@@ -1300,10 +1313,16 @@ private struct AnimateCreateVideoDirectionCard: View {
                 activeGuidedSheet = .look
                 return
             }
+            if !hasMessage && selectedScriptIdea == .none {
+                completeGuideWithoutMessage()
+                return
+            }
             step = .scriptIdea
             activeGuidedSheet = .scriptIdea
         case .scriptIdea:
-            if hasMessage {
+            if selectedScriptIdea == .none {
+                completeGuideWithoutMessage()
+            } else if hasMessage {
                 step = .scriptMessage
                 activeGuidedSheet = .scriptMessage
             } else {
@@ -1329,7 +1348,7 @@ private struct AnimateCreateVideoDirectionCard: View {
         case .look:
             return selectedLook == nil ? "Elegir look" : L10n.string("create.guided.continue.message")
         case .scriptIdea:
-            return hasMessage
+            return selectedScriptIdea != .none && hasMessage
                 ? L10n.string("create.guided.continue.editMessage")
                 : L10n.string("create.guided.continue.finish")
         case .scriptMessage:
@@ -1347,6 +1366,13 @@ private struct AnimateCreateVideoDirectionCard: View {
         }
         updateMessage(idea.defaultMessage)
         form.occasion = idea.title
+    }
+
+    private func completeGuideWithoutMessage() {
+        updateMessage("")
+        step = .scriptIdea
+        isGuidedFlowComplete = true
+        activeGuidedSheet = nil
     }
 
     private var isUserAdjustedFromAvi: Bool {
@@ -2404,7 +2430,8 @@ private struct AnimateCreatePrimaryActionBar: View {
         } else if presentation.finalRenderSummary.latestFinalJob != nil {
             return
         } else if primaryActionPresentation.hasFinalVideoIntent {
-            if primaryActionPresentation.needsSignInForVideoDirection {
+            if primaryActionPresentation.needsSignInForVideoDirection
+                || primaryActionPresentation.needsSignInForFinalRender {
                 startSignInFlow()
             } else if !primaryActionPresentation.hasCompletedVideoDirection {
                 if guideIsReadyToPrepareDirection {

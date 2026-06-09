@@ -44,6 +44,27 @@ final class AnimateCreateViewModelVideoDirectionStateTests: XCTestCase {
         XCTAssertNil(viewModel.workflowErrorAlertMessage)
     }
 
+    func testFinalVideoCommandFailsWhenConfirmationReturnsWithoutJob() {
+        let viewModel = AnimateCreateViewModel()
+
+        viewModel.beginFinalVideoCommand(.confirming("Creating final video."))
+        viewModel.applyFinalRenderState(
+            AnimateCreateFinalRenderState(
+                finalExport: nil,
+                latestFinalJob: nil,
+                renderPlan: AnimateCreateTestFixtures.makeRenderPlan(momentId: "moment-1"),
+                statusMessage: L10n.string("workflow.final.tryAgain"),
+                isGenerating: false
+            )
+        )
+
+        XCTAssertEqual(
+            viewModel.finalVideoCommandState,
+            .failed(L10n.string("workflow.final.tryAgain"))
+        )
+        XCTAssertEqual(viewModel.workflowErrorAlertMessage, L10n.string("workflow.final.tryAgain"))
+    }
+
     func testClearingFinalSessionAfterGalleryMoveRemovesDownloadState() {
         let viewModel = AnimateCreateViewModel()
         let finalExport = AnimateCreateTestFixtures.makeArtifact(id: "artifact-1", kind: "final_export")
@@ -142,7 +163,8 @@ final class AnimateCreateViewModelVideoDirectionStateTests: XCTestCase {
                 mediaAssets: [
                     AnimateCreateTestFixtures.makeMediaAsset(
                         id: "backend-media-1",
-                        sourceLocalIdentifier: "missing-photos-asset"
+                        sourceLocalIdentifier: "missing-photos-asset",
+                        hasUploadId: false
                     )
                 ],
                 storyScenes: [],
@@ -163,6 +185,36 @@ final class AnimateCreateViewModelVideoDirectionStateTests: XCTestCase {
         XCTAssertEqual(workflow.statusMessage, L10n.string("workflow.final.sourceMediaMissing"))
         XCTAssertFalse(workflow.isGenerating)
         XCTAssertNil(workflow.renderPlan)
+    }
+
+    func testFinalRenderPlanAllowsRecoveredWorkspaceWhenSourceMediaIsSynced() async {
+        let harness = AnimateVideoCreationFailureHarness(error: NSError(domain: "test", code: 1))
+        let workflow = harness.finalRenderWorkflow
+        harness.publishWorkspace(
+            AnimateWorkspace(
+                video: AnimateCreateTestFixtures.makeVideo(id: "moment-1"),
+                mediaAssets: [
+                    AnimateCreateTestFixtures.makeMediaAsset(
+                        id: "backend-media-1",
+                        sourceLocalIdentifier: "backend-source-1"
+                    )
+                ],
+                storyScenes: [],
+                renderJobs: [],
+                artifacts: []
+            )
+        )
+        await Task.yield()
+
+        await workflow.prepareFinalRenderPlan(
+            momentId: "moment-1",
+            template: .birthdayMessage,
+            creationStyle: nil,
+            form: AnimateVideoSetupForm(template: .birthdayMessage),
+            selectedMedia: []
+        )
+
+        XCTAssertNotEqual(workflow.statusMessage, L10n.string("workflow.final.sourceMediaMissing"))
     }
 
     func testFinalRenderPlanWithoutWatermarkIsCurrentForWatermarkedRender() {
@@ -889,9 +941,14 @@ private final class AnimateVideoCreationFailureHarness:
 private struct TestGalleryStore: AnimateGalleryStoring {
     func loadRecords() -> [AnimateGalleryVideoRecord] { [] }
     func saveRecords(_ records: [AnimateGalleryVideoRecord]) {}
+    func loadImageRecords() -> [AnimateGalleryImageRecord] { [] }
+    func saveImageRecords(_ records: [AnimateGalleryImageRecord]) {}
     func localFileExists(for record: AnimateGalleryVideoRecord) -> Bool { false }
     func localFileURL(for record: AnimateGalleryVideoRecord) -> URL { URL(fileURLWithPath: "/tmp/\(record.id).mp4") }
+    func localFileExists(for record: AnimateGalleryImageRecord) -> Bool { false }
+    func localFileURL(for record: AnimateGalleryImageRecord) -> URL { URL(fileURLWithPath: "/tmp/\(record.id).png") }
     func contains(artifactId: String) -> Bool { false }
+    func containsImage(artifactId: String) -> Bool { false }
     func saveDownloadedVideo(
         temporaryFileURL: URL,
         momentId: String,
@@ -910,7 +967,27 @@ private struct TestGalleryStore: AnimateGalleryStoring {
             createdAt: createdAt.timeIntervalSince1970 * 1000
         )
     }
+    func saveDownloadedImage(
+        temporaryFileURL: URL,
+        artifactId: String,
+        title: String,
+        look: String?,
+        r2Key: String,
+        createdAt: Date
+    ) throws -> AnimateGalleryImageRecord {
+        AnimateGalleryImageRecord(
+            id: artifactId,
+            artifactId: artifactId,
+            title: title,
+            look: look,
+            r2Key: r2Key,
+            localRelativePath: "\(artifactId).png",
+            createdAt: createdAt.timeIntervalSince1970 * 1000
+        )
+    }
     func addRecord(_ record: AnimateGalleryVideoRecord) {}
+    func addImageRecord(_ record: AnimateGalleryImageRecord) {}
     func renameRecord(_ record: AnimateGalleryVideoRecord, title: String) {}
     func deleteRecord(_ record: AnimateGalleryVideoRecord, deleteLocalFile: Bool) {}
+    func deleteImageRecord(_ record: AnimateGalleryImageRecord, deleteLocalFile: Bool) {}
 }

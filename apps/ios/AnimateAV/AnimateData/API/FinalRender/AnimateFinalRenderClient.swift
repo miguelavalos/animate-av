@@ -344,7 +344,6 @@ struct AnimateFinalRenderClient {
     }
 
     private static func narrationVoiceIdentifier(_ form: AnimateVideoSetupForm) -> String? {
-        guard nonBlankOptional(form.details) != nil else { return nil }
         return form.voiceProfile.rawValue
     }
 

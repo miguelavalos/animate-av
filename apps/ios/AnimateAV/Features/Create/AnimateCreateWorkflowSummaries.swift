@@ -145,6 +145,7 @@ struct AnimateCreateFinalRenderSummary: Equatable {
     var canRetryFinalVideoDownload = false
     var latestFinalJob: AnimateRenderJob?
     var isGenerating = false
+    var isPreparingPlan = false
     var statusMessage: String?
 
     var realtimeStatus: AnimateRenderRealtimePresentation? {

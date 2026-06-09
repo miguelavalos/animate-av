@@ -387,6 +387,7 @@ final class AnimateAPIClientTests: XCTestCase {
         XCTAssertNil(json["details"])
         XCTAssertNil(json["message"])
         XCTAssertNil(json["script"])
+        XCTAssertEqual(json["narrationVoice"] as? String, AnimateVideoVoiceProfile.adultWoman.rawValue)
         XCTAssertEqual(json["selectedSourceLocalIdentifiers"] as? [String], ["local-1", "local-2"])
         XCTAssertEqual(json["sourceImageUploadId"] as? String, "source-upload-1")
         XCTAssertNil(json["generatedImageArtifactId"])
@@ -451,6 +452,7 @@ final class AnimateAPIClientTests: XCTestCase {
         XCTAssertEqual(json["details"] as? String, "Happy birthday, Ana. Your photo turns into a watercolor celebration.")
         XCTAssertNil(json["message"])
         XCTAssertEqual(json["script"] as? String, "Happy birthday, Ana. Your photo turns into a watercolor celebration.")
+        XCTAssertEqual(json["narrationVoice"] as? String, AnimateVideoVoiceProfile.adultWoman.rawValue)
     }
 
     func testConfirmFinalRenderUsesBackendOwnedEndpoint() async throws {
@@ -541,6 +543,7 @@ final class AnimateAPIClientTests: XCTestCase {
         let json = try XCTUnwrap(JSONSerialization.jsonObject(with: body) as? [String: Any])
         XCTAssertEqual(json["sourceImageUploadId"] as? String, "source-upload-1")
         XCTAssertNil(json["generatedImageArtifactId"])
+        XCTAssertEqual(json["narrationVoice"] as? String, AnimateVideoVoiceProfile.adultWoman.rawValue)
     }
 
     func testVideoQuoteUsesBackendOwnedQuoteEndpoint() async throws {

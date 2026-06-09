@@ -53,6 +53,35 @@ final class AnimateCreateWorkflowPresentationTests: XCTestCase {
         XCTAssertEqual(presentation.statusMessage, "Creating final video.")
     }
 
+    func testPrimaryActionRequestsSignInWhenFinalRenderLosesSession() {
+        let presentation = AnimateCreatePrimaryActionPresentation(
+            workflow: AnimateCreateWorkflowPresentation(
+                activeVideoId: "moment-1",
+                isSignedIn: false,
+                hasActiveVideoWorkspace: true,
+                template: .birthdayMessage,
+                balance: AnimateCreditBalance(proMonthly: 0, promotional: 1, purchased: 0),
+                mediaSummary: AnimateCreateMediaSummary(
+                    selectedMedia: [AnimateCreateTestFixtures.makeSelectedMedia(id: "00000000-0000-0000-0000-000000000001")]
+                ),
+                videoDirectionSummary: AnimateCreateVideoDirectionSummary(
+                    savedScenes: [AnimateCreateTestFixtures.makeScene(id: "scene-1")]
+                ),
+                finalRenderSummary: AnimateCreateFinalRenderSummary(
+                    creditCost: 1,
+                    statusMessage: L10n.string("workflow.final.signInAgainRender")
+                ),
+                canPrepareFinalRenderPlan: false,
+                canGenerateFinalRender: false
+            )
+        )
+
+        XCTAssertTrue(presentation.canRunPrimaryAction)
+        XCTAssertTrue(presentation.needsSignInForFinalRender)
+        XCTAssertEqual(presentation.buttonTitle, L10n.string("common.signIn"))
+        XCTAssertEqual(presentation.buttonIconName, "person.crop.circle.badge.checkmark")
+    }
+
     func testWorkflowPresentationHidesWorkflowCardsWithoutVideo() {
         let presentation = AnimateCreateWorkflowPresentation(
             activeVideoId: nil,
@@ -231,6 +260,7 @@ final class AnimateCreateWorkflowPresentationTests: XCTestCase {
             hasUnsavedLocalVideo: false,
             template: .birthdayMessage,
             creationStyleTitle: "Birthday cartoon",
+            selectedLook: nil,
             toneTitle: "Warm",
             tempoTitle: "Balanced",
             occasionTitle: "Birthday for Ava",
@@ -269,6 +299,7 @@ final class AnimateCreateWorkflowPresentationTests: XCTestCase {
             hasUnsavedLocalVideo: true,
             template: .birthdayMessage,
             creationStyleTitle: "Birthday cartoon",
+            selectedLook: nil,
             toneTitle: "Warm",
             tempoTitle: "Balanced",
             occasionTitle: "Birthday",
@@ -301,6 +332,7 @@ final class AnimateCreateWorkflowPresentationTests: XCTestCase {
             hasUnsavedLocalVideo: true,
             template: .birthdayMessage,
             creationStyleTitle: "Birthday cartoon",
+            selectedLook: nil,
             toneTitle: "Warm",
             tempoTitle: "Balanced",
             occasionTitle: "Birthday",

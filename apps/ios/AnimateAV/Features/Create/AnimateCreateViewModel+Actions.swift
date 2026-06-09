@@ -136,13 +136,28 @@ extension AnimateCreateViewModel {
                 persistedMedia: persistedMedia
             )
             if didPrepareVideoDirection {
+                let generatedScenes = videoDirectionWorkflow.generatedPlan?.scenes ?? []
+                if !generatedScenes.isEmpty {
+                    self.applyVideoDirectionState(
+                        AnimateCreateVideoDirectionState(
+                            activeWorkspace: self.activeWorkspace,
+                            savedScenes: self.savedScenes,
+                            generatedScenes: generatedScenes,
+                            statusMessage: nil,
+                            isPlanning: videoDirectionWorkflow.isPlanning
+                        )
+                    )
+                }
                 self.recordPreparedVideoDirectionInputSignature(inputSignature, momentId: momentId)
+                if !generatedScenes.isEmpty {
+                    self.lastPreparedVideoDirectionInputSignature = inputSignature
+                }
             }
             guard didPrepareVideoDirection else {
                 self.failVideoDirectionPreparation(AnimateRecoveryCopy.storyFailure())
                 return
             }
-            guard self.videoDirectionSummary.hasScenes,
+            guard (self.videoDirectionSummary.hasScenes || videoDirectionWorkflow.generatedPlan?.scenes.isEmpty == false),
                   self.lastPreparedVideoDirectionInputSignature == inputSignature else {
                 self.failVideoDirectionPreparation(L10n.string("create.error.storyPreparationUnfinished"))
                 return
@@ -225,6 +240,13 @@ extension AnimateCreateViewModel {
                 selectedMedia: self.selectedMedia,
                 removesWatermark: removesWatermark
             )
+            guard finalRenderWorkflow.renderPlan != nil else {
+                self.failFinalVideoCommand(
+                    finalRenderWorkflow.statusMessage
+                        ?? L10n.string("create.error.videoCreationNotReady")
+                )
+                return
+            }
         }
     }
 
@@ -271,6 +293,16 @@ extension AnimateCreateViewModel {
                 selectedMedia: self.selectedMedia,
                 removesWatermark: removesWatermark
             )
+            guard finalRenderWorkflow.latestFinalJob != nil
+                    || finalRenderWorkflow.finalExport != nil
+                    || finalRenderWorkflow.pendingGalleryVideo != nil
+                    || finalRenderWorkflow.isGenerating else {
+                self.failFinalVideoCommand(
+                    finalRenderWorkflow.statusMessage
+                        ?? L10n.string("workflow.final.tryAgain")
+                )
+                return
+            }
         }
     }
 
@@ -323,10 +355,26 @@ extension AnimateCreateViewModel {
             persistedMedia: persistedMedia
         )
         if didPrepareVideoDirection {
+            let generatedScenes = videoDirectionWorkflow.generatedPlan?.scenes ?? []
+            if !generatedScenes.isEmpty {
+                applyVideoDirectionState(
+                    AnimateCreateVideoDirectionState(
+                        activeWorkspace: activeWorkspace,
+                        savedScenes: savedScenes,
+                        generatedScenes: generatedScenes,
+                        statusMessage: nil,
+                        isPlanning: videoDirectionWorkflow.isPlanning
+                    )
+                )
+            }
             recordPreparedVideoDirectionInputSignature(inputSignature, momentId: momentId)
+            if !generatedScenes.isEmpty {
+                lastPreparedVideoDirectionInputSignature = inputSignature
+            }
         }
 
-        guard videoDirectionSummary.hasScenes, lastPreparedVideoDirectionInputSignature == inputSignature else {
+        guard (videoDirectionSummary.hasScenes || videoDirectionWorkflow.generatedPlan?.scenes.isEmpty == false),
+              lastPreparedVideoDirectionInputSignature == inputSignature else {
             failVideoDirectionPreparation(L10n.string("create.error.storyPreparationUnfinished"))
             return false
         }

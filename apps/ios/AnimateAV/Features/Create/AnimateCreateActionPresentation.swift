@@ -115,6 +115,9 @@ struct AnimateCreatePrimaryActionPresentation: Equatable {
             return false
         }
         if hasFinalVideoIntent {
+            if needsSignInForFinalRender {
+                return true
+            }
             if !hasCompletedVideoDirection {
                 return workflow.mediaSummary.effectiveMediaCount > 0
                     || workflow.canPrepareVideoDirection
@@ -172,11 +175,17 @@ struct AnimateCreatePrimaryActionPresentation: Equatable {
             }
             return L10n.string("create.final.video")
         }
+        if workflow.finalRenderSummary.isPreparingPlan {
+            return L10n.string("create.final.checkCredits")
+        }
         if workflow.finalRenderSummary.isGenerating {
             return L10n.string("create.final.creating")
         }
         if workflow.mediaSummary.isImporting {
             return workflow.mediaSummary.statusMessage ?? L10n.string("workflow.media.uploading")
+        }
+        if hasFinalVideoIntent, needsSignInForFinalRender {
+            return L10n.string("common.signIn")
         }
         if hasFinalVideoIntent, needsCreditsForPreparedPlan {
             return L10n.string("credits.get.title")
@@ -216,6 +225,9 @@ struct AnimateCreatePrimaryActionPresentation: Equatable {
         if hasFinalVideoIntent, needsCreditsForPreparedPlan {
             return "plus.circle.fill"
         }
+        if hasFinalVideoIntent, needsSignInForFinalRender {
+            return "person.crop.circle.badge.checkmark"
+        }
         if hasFinalVideoIntent {
             if !hasCompletedVideoDirection {
                 return hasSelectedVideoLook ? "message.fill" : "paintbrush.pointed.fill"
@@ -238,6 +250,9 @@ struct AnimateCreatePrimaryActionPresentation: Equatable {
             return workflow.finalRenderSummary.statusMessage
                 ?? L10n.string("workflow.final.savedLocal")
         }
+        if workflow.finalRenderSummary.isPreparingPlan {
+            return workflow.finalRenderSummary.statusMessage ?? L10n.string("workflow.final.checkingPlan")
+        }
         if workflow.finalRenderSummary.isGenerating {
             return workflow.finalRenderSummary.statusMessage ?? L10n.string("create.final.action.creating")
         }
@@ -256,6 +271,14 @@ struct AnimateCreatePrimaryActionPresentation: Equatable {
                 ?? L10n.string("create.primary.videoCreating")
         }
         if hasFinalVideoIntent {
+            if needsSignInForFinalRender {
+                return L10n.string("workflow.final.signInAgainRender")
+            }
+            if let finalStatusMessage = workflow.finalRenderSummary.statusMessage,
+               !finalStatusMessage.isEmpty,
+               Self.isFinalRenderErrorMessage(finalStatusMessage) {
+                return finalStatusMessage
+            }
             if !hasCompletedVideoDirection {
                 return hasSelectedVideoLook
                     ? L10n.string("create.storyDirection.needsStory")
@@ -271,11 +294,6 @@ struct AnimateCreatePrimaryActionPresentation: Equatable {
             }
             if let blockedRenderPlanMessage = finalVideoAction.blockedRenderPlanMessage {
                 return blockedRenderPlanMessage
-            }
-            if let finalStatusMessage = workflow.finalRenderSummary.statusMessage,
-               !finalStatusMessage.isEmpty,
-               Self.isFinalRenderErrorMessage(finalStatusMessage) {
-                return finalStatusMessage
             }
             if finalVideoAction.hasRenderPlan {
                 return finalVideoAction.creditPolicyMessage
@@ -359,6 +377,7 @@ struct AnimateCreatePrimaryActionPresentation: Equatable {
 
     var hasCompletedVideoDirection: Bool {
         workflow.videoDirectionSummary.hasScenes
+            || workflow.finalRenderSummary.renderPlan != nil
     }
 
     var hasSelectedVideoLook: Bool {
@@ -369,6 +388,7 @@ struct AnimateCreatePrimaryActionPresentation: Equatable {
         workflow.mediaSummary.isImporting
             || workflow.videoDirectionSummary.isPlanning
             || workflow.finalRenderSummary.isGenerating
+            || workflow.finalRenderSummary.isPreparingPlan
     }
 
     var hasRetryableFinalRenderJob: Bool {
@@ -387,6 +407,7 @@ struct AnimateCreatePrimaryActionPresentation: Equatable {
     var canPrepareLocalVideoPlan: Bool {
         workflow.isSignedIn
             && workflow.mediaSummary.effectiveMediaCount > 0
+            && hasCompletedVideoDirection
             && workflow.finalRenderSummary.renderPlan == nil
     }
 
@@ -394,6 +415,14 @@ struct AnimateCreatePrimaryActionPresentation: Equatable {
         !workflow.isSignedIn
             && workflow.mediaSummary.effectiveMediaCount > 0
             && !workflow.videoDirectionSummary.isPlanning
+    }
+
+    var needsSignInForFinalRender: Bool {
+        hasCompletedVideoDirection
+            && workflow.finalRenderSummary.latestFinalJob == nil
+            && workflow.finalRenderSummary.finalExport == nil
+            && workflow.finalRenderSummary.pendingGalleryVideo == nil
+            && (!workflow.isSignedIn || finalRenderStatusNeedsSignIn)
     }
 
     var needsCreditsForPreparedPlan: Bool {
@@ -433,5 +462,20 @@ struct AnimateCreatePrimaryActionPresentation: Equatable {
             || lowercased.contains("sign in again")
             || lowercased.contains("try again")
             || lowercased.contains("changed")
+    }
+
+    private var finalRenderStatusNeedsSignIn: Bool {
+        guard let message = workflow.finalRenderSummary.statusMessage?.trimmingCharacters(in: .whitespacesAndNewlines),
+              !message.isEmpty else {
+            return false
+        }
+        if message == L10n.string("workflow.final.signInAgainRender") {
+            return true
+        }
+        let lowercased = message.lowercased()
+        return lowercased.contains("sign in")
+            || lowercased.contains("iniciar sesión")
+            || lowercased.contains("sesion")
+            || lowercased.contains("sesión")
     }
 }

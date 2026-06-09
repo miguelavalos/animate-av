@@ -35,6 +35,7 @@ extension AnimateCreateViewModel {
             canRetryFinalVideoDownload: canRetryFinalVideoDownload,
             latestFinalJob: effectiveLatestFinalJob,
             isGenerating: isGeneratingFinalRender,
+            isPreparingPlan: isPreparingFinalPlan,
             statusMessage: effectiveLatestFinalJob?.userMessage
                 ?? finalVideoCommandState.message
                 ?? finalRenderStatusMessage

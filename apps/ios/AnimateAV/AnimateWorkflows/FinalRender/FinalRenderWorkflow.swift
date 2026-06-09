@@ -483,10 +483,19 @@ final class FinalRenderWorkflow: WorkspaceObservingWorkflow {
 
     private func validateRecoveredSourceMediaAvailable(selectedMedia: [AnimateSelectedMedia]) -> Bool {
         guard selectedMedia.isEmpty else { return true }
-        let sourceIdentifiers = selectedSourceLocalIdentifiersForFinalRender(
-            from: selectedMedia,
-            workspaceMedia: activeWorkspace?.mediaAssets ?? []
-        )
+        let workspaceMedia = activeWorkspace?.mediaAssets ?? []
+        let selectedWorkspaceMedia = workspaceMedia.filter(\.selected)
+        let recoveredWorkspaceMedia = selectedWorkspaceMedia.isEmpty ? workspaceMedia : selectedWorkspaceMedia
+        if recoveredWorkspaceMedia.contains(where: { media in
+            Self.nonBlankIdentifier(media.uploadId) != nil
+                || Self.nonBlankIdentifier(media.r2Key) != nil
+        }) {
+            return true
+        }
+
+        let sourceIdentifiers = recoveredWorkspaceMedia
+            .sorted { $0.sortOrder < $1.sortOrder }
+            .compactMap { Self.nonBlankIdentifier($0.platformMediaAssetId) }
         guard !sourceIdentifiers.isEmpty else { return true }
 
         let result = PHAsset.fetchAssets(withLocalIdentifiers: sourceIdentifiers, options: nil)

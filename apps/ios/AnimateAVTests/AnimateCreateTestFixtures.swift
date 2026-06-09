@@ -41,13 +41,16 @@ enum AnimateCreateTestFixtures {
     static func makeMediaAsset(
         id: String,
         sortOrder: Double = 0,
-        sourceLocalIdentifier: String? = nil
+        sourceLocalIdentifier: String? = nil,
+        hasUploadId: Bool = true,
+        r2Key: String? = nil
     ) -> AnimateMediaAsset {
         AnimateMediaAsset(
             id: id,
             platformMediaAssetId: sourceLocalIdentifier ?? "platform-\(id)",
-            uploadId: "upload-\(id)",
+            uploadId: hasUploadId ? "upload-\(id)" : nil,
             kind: "image",
+            r2Key: r2Key,
             sortOrder: sortOrder,
             selected: true,
             moderationStatus: "approved",
