@@ -8,6 +8,7 @@ struct AnimateCreateWorkflowPresentation: Equatable {
     var hasUnsavedLocalVideo = false
     var template: AnimateVideoTemplate
     var creationStyleTitle = ""
+    var selectedLook: AnimateVideoLook?
     var toneTitle = ""
     var tempoTitle = ""
     var occasionTitle = ""
@@ -108,6 +109,7 @@ struct AnimateCreateWorkflowPresentation: Equatable {
         hasUnsavedLocalVideo: Bool,
         template: AnimateVideoTemplate,
         creationStyleTitle: String,
+        selectedLook: AnimateVideoLook?,
         toneTitle: String,
         tempoTitle: String,
         occasionTitle: String,
@@ -126,6 +128,7 @@ struct AnimateCreateWorkflowPresentation: Equatable {
             hasUnsavedLocalVideo: hasUnsavedLocalVideo,
             template: template,
             creationStyleTitle: creationStyleTitle,
+            selectedLook: selectedLook,
             toneTitle: toneTitle,
             tempoTitle: tempoTitle,
             occasionTitle: occasionTitle,

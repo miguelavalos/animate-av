@@ -8,6 +8,7 @@ extension AnimateCreateViewModel {
             hasUnsavedLocalVideo: hasLocalAnimateWorkspace,
             template: form.template,
             creationStyleTitle: selectedCreationStyle.title,
+            selectedLook: selectedVideoLook,
             toneTitle: form.tone.title,
             tempoTitle: form.tempo.title,
             occasionTitle: form.title,

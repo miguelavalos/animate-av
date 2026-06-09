@@ -183,7 +183,7 @@ struct AnimateCreatePrimaryActionPresentation: Equatable {
         }
         if hasFinalVideoIntent {
             if !hasCompletedVideoDirection {
-                return L10n.string("create.guided.continue.message")
+                return hasSelectedVideoLook ? L10n.string("create.guided.continue.message") : "Elegir look"
             }
             if finalVideoAction.hasBlockedRenderPlan {
                 return finalVideoAction.canRetryBlockedRenderPlan
@@ -218,7 +218,7 @@ struct AnimateCreatePrimaryActionPresentation: Equatable {
         }
         if hasFinalVideoIntent {
             if !hasCompletedVideoDirection {
-                return "message.fill"
+                return hasSelectedVideoLook ? "message.fill" : "paintbrush.pointed.fill"
             }
             if finalVideoAction.hasBlockedRenderPlan {
                 return finalVideoAction.canRetryBlockedRenderPlan
@@ -257,7 +257,9 @@ struct AnimateCreatePrimaryActionPresentation: Equatable {
         }
         if hasFinalVideoIntent {
             if !hasCompletedVideoDirection {
-                return L10n.string("create.storyDirection.needsStory")
+                return hasSelectedVideoLook
+                    ? L10n.string("create.storyDirection.needsStory")
+                    : "Elige un look para preparar la dirección del video."
             }
             if needsCreditsForPreparedPlan {
                 guard missingCreditsForPreparedPlan > 0 else {
@@ -339,7 +341,7 @@ struct AnimateCreatePrimaryActionPresentation: Equatable {
         }
         if hasFinalVideoIntent {
             if !hasCompletedVideoDirection {
-                return "message.fill"
+                return hasSelectedVideoLook ? "message.fill" : "paintbrush.pointed.fill"
             }
             return finalVideoAction.primaryIconName
         }
@@ -357,6 +359,10 @@ struct AnimateCreatePrimaryActionPresentation: Equatable {
 
     var hasCompletedVideoDirection: Bool {
         workflow.videoDirectionSummary.hasScenes
+    }
+
+    var hasSelectedVideoLook: Bool {
+        workflow.selectedLook != nil
     }
 
     var isBusy: Bool {

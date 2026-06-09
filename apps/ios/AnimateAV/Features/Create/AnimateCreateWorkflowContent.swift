@@ -20,6 +20,7 @@ struct AnimateCreateWorkflowContent: View {
                     canUndoAutoStyleSuggestion: viewModel.canUndoAutoStyleSuggestion,
                     styles: viewModel.creationStyles,
                     selectedMusicPreset: viewModel.selectedMusicPreset,
+                    selectedLook: viewModel.selectedVideoLook,
                     presentation: viewModel.workflowPresentation,
                     isPreparingVideoDirectionAction: viewModel.isPreparingVideoDirectionAction,
                     pickerItems: $pickerItems,
@@ -58,6 +59,7 @@ private struct AnimateCreateMediaFirstWorkspace: View {
     let canUndoAutoStyleSuggestion: Bool
     let styles: [AnimateVideoCreationStyle]
     let selectedMusicPreset: AnimateVideoMusicPreset
+    let selectedLook: AnimateVideoLook?
     let presentation: AnimateCreateWorkflowPresentation
     let isPreparingVideoDirectionAction: Bool
     @Binding var pickerItems: [PhotosPickerItem]
@@ -127,6 +129,7 @@ private struct AnimateCreateMediaFirstWorkspace: View {
                             form: $form,
                             selectedStyle: selectedStyle,
                             selectedMusicPreset: selectedMusicPreset,
+                            selectedLook: selectedLook,
                             autoStyleSuggestion: autoStyleSuggestion,
                             canUndoAutoStyleSuggestion: canUndoAutoStyleSuggestion,
                             styles: styles,
@@ -272,14 +275,14 @@ private struct AnimateCreateMediaFirstWorkspace: View {
         }
         .navigationDestination(isPresented: $showsLookChooser) {
             AnimateCreateLookChooserPage(
-                selectedLook: form.look,
+                selectedLook: selectedLook,
                 selectLook: {
                     selectLook($0)
                     showsLookChooser = false
                 },
                 dismiss: { showsLookChooser = false }
             )
-            .id(form.look.rawValue)
+            .id(selectedLook?.rawValue ?? "none")
         }
         .navigationDestination(isPresented: $showsVoiceChooser) {
             AnimateCreateVoiceChooserPage(
@@ -781,6 +784,7 @@ private struct AnimateCreateVideoDirectionCard: View {
     @Binding var form: AnimateVideoSetupForm
     let selectedStyle: AnimateVideoCreationStyle
     let selectedMusicPreset: AnimateVideoMusicPreset
+    let selectedLook: AnimateVideoLook?
     let autoStyleSuggestion: AnimateMediaAutoStyleSuggestion?
     let canUndoAutoStyleSuggestion: Bool
     let styles: [AnimateVideoCreationStyle]
@@ -959,7 +963,7 @@ private struct AnimateCreateVideoDirectionCard: View {
             VStack(spacing: 8) {
                 summaryEditRow(
                     title: L10n.string("create.guided.summary.look"),
-                    detail: form.look.title,
+                    detail: selectedLookTitle,
                     icon: "paintbrush.pointed.fill",
                     editStep: .look
                 )
@@ -993,7 +997,7 @@ private struct AnimateCreateVideoDirectionCard: View {
             VStack(spacing: 8) {
                 summaryEditRow(
                     title: L10n.string("create.guided.summary.look"),
-                    detail: form.look.title,
+                    detail: selectedLookTitle,
                     icon: "paintbrush.pointed.fill",
                     editStep: .look
                 )
@@ -1094,7 +1098,7 @@ private struct AnimateCreateVideoDirectionCard: View {
                 AnimateCreateTwoColumnGrid(items: visibleLooks, verticalSpacing: 10, itemHeight: 92) { look in
                     AnimateCreateGuidedLookTile(
                         look: look,
-                        isSelected: form.look == look,
+                        isSelected: selectedLook == look,
                         select: { selectLook(look) }
                     )
                 }
@@ -1220,16 +1224,16 @@ private struct AnimateCreateVideoDirectionCard: View {
 
     private var selectedLookStrip: some View {
         HStack(spacing: 9) {
-            Image(systemName: form.look.systemImage)
+            Image(systemName: selectedLook?.systemImage ?? "paintbrush.pointed.fill")
                 .font(.system(size: 13, weight: .black))
                 .foregroundStyle(AVBrandColor.accent)
                 .frame(width: 28, height: 28)
                 .background(AVBrandColor.accent.opacity(0.10), in: Circle())
             VStack(alignment: .leading, spacing: 2) {
-                Text(L10n.string("create.guided.look.selected", form.look.title))
+                Text(selectedLook.map { L10n.string("create.guided.look.selected", $0.title) } ?? "Elige un look")
                     .font(.system(size: 12, weight: .black))
                     .foregroundStyle(AVBrandColor.textPrimary)
-                Text(form.look.subtitle)
+                Text(selectedLook?.subtitle ?? "Ningún look seleccionado todavía.")
                     .font(.caption.weight(.semibold))
                     .foregroundStyle(AVBrandColor.textSecondary)
                     .lineLimit(2)
@@ -1246,9 +1250,9 @@ private struct AnimateCreateVideoDirectionCard: View {
                 .frame(maxWidth: .infinity)
                 .frame(height: 44)
         }
-        .disabled(step == .scriptMessage && !canContinueMessageStep)
+        .disabled((step == .look && selectedLook == nil) || (step == .scriptMessage && !canContinueMessageStep))
         .buttonStyle(AnimateCreateSoftActionButtonStyle())
-        .opacity(step == .scriptMessage && !canContinueMessageStep ? 0.62 : 1)
+        .opacity(((step == .look && selectedLook == nil) || (step == .scriptMessage && !canContinueMessageStep)) ? 0.62 : 1)
     }
 
     private func stepHeader(_ title: String, _ detail: String) -> some View {
@@ -1270,6 +1274,10 @@ private struct AnimateCreateVideoDirectionCard: View {
         !form.details.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty
     }
 
+    private var selectedLookTitle: String {
+        selectedLook?.title ?? "Elegir look"
+    }
+
     private var canContinueMessageStep: Bool {
         form.details.trimmingCharacters(in: .whitespacesAndNewlines).count >= minimumMessageCharacterCount
     }
@@ -1277,6 +1285,10 @@ private struct AnimateCreateVideoDirectionCard: View {
     private func continueStep() {
         switch step {
         case .look:
+            guard selectedLook != nil else {
+                activeGuidedSheet = .look
+                return
+            }
             step = .scriptIdea
             activeGuidedSheet = .scriptIdea
         case .scriptIdea:
@@ -1304,7 +1316,7 @@ private struct AnimateCreateVideoDirectionCard: View {
     private var continueButtonTitle: String {
         switch step {
         case .look:
-            return L10n.string("create.guided.continue.message")
+            return selectedLook == nil ? "Elegir look" : L10n.string("create.guided.continue.message")
         case .scriptIdea:
             return hasMessage
                 ? L10n.string("create.guided.continue.editMessage")
@@ -1348,7 +1360,7 @@ private struct AnimateCreateVideoDirectionCard: View {
                 "create.videoDirection.summary.userDetail",
                 selectedStyle.title,
                 selectedMusicPreset.title,
-                form.look.title
+                selectedLookTitle
             )
         }
 
@@ -1356,7 +1368,7 @@ private struct AnimateCreateVideoDirectionCard: View {
             "create.videoDirection.summary.aviDetail",
             selectedStyle.title,
             selectedMusicPreset.title,
-            form.look.title,
+            selectedLookTitle,
             mediaDetail.trimmingCharacters(in: CharacterSet(charactersIn: ".!?"))
         )
     }
@@ -1370,7 +1382,7 @@ private struct AnimateCreateVideoDirectionCard: View {
             "create.videoDirection.summary.aviProposalDetail",
             styleTitle,
             autoStyleSuggestion.musicPreset.title,
-            form.look.title
+            selectedLookTitle
         )
     }
 
@@ -3374,14 +3386,14 @@ private struct AnimateCreateTwoColumnGrid<Item: Identifiable, Content: View>: Vi
 }
 
 private struct AnimateCreateLookChooserPage: View {
-    let selectedLook: AnimateVideoLook
+    let selectedLook: AnimateVideoLook?
     let selectLook: (AnimateVideoLook) -> Void
     let dismiss: () -> Void
 
-    @State private var setupLook: AnimateVideoLook
+    @State private var setupLook: AnimateVideoLook?
 
     init(
-        selectedLook: AnimateVideoLook,
+        selectedLook: AnimateVideoLook?,
         selectLook: @escaping (AnimateVideoLook) -> Void,
         dismiss: @escaping () -> Void
     ) {
@@ -3450,6 +3462,8 @@ private struct AnimateCreateLookChooserPage: View {
                 systemImage: "checkmark.circle.fill",
                 action: applySelection
             )
+            .disabled(setupLook == nil)
+            .opacity(setupLook == nil ? 0.62 : 1)
             .padding(.horizontal, 20)
             .padding(.bottom, 96)
         }
@@ -3459,6 +3473,7 @@ private struct AnimateCreateLookChooserPage: View {
     }
 
     private func applySelection() {
+        guard let setupLook else { return }
         selectLook(setupLook)
         dismiss()
     }

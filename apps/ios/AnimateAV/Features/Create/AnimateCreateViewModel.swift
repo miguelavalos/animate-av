@@ -46,6 +46,7 @@ final class AnimateCreateViewModel: ObservableObject {
     @Published private(set) var creationStyles = AnimateVideoCreationStyle.launchStyles
     @Published var selectedCreationStyle = AnimateVideoCreationStyle.launchStyles[0]
     @Published var selectedMusicPreset = AnimateVideoCreationStyle.launchStyles[0].defaultMusic
+    @Published private(set) var selectedVideoLook: AnimateVideoLook?
     @Published var form = AnimateVideoSetupForm(template: AnimateVideoTemplate.launchTemplates[0])
     @Published private(set) var isCreatingVideo = false
     @Published private(set) var isContinuingVideoCreation = false
@@ -586,6 +587,7 @@ final class AnimateCreateViewModel: ObservableObject {
         hasUserStyleOverride = false
         hasUserLookOverride = false
         hasUserVoiceOverride = false
+        selectedVideoLook = nil
         applyStyleDefaults(selectedCreationStyle)
     }
 
@@ -613,10 +615,11 @@ final class AnimateCreateViewModel: ObservableObject {
     }
 
     private func applyStyleDefaults(_ style: AnimateVideoCreationStyle, preserveUserOverrides: Bool = false) {
-        let currentLook = form.look
+        let currentLook = selectedVideoLook
         form.template = style.template
         form.theme = style.id
-        form.look = preserveUserOverrides && hasUserLookOverride ? currentLook : .cartoon
+        selectedVideoLook = preserveUserOverrides && hasUserLookOverride ? currentLook : nil
+        form.look = selectedVideoLook ?? .cartoon
         form.creationMode = .quick
         form.duration = .auto
         form.mediaUse = .aviPick
@@ -744,6 +747,7 @@ final class AnimateCreateViewModel: ObservableObject {
     }
 
     func selectLook(_ look: AnimateVideoLook) {
+        selectedVideoLook = look
         form.look = look
         if !hasUserVoiceOverride {
             form.voiceProfile = look.defaultVoiceProfile
@@ -1036,7 +1040,7 @@ extension AnimateCreateViewModel {
         guard !hasUserStyleOverride else { return }
         selectedCreationStyle = suggestedStyle
         selectedMusicPreset = suggestion.musicPreset
-        applyStyleDefaults(suggestedStyle)
+        applyStyleDefaults(suggestedStyle, preserveUserOverrides: true)
         form.tone = AnimateVideoSetupTone(musicPreset: suggestion.musicPreset)
     }
 
