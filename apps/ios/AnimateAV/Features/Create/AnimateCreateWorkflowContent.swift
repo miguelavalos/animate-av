@@ -246,12 +246,7 @@ private struct AnimateCreateMediaFirstWorkspace: View {
             .presentationDragIndicator(.visible)
         }
         .onChange(of: presentation.finalRenderSummary.renderPlan?.planId) { _, _ in
-            guard waitsForFinalRenderPlan,
-                  presentation.finalRenderSummary.latestFinalJob == nil,
-                  presentation.videoDirectionSummary.hasScenes,
-                  finalVideoAction.canShowConfirmationSheet else { return }
-            waitsForFinalRenderPlan = false
-            showsCreateVideoConfirmation = true
+            presentCreateVideoConfirmationIfReady()
         }
         .onChange(of: presentation.finalRenderSummary.latestFinalJob?.id) { _, jobId in
             if jobId != nil {
@@ -260,11 +255,13 @@ private struct AnimateCreateMediaFirstWorkspace: View {
             }
         }
         .onChange(of: presentation.finalRenderSummary.isPreparingPlan) { _, isPreparingPlan in
+            if isPreparingPlan, waitsForFinalRenderPlan {
+                showsCreateVideoConfirmation = false
+                return
+            }
             guard waitsForFinalRenderPlan, !isPreparingPlan else { return }
-            if finalVideoAction.canShowConfirmationSheet {
-                waitsForFinalRenderPlan = false
-                showsCreateVideoConfirmation = true
-            } else if presentation.finalRenderSummary.renderPlan == nil {
+            presentCreateVideoConfirmationIfReady()
+            if presentation.finalRenderSummary.renderPlan == nil {
                 waitsForFinalRenderPlan = false
             }
         }
@@ -352,8 +349,18 @@ private struct AnimateCreateMediaFirstWorkspace: View {
             showsCreateVideoConfirmation = true
         } else {
             waitsForFinalRenderPlan = true
+            showsCreateVideoConfirmation = false
             prepareFinalRenderPlan(false)
         }
+    }
+
+    private func presentCreateVideoConfirmationIfReady() {
+        guard waitsForFinalRenderPlan,
+              presentation.finalRenderSummary.latestFinalJob == nil,
+              presentation.videoDirectionSummary.hasScenes,
+              finalVideoAction.canShowConfirmationSheet else { return }
+        waitsForFinalRenderPlan = false
+        showsCreateVideoConfirmation = true
     }
 
     private func continueFromCompletedVideoSetupGuide() {
