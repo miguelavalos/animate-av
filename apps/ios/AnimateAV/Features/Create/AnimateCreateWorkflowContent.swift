@@ -159,17 +159,26 @@ private struct AnimateCreateMediaFirstWorkspace: View {
             .scrollIndicators(.hidden)
 
             if showsPrimaryActionBar {
-                AnimateCreatePrimaryActionBar(
-                    presentation: presentation,
-                    startSignInFlow: startSignInFlow,
-                    openCredits: openCredits,
-                    generateFinalRender: primaryFinalRenderAction,
-                    openCreateVideoConfirmation: { showsCreateVideoConfirmation = true },
-                    retryFinalVideoDownload: retryFinalVideoDownload,
-                    finishFinalVideoToGallery: finishFinalVideoToGallery
-                )
-                .padding(.horizontal, 2)
+                VStack(spacing: 0) {
+                    Spacer(minLength: 0)
+
+                    AnimateCreatePrimaryActionBar(
+                        presentation: presentation,
+                        startSignInFlow: startSignInFlow,
+                        openCredits: openCredits,
+                        generateFinalRender: primaryFinalRenderAction,
+                        openCreateVideoConfirmation: { showsCreateVideoConfirmation = true },
+                        retryFinalVideoDownload: retryFinalVideoDownload,
+                        finishFinalVideoToGallery: finishFinalVideoToGallery
+                    )
+                    .padding(.horizontal, -8)
+                    .padding(.bottom, 4)
+                }
+                .background(alignment: .bottom) {
+                    primaryActionBarBackdrop
+                }
                 .frame(maxHeight: .infinity, alignment: .bottom)
+                .offset(y: 18)
             }
         }
         .animation(.spring(response: 0.38, dampingFraction: 0.86), value: presentation.videoDirectionSummary.hasScenes)
@@ -400,7 +409,25 @@ private struct AnimateCreateMediaFirstWorkspace: View {
         if presentation.isFinalRenderEditingLocked {
             return 118
         }
-        return showsWorkflowDashboard ? 144 : 172
+        return showsWorkflowDashboard ? 188 : 172
+    }
+
+    private var primaryActionBarBackdrop: some View {
+        VStack(spacing: 0) {
+            Rectangle()
+                .fill(AnimateTheme.shellBackground.opacity(0))
+                .frame(height: 28)
+            Rectangle()
+                .fill(AnimateTheme.shellBackground.opacity(0.96))
+        }
+        .frame(height: 150)
+        .overlay(alignment: .top) {
+            Rectangle()
+                .fill(AVBrandColor.borderSubtle.opacity(0.28))
+                .frame(height: 1)
+                .offset(y: 34)
+        }
+        .allowsHitTesting(false)
     }
 }
 
@@ -2271,13 +2298,20 @@ private struct AnimateCreatePrimaryActionBar: View {
                 }
             }
             .padding(.horizontal, 12)
-            .padding(.vertical, 12)
-            .background(.ultraThinMaterial, in: RoundedRectangle(cornerRadius: 20, style: .continuous))
+            .padding(.vertical, 10)
+            .background(AVBrandColor.elevatedSurface, in: RoundedRectangle(cornerRadius: 20, style: .continuous))
             .overlay {
                 RoundedRectangle(cornerRadius: 20, style: .continuous)
-                    .stroke(AVBrandColor.glassStroke.opacity(0.82), lineWidth: 1)
+                    .stroke(
+                        LinearGradient(
+                            colors: [AVBrandColor.glassStroke, AVBrandColor.accent.opacity(0.12)],
+                            startPoint: .topLeading,
+                            endPoint: .bottomTrailing
+                        ),
+                        lineWidth: 1
+                    )
             }
-            .shadow(color: AVBrandColor.glassShadow.opacity(0.7), radius: 12, y: 3)
+            .shadow(color: AVBrandColor.glassShadow.opacity(0.72), radius: 8, y: 2)
         }
     }
 
