@@ -2258,7 +2258,7 @@ private struct AnimateCreatePrimaryActionBar: View {
                             .frame(height: 46)
                     }
                     .disabled(!primaryActionPresentation.canRunPrimaryAction)
-                    .buttonStyle(AnimateCreateSoftActionButtonStyle())
+                    .buttonStyle(AnimateCreateFinalVideoButtonStyle())
                     .opacity(primaryActionPresentation.canRunPrimaryAction ? 1 : 0.72)
                 }
 

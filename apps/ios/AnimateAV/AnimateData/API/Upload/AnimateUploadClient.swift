@@ -64,6 +64,7 @@ struct AnimateUploadClient: Sendable {
         preparedUpload.headers.forEach { key, value in
             request.setValue(value, forHTTPHeaderField: key)
         }
+        request.setValue(preparedUpload.momentId, forHTTPHeaderField: "x-appsav-animate-moment-id")
         request.setValue(String(media.sortOrder), forHTTPHeaderField: "x-appsav-videos-sort-order")
         request.setValue(media.selected ? "true" : "false", forHTTPHeaderField: "x-appsav-videos-selected")
 
