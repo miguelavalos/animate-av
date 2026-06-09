@@ -918,11 +918,6 @@
 "gallery.info.title" = "Info";
 "gallery.info.look" = "Look";
 "gallery.info.titleLabel" = "Title";
-"gallery.info.availability" = "Availability";
-"gallery.info.created" = "Created";
-"gallery.info.moment" = "Video ID";
-"gallery.info.artifact" = "Artifact ID";
-"gallery.info.storage" = "Storage key";
 
 "create.summary.media.added" = "%d added";
 "create.summary.story.scene" = "%d scene";

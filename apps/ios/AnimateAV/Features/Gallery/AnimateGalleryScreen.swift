@@ -332,17 +332,6 @@ private struct AnimateGalleryImageZoomSheet: View {
                     .clipShape(RoundedRectangle(cornerRadius: 14, style: .continuous))
                     .padding(16)
             }
-            .safeAreaInset(edge: .bottom) {
-                AnimateGalleryMetadataPanel(
-                    rows: [
-                        AnimateGalleryMetadataRow(title: L10n.string("gallery.info.look"), value: image.lookTitle),
-                        AnimateGalleryMetadataRow(title: L10n.string("gallery.info.created"), value: AnimateVideoFormatting.galleryDate(image.artifact.createdAt)),
-                        AnimateGalleryMetadataRow(title: L10n.string("gallery.info.artifact"), value: image.artifact.workflowArtifactId ?? image.artifact.id)
-                    ]
-                )
-                .padding(.horizontal, 16)
-                .padding(.bottom, 10)
-            }
             .navigationTitle(image.lookTitle)
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
@@ -593,12 +582,7 @@ private struct AnimateGalleryVideoInfoSheet: View {
     private var metadataRows: [AnimateGalleryMetadataRow] {
         [
             AnimateGalleryMetadataRow(title: L10n.string("gallery.info.look"), value: video.lookTitle),
-            AnimateGalleryMetadataRow(title: L10n.string("gallery.info.titleLabel"), value: video.title),
-            AnimateGalleryMetadataRow(title: L10n.string("gallery.info.availability"), value: video.availabilityTitle),
-            AnimateGalleryMetadataRow(title: L10n.string("gallery.info.created"), value: AnimateVideoFormatting.galleryDate(video.record.createdAt)),
-            AnimateGalleryMetadataRow(title: L10n.string("gallery.info.moment"), value: video.record.momentId),
-            AnimateGalleryMetadataRow(title: L10n.string("gallery.info.artifact"), value: video.record.artifactId),
-            AnimateGalleryMetadataRow(title: L10n.string("gallery.info.storage"), value: video.record.r2Key)
+            AnimateGalleryMetadataRow(title: L10n.string("gallery.info.titleLabel"), value: video.title)
         ]
     }
 }

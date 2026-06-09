@@ -911,11 +911,6 @@
 "gallery.info.title" = "Info";
 "gallery.info.look" = "Look";
 "gallery.info.titleLabel" = "Titre";
-"gallery.info.availability" = "Disponibilité";
-"gallery.info.created" = "Créé";
-"gallery.info.moment" = "ID vidéo";
-"gallery.info.artifact" = "ID artifact";
-"gallery.info.storage" = "Clé de storage";
 
 "create.summary.media.added" = "%d ajoutés";
 "create.summary.story.scene" = "%d scène";
