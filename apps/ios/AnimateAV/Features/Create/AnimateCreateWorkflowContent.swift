@@ -2302,7 +2302,6 @@ private struct AnimateCreatePrimaryActionBar: View {
                 RoundedRectangle(cornerRadius: 20, style: .continuous)
                     .stroke(AVBrandColor.borderSubtle.opacity(0.56), lineWidth: 1)
             }
-            .shadow(color: AVBrandColor.ink.opacity(0.08), radius: 6, y: 2)
         }
     }
 
@@ -2448,7 +2447,6 @@ private struct AnimateCreateFinalVideoButtonStyle: ButtonStyle {
                 Capsule()
                     .stroke(Color.white.opacity(configuration.isPressed ? 0.30 : 0.22), lineWidth: 1)
             }
-            .shadow(color: AVBrandColor.ink.opacity(isEnabled ? 0.10 : 0), radius: 4, y: 2)
             .scaleEffect(configuration.isPressed ? 0.98 : 1)
             .opacity(isEnabled ? 1 : 0.72)
     }
