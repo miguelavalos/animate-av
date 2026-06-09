@@ -146,20 +146,7 @@ struct AnimateUploadClient: Sendable {
     }
 
     private func retryingData(for request: URLRequest) async throws -> (Data, URLResponse) {
-        var attempt = 0
-
-        while true {
-            do {
-                return try await session.data(for: request)
-            } catch {
-                guard networkRetryPolicy.shouldRetry(error: error, attempt: attempt) else {
-                    throw error
-                }
-
-                attempt += 1
-                try await Task.sleep(nanoseconds: networkRetryPolicy.delayNanoseconds(forAttempt: attempt))
-            }
-        }
+        try await networkRetryPolicy.runData(session: session, request: request)
     }
 
     private func shouldRetryUpload(statusCode: Int, attempt: Int) -> Bool {

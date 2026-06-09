@@ -293,7 +293,7 @@ final class FinalRenderWorkflow: WorkspaceObservingWorkflow {
                     "removes_watermark": String(removesWatermark),
                 ]
             )
-            if error.code == "moments_render_plan_stale" {
+            if error.code == "moments_render_plan_stale" || error.code == "animate_render_plan_stale" {
                 self.renderPlan = nil
             }
             statusMessage = finalRenderMessage(for: error)
@@ -356,10 +356,12 @@ final class FinalRenderWorkflow: WorkspaceObservingWorkflow {
         if error.code == "unauthorized" || error.code == "moments_sign_in_required" || error.code == "moments_auth_token_missing" {
             return L10n.string("workflow.final.signInAgainRender")
         }
-        if error.code == "insufficient_credits" || error.code == "moments_insufficient_credits" {
+        if error.code == "insufficient_credits"
+            || error.code == "moments_insufficient_credits"
+            || error.code == "insufficient_animate_credits" {
             return L10n.string("workflow.final.addCredits")
         }
-        if error.code == "moments_render_plan_stale" {
+        if error.code == "moments_render_plan_stale" || error.code == "animate_render_plan_stale" {
             return L10n.string("workflow.final.tryAgain")
         }
         if error.isLikelyConfigurationOrServerContractError {

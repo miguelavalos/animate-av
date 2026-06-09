@@ -14,7 +14,7 @@ enum AppConfig {
 
     static var diagnosticsConfiguration: AVDiagnosticsConfiguration {
         AVDiagnosticsConfiguration(
-            dsn: configuredString(for: "ANIMATEAV_IOS_SENTRY_DSN", fallback: ""),
+            dsn: diagnosticsDSN,
             environment: diagnosticsEnvironment,
             releaseName: diagnosticsReleaseName,
             tracesSampleRate: 0,
@@ -89,12 +89,20 @@ enum AppConfig {
         return "\(bundleIdentifier)@\(version)+\(build)"
     }
 
+    private static var diagnosticsDSN: String {
+        configuredString(for: "ANIMATEAV_IOS_SENTRY_DSN", fallback: "")
+    }
+
     private static var isDiagnosticsEnabled: Bool {
         #if DEBUG
-        false
+        isDebugDiagnosticsOverrideEnabled && !diagnosticsDSN.isEmpty
         #else
-        !configuredString(for: "ANIMATEAV_IOS_SENTRY_DSN", fallback: "").isEmpty
+        !diagnosticsDSN.isEmpty
         #endif
+    }
+
+    private static var isDebugDiagnosticsOverrideEnabled: Bool {
+        configuredBoolean(for: "ANIMATEAV_ENABLE_DEBUG_DIAGNOSTICS")
     }
 
     private static func configuredURL(for key: String, fallback: String) -> URL {
@@ -114,9 +122,19 @@ enum AppConfig {
     }
 
     private static func configuredOptionalString(for key: String) -> String? {
-        let rawValue = Bundle.main.object(forInfoDictionaryKey: key) as? String ?? ""
+        let rawValue = ProcessInfo.processInfo.environment[key]
+            ?? Bundle.main.object(forInfoDictionaryKey: key) as? String
+            ?? ""
         let trimmedValue = rawValue.trimmingCharacters(in: .whitespacesAndNewlines)
         return trimmedValue.isEmpty || trimmedValue == "$(inherited)" ? nil : trimmedValue
+    }
+
+    private static func configuredBoolean(for key: String) -> Bool {
+        guard let rawValue = configuredOptionalString(for: key)?.lowercased() else {
+            return false
+        }
+
+        return rawValue == "1" || rawValue == "true" || rawValue == "yes"
     }
 
     private static func configuredSupportURL(explicitURL: URL?, email: String?) -> URL? {

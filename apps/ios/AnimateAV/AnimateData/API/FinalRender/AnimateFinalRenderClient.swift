@@ -27,12 +27,65 @@ struct AnimateNetworkRetryPolicy: Sendable {
         baseDelayNanoseconds * UInt64(1 << max(attempt - 1, 0))
     }
 
+    func shouldRetry(statusCode: Int, attempt: Int) -> Bool {
+        guard attempt < maximumRetries else { return false }
+        return statusCode == 408 || statusCode == 429 || 500..<600 ~= statusCode
+    }
+
     func run<T>(_ operation: () async throws -> T) async throws -> T {
         var attempt = 0
 
         while true {
             do {
                 return try await operation()
+            } catch {
+                guard shouldRetry(error: error, attempt: attempt) else {
+                    throw error
+                }
+
+                attempt += 1
+                try await Task.sleep(nanoseconds: delayNanoseconds(forAttempt: attempt))
+            }
+        }
+    }
+
+    func runData(session: URLSession, request: URLRequest) async throws -> (Data, URLResponse) {
+        var attempt = 0
+
+        while true {
+            do {
+                let (data, response) = try await session.data(for: request)
+                if let httpResponse = response as? HTTPURLResponse,
+                   shouldRetry(statusCode: httpResponse.statusCode, attempt: attempt) {
+                    attempt += 1
+                    try await Task.sleep(nanoseconds: delayNanoseconds(forAttempt: attempt))
+                    continue
+                }
+                return (data, response)
+            } catch {
+                guard shouldRetry(error: error, attempt: attempt) else {
+                    throw error
+                }
+
+                attempt += 1
+                try await Task.sleep(nanoseconds: delayNanoseconds(forAttempt: attempt))
+            }
+        }
+    }
+
+    func runDownload(session: URLSession, request: URLRequest) async throws -> (URL, URLResponse) {
+        var attempt = 0
+
+        while true {
+            do {
+                let (fileURL, response) = try await session.download(for: request)
+                if let httpResponse = response as? HTTPURLResponse,
+                   shouldRetry(statusCode: httpResponse.statusCode, attempt: attempt) {
+                    attempt += 1
+                    try await Task.sleep(nanoseconds: delayNanoseconds(forAttempt: attempt))
+                    continue
+                }
+                return (fileURL, response)
             } catch {
                 guard shouldRetry(error: error, attempt: attempt) else {
                     throw error
@@ -104,9 +157,7 @@ struct AnimateFinalRenderClient {
         request.setValue("Bearer \(bearerToken)", forHTTPHeaderField: "Authorization")
         request.httpBody = try JSONEncoder().encode(body)
 
-        let (data, response) = try await retryPolicy.run {
-            try await session.data(for: request)
-        }
+        let (data, response) = try await retryPolicy.runData(session: session, request: request)
         guard let httpResponse = response as? HTTPURLResponse, 200..<300 ~= httpResponse.statusCode else {
             throw AnimateAPIError.decode(
                 from: data,
@@ -173,9 +224,7 @@ struct AnimateFinalRenderClient {
         request.setValue("Bearer \(bearerToken)", forHTTPHeaderField: "Authorization")
         request.httpBody = try JSONEncoder().encode(body)
 
-        let (data, response) = try await retryPolicy.run {
-            try await session.data(for: request)
-        }
+        let (data, response) = try await retryPolicy.runData(session: session, request: request)
         guard let httpResponse = response as? HTTPURLResponse, 200..<300 ~= httpResponse.statusCode else {
             throw AnimateAPIError.decode(
                 from: data,
@@ -214,9 +263,7 @@ struct AnimateFinalRenderClient {
         request.setValue("Bearer \(bearerToken)", forHTTPHeaderField: "Authorization")
         request.httpBody = try JSONEncoder().encode(body)
 
-        let (data, response) = try await retryPolicy.run {
-            try await session.data(for: request)
-        }
+        let (data, response) = try await retryPolicy.runData(session: session, request: request)
         guard let httpResponse = response as? HTTPURLResponse, 200..<300 ~= httpResponse.statusCode else {
             throw AnimateAPIError.decode(
                 from: data,
@@ -249,9 +296,7 @@ struct AnimateFinalRenderClient {
         request.httpMethod = "POST"
         request.setValue("Bearer \(bearerToken)", forHTTPHeaderField: "Authorization")
 
-        let (data, response) = try await retryPolicy.run {
-            try await session.data(for: request)
-        }
+        let (data, response) = try await retryPolicy.runData(session: session, request: request)
         guard let httpResponse = response as? HTTPURLResponse, 200..<300 ~= httpResponse.statusCode else {
             throw AnimateAPIError.decode(
                 from: data,
@@ -274,9 +319,7 @@ struct AnimateFinalRenderClient {
             request.setValue(value, forHTTPHeaderField: key)
         }
 
-        let (fileURL, urlResponse) = try await retryPolicy.run {
-            try await session.download(for: request)
-        }
+        let (fileURL, urlResponse) = try await retryPolicy.runDownload(session: session, request: request)
         guard let httpResponse = urlResponse as? HTTPURLResponse, 200..<300 ~= httpResponse.statusCode else {
             throw AnimateFinalRenderError.downloadFailed
         }

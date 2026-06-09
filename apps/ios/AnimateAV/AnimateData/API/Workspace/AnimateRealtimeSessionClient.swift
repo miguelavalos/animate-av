@@ -22,9 +22,7 @@ struct AnimateRealtimeSessionClient {
         request.setValue("Bearer \(bearerToken)", forHTTPHeaderField: "Authorization")
         request.httpBody = Data("{}".utf8)
 
-        let (data, response) = try await retryPolicy.run {
-            try await session.data(for: request)
-        }
+        let (data, response) = try await retryPolicy.runData(session: session, request: request)
         guard let httpResponse = response as? HTTPURLResponse, 200..<300 ~= httpResponse.statusCode else {
             throw AnimateAPIError.decode(
                 from: data,
