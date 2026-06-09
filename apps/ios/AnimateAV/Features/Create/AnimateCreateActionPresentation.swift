@@ -115,6 +115,9 @@ struct AnimateCreatePrimaryActionPresentation: Equatable {
             return false
         }
         if hasFinalVideoIntent {
+            guard hasCompletedVideoDirection else {
+                return false
+            }
             if needsCreditsForPreparedPlan {
                 return true
             }
@@ -144,6 +147,9 @@ struct AnimateCreatePrimaryActionPresentation: Equatable {
             return L10n.string("create.final.video")
         }
         if hasFinalVideoIntent {
+            if !hasCompletedVideoDirection {
+                return L10n.string("create.primary.continueWithVideo")
+            }
             return finalVideoAction.hasRenderPlan
                 ? L10n.string("create.final.readyToCreateTitle")
                 : L10n.string("create.primary.continueWithVideo")
@@ -174,6 +180,9 @@ struct AnimateCreatePrimaryActionPresentation: Equatable {
             return L10n.string("credits.get.title")
         }
         if hasFinalVideoIntent {
+            if !hasCompletedVideoDirection {
+                return L10n.string("create.guided.continue.message")
+            }
             if finalVideoAction.hasBlockedRenderPlan {
                 return finalVideoAction.canRetryBlockedRenderPlan
                     ? L10n.string("create.final.retrySetup")
@@ -206,6 +215,9 @@ struct AnimateCreatePrimaryActionPresentation: Equatable {
             return "plus.circle.fill"
         }
         if hasFinalVideoIntent {
+            if !hasCompletedVideoDirection {
+                return "message.fill"
+            }
             if finalVideoAction.hasBlockedRenderPlan {
                 return finalVideoAction.canRetryBlockedRenderPlan
                     ? "arrow.clockwise"
@@ -242,6 +254,9 @@ struct AnimateCreatePrimaryActionPresentation: Equatable {
                 ?? L10n.string("create.primary.videoCreating")
         }
         if hasFinalVideoIntent {
+            if !hasCompletedVideoDirection {
+                return L10n.string("create.storyDirection.needsStory")
+            }
             if needsCreditsForPreparedPlan {
                 guard missingCreditsForPreparedPlan > 0 else {
                     return L10n.string("workflow.final.addCredits")
@@ -321,6 +336,9 @@ struct AnimateCreatePrimaryActionPresentation: Equatable {
             return "person.crop.circle.badge.checkmark"
         }
         if hasFinalVideoIntent {
+            if !hasCompletedVideoDirection {
+                return "message.fill"
+            }
             return finalVideoAction.primaryIconName
         }
         return "creditcard.fill"
@@ -333,6 +351,10 @@ struct AnimateCreatePrimaryActionPresentation: Equatable {
             || workflow.finalRenderSummary.latestFinalJob != nil
             || workflow.finalRenderSummary.finalExport != nil
             || workflow.finalRenderSummary.pendingGalleryVideo != nil
+    }
+
+    var hasCompletedVideoDirection: Bool {
+        workflow.videoDirectionSummary.hasScenes
     }
 
     var isBusy: Bool {
@@ -367,6 +389,9 @@ struct AnimateCreatePrimaryActionPresentation: Equatable {
     }
 
     var needsCreditsForPreparedPlan: Bool {
+        guard hasCompletedVideoDirection else {
+            return false
+        }
         if finalVideoAction.blockedRenderPlanIsInsufficientCredits {
             return true
         }

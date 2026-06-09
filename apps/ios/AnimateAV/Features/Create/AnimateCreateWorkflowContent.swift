@@ -230,6 +230,7 @@ private struct AnimateCreateMediaFirstWorkspace: View {
         .onChange(of: presentation.finalRenderSummary.renderPlan?.planId) { _, _ in
             guard waitsForFinalRenderPlan,
                   presentation.finalRenderSummary.latestFinalJob == nil,
+                  presentation.videoDirectionSummary.hasScenes,
                   finalVideoAction.canShowConfirmationSheet else { return }
             waitsForFinalRenderPlan = false
             showsCreateVideoConfirmation = true
@@ -321,6 +322,9 @@ private struct AnimateCreateMediaFirstWorkspace: View {
     }
 
     private func primaryFinalRenderAction() {
+        guard presentation.videoDirectionSummary.hasScenes else {
+            return
+        }
         if finalVideoAction.hasRenderPlan {
             showsCreateVideoConfirmation = true
         } else {
