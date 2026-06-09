@@ -253,20 +253,38 @@ enum AnimateVideoLook: String, CaseIterable, Identifiable, Codable {
         case .rubberHose: "LookRubberHose"
         case .fantasyQuest: "LookFantasyQuest"
         case .miniAvatar: "LookMiniAvatar"
-        case .kawaiiPop, .shonenAction, .cozySliceOfLife,
-             .magicalFantasyAnime, .cyberAnime, .shojoRomance, .superDeformed,
-             .animeWatercolor:
-            "LookAnime"
-        case .graphicNovel, .sundayStrip, .inkWash, .charcoal,
-             .inkMarker, .collageCutout, .cardboardTheater, .origami,
-             .stainedGlass, .embroideredTextile:
-            "LookComic"
-        case .oilPainting, .crayonKids, .acrylicPoster,
-             .fairytale, .mythicEpic:
-            "LookWatercolor"
-        case .lowPoly, .voxelWorld, .synthwave, .glitchArt, .isometricGame,
-             .sciFiSpace, .steampunk, .pirateStory, .feltCraft:
-            "LookCartoon"
+        case .kawaiiPop: "LookKawaiiPop"
+        case .graphicNovel: "LookGraphicNovel"
+        case .sundayStrip: "LookSundayStrip"
+        case .inkWash: "LookInkWash"
+        case .shonenAction: "LookShonenAction"
+        case .cozySliceOfLife: "LookCozySliceOfLife"
+        case .magicalFantasyAnime: "LookMagicalFantasyAnime"
+        case .cyberAnime: "LookCyberAnime"
+        case .shojoRomance: "LookShojoRomance"
+        case .superDeformed: "LookSuperDeformed"
+        case .animeWatercolor: "LookAnimeWatercolor"
+        case .charcoal: "LookCharcoal"
+        case .oilPainting: "LookOilPainting"
+        case .inkMarker: "LookInkMarker"
+        case .crayonKids: "LookCrayonKids"
+        case .acrylicPoster: "LookAcrylicPoster"
+        case .lowPoly: "LookLowPoly"
+        case .voxelWorld: "LookVoxelWorld"
+        case .synthwave: "LookSynthwave"
+        case .glitchArt: "LookGlitchArt"
+        case .isometricGame: "LookIsometricGame"
+        case .sciFiSpace: "LookSciFiSpace"
+        case .steampunk: "LookSteampunk"
+        case .pirateStory: "LookPirateStory"
+        case .fairytale: "LookFairytale"
+        case .mythicEpic: "LookMythicEpic"
+        case .feltCraft: "LookFeltCraft"
+        case .collageCutout: "LookCollageCutout"
+        case .cardboardTheater: "LookCardboardTheater"
+        case .origami: "LookOrigami"
+        case .stainedGlass: "LookStainedGlass"
+        case .embroideredTextile: "LookEmbroideredTextile"
         }
     }
 

@@ -52,30 +52,16 @@ final class AnimateLookVoiceMatrixTests: XCTestCase {
         }
     }
 
-    func testEachLookReferencesAvailablePreviewAssetAllowingPlaceholders() {
+    func testEachLookReferencesUniqueAvailablePreviewAsset() {
         let assetNames = AnimateVideoLook.selectorOrder.map(\.assetName)
 
         XCTAssertEqual(assetNames.count, 64)
+        XCTAssertEqual(Set(assetNames).count, 64)
         XCTAssertTrue(assetNames.allSatisfy { $0.hasPrefix("Look") })
 
-        for assetName in Set(assetNames) {
+        for assetName in assetNames {
             XCTAssertNotNil(UIImage(named: assetName), "Missing preview asset \(assetName).")
         }
-    }
-
-    func testFinishedPreviewAssetsKeepStableUniqueNames() {
-        let existingLooks: [AnimateVideoLook] = [
-            .anime, .cartoon, .comic, .clay, .watercolor, .cinematic3d,
-            .manga, .paperCut, .plush, .sticker, .pixel, .neon,
-            .storybook, .yellowComedy, .soft3d, .darkFantasy, .vintagePoster,
-            .pencilSketch, .editorialCaricature, .euroComic, .americanComic,
-            .stopMotion, .blackWhiteManga, .toyFigure, .chibi, .flatVector,
-            .pastelDream, .heroicComic, .noirInk, .rubberHose, .fantasyQuest,
-            .miniAvatar
-        ]
-        let finishedAssetNames = existingLooks.map(\.assetName)
-
-        XCTAssertEqual(Set(finishedAssetNames).count, finishedAssetNames.count)
     }
 
     func testSelectingLookAppliesDefaultVoiceWhenVoiceWasNotManuallyChanged() {
