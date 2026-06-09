@@ -50,8 +50,8 @@ struct AnimateInProgressSummary: Equatable {
         )
     }
 
-    func removing(momentId: String) -> AnimateInProgressSummary {
-        Self.make(from: videos.filter { $0.id != momentId })
+    func removing(videoId: String) -> AnimateInProgressSummary {
+        Self.make(from: videos.filter { $0.id != videoId })
     }
 }
 

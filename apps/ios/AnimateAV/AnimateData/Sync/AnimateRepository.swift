@@ -28,11 +28,11 @@ struct AnimateRepository {
 
     func observeAnimateWorkspace(
         ownerUserId: String,
-        momentId: String
+        videoId: String
     ) throws -> AnyPublisher<AnimateWorkspace?, Error> {
         try remoteClient.observeAnimateWorkspace(
             ownerUserId: ownerUserId,
-            momentId: momentId
+            videoId: videoId
         )
     }
 

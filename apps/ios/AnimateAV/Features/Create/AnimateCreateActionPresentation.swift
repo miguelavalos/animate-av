@@ -270,6 +270,10 @@ struct AnimateCreatePrimaryActionPresentation: Equatable {
                 ?? workflow.finalRenderSummary.statusMessage
                 ?? L10n.string("create.primary.videoCreating")
         }
+        if let finalStatusMessage = workflow.finalRenderSummary.statusMessage,
+           !finalStatusMessage.isEmpty {
+            return finalStatusMessage
+        }
         if hasFinalVideoIntent {
             if needsSignInForFinalRender {
                 return L10n.string("workflow.final.signInAgainRender")
@@ -297,10 +301,6 @@ struct AnimateCreatePrimaryActionPresentation: Equatable {
             }
             if finalVideoAction.hasRenderPlan {
                 return finalVideoAction.creditPolicyMessage
-            }
-            if let finalStatusMessage = workflow.finalRenderSummary.statusMessage,
-               !finalStatusMessage.isEmpty {
-                return finalStatusMessage
             }
             if workflow.canGenerateFinalRender || canPrepareVideoPlan || canPrepareLocalVideoPlan || workflow.canPrepareVideoDirection {
                 return L10n.string("create.primary.continuePreflight")

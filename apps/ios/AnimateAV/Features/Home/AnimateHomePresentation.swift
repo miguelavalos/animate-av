@@ -41,7 +41,7 @@ struct AnimateHomePresentation {
             openInProgressAction: AnimateHomeAction(
                 title: L10n.string("home.action.openInProgress.title"),
                 detail: videosSummary.hasVideos
-                    ? L10n.string("home.action.openInProgress.detail.hasMoments")
+                    ? L10n.string("home.action.openInProgress.detail.hasVideos")
                     : L10n.string("home.action.openInProgress.detail.empty"),
                 systemImage: "clock",
                 isDisabled: !isSignedIn

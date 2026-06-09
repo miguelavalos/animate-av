@@ -2,7 +2,7 @@ import Foundation
 
 struct AnimateGalleryVideoRecord: Identifiable, Codable, Equatable {
     let id: String
-    let momentId: String
+    let videoId: String
     let artifactId: String
     let title: String
     let r2Key: String
@@ -11,7 +11,7 @@ struct AnimateGalleryVideoRecord: Identifiable, Codable, Equatable {
 
     init(
         id: String,
-        momentId: String,
+        videoId: String,
         artifactId: String,
         title: String,
         r2Key: String,
@@ -19,7 +19,7 @@ struct AnimateGalleryVideoRecord: Identifiable, Codable, Equatable {
         createdAt: Double
     ) {
         self.id = id
-        self.momentId = momentId
+        self.videoId = videoId
         self.artifactId = artifactId
         self.title = title
         self.r2Key = r2Key
@@ -30,7 +30,7 @@ struct AnimateGalleryVideoRecord: Identifiable, Codable, Equatable {
     func renamed(_ title: String) -> AnimateGalleryVideoRecord {
         AnimateGalleryVideoRecord(
             id: id,
-            momentId: momentId,
+            videoId: videoId,
             artifactId: artifactId,
             title: title,
             r2Key: r2Key,

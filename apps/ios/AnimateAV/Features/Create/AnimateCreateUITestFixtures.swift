@@ -15,7 +15,7 @@ enum AnimateCreateUITestFixtures {
         }
     }
 
-    static let momentId = "videos-ui-moment-1"
+    static let videoId = "videos-ui-moment-1"
 
     static var mode: Mode? {
         Mode.current
@@ -31,7 +31,7 @@ enum AnimateCreateUITestFixtures {
 
     static func moment(for mode: Mode) -> AnimateVideo {
         AnimateVideo(
-            id: momentId,
+            id: videoId,
             template: .birthdayMessage,
             status: momentStatus(for: mode),
             title: "Animated Portrait",
@@ -150,7 +150,7 @@ enum AnimateCreateUITestFixtures {
         let hasCredits = mode != .videoPlanInsufficientCredits
         return AnimateRenderPlanResponse(
             appId: "animateav",
-            momentId: momentId,
+            videoId: videoId,
             planId: hasCredits ? "ui-test-plan-1" : "ui-test-plan-low-credits",
             watermark: AnimateRenderWatermarkPlan(
                 includedForPro: true,

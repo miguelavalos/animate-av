@@ -36,7 +36,7 @@ final class MediaUploadWorkflow: WorkspaceObservingWorkflow {
     func importPickerItems(
         _ items: [PhotosPickerItem],
         template: AnimateVideoTemplate,
-        momentId: String?
+        videoId: String?
     ) async {
         guard !items.isEmpty else { return }
         let remainingSlots = AnimateMediaRules.remainingSlots(
@@ -120,18 +120,18 @@ final class MediaUploadWorkflow: WorkspaceObservingWorkflow {
         }
     }
 
-    func persistSelectedMedia(momentId: String) async -> [AnimateVideoDirectionMedia]? {
+    func persistSelectedMedia(videoId: String) async -> [AnimateVideoDirectionMedia]? {
         await persistSelectedMedia(
-            momentId: momentId,
+            videoId: videoId,
             requiresProductStateSave: true,
             saveFailureMessage: AnimateRecoveryCopy.mediaStorySaveFailure()
         )
     }
 
-    func persistSelectedMediaForFinalVideo(momentId: String) async -> Bool {
+    func persistSelectedMediaForFinalVideo(videoId: String) async -> Bool {
         let selectedCount = selectedMedia.filter(\.selected).count
         let persistedMedia = await persistSelectedMedia(
-            momentId: momentId,
+            videoId: videoId,
             requiresProductStateSave: false,
             saveFailureMessage: AnimateRecoveryCopy.mediaVideoSaveFailure()
         )
@@ -139,7 +139,7 @@ final class MediaUploadWorkflow: WorkspaceObservingWorkflow {
     }
 
     private func persistSelectedMedia(
-        momentId: String,
+        videoId: String,
         requiresProductStateSave: Bool,
         saveFailureMessage: String
     ) async -> [AnimateVideoDirectionMedia]? {
@@ -198,7 +198,7 @@ final class MediaUploadWorkflow: WorkspaceObservingWorkflow {
                 imported: pendingMediaToSave,
                 ownerUserId: ownerUserId,
                 bearerToken: bearerToken,
-                momentId: momentId,
+                videoId: videoId,
                 uploadClient: uploadClient,
                 requiresProductStateSave: requiresProductStateSave,
                 progress: { [weak self] completedCount, totalCount in
@@ -278,7 +278,9 @@ final class MediaUploadWorkflow: WorkspaceObservingWorkflow {
     }
 
     private func mediaUploadMessage(for error: AnimateAPIError, fallback: String) -> String {
-        if error.code == "unauthorized" || error.code == "moments_sign_in_required" || error.code == "moments_auth_token_missing" {
+        if error.code == "unauthorized"
+            || error.code == "animate_sign_in_required"
+            || error.code == "animate_auth_token_missing" {
             return L10n.string("workflow.media.signInAgainPrepareStory")
         }
         if error.isLikelyConfigurationOrServerContractError {

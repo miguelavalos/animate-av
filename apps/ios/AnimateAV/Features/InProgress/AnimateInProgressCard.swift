@@ -173,7 +173,7 @@ private struct AnimateInProgressEmptyContent: View {
             systemImage: "photo.badge.plus",
             title: L10n.string("inProgress.empty.inProgress.title"),
             message: L10n.string("inProgress.empty.inProgress.detail"),
-            actionTitle: L10n.string("inProgress.newMoment"),
+            actionTitle: L10n.string("inProgress.newVideo"),
             actionSystemImage: "plus",
             action: startVideoCreation
         )

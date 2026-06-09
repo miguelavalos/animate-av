@@ -108,7 +108,7 @@ struct AnimateFinalRenderClient {
     }
 
     func prepareRenderPlan(
-        momentId: String,
+        videoId: String,
         bearerToken: String,
         template: AnimateVideoTemplate,
         creationStyle: AnimateVideoCreationStyleID?,
@@ -130,7 +130,7 @@ struct AnimateFinalRenderClient {
             .appendingPathComponent("plan")
         let messageFields = Self.videoMessageFields(form)
         let body = AnimateRenderPlanRequest(
-            momentId: momentId,
+            videoId: videoId,
             creationMode: form.creationMode.rawValue,
             look: form.look.rawValue,
             theme: form.theme.rawValue,
@@ -161,7 +161,7 @@ struct AnimateFinalRenderClient {
         guard let httpResponse = response as? HTTPURLResponse, 200..<300 ~= httpResponse.statusCode else {
             throw AnimateAPIError.decode(
                 from: data,
-                fallbackCode: "moments_render_plan_failed",
+                fallbackCode: "animate_render_plan_failed",
                 fallbackMessage: AnimateFinalRenderError.planFailed.localizedDescription
             )
         }
@@ -170,7 +170,7 @@ struct AnimateFinalRenderClient {
     }
 
     func confirmFinalRender(
-        momentId: String,
+        videoId: String,
         bearerToken: String,
         template: AnimateVideoTemplate,
         creationStyle: AnimateVideoCreationStyleID?,
@@ -195,7 +195,7 @@ struct AnimateFinalRenderClient {
             .appendingPathComponent("confirm")
         let messageFields = Self.videoMessageFields(form)
         let body = AnimateConfirmFinalRenderRequest(
-            momentId: momentId,
+            videoId: videoId,
             creationMode: form.creationMode.rawValue,
             look: form.look.rawValue,
             theme: form.theme.rawValue,
@@ -215,7 +215,7 @@ struct AnimateFinalRenderClient {
             removeWatermark: removesWatermark,
             renderOptionId: renderOptionId,
             planId: planId,
-            idempotencyKey: "final-confirm:\(momentId):\(planId):\(template.id.rawValue):\(removesWatermark ? "clean" : "watermarked")"
+            idempotencyKey: "final-confirm:\(videoId):\(planId):\(template.id.rawValue):\(removesWatermark ? "clean" : "watermarked")"
         )
 
         var request = URLRequest(url: endpoint)
@@ -228,7 +228,7 @@ struct AnimateFinalRenderClient {
         guard let httpResponse = response as? HTTPURLResponse, 200..<300 ~= httpResponse.statusCode else {
             throw AnimateAPIError.decode(
                 from: data,
-                fallbackCode: "moments_final_render_confirm_failed",
+                fallbackCode: "animate_final_render_confirm_failed",
                 fallbackMessage: AnimateFinalRenderError.generationFailed.localizedDescription
             )
         }
@@ -237,7 +237,7 @@ struct AnimateFinalRenderClient {
     }
 
     func prepareFinalArtifactDownload(
-        momentId: String,
+        videoId: String,
         artifactId: String,
         bearerToken: String
     ) async throws -> AnimateArtifactDownloadResponse {
@@ -253,7 +253,7 @@ struct AnimateFinalRenderClient {
             .appendingPathComponent(artifactId)
             .appendingPathComponent("download")
         let body = AnimateArtifactDownloadRequest(
-            momentId: momentId,
+            videoId: videoId,
             artifactId: artifactId
         )
 
@@ -267,7 +267,7 @@ struct AnimateFinalRenderClient {
         guard let httpResponse = response as? HTTPURLResponse, 200..<300 ~= httpResponse.statusCode else {
             throw AnimateAPIError.decode(
                 from: data,
-                fallbackCode: "moments_artifact_download_failed",
+                fallbackCode: "animate_artifact_download_failed",
                 fallbackMessage: AnimateFinalRenderError.downloadPreparationFailed.localizedDescription
             )
         }

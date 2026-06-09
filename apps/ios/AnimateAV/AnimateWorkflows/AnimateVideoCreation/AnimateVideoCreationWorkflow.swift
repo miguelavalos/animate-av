@@ -74,12 +74,12 @@ final class AnimateVideoCreationWorkflow: ObservableObject {
         errorMessage = nil
 
         do {
-            let momentId = try await videoCreator.createVideo(bearerToken: bearerToken, form: form)
+            let videoId = try await videoCreator.createVideo(bearerToken: bearerToken, form: form)
             guard workflowGeneration.isCurrent(generation) else { return nil }
-            activeVideoId = momentId
-            workspaceObserver.observeWorkspace(ownerUserId: ownerUserId, momentId: momentId)
+            activeVideoId = videoId
+            workspaceObserver.observeWorkspace(ownerUserId: ownerUserId, videoId: videoId)
             isCreatingVideo = false
-            return momentId
+            return videoId
         } catch {
             guard workflowGeneration.isCurrent(generation) else { return nil }
             logger.error("Video creation failed reason=\(String(describing: error), privacy: .public)")
@@ -89,7 +89,7 @@ final class AnimateVideoCreationWorkflow: ObservableObject {
         }
     }
 
-    func updateVideoSetup(momentId: String, form: AnimateVideoSetupForm) async -> Bool {
+    func updateVideoSetup(videoId: String, form: AnimateVideoSetupForm) async -> Bool {
         guard !isCreatingVideo else { return false }
         guard currentUserProvider.currentUserId != nil else {
             errorMessage = L10n.string("workflow.video.signInContinue")
@@ -112,7 +112,7 @@ final class AnimateVideoCreationWorkflow: ObservableObject {
         do {
             try await videoCreator.updateVideoSetup(
                 bearerToken: bearerToken,
-                momentId: momentId,
+                videoId: videoId,
                 form: form
             )
             isCreatingVideo = false
@@ -135,7 +135,7 @@ final class AnimateVideoCreationWorkflow: ObservableObject {
         isCreatingVideo = false
         activeVideoId = video.id
         errorMessage = nil
-        workspaceObserver.observeWorkspace(ownerUserId: ownerUserId, momentId: video.id)
+        workspaceObserver.observeWorkspace(ownerUserId: ownerUserId, videoId: video.id)
     }
 
     func resetVideoSetup(force: Bool = false) {
@@ -147,7 +147,7 @@ final class AnimateVideoCreationWorkflow: ObservableObject {
         workspaceObserver.clearWorkspace()
     }
 
-    func discardActiveVideo(momentId momentIdOverride: String? = nil) async -> Bool {
+    func discardActiveVideo(videoId videoIdOverride: String? = nil) async -> Bool {
         guard !isCreatingVideo else { return false }
         guard currentUserProvider.currentUserId != nil else {
             errorMessage = L10n.string("workflow.video.signInDiscard")
@@ -157,14 +157,14 @@ final class AnimateVideoCreationWorkflow: ObservableObject {
             errorMessage = L10n.string("workflow.story.signInAgainPlan")
             return false
         }
-        guard let momentId = momentIdOverride ?? activeVideoId else { return true }
+        guard let videoId = videoIdOverride ?? activeVideoId else { return true }
 
         let generation = workflowGeneration.begin()
         isCreatingVideo = true
         errorMessage = nil
 
         do {
-            try await videoDeleter.deleteVideo(bearerToken: bearerToken, momentId: momentId)
+            try await videoDeleter.deleteVideo(bearerToken: bearerToken, videoId: videoId)
             guard workflowGeneration.isCurrent(generation) else { return false }
             isCreatingVideo = false
             self.activeVideoId = nil
@@ -184,7 +184,9 @@ final class AnimateVideoCreationWorkflow: ObservableObject {
 
     private func videoWorkflowMessage(for error: Error) -> String {
         if let apiError = error as? AnimateAPIError {
-            if apiError.code == "unauthorized" || apiError.code == "moments_sign_in_required" || apiError.code == "moments_auth_token_missing" {
+            if apiError.code == "unauthorized"
+                || apiError.code == "animate_sign_in_required"
+                || apiError.code == "animate_auth_token_missing" {
                 return L10n.string("workflow.story.signInAgainPlan")
             }
             if apiError.isLikelyConfigurationOrServerContractError {

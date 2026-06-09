@@ -30,19 +30,31 @@ struct AnimateCreateScreen: View {
     }
 
     var body: some View {
-        VStack(alignment: .leading, spacing: 12) {
-            AnimateCreateWorkflowContent(
-                viewModel: viewModel,
-                pickerItems: $pickerItems,
-                startSignInFlow: startSignInFlow,
-                openCredits: openCredits,
-                finishFinalVideoToGallery: finishFinalVideoToGallery
-            )
+        ZStack {
+            VStack(alignment: .leading, spacing: 12) {
+                AnimateCreateWorkflowContent(
+                    viewModel: viewModel,
+                    pickerItems: $pickerItems,
+                    startSignInFlow: startSignInFlow,
+                    openCredits: openCredits,
+                    finishFinalVideoToGallery: finishFinalVideoToGallery
+                )
+            }
+            .safeAreaPadding(.horizontal, 20)
+            .safeAreaPadding(.top, 12)
+            .safeAreaPadding(.bottom, bottomSafeAreaPadding)
+
+            if showsBlockingPreparation {
+                AnimateCreateBlockingPreparationView(
+                    presentation: viewModel.workflowPresentation,
+                    isPreparingVideoDirectionAction: viewModel.isPreparingVideoDirectionAction,
+                    isPreparingFinalPlan: viewModel.isPreparingFinalPlan
+                )
+                .ignoresSafeArea()
+                .zIndex(10)
+            }
         }
         .background(AnimateTheme.shellBackground.ignoresSafeArea())
-        .safeAreaPadding(.horizontal, 20)
-        .safeAreaPadding(.top, 12)
-        .safeAreaPadding(.bottom, bottomSafeAreaPadding)
         .task {
             redirectEmptyCreateIfNeeded()
             openAutomaticPhotoPickerIfRequested(viewModel.mediaPickerOpenRequest)
@@ -65,23 +77,6 @@ struct AnimateCreateScreen: View {
             viewModel.importPickerItems(newItems)
             pickerItems = []
         }
-        .fullScreenCover(
-            isPresented: Binding(
-                get: {
-                    viewModel.workflowPresentation.showsBlockingPreparation
-                        || viewModel.isPreparingVideoDirectionAction
-                        || viewModel.isPreparingFinalPlan
-                },
-                set: { _ in }
-            )
-        ) {
-            AnimateCreateBlockingPreparationView(
-                presentation: viewModel.workflowPresentation,
-                isPreparingVideoDirectionAction: viewModel.isPreparingVideoDirectionAction,
-                isPreparingFinalPlan: viewModel.isPreparingFinalPlan
-            )
-            .interactiveDismissDisabled()
-        }
         .onChange(of: viewModel.workflowErrorAlertMessage) { _, message in
             workflowErrorAlertMessage = message
         }
@@ -99,6 +94,12 @@ struct AnimateCreateScreen: View {
         } message: {
             Text(workflowErrorAlertMessage ?? L10n.string("common.tryAgain"))
         }
+    }
+
+    private var showsBlockingPreparation: Bool {
+        viewModel.workflowPresentation.showsBlockingPreparation
+            || viewModel.isPreparingVideoDirectionAction
+            || viewModel.isPreparingFinalPlan
     }
 
     private var automaticPhotoPickerSelectionLimit: Int {

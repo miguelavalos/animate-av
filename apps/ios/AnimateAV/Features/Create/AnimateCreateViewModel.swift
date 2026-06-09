@@ -410,7 +410,9 @@ final class AnimateCreateViewModel: ObservableObject {
             }
         }
         if let apiError = error as? AnimateAPIError {
-            if apiError.code == "unauthorized" || apiError.code == "moments_sign_in_required" || apiError.code == "moments_auth_token_missing" {
+            if apiError.code == "unauthorized"
+                || apiError.code == "animate_sign_in_required"
+                || apiError.code == "animate_auth_token_missing" {
                 return L10n.string("create.images.balance.signIn")
             }
             if apiError.isLikelyConfigurationOrServerContractError {
@@ -483,7 +485,7 @@ final class AnimateCreateViewModel: ObservableObject {
         generatedScenes = []
         videoDirectionStatusMessage = L10n.string("create.story.status.ready")
         lastPreparedVideoDirectionInputSignature = workspace.video.storyInputSignature
-            ?? currentVideoDirectionInputSignature(momentId: workspace.video.id)
+            ?? currentVideoDirectionInputSignature(videoId: workspace.video.id)
         activeWorkspace = workspace
         finalExport = workspace.latestArtifact(kind: "final_export")
         pendingGalleryVideo = nil
@@ -494,7 +496,7 @@ final class AnimateCreateViewModel: ObservableObject {
         case .storyReady, .finalQueued, .finalRunning, .full:
             renderPlan = nil
         }
-        renderPlanInputSignature = renderPlan.map { currentFinalRenderInputSignature(momentId: $0.momentId) }
+        renderPlanInputSignature = renderPlan.map { currentFinalRenderInputSignature(videoId: $0.videoId) }
         finalRenderStatusMessage = {
             switch fixtureMode {
             case .storyReady:
@@ -628,48 +630,48 @@ final class AnimateCreateViewModel: ObservableObject {
         form.tempo = style.tempo
     }
 
-    func currentVideoDirectionInputSignature(momentId: String) -> String {
+    func currentVideoDirectionInputSignature(videoId: String) -> String {
         AnimateVideoDirectionInputSignature.make(
-            momentId: momentId,
+            videoId: videoId,
             form: form,
             selectedMedia: currentVideoDirectionSignatureMedia()
         )
     }
 
     func currentVideoDirectionInputSignature(
-        momentId: String,
+        videoId: String,
         persistedMedia: [AnimateVideoDirectionMedia]?
     ) -> String {
         AnimateVideoDirectionInputSignature.make(
-            momentId: momentId,
+            videoId: videoId,
             form: form,
             selectedMedia: persistedMedia ?? currentVideoDirectionSignatureMedia()
         )
     }
 
-    func preparedVideoDirectionComparisonInputSignature(momentId: String) -> String {
+    func preparedVideoDirectionComparisonInputSignature(videoId: String) -> String {
         if !hasExplicitMediaEditsAfterPreparedVideoDirection,
            let workspaceMedia = currentWorkspaceVideoDirectionSignatureMedia(),
            !workspaceMedia.isEmpty {
-            return currentVideoDirectionInputSignature(momentId: momentId, persistedMedia: workspaceMedia)
+            return currentVideoDirectionInputSignature(videoId: videoId, persistedMedia: workspaceMedia)
         }
 
-        return currentVideoDirectionInputSignature(momentId: momentId)
+        return currentVideoDirectionInputSignature(videoId: videoId)
     }
 
-    func currentFinalRenderInputSignature(momentId: String, removesWatermark: Bool = false) -> String {
-        let input = currentFinalRenderInputSignatureSource(momentId: momentId, removesWatermark: removesWatermark)
+    func currentFinalRenderInputSignature(videoId: String, removesWatermark: Bool = false) -> String {
+        let input = currentFinalRenderInputSignatureSource(videoId: videoId, removesWatermark: removesWatermark)
         let digest = SHA256.hash(data: Data(input.utf8))
         return digest.map { String(format: "%02x", $0) }.joined()
     }
 
-    func currentFinalRenderInputSignatureSource(momentId: String, removesWatermark: Bool = false) -> String {
+    func currentFinalRenderInputSignatureSource(videoId: String, removesWatermark: Bool = false) -> String {
         let finalForm = effectiveFinalRenderForm()
         let mediaSignature = currentFinalRenderSignatureMedia()
             .map { "\($0.sortOrder):\($0.sourceLocalIdentifier):\($0.mediaKind)" }
             .joined(separator: "|")
         return [
-            momentId,
+            videoId,
             finalForm.creationMode.rawValue,
             finalForm.look.rawValue,
             finalForm.theme.rawValue,
@@ -698,7 +700,7 @@ final class AnimateCreateViewModel: ObservableObject {
     func currentRenderPlan(removesWatermark: Bool) -> AnimateRenderPlanResponse? {
         guard let renderPlan else { return nil }
         guard renderPlanInputSignature == currentFinalRenderInputSignature(
-            momentId: renderPlan.momentId,
+            videoId: renderPlan.videoId,
             removesWatermark: removesWatermark
         ) else {
             return nil
@@ -706,13 +708,13 @@ final class AnimateCreateViewModel: ObservableObject {
         return renderPlan
     }
 
-    func hasConfirmableRenderPlan(momentId: String) -> Bool {
-        confirmableRenderPlan(momentId: momentId) != nil
+    func hasConfirmableRenderPlan(videoId: String) -> Bool {
+        confirmableRenderPlan(videoId: videoId) != nil
     }
 
-    func confirmableRenderPlan(momentId: String) -> AnimateRenderPlanResponse? {
+    func confirmableRenderPlan(videoId: String) -> AnimateRenderPlanResponse? {
         guard let renderPlan else { return nil }
-        guard renderPlan.momentId == momentId, renderPlan.canCreateVideo else { return nil }
+        guard renderPlan.videoId == videoId, renderPlan.canCreateVideo else { return nil }
         return renderPlan
     }
 
@@ -784,14 +786,14 @@ final class AnimateCreateViewModel: ObservableObject {
     }
 
     @discardableResult
-    func recordPreparedVideoDirectionInputSignature(_ inputSignature: String, momentId: String) -> String {
+    func recordPreparedVideoDirectionInputSignature(_ inputSignature: String, videoId: String) -> String {
         let recordedSignature: String
         if let workspaceSignature = effectiveActiveWorkspace?.video.storyInputSignature {
             recordedSignature = workspaceSignature
         } else if currentWorkspaceVideoDirectionSignatureMedia()?.isEmpty == false {
             recordedSignature = inputSignature
         } else {
-            recordedSignature = currentVideoDirectionInputSignature(momentId: momentId)
+            recordedSignature = currentVideoDirectionInputSignature(videoId: videoId)
         }
         lastPreparedVideoDirectionInputSignature = recordedSignature
         hasExplicitMediaEditsAfterPreparedVideoDirection = false
@@ -959,7 +961,7 @@ extension AnimateCreateViewModel {
         videoQuote = state.videoQuote
         if let renderPlan = state.renderPlan {
             renderPlanInputSignature = pendingRenderPlanInputSignature
-                ?? currentFinalRenderInputSignature(momentId: renderPlan.momentId)
+                ?? currentFinalRenderInputSignature(videoId: renderPlan.videoId)
             pendingRenderPlanInputSignature = nil
         } else {
             renderPlanInputSignature = nil
@@ -1014,7 +1016,7 @@ extension AnimateCreateViewModel {
         }
 
         if lastPreparedVideoDirectionInputSignature == nil || currentWorkspaceVideoDirectionSignatureMedia()?.isEmpty == false {
-            lastPreparedVideoDirectionInputSignature = preparedVideoDirectionComparisonInputSignature(momentId: activeVideoId)
+            lastPreparedVideoDirectionInputSignature = preparedVideoDirectionComparisonInputSignature(videoId: activeVideoId)
         }
     }
 

@@ -103,7 +103,7 @@ final class AnimateInProgressViewModel: ObservableObject {
         }
 
         selectedVideoId = video.id
-        workflow?.observeAnimateWorkspace(ownerUserId: currentUserId, momentId: video.id)
+        workflow?.observeAnimateWorkspace(ownerUserId: currentUserId, videoId: video.id)
     }
 
     func isSelected(_ video: AnimateVideo) -> Bool {
@@ -152,7 +152,7 @@ final class AnimateInProgressViewModel: ObservableObject {
                 self?.selectedVideoId = nil
                 self?.activeVideo = nil
                 self?.activeWorkspace = nil
-                self?.allVideosSummary = self?.allVideosSummary.removing(momentId: video.id) ?? AnimateInProgressSummary()
+                self?.allVideosSummary = self?.allVideosSummary.removing(videoId: video.id) ?? AnimateInProgressSummary()
                 self?.statusMessage = L10n.string("inProgress.status.momentDeleted")
             }
             self?.deletionTask = nil

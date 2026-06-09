@@ -45,18 +45,18 @@ final class AnimateWorkspaceSelectionWorkflow: ObservableObject {
         $errorMessage.eraseToAnyPublisher()
     }
 
-    func observeAnimateWorkspace(ownerUserId: String?, momentId: String?) {
+    func observeAnimateWorkspace(ownerUserId: String?, videoId: String?) {
         activeVideo = nil
         activeWorkspace = nil
         isLoadingAnimateWorkspace = false
         errorMessage = nil
 
-        guard let ownerUserId, let momentId else {
+        guard let ownerUserId, let videoId else {
             workspaceObserver.clearWorkspace()
             return
         }
 
-        workspaceObserver.observeWorkspace(ownerUserId: ownerUserId, momentId: momentId)
+        workspaceObserver.observeWorkspace(ownerUserId: ownerUserId, videoId: videoId)
         isLoadingAnimateWorkspace = true
     }
 

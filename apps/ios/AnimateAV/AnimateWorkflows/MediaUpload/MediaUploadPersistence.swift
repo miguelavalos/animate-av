@@ -36,7 +36,7 @@ enum MediaUploadPersistence {
         imported mediaItems: [AnimateSelectedMedia],
         ownerUserId: String,
         bearerToken: String,
-        momentId: String,
+        videoId: String,
         uploadClient: AnimateUploadClient,
         requiresProductStateSave: Bool = true,
         progress: @MainActor @escaping (_ completedCount: Int, _ totalCount: Int) -> Void = { _, _ in },
@@ -50,7 +50,7 @@ enum MediaUploadPersistence {
         var completedUploads = 0
         let uploadedMedia = try await uploadMedia(
             mediaItems,
-            momentId: momentId,
+            videoId: videoId,
             bearerToken: bearerToken,
             uploadClient: uploadClient,
             shouldContinue: shouldContinue,
@@ -87,7 +87,7 @@ enum MediaUploadPersistence {
     @MainActor
     private static func uploadMedia(
         _ mediaItems: [AnimateSelectedMedia],
-        momentId: String,
+        videoId: String,
         bearerToken: String,
         uploadClient: AnimateUploadClient,
         shouldContinue: @MainActor () -> Bool,
@@ -105,7 +105,7 @@ enum MediaUploadPersistence {
                 group.addTask {
                     try await withUploadTimeout {
                         let prepared = try await uploadClient.prepareUpload(
-                            momentId: momentId,
+                            videoId: videoId,
                             bearerToken: bearerToken,
                             media: media
                         )

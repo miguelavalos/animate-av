@@ -67,7 +67,7 @@ final class AccountController: ObservableObject {
         case .active(let providerUser):
             guard let resolvedUser = await resolveInternalAccountUser(providerUser: providerUser) else {
                 captureAccountError(
-                    AnimateAPIError(code: "moments_account_profile_resolution_failed", message: "Account profile resolution failed."),
+                    AnimateAPIError(code: "animate_account_profile_resolution_failed", message: "Account profile resolution failed."),
                     operation: "restore",
                     data: ["restore_result": "active_without_internal_user"]
                 )
@@ -132,7 +132,7 @@ final class AccountController: ObservableObject {
         guard let user, !normalizedCode.isEmpty else { return 0 }
 
         guard let token = try await currentBackendBearerToken(for: user) else {
-            throw AnimateAPIError(code: "moments_auth_token_missing", message: L10n.string("access.signInRequired.generic"))
+            throw AnimateAPIError(code: "animate_auth_token_missing", message: L10n.string("access.signInRequired.generic"))
         }
         let response = try await promoCodeClient.redeem(code: normalizedCode, bearerToken: token)
         creditBalance = response.balance
@@ -161,7 +161,7 @@ final class AccountController: ObservableObject {
 
     func purchase(_ product: AnimateCreditPaywallProduct) async throws -> AnimatePurchaseResult {
         guard let user else {
-            throw AnimateAPIError(code: "moments_sign_in_required", message: L10n.string("access.signInRequired.purchase"))
+            throw AnimateAPIError(code: "animate_sign_in_required", message: L10n.string("access.signInRequired.purchase"))
         }
         guard !isPurchaseInProgress else {
             return AnimatePurchaseResult(status: .cancelled, productId: product.id, transactionId: nil)
@@ -203,7 +203,7 @@ final class AccountController: ObservableObject {
         creditBalanceLoadState = .loading
         do {
             guard let token = try await currentBackendBearerToken(for: user) else {
-                throw AnimateAPIError(code: "moments_auth_token_missing", message: L10n.string("access.signInRequired.generic"))
+                throw AnimateAPIError(code: "animate_auth_token_missing", message: L10n.string("access.signInRequired.generic"))
             }
             creditBalance = try await balanceClient.fetchBalance(bearerToken: token)
             creditBalanceLoadState = .loaded
@@ -528,7 +528,7 @@ struct AnimatePromoCodeClient {
 
     func redeem(code: String, bearerToken: String) async throws -> AnimatePromoCodeRedemptionResponse {
         guard let url = URL(string: "\(baseURLString)/v1/apps/animateav/credits/promotions/redeem") else {
-            throw AnimateAPIError(code: "invalid_moments_api_url", message: L10n.string("access.apiURLMissing"))
+            throw AnimateAPIError(code: "invalid_animate_api_url", message: L10n.string("access.apiURLMissing"))
         }
 
         var request = URLRequest(url: url)
@@ -541,7 +541,7 @@ struct AnimatePromoCodeClient {
         if let httpResponse = response as? HTTPURLResponse, !(200..<300).contains(httpResponse.statusCode) {
             throw AnimateAPIError.decode(
                 from: data,
-                fallbackCode: "moments_promo_code_redeem_failed",
+                fallbackCode: "animate_promo_code_redeem_failed",
                 fallbackMessage: "Promo code could not be redeemed."
             )
         }

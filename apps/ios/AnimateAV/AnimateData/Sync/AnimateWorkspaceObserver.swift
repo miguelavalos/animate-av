@@ -23,20 +23,20 @@ final class AnimateWorkspaceObserver: ObservableObject {
         $errorMessage.eraseToAnyPublisher()
     }
 
-    func observeWorkspace(ownerUserId: String?, momentId: String?) {
+    func observeWorkspace(ownerUserId: String?, videoId: String?) {
         observationGeneration += 1
         let generation = observationGeneration
         activeWorkspaceTask?.cancel()
         activeWorkspace = nil
         errorMessage = nil
 
-        guard let ownerUserId, let momentId else { return }
+        guard let ownerUserId, let videoId else { return }
         AnimateSyncDiagnostics.addObserverBreadcrumb(observer: diagnosticsObserverName, message: "observer_started")
 
         do {
             let updates = try workspaceObserver.observeAnimateWorkspace(
                 ownerUserId: ownerUserId,
-                momentId: momentId
+                videoId: videoId
             )
             .values
 

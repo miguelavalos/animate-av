@@ -10,7 +10,7 @@ struct AnimateVideoDirectionClient {
     }
 
     func generatePlan(
-        momentId: String,
+        videoId: String,
         ownerUserId: String,
         bearerToken: String,
         form: AnimateVideoSetupForm,
@@ -30,7 +30,7 @@ struct AnimateVideoDirectionClient {
             }
 
         return try await generatePlan(
-            momentId: momentId,
+            videoId: videoId,
             ownerUserId: ownerUserId,
             bearerToken: bearerToken,
             form: form,
@@ -39,7 +39,7 @@ struct AnimateVideoDirectionClient {
     }
 
     func generatePlan(
-        momentId: String,
+        videoId: String,
         ownerUserId: String,
         bearerToken: String,
         form: AnimateVideoSetupForm,
@@ -57,7 +57,7 @@ struct AnimateVideoDirectionClient {
             .appendingPathComponent("plans")
 
         let requestBody = AnimateVideoDirectionRequest(
-            momentId: momentId,
+            videoId: videoId,
             creationMode: form.creationMode.rawValue,
             look: form.look.rawValue,
             theme: form.theme.rawValue,
@@ -69,7 +69,7 @@ struct AnimateVideoDirectionClient {
             narrationVoice: form.details.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty ? "none" : form.voiceProfile.rawValue,
             voiceTone: form.voiceTone.rawValue,
             media: selectedMedia,
-            idempotencyKey: "story:\(momentId):\(AnimateVideoDirectionInputSignature.make(momentId: momentId, form: form, selectedMedia: selectedMedia))"
+            idempotencyKey: "story:\(videoId):\(AnimateVideoDirectionInputSignature.make(videoId: videoId, form: form, selectedMedia: selectedMedia))"
         )
 
         var request = URLRequest(url: endpoint)
@@ -82,7 +82,7 @@ struct AnimateVideoDirectionClient {
         guard let httpResponse = response as? HTTPURLResponse, 200..<300 ~= httpResponse.statusCode else {
             let apiError = AnimateAPIError.decode(
                 from: data,
-                fallbackCode: "moments_story_plan_failed",
+                fallbackCode: "animate_story_plan_failed",
                 fallbackMessage: AnimateVideoDirectionError.planFailed.localizedDescription
             )
             throw apiError

@@ -84,7 +84,7 @@ enum AnimateMediaAutoStyleSuggester {
         } else if sceneryAssetCount >= 1 {
             candidate = (.travel, .cinematic, 0.68, "Local image analysis sees a scenic photo.")
         } else if groupAssetCount >= 1 {
-            candidate = (.familyMoments, .warm, 0.66, "Local image analysis sees a group photo.")
+            candidate = (.familyScenes, .warm, 0.66, "Local image analysis sees a group photo.")
         } else if peopleAssetCount >= 1 && sceneryAssetCount < peopleAssetCount {
             candidate = (.favoritePeople, .warm, 0.63, "Local image analysis sees a people-focused photo.")
         } else if videoCount > 0 && videoCount >= max(1, photoCount / 3) {
@@ -92,7 +92,7 @@ enum AnimateMediaAutoStyleSuggester {
         } else if media.count >= 10 && dateSpan > 6 * 60 * 60 {
             candidate = (.travel, .cinematic, 0.62, "The photo metadata fits a trip or day-out vibe.")
         } else if media.count >= 6 {
-            candidate = (.familyMoments, .warm, 0.58, "This photo works best as a warm cartoon moment.")
+            candidate = (.familyScenes, .warm, 0.58, "This photo works best as a warm cartoon scene.")
         } else {
             candidate = (.eventRecap, .warm, 0.48, "A single photo is safest as a simple cartoon moment.")
         }

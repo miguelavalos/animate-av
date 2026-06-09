@@ -13,7 +13,7 @@ protocol AnimateGalleryStoring {
     func containsImage(artifactId: String) -> Bool
     func saveDownloadedVideo(
         temporaryFileURL: URL,
-        momentId: String,
+        videoId: String,
         artifactId: String,
         title: String,
         r2Key: String,
@@ -106,7 +106,7 @@ struct AnimateGalleryStore: AnimateGalleryStoring {
 
     func saveDownloadedVideo(
         temporaryFileURL: URL,
-        momentId: String,
+        videoId: String,
         artifactId: String,
         title: String,
         r2Key: String,
@@ -116,7 +116,7 @@ struct AnimateGalleryStore: AnimateGalleryStoring {
             at: videosDirectory,
             withIntermediateDirectories: true
         )
-        let localRelativePath = "Videos/\(Self.safeFilename(momentId))-\(Self.safeFilename(artifactId)).mp4"
+        let localRelativePath = "Videos/\(Self.safeFilename(videoId))-\(Self.safeFilename(artifactId)).mp4"
         let destinationURL = baseDirectory.appendingPathComponent(localRelativePath)
         if fileManager.fileExists(atPath: destinationURL.path) {
             try fileManager.removeItem(at: destinationURL)
@@ -125,7 +125,7 @@ struct AnimateGalleryStore: AnimateGalleryStoring {
 
         let record = AnimateGalleryVideoRecord(
             id: artifactId,
-            momentId: momentId,
+            videoId: videoId,
             artifactId: artifactId,
             title: title,
             r2Key: r2Key,

@@ -7,7 +7,7 @@ struct AnimateRealtimeSessionClient {
 
     func createRealtimeSession(bearerToken: String) async throws -> String {
         guard var endpoint = URL(string: baseURLString.trimmingCharacters(in: .whitespacesAndNewlines)) else {
-            throw AnimateAPIError(code: "moments_realtime_not_configured", message: "Animate realtime is not configured.")
+            throw AnimateAPIError(code: "animate_realtime_not_configured", message: "Animate realtime is not configured.")
         }
 
         endpoint.appendPathComponent("v1")
@@ -26,7 +26,7 @@ struct AnimateRealtimeSessionClient {
         guard let httpResponse = response as? HTTPURLResponse, 200..<300 ~= httpResponse.statusCode else {
             throw AnimateAPIError.decode(
                 from: data,
-                fallbackCode: "moments_realtime_session_failed",
+                fallbackCode: "animate_realtime_session_failed",
                 fallbackMessage: "Realtime session failed."
             )
         }

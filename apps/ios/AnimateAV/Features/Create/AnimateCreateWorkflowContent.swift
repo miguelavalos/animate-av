@@ -41,7 +41,9 @@ struct AnimateCreateWorkflowContent: View {
                     startSignInFlow: startSignInFlow,
                     openCredits: openCredits,
                     prepareVideoDirection: viewModel.prepareVideoDirection,
-                    prepareFinalRenderPlan: viewModel.prepareFinalVideoPlanFromCurrentSelection,
+                    prepareFinalRenderPlan: { removesWatermark in
+                        viewModel.prepareFinalVideoPlanFromCurrentSelection(removesWatermark: removesWatermark)
+                    },
                     submitFinalVideoConfirmation: viewModel.submitFinalVideoConfirmation,
                     retryFinalVideoDownload: viewModel.retryFinalVideoDownload,
                     finishFinalVideoToGallery: finishFinalVideoToGallery
@@ -99,6 +101,7 @@ private struct AnimateCreateMediaFirstWorkspace: View {
     @State private var handledOpenAlbumRequest = 0
     @State private var continueGuidedFlowRequest = 0
     @State private var isVideoSetupGuideComplete = false
+    @State private var shouldPrepareFinalPlanAfterDirection = false
 
     var body: some View {
         ZStack {
@@ -148,7 +151,6 @@ private struct AnimateCreateMediaFirstWorkspace: View {
                             updateMessage: updateMessage,
                             updateVoiceProfile: updateVoiceProfile,
                             updateVoiceTone: updateVoiceTone,
-                            createVideo: primaryFinalRenderAction,
                             continueGuidedFlowRequest: continueGuidedFlowRequest,
                             isGuidedFlowComplete: $isVideoSetupGuideComplete,
                             discardVideoCreation: { showsDiscardVideoConfirmation = true }
@@ -177,6 +179,7 @@ private struct AnimateCreateMediaFirstWorkspace: View {
                         openCredits: openCredits,
                         prepareVideoDirection: prepareVideoDirection,
                         generateFinalRender: primaryFinalRenderAction,
+                        continueFromCompletedVideoSetupGuide: continueFromCompletedVideoSetupGuide,
                         continueVideoSetup: continueVideoSetup,
                         isVideoSetupGuideComplete: isVideoSetupGuideComplete,
                         openCreateVideoConfirmation: { showsCreateVideoConfirmation = true },
@@ -207,7 +210,13 @@ private struct AnimateCreateMediaFirstWorkspace: View {
         .onChange(of: selectedLook) { _, newValue in
             if newValue == nil {
                 isVideoSetupGuideComplete = false
+                shouldPrepareFinalPlanAfterDirection = false
             }
+        }
+        .onChange(of: presentation.videoDirectionSummary.hasScenes) { _, hasScenes in
+            guard hasScenes, shouldPrepareFinalPlanAfterDirection else { return }
+            shouldPrepareFinalPlanAfterDirection = false
+            primaryFinalRenderAction()
         }
         .navigationDestination(isPresented: $showsCompactMediaManager) {
             AnimateCreateMediaManagerSheet(
@@ -351,6 +360,15 @@ private struct AnimateCreateMediaFirstWorkspace: View {
         } else {
             waitsForFinalRenderPlan = true
             prepareFinalRenderPlan(false)
+        }
+    }
+
+    private func continueFromCompletedVideoSetupGuide() {
+        if presentation.videoDirectionSummary.hasScenes {
+            primaryFinalRenderAction()
+        } else {
+            shouldPrepareFinalPlanAfterDirection = true
+            prepareVideoDirection()
         }
     }
 
@@ -519,7 +537,6 @@ struct AnimateCreateBlockingPreparationView: View {
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
         .background(AnimateTheme.shellBackground.ignoresSafeArea())
-        .transition(.opacity.combined(with: .scale(scale: 0.98)))
         .onAppear {
             withAnimation(.easeInOut(duration: 1.05).repeatForever(autoreverses: true)) {
                 isAnimating = true
@@ -555,7 +572,7 @@ struct AnimateCreateBlockingPreparationView: View {
             return .prepareStory
         }
         if isPreparingVideoDirectionAction {
-            return .uploadForVideo
+            return .prepareFinalPlan
         }
         return .importMedia
     }
@@ -571,7 +588,7 @@ struct AnimateCreateBlockingPreparationView: View {
         var title: String {
             switch self {
             case .prepareVideoSetup:
-                return L10n.string("create.preparation.prepareMoment.title")
+                return L10n.string("create.preparation.prepareVideo.title")
             case .importMedia:
                 return L10n.string("create.preparation.importMedia.title")
             case .prepareStory:
@@ -616,7 +633,7 @@ struct AnimateCreateBlockingPreparationView: View {
         func message(itemCount: Int?) -> String {
             switch self {
             case .prepareVideoSetup:
-                return L10n.string("create.preparation.prepareMoment.detail")
+                return L10n.string("create.preparation.prepareVideo.detail")
             case .importMedia:
                 if let itemCount, itemCount > 0 {
                     let itemWord = itemCount == 1
@@ -816,14 +833,12 @@ private struct AnimateCreateVideoDirectionCard: View {
     let updateMessage: (String) -> Void
     let updateVoiceProfile: (AnimateVideoVoiceProfile) -> Void
     let updateVoiceTone: (AnimateVideoVoiceTone) -> Void
-    let createVideo: () -> Void
     let continueGuidedFlowRequest: Int
     @Binding var isGuidedFlowComplete: Bool
     let discardVideoCreation: () -> Void
 
-    @State private var step: GuidedStep = .look
+    @State private var guideState = AnimateCreateVideoSetupGuideState()
     @State private var activeGuidedSheet: GuidedStep?
-    @State private var selectedScriptIdea: ScriptIdea = .none
     @State private var guidedLookFamily: AnimateVideoLookFamily?
     @State private var handledContinueGuidedFlowRequest = 0
 
@@ -923,11 +938,11 @@ private struct AnimateCreateVideoDirectionCard: View {
         }
         .onAppear {
             guard !isGuidedFlowComplete, activeGuidedSheet == nil else { return }
-            activeGuidedSheet = step
+            activeGuidedSheet = guideState.step
         }
         .onChange(of: form.details) { _, newValue in
-            if step == .voice && newValue.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
-                step = .scriptIdea
+            if guideState.step == .voice && newValue.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
+                guideState.step = .scriptIdea
                 isGuidedFlowComplete = false
                 activeGuidedSheet = .scriptIdea
             }
@@ -943,7 +958,7 @@ private struct AnimateCreateVideoDirectionCard: View {
         HStack(spacing: 8) {
             ForEach(activeSteps) { item in
                 Capsule()
-                    .fill(step == item ? AVBrandColor.accent : AVBrandColor.mutedSurface)
+                    .fill(guideState.step == item ? AVBrandColor.accent : AVBrandColor.mutedSurface)
                     .frame(height: 5)
             }
         }
@@ -1061,7 +1076,7 @@ private struct AnimateCreateVideoDirectionCard: View {
 
     private func summaryEditRow(title: String, detail: String, icon: String, editStep: GuidedStep) -> some View {
         Button {
-            step = editStep
+            guideState.step = editStep
             activeGuidedSheet = editStep
         } label: {
             HStack(spacing: 10) {
@@ -1117,9 +1132,6 @@ private struct AnimateCreateVideoDirectionCard: View {
                             isSelected: selectedLook == look,
                             select: {
                                 selectLook(look)
-                                if selectedScriptIdea == .none {
-                                    completeGuideWithoutMessage()
-                                }
                             }
                         )
                     }
@@ -1153,13 +1165,10 @@ private struct AnimateCreateVideoDirectionCard: View {
                     ForEach(ScriptIdea.allCases) { idea in
                         AnimateCreateGuidedScriptIdeaTile(
                             idea: idea,
-                            isSelected: selectedScriptIdea == idea,
+                            isSelected: guideState.selectedScriptIdea == idea,
                             select: {
-                                selectedScriptIdea = idea
+                                guideState.selectScriptIdea(idea)
                                 applyScriptIdea(idea)
-                                if idea == .none {
-                                    completeGuideWithoutMessage()
-                                }
                             }
                         )
                     }
@@ -1263,9 +1272,9 @@ private struct AnimateCreateVideoDirectionCard: View {
                 .frame(maxWidth: .infinity)
                 .frame(height: 44)
         }
-        .disabled((step == .look && selectedLook == nil) || (step == .scriptMessage && !canContinueMessageStep))
+        .disabled((guideState.step == .look && selectedLook == nil) || (guideState.step == .scriptMessage && !canContinueMessageStep))
         .buttonStyle(AnimateCreateSoftActionButtonStyle())
-        .opacity(((step == .look && selectedLook == nil) || (step == .scriptMessage && !canContinueMessageStep)) ? 0.62 : 1)
+        .opacity(((guideState.step == .look && selectedLook == nil) || (guideState.step == .scriptMessage && !canContinueMessageStep)) ? 0.62 : 1)
     }
 
     private func stepHeader(_ title: String, _ detail: String) -> some View {
@@ -1296,48 +1305,24 @@ private struct AnimateCreateVideoDirectionCard: View {
     }
 
     private func continueStep() {
-        switch step {
-        case .look:
-            guard selectedLook != nil else {
-                activeGuidedSheet = .look
-                return
-            }
-            if !hasMessage && selectedScriptIdea == .none {
-                completeGuideWithoutMessage()
-                return
-            }
-            step = .scriptIdea
-            activeGuidedSheet = .scriptIdea
-        case .scriptIdea:
-            if selectedScriptIdea == .none {
-                completeGuideWithoutMessage()
-            } else if hasMessage {
-                step = .scriptMessage
-                activeGuidedSheet = .scriptMessage
-            } else {
-                isGuidedFlowComplete = true
-                activeGuidedSheet = nil
-            }
-        case .scriptMessage:
-            if canContinueMessageStep {
-                step = .voice
-                activeGuidedSheet = .voice
-            } else {
-                isGuidedFlowComplete = true
-                activeGuidedSheet = nil
-            }
-        case .voice:
-            isGuidedFlowComplete = true
-            activeGuidedSheet = nil
+        let result = guideState.continueStep(
+            hasSelectedLook: selectedLook != nil,
+            hasMessage: hasMessage,
+            canContinueMessageStep: canContinueMessageStep
+        )
+        isGuidedFlowComplete = guideState.isComplete
+        activeGuidedSheet = result.activeSheet
+        if result.clearsMessage {
+            updateMessage("")
         }
     }
 
     private var continueButtonTitle: String {
-        switch step {
+        switch guideState.step {
         case .look:
             return selectedLook == nil ? "Elegir look" : L10n.string("create.guided.continue.message")
         case .scriptIdea:
-            return selectedScriptIdea != .none && hasMessage
+            return guideState.selectedScriptIdea != .none && hasMessage
                 ? L10n.string("create.guided.continue.editMessage")
                 : L10n.string("create.guided.continue.finish")
         case .scriptMessage:
@@ -1355,13 +1340,6 @@ private struct AnimateCreateVideoDirectionCard: View {
         }
         updateMessage(idea.defaultMessage)
         form.occasion = idea.title
-    }
-
-    private func completeGuideWithoutMessage() {
-        updateMessage("")
-        step = .scriptIdea
-        isGuidedFlowComplete = true
-        activeGuidedSheet = nil
     }
 
     private var isUserAdjustedFromAvi: Bool {
@@ -1540,7 +1518,69 @@ private struct AnimateCreateVideoDirectionDecisionSummary: View {
     }
 }
 
-private enum GuidedStep: String, CaseIterable, Identifiable {
+struct AnimateCreateVideoSetupGuideState: Equatable {
+    struct ContinueResult: Equatable {
+        var activeSheet: GuidedStep?
+        var clearsMessage = false
+    }
+
+    var step: GuidedStep = .look
+    var selectedScriptIdea: ScriptIdea = .none
+    var isComplete = false
+
+    mutating func selectScriptIdea(_ idea: ScriptIdea) {
+        selectedScriptIdea = idea
+        if isComplete {
+            isComplete = false
+        }
+    }
+
+    mutating func continueStep(
+        hasSelectedLook: Bool,
+        hasMessage: Bool,
+        canContinueMessageStep: Bool
+    ) -> ContinueResult {
+        switch step {
+        case .look:
+            guard hasSelectedLook else {
+                return ContinueResult(activeSheet: .look)
+            }
+            step = .scriptIdea
+            isComplete = false
+            return ContinueResult(activeSheet: .scriptIdea)
+        case .scriptIdea:
+            if selectedScriptIdea == .none {
+                completeWithoutMessage()
+                return ContinueResult(activeSheet: nil, clearsMessage: true)
+            }
+            if hasMessage {
+                step = .scriptMessage
+                isComplete = false
+                return ContinueResult(activeSheet: .scriptMessage)
+            }
+            isComplete = true
+            return ContinueResult(activeSheet: nil)
+        case .scriptMessage:
+            if canContinueMessageStep {
+                step = .voice
+                isComplete = false
+                return ContinueResult(activeSheet: .voice)
+            }
+            isComplete = true
+            return ContinueResult(activeSheet: nil)
+        case .voice:
+            isComplete = true
+            return ContinueResult(activeSheet: nil)
+        }
+    }
+
+    mutating func completeWithoutMessage() {
+        step = .scriptIdea
+        isComplete = true
+    }
+}
+
+enum GuidedStep: String, CaseIterable, Identifiable {
     case look
     case scriptIdea
     case scriptMessage
@@ -1558,7 +1598,7 @@ private enum GuidedStep: String, CaseIterable, Identifiable {
     }
 }
 
-private enum ScriptIdea: String, CaseIterable, Identifiable {
+enum ScriptIdea: String, CaseIterable, Identifiable {
     case none
     case birthday
     case congratulations
@@ -1640,7 +1680,7 @@ private enum ScriptIdea: String, CaseIterable, Identifiable {
         case .love, .missYou:
             return .favoritePeople
         case .holiday:
-            return .familyMoments
+            return .familyScenes
         case .funny:
             return .softRoast
         }
@@ -2236,6 +2276,7 @@ private struct AnimateCreatePrimaryActionBar: View {
     let openCredits: () -> Void
     let prepareVideoDirection: () -> Void
     let generateFinalRender: () -> Void
+    let continueFromCompletedVideoSetupGuide: () -> Void
     let continueVideoSetup: () -> Void
     let isVideoSetupGuideComplete: Bool
     let openCreateVideoConfirmation: () -> Void
@@ -2424,7 +2465,7 @@ private struct AnimateCreatePrimaryActionBar: View {
                 startSignInFlow()
             } else if !primaryActionPresentation.hasCompletedVideoDirection {
                 if guideIsReadyToPrepareDirection {
-                    prepareVideoDirection()
+                    continueFromCompletedVideoSetupGuide()
                 } else {
                     continueVideoSetup()
                 }
@@ -2714,16 +2755,35 @@ private struct AnimateCreateFinalVideoConfirmationSheet: View {
             if removesWatermark,
                !videoQuote.branding.removalIncluded,
                !videoQuote.branding.removalRequested {
-                return videoQuote.totalCreditCost + videoQuote.brandingRemovalCreditCost
+                return videoQuote.baseCreditCost + brandingRemovalOptionCreditCost
             }
             return videoQuote.totalCreditCost
         }
         let baseCost = plan?.creditCost ?? action.totalCreditCost
         guard removesWatermark,
               watermark?.userHasWatermarkFree != true else {
-            return action.totalCreditCost
+            return plan?.totalCreditCost ?? action.totalCreditCost
         }
-        return baseCost + (watermark?.nonProRemovalCreditCost ?? action.balance.watermarkRemovalCreditCost)
+        return baseCost + brandingRemovalOptionCreditCost
+    }
+
+    private var brandingRemovalOptionCreditCost: Int {
+        if let videoQuote = action.summary.videoQuote {
+            if videoQuote.branding.removalIncluded {
+                return 0
+            }
+            if videoQuote.brandingRemovalCreditCost > 0 {
+                return videoQuote.brandingRemovalCreditCost
+            }
+        }
+        if watermark?.userHasWatermarkFree == true {
+            return 0
+        }
+        if let nonProRemovalCreditCost = watermark?.nonProRemovalCreditCost,
+           nonProRemovalCreditCost > 0 {
+            return nonProRemovalCreditCost
+        }
+        return max(1, action.balance.watermarkRemovalCreditCost)
     }
 
     private var selectedCreditCostTitle: String {
@@ -2762,7 +2822,7 @@ private struct AnimateCreateFinalVideoConfirmationSheet: View {
                     VStack(alignment: .leading, spacing: 3) {
                         Text(L10n.string(
                             "create.final.watermark.remove",
-                            AnimateCreditCopy.countTitle(videoQuote.brandingRemovalCreditCost)
+                            AnimateCreditCopy.countTitle(brandingRemovalOptionCreditCost)
                         ))
                         .font(.system(size: 12, weight: .black))
                         .foregroundStyle(AVBrandColor.textPrimary)
@@ -2783,12 +2843,12 @@ private struct AnimateCreateFinalVideoConfirmationSheet: View {
                     .font(.system(size: 11, weight: .bold))
                     .foregroundStyle(AVBrandColor.textSecondary)
             }
-        } else if let watermark {
+        } else if watermark != nil {
             Toggle(isOn: $removesWatermark) {
                 VStack(alignment: .leading, spacing: 3) {
                     Text(L10n.string(
                         "create.final.watermark.remove",
-                        AnimateCreditCopy.countTitle(watermark.nonProRemovalCreditCost)
+                        AnimateCreditCopy.countTitle(brandingRemovalOptionCreditCost)
                     ))
                     .font(.system(size: 12, weight: .black))
                     .foregroundStyle(AVBrandColor.textPrimary)
@@ -2823,7 +2883,7 @@ private struct AnimateCreateFinalVideoConfirmationSheet: View {
                 return L10n.string("create.final.costDetails.includedWithPro")
             }
             if videoQuote.branding.removalRequested || removesWatermark {
-                return AnimateCreditCopy.countTitle(videoQuote.brandingRemovalCreditCost)
+                return AnimateCreditCopy.countTitle(brandingRemovalOptionCreditCost)
             }
             return L10n.string("create.final.costDetails.noExtraCost")
         }
@@ -2831,7 +2891,7 @@ private struct AnimateCreateFinalVideoConfirmationSheet: View {
             return L10n.string("create.final.costDetails.includedWithPro")
         }
         if removesWatermark {
-            return AnimateCreditCopy.countTitle(watermark?.nonProRemovalCreditCost ?? action.balance.watermarkRemovalCreditCost)
+            return AnimateCreditCopy.countTitle(brandingRemovalOptionCreditCost)
         }
         return L10n.string("create.final.costDetails.noExtraCost")
     }
@@ -3204,7 +3264,7 @@ private struct AnimateCreateOptionsAviPanel: View {
         case .travel: L10n.string("create.theme.travel.title")
         case .favoritePeople: L10n.string("create.theme.favoritePeople.title")
         case .birthday: L10n.string("create.theme.birthday.title")
-        case .familyMoments: L10n.string("create.theme.familyMoments.title")
+        case .familyScenes: L10n.string("create.theme.familyScenes.title")
         case .softRoast: L10n.string("create.theme.softRoast.title")
         case .milestone: L10n.string("create.theme.milestone.title")
         }

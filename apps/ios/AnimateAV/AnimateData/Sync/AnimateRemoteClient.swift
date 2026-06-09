@@ -31,7 +31,7 @@ struct AnimateRemoteClient {
         )
         .receive(on: DispatchQueue.main)
         .map { jobs in
-            jobs.map(\.inProgressMoment)
+            jobs.map(\.inProgressVideo)
         }
         .mapError { $0 as Error }
         .eraseToAnyPublisher()
@@ -46,14 +46,14 @@ struct AnimateRemoteClient {
         )
         .receive(on: DispatchQueue.main)
         .map { jobs in
-            jobs.map(\.inProgressMoment)
+            jobs.map(\.inProgressVideo)
         }
         .mapError { $0 as Error }
         .eraseToAnyPublisher()
 
         return Publishers.CombineLatest(videoJobs, imageJobs)
-            .map { videoMoments, imageMoments in
-                (videoMoments + imageMoments).sorted { $0.updatedAt > $1.updatedAt }
+            .map { videoJobs, imageJobs in
+                (videoJobs + imageJobs).sorted { $0.updatedAt > $1.updatedAt }
             }
             .eraseToAnyPublisher()
     }
@@ -71,7 +71,7 @@ struct AnimateRemoteClient {
         let totalCreditCost: Double?
         let updatedAt: Double
 
-        var inProgressMoment: AnimateVideo {
+        var inProgressVideo: AnimateVideo {
             AnimateVideo(
                 id: id,
                 template: .birthdayMessage,
@@ -118,7 +118,7 @@ struct AnimateRemoteClient {
         let look: String?
         let updatedAt: Double
 
-        var inProgressMoment: AnimateVideo {
+        var inProgressVideo: AnimateVideo {
             AnimateVideo(
                 id: id,
                 template: .birthdayMessage,
@@ -171,7 +171,7 @@ struct AnimateRemoteClient {
 
     func observeAnimateWorkspace(
         ownerUserId: String,
-        momentId: String
+        videoId: String
     ) throws -> AnyPublisher<AnimateWorkspace?, Error> {
         let client = try requireClient()
         let realtimeSessionId = try realtimeSessionStore.sessionId(for: ownerUserId)
@@ -181,7 +181,7 @@ struct AnimateRemoteClient {
             with: [
                 "ownerUserId": ownerUserId,
                 "realtimeSessionId": realtimeSessionId,
-                "momentId": momentId
+                "videoId": videoId
             ],
             yielding: AnimateWorkspace?.self
         )

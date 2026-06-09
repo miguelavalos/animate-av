@@ -2,7 +2,7 @@ import Foundation
 
 struct AnimateRenderStatusResponse: Decodable, Equatable {
     let appId: String
-    let momentId: String
+    let videoId: String
     let renderJobId: String
     let workflowRunId: String?
     let renderKind: String
@@ -25,7 +25,7 @@ struct AnimateRenderStatusResponse: Decodable, Equatable {
 
     enum CodingKeys: String, CodingKey {
         case appId
-        case momentId
+        case videoId
         case renderJobId
         case workflowRunId
         case renderKind
@@ -33,7 +33,7 @@ struct AnimateRenderStatusResponse: Decodable, Equatable {
         case phase
         case progressPercent
         case userMessage
-        case canEditSetup = "canEditMoment"
+        case canEditSetup
         case canRetry
         case artifactId
         case artifactKind

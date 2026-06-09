@@ -236,6 +236,160 @@ final class AnimateCreateViewModelVideoDirectionStateTests: XCTestCase {
         )
     }
 
+    func testConfirmPreparedFinalRenderPublishesQueuedJobFromMockedBackendResponse() async {
+        AnimateFinalRenderURLProtocolMock.reset()
+        AnimateFinalRenderURLProtocolMock.responseData = Data(Self.confirmFinalRenderJSON.utf8)
+        let configuration = URLSessionConfiguration.ephemeral
+        configuration.protocolClasses = [AnimateFinalRenderURLProtocolMock.self]
+        let harness = AnimateVideoCreationFailureHarness(
+            error: NSError(domain: "test", code: 1),
+            finalRenderSession: URLSession(configuration: configuration)
+        )
+        let workflow = harness.finalRenderWorkflow
+        let plan = AnimateCreateTestFixtures.makeRenderPlan(momentId: "moment-1")
+        harness.publishWorkspace(
+            AnimateWorkspace(
+                video: AnimateCreateTestFixtures.makeVideo(id: "moment-1"),
+                mediaAssets: [
+                    AnimateCreateTestFixtures.makeMediaAsset(id: "backend-media-1", hasUploadId: true)
+                ],
+                storyScenes: [AnimateCreateTestFixtures.makeScene(id: "scene-1")],
+                renderJobs: [],
+                artifacts: []
+            )
+        )
+        await Task.yield()
+        workflow.usePreparedRenderPlan(plan)
+
+        await workflow.confirmPreparedFinalRender(
+            momentId: "moment-1",
+            template: .birthdayMessage,
+            creationStyle: nil,
+            form: AnimateVideoSetupForm(template: .birthdayMessage),
+            selectedMedia: [],
+            removesWatermark: false
+        )
+
+        XCTAssertEqual(AnimateFinalRenderURLProtocolMock.requestCount, 1)
+        XCTAssertEqual(
+            AnimateFinalRenderURLProtocolMock.lastRequest?.url?.absoluteString,
+            "https://api.example.com/v1/apps/animateav/renders/final/confirm"
+        )
+        XCTAssertEqual(workflow.latestFinalJob?.id, "render-1")
+        XCTAssertEqual(workflow.latestFinalJob?.status, "running")
+        XCTAssertFalse(workflow.isGenerating)
+    }
+
+    func testSubmitFinalVideoConfirmationReplansAndConfirmsWhenBrandingRemovalChanges() async {
+        AnimateFinalRenderURLProtocolMock.reset()
+        AnimateFinalRenderURLProtocolMock.responseDataForRequest = { request in
+            switch request.url?.path {
+            case "/v1/apps/animateav/video/quotes":
+                return Data(Self.videoQuoteJSON.utf8)
+            case "/v1/apps/animateav/renders/plan":
+                return Data(Self.renderPlanWithoutBrandingJSON.utf8)
+            case "/v1/apps/animateav/renders/final/confirm":
+                return Data(Self.confirmFinalRenderWithoutBrandingJSON.utf8)
+            default:
+                return Data("{}".utf8)
+            }
+        }
+        let configuration = URLSessionConfiguration.ephemeral
+        configuration.protocolClasses = [AnimateFinalRenderURLProtocolMock.self]
+        let harness = AnimateVideoCreationFailureHarness(
+            error: NSError(domain: "test", code: 1),
+            finalRenderSession: URLSession(configuration: configuration)
+        )
+        let finalRenderWorkflow = harness.finalRenderWorkflow
+        let media = AnimateCreateTestFixtures.makeSelectedMedia(
+            id: "00000000-0000-0000-0000-000000000001",
+            sourceLocalIdentifier: "local-asset-1"
+        )
+        let viewModel = AnimateCreateViewModel()
+        viewModel.bind(
+            accountStateProvider: harness,
+            videoCreationWorkflow: harness.videoCreationWorkflow,
+            mediaUploadWorkflow: harness.mediaUploadWorkflow,
+            videoDirectionWorkflow: harness.videoDirectionWorkflow,
+            finalRenderWorkflow: finalRenderWorkflow,
+            authTokenProvider: harness,
+            imageGenerationAccountingClient: AnimateImageGenerationAccountingClient(baseURLString: "https://api.example.test")
+        )
+        viewModel.continueVideo(
+            AnimateCreateTestFixtures.makeVideo(id: "moment-1", status: "story_ready"),
+            focus: .video
+        )
+        let workspace = AnimateWorkspace(
+            video: AnimateCreateTestFixtures.makeVideo(id: "moment-1", status: "story_ready"),
+            mediaAssets: [
+                AnimateCreateTestFixtures.makeMediaAsset(
+                    id: "backend-media-1",
+                    sourceLocalIdentifier: "local-asset-1",
+                    hasUploadId: true
+                )
+            ],
+            storyScenes: [AnimateCreateTestFixtures.makeScene(id: "scene-1")],
+            renderJobs: [],
+            artifacts: []
+        )
+        harness.publishWorkspace(workspace)
+        await Task.yield()
+        await Task.yield()
+        viewModel.applyAccountState(
+            AnimateCreateAccountState(
+                isSignedIn: true,
+                balance: AnimateCreditBalance(proMonthly: 0, promotional: 15, purchased: 0),
+                creditBalanceLoadState: .loaded
+            )
+        )
+        viewModel.applyMediaUploadState(
+            AnimateCreateMediaUploadState(
+                selectedMedia: [media],
+                statusMessage: nil,
+                isImporting: false,
+                importProgress: nil
+            )
+        )
+        viewModel.applyVideoDirectionState(
+            AnimateCreateVideoDirectionState(
+                activeWorkspace: workspace,
+                savedScenes: [AnimateCreateTestFixtures.makeScene(id: "scene-1")],
+                generatedScenes: [],
+                statusMessage: nil,
+                isPlanning: false
+            )
+        )
+        let existingRenderPlan = AnimateCreateTestFixtures.makeRenderPlan(
+            momentId: "moment-1",
+            totalCreditCost: 1,
+            plannedAssetCount: 1,
+            usedAssetCount: 1
+        )
+        finalRenderWorkflow.usePreparedRenderPlan(existingRenderPlan)
+        viewModel.applyFinalRenderState(
+            AnimateCreateFinalRenderState(
+                finalExport: nil,
+                latestFinalJob: nil,
+                renderPlan: existingRenderPlan,
+                statusMessage: nil,
+                isGenerating: false
+            )
+        )
+        await Task.yield()
+
+        viewModel.submitFinalVideoConfirmation(removesWatermark: true)
+        await waitForFinalRenderJob(in: viewModel)
+
+        XCTAssertEqual(AnimateFinalRenderURLProtocolMock.requestPaths, [
+            "/v1/apps/animateav/renders/plan",
+            "/v1/apps/animateav/renders/final/confirm",
+        ])
+        XCTAssertEqual(viewModel.latestFinalJob?.id, "render-without-branding-1")
+        XCTAssertEqual(viewModel.latestFinalJob?.status, "running")
+        XCTAssertEqual(viewModel.finalVideoCommandState, .queued(L10n.string("workflow.final.creatingVideo")))
+        XCTAssertNil(viewModel.workflowErrorAlertMessage)
+    }
+
     func testVisibleFinalRenderPlanCanBeConfirmedEvenWhenLocalSignatureChanged() {
         let viewModel = AnimateCreateViewModel()
         let plan = AnimateCreateTestFixtures.makeRenderPlan(momentId: "moment-1")
@@ -734,6 +888,176 @@ final class AnimateCreateViewModelVideoDirectionStateTests: XCTestCase {
         XCTAssertEqual(viewModel.videoDirectionSummary.statusMessage, AnimateSyncError.notConfigured.localizedDescription)
     }
 
+    private static let confirmFinalRenderJSON = """
+    {
+      "appId": "animateav",
+      "momentId": "moment-1",
+      "planId": "plan-1",
+      "reservation": {
+        "id": "reservation-1",
+        "appId": "animateav",
+        "userId": "user-1",
+        "momentId": "moment-1",
+        "workflowRunId": null,
+        "amount": 2,
+        "status": "reserved",
+        "idempotencyKey": "final-confirm:moment-1:plan-1:birthdayMessage:watermarked",
+        "expiresAt": "2026-06-16T16:00:00Z",
+        "createdAt": "2026-05-16T16:00:00Z",
+        "updatedAt": "2026-05-16T16:00:00Z"
+      },
+      "workflow": {
+        "appId": "animateav",
+        "momentId": "moment-1",
+        "renderJobId": "render-1",
+        "workflowRunId": "workflow-1",
+        "status": "running",
+        "startedAt": "2026-05-16T16:00:00Z"
+      },
+      "renderPlan": {
+        "appId": "animateav",
+        "momentId": "moment-1",
+        "planId": "plan-1",
+        "canCreateVideo": true,
+        "createVideoBlockers": [],
+        "generatedAt": "2026-05-16T16:00:00Z",
+        "plan": {
+          "schemaVersion": 1,
+          "secondsPerCredit": 15,
+          "renderOptionId": "standard_moment",
+          "renderOptionTitle": "Standard Moment",
+          "creditCost": 2,
+          "totalCreditCost": 2,
+          "targetDurationMs": 30000,
+          "rendererMode": "image_to_video",
+          "plannedAssetCount": 4,
+          "usedAssetCount": 4,
+          "rejectedAssetCount": 0,
+          "qualityWarnings": [],
+          "userMessage": "Ready."
+        }
+      },
+      "confirmedAt": "2026-05-16T16:00:00Z"
+    }
+    """
+
+    private static let videoQuoteJSON = """
+    {
+      "appId": "animateav",
+      "outputKind": "video",
+      "duration": "upTo5s",
+      "baseCreditCost": 1,
+      "brandingRemovalCreditCost": 1,
+      "totalCreditCost": 2,
+      "proIncludesBrandingFreeVideo": false,
+      "branding": {
+        "enabled": true,
+        "included": false,
+        "removalAvailable": true,
+        "removalRequested": true,
+        "removalIncluded": false,
+        "assetId": null,
+        "placement": null,
+        "reason": "branding_removal_purchased"
+      }
+    }
+    """
+
+    private static let renderPlanWithoutBrandingJSON = """
+    {
+      "appId": "animateav",
+      "momentId": "moment-1",
+      "planId": "plan-without-branding-1",
+      "watermark": {
+        "includedForPro": true,
+        "userHasWatermarkFree": false,
+        "nonProRemovalCreditCost": 1,
+        "selectedRemoveWatermark": true,
+        "watermarkCreditCost": 1
+      },
+      "canCreateVideo": true,
+      "createVideoBlockers": [],
+      "generatedAt": "2026-05-16T16:00:00Z",
+      "plan": {
+        "schemaVersion": 1,
+        "secondsPerCredit": 5,
+        "renderOptionId": "animate_short",
+        "renderOptionTitle": "Short animation",
+        "creditCost": 1,
+        "totalCreditCost": 2,
+        "targetDurationMs": 5000,
+        "minimumDurationMs": 5000,
+        "rendererMode": "image_to_video",
+        "plannedAssetCount": 1,
+        "usedAssetCount": 1,
+        "rejectedAssetCount": 0,
+        "qualityWarnings": [],
+        "userMessage": "Ready."
+      }
+    }
+    """
+
+    private static let confirmFinalRenderWithoutBrandingJSON = """
+    {
+      "appId": "animateav",
+      "momentId": "moment-1",
+      "planId": "plan-without-branding-1",
+      "reservation": {
+        "id": "reservation-without-branding-1",
+        "appId": "animateav",
+        "userId": "user-1",
+        "momentId": "moment-1",
+        "workflowRunId": null,
+        "amount": 2,
+        "status": "reserved",
+        "idempotencyKey": "final-confirm:moment-1:plan-without-branding-1:birthdayMessage:without-branding",
+        "expiresAt": "2026-06-16T16:00:00Z",
+        "createdAt": "2026-05-16T16:00:00Z",
+        "updatedAt": "2026-05-16T16:00:00Z"
+      },
+      "workflow": {
+        "appId": "animateav",
+        "momentId": "moment-1",
+        "renderJobId": "render-without-branding-1",
+        "workflowRunId": "workflow-without-branding-1",
+        "status": "running",
+        "startedAt": "2026-05-16T16:00:00Z"
+      },
+      "renderPlan": {
+        "appId": "animateav",
+        "momentId": "moment-1",
+        "planId": "plan-without-branding-1",
+        "watermark": {
+          "includedForPro": true,
+          "userHasWatermarkFree": false,
+          "nonProRemovalCreditCost": 1,
+          "selectedRemoveWatermark": true,
+          "watermarkCreditCost": 1
+        },
+        "canCreateVideo": true,
+        "createVideoBlockers": [],
+        "generatedAt": "2026-05-16T16:00:00Z",
+        "plan": {
+          "schemaVersion": 1,
+          "secondsPerCredit": 5,
+          "renderOptionId": "animate_short",
+          "renderOptionTitle": "Short animation",
+          "creditCost": 1,
+          "totalCreditCost": 2,
+          "targetDurationMs": 5000,
+          "minimumDurationMs": 5000,
+          "rendererMode": "image_to_video",
+          "plannedAssetCount": 1,
+          "usedAssetCount": 1,
+          "rejectedAssetCount": 0,
+          "qualityWarnings": [],
+          "userMessage": "Ready."
+        }
+      },
+      "confirmedAt": "2026-05-16T16:00:00Z"
+    }
+    """
+
     @discardableResult
     private func applyPreparedBackendVideoDirection(
         to viewModel: AnimateCreateViewModel,
@@ -803,6 +1127,12 @@ final class AnimateCreateViewModelVideoDirectionStateTests: XCTestCase {
             try? await Task.sleep(nanoseconds: 25_000_000)
         }
     }
+
+    private func waitForFinalRenderJob(in viewModel: AnimateCreateViewModel) async {
+        for _ in 0..<40 where viewModel.latestFinalJob == nil {
+            try? await Task.sleep(nanoseconds: 25_000_000)
+        }
+    }
 }
 
 @MainActor
@@ -826,9 +1156,11 @@ private final class AnimateVideoCreationFailureHarness:
     private let creditBalanceLoadStateSubject = CurrentValueSubject<AnimateCreditBalanceLoadState, Never>(.loaded)
     private let workspaceSubject = CurrentValueSubject<AnimateWorkspace?, Never>(nil)
     private let workspaceErrorSubject = CurrentValueSubject<String?, Never>(nil)
+    private let finalRenderSession: URLSession
 
-    init(error: Error) {
+    init(error: Error, finalRenderSession: URLSession = .shared) {
         creationError = error
+        self.finalRenderSession = finalRenderSession
     }
 
     var videoCreationWorkflow: AnimateVideoCreationWorkflow {
@@ -866,7 +1198,10 @@ private final class AnimateVideoCreationFailureHarness:
             authTokenProvider: self,
             creditBalanceProvider: self,
             workspaceObserver: self,
-            finalRenderClient: AnimateFinalRenderClient(baseURLString: "https://api.example.com"),
+            finalRenderClient: AnimateFinalRenderClient(
+                baseURLString: "https://api.example.com",
+                session: finalRenderSession
+            ),
             galleryStore: TestGalleryStore()
         )
     }
@@ -990,4 +1325,47 @@ private struct TestGalleryStore: AnimateGalleryStoring {
     func renameRecord(_ record: AnimateGalleryVideoRecord, title: String) {}
     func deleteRecord(_ record: AnimateGalleryVideoRecord, deleteLocalFile: Bool) {}
     func deleteImageRecord(_ record: AnimateGalleryImageRecord, deleteLocalFile: Bool) {}
+}
+
+private final class AnimateFinalRenderURLProtocolMock: URLProtocol {
+    nonisolated(unsafe) static var responseData = Data()
+    nonisolated(unsafe) static var responseDataForRequest: ((URLRequest) -> Data)?
+    nonisolated(unsafe) static var statusCode = 200
+    nonisolated(unsafe) static var requestCount = 0
+    nonisolated(unsafe) static var lastRequest: URLRequest?
+    nonisolated(unsafe) static var requestPaths: [String] = []
+
+    static func reset() {
+        responseData = Data()
+        responseDataForRequest = nil
+        statusCode = 200
+        requestCount = 0
+        lastRequest = nil
+        requestPaths = []
+    }
+
+    override class func canInit(with request: URLRequest) -> Bool {
+        true
+    }
+
+    override class func canonicalRequest(for request: URLRequest) -> URLRequest {
+        request
+    }
+
+    override func startLoading() {
+        Self.requestCount += 1
+        Self.lastRequest = request
+        Self.requestPaths.append(request.url?.path ?? "")
+        let response = HTTPURLResponse(
+            url: request.url!,
+            statusCode: Self.statusCode,
+            httpVersion: nil,
+            headerFields: ["Content-Type": "application/json"]
+        )!
+        client?.urlProtocol(self, didReceive: response, cacheStoragePolicy: .notAllowed)
+        client?.urlProtocol(self, didLoad: Self.responseDataForRequest?(request) ?? Self.responseData)
+        client?.urlProtocolDidFinishLoading(self)
+    }
+
+    override func stopLoading() {}
 }

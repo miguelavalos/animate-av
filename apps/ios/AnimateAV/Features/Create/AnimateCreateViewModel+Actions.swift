@@ -32,7 +32,7 @@ extension AnimateCreateViewModel {
             return
         }
         guard hasActiveVideoWorkspace || hasRecoverableVideoContext else {
-            updateSetupErrorMessage(L10n.string("create.error.noActiveMoment"))
+            updateSetupErrorMessage(L10n.string("create.error.noActiveVideo"))
             return
         }
         if hasLocalAnimateWorkspace {
@@ -45,13 +45,13 @@ extension AnimateCreateViewModel {
         }
 
         runOperation {
-            let discarded = await videoCreationWorkflow.discardActiveVideo(momentId: self.activeVideoId)
+            let discarded = await videoCreationWorkflow.discardActiveVideo(videoId: self.activeVideoId)
             if discarded {
                 self.resetActiveVideoCreation(force: true)
             } else if let message = videoCreationWorkflow.errorMessage {
                 self.updateSetupErrorMessage(message)
             } else {
-                self.updateSetupErrorMessage(L10n.string("create.error.discardMoment"))
+                self.updateSetupErrorMessage(L10n.string("create.error.discardVideo"))
             }
         }
     }
@@ -68,7 +68,7 @@ extension AnimateCreateViewModel {
             await mediaUploadWorkflow.importPickerItems(
                 items,
                 template: template,
-                momentId: self.activeVideoId
+                videoId: self.activeVideoId
             )
         }
     }
@@ -95,29 +95,29 @@ extension AnimateCreateViewModel {
 
         runOperation {
             defer { self.isPreparingVideoDirectionAction = false }
-            let momentId: String?
+            let videoId: String?
             if let activeVideoId = self.activeVideoId {
-                momentId = activeVideoId
+                videoId = activeVideoId
             } else if let videoCreationWorkflow = self.videoCreationWorkflow {
-                momentId = await videoCreationWorkflow.createVideo(form: form)
-                if momentId != nil {
+                videoId = await videoCreationWorkflow.createVideo(form: form)
+                if videoId != nil {
                     self.isLocalVideoCreationStarted = false
                 }
             } else {
-                momentId = nil
+                videoId = nil
             }
 
-            guard let momentId else {
+            guard let videoId else {
                 self.failVideoDirectionPreparation(self.videoCreationFailureMessage())
                 return
             }
             if self.videoDirectionSummary.hasScenes,
-               self.lastPreparedVideoDirectionInputSignature == self.preparedVideoDirectionComparisonInputSignature(momentId: momentId) {
+               self.lastPreparedVideoDirectionInputSignature == self.preparedVideoDirectionComparisonInputSignature(videoId: videoId) {
                 self.updateVideoDirectionStatusMessage(L10n.string("create.story.status.alreadyReady"))
                 return
             }
 
-            let persistedMedia = await self.mediaUploadWorkflow?.persistSelectedMedia(momentId: momentId)
+            let persistedMedia = await self.mediaUploadWorkflow?.persistSelectedMedia(videoId: videoId)
             guard persistedMedia != nil || selectedMedia.isEmpty else {
                 self.failVideoDirectionPreparation(self.mediaStatusMessage
                     ?? AnimateRecoveryCopy.mediaStorySaveFailure()
@@ -125,12 +125,12 @@ extension AnimateCreateViewModel {
                 return
             }
             let inputSignature = self.currentVideoDirectionInputSignature(
-                momentId: momentId,
+                videoId: videoId,
                 persistedMedia: persistedMedia
             )
 
             let didPrepareVideoDirection = await videoDirectionWorkflow.generatePlan(
-                momentId: momentId,
+                videoId: videoId,
                 form: form,
                 selectedMedia: selectedMedia,
                 persistedMedia: persistedMedia
@@ -148,7 +148,7 @@ extension AnimateCreateViewModel {
                         )
                     )
                 }
-                self.recordPreparedVideoDirectionInputSignature(inputSignature, momentId: momentId)
+                self.recordPreparedVideoDirectionInputSignature(inputSignature, videoId: videoId)
                 if !generatedScenes.isEmpty {
                     self.lastPreparedVideoDirectionInputSignature = inputSignature
                 }
@@ -165,7 +165,10 @@ extension AnimateCreateViewModel {
         }
     }
 
-    func prepareFinalVideoPlanFromCurrentSelection(removesWatermark: Bool = false) {
+    func prepareFinalVideoPlanFromCurrentSelection(
+        removesWatermark: Bool = false,
+        confirmsAfterPreparation: Bool = false
+    ) {
         guard let finalRenderWorkflow else {
             failFinalVideoCommand(L10n.string("create.error.videoCreationNotConfigured"))
             return
@@ -184,23 +187,23 @@ extension AnimateCreateViewModel {
         updateFinalRenderStatusMessage(L10n.string("workflow.final.checkingPlan"))
 
         runOperation {
-            let momentId = await self.resolveMomentIdForPreparation(form: form)
+            let videoId = await self.resolveVideoIdForPreparation(form: form)
 
-            guard let momentId else {
+            guard let videoId else {
                 self.failFinalVideoCommand(self.videoCreationFailureMessage())
                 return
             }
 
-            guard await self.persistSetupEditsIfNeeded(momentId: momentId, form: form) else {
+            guard await self.persistSetupEditsIfNeeded(videoId: videoId, form: form) else {
                 self.failFinalVideoCommand(self.videoCreationFailureMessage())
                 return
             }
 
             let inputSignature = self.currentFinalRenderInputSignature(
-                momentId: momentId,
+                videoId: videoId,
                 removesWatermark: removesWatermark
             )
-            let currentRenderPlan = self.confirmableRenderPlan(momentId: momentId)
+            let currentRenderPlan = self.confirmableRenderPlan(videoId: videoId)
             let hasCurrentRenderPlan = currentRenderPlan != nil
 
             if !hasCurrentRenderPlan {
@@ -222,7 +225,7 @@ extension AnimateCreateViewModel {
                     self.failFinalVideoCommand(self.mediaAvailabilityMessage ?? L10n.string("create.error.mediaUnavailable"))
                     return
                 }
-                guard await mediaUploadWorkflow.persistSelectedMediaForFinalVideo(momentId: momentId) else {
+                guard await mediaUploadWorkflow.persistSelectedMediaForFinalVideo(videoId: videoId) else {
                     self.failFinalVideoCommand(self.mediaStatusMessage ?? AnimateRecoveryCopy.mediaVideoSaveFailure())
                     return
                 }
@@ -233,7 +236,7 @@ extension AnimateCreateViewModel {
                 removesWatermark: removesWatermark
             )
             await finalRenderWorkflow.prepareFinalRenderPlan(
-                momentId: momentId,
+                videoId: videoId,
                 template: form.template,
                 creationStyle: creationStyleId,
                 form: form,
@@ -247,6 +250,38 @@ extension AnimateCreateViewModel {
                 )
                 return
             }
+
+            guard confirmsAfterPreparation else {
+                return
+            }
+            guard finalRenderWorkflow.renderPlan?.canCreateVideo == true else {
+                self.failFinalVideoCommand(
+                    finalRenderWorkflow.statusMessage
+                        ?? L10n.string("create.error.videoCreationNotReady")
+                )
+                return
+            }
+
+            self.beginFinalVideoCommand(.confirming(L10n.string("workflow.final.creatingVideo")))
+            self.updateFinalRenderStatusMessage(L10n.string("workflow.final.creatingVideo"))
+            await finalRenderWorkflow.confirmPreparedFinalRender(
+                videoId: videoId,
+                template: form.template,
+                creationStyle: creationStyleId,
+                form: form,
+                selectedMedia: self.selectedMedia,
+                removesWatermark: removesWatermark
+            )
+            guard finalRenderWorkflow.latestFinalJob != nil
+                    || finalRenderWorkflow.finalExport != nil
+                    || finalRenderWorkflow.pendingGalleryVideo != nil
+                    || finalRenderWorkflow.isGenerating else {
+                self.failFinalVideoCommand(
+                    finalRenderWorkflow.statusMessage
+                        ?? L10n.string("workflow.final.tryAgain")
+                )
+                return
+            }
         }
     }
 
@@ -256,7 +291,10 @@ extension AnimateCreateViewModel {
         let needsUpdatedPlan = removesWatermark != currentRemovesWatermark
             || renderPlan?.canCreateVideo != true
         if needsUpdatedPlan {
-            prepareFinalVideoPlanFromCurrentSelection(removesWatermark: removesWatermark)
+            prepareFinalVideoPlanFromCurrentSelection(
+                removesWatermark: removesWatermark,
+                confirmsAfterPreparation: true
+            )
         } else {
             confirmFinalVideoFromCurrentSelection(removesWatermark: removesWatermark)
         }
@@ -268,10 +306,10 @@ extension AnimateCreateViewModel {
             return
         }
         guard let context = activeTemplateContext else {
-            failFinalVideoCommand(L10n.string("create.error.currentMomentMissing"))
+            failFinalVideoCommand(L10n.string("create.error.currentVideoMissing"))
             return
         }
-        guard canGenerateFinalRender else {
+        guard canGenerateFinalRender || renderPlan?.canCreateVideo == true else {
             failFinalVideoCommand(
                 finalRenderAvailabilityMessage
                     ?? videoDirectionAvailabilityMessage
@@ -286,7 +324,7 @@ extension AnimateCreateViewModel {
 
         runOperation {
             await finalRenderWorkflow.confirmPreparedFinalRender(
-                momentId: context.momentId,
+                videoId: context.videoId,
                 template: context.template,
                 creationStyle: self.selectedCreationStyle.id,
                 form: form,
@@ -306,50 +344,50 @@ extension AnimateCreateViewModel {
         }
     }
 
-    private func resolveMomentIdForPreparation(form: AnimateVideoSetupForm) async -> String? {
+    private func resolveVideoIdForPreparation(form: AnimateVideoSetupForm) async -> String? {
         if let activeVideoId {
             return activeVideoId
         }
         guard let videoCreationWorkflow else {
             return nil
         }
-        let momentId = await videoCreationWorkflow.createVideo(form: form)
-        if momentId != nil {
+        let videoId = await videoCreationWorkflow.createVideo(form: form)
+        if videoId != nil {
             isLocalVideoCreationStarted = false
         }
-        return momentId
+        return videoId
     }
 
-    private func persistSetupEditsIfNeeded(momentId: String, form: AnimateVideoSetupForm) async -> Bool {
+    private func persistSetupEditsIfNeeded(videoId: String, form: AnimateVideoSetupForm) async -> Bool {
         guard hasPendingLocalSetupEdits else { return true }
         guard let videoCreationWorkflow else { return false }
-        return await videoCreationWorkflow.updateVideoSetup(momentId: momentId, form: form)
+        return await videoCreationWorkflow.updateVideoSetup(videoId: videoId, form: form)
     }
 
     private func prepareVideoDirectionIfNeeded(
-        momentId: String,
+        videoId: String,
         form: AnimateVideoSetupForm,
         selectedMedia: [AnimateSelectedMedia],
         videoDirectionWorkflow: VideoDirectionWorkflow
     ) async -> Bool {
-        var inputSignature = preparedVideoDirectionComparisonInputSignature(momentId: momentId)
+        var inputSignature = preparedVideoDirectionComparisonInputSignature(videoId: videoId)
         if videoDirectionSummary.hasScenes, lastPreparedVideoDirectionInputSignature == inputSignature {
             updateVideoDirectionStatusMessage(L10n.string("create.story.status.alreadyReady"))
             return true
         }
 
-        let persistedMedia = await mediaUploadWorkflow?.persistSelectedMedia(momentId: momentId)
+        let persistedMedia = await mediaUploadWorkflow?.persistSelectedMedia(videoId: videoId)
         guard persistedMedia != nil || selectedMedia.isEmpty else {
             updateVideoDirectionStatusMessage(mediaStatusMessage ?? AnimateRecoveryCopy.mediaStorySaveFailure())
             return false
         }
         inputSignature = currentVideoDirectionInputSignature(
-            momentId: momentId,
+            videoId: videoId,
             persistedMedia: persistedMedia
         )
 
         let didPrepareVideoDirection = await videoDirectionWorkflow.generatePlan(
-            momentId: momentId,
+            videoId: videoId,
             form: form,
             selectedMedia: selectedMedia,
             persistedMedia: persistedMedia
@@ -367,7 +405,7 @@ extension AnimateCreateViewModel {
                     )
                 )
             }
-            recordPreparedVideoDirectionInputSignature(inputSignature, momentId: momentId)
+            recordPreparedVideoDirectionInputSignature(inputSignature, videoId: videoId)
             if !generatedScenes.isEmpty {
                 lastPreparedVideoDirectionInputSignature = inputSignature
             }
@@ -406,12 +444,12 @@ extension AnimateCreateViewModel {
         return true
     }
 
-    private var activeTemplateContext: (momentId: String, template: AnimateVideoTemplate)? {
+    private var activeTemplateContext: (videoId: String, template: AnimateVideoTemplate)? {
         guard let activeVideoId else { return nil }
         return (activeVideoId, form.template)
     }
 
-    private var activeFormContext: (momentId: String, form: AnimateVideoSetupForm)? {
+    private var activeFormContext: (videoId: String, form: AnimateVideoSetupForm)? {
         guard let activeVideoId else { return nil }
         return (activeVideoId, form)
     }

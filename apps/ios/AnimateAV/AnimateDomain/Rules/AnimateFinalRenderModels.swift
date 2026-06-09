@@ -4,7 +4,7 @@ struct AnimateCreditReservationResponse: Decodable, Equatable {
     let id: String
     let appId: String
     let userId: String?
-    let momentId: String
+    let videoId: String
     let workflowRunId: String?
     let amount: Int
     let status: String
@@ -16,7 +16,7 @@ struct AnimateCreditReservationResponse: Decodable, Equatable {
 
 struct AnimateStartWorkflowResponse: Decodable, Equatable {
     let appId: String
-    let momentId: String
+    let videoId: String
     let renderJobId: String
     let workflowRunId: String
     let status: String
@@ -25,7 +25,7 @@ struct AnimateStartWorkflowResponse: Decodable, Equatable {
 
 struct AnimateRenderPlanRequest: Encodable {
     let appId = "animateav"
-    let momentId: String
+    let videoId: String
     let creationMode: String
     let look: String
     let theme: String
@@ -48,7 +48,7 @@ struct AnimateRenderPlanRequest: Encodable {
 
 struct AnimateConfirmFinalRenderRequest: Encodable {
     let appId = "animateav"
-    let momentId: String
+    let videoId: String
     let creationMode: String
     let look: String
     let theme: String
@@ -73,7 +73,7 @@ struct AnimateConfirmFinalRenderRequest: Encodable {
 
 struct AnimateConfirmFinalRenderResponse: Decodable, Equatable {
     let appId: String
-    let momentId: String
+    let videoId: String
     let planId: String
     let reservation: AnimateCreditReservationResponse
     let workflow: AnimateStartWorkflowResponse
@@ -83,7 +83,7 @@ struct AnimateConfirmFinalRenderResponse: Decodable, Equatable {
 
 struct AnimateRenderPlanResponse: Decodable, Equatable {
     let appId: String
-    let momentId: String
+    let videoId: String
     let planId: String
     let watermark: AnimateRenderWatermarkPlan?
     let plan: AnimateRenderPlan
@@ -93,7 +93,7 @@ struct AnimateRenderPlanResponse: Decodable, Equatable {
 
     enum CodingKeys: String, CodingKey {
         case appId
-        case momentId
+        case videoId
         case planId
         case watermark
         case plan
@@ -104,7 +104,7 @@ struct AnimateRenderPlanResponse: Decodable, Equatable {
 
     init(
         appId: String,
-        momentId: String,
+        videoId: String,
         planId: String,
         watermark: AnimateRenderWatermarkPlan? = nil,
         plan: AnimateRenderPlan,
@@ -113,7 +113,7 @@ struct AnimateRenderPlanResponse: Decodable, Equatable {
         generatedAt: String
     ) {
         self.appId = appId
-        self.momentId = momentId
+        self.videoId = videoId
         self.planId = planId
         self.watermark = watermark
         self.plan = plan
@@ -125,7 +125,7 @@ struct AnimateRenderPlanResponse: Decodable, Equatable {
     init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
         appId = try container.decode(String.self, forKey: .appId)
-        momentId = try container.decode(String.self, forKey: .momentId)
+        videoId = try container.decode(String.self, forKey: .videoId)
         planId = try container.decode(String.self, forKey: .planId)
         watermark = try container.decodeIfPresent(AnimateRenderWatermarkPlan.self, forKey: .watermark)
         plan = try container.decode(AnimateRenderPlan.self, forKey: .plan)
@@ -145,13 +145,13 @@ struct AnimateRenderWatermarkPlan: Decodable, Equatable {
 
 struct AnimateArtifactDownloadRequest: Encodable {
     let appId = "animateav"
-    let momentId: String
+    let videoId: String
     let artifactId: String
 }
 
 struct AnimateArtifactDownloadResponse: Decodable, Equatable {
     let appId: String
-    let momentId: String?
+    let videoId: String?
     let artifactId: String
     let artifactKind: String
     let downloadUrl: String

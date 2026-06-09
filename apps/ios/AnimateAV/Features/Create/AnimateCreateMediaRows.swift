@@ -272,7 +272,7 @@ struct AnimateCreateMediaDetailSheet: View {
             }
 
             Button(role: .destructive, action: remove) {
-                Label(L10n.string("create.mediaRows.removeFromMoment"), systemImage: "trash")
+                Label(L10n.string("create.mediaRows.removeFromVideo"), systemImage: "trash")
                     .frame(maxWidth: .infinity)
             }
             .buttonStyle(.bordered)

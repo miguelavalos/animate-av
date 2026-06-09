@@ -74,7 +74,7 @@ final class AnimateGalleryViewModel: ObservableObject {
 
             let record = AnimateGalleryVideoRecord(
                 id: artifactId,
-                momentId: artifactId,
+                videoId: artifactId,
                 artifactId: artifactId,
                 title: L10n.string("gallery.video.defaultTitle"),
                 r2Key: artifact.r2Key,
@@ -176,14 +176,14 @@ final class AnimateGalleryViewModel: ObservableObject {
                 }
                 let artifactId = remoteArtifact.workflowArtifactId ?? remoteArtifact.id
                 let download = try await finalRenderClient.prepareFinalArtifactDownload(
-                    momentId: video.record.momentId,
+                    videoId: video.record.videoId,
                     artifactId: artifactId,
                     bearerToken: bearerToken
                 )
                 let temporaryFileURL = try await finalRenderClient.downloadFinalArtifact(from: download)
                 let record = try self?.galleryStore.saveDownloadedVideo(
                     temporaryFileURL: temporaryFileURL,
-                    momentId: video.record.momentId,
+                    videoId: video.record.videoId,
                     artifactId: artifactId,
                     title: video.title,
                     r2Key: download.r2Key ?? remoteArtifact.r2Key,

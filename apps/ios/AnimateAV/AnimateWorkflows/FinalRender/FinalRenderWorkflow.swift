@@ -13,7 +13,7 @@ final class FinalRenderWorkflow: WorkspaceObservingWorkflow {
     @Published private(set) var canRetryFinalVideoDownload = false
     @Published private(set) var statusMessage: String?
 
-    private var latestFinalJobMomentId: String?
+    private var latestFinalJobVideoId: String?
 
     private let currentUserProvider: any AnimateCurrentUserProviding
     private let authTokenProvider: any AnimateAuthTokenProviding
@@ -49,13 +49,13 @@ final class FinalRenderWorkflow: WorkspaceObservingWorkflow {
 
     override func workspaceDidChange(_ workspace: AnimateWorkspace?) {
         finalExport = workspace?.latestArtifact(kind: "final_export")
-        let momentId = workspace?.video.id
+        let videoId = workspace?.video.id
         if let workspaceFinalJob = workspace?.latestRenderJob(kind: "final") {
             latestFinalJob = workspaceFinalJob
-            latestFinalJobMomentId = momentId
-        } else if momentId == nil || latestFinalJobMomentId != momentId {
+            latestFinalJobVideoId = videoId
+        } else if videoId == nil || latestFinalJobVideoId != videoId {
             latestFinalJob = nil
-            latestFinalJobMomentId = momentId
+            latestFinalJobVideoId = videoId
         }
         refreshCreditBalanceIfTerminalStateChanged(workspace: workspace)
         scheduleLocalGalleryDownloadIfNeeded(workspace: workspace)
@@ -115,7 +115,7 @@ final class FinalRenderWorkflow: WorkspaceObservingWorkflow {
     }
 
     func prepareFinalRenderPlan(
-        momentId: String,
+        videoId: String,
         template: AnimateVideoTemplate,
         creationStyle: AnimateVideoCreationStyleID?,
         form: AnimateVideoSetupForm,
@@ -124,7 +124,7 @@ final class FinalRenderWorkflow: WorkspaceObservingWorkflow {
     ) async {
         guard let bearerToken = await validatedBearerTokenForFinalRender() else { return }
         guard validateRecoveredSourceMediaAvailable(selectedMedia: selectedMedia) else { return }
-        guard needsRenderPlanForFinalRender(momentId: momentId, removesWatermark: removesWatermark) else {
+        guard needsRenderPlanForFinalRender(videoId: videoId, removesWatermark: removesWatermark) else {
             statusMessage = L10n.string("workflow.final.planReady")
             return
         }
@@ -144,13 +144,13 @@ final class FinalRenderWorkflow: WorkspaceObservingWorkflow {
 
         do {
             statusMessage = L10n.string("workflow.final.checkingPlan")
-            logger.info("Preparing final render plan momentId=\(momentId, privacy: .public)")
+            logger.info("Preparing final render plan videoId=\(videoId, privacy: .public)")
             let sourceImageUploadId = try await prepareVideoSourceUploadIfNeeded(
                 selectedMedia: selectedMedia,
                 bearerToken: bearerToken
             )
             let plan = try await prepareRenderPlanWithUploadVisibilityRetry(
-                momentId: momentId,
+                videoId: videoId,
                 bearerToken: bearerToken,
                 template: template,
                 creationStyle: creationStyle,
@@ -164,10 +164,10 @@ final class FinalRenderWorkflow: WorkspaceObservingWorkflow {
             statusMessage = plan.canCreateVideo
                 ? L10n.string("workflow.final.planReady")
                 : L10n.string("workflow.final.needsUsableMedia")
-            logger.info("Final render plan ready momentId=\(momentId, privacy: .public) planId=\(plan.planId, privacy: .public) cost=\(plan.plan.totalCreditCost, privacy: .public)")
+            logger.info("Final render plan ready videoId=\(videoId, privacy: .public) planId=\(plan.planId, privacy: .public) cost=\(plan.plan.totalCreditCost, privacy: .public)")
             if !plan.canCreateVideo {
                 logger.warning(
-                    "Final render plan blocked momentId=\(momentId, privacy: .public) planId=\(plan.planId, privacy: .public) blockers=\(plan.createVideoBlockers.joined(separator: ","), privacy: .public) cost=\(plan.plan.totalCreditCost, privacy: .public) plannedAssets=\(plan.plan.plannedAssetCount, privacy: .public) usedAssets=\(plan.plan.usedAssetCount, privacy: .public)"
+                    "Final render plan blocked videoId=\(videoId, privacy: .public) planId=\(plan.planId, privacy: .public) blockers=\(plan.createVideoBlockers.joined(separator: ","), privacy: .public) cost=\(plan.plan.totalCreditCost, privacy: .public) plannedAssets=\(plan.plan.plannedAssetCount, privacy: .public) usedAssets=\(plan.plan.usedAssetCount, privacy: .public)"
                 )
                 if plan.createVideoBlockers.contains("insufficient_credits") {
                     await creditBalanceProvider.refreshCreditBalance()
@@ -175,7 +175,7 @@ final class FinalRenderWorkflow: WorkspaceObservingWorkflow {
             }
         } catch let error as AnimateAPIError {
             guard isCurrentWorkflowGeneration(generation) else { return }
-            logger.error("Final render plan API error code=\(error.code, privacy: .public) message=\(error.message, privacy: .public) momentId=\(momentId, privacy: .public)")
+            logger.error("Final render plan API error code=\(error.code, privacy: .public) message=\(error.message, privacy: .public) videoId=\(videoId, privacy: .public)")
             AnimateWorkflowDiagnostics.capture(
                 error,
                 feature: "animate.final_render",
@@ -209,7 +209,7 @@ final class FinalRenderWorkflow: WorkspaceObservingWorkflow {
     }
 
     func confirmPreparedFinalRender(
-        momentId: String,
+        videoId: String,
         template: AnimateVideoTemplate,
         creationStyle: AnimateVideoCreationStyleID?,
         form: AnimateVideoSetupForm,
@@ -226,7 +226,7 @@ final class FinalRenderWorkflow: WorkspaceObservingWorkflow {
             return
         }
         guard validateRecoveredSourceMediaAvailable(selectedMedia: selectedMedia) else { return }
-        guard !needsRenderPlanForFinalRender(momentId: momentId, removesWatermark: removesWatermark) else {
+        guard !needsRenderPlanForFinalRender(videoId: videoId, removesWatermark: removesWatermark) else {
             self.renderPlan = nil
             statusMessage = L10n.string("workflow.final.checkingPlan")
             return
@@ -259,9 +259,9 @@ final class FinalRenderWorkflow: WorkspaceObservingWorkflow {
                 selectedMedia: selectedMedia,
                 bearerToken: bearerToken
             )
-            logger.info("Confirming final render momentId=\(momentId, privacy: .public) planId=\(renderPlan.planId, privacy: .public) cost=\(renderPlan.plan.totalCreditCost, privacy: .public) selectedMedia=\(selectedSourceLocalIdentifiers.count, privacy: .public)")
+            logger.info("Confirming final render videoId=\(videoId, privacy: .public) planId=\(renderPlan.planId, privacy: .public) cost=\(renderPlan.plan.totalCreditCost, privacy: .public) selectedMedia=\(selectedSourceLocalIdentifiers.count, privacy: .public)")
             let confirmed = try await finalRenderClient.confirmFinalRender(
-                momentId: momentId,
+                videoId: videoId,
                 bearerToken: bearerToken,
                 template: template,
                 creationStyle: creationStyle,
@@ -273,15 +273,30 @@ final class FinalRenderWorkflow: WorkspaceObservingWorkflow {
                 renderOptionId: renderPlan.plan.renderOptionId
             )
             self.renderPlan = confirmed.renderPlan
+            latestFinalJob = AnimateRenderJob(
+                id: confirmed.workflow.renderJobId,
+                kind: "final",
+                status: confirmed.workflow.status,
+                userMessage: L10n.string("workflow.final.creatingVideo"),
+                canEditSetup: false,
+                totalCreditCost: Double(requiredCredits),
+                plannedAssetCount: Double(renderPlan.plan.plannedAssetCount),
+                usedAssetCount: Double(renderPlan.plan.usedAssetCount),
+                rendererMode: renderPlan.plan.rendererMode,
+                workflowRunId: confirmed.workflow.workflowRunId,
+                createdAt: Date().timeIntervalSince1970 * 1000,
+                updatedAt: Date().timeIntervalSince1970 * 1000
+            )
+            latestFinalJobVideoId = videoId
 
             guard isCurrentWorkflowGeneration(generation) else { return }
 
             await creditBalanceProvider.refreshCreditBalance()
-            workspaceObserver.observeWorkspace(ownerUserId: ownerUserId, momentId: momentId)
+            workspaceObserver.observeWorkspace(ownerUserId: ownerUserId, videoId: videoId)
             statusMessage = L10n.string("workflow.final.creatingVideo")
         } catch let error as AnimateAPIError {
             guard isCurrentWorkflowGeneration(generation) else { return }
-            logger.error("Final render API error code=\(error.code, privacy: .public) message=\(error.message, privacy: .public) momentId=\(momentId, privacy: .public)")
+            logger.error("Final render API error code=\(error.code, privacy: .public) message=\(error.message, privacy: .public) videoId=\(videoId, privacy: .public)")
             AnimateWorkflowDiagnostics.capture(
                 error,
                 feature: "animate.final_render",
@@ -293,7 +308,7 @@ final class FinalRenderWorkflow: WorkspaceObservingWorkflow {
                     "removes_watermark": String(removesWatermark),
                 ]
             )
-            if error.code == "moments_render_plan_stale" || error.code == "animate_render_plan_stale" {
+            if error.code == "animate_render_plan_stale" {
                 self.renderPlan = nil
             }
             statusMessage = finalRenderMessage(for: error)
@@ -353,15 +368,15 @@ final class FinalRenderWorkflow: WorkspaceObservingWorkflow {
     }
 
     private func finalRenderMessage(for error: AnimateAPIError) -> String {
-        if error.code == "unauthorized" || error.code == "moments_sign_in_required" || error.code == "moments_auth_token_missing" {
+        if error.code == "unauthorized"
+            || error.code == "animate_sign_in_required"
+            || error.code == "animate_auth_token_missing" {
             return L10n.string("workflow.final.signInAgainRender")
         }
-        if error.code == "insufficient_credits"
-            || error.code == "moments_insufficient_credits"
-            || error.code == "insufficient_animate_credits" {
+        if error.code == "insufficient_credits" || error.code == "insufficient_animate_credits" {
             return L10n.string("workflow.final.addCredits")
         }
-        if error.code == "moments_render_plan_stale" || error.code == "animate_render_plan_stale" {
+        if error.code == "animate_render_plan_stale" {
             return L10n.string("workflow.final.tryAgain")
         }
         if error.isLikelyConfigurationOrServerContractError {
@@ -371,7 +386,7 @@ final class FinalRenderWorkflow: WorkspaceObservingWorkflow {
     }
 
     private func prepareRenderPlanWithUploadVisibilityRetry(
-        momentId: String,
+        videoId: String,
         bearerToken: String,
         template: AnimateVideoTemplate,
         creationStyle: AnimateVideoCreationStyleID?,
@@ -385,7 +400,7 @@ final class FinalRenderWorkflow: WorkspaceObservingWorkflow {
         while true {
             do {
                 return try await finalRenderClient.prepareRenderPlan(
-                    momentId: momentId,
+                    videoId: videoId,
                     bearerToken: bearerToken,
                     template: template,
                     creationStyle: creationStyle,
@@ -508,21 +523,21 @@ final class FinalRenderWorkflow: WorkspaceObservingWorkflow {
         return true
     }
 
-    func needsRenderPlanForFinalRender(momentId: String, removesWatermark: Bool) -> Bool {
+    func needsRenderPlanForFinalRender(videoId: String, removesWatermark: Bool) -> Bool {
         Self.needsRenderPlanForFinalRender(
             renderPlan: renderPlan,
-            momentId: momentId,
+            videoId: videoId,
             removesWatermark: removesWatermark
         )
     }
 
     static func needsRenderPlanForFinalRender(
         renderPlan: AnimateRenderPlanResponse?,
-        momentId: String,
+        videoId: String,
         removesWatermark: Bool
     ) -> Bool {
         guard let renderPlan else { return true }
-        return renderPlan.momentId != momentId
+        return renderPlan.videoId != videoId
             || (renderPlan.watermark?.selectedRemoveWatermark ?? false) != removesWatermark
     }
 
@@ -546,7 +561,7 @@ final class FinalRenderWorkflow: WorkspaceObservingWorkflow {
         clearActiveWorkspace()
         finalExport = nil
         latestFinalJob = nil
-        latestFinalJobMomentId = nil
+        latestFinalJobVideoId = nil
         renderPlan = nil
         videoQuote = nil
         preparedVideoSourceUpload = nil
@@ -617,14 +632,14 @@ final class FinalRenderWorkflow: WorkspaceObservingWorkflow {
             )
             let downloadArtifactId = finalDownloadArtifactId(for: artifact)
             let download = try await finalRenderClient.prepareFinalArtifactDownload(
-                momentId: workspace.video.id,
+                videoId: workspace.video.id,
                 artifactId: downloadArtifactId,
                 bearerToken: bearerToken
             )
             let temporaryFileURL = try await finalRenderClient.downloadFinalArtifact(from: download)
             pendingGalleryVideo = try galleryStore.saveDownloadedVideo(
                 temporaryFileURL: temporaryFileURL,
-                momentId: workspace.video.id,
+                videoId: workspace.video.id,
                 artifactId: downloadArtifactId,
                 title: workspace.video.title,
                 r2Key: download.r2Key ?? artifact.r2Key,
@@ -670,7 +685,7 @@ final class FinalRenderWorkflow: WorkspaceObservingWorkflow {
         clearActiveWorkspace()
         finalExport = nil
         latestFinalJob = nil
-        latestFinalJobMomentId = nil
+        latestFinalJobVideoId = nil
         renderPlan = nil
         isGenerating = false
         pendingGalleryVideo = nil
@@ -714,7 +729,7 @@ private struct PreparedVideoSourceUpload {
 private extension AnimateAPIError {
     var isRetryableMediaVisibilityError: Bool {
         code == "insufficient_allowed_media"
-            || code == "moments_final_render_source_media_required"
-            || code == "moments_render_timeline_duration_required"
+            || code == "animate_final_render_source_media_required"
+            || code == "animate_render_timeline_duration_required"
     }
 }

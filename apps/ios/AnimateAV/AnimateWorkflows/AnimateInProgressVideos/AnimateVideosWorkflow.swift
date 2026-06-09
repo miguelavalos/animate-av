@@ -76,9 +76,9 @@ final class AnimateVideosWorkflow: ObservableObject {
         videosObserver.observeAnimateVideos(ownerUserId: ownerUserId)
     }
 
-    func observeAnimateWorkspace(ownerUserId: String?, momentId: String?) {
+    func observeAnimateWorkspace(ownerUserId: String?, videoId: String?) {
         errorMessage = nil
-        workspaceSelectionWorkflow.observeAnimateWorkspace(ownerUserId: ownerUserId, momentId: momentId)
+        workspaceSelectionWorkflow.observeAnimateWorkspace(ownerUserId: ownerUserId, videoId: videoId)
     }
 
     private func applyWorkspaceError(_ message: String?) {
@@ -95,28 +95,28 @@ final class AnimateVideosWorkflow: ObservableObject {
         guard !trimmedTitle.isEmpty else { return false }
         let previousTitle = optimisticVideoTitles[video.id]
         optimisticVideoTitles[video.id] = trimmedTitle
-        applyOptimisticTitle(momentId: video.id, title: trimmedTitle)
+        applyOptimisticTitle(videoId: video.id, title: trimmedTitle)
 
         do {
             guard currentUserProvider.currentUserId != nil else {
-                restoreOptimisticTitle(momentId: video.id, previousTitle: previousTitle)
+                restoreOptimisticTitle(videoId: video.id, previousTitle: previousTitle)
                 errorMessage = L10n.string("inProgress.rename.failed")
                 return false
             }
             guard let bearerToken = try? await authTokenProvider.currentBearerToken() else {
-                restoreOptimisticTitle(momentId: video.id, previousTitle: previousTitle)
+                restoreOptimisticTitle(videoId: video.id, previousTitle: previousTitle)
                 errorMessage = L10n.string("inProgress.rename.failed")
                 return false
             }
-            try await videoTitleUpdater.updateMomentTitle(
+            try await videoTitleUpdater.updateVideoTitle(
                 bearerToken: bearerToken,
-                momentId: video.id,
+                videoId: video.id,
                 title: trimmedTitle
             )
             errorMessage = nil
             return true
         } catch {
-            restoreOptimisticTitle(momentId: video.id, previousTitle: previousTitle)
+            restoreOptimisticTitle(videoId: video.id, previousTitle: previousTitle)
             errorMessage = L10n.string("inProgress.rename.failed")
             return false
         }
@@ -146,21 +146,21 @@ final class AnimateVideosWorkflow: ObservableObject {
         videosSummary = AnimateInProgressSummary.make(from: renamedVideos)
     }
 
-    private func applyOptimisticTitle(momentId: String, title: String) {
+    private func applyOptimisticTitle(videoId: String, title: String) {
         let videos = videosSummary.videos.map { video in
-            video.id == momentId ? video.renamed(title) : video
+            video.id == videoId ? video.renamed(title) : video
         }
         videosSummary = AnimateInProgressSummary.make(from: videos)
     }
 
-    private func restoreOptimisticTitle(momentId: String, previousTitle: String?) {
+    private func restoreOptimisticTitle(videoId: String, previousTitle: String?) {
         if let previousTitle {
-            optimisticVideoTitles[momentId] = previousTitle
-            applyOptimisticTitle(momentId: momentId, title: previousTitle)
+            optimisticVideoTitles[videoId] = previousTitle
+            applyOptimisticTitle(videoId: videoId, title: previousTitle)
             return
         }
 
-        optimisticVideoTitles[momentId] = nil
+        optimisticVideoTitles[videoId] = nil
     }
 
     private func applyVideoListError(_ message: String?) {

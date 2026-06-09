@@ -12,7 +12,7 @@ struct AnimateUploadClient: Sendable {
         URL(string: baseURLString.trimmingCharacters(in: .whitespacesAndNewlines)) != nil
     }
 
-    func prepareUpload(momentId: String, bearerToken: String, media: AnimateSelectedMedia) async throws -> AnimatePreparedUpload {
+    func prepareUpload(videoId: String, bearerToken: String, media: AnimateSelectedMedia) async throws -> AnimatePreparedUpload {
         guard let baseURL = URL(string: baseURLString.trimmingCharacters(in: .whitespacesAndNewlines)) else {
             throw AnimateUploadError.apiNotConfigured
         }
@@ -28,7 +28,7 @@ struct AnimateUploadClient: Sendable {
         request.httpMethod = "POST"
         request.setValue("application/json", forHTTPHeaderField: "Content-Type")
         request.setValue("Bearer \(bearerToken)", forHTTPHeaderField: "Authorization")
-        request.httpBody = try JSONEncoder().encode(AnimatePrepareUploadRequest(momentId: momentId, media: media))
+        request.httpBody = try JSONEncoder().encode(AnimatePrepareUploadRequest(videoId: videoId, media: media))
 
         let (data, response) = try await retryingData(for: request)
         guard let httpResponse = response as? HTTPURLResponse, 200..<300 ~= httpResponse.statusCode else {
@@ -36,7 +36,7 @@ struct AnimateUploadClient: Sendable {
             logger.error("prepare-upload failed status=\(statusCode, privacy: .public)")
             throw AnimateAPIError.decode(
                 from: data,
-                fallbackCode: "moments_upload_prepare_failed",
+                fallbackCode: "animate_upload_prepare_failed",
                 fallbackMessage: AnimateUploadError.prepareFailed.localizedDescription
             )
         }
@@ -64,7 +64,7 @@ struct AnimateUploadClient: Sendable {
         preparedUpload.headers.forEach { key, value in
             request.setValue(value, forHTTPHeaderField: key)
         }
-        request.setValue(preparedUpload.momentId, forHTTPHeaderField: "x-appsav-animate-moment-id")
+        request.setValue(preparedUpload.videoId, forHTTPHeaderField: "x-appsav-animate-video-id")
         request.setValue(String(media.sortOrder), forHTTPHeaderField: "x-appsav-videos-sort-order")
         request.setValue(media.selected ? "true" : "false", forHTTPHeaderField: "x-appsav-videos-selected")
 
@@ -99,7 +99,7 @@ struct AnimateUploadClient: Sendable {
             logger.error("direct upload complete failed uploadId=\(uploadId, privacy: .public) status=\(statusCode, privacy: .public)")
             throw AnimateAPIError.decode(
                 from: data,
-                fallbackCode: "moments_upload_complete_failed",
+                fallbackCode: "animate_upload_complete_failed",
                 fallbackMessage: AnimateUploadError.uploadFailed.localizedDescription
             )
         }
@@ -130,7 +130,7 @@ struct AnimateUploadClient: Sendable {
                     }
                     throw AnimateAPIError.decode(
                         from: responseData,
-                        fallbackCode: "moments_upload_failed",
+                        fallbackCode: "animate_upload_failed",
                         fallbackMessage: AnimateUploadError.uploadFailed.localizedDescription
                     )
                 }
@@ -196,7 +196,7 @@ struct AnimateUploadRetryPolicy: Sendable {
 
 private struct AnimatePrepareUploadRequest: Encodable {
     let appId = "animateav"
-    let momentId: String
+    let videoId: String
     let mediaKind: String
     let sourceLocalIdentifier: String
     let originalFilename: String
@@ -204,8 +204,8 @@ private struct AnimatePrepareUploadRequest: Encodable {
     let byteSize: Int
     let sha256: String
 
-    init(momentId: String, media: AnimateSelectedMedia) {
-        self.momentId = momentId
+    init(videoId: String, media: AnimateSelectedMedia) {
+        self.videoId = videoId
         mediaKind = media.kind
         sourceLocalIdentifier = media.sourceLocalIdentifier
         originalFilename = media.originalFilename

@@ -376,7 +376,7 @@ enum AnimateVideoCreationStyleID: String, CaseIterable, Identifiable {
     case travel
     case favoritePeople
     case birthday
-    case familyMoments
+    case familyScenes
     case softRoast
     case milestone
 
@@ -463,9 +463,9 @@ struct AnimateVideoCreationStyle: Identifiable, Equatable {
             isEnabled: true
         ),
         AnimateVideoCreationStyle(
-            id: .familyMoments,
-            title: L10n.string("create.theme.familyMoments.title"),
-            subtitle: L10n.string("create.theme.familyMoments.subtitle"),
+            id: .familyScenes,
+            title: L10n.string("create.theme.familyScenes.title"),
+            subtitle: L10n.string("create.theme.familyScenes.subtitle"),
             assetName: "StyleFamilyCartoon",
             template: .birthdayMessage,
             defaultMusic: .warm,

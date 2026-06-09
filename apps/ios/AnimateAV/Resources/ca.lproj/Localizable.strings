@@ -209,8 +209,8 @@
 "create.theme.celebration.title" = "Presentació";
 "create.theme.eventRecap.subtitle" = "Talls ràpids, moviment i força.";
 "create.theme.eventRecap.title" = "Mini tràiler";
-"create.theme.familyMoments.subtitle" = "Càlid, simple i amb encant.";
-"create.theme.familyMoments.title" = "Moment cute";
+"create.theme.familyScenes.subtitle" = "Càlid, simple i amb encant.";
+"create.theme.familyScenes.title" = "Moment cute";
 "create.theme.favoritePeople.subtitle" = "Una foto que sembla cobrar vida.";
 "create.theme.favoritePeople.title" = "Retrat viu";
 "create.theme.milestone.subtitle" = "Una transformació clara.";
@@ -372,7 +372,7 @@
 "home.action.guidance.detail" = "L’Avi et pot ajudar amb l’estil, el missatge i el to.";
 "home.action.guidance.title" = "Pregunta a l’Avi";
 "home.action.openInProgress.detail.empty" = "Els vídeos sense acabar apareixeran aquí.";
-"home.action.openInProgress.detail.hasMoments" = "Acaba els vídeos que ja estan en curs.";
+"home.action.openInProgress.detail.hasVideos" = "Acaba els vídeos que ja estan en curs.";
 "home.action.openInProgress.title" = "Obre En curs";
 "home.avi.addMedia.detail" = "Afegeix una foto i l’Avi començarà el vídeo animat.";
 "home.avi.createVideo.detail" = "Tria una foto per convertir-la en una escena animada breu.";
@@ -447,7 +447,7 @@
 "library.finished.title" = "Acabats";
 "inProgress.title" = "En curs";
 "library.inProgressAndGallery.title" = "En curs i Galeria";
-"inProgress.newMoment" = "Nou vídeo";
+"inProgress.newVideo" = "Nou vídeo";
 "inProgress.rename.failed" = "No s’ha pogut canviar el nom del vídeo. Torna-ho a provar.";
 "inProgress.rename.placeholder" = "Nom del vídeo";
 "inProgress.rename.saved" = "Nom del vídeo canviat.";
@@ -694,6 +694,11 @@
 "create.final.blocker.insufficientCredits" = "Necessites més crèdits per crear aquest vídeo final.";
 "create.final.blocker.noUsableMedia" = "Avi necessita una foto utilitzable abans de crear el vídeo final.";
 "create.final.blocker.default" = "Avi encara no pot crear aquest vídeo final.";
+"create.final.watermark.included" = "Inclòs";
+"create.final.watermark.none" = "Sense branding";
+"create.final.watermark.proIncluded" = "Pro elimina el branding d’Animate AV.";
+"create.final.watermark.remove" = "Crear sense branding +%@ extra";
+"create.final.watermark.removeDetail" = "Elimina la targeta final d’Animate AV abans de crear el vídeo.";
 "create.form.details" = "Detalls per a Avi";
 "create.form.details.placeholder" = "Afegeix noms, bromes internes, escenes a destacar o coses a evitar.";
 "create.media.addPhotos" = "Afegir imatge";
@@ -765,14 +770,14 @@
 "create.dashboard.subtitle.finalReady" = "El vídeo final està a punt per revisar-lo i compartir-lo.";
 "create.dashboard.subtitle.default" = "Revisa què ha preparat Avi i crea el vídeo quan estigui a punt.";
 "create.preparation.importMedia.title" = "Llegint la teva selecció";
-"create.preparation.prepareMoment.title" = "Preparant aquest vídeo";
+"create.preparation.prepareVideo.title" = "Preparant aquest vídeo";
 "create.preparation.prepareStory.title" = "Preparant el teu vídeo";
 "create.preparation.uploadForVideo.title" = "Pujant imatge";
 "create.preparation.prepareFinalPlan.title" = "Calculant crèdits";
 "create.preparation.createVideo.title" = "Creant el teu vídeo";
 "create.preparation.importMedia.detailWithCount" = "Avi està llegint %d %@ i preparant el vídeo.";
 "create.preparation.importMedia.detail" = "Avi està llegint la foto i preparant el vídeo.";
-"create.preparation.prepareMoment.detail" = "Avi està obrint un espai segur per a aquest vídeo.";
+"create.preparation.prepareVideo.detail" = "Avi està obrint un espai segur per a aquest vídeo.";
 "create.preparation.prepareStory.detail" = "Avi està organitzant la foto en la direcció del vídeo.";
 "create.preparation.uploadForVideo.detailWithCount" = "Enviant %d %@ necessaris per crear el vídeo final.";
 "create.preparation.uploadForVideo.detail" = "Enviant la foto necessària per crear el vídeo final.";
@@ -852,15 +857,15 @@
 "create.error.storyPreparationNotReady" = "La preparació del vídeo encara no està a punt.";
 "create.availability.momentSignInRequired" = "Inicia sessió abans de començar un vídeo.";
 "create.availability.momentSyncNotConfigured" = "La sincronització de vídeo no està configurada per a aquesta build.";
-"create.availability.mediaMissingMoment" = "Inicia o continua un vídeo abans d’afegir una foto.";
+"create.availability.mediaMissingVideo" = "Inicia o continua un vídeo abans d’afegir una foto.";
 "create.availability.mediaUploadNotConfigured" = "La pujada d’imatge no està configurada per a aquesta build.";
 "create.availability.mediaTemplateFull" = "Avi té la foto per a aquest vídeo.";
 "create.availability.storySignInRequired" = "Inicia sessió abans de preparar el vídeo.";
-"create.availability.storyMissingMoment" = "Inicia o continua un vídeo abans de preparar la direcció.";
+"create.availability.storyMissingVideo" = "Inicia o continua un vídeo abans de preparar la direcció.";
 "create.availability.storyUnavailable" = "La preparació del vídeo encara no està disponible.";
 "create.availability.storyNotConfigured" = "La preparació del vídeo no està configurada per a aquesta build.";
 "create.availability.storyMissingMedia" = "Afegeix una foto abans de preparar el vídeo.";
-"create.availability.finalRenderMissingMoment" = "Inicia o continua un vídeo abans de crear el vídeo final.";
+"create.availability.finalRenderMissingVideo" = "Inicia o continua un vídeo abans de crear el vídeo final.";
 "create.availability.finalRenderUnavailable" = "La creació del vídeo final encara no està disponible.";
 "create.availability.finalRenderNotConfigured" = "La creació del vídeo final no està configurada per a aquesta build.";
 "create.availability.finalRenderMissingWorkspace" = "Espera que aquest vídeo se sincronitzi abans de crear el vídeo final.";
@@ -990,7 +995,7 @@
 "create.mediaCard.backToDashboard" = "Tornar al tauler";
 "create.mediaCard.mediaAccessibility" = "%@ %d";
 "create.mediaRows.removeNamed" = "Treure %@";
-"create.mediaRows.removeFromMoment" = "Treure de la selecció";
+"create.mediaRows.removeFromVideo" = "Treure de la selecció";
 "create.workflowContent.videoPlan" = "Comprovació final";
 "create.workflowContent.preparedVideoPlan" = "Llest per crear";
 "create.workflowContent.needsPlan" = "Comprovant";
@@ -1063,8 +1068,10 @@
 "create.workflowContent.aviTip" = "Consell d’Avi";
 "create.workflowContent.tipFinalReady" = "El vídeo està a punt per baixar-se i moure’s a Galeria.";
 "create.workflowContent.tipFinalWorking" = "Avi està acabant el vídeo final. El progrés s’actualitza automàticament.";
-"create.workflowContent.tipPickMoments" = "Tria la imatge. Avi definirà estil, missatge i ritme.";
+"create.workflowContent.tipPickVideos" = "Tria la imatge. Avi definirà estil, missatge i ritme.";
 "create.workflowContent.planDetail" = "%ds · %d foto";
+"create.workflowContent.renderMayTakeMinutes" = "La generació de vídeo amb IA pot tardar diversos minuts. Aquesta pantalla s’actualitza automàticament quan el vídeo final està llest.";
+"create.workflowContent.waitingForProvider" = "Esperant el servei d’animació";
 
 "create.renderRows.renderJob" = "Feina de creació de vídeo";
 "create.renderRows.waitingStatus" = "Esperant l’estat del servei de vídeo.";
@@ -1244,7 +1251,7 @@
 "create.look.shonenAction.title" = "Shonen Action";
 "create.look.shonenAction.subtitle" = "High-energy poses and speed-line drama.";
 "create.look.cozySliceOfLife.title" = "Cozy Slice of Life";
-"create.look.cozySliceOfLife.subtitle" = "Gentle anime warmth for everyday moments.";
+"create.look.cozySliceOfLife.subtitle" = "Gentle anime warmth for everyday scenes.";
 "create.look.magicalFantasyAnime.title" = "Magical Fantasy Anime";
 "create.look.magicalFantasyAnime.subtitle" = "Bright fantasy anime with enchanted detail.";
 "create.look.cyberAnime.title" = "Cyber Anime";

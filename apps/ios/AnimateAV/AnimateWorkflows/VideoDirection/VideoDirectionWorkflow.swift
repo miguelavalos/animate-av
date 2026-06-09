@@ -39,7 +39,7 @@ final class VideoDirectionWorkflow: WorkspaceObservingWorkflow {
     }
 
     func generatePlan(
-        momentId: String,
+        videoId: String,
         form: AnimateVideoSetupForm,
         selectedMedia: [AnimateSelectedMedia],
         persistedMedia: [AnimateVideoDirectionMedia]? = nil
@@ -81,7 +81,7 @@ final class VideoDirectionWorkflow: WorkspaceObservingWorkflow {
 
         do {
             let plan = try await videoDirectionClient.generatePlan(
-                momentId: momentId,
+                videoId: videoId,
                 ownerUserId: ownerUserId,
                 bearerToken: bearerToken,
                 form: form,
@@ -91,11 +91,11 @@ final class VideoDirectionWorkflow: WorkspaceObservingWorkflow {
             try validatePlanMediaReferences(plan, availableMedia: media)
             generatedPlan = plan
             guard isCurrentWorkflowGeneration(generation) else { return false }
-            workspaceObserver.observeWorkspace(ownerUserId: ownerUserId, momentId: momentId)
+            workspaceObserver.observeWorkspace(ownerUserId: ownerUserId, videoId: videoId)
             statusMessage = plan.helperCopy
         } catch let error as VideoDirectionWorkflowError {
             guard isCurrentWorkflowGeneration(generation) else { return false }
-            logger.error("Video direction workflow failed momentId=\(momentId, privacy: .public) reason=\(error.localizedDescription, privacy: .public)")
+            logger.error("Video direction workflow failed videoId=\(videoId, privacy: .public) reason=\(error.localizedDescription, privacy: .public)")
             AnimateWorkflowDiagnostics.capture(
                 error,
                 feature: "animate.story",
@@ -111,7 +111,7 @@ final class VideoDirectionWorkflow: WorkspaceObservingWorkflow {
             return false
         } catch let error as LocalizedError {
             guard isCurrentWorkflowGeneration(generation) else { return false }
-            logger.error("Video direction request failed momentId=\(momentId, privacy: .public) error=\(String(describing: error), privacy: .public)")
+            logger.error("Video direction request failed videoId=\(videoId, privacy: .public) error=\(String(describing: error), privacy: .public)")
             AnimateWorkflowDiagnostics.capture(
                 error,
                 feature: "animate.story",
@@ -127,7 +127,7 @@ final class VideoDirectionWorkflow: WorkspaceObservingWorkflow {
             return false
         } catch {
             guard isCurrentWorkflowGeneration(generation) else { return false }
-            logger.error("Video direction failed momentId=\(momentId, privacy: .public) error=\(String(describing: error), privacy: .public)")
+            logger.error("Video direction failed videoId=\(videoId, privacy: .public) error=\(String(describing: error), privacy: .public)")
             AnimateWorkflowDiagnostics.capture(
                 error,
                 feature: "animate.story",

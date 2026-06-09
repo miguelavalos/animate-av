@@ -168,6 +168,7 @@
 		CB7AA607DB4E118DDCF80D3A /* AnimateInProgressWorkspaceChrome.swift in Sources */ = {isa = PBXBuildFile; fileRef = 96ED7D51080F1DF098DD426E /* AnimateInProgressWorkspaceChrome.swift */; };
 		CB82A99F460886B027BAA1E6 /* AnimateHomeCreditComponents.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD939C3CCB513101EE73F2E0 /* AnimateHomeCreditComponents.swift */; };
 		CD621B0615636F6DEA0FE6C5 /* AnimateCreateTestFixtures.swift in Sources */ = {isa = PBXBuildFile; fileRef = C3DF6F578EA73CED7A3827ED /* AnimateCreateTestFixtures.swift */; };
+		CD8F7166E7B14E8FB6F0A5D1 /* AnimateCreateVideoSetupGuideStateTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD8F7165E7B14E8FB6F0A5D1 /* AnimateCreateVideoSetupGuideStateTests.swift */; };
 		CE11572CECD38640CFC08160 /* AnimateCreateBindingState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C643D9379944E9FE0EE14A1 /* AnimateCreateBindingState.swift */; };
 		D12698A1AEB513D2F682936F /* AnimateCreateRenderRows.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8EB6D17FEF3139999ED41086 /* AnimateCreateRenderRows.swift */; };
 		D2411288F4C6A78D5C6667F5 /* AnimateCreateOverviewCards.swift in Sources */ = {isa = PBXBuildFile; fileRef = E295EF5914D1F014D4184BC8 /* AnimateCreateOverviewCards.swift */; };
@@ -253,6 +254,7 @@
 		3C3F9F462255F31B1CE171D0 /* AnimateInProgressObserver.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnimateInProgressObserver.swift; sourceTree = "<group>"; };
 		42C30E26B181C704F6C8CAAC /* AnimateInProgressWorkspaceSections.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnimateInProgressWorkspaceSections.swift; sourceTree = "<group>"; };
 		43CCBAF7B7D00CE258D044D1 /* AnimateCreateWorkflowPresentationTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnimateCreateWorkflowPresentationTests.swift; sourceTree = "<group>"; };
+		CD8F7165E7B14E8FB6F0A5D1 /* AnimateCreateVideoSetupGuideStateTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnimateCreateVideoSetupGuideStateTests.swift; sourceTree = "<group>"; };
 		44B7CF1E0C34BDD4D22DC1AC /* AnimateVideoCreationModels.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnimateVideoCreationModels.swift; sourceTree = "<group>"; };
 		4605252A846ED4791032F2B4 /* AnimateCreateViewModel+Capabilities.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "AnimateCreateViewModel+Capabilities.swift"; sourceTree = "<group>"; };
 		46A68B41F531A0D11258B9E6 /* AnimateCreateWorkflowSummaries.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnimateCreateWorkflowSummaries.swift; sourceTree = "<group>"; };
@@ -801,6 +803,7 @@
 				C13E1D534FFAD38AA5BFDAB0 /* AnimateAviViewModelTests.swift */,
 				7C029E23218DAE1E7E873DDE /* AnimateCreateAvailabilityPresentationTests.swift */,
 				C3DF6F578EA73CED7A3827ED /* AnimateCreateTestFixtures.swift */,
+				CD8F7165E7B14E8FB6F0A5D1 /* AnimateCreateVideoSetupGuideStateTests.swift */,
 				30E67811A0067329433E18B3 /* AnimateCreateViewModelVideoDirectionStateTests.swift */,
 				43CCBAF7B7D00CE258D044D1 /* AnimateCreateWorkflowPresentationTests.swift */,
 				15B4B1517C76E0DAFBD8F13B /* AnimateCreditGateTests.swift */,
@@ -1307,6 +1310,7 @@
 				2A31F7F2A6009726BFD0CB23 /* AnimateAviViewModelTests.swift in Sources */,
 				BA153D9C6487188B021B1E5D /* AnimateCreateAvailabilityPresentationTests.swift in Sources */,
 				CD621B0615636F6DEA0FE6C5 /* AnimateCreateTestFixtures.swift in Sources */,
+				CD8F7166E7B14E8FB6F0A5D1 /* AnimateCreateVideoSetupGuideStateTests.swift in Sources */,
 				F02A07416ED6FC5C7D2B079D /* AnimateCreateViewModelVideoDirectionStateTests.swift in Sources */,
 				49034F4A18106C0AE7DFCB0D /* AnimateCreateWorkflowPresentationTests.swift in Sources */,
 				CA6CE16BF556481E87DB262D /* AnimateCreditGateTests.swift in Sources */,

@@ -5,17 +5,17 @@ import Foundation
 protocol AnimateVideoCreating {
     var isConfigured: Bool { get }
     func createVideo(bearerToken: String, form: AnimateVideoSetupForm) async throws -> String
-    func updateVideoSetup(bearerToken: String, momentId: String, form: AnimateVideoSetupForm) async throws
+    func updateVideoSetup(bearerToken: String, videoId: String, form: AnimateVideoSetupForm) async throws
 }
 
 @MainActor
 protocol AnimateVideoDeleting {
-    func deleteVideo(bearerToken: String, momentId: String) async throws
+    func deleteVideo(bearerToken: String, videoId: String) async throws
 }
 
 @MainActor
 protocol AnimateVideoTitleUpdating {
-    func updateMomentTitle(bearerToken: String, momentId: String, title: String) async throws
+    func updateVideoTitle(bearerToken: String, videoId: String, title: String) async throws
 }
 
 @MainActor
@@ -50,7 +50,7 @@ protocol AnimateGalleryListProviding {
 protocol AnimateWorkspaceObserving {
     func observeAnimateWorkspace(
         ownerUserId: String,
-        momentId: String
+        videoId: String
     ) throws -> AnyPublisher<AnimateWorkspace?, Error>
 }
 
@@ -59,7 +59,7 @@ protocol AnimateActiveWorkspaceObserving {
     var activeWorkspacePublisher: AnyPublisher<AnimateWorkspace?, Never> { get }
     var workspaceErrorPublisher: AnyPublisher<String?, Never> { get }
 
-    func observeWorkspace(ownerUserId: String?, momentId: String?)
+    func observeWorkspace(ownerUserId: String?, videoId: String?)
     func clearWorkspace()
 }
 

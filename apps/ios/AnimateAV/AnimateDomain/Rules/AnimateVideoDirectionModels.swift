@@ -11,7 +11,7 @@ struct AnimateVideoDirectionMedia: Encodable {
 
 struct AnimateVideoDirectionRequest: Encodable {
     let appId = "animateav"
-    let momentId: String
+    let videoId: String
     let creationMode: String
     let look: String
     let theme: String
@@ -29,7 +29,7 @@ struct AnimateVideoDirectionRequest: Encodable {
 
 enum AnimateVideoDirectionInputSignature {
     static func make(
-        momentId: String,
+        videoId: String,
         form: AnimateVideoSetupForm,
         selectedMedia: [AnimateVideoDirectionMedia]
     ) -> String {
@@ -45,7 +45,7 @@ enum AnimateVideoDirectionInputSignature {
             .joined(separator: "|")
 
         let input = [
-            momentId,
+            videoId,
             form.creationMode.rawValue,
             form.look.rawValue,
             form.theme.rawValue,
@@ -80,7 +80,7 @@ struct AnimateVideoDirectionSceneResponse: Decodable, Identifiable, Equatable {
 
 struct AnimateVideoDirectionResponse: Decodable, Equatable {
     let appId: String
-    let momentId: String
+    let videoId: String
     let workflowRunId: String
     let status: String
     let provider: String?

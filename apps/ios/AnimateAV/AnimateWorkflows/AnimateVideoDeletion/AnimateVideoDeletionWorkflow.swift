@@ -47,7 +47,7 @@ final class AnimateVideoDeletionWorkflow: ObservableObject {
         let generation = deletionGeneration
 
         do {
-            try await videoDeleter.deleteVideo(bearerToken: bearerToken, momentId: video.id)
+            try await videoDeleter.deleteVideo(bearerToken: bearerToken, videoId: video.id)
             guard deletionGeneration == generation else { return false }
             isDeletingVideo = false
             return true

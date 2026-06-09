@@ -85,7 +85,7 @@ struct AnimateRenderJob: Identifiable, Decodable, Equatable {
         case phase
         case progressPercent
         case userMessage
-        case canEditSetup = "canEditMoment"
+        case canEditSetup
         case canRetry
         case baseCreditCost
         case watermarkRemovalCreditCost

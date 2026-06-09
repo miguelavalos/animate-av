@@ -83,6 +83,6 @@ extension AnimateCreateViewModel {
         guard let preparedSignature else {
             return true
         }
-        return preparedVideoDirectionComparisonInputSignature(momentId: activeVideoId) == preparedSignature
+        return preparedVideoDirectionComparisonInputSignature(videoId: activeVideoId) == preparedSignature
     }
 }

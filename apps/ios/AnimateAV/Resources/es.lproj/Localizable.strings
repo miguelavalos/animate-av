@@ -209,8 +209,8 @@
 "create.theme.celebration.title" = "Presentación";
 "create.theme.eventRecap.subtitle" = "Cortes rápidos, movimiento y fuerza.";
 "create.theme.eventRecap.title" = "Mini tráiler";
-"create.theme.familyMoments.subtitle" = "Cálido, simple y con encanto.";
-"create.theme.familyMoments.title" = "Momento cute";
+"create.theme.familyScenes.subtitle" = "Cálido, simple y con encanto.";
+"create.theme.familyScenes.title" = "Escena cute";
 "create.theme.favoritePeople.subtitle" = "Una foto que parece cobrar vida.";
 "create.theme.favoritePeople.title" = "Retrato vivo";
 "create.theme.milestone.subtitle" = "Una transformación clara.";
@@ -374,7 +374,7 @@
 "home.action.guidance.detail" = "Avi puede ayudarte con el look, el mensaje y el tono.";
 "home.action.guidance.title" = "Preguntar a Avi";
 "home.action.openInProgress.detail.empty" = "Los videos sin terminar aparecerán aquí.";
-"home.action.openInProgress.detail.hasMoments" = "Termina los videos que ya están en progreso.";
+"home.action.openInProgress.detail.hasVideos" = "Termina los videos que ya están en progreso.";
 "home.action.openInProgress.title" = "Abrir En progreso";
 "home.avi.addMedia.detail" = "Añade una foto y Avi empezará el video animado.";
 "home.avi.createVideo.detail" = "Elige una foto para convertirla en una escena animada breve.";
@@ -449,7 +449,7 @@
 "library.finished.title" = "Terminados";
 "inProgress.title" = "En progreso";
 "library.inProgressAndGallery.title" = "En progreso y Galería";
-"inProgress.newMoment" = "Nuevo video";
+"inProgress.newVideo" = "Nuevo video";
 "inProgress.rename.failed" = "No se pudo renombrar el video. Inténtalo de nuevo.";
 "inProgress.rename.placeholder" = "Nombre del video";
 "inProgress.rename.saved" = "Video renombrado.";
@@ -699,8 +699,8 @@
 "create.final.watermark.included" = "Incluido";
 "create.final.watermark.none" = "Sin branding";
 "create.final.watermark.proIncluded" = "Pro elimina el branding de Animate AV.";
-"create.final.watermark.remove" = "Quitar branding · %@";
-"create.final.watermark.removeDetail" = "Elimina la tarjeta final de branding antes de crear el video.";
+"create.final.watermark.remove" = "Crear sin branding +%@ extra";
+"create.final.watermark.removeDetail" = "Elimina la tarjeta final de Animate AV antes de crear el video.";
 "create.form.details" = "Detalles para Avi";
 "create.form.details.placeholder" = "Añade nombres, la frase que Avi debe decir, estilo de felicitación o algo a evitar.";
 "create.media.addPhotos" = "Añadir imagen";
@@ -772,14 +772,14 @@
 "create.dashboard.subtitle.finalReady" = "Tu video final está listo para comprobar y compartir.";
 "create.dashboard.subtitle.default" = "Comprueba lo que preparó Avi y crea el video cuando esté listo.";
 "create.preparation.importMedia.title" = "Leyendo tu selección";
-"create.preparation.prepareMoment.title" = "Preparando este video";
+"create.preparation.prepareVideo.title" = "Preparando este video";
 "create.preparation.prepareStory.title" = "Preparando tu video";
 "create.preparation.uploadForVideo.title" = "Subiendo imagen";
 "create.preparation.prepareFinalPlan.title" = "Calculando créditos";
 "create.preparation.createVideo.title" = "Creando tu video";
 "create.preparation.importMedia.detailWithCount" = "Avi está leyendo %d %@ y preparando el video.";
 "create.preparation.importMedia.detail" = "Avi está leyendo la foto y preparando el video.";
-"create.preparation.prepareMoment.detail" = "Avi está abriendo un espacio seguro para este video.";
+"create.preparation.prepareVideo.detail" = "Avi está abriendo un espacio seguro para este video.";
 "create.preparation.prepareStory.detail" = "Avi está organizando la foto en la dirección del video.";
 "create.preparation.uploadForVideo.detailWithCount" = "Enviando %d %@ necesarios para crear el video final.";
 "create.preparation.uploadForVideo.detail" = "Enviando la foto necesaria para crear el video final.";
@@ -859,15 +859,15 @@
 "create.error.storyPreparationNotReady" = "La preparación del video aún no está lista.";
 "create.availability.momentSignInRequired" = "Inicia sesión antes de empezar un video.";
 "create.availability.momentSyncNotConfigured" = "La sincronización de video no está configurada para esta build.";
-"create.availability.mediaMissingMoment" = "Inicia o continúa un video antes de añadir una foto.";
+"create.availability.mediaMissingVideo" = "Inicia o continúa un video antes de añadir una foto.";
 "create.availability.mediaUploadNotConfigured" = "La subida de imagen no está configurada para esta build.";
 "create.availability.mediaTemplateFull" = "Avi tiene suficiente imagen para este video.";
 "create.availability.storySignInRequired" = "Inicia sesión antes de preparar el video.";
-"create.availability.storyMissingMoment" = "Inicia o continúa un video antes de preparar la dirección.";
+"create.availability.storyMissingVideo" = "Inicia o continúa un video antes de preparar la dirección.";
 "create.availability.storyUnavailable" = "La preparación del video aún no está disponible.";
 "create.availability.storyNotConfigured" = "La preparación del video no está configurada para esta build.";
 "create.availability.storyMissingMedia" = "Añade una foto antes de preparar el video.";
-"create.availability.finalRenderMissingMoment" = "Inicia o continúa un video antes de crear el video final.";
+"create.availability.finalRenderMissingVideo" = "Inicia o continúa un video antes de crear el video final.";
 "create.availability.finalRenderUnavailable" = "La creación del video final aún no está disponible.";
 "create.availability.finalRenderNotConfigured" = "La creación del video final no está configurada para esta build.";
 "create.availability.finalRenderMissingWorkspace" = "Espera a que este video se sincronice antes de crear el video final.";
@@ -997,7 +997,7 @@
 "create.mediaCard.backToDashboard" = "Volver al panel";
 "create.mediaCard.mediaAccessibility" = "%@ %d";
 "create.mediaRows.removeNamed" = "Quitar %@";
-"create.mediaRows.removeFromMoment" = "Quitar de la selección";
+"create.mediaRows.removeFromVideo" = "Quitar de la selección";
 "create.workflowContent.videoPlan" = "Comprobación final";
 "create.workflowContent.preparedVideoPlan" = "Listo para crear";
 "create.workflowContent.needsPlan" = "Comprobando";
@@ -1072,7 +1072,7 @@
 "create.workflowContent.aviTip" = "Consejo de Avi";
 "create.workflowContent.tipFinalReady" = "Tu video está listo para descargar y mover a la Galería.";
 "create.workflowContent.tipFinalWorking" = "Avi está terminando el video final. El progreso se actualiza automáticamente.";
-"create.workflowContent.tipPickMoments" = "Elige la imagen. Avi definirá estilo, mensaje y ritmo.";
+"create.workflowContent.tipPickVideos" = "Elige la imagen. Avi definirá estilo, mensaje y ritmo.";
 "create.workflowContent.planDetail" = "%ds · %d foto";
 
 "create.renderRows.renderJob" = "Tarea de video";
@@ -1253,7 +1253,7 @@
 "create.look.shonenAction.title" = "Shonen Action";
 "create.look.shonenAction.subtitle" = "High-energy poses and speed-line drama.";
 "create.look.cozySliceOfLife.title" = "Cozy Slice of Life";
-"create.look.cozySliceOfLife.subtitle" = "Gentle anime warmth for everyday moments.";
+"create.look.cozySliceOfLife.subtitle" = "Gentle anime warmth for everyday scenes.";
 "create.look.magicalFantasyAnime.title" = "Magical Fantasy Anime";
 "create.look.magicalFantasyAnime.subtitle" = "Bright fantasy anime with enchanted detail.";
 "create.look.cyberAnime.title" = "Cyber Anime";

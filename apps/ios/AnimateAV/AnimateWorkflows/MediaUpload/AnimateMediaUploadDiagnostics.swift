@@ -14,7 +14,7 @@ enum AnimateMediaUploadDiagnostics {
         }
         AVDiagnostics.addBreadcrumb(AVDiagnosticsBreadcrumb(
             category: "animate.media",
-            message: "moments_media_\(operation)",
+            message: "animate_media_\(operation)",
             data: metadata
         ))
     }

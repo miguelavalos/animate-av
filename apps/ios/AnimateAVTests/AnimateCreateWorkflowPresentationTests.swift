@@ -661,9 +661,9 @@ final class AnimateCreateWorkflowPresentationTests: XCTestCase {
 
         XCTAssertTrue(presentation.hasFinalVideoIntent)
         XCTAssertFalse(presentation.canRunPrimaryAction)
-        XCTAssertEqual(presentation.title, "Continue")
-        XCTAssertEqual(presentation.buttonTitle, "Continue")
-        XCTAssertEqual(presentation.buttonIconName, "creditcard.fill")
+        XCTAssertEqual(presentation.title, "Continue with video")
+        XCTAssertEqual(presentation.buttonTitle, "Uploading media for video creation.")
+        XCTAssertEqual(presentation.buttonIconName, "paintbrush.pointed.fill")
         XCTAssertEqual(presentation.statusMessage, "Uploading media for video creation.")
     }
 
@@ -687,9 +687,9 @@ final class AnimateCreateWorkflowPresentationTests: XCTestCase {
         )
 
         XCTAssertTrue(presentation.canRunPrimaryAction)
-        XCTAssertEqual(presentation.title, "Continue")
-        XCTAssertEqual(presentation.buttonTitle, "Continue")
-        XCTAssertEqual(presentation.statusMessage, "You will see the cost before creating the video.")
+        XCTAssertEqual(presentation.title, "Continue with video")
+        XCTAssertEqual(presentation.buttonTitle, "Elegir look")
+        XCTAssertEqual(presentation.statusMessage, "Elige un look para preparar la dirección del video.")
     }
 
     func testPrimaryActionPresentationShowsBackendPlanCostBeforeConfirmation() {

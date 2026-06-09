@@ -16,30 +16,30 @@ struct AnimateWorkspaceCommandClient {
             bearerToken: bearerToken,
             body: AnimateWorkspaceSetupCommand(form: form)
         )
-        return response.momentId
+        return response.videoId
     }
 
-    func updateVideoSetup(bearerToken: String, momentId: String, form: AnimateVideoSetupForm) async throws {
+    func updateVideoSetup(bearerToken: String, videoId: String, form: AnimateVideoSetupForm) async throws {
         let _: AnimateWorkspaceCommandResponse = try await send(
-            path: ["workspace", "videos", momentId, "setup"],
+            path: ["workspace", "videos", videoId, "setup"],
             method: "PATCH",
             bearerToken: bearerToken,
             body: AnimateWorkspaceSetupCommand(form: form)
         )
     }
 
-    func updateMomentTitle(bearerToken: String, momentId: String, title: String) async throws {
+    func updateVideoTitle(bearerToken: String, videoId: String, title: String) async throws {
         let _: AnimateWorkspaceCommandResponse = try await send(
-            path: ["workspace", "videos", momentId, "title"],
+            path: ["workspace", "videos", videoId, "title"],
             method: "PATCH",
             bearerToken: bearerToken,
             body: AnimateWorkspaceTitleCommand(title: title)
         )
     }
 
-    func deleteVideo(bearerToken: String, momentId: String) async throws {
+    func deleteVideo(bearerToken: String, videoId: String) async throws {
         let _: AnimateWorkspaceCommandResponse = try await send(
-            path: ["workspace", "videos", momentId],
+            path: ["workspace", "videos", videoId],
             method: "DELETE",
             bearerToken: bearerToken,
             body: AnimateWorkspaceDeleteCommand()
@@ -53,7 +53,7 @@ struct AnimateWorkspaceCommandClient {
         body: Body
     ) async throws -> Response {
         guard var endpoint = URL(string: baseURLString.trimmingCharacters(in: .whitespacesAndNewlines)) else {
-            throw AnimateAPIError(code: "moments_workspace_not_configured", message: "Animate workspace commands are not configured.")
+            throw AnimateAPIError(code: "animate_workspace_not_configured", message: "Animate workspace commands are not configured.")
         }
 
         endpoint.appendPathComponent("v1")
@@ -73,7 +73,7 @@ struct AnimateWorkspaceCommandClient {
         guard let httpResponse = response as? HTTPURLResponse, 200..<300 ~= httpResponse.statusCode else {
             throw AnimateAPIError.decode(
                 from: data,
-                fallbackCode: "moments_workspace_command_failed",
+                fallbackCode: "animate_workspace_command_failed",
                 fallbackMessage: L10n.string("workflow.video.tryAgain")
             )
         }
@@ -117,5 +117,5 @@ private struct AnimateWorkspaceDeleteCommand: Encodable {
 }
 
 private struct AnimateWorkspaceCommandResponse: Decodable {
-    let momentId: String
+    let videoId: String
 }

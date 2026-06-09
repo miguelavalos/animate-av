@@ -30,7 +30,7 @@ struct AnimateRenderStatusClient {
         guard let httpResponse = response as? HTTPURLResponse, 200..<300 ~= httpResponse.statusCode else {
             throw AnimateAPIError.decode(
                 from: data,
-                fallbackCode: "moments_render_status_failed",
+                fallbackCode: "animate_render_status_failed",
                 fallbackMessage: AnimateRenderStatusError.statusFailed.localizedDescription
             )
         }

@@ -22,7 +22,7 @@ struct AnimateSelectedMedia: Identifiable, Equatable {
 
 struct AnimatePreparedUpload: Decodable, Equatable, Sendable {
     let appId: String
-    let momentId: String
+    let videoId: String
     let mediaAssetId: String
     let uploadId: String
     let uploadUrl: URL?
@@ -35,7 +35,7 @@ struct AnimatePreparedUpload: Decodable, Equatable, Sendable {
 
 struct AnimateUploadCompletion: Decodable, Equatable, Sendable {
     let appId: String
-    let momentId: String
+    let videoId: String
     let mediaAssetId: String
     let uploadId: String
     let storageKey: String
