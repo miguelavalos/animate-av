@@ -1,14 +1,15 @@
 import AVLaunchFoundation
+import AVProductAccountFoundation
 import SwiftUI
 
 struct AnimateAppBootstrapView: View {
     @Environment(\.scenePhase) private var scenePhase
     @StateObject private var dependencies = AnimateDependencyContainer()
     @State private var selectedTab: AnimateRootTab = .home
-    @State private var authOptionsArePresented = false
+    @State private var authPresentationState: AVProductAccountAuthPresentationState = .hidden
     @State private var authenticationWasSkipped = false
-    @State private var isShowingAccountOnboarding = false
     @State private var initialSplashIsPresented = true
+    @State private var initialAccountRestoreCompleted = false
     @State private var didApplyLaunchTab = false
     @State private var postAuthenticationSplashIsPresented = false
 
@@ -23,7 +24,7 @@ struct AnimateAppBootstrapView: View {
                 AnimateAVSplashView()
             } else if shouldShowOnboarding {
                 AnimateAuthOnboardingView(
-                    authOptionsArePresented: $authOptionsArePresented,
+                    authPresentationState: $authPresentationState,
                     accountIsAvailable: dependencies.accountController.isAccountAvailable,
                     onContinueWithApple: startAppleSignIn,
                     onContinueWithGoogle: startGoogleSignIn,
@@ -53,14 +54,16 @@ struct AnimateAppBootstrapView: View {
         .environmentObject(dependencies.aviViewModel)
         .task {
             applyLaunchTabIfNeeded()
-            await completeInitialSplashIfNeeded()
+            await restoreInitialAccountSessionIfNeeded()
             dependencies.applyUITestFixturesIfNeeded()
             await Task.yield()
             dependencies.applyUITestFixturesIfNeeded()
+            await completeInitialSplashIfNeeded()
         }
         .task(id: scenePhase) {
             guard scenePhase == .active else { return }
             await dependencies.accountController.syncFromAccountProvider()
+            initialAccountRestoreCompleted = true
         }
         .onReceive(dependencies.accountController.currentUserIdPublisher) { ownerUserId in
             dependencies.handleAccountChange(ownerUserId: ownerUserId)
@@ -68,7 +71,12 @@ struct AnimateAppBootstrapView: View {
     }
 
     private var shouldShowOnboarding: Bool {
-        !dependencies.accountController.isSignedIn && !authenticationWasSkipped && isShowingAccountOnboarding
+        guard !authenticationWasSkipped else { return false }
+        let rootGate = AVProductAccountAuthFlowRootGate(
+            accountState: dependencies.accountController.productAccountState,
+            authPresentationState: authPresentationState
+        )
+        return rootGate.shouldShowOnboarding
     }
 
     private var shouldShowInitialSplash: Bool {
@@ -96,14 +104,20 @@ struct AnimateAppBootstrapView: View {
     }
 
     private func showInitialOnboardingAfterSplashIfNeeded() {
+        guard initialAccountRestoreCompleted else { return }
         guard !dependencies.accountController.isSignedIn else { return }
         guard !authenticationWasSkipped else { return }
-        isShowingAccountOnboarding = true
+        authPresentationState = .onboardingCollapsed
+    }
+
+    private func restoreInitialAccountSessionIfNeeded() async {
+        guard !initialAccountRestoreCompleted else { return }
+        await dependencies.accountController.syncFromAccountProvider()
+        initialAccountRestoreCompleted = true
     }
 
     private func skipAuthentication() {
-        authOptionsArePresented = false
-        isShowingAccountOnboarding = false
+        authPresentationState = .hidden
         postAuthenticationSplashIsPresented = true
         authenticationWasSkipped = true
         Task {
@@ -119,24 +133,21 @@ struct AnimateAppBootstrapView: View {
     private func startSignInFlow(showAuthOptions: Bool = false) {
         postAuthenticationSplashIsPresented = false
         authenticationWasSkipped = false
-        isShowingAccountOnboarding = true
-        authOptionsArePresented = showAuthOptions
+        authPresentationState = showAuthOptions ? .onboardingOptions : .onboardingCollapsed
     }
 
     private func startAppleSignIn() async throws {
         try await dependencies.accountController.signInWithApple()
         await dependencies.accountController.syncFromAccountProvider()
         authenticationWasSkipped = false
-        isShowingAccountOnboarding = false
-        authOptionsArePresented = false
+        authPresentationState = .hidden
     }
 
     private func startGoogleSignIn() async throws {
         try await dependencies.accountController.signInWithGoogle()
         await dependencies.accountController.syncFromAccountProvider()
         authenticationWasSkipped = false
-        isShowingAccountOnboarding = false
-        authOptionsArePresented = false
+        authPresentationState = .hidden
     }
 }
 

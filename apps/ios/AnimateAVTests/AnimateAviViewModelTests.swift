@@ -26,7 +26,7 @@ final class AnimateAviViewModelTests: XCTestCase {
             creditBalance: .empty
         )
 
-        XCTAssertEqual(presentation.workflowFocusTitle, "Cartoons in motion")
+        XCTAssertEqual(presentation.workflowFocusTitle, "Videos in progress")
         XCTAssertTrue(presentation.workflowFocusMessage.contains("1 video in In Progress"))
         XCTAssertEqual(presentation.workflowFocusSystemImage, "clock.badge.checkmark")
     }
@@ -106,7 +106,7 @@ final class AnimateAviViewModelTests: XCTestCase {
             ])
         )
 
-        XCTAssertEqual(viewModel.presentation.workflowFocusTitle, "Cartoons in motion")
+        XCTAssertEqual(viewModel.presentation.workflowFocusTitle, "Videos in progress")
         XCTAssertTrue(viewModel.presentation.creditGuidanceMessage.contains("1 credit available"))
     }
 

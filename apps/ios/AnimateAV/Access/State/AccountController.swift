@@ -1,5 +1,6 @@
 import AccountAV
 import AVDiagnosticsFoundation
+import AVProductAccountFoundation
 import AuthenticationServices
 import Combine
 import Foundation
@@ -52,6 +53,21 @@ final class AccountController: ObservableObject {
         user != nil
     }
 
+    var productAccountState: AVProductAccountState {
+        if isAccountSessionTemporarilyUnavailable, let user {
+            return .temporarilyUnavailable(AVProductAccountSession(
+                user: user.productAccountUser,
+                isTemporarilyUnavailable: true
+            ))
+        }
+
+        if let user {
+            return .signedIn(AVProductAccountSession(user: user.productAccountUser))
+        }
+
+        return .guest
+    }
+
     func refresh() {
         if user == nil {
             resetSignedOutAccountState()
@@ -64,36 +80,77 @@ final class AccountController: ObservableObject {
 
     func syncFromAccountProvider() async {
         addAccountBreadcrumb("restore_started")
-        switch await service.restoreSession() {
-        case .active(let providerUser):
-            guard let resolvedProfile = await resolveInternalAccountUser(providerUser: providerUser) else {
-                captureAccountError(
-                    AnimateAPIError(code: "animate_account_profile_resolution_failed", message: "Account profile resolution failed."),
-                    operation: "restore",
-                    data: ["restore_result": "active_without_internal_user"]
-                )
-                isAccountSessionTemporarilyUnavailable = true
-                if user == nil {
-                    resetSignedOutAccountState()
-                }
-                return
-            }
-            publishProfile(resolvedProfile)
+
+        let diagnostics = AnimateProductAccountDiagnostics()
+        let featureStore = AnimateProductAccountFeatureStore()
+        let sessionController = AVProductAccountSessionController(
+            configuration: .animateAV,
+            provider: AnimateProductAccountProvider(accountService: service),
+            resolver: AnimateProductAccountResolver(
+                accountService: service,
+                profileResolver: AnimatePlatformAccountProfileResolver(
+                    accountService: service,
+                    accountProfileClient: accountProfileClient
+                ),
+                featureStore: featureStore
+            ),
+            persistence: AnimateProductAccountPersistence(userDefaults: userDefaults, key: lastKnownAccountUserKey),
+            diagnostics: diagnostics
+        )
+
+        let productAccountState = await sessionController.restore()
+        let diagnosticEvents = await diagnostics.events
+
+        if diagnosticEvents.contains(.providerSessionActive) {
             addAccountBreadcrumb("restore_active")
-            isAccountSessionTemporarilyUnavailable = false
-            persistLastKnownAccountUser(resolvedProfile.user)
-            await refreshCreditBalance()
-        case .temporarilyUnavailable:
+        }
+
+        if diagnosticEvents.contains(.providerSessionUnavailable) ||
+            diagnosticEvents.contains(.providerTokenUnavailable) ||
+            diagnosticEvents.contains(.productUserResolutionTemporarilyUnavailable) {
             addAccountBreadcrumb("restore_temporarily_unavailable")
+        }
+
+        if diagnosticEvents.contains(.providerSignedOut), productAccountState.user != nil {
+            addAccountBreadcrumb("restore_signed_out_preserved_local_user")
+        } else if diagnosticEvents.contains(.providerSignedOut) {
+            addAccountBreadcrumb("restore_signed_out")
+        }
+
+        switch productAccountState {
+        case .signedIn(let session):
+            let resolvedUser = AccountAVUser(productAccountUser: session.user)
+            publishProfile(AnimateAccountProfile(
+                user: resolvedUser,
+                features: featureStore.features ?? .publicDefault
+            ))
+            isAccountSessionTemporarilyUnavailable = false
+            await refreshCreditBalance()
+        case .temporarilyUnavailable(let session):
+            user = AccountAVUser(productAccountUser: session.user)
+            AVDiagnostics.setUserContext(AVDiagnosticsUserContext(id: session.user.id))
             isAccountSessionTemporarilyUnavailable = true
-            if user == nil {
+            if creditBalanceLoadState == .signedOut {
                 resetSignedOutAccountState()
             }
-        case .signedOut, .invalidated:
+        case .restoring(let lastKnownUser):
+            user = lastKnownUser.map(AccountAVUser.init(productAccountUser:))
+            isAccountSessionTemporarilyUnavailable = lastKnownUser != nil
+        case .guest:
+            if diagnosticEvents.contains(.productUserResolutionTemporarilyUnavailable) ||
+                diagnosticEvents.contains(.providerTokenUnavailable) ||
+                diagnosticEvents.contains(.providerSessionUnavailable) {
+                user = nil
+                canUseAnimateImageGeneration = false
+                AVDiagnostics.clearUserContext()
+                isAccountSessionTemporarilyUnavailable = true
+                resetSignedOutAccountState()
+                return
+            }
+
             user = nil
             canUseAnimateImageGeneration = false
             AVDiagnostics.clearUserContext()
-            addAccountBreadcrumb("restore_signed_out")
             isAccountSessionTemporarilyUnavailable = false
             clearLastKnownAccountUser()
             resetSignedOutAccountState()
@@ -236,21 +293,6 @@ final class AccountController: ObservableObject {
         Task { [weak self] in
             try? await Task.sleep(nanoseconds: 1_500_000_000)
             await self?.refreshCreditBalance()
-        }
-    }
-
-    private func resolveInternalAccountUser(providerUser: AccountAVUser) async -> AnimateAccountProfile? {
-        do {
-            guard let token = try await service.getToken() else {
-                return AnimateUITestEnvironment.current.hasAccountOverride
-                    ? AnimateAccountProfile(user: providerUser, features: .uiTestDefault)
-                    : nil
-            }
-            return try await accountProfileClient.fetchCurrentUser(bearerToken: token)
-        } catch {
-            captureAccountError(error, operation: "profile_resolution")
-            errorMessage = error.localizedDescription
-            return nil
         }
     }
 
@@ -422,6 +464,130 @@ private struct AnimateLastKnownAccountUser: Codable {
 
     var accountUser: AccountAVUser {
         AccountAVUser(id: id, displayName: displayName, emailAddress: emailAddress)
+    }
+}
+
+@MainActor
+protocol AnimateAccountProfileResolving {
+    func resolveCurrentAccountProfile() async throws -> AnimateAccountProfile
+}
+
+@MainActor
+private struct AnimatePlatformAccountProfileResolver: AnimateAccountProfileResolving {
+    let accountService: AVAccountService
+    let accountProfileClient: AnimateAccountProfileClient
+
+    func resolveCurrentAccountProfile() async throws -> AnimateAccountProfile {
+        guard let token = try await accountService.getToken() else {
+            throw AnimateAPIError(code: "animate_auth_token_missing", message: L10n.string("access.signInRequired.generic"))
+        }
+        return try await accountProfileClient.fetchCurrentUser(bearerToken: token)
+    }
+}
+
+@MainActor
+private final class AnimateProductAccountFeatureStore {
+    var features: AnimateAccountFeatures?
+}
+
+private extension AVProductAccountConfiguration {
+    static let animateAV = AVProductAccountConfiguration(
+        appIdentifier: "animate-av",
+        appDisplayName: "Animate AV",
+        allowsGuestMode: true
+    )
+}
+
+private extension AccountAVUser {
+    init(productAccountUser user: AVProductAccountUser) {
+        self.init(id: user.id, displayName: user.displayName, emailAddress: user.emailAddress)
+    }
+
+    var productAccountUser: AVProductAccountUser {
+        AVProductAccountUser(id: id, displayName: displayName, emailAddress: emailAddress)
+    }
+}
+
+@MainActor
+private struct AnimateProductAccountProvider: AVProductAccountProviderSessioning {
+    let accountService: AVAccountService
+
+    func restoreProviderSession() async -> AVProductAccountProviderRestoreResult {
+        switch await accountService.restoreSession() {
+        case .signedOut:
+            return .signedOut
+        case .active:
+            return .active
+        case .temporarilyUnavailable:
+            return .temporarilyUnavailable
+        case .invalidated:
+            return .invalidated
+        }
+    }
+
+    func getProviderToken() async throws -> String? {
+        try await accountService.getToken()
+    }
+
+    func signOutProvider() async throws {
+        try await accountService.signOut()
+    }
+}
+
+@MainActor
+private struct AnimateProductAccountResolver: AVProductAccountResolving {
+    let accountService: AVAccountService
+    let profileResolver: AnimateAccountProfileResolving
+    let featureStore: AnimateProductAccountFeatureStore
+
+    func resolveProductAccount(
+        providerToken: String,
+        configuration: AVProductAccountConfiguration
+    ) async throws -> AVProductAccountUser {
+        _ = providerToken
+        _ = configuration
+
+        if AnimateUITestEnvironment.current.hasAccountOverride,
+           let providerUser = accountService.providerSessionUser {
+            featureStore.features = .uiTestDefault
+            return providerUser.productAccountUser
+        }
+
+        let profile = try await profileResolver.resolveCurrentAccountProfile()
+        featureStore.features = profile.features
+        return profile.user.productAccountUser
+    }
+}
+
+@MainActor
+private struct AnimateProductAccountPersistence: AVProductAccountPersistence {
+    let userDefaults: UserDefaults
+    let key: String
+
+    func loadLastKnownUser() async -> AVProductAccountUser? {
+        guard let data = userDefaults.data(forKey: key),
+              let snapshot = try? JSONDecoder().decode(AnimateLastKnownAccountUser.self, from: data) else {
+            return nil
+        }
+        return snapshot.accountUser.productAccountUser
+    }
+
+    func saveLastKnownUser(_ user: AVProductAccountUser) async throws {
+        let snapshot = AnimateLastKnownAccountUser(user: AccountAVUser(productAccountUser: user))
+        guard let data = try? JSONEncoder().encode(snapshot) else { return }
+        userDefaults.set(data, forKey: key)
+    }
+
+    func clearLastKnownUser() async throws {
+        userDefaults.removeObject(forKey: key)
+    }
+}
+
+private actor AnimateProductAccountDiagnostics: AVProductAccountDiagnostics {
+    private(set) var events: [AVProductAccountDiagnosticEvent] = []
+
+    func recordAccountEvent(_ event: AVProductAccountDiagnosticEvent) {
+        events.append(event)
     }
 }
 

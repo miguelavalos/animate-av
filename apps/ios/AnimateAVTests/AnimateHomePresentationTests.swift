@@ -34,7 +34,7 @@ final class AnimateHomePresentationTests: XCTestCase {
         XCTAssertFalse(presentation.createAction.isDisabled)
         XCTAssertEqual(
             presentation.openInProgressAction.detail,
-            "Half-made cartoons will show up here."
+            "Unfinished videos will appear here."
         )
     }
 
@@ -69,11 +69,11 @@ final class AnimateHomePresentationTests: XCTestCase {
 
         XCTAssertEqual(
             presentation.videoStatusDetail,
-            "2 videos ready in your cartoon shelf."
+            "2 videos ready in your video library."
         )
         XCTAssertEqual(
             presentation.openInProgressAction.detail,
-            "Finish the cartoons already in motion."
+            "Finish the videos already in progress."
         )
     }
 
@@ -88,11 +88,11 @@ final class AnimateHomePresentationTests: XCTestCase {
 
         XCTAssertEqual(
             presentation.videoStatusDetail,
-            "1 video ready in your cartoon shelf."
+            "1 video ready in your video library."
         )
         XCTAssertEqual(
             presentation.openInProgressAction.detail,
-            "Finish the cartoons already in motion."
+            "Finish the videos already in progress."
         )
     }
 

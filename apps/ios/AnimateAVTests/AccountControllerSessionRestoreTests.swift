@@ -78,9 +78,9 @@ final class AccountControllerSessionRestoreTests: XCTestCase {
         XCTAssertTrue(restoredController.isAccountSessionTemporarilyUnavailable)
     }
 
-    func testConfirmedSignedOutClearsLastKnownUser() async {
+    func testProviderSignedOutPreservesLastKnownUserUntilManualSignOut() async {
         let userDefaults = isolatedUserDefaults()
-        let user = AccountAVUser(id: "signed-out-user", displayName: "Signed Out User", emailAddress: nil)
+        let user = AccountAVUser(id: "signed-out-user", displayName: "Signed Out User", emailAddress: "signed@example.com")
         AccountControllerURLProtocol.profileUser = user
         let signedInController = AccountController(
             service: StubAVAccountService(user: user),
@@ -100,9 +100,25 @@ final class AccountControllerSessionRestoreTests: XCTestCase {
         )
         await signedOutController.syncFromAccountProvider()
 
-        XCTAssertFalse(signedOutController.isSignedIn)
-        XCTAssertNil(signedOutController.currentUserId)
-        XCTAssertFalse(signedOutController.isAccountSessionTemporarilyUnavailable)
+        XCTAssertTrue(signedOutController.isSignedIn)
+        XCTAssertEqual(signedOutController.currentUserId, user.id)
+        XCTAssertTrue(signedOutController.isAccountSessionTemporarilyUnavailable)
+    }
+
+    func testProviderSignedOutWithoutLastKnownUserStaysSignedOut() async {
+        let controller = AccountController(
+            service: StubAVAccountService(user: nil, restoreResult: .signedOut),
+            accountProfileClient: accountProfileClient(),
+            balanceClient: balanceClient(),
+            purchaseService: StubAnimatePurchaseService(),
+            userDefaults: isolatedUserDefaults()
+        )
+
+        await controller.syncFromAccountProvider()
+
+        XCTAssertFalse(controller.isSignedIn)
+        XCTAssertNil(controller.currentUserId)
+        XCTAssertFalse(controller.isAccountSessionTemporarilyUnavailable)
     }
 
     func testManualSignOutClearsLastKnownUser() async throws {
@@ -455,6 +471,7 @@ private final class AccountControllerURLProtocol: URLProtocol {
 
         return """
         {
+          "spendableCredits": 10,
           "proMonthlyCredits": 10,
           "promotionalGrantedCredits": 0,
           "purchasedCredits": 0,
