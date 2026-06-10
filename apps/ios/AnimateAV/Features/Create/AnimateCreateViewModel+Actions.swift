@@ -319,10 +319,15 @@ extension AnimateCreateViewModel {
         }
 
         let form = effectiveFinalRenderForm()
+        let preparedRenderPlan = confirmableRenderPlan(videoId: context.videoId)
         beginFinalVideoCommand(.confirming(L10n.string("workflow.final.creatingVideo")))
         updateFinalRenderStatusMessage(L10n.string("workflow.final.creatingVideo"))
 
         runOperation {
+            if let preparedRenderPlan {
+                finalRenderWorkflow.usePreparedRenderPlan(preparedRenderPlan)
+            }
+
             await finalRenderWorkflow.confirmPreparedFinalRender(
                 videoId: context.videoId,
                 template: context.template,

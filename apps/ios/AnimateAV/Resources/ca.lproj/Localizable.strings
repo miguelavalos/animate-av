@@ -920,6 +920,8 @@
 "workflow.final.addCredits" = "Afegeix crèdits abans del vídeo final.";
 "workflow.final.notReady" = "L’exportació final encara no està llesta per crear-se.";
 "workflow.final.tryAgain" = "El workflow de vídeo no s’ha pogut completar. Torna-ho a provar.";
+"workflow.final.planChanged" = "El pla del vídeo ha canviat. Revisa el cost de nou abans de crear el vídeo.";
+"workflow.final.notCreatable" = "Aquest vídeo encara no està a punt per crear-se. Revisa la foto, els crèdits i les opcions.";
 "workflow.final.contactSupport" = "Hi ha un problema del servei. Torna-ho a provar més tard o contacta amb suport.";
 "gallery.info.title" = "Info";
 "gallery.info.look" = "Look";

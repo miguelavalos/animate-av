@@ -922,6 +922,8 @@
 "workflow.final.addCredits" = "Add credits before creating the final video.";
 "workflow.final.notReady" = "Final video is not ready to create.";
 "workflow.final.tryAgain" = "The video workflow could not finish. Please try again.";
+"workflow.final.planChanged" = "The video plan changed. Review the cost again before creating the video.";
+"workflow.final.notCreatable" = "This video is not ready to create yet. Review the photo, credits, and options.";
 "workflow.final.contactSupport" = "There is a service problem. Try again later or contact support.";
 "gallery.info.title" = "Info";
 "gallery.info.look" = "Look";

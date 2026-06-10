@@ -136,8 +136,10 @@ final class FinalRenderWorkflow: WorkspaceObservingWorkflow {
             feature: "animate.final_render",
             operation: "prepare_plan",
             data: [
+                "video_id": videoId,
                 "selected_count": String(selectedMedia.filter(\.selected).count),
                 "removes_watermark": String(removesWatermark),
+                "has_message": String(form.activeMessageText != nil),
             ]
         )
 
@@ -147,6 +149,15 @@ final class FinalRenderWorkflow: WorkspaceObservingWorkflow {
             let sourceImageUploadId = try await prepareVideoSourceUploadIfNeeded(
                 selectedMedia: selectedMedia,
                 bearerToken: bearerToken
+            )
+            AnimateWorkflowDiagnostics.addBreadcrumb(
+                feature: "animate.final_render",
+                operation: "prepare_plan_source",
+                data: [
+                    "video_id": videoId,
+                    "has_source_upload": String(sourceImageUploadId != nil),
+                    "selected_source_count": String(selectedSourceLocalIdentifiersForFinalRender(from: selectedMedia).count),
+                ]
             )
             let plan = try await prepareRenderPlanWithUploadVisibilityRetry(
                 videoId: videoId,
@@ -246,9 +257,12 @@ final class FinalRenderWorkflow: WorkspaceObservingWorkflow {
             feature: "animate.final_render",
             operation: "confirm",
             data: [
+                "video_id": videoId,
+                "plan_id": renderPlan.planId,
                 "selected_count": String(selectedMedia.filter(\.selected).count),
                 "required_credits": String(requiredCredits),
                 "removes_watermark": String(removesWatermark),
+                "has_message": String(form.activeMessageText != nil),
             ]
         )
 
@@ -257,6 +271,16 @@ final class FinalRenderWorkflow: WorkspaceObservingWorkflow {
             let sourceImageUploadId = try await prepareVideoSourceUploadIfNeeded(
                 selectedMedia: selectedMedia,
                 bearerToken: bearerToken
+            )
+            AnimateWorkflowDiagnostics.addBreadcrumb(
+                feature: "animate.final_render",
+                operation: "confirm_source",
+                data: [
+                    "video_id": videoId,
+                    "plan_id": renderPlan.planId,
+                    "has_source_upload": String(sourceImageUploadId != nil),
+                    "selected_source_count": String(selectedSourceLocalIdentifiers.count),
+                ]
             )
             logger.info("Confirming final render videoId=\(videoId, privacy: .public) planId=\(renderPlan.planId, privacy: .public) cost=\(renderPlan.plan.totalCreditCost, privacy: .public) selectedMedia=\(selectedSourceLocalIdentifiers.count, privacy: .public)")
             let confirmed = try await finalRenderClient.confirmFinalRender(
@@ -376,7 +400,13 @@ final class FinalRenderWorkflow: WorkspaceObservingWorkflow {
             return L10n.string("workflow.final.addCredits")
         }
         if error.code == "animate_render_plan_stale" {
-            return L10n.string("workflow.final.tryAgain")
+            return L10n.string("workflow.final.planChanged")
+        }
+        if error.code == "animate_render_plan_not_creatable" {
+            return L10n.string("workflow.final.notCreatable")
+        }
+        if error.code == "animate_workspace_video_not_found" {
+            return L10n.string("workflow.final.missingVideo")
         }
         if error.isLikelyConfigurationOrServerContractError {
             return L10n.string("workflow.final.contactSupport")

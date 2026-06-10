@@ -390,6 +390,167 @@ final class AnimateCreateViewModelVideoDirectionStateTests: XCTestCase {
         XCTAssertNil(viewModel.workflowErrorAlertMessage)
     }
 
+    func testSubmitFinalVideoSyncsVisibleRenderPlanBeforeConfirming() async {
+        AnimateFinalRenderURLProtocolMock.reset()
+        AnimateFinalRenderURLProtocolMock.responseData = Data(Self.confirmFinalRenderJSON.utf8)
+        let configuration = URLSessionConfiguration.ephemeral
+        configuration.protocolClasses = [AnimateFinalRenderURLProtocolMock.self]
+        let harness = AnimateVideoCreationFailureHarness(
+            error: NSError(domain: "test", code: 1),
+            finalRenderSession: URLSession(configuration: configuration)
+        )
+        let finalRenderWorkflow = harness.finalRenderWorkflow
+        let viewModel = AnimateCreateViewModel()
+        viewModel.bind(
+            accountStateProvider: harness,
+            videoCreationWorkflow: harness.videoCreationWorkflow,
+            mediaUploadWorkflow: harness.mediaUploadWorkflow,
+            videoDirectionWorkflow: harness.videoDirectionWorkflow,
+            finalRenderWorkflow: finalRenderWorkflow,
+            authTokenProvider: harness,
+            imageGenerationAccountingClient: AnimateImageGenerationAccountingClient(baseURLString: "https://api.example.test")
+        )
+        viewModel.continueVideo(
+            AnimateCreateTestFixtures.makeVideo(id: "video-1", status: "story_ready"),
+            focus: .video
+        )
+        let workspace = AnimateWorkspace(
+            video: AnimateCreateTestFixtures.makeVideo(id: "video-1", status: "story_ready"),
+            mediaAssets: [
+                AnimateCreateTestFixtures.makeMediaAsset(id: "backend-media-1", hasUploadId: true)
+            ],
+            storyScenes: [AnimateCreateTestFixtures.makeScene(id: "scene-1")],
+            renderJobs: [],
+            artifacts: []
+        )
+        harness.publishWorkspace(workspace)
+        await Task.yield()
+        await Task.yield()
+        viewModel.applyAccountState(
+            AnimateCreateAccountState(
+                isSignedIn: true,
+                balance: AnimateCreditBalance(proMonthly: 0, promotional: 15, purchased: 0),
+                creditBalanceLoadState: .loaded
+            )
+        )
+        viewModel.applyVideoDirectionState(
+            AnimateCreateVideoDirectionState(
+                activeWorkspace: workspace,
+                savedScenes: [AnimateCreateTestFixtures.makeScene(id: "scene-1")],
+                generatedScenes: [],
+                statusMessage: nil,
+                isPlanning: false
+            )
+        )
+        let visibleRenderPlan = AnimateCreateTestFixtures.makeRenderPlan(
+            videoId: "video-1",
+            totalCreditCost: 1,
+            plannedAssetCount: 1,
+            usedAssetCount: 1
+        )
+        viewModel.applyFinalRenderState(
+            AnimateCreateFinalRenderState(
+                finalExport: nil,
+                latestFinalJob: nil,
+                renderPlan: visibleRenderPlan,
+                statusMessage: nil,
+                isGenerating: false
+            )
+        )
+
+        viewModel.submitFinalVideoConfirmation()
+        await waitForFinalRenderJob(in: viewModel)
+
+        XCTAssertEqual(AnimateFinalRenderURLProtocolMock.requestPaths, [
+            "/v1/apps/animateav/renders/final/confirm",
+        ])
+        XCTAssertEqual(viewModel.latestFinalJob?.id, "render-1")
+        XCTAssertEqual(viewModel.finalVideoCommandState, .queued(L10n.string("workflow.final.creatingVideo")))
+        XCTAssertNil(viewModel.workflowErrorAlertMessage)
+    }
+
+    func testConfirmFinalRenderShowsSpecificMessageWhenBackendPlanIsNotCreatable() async {
+        AnimateFinalRenderURLProtocolMock.reset()
+        AnimateFinalRenderURLProtocolMock.statusCode = 409
+        AnimateFinalRenderURLProtocolMock.responseData = Data(Self.notCreatableRenderPlanErrorJSON.utf8)
+        let configuration = URLSessionConfiguration.ephemeral
+        configuration.protocolClasses = [AnimateFinalRenderURLProtocolMock.self]
+        let harness = AnimateVideoCreationFailureHarness(
+            error: NSError(domain: "test", code: 1),
+            finalRenderSession: URLSession(configuration: configuration)
+        )
+        let workflow = harness.finalRenderWorkflow
+        workflow.usePreparedRenderPlan(AnimateCreateTestFixtures.makeRenderPlan(videoId: "video-1"))
+        harness.publishWorkspace(
+            AnimateWorkspace(
+                video: AnimateCreateTestFixtures.makeVideo(id: "video-1"),
+                mediaAssets: [
+                    AnimateCreateTestFixtures.makeMediaAsset(id: "backend-media-1", hasUploadId: true)
+                ],
+                storyScenes: [AnimateCreateTestFixtures.makeScene(id: "scene-1")],
+                renderJobs: [],
+                artifacts: []
+            )
+        )
+        await Task.yield()
+
+        await workflow.confirmPreparedFinalRender(
+            videoId: "video-1",
+            template: .birthdayMessage,
+            creationStyle: nil,
+            form: AnimateVideoSetupForm(template: .birthdayMessage),
+            selectedMedia: [],
+            removesWatermark: false
+        )
+
+        XCTAssertEqual(AnimateFinalRenderURLProtocolMock.requestPaths, [
+            "/v1/apps/animateav/renders/final/confirm",
+        ])
+        XCTAssertEqual(workflow.statusMessage, L10n.string("workflow.final.notCreatable"))
+        XCTAssertNil(workflow.latestFinalJob)
+        XCTAssertFalse(workflow.isGenerating)
+    }
+
+    func testConfirmFinalRenderShowsSpecificMessageWhenBackendPlanIsStale() async {
+        AnimateFinalRenderURLProtocolMock.reset()
+        AnimateFinalRenderURLProtocolMock.statusCode = 409
+        AnimateFinalRenderURLProtocolMock.responseData = Data(Self.staleRenderPlanErrorJSON.utf8)
+        let configuration = URLSessionConfiguration.ephemeral
+        configuration.protocolClasses = [AnimateFinalRenderURLProtocolMock.self]
+        let harness = AnimateVideoCreationFailureHarness(
+            error: NSError(domain: "test", code: 1),
+            finalRenderSession: URLSession(configuration: configuration)
+        )
+        let workflow = harness.finalRenderWorkflow
+        workflow.usePreparedRenderPlan(AnimateCreateTestFixtures.makeRenderPlan(videoId: "video-1"))
+        harness.publishWorkspace(
+            AnimateWorkspace(
+                video: AnimateCreateTestFixtures.makeVideo(id: "video-1"),
+                mediaAssets: [
+                    AnimateCreateTestFixtures.makeMediaAsset(id: "backend-media-1", hasUploadId: true)
+                ],
+                storyScenes: [AnimateCreateTestFixtures.makeScene(id: "scene-1")],
+                renderJobs: [],
+                artifacts: []
+            )
+        )
+        await Task.yield()
+
+        await workflow.confirmPreparedFinalRender(
+            videoId: "video-1",
+            template: .birthdayMessage,
+            creationStyle: nil,
+            form: AnimateVideoSetupForm(template: .birthdayMessage),
+            selectedMedia: [],
+            removesWatermark: false
+        )
+
+        XCTAssertEqual(workflow.statusMessage, L10n.string("workflow.final.planChanged"))
+        XCTAssertNil(workflow.renderPlan)
+        XCTAssertNil(workflow.latestFinalJob)
+        XCTAssertFalse(workflow.isGenerating)
+    }
+
     func testVisibleFinalRenderPlanCanBeConfirmedEvenWhenLocalSignatureChanged() {
         let viewModel = AnimateCreateViewModel()
         let plan = AnimateCreateTestFixtures.makeRenderPlan(videoId: "video-1")
@@ -961,6 +1122,24 @@ final class AnimateCreateViewModelVideoDirectionStateTests: XCTestCase {
         }
       },
       "confirmedAt": "2026-05-16T16:00:00Z"
+    }
+    """
+
+    private static let notCreatableRenderPlanErrorJSON = """
+    {
+      "error": {
+        "code": "animate_render_plan_not_creatable",
+        "message": "The render plan cannot create a video."
+      }
+    }
+    """
+
+    private static let staleRenderPlanErrorJSON = """
+    {
+      "error": {
+        "code": "animate_render_plan_stale",
+        "message": "The render plan changed."
+      }
     }
     """
 

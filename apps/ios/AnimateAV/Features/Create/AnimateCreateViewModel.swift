@@ -509,6 +509,11 @@ final class AnimateCreateViewModel: ObservableObject {
         case .storyReady, .finalQueued, .finalRunning, .full:
             renderPlan = nil
         }
+        if let renderPlan {
+            finalRenderWorkflow?.usePreparedRenderPlan(renderPlan)
+        } else {
+            finalRenderWorkflow?.clearRenderPlan()
+        }
         renderPlanInputSignature = renderPlan.map { currentFinalRenderInputSignature(videoId: $0.videoId) }
         finalRenderStatusMessage = {
             switch fixtureMode {

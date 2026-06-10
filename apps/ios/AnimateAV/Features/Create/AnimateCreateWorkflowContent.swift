@@ -344,22 +344,25 @@ private struct AnimateCreateMediaFirstWorkspace: View {
     }
 
     private func primaryFinalRenderAction() {
-        guard presentation.videoDirectionSummary.hasScenes else {
-            return
-        }
         if finalVideoAction.hasRenderPlan {
             showsCreateVideoConfirmation = true
-        } else {
-            waitsForFinalRenderPlan = true
-            showsCreateVideoConfirmation = false
-            prepareFinalRenderPlan(false)
+            return
         }
+
+        guard presentation.videoDirectionSummary.hasScenes else {
+            prepareVideoDirection()
+            return
+        }
+
+        waitsForFinalRenderPlan = true
+        showsCreateVideoConfirmation = false
+        prepareFinalRenderPlan(false)
     }
 
     private func presentCreateVideoConfirmationIfReady() {
         guard waitsForFinalRenderPlan,
               presentation.finalRenderSummary.latestFinalJob == nil,
-              presentation.videoDirectionSummary.hasScenes,
+              presentation.videoDirectionSummary.hasScenes || presentation.finalRenderSummary.renderPlan != nil,
               finalVideoAction.canShowConfirmationSheet else { return }
         waitsForFinalRenderPlan = false
         showsCreateVideoConfirmation = true
@@ -945,6 +948,13 @@ private struct AnimateCreateVideoDirectionCard: View {
         .onAppear {
             guard !isGuidedFlowComplete, activeGuidedSheet == nil else { return }
             activeGuidedSheet = guideState.step
+            updateGuidedLookFamilyForCurrentStep()
+        }
+        .onChange(of: activeGuidedSheet) { _, _ in
+            updateGuidedLookFamilyForCurrentStep()
+        }
+        .onChange(of: selectedLook) { _, _ in
+            updateGuidedLookFamilyForCurrentStep()
         }
         .onChange(of: continueGuidedFlowRequest) { _, request in
             guard request > handledContinueGuidedFlowRequest else { return }
@@ -1125,15 +1135,35 @@ private struct AnimateCreateVideoDirectionCard: View {
                     .buttonStyle(.plain)
 
                     stepHeader(family.title, family.subtitle)
-                    AnimateCreateTwoColumnGrid(items: family.looks, verticalSpacing: 10, itemHeight: 92) { look in
-                        AnimateCreateGuidedLookTile(
-                            look: look,
-                            isSelected: selectedLook == look,
-                            select: {
-                                selectLook(look)
-                            }
+
+                    AnimateCreateLookFamilyNavigator(
+                        family: family,
+                        familyIndex: guidedLookFamilyIndex ?? 0,
+                        familyCount: AnimateVideoLook.families.count,
+                        previous: selectPreviousGuidedLookFamily,
+                        next: selectNextGuidedLookFamily
+                    )
+
+                    VStack(spacing: 12) {
+                        AnimateCreateLookFamilyRail(
+                            families: AnimateVideoLook.families,
+                            selectedFamily: family,
+                            setupLook: selectedLook,
+                            selectFamily: selectGuidedLookFamily
                         )
+
+                        AnimateCreateTwoColumnGrid(items: family.looks, verticalSpacing: 10, itemHeight: 92) { look in
+                            AnimateCreateGuidedLookTile(
+                                look: look,
+                                isSelected: selectedLook == look,
+                                select: {
+                                    selectLook(look)
+                                }
+                            )
+                        }
                     }
+                    .contentShape(Rectangle())
+                    .gesture(guidedLookFamilySwipeGesture)
                 } else {
                     stepHeader(L10n.string("create.guided.look.title"), L10n.string("create.guided.look.detail"))
                     AnimateCreateTwoColumnGrid(items: AnimateVideoLook.families, verticalSpacing: 10, itemHeight: 104) { family in
@@ -1243,6 +1273,26 @@ private struct AnimateCreateVideoDirectionCard: View {
         guidedLookFamily
     }
 
+    private var guidedLookFamilyIndex: Int? {
+        guard let guidedLookFamily else { return nil }
+        return AnimateVideoLook.families.firstIndex(where: { $0.id == guidedLookFamily.id })
+    }
+
+    private var guidedLookFamilySwipeGesture: some Gesture {
+        DragGesture(minimumDistance: 28)
+            .onEnded { value in
+                let horizontal = value.translation.width
+                let vertical = value.translation.height
+                guard abs(horizontal) > abs(vertical), abs(horizontal) > 44 else { return }
+
+                if horizontal < 0 {
+                    selectNextGuidedLookFamily()
+                } else {
+                    selectPreviousGuidedLookFamily()
+                }
+            }
+    }
+
     private var selectedLookStrip: some View {
         HStack(spacing: 9) {
             Image(systemName: selectedLook?.systemImage ?? "paintbrush.pointed.fill")
@@ -1314,6 +1364,29 @@ private struct AnimateCreateVideoDirectionCard: View {
         if result.clearsMessage {
             updateMessage("")
         }
+    }
+
+    private func updateGuidedLookFamilyForCurrentStep() {
+        guard activeGuidedSheet == .look, guidedLookFamily == nil, let selectedLook else { return }
+        guidedLookFamily = AnimateVideoLook.family(containing: selectedLook)
+    }
+
+    private func selectGuidedLookFamily(_ family: AnimateVideoLookFamily) {
+        withAnimation(.spring(response: 0.28, dampingFraction: 0.88)) {
+            guidedLookFamily = family
+        }
+    }
+
+    private func selectPreviousGuidedLookFamily() {
+        guard let index = guidedLookFamilyIndex else { return }
+        let previousIndex = index == 0 ? AnimateVideoLook.families.count - 1 : index - 1
+        selectGuidedLookFamily(AnimateVideoLook.families[previousIndex])
+    }
+
+    private func selectNextGuidedLookFamily() {
+        guard let index = guidedLookFamilyIndex else { return }
+        let nextIndex = index == AnimateVideoLook.families.count - 1 ? 0 : index + 1
+        selectGuidedLookFamily(AnimateVideoLook.families[nextIndex])
     }
 
     private var continueButtonTitle: String {
