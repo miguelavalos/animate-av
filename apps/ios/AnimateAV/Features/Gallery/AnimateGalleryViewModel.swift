@@ -3,6 +3,8 @@ import Foundation
 
 @MainActor
 final class AnimateGalleryViewModel: ObservableObject {
+    private static let dismissedRemoteVideoIdsDefaultsKey = "AnimateGallery.dismissedRemoteVideoIds"
+
     @Published private(set) var videos: [AnimateGalleryVideoPresentation] = []
     @Published private(set) var images: [AnimateGalleryImagePresentation] = []
     @Published private(set) var statusMessage: String?
@@ -14,6 +16,7 @@ final class AnimateGalleryViewModel: ObservableObject {
     private let finalRenderClient: AnimateFinalRenderClient?
     private var remoteArtifacts: [AnimateArtifact] = []
     private var downloadingImageIds = Set<String>()
+    private var dismissedRemoteVideoIds: Set<String>
     private var dismissedRemoteImageIds = Set<String>()
 
     init(
@@ -26,6 +29,9 @@ final class AnimateGalleryViewModel: ObservableObject {
         self.galleryArtifactsProvider = galleryArtifactsProvider
         self.authTokenProvider = authTokenProvider
         self.finalRenderClient = finalRenderClient
+        self.dismissedRemoteVideoIds = Set(
+            UserDefaults.standard.stringArray(forKey: Self.dismissedRemoteVideoIdsDefaultsKey) ?? []
+        )
         refreshVideos()
         refreshImages()
         NotificationCenter.default.publisher(for: AnimateGalleryStore.didChangeNotification)
@@ -68,6 +74,9 @@ final class AnimateGalleryViewModel: ObservableObject {
 
         for artifact in remoteArtifacts where artifact.kind == "final_export" || artifact.kind == "final_video" {
             let artifactId = artifact.workflowArtifactId ?? artifact.id
+            guard !dismissedRemoteVideoIds.contains(artifactId),
+                  !dismissedRemoteVideoIds.contains(artifact.id)
+            else { continue }
             let alreadyPresented = presentations.contains { presentation in
                 presentation.record.artifactId == artifactId
                     || presentation.record.artifactId == artifact.id
@@ -141,6 +150,14 @@ final class AnimateGalleryViewModel: ObservableObject {
     }
 
     func deleteVideo(_ video: AnimateGalleryVideoPresentation) {
+        dismissedRemoteVideoIds.insert(video.record.artifactId)
+        if let remoteArtifact = video.remoteArtifact {
+            dismissedRemoteVideoIds.insert(remoteArtifact.id)
+            if let workflowArtifactId = remoteArtifact.workflowArtifactId {
+                dismissedRemoteVideoIds.insert(workflowArtifactId)
+            }
+        }
+        persistDismissedRemoteVideoIds()
         galleryStore.deleteRecord(video.record, deleteLocalFile: true)
         refreshVideos()
     }
@@ -210,6 +227,13 @@ final class AnimateGalleryViewModel: ObservableObject {
             return nil
         }
         return galleryStore.localFileURL(relativePath: relativePath)
+    }
+
+    private func persistDismissedRemoteVideoIds() {
+        UserDefaults.standard.set(
+            Array(dismissedRemoteVideoIds).sorted(),
+            forKey: Self.dismissedRemoteVideoIdsDefaultsKey
+        )
     }
 
     func downloadImage(_ image: AnimateGalleryImagePresentation) {

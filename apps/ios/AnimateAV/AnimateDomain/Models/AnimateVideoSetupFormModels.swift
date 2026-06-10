@@ -291,10 +291,6 @@ enum AnimateVideoSetupRules {
         form: AnimateVideoSetupForm,
         balance: AnimateCreditBalance
     ) -> Availability {
-        guard !form.occasion.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty else {
-            return Availability(canCreateVideo: false, blockReason: .missingOccasion)
-        }
-
         return Availability(canCreateVideo: true, blockReason: nil)
     }
 

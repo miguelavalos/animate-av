@@ -380,6 +380,7 @@ struct AnimateCreatePrimaryActionPresentation: Equatable {
     var hasCompletedVideoDirection: Bool {
         workflow.videoDirectionSummary.hasScenes
             || workflow.finalRenderSummary.renderPlan != nil
+            || (workflow.mediaSummary.effectiveMediaCount > 0 && workflow.selectedLook != nil)
     }
 
     var hasSelectedVideoLook: Bool {

@@ -64,6 +64,7 @@
 		40395F111A325249FA7669CE /* WorkspaceObservingWorkflow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D2117570E128B0B05FD08D7 /* WorkspaceObservingWorkflow.swift */; };
 		41730078490E593A9D151D3D /* AVSettingsFoundation in Frameworks */ = {isa = PBXBuildFile; productRef = 75E26B9A88E4C3E7FF0EF28F /* AVSettingsFoundation */; };
 		42FC2C9384715D012125AEC8 /* AnimateInProgressWorkspaceHeaderPresentation.swift in Sources */ = {isa = PBXBuildFile; fileRef = D379BF171DC081DAB5DDE7CE /* AnimateInProgressWorkspaceHeaderPresentation.swift */; };
+		430E790CEAB5798965150ED6 /* AnimateGalleryViewModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3756D2D825EDB7BA3F51454A /* AnimateGalleryViewModelTests.swift */; };
 		431617A64F011BAA790CB9FF /* AnimateMediaAsset.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB9BC90205E5D8DC7CD23628 /* AnimateMediaAsset.swift */; };
 		4827DF0FA1877B2211815FA5 /* AnimateAviPreparationCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 839E236C00AD493C76D46D28 /* AnimateAviPreparationCard.swift */; };
 		48EBA6035041CA34F84297B8 /* AnimateVideoDirectionModels.swift in Sources */ = {isa = PBXBuildFile; fileRef = 703AD1FF61906F815421C59B /* AnimateVideoDirectionModels.swift */; };
@@ -121,6 +122,7 @@
 		943900483E1FD8E4C2AC5AF7 /* AVMediaAnalysisFoundation in Frameworks */ = {isa = PBXBuildFile; productRef = 790D345185B9E02F2C7EA015 /* AVMediaAnalysisFoundation */; };
 		9943A148B0D040B2EB93C263 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 98C635FA97FC6673CD774829 /* LaunchScreen.storyboard */; };
 		9A7FB3CA32C47A8168E61D68 /* AnimateGalleryViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 677FD2D0761CADE3AFDA90F2 /* AnimateGalleryViewModel.swift */; };
+		9A81C91362D9DBCD543D66F6 /* AnimateGalleryStoreTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 876E9E73B253103908FD98D2 /* AnimateGalleryStoreTests.swift */; };
 		9C0EAF5BDAD257F5A8A3EDA8 /* AnimateGalleryObserver.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08708484C6DE72D1FCCB38D9 /* AnimateGalleryObserver.swift */; };
 		9D48B7DA1A09F0EEE569BE53 /* AnimateInProgressSummary.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5F7FB241429E76E1F04EB49 /* AnimateInProgressSummary.swift */; };
 		9D5D87DC9E32E0253AEF4E11 /* AnimateHomeVideoComponents.swift in Sources */ = {isa = PBXBuildFile; fileRef = D1159F09E9BF277980DF375B /* AnimateHomeVideoComponents.swift */; };
@@ -248,6 +250,7 @@
 		332CDA9BB82C5AF8F43AB6CE /* AnimateVideoQuoteClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnimateVideoQuoteClient.swift; sourceTree = "<group>"; };
 		349182D5412B86549143E168 /* AnimateProfileScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnimateProfileScreen.swift; sourceTree = "<group>"; };
 		35A4D44D62AFB09DF0EB855D /* AnimateLaunchLogo.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = AnimateLaunchLogo.png; sourceTree = "<group>"; };
+		3756D2D825EDB7BA3F51454A /* AnimateGalleryViewModelTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnimateGalleryViewModelTests.swift; sourceTree = "<group>"; };
 		39613CC5D87E48819BC8CD59 /* AnimateCreateWorkflowCapability.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnimateCreateWorkflowCapability.swift; sourceTree = "<group>"; };
 		39E607E04535C5B89723204E /* AnimateAviFocusCards.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnimateAviFocusCards.swift; sourceTree = "<group>"; };
 		3A7BD45EAE2608DE2A3CE675 /* AnimateRenderStatusClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnimateRenderStatusClient.swift; sourceTree = "<group>"; };
@@ -310,6 +313,7 @@
 		8403B8E7C1F6DA32B631CD4F /* AnimateInProgressVideoDirectionPresentation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnimateInProgressVideoDirectionPresentation.swift; sourceTree = "<group>"; };
 		84DABB9A37EEEE7E49EF549E /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		855F65BF187677470E295905 /* AnimateAV.app */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.application; path = AnimateAV.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		876E9E73B253103908FD98D2 /* AnimateGalleryStoreTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnimateGalleryStoreTests.swift; sourceTree = "<group>"; };
 		87DD5D49E92236F9C875F6B6 /* de */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = de; path = de.lproj/Localizable.strings; sourceTree = "<group>"; };
 		893187B4E73EC46520DE9049 /* AnimateInProgressCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnimateInProgressCard.swift; sourceTree = "<group>"; };
 		89C8382180686ACDA114CDCA /* AnimateRealtimeSessionClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnimateRealtimeSessionClient.swift; sourceTree = "<group>"; };
@@ -807,6 +811,8 @@
 				30E67811A0067329433E18B3 /* AnimateCreateViewModelVideoDirectionStateTests.swift */,
 				43CCBAF7B7D00CE258D044D1 /* AnimateCreateWorkflowPresentationTests.swift */,
 				15B4B1517C76E0DAFBD8F13B /* AnimateCreditGateTests.swift */,
+				876E9E73B253103908FD98D2 /* AnimateGalleryStoreTests.swift */,
+				3756D2D825EDB7BA3F51454A /* AnimateGalleryViewModelTests.swift */,
 				0D86C1829E17BD8791BBAFFB /* AnimateHomePresentationTests.swift */,
 				564CD9B506C25BF1488691D4 /* AnimateInProgressArtifactPresentationTests.swift */,
 				B46BA26B84DB49B0BC110BB2 /* AnimateInProgressListPresentationTests.swift */,
@@ -1313,6 +1319,8 @@
 				F02A07416ED6FC5C7D2B079D /* AnimateCreateViewModelVideoDirectionStateTests.swift in Sources */,
 				49034F4A18106C0AE7DFCB0D /* AnimateCreateWorkflowPresentationTests.swift in Sources */,
 				CA6CE16BF556481E87DB262D /* AnimateCreditGateTests.swift in Sources */,
+				9A81C91362D9DBCD543D66F6 /* AnimateGalleryStoreTests.swift in Sources */,
+				430E790CEAB5798965150ED6 /* AnimateGalleryViewModelTests.swift in Sources */,
 				20A90E05CEE6D8718191978D /* AnimateHomePresentationTests.swift in Sources */,
 				0E299ECCFCE45298ADCD58A5 /* AnimateInProgressArtifactPresentationTests.swift in Sources */,
 				3A2DE7E59802CBA3904FACA2 /* AnimateInProgressListPresentationTests.swift in Sources */,
