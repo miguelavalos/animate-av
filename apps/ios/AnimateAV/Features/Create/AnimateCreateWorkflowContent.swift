@@ -3512,6 +3512,15 @@ private struct AnimateCreateLookChooserPage: View {
     @State private var setupLook: AnimateVideoLook?
     @State private var selectedFamily: AnimateVideoLookFamily?
 
+    private var families: [AnimateVideoLookFamily] {
+        AnimateVideoLook.families
+    }
+
+    private var selectedFamilyIndex: Int? {
+        guard let selectedFamily else { return nil }
+        return families.firstIndex(where: { $0.id == selectedFamily.id })
+    }
+
     init(
         selectedLook: AnimateVideoLook?,
         selectLook: @escaping (AnimateVideoLook) -> Void,
@@ -3584,22 +3593,39 @@ private struct AnimateCreateLookChooserPage: View {
                                     .foregroundStyle(AVBrandColor.textSecondary)
                             }
 
-                            AnimateCreateTwoColumnGrid(items: selectedFamily.looks) { look in
-                                AnimateCreateLookImageTile(
-                                    look: look,
-                                    isSelected: setupLook == look,
-                                    selectLook: { setupLook = look }
+                            AnimateCreateLookFamilyNavigator(
+                                family: selectedFamily,
+                                familyIndex: selectedFamilyIndex ?? 0,
+                                familyCount: families.count,
+                                previous: selectPreviousFamily,
+                                next: selectNextFamily
+                            )
+
+                            VStack(spacing: 14) {
+                                AnimateCreateLookFamilyRail(
+                                    families: families,
+                                    selectedFamily: selectedFamily,
+                                    setupLook: setupLook,
+                                    selectFamily: selectFamily
                                 )
+
+                                AnimateCreateTwoColumnGrid(items: selectedFamily.looks) { look in
+                                    AnimateCreateLookImageTile(
+                                        look: look,
+                                        isSelected: setupLook == look,
+                                        selectLook: { setupLook = look }
+                                    )
+                                }
                             }
+                            .contentShape(Rectangle())
+                            .gesture(familySwipeGesture)
                         } else {
-                            AnimateCreateTwoColumnGrid(items: AnimateVideoLook.families, itemHeight: 118) { family in
+                            AnimateCreateTwoColumnGrid(items: families, itemHeight: 118) { family in
                                 AnimateCreateLookFamilyTile(
                                     family: family,
                                     isSelected: family.looks.contains(where: { $0 == setupLook }),
                                     select: {
-                                        withAnimation(.spring(response: 0.28, dampingFraction: 0.88)) {
-                                            selectedFamily = family
-                                        }
+                                        selectFamily(family)
                                     }
                                 )
                             }
@@ -3631,6 +3657,162 @@ private struct AnimateCreateLookChooserPage: View {
         guard let setupLook else { return }
         selectLook(setupLook)
         dismiss()
+    }
+
+    private var familySwipeGesture: some Gesture {
+        DragGesture(minimumDistance: 28)
+            .onEnded { value in
+                let horizontal = value.translation.width
+                let vertical = value.translation.height
+                guard abs(horizontal) > abs(vertical), abs(horizontal) > 44 else { return }
+
+                if horizontal < 0 {
+                    selectNextFamily()
+                } else {
+                    selectPreviousFamily()
+                }
+            }
+    }
+
+    private func selectFamily(_ family: AnimateVideoLookFamily) {
+        withAnimation(.spring(response: 0.28, dampingFraction: 0.88)) {
+            selectedFamily = family
+            if setupLook.map({ family.looks.contains($0) }) != true {
+                setupLook = family.looks.first
+            }
+        }
+    }
+
+    private func selectPreviousFamily() {
+        guard let index = selectedFamilyIndex else { return }
+        let previousIndex = index == 0 ? families.count - 1 : index - 1
+        selectFamily(families[previousIndex])
+    }
+
+    private func selectNextFamily() {
+        guard let index = selectedFamilyIndex else { return }
+        let nextIndex = index == families.count - 1 ? 0 : index + 1
+        selectFamily(families[nextIndex])
+    }
+}
+
+private struct AnimateCreateLookFamilyNavigator: View {
+    let family: AnimateVideoLookFamily
+    let familyIndex: Int
+    let familyCount: Int
+    let previous: () -> Void
+    let next: () -> Void
+
+    var body: some View {
+        HStack(spacing: 10) {
+            navigationButton(
+                systemImage: "chevron.left",
+                accessibilityLabel: L10n.string("create.images.looks.previousPage"),
+                action: previous
+            )
+
+            VStack(spacing: 2) {
+                Text(family.title)
+                    .font(.system(size: 13, weight: .black))
+                    .foregroundStyle(AVBrandColor.textPrimary)
+                    .lineLimit(1)
+
+                Text("\(familyIndex + 1) / \(familyCount)")
+                    .font(.system(size: 11, weight: .bold))
+                    .foregroundStyle(AVBrandColor.textSecondary)
+            }
+            .frame(maxWidth: .infinity)
+
+            navigationButton(
+                systemImage: "chevron.right",
+                accessibilityLabel: L10n.string("create.images.looks.nextPage"),
+                action: next
+            )
+        }
+        .padding(10)
+        .background(AVBrandColor.cardSurface.opacity(0.72), in: RoundedRectangle(cornerRadius: 8, style: .continuous))
+        .overlay {
+            RoundedRectangle(cornerRadius: 8, style: .continuous)
+                .stroke(AVBrandColor.borderSubtle.opacity(0.5), lineWidth: 1)
+        }
+    }
+
+    private func navigationButton(
+        systemImage: String,
+        accessibilityLabel: String,
+        action: @escaping () -> Void
+    ) -> some View {
+        Button(action: action) {
+            Image(systemName: systemImage)
+                .font(.system(size: 14, weight: .black))
+                .foregroundStyle(AVBrandColor.textPrimary)
+                .frame(width: 36, height: 36)
+                .background(.white.opacity(0.92), in: Circle())
+                .shadow(color: AVBrandColor.ink.opacity(0.06), radius: 8, x: 0, y: 3)
+        }
+        .buttonStyle(.plain)
+        .accessibilityLabel(accessibilityLabel)
+    }
+}
+
+private struct AnimateCreateLookFamilyRail: View {
+    let families: [AnimateVideoLookFamily]
+    let selectedFamily: AnimateVideoLookFamily
+    let setupLook: AnimateVideoLook?
+    let selectFamily: (AnimateVideoLookFamily) -> Void
+
+    var body: some View {
+        ScrollView(.horizontal) {
+            HStack(spacing: 8) {
+                ForEach(families) { family in
+                    Button {
+                        selectFamily(family)
+                    } label: {
+                        Image(systemName: family.systemImage)
+                            .font(.system(size: 13, weight: .black))
+                            .foregroundStyle(iconColor(for: family))
+                            .frame(width: 34, height: 34)
+                            .background(backgroundColor(for: family), in: Circle())
+                            .overlay {
+                                Circle()
+                                    .stroke(borderColor(for: family), lineWidth: selectedFamily.id == family.id ? 2 : 1)
+                            }
+                    }
+                    .buttonStyle(.plain)
+                    .accessibilityLabel(L10n.string("create.look.family.accessibility", family.title))
+                }
+            }
+            .padding(.vertical, 1)
+        }
+        .scrollIndicators(.hidden)
+    }
+
+    private func iconColor(for family: AnimateVideoLookFamily) -> Color {
+        selectedFamily.id == family.id ? AVBrandColor.textInverse : AVBrandColor.textSecondary
+    }
+
+    private func backgroundColor(for family: AnimateVideoLookFamily) -> Color {
+        if selectedFamily.id == family.id {
+            return AVBrandColor.accent
+        }
+
+        if family.looks.contains(where: { $0 == setupLook }) {
+            return AVBrandColor.accent.opacity(0.14)
+        }
+
+        return AVBrandColor.cardSurface.opacity(0.82)
+    }
+
+    private func borderColor(for family: AnimateVideoLookFamily) -> Color {
+        if selectedFamily.id == family.id {
+            return AVBrandColor.accent.opacity(0.55)
+        }
+
+        if family.looks.contains(where: { $0 == setupLook }) {
+            return AVBrandColor.accent.opacity(0.34)
+        }
+
+        return AVBrandColor.borderSubtle.opacity(0.68)
     }
 }
 
