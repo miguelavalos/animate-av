@@ -87,7 +87,6 @@ final class AccountController: ObservableObject {
             configuration: .animateAV,
             provider: AnimateProductAccountProvider(accountService: service),
             resolver: AnimateProductAccountResolver(
-                accountService: service,
                 profileResolver: AnimatePlatformAccountProfileResolver(
                     accountService: service,
                     accountProfileClient: accountProfileClient
@@ -536,7 +535,6 @@ private struct AnimateProductAccountProvider: AVProductAccountProviderSessioning
 
 @MainActor
 private struct AnimateProductAccountResolver: AVProductAccountResolving {
-    let accountService: AVAccountService
     let profileResolver: AnimateAccountProfileResolving
     let featureStore: AnimateProductAccountFeatureStore
 
@@ -546,12 +544,6 @@ private struct AnimateProductAccountResolver: AVProductAccountResolving {
     ) async throws -> AVProductAccountUser {
         _ = providerToken
         _ = configuration
-
-        if AnimateUITestEnvironment.current.hasAccountOverride,
-           let providerUser = accountService.providerSessionUser {
-            featureStore.features = .uiTestDefault
-            return providerUser.productAccountUser
-        }
 
         let profile = try await profileResolver.resolveCurrentAccountProfile()
         featureStore.features = profile.features
