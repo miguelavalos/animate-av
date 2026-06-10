@@ -8,6 +8,8 @@ struct AnimateArtifact: Identifiable, Decodable, Equatable {
     let title: String?
     let look: String?
     let status: String
+    let durationSeconds: Double?
+    let creditCost: Int?
     let hasWatermark: Bool?
     let expiresAt: Double
     let createdAt: Double
@@ -20,6 +22,8 @@ struct AnimateArtifact: Identifiable, Decodable, Equatable {
         title: String? = nil,
         look: String? = nil,
         status: String,
+        durationSeconds: Double? = nil,
+        creditCost: Int? = nil,
         hasWatermark: Bool?,
         expiresAt: Double,
         createdAt: Double = 0
@@ -31,6 +35,8 @@ struct AnimateArtifact: Identifiable, Decodable, Equatable {
         self.title = title
         self.look = look
         self.status = status
+        self.durationSeconds = durationSeconds
+        self.creditCost = creditCost
         self.hasWatermark = hasWatermark
         self.expiresAt = expiresAt
         self.createdAt = createdAt
@@ -44,6 +50,8 @@ struct AnimateArtifact: Identifiable, Decodable, Equatable {
         case title
         case look
         case status
+        case durationSeconds
+        case creditCost
         case hasWatermark
         case expiresAt
         case createdAt
@@ -59,6 +67,8 @@ struct AnimateArtifact: Identifiable, Decodable, Equatable {
         title = try container.decodeIfPresent(String.self, forKey: .title)
         look = try container.decodeIfPresent(String.self, forKey: .look)
         status = try container.decode(String.self, forKey: .status)
+        durationSeconds = try container.decodeIfPresent(Double.self, forKey: .durationSeconds)
+        creditCost = try container.decodeIfPresent(Int.self, forKey: .creditCost)
         hasWatermark = try container.decodeIfPresent(Bool.self, forKey: .hasWatermark)
         expiresAt = try container.decodeIfPresent(Double.self, forKey: .expiresAt) ?? 0
         createdAt = try container.decodeIfPresent(Double.self, forKey: .createdAt) ?? 0

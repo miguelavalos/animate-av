@@ -97,6 +97,7 @@ final class AnimateCreateViewModel: ObservableObject {
     var lastPreparedVideoDirectionInputSignature: String?
     private var renderPlanInputSignature: String?
     private var pendingRenderPlanInputSignature: String?
+    private var finalPlanPreparationGeneration = 0
     private var hasExplicitMediaEditsAfterPreparedVideoDirection = false
     private var hasLocalSetupEdits = false
     private var hasUserStyleOverride = false
@@ -500,9 +501,13 @@ final class AnimateCreateViewModel: ObservableObject {
         lastPreparedVideoDirectionInputSignature = workspace.video.storyInputSignature
             ?? currentVideoDirectionInputSignature(videoId: workspace.video.id)
         activeWorkspace = workspace
-        finalExport = workspace.latestArtifact(kind: "final_export")
+        finalExport = workspace.latestFinalVideoArtifact
         pendingGalleryVideo = nil
         latestFinalJob = workspace.latestRenderJob(kind: "final")
+        if fixtureMode == .full {
+            finalRenderWorkflow?.prepareUITestFinalExportForGallery(workspace: workspace)
+            pendingGalleryVideo = finalRenderWorkflow?.pendingGalleryVideo
+        }
         switch fixtureMode {
         case .videoPlanReady, .videoPlanReadyNoMessage, .videoPlanReadyWithMessage, .videoPlanInsufficientCredits:
             renderPlan = AnimateCreateUITestFixtures.renderPlan(for: fixtureMode)
@@ -557,7 +562,7 @@ final class AnimateCreateViewModel: ObservableObject {
     }
 
     var effectiveFinalExport: AnimateArtifact? {
-        effectiveActiveWorkspace?.latestArtifact(kind: "final_export") ?? finalExport
+        effectiveActiveWorkspace?.latestFinalVideoArtifact ?? finalExport
     }
 
     private var canEditCreationOptions: Bool {
@@ -585,6 +590,7 @@ final class AnimateCreateViewModel: ObservableObject {
 
     func resetActiveVideoCreation(force: Bool) {
         cancelOperations()
+        invalidateFinalPlanPreparation()
         isContinuingVideoCreation = false
         isLocalVideoCreationStarted = false
         pendingFocus = nil
@@ -746,13 +752,31 @@ final class AnimateCreateViewModel: ObservableObject {
         return renderPlan
     }
 
-    func beginFinalPlanPreparation(inputSignature: String) {
+    @discardableResult
+    func beginFinalPlanPreparation(inputSignature: String) -> Int {
+        finalPlanPreparationGeneration += 1
         pendingRenderPlanInputSignature = inputSignature
         isPreparingFinalPlan = true
+        return finalPlanPreparationGeneration
     }
 
-    func finishFinalPlanPreparation() {
+    func finishFinalPlanPreparation(generation: Int? = nil) {
+        guard generation == nil || generation == finalPlanPreparationGeneration else { return }
         isPreparingFinalPlan = false
+    }
+
+    func isCurrentFinalPlanPreparation(_ generation: Int) -> Bool {
+        generation == finalPlanPreparationGeneration && !Task.isCancelled
+    }
+
+    func invalidateFinalPlanPreparation() {
+        finalPlanPreparationGeneration += 1
+        isPreparingFinalPlan = false
+        pendingRenderPlanInputSignature = nil
+        if finalVideoCommandState.isRunning {
+            finalVideoCommandState = .idle
+        }
+        finalRenderStatusMessage = nil
     }
 
     func beginFinalVideoCommand(_ state: AnimateFinalVideoCommandState) {
@@ -1055,29 +1079,10 @@ extension AnimateCreateViewModel {
     }
 
     private func updateAutoStyleSuggestion(for media: [AnimateSelectedMedia]) {
-        guard canEditCreationOptions else { return }
-        guard !videoDirectionSummary.hasScenes || hasExplicitMediaEditsAfterPreparedVideoDirection else { return }
-        let signature = mediaSignature(media)
-        guard signature != autoStyleMediaSignature else { return }
-        autoStyleMediaSignature = signature
-        guard let suggestion = AnimateMediaAutoStyleSuggester.suggest(
-            media: media,
-            styles: creationStyles
-        ) else {
-            autoStyleSuggestion = nil
-            return
-        }
-        guard let suggestedStyle = creationStyles.first(where: { $0.id == suggestion.styleID && $0.isEnabled }) else {
-            autoStyleSuggestion = nil
-            return
-        }
-
-        autoStyleSuggestion = suggestion
-        guard !hasUserStyleOverride else { return }
-        selectedCreationStyle = suggestedStyle
-        selectedMusicPreset = suggestion.musicPreset
-        applyStyleDefaults(suggestedStyle, preserveUserOverrides: true)
-        form.tone = AnimateVideoSetupTone(musicPreset: suggestion.musicPreset)
+        autoStyleMediaSignature = mediaSignature(media)
+        autoStyleSuggestion = nil
+        autoStyleUndoSelection = nil
+        canUndoAutoStyleSuggestion = false
     }
 
     private func mediaSignature(_ media: [AnimateSelectedMedia]) -> String {

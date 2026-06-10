@@ -7,6 +7,8 @@ struct AnimateGalleryVideoRecord: Identifiable, Codable, Equatable {
     let title: String
     let r2Key: String
     let localRelativePath: String
+    let sourceImageLocalRelativePath: String?
+    let generatedImageLocalRelativePath: String?
     let createdAt: Double
 
     init(
@@ -16,6 +18,8 @@ struct AnimateGalleryVideoRecord: Identifiable, Codable, Equatable {
         title: String,
         r2Key: String,
         localRelativePath: String,
+        sourceImageLocalRelativePath: String? = nil,
+        generatedImageLocalRelativePath: String? = nil,
         createdAt: Double
     ) {
         self.id = id
@@ -24,6 +28,8 @@ struct AnimateGalleryVideoRecord: Identifiable, Codable, Equatable {
         self.title = title
         self.r2Key = r2Key
         self.localRelativePath = localRelativePath
+        self.sourceImageLocalRelativePath = sourceImageLocalRelativePath
+        self.generatedImageLocalRelativePath = generatedImageLocalRelativePath
         self.createdAt = createdAt
     }
 
@@ -35,6 +41,8 @@ struct AnimateGalleryVideoRecord: Identifiable, Codable, Equatable {
             title: title,
             r2Key: r2Key,
             localRelativePath: localRelativePath,
+            sourceImageLocalRelativePath: sourceImageLocalRelativePath,
+            generatedImageLocalRelativePath: generatedImageLocalRelativePath,
             createdAt: createdAt
         )
     }
@@ -43,6 +51,8 @@ struct AnimateGalleryVideoRecord: Identifiable, Codable, Equatable {
 struct AnimateGalleryVideoPresentation: Identifiable, Equatable {
     let record: AnimateGalleryVideoRecord
     let localFileURL: URL?
+    let sourceImageURL: URL?
+    let generatedImageURL: URL?
     let availability: AnimateGalleryVideoAvailability
     let remoteArtifact: AnimateArtifact?
 

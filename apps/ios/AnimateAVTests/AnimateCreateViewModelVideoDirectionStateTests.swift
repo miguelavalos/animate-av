@@ -1486,14 +1486,21 @@ private struct TestGalleryStore: AnimateGalleryStoring {
     func localFileURL(for record: AnimateGalleryVideoRecord) -> URL { URL(fileURLWithPath: "/tmp/\(record.id).mp4") }
     func localFileExists(for record: AnimateGalleryImageRecord) -> Bool { false }
     func localFileURL(for record: AnimateGalleryImageRecord) -> URL { URL(fileURLWithPath: "/tmp/\(record.id).png") }
+    func localFileExists(relativePath: String) -> Bool { false }
+    func localFileURL(relativePath: String) -> URL { URL(fileURLWithPath: "/tmp/\(relativePath)") }
     func contains(artifactId: String) -> Bool { false }
     func containsImage(artifactId: String) -> Bool { false }
+    func saveSourceImage(data: Data, videoId: String, artifactId: String) throws -> String {
+        "source-\(artifactId).jpg"
+    }
     func saveDownloadedVideo(
         temporaryFileURL: URL,
         videoId: String,
         artifactId: String,
         title: String,
         r2Key: String,
+        sourceImageLocalRelativePath: String?,
+        generatedImageLocalRelativePath: String?,
         createdAt: Date
     ) throws -> AnimateGalleryVideoRecord {
         AnimateGalleryVideoRecord(
@@ -1503,6 +1510,8 @@ private struct TestGalleryStore: AnimateGalleryStoring {
             title: title,
             r2Key: r2Key,
             localRelativePath: "\(artifactId).mp4",
+            sourceImageLocalRelativePath: sourceImageLocalRelativePath,
+            generatedImageLocalRelativePath: generatedImageLocalRelativePath,
             createdAt: createdAt.timeIntervalSince1970 * 1000
         )
     }

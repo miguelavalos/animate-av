@@ -9,14 +9,19 @@ protocol AnimateGalleryStoring {
     func localFileURL(for record: AnimateGalleryVideoRecord) -> URL
     func localFileExists(for record: AnimateGalleryImageRecord) -> Bool
     func localFileURL(for record: AnimateGalleryImageRecord) -> URL
+    func localFileExists(relativePath: String) -> Bool
+    func localFileURL(relativePath: String) -> URL
     func contains(artifactId: String) -> Bool
     func containsImage(artifactId: String) -> Bool
+    func saveSourceImage(data: Data, videoId: String, artifactId: String) throws -> String
     func saveDownloadedVideo(
         temporaryFileURL: URL,
         videoId: String,
         artifactId: String,
         title: String,
         r2Key: String,
+        sourceImageLocalRelativePath: String?,
+        generatedImageLocalRelativePath: String?,
         createdAt: Date
     ) throws -> AnimateGalleryVideoRecord
     func saveDownloadedImage(
@@ -73,7 +78,7 @@ struct AnimateGalleryStore: AnimateGalleryStoring {
                 withIntermediateDirectories: true
             )
             let data = try JSONEncoder().encode(records)
-            try data.write(to: recordsURL, options: .atomic)
+            try data.write(to: url, options: .atomic)
             NotificationCenter.default.post(name: Self.didChangeNotification, object: nil)
         } catch {
             return
@@ -96,6 +101,14 @@ struct AnimateGalleryStore: AnimateGalleryStoring {
         baseDirectory.appendingPathComponent(record.localRelativePath)
     }
 
+    func localFileExists(relativePath: String) -> Bool {
+        fileManager.fileExists(atPath: localFileURL(relativePath: relativePath).path)
+    }
+
+    func localFileURL(relativePath: String) -> URL {
+        baseDirectory.appendingPathComponent(relativePath)
+    }
+
     func contains(artifactId: String) -> Bool {
         loadRecords().contains { $0.artifactId == artifactId }
     }
@@ -104,12 +117,28 @@ struct AnimateGalleryStore: AnimateGalleryStoring {
         loadImageRecords().contains { $0.artifactId == artifactId }
     }
 
+    func saveSourceImage(data: Data, videoId: String, artifactId: String) throws -> String {
+        try fileManager.createDirectory(
+            at: imagesDirectory,
+            withIntermediateDirectories: true
+        )
+        let localRelativePath = "Images/source-\(Self.safeFilename(videoId))-\(Self.safeFilename(artifactId)).jpg"
+        let destinationURL = baseDirectory.appendingPathComponent(localRelativePath)
+        if fileManager.fileExists(atPath: destinationURL.path) {
+            try fileManager.removeItem(at: destinationURL)
+        }
+        try data.write(to: destinationURL, options: .atomic)
+        return localRelativePath
+    }
+
     func saveDownloadedVideo(
         temporaryFileURL: URL,
         videoId: String,
         artifactId: String,
         title: String,
         r2Key: String,
+        sourceImageLocalRelativePath: String? = nil,
+        generatedImageLocalRelativePath: String? = nil,
         createdAt: Date = Date()
     ) throws -> AnimateGalleryVideoRecord {
         try fileManager.createDirectory(
@@ -130,6 +159,8 @@ struct AnimateGalleryStore: AnimateGalleryStoring {
             title: title,
             r2Key: r2Key,
             localRelativePath: localRelativePath,
+            sourceImageLocalRelativePath: sourceImageLocalRelativePath,
+            generatedImageLocalRelativePath: generatedImageLocalRelativePath,
             createdAt: createdAt.timeIntervalSince1970 * 1000
         )
         return record

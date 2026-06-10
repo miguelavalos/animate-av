@@ -640,8 +640,15 @@ private struct AnimateGalleryVideoInfoSheet: View {
     var body: some View {
         NavigationStack {
             ScrollView {
-                AnimateGalleryMetadataPanel(rows: metadataRows)
-                    .padding(16)
+                VStack(alignment: .leading, spacing: 14) {
+                    AnimateGalleryVideoInfoHero(
+                        sourceImageURL: video.sourceImageURL,
+                        generatedImageURL: video.generatedImageURL
+                    )
+
+                    AnimateGalleryMetadataPanel(rows: metadataRows)
+                }
+                .padding(16)
             }
             .background(AnimateTheme.shellBackground.ignoresSafeArea())
             .navigationTitle(L10n.string("gallery.info.title"))
@@ -657,10 +664,168 @@ private struct AnimateGalleryVideoInfoSheet: View {
     }
 
     private var metadataRows: [AnimateGalleryMetadataRow] {
-        [
-            AnimateGalleryMetadataRow(title: L10n.string("gallery.info.look"), value: video.lookTitle),
-            AnimateGalleryMetadataRow(title: L10n.string("gallery.info.titleLabel"), value: video.title)
+        let artifact = video.remoteArtifact
+        var rows = [
+            AnimateGalleryMetadataRow(title: L10n.string("gallery.info.look"), value: video.lookTitle)
         ]
+
+        if let durationSeconds = artifact?.durationSeconds, durationSeconds > 0 {
+            rows.append(
+                AnimateGalleryMetadataRow(
+                    title: L10n.string("gallery.info.duration"),
+                    value: L10n.string("gallery.info.duration.seconds", Int(durationSeconds.rounded()))
+                )
+            )
+        }
+        if let creditCost = artifact?.creditCost {
+            rows.append(
+                AnimateGalleryMetadataRow(
+                    title: L10n.string("gallery.info.credits"),
+                    value: L10n.string("gallery.info.credits.value", creditCost, AnimateCreditCopy.noun(creditCost))
+                )
+            )
+        }
+        if let hasWatermark = artifact?.hasWatermark {
+            rows.append(
+                AnimateGalleryMetadataRow(
+                    title: L10n.string("gallery.info.branding"),
+                    value: hasWatermark
+                        ? L10n.string("gallery.info.branding.included")
+                        : L10n.string("gallery.info.branding.removed")
+                )
+            )
+        }
+        if video.record.createdAt > 0 {
+            rows.append(
+                AnimateGalleryMetadataRow(
+                    title: L10n.string("gallery.info.saved"),
+                    value: AnimateDateFormatting.formattedDate(milliseconds: video.record.createdAt)
+                )
+            )
+        }
+
+        return rows
+    }
+}
+
+private struct AnimateGalleryVideoInfoHero: View {
+    let sourceImageURL: URL?
+    let generatedImageURL: URL?
+
+    var body: some View {
+        VStack(alignment: .leading, spacing: 12) {
+            Group {
+                if let sourceImageURL, let generatedImageURL {
+                    AnimateGalleryBeforeAfterImageView(
+                        sourceImageURL: sourceImageURL,
+                        generatedImageURL: generatedImageURL
+                    )
+                } else {
+                    AnimateGalleryImageThumbnail(url: generatedImageURL)
+                }
+            }
+            .frame(height: 230)
+            .clipShape(RoundedRectangle(cornerRadius: 18, style: .continuous))
+            .overlay {
+                RoundedRectangle(cornerRadius: 18, style: .continuous)
+                    .stroke(AVBrandColor.borderSubtle.opacity(0.35), lineWidth: 1)
+            }
+        }
+    }
+}
+
+private struct AnimateGalleryBeforeAfterImageView: View {
+    let sourceImageURL: URL
+    let generatedImageURL: URL
+    @State private var sourceImage: UIImage?
+    @State private var generatedImage: UIImage?
+    @State private var reveal: CGFloat = 0.5
+
+    var body: some View {
+        GeometryReader { proxy in
+            ZStack(alignment: .leading) {
+                if let sourceImage, let generatedImage {
+                    Image(uiImage: sourceImage)
+                        .resizable()
+                        .scaledToFill()
+                        .frame(width: proxy.size.width, height: proxy.size.height)
+                        .clipped()
+
+                    Image(uiImage: generatedImage)
+                        .resizable()
+                        .scaledToFill()
+                        .frame(width: proxy.size.width, height: proxy.size.height)
+                        .clipped()
+                        .mask(alignment: .leading) {
+                            Rectangle()
+                                .frame(width: proxy.size.width * reveal)
+                        }
+
+                    comparisonLabels
+                        .padding(12)
+
+                    Rectangle()
+                        .fill(.white.opacity(0.92))
+                        .frame(width: 3)
+                        .shadow(color: .black.opacity(0.18), radius: 6, y: 2)
+                        .position(x: proxy.size.width * reveal, y: proxy.size.height / 2)
+
+                    Circle()
+                        .fill(.white)
+                        .frame(width: 40, height: 40)
+                        .overlay {
+                            Image(systemName: "arrow.left.and.right")
+                                .font(.system(size: 15, weight: .black))
+                                .foregroundStyle(AVBrandColor.accent)
+                        }
+                        .shadow(color: .black.opacity(0.20), radius: 10, y: 4)
+                        .position(x: proxy.size.width * reveal, y: proxy.size.height / 2)
+                } else {
+                    AnimateGalleryImageThumbnail(url: generatedImageURL)
+                }
+            }
+            .contentShape(Rectangle())
+            .gesture(
+                DragGesture(minimumDistance: 0)
+                    .onChanged { value in
+                        let width = max(proxy.size.width, 1)
+                        reveal = min(max(value.location.x / width, 0.02), 0.98)
+                    }
+            )
+        }
+        .task(id: "\(sourceImageURL.absoluteString)|\(generatedImageURL.absoluteString)") {
+            sourceImage = Self.loadImage(url: sourceImageURL)
+            generatedImage = Self.loadImage(url: generatedImageURL)
+        }
+    }
+
+    private var comparisonLabels: some View {
+        VStack {
+            HStack {
+                Text(L10n.string("gallery.info.compare.original"))
+                    .font(.system(size: 11, weight: .black))
+                    .textCase(.uppercase)
+                    .padding(.horizontal, 9)
+                    .padding(.vertical, 6)
+                    .background(.ultraThinMaterial, in: Capsule())
+
+                Spacer()
+
+                Text(L10n.string("gallery.info.compare.generated"))
+                    .font(.system(size: 11, weight: .black))
+                    .textCase(.uppercase)
+                    .padding(.horizontal, 9)
+                    .padding(.vertical, 6)
+                    .background(.ultraThinMaterial, in: Capsule())
+            }
+            Spacer()
+        }
+        .foregroundStyle(AVBrandColor.textPrimary)
+    }
+
+    private static func loadImage(url: URL) -> UIImage? {
+        guard let data = try? Data(contentsOf: url) else { return nil }
+        return UIImage(data: data)
     }
 }
 
@@ -668,25 +833,33 @@ private struct AnimateGalleryMetadataPanel: View {
     let rows: [AnimateGalleryMetadataRow]
 
     var body: some View {
-        VStack(alignment: .leading, spacing: 10) {
+        VStack(alignment: .leading, spacing: 0) {
             ForEach(rows) { row in
-                VStack(alignment: .leading, spacing: 3) {
+                HStack(alignment: .top, spacing: 14) {
                     Text(row.title)
                         .font(.system(size: 11, weight: .black))
                         .foregroundStyle(AVBrandColor.textSecondary)
                         .textCase(.uppercase)
+                        .frame(width: 86, alignment: .leading)
 
                     Text(row.value)
-                        .font(.system(size: 13, weight: .semibold))
+                        .font(.system(size: 15, weight: .bold))
                         .foregroundStyle(AVBrandColor.textPrimary)
                         .textSelection(.enabled)
                         .fixedSize(horizontal: false, vertical: true)
+                        .frame(maxWidth: .infinity, alignment: .leading)
                 }
                 .frame(maxWidth: .infinity, alignment: .leading)
+                .padding(.vertical, 12)
+
+                if row.id != rows.last?.id {
+                    Divider()
+                        .overlay(AVBrandColor.borderSubtle.opacity(0.45))
+                }
             }
         }
-        .padding(14)
-        .background(.ultraThinMaterial, in: RoundedRectangle(cornerRadius: 14, style: .continuous))
+        .padding(.horizontal, 14)
+        .background(AVBrandColor.elevatedSurface, in: RoundedRectangle(cornerRadius: 14, style: .continuous))
         .overlay {
             RoundedRectangle(cornerRadius: 14, style: .continuous)
                 .stroke(AVBrandColor.borderSubtle.opacity(0.42), lineWidth: 1)

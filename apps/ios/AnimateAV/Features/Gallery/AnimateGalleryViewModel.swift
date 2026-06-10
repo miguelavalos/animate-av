@@ -59,6 +59,8 @@ final class AnimateGalleryViewModel: ObservableObject {
             return AnimateGalleryVideoPresentation(
                 record: record,
                 localFileURL: galleryStore.localFileURL(for: record),
+                sourceImageURL: localURLIfAvailable(relativePath: record.sourceImageLocalRelativePath),
+                generatedImageURL: localURLIfAvailable(relativePath: record.generatedImageLocalRelativePath),
                 availability: localFileExists ? .savedOnDevice : availabilityForMissingLocalFile(remoteArtifact: remoteArtifact),
                 remoteArtifact: remoteArtifact
             )
@@ -85,6 +87,8 @@ final class AnimateGalleryViewModel: ObservableObject {
                 AnimateGalleryVideoPresentation(
                     record: record,
                     localFileURL: nil,
+                    sourceImageURL: nil,
+                    generatedImageURL: nil,
                     availability: availabilityForRemoteOnlyArtifact(artifact),
                     remoteArtifact: artifact
                 )
@@ -134,7 +138,6 @@ final class AnimateGalleryViewModel: ObservableObject {
                 let rhsCreatedAt = rhs.record?.createdAt ?? rhs.remoteArtifact?.createdAt ?? 0
                 return lhsCreatedAt > rhsCreatedAt
             }
-        preloadMissingImages()
     }
 
     func deleteVideo(_ video: AnimateGalleryVideoPresentation) {
@@ -187,6 +190,8 @@ final class AnimateGalleryViewModel: ObservableObject {
                     artifactId: artifactId,
                     title: video.title,
                     r2Key: download.r2Key ?? remoteArtifact.r2Key,
+                    sourceImageLocalRelativePath: video.record.sourceImageLocalRelativePath,
+                    generatedImageLocalRelativePath: video.record.generatedImageLocalRelativePath,
                     createdAt: Date()
                 )
                 if let record {
@@ -198,6 +203,13 @@ final class AnimateGalleryViewModel: ObservableObject {
                 self?.statusMessage = L10n.string("gallery.video.downloadFailed")
             }
         }
+    }
+
+    private func localURLIfAvailable(relativePath: String?) -> URL? {
+        guard let relativePath, galleryStore.localFileExists(relativePath: relativePath) else {
+            return nil
+        }
+        return galleryStore.localFileURL(relativePath: relativePath)
     }
 
     func downloadImage(_ image: AnimateGalleryImagePresentation) {
@@ -263,12 +275,6 @@ final class AnimateGalleryViewModel: ObservableObject {
                     self?.statusMessage = L10n.string("gallery.image.downloadFailed")
                 }
             }
-        }
-    }
-
-    private func preloadMissingImages() {
-        for image in images where image.localFileURL == nil && image.canDownload {
-            downloadImage(image, reportStatus: false)
         }
     }
 

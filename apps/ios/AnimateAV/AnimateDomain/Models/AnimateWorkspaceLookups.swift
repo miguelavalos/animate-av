@@ -9,6 +9,14 @@ extension AnimateWorkspace {
         artifacts.contains { $0.kind == kind && $0.status == "available" }
     }
 
+    var latestFinalVideoArtifact: AnimateArtifact? {
+        latestArtifact(kind: "final_video") ?? latestArtifact(kind: "final_export")
+    }
+
+    var latestGeneratedImageArtifact: AnimateArtifact? {
+        latestArtifact(kind: "generated_image")
+    }
+
     func latestRenderJob(kind: String? = nil) -> AnimateRenderJob? {
         renderJobs
             .filter { job in

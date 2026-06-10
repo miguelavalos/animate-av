@@ -58,7 +58,7 @@ struct AnimateWorkflowBundle {
             workspaceObserver: workspaceObserver,
             finalRenderClient: clients.finalRender,
             videoQuoteClient: clients.videoQuote,
-            imageGenerationAccountingClient: clients.imageGenerationAccounting
+            uploadClient: clients.upload
         )
     }
 }

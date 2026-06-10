@@ -53,7 +53,7 @@ final class AnimateCreateWorkflowPresentationTests: XCTestCase {
         XCTAssertEqual(presentation.statusMessage, "Creating final video.")
     }
 
-    func testPrimaryActionRequestsSignInWhenFinalRenderLosesSession() {
+    func testPrimaryActionRequestsSignInOnlyWhenWorkflowIsSignedOut() {
         let presentation = AnimateCreatePrimaryActionPresentation(
             workflow: AnimateCreateWorkflowPresentation(
                 activeVideoId: "video-1",
@@ -80,6 +80,35 @@ final class AnimateCreateWorkflowPresentationTests: XCTestCase {
         XCTAssertTrue(presentation.needsSignInForFinalRender)
         XCTAssertEqual(presentation.buttonTitle, L10n.string("common.signIn"))
         XCTAssertEqual(presentation.buttonIconName, "person.crop.circle.badge.checkmark")
+    }
+
+    func testPrimaryActionDoesNotShowDeadSignInCTAForAuthenticatedFinalRenderAuthError() {
+        let presentation = AnimateCreatePrimaryActionPresentation(
+            workflow: AnimateCreateWorkflowPresentation(
+                activeVideoId: "video-1",
+                isSignedIn: true,
+                hasActiveVideoWorkspace: true,
+                template: .birthdayMessage,
+                balance: AnimateCreditBalance(proMonthly: 0, promotional: 1, purchased: 0),
+                mediaSummary: AnimateCreateMediaSummary(
+                    selectedMedia: [AnimateCreateTestFixtures.makeSelectedMedia(id: "00000000-0000-0000-0000-000000000001")]
+                ),
+                videoDirectionSummary: AnimateCreateVideoDirectionSummary(
+                    savedScenes: [AnimateCreateTestFixtures.makeScene(id: "scene-1")]
+                ),
+                finalRenderSummary: AnimateCreateFinalRenderSummary(
+                    creditCost: 1,
+                    statusMessage: L10n.string("workflow.final.signInAgainRender")
+                ),
+                canPrepareFinalRenderPlan: true,
+                canGenerateFinalRender: false
+            )
+        )
+
+        XCTAssertTrue(presentation.canRunPrimaryAction)
+        XCTAssertFalse(presentation.needsSignInForFinalRender)
+        XCTAssertNotEqual(presentation.buttonTitle, L10n.string("common.signIn"))
+        XCTAssertNotEqual(presentation.buttonIconName, "person.crop.circle.badge.checkmark")
     }
 
     func testWorkflowPresentationHidesWorkflowCardsWithoutVideo() {

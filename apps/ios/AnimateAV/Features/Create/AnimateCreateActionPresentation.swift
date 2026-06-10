@@ -192,7 +192,9 @@ struct AnimateCreatePrimaryActionPresentation: Equatable {
         }
         if hasFinalVideoIntent {
             if !hasCompletedVideoDirection {
-                return hasSelectedVideoLook ? L10n.string("create.guided.continue.message") : "Elegir look"
+                return hasSelectedVideoLook
+                    ? L10n.string("create.guided.continue.message")
+                    : L10n.string("create.guided.look.noneSelected.title")
             }
             if finalVideoAction.hasBlockedRenderPlan {
                 return finalVideoAction.canRetryBlockedRenderPlan
@@ -263,7 +265,7 @@ struct AnimateCreatePrimaryActionPresentation: Equatable {
             return workflow.mediaSummary.statusMessage ?? L10n.string("workflow.media.uploading")
         }
         if workflow.finalRenderSummary.finalExport != nil {
-            return L10n.string("create.primary.finalReady")
+            return workflow.finalRenderSummary.statusMessage ?? L10n.string("create.primary.finalReady")
         }
         if workflow.finalRenderSummary.latestFinalJob != nil {
             return workflow.finalRenderSummary.realtimeStatus?.detail
@@ -286,7 +288,7 @@ struct AnimateCreatePrimaryActionPresentation: Equatable {
             if !hasCompletedVideoDirection {
                 return hasSelectedVideoLook
                     ? L10n.string("create.storyDirection.needsStory")
-                    : "Elige un look para preparar la dirección del video."
+                    : L10n.string("create.primary.continuePreflight")
             }
             if needsCreditsForPreparedPlan {
                 guard missingCreditsForPreparedPlan > 0 else {
@@ -422,7 +424,7 @@ struct AnimateCreatePrimaryActionPresentation: Equatable {
             && workflow.finalRenderSummary.latestFinalJob == nil
             && workflow.finalRenderSummary.finalExport == nil
             && workflow.finalRenderSummary.pendingGalleryVideo == nil
-            && (!workflow.isSignedIn || finalRenderStatusNeedsSignIn)
+            && !workflow.isSignedIn
     }
 
     var needsCreditsForPreparedPlan: Bool {
@@ -464,18 +466,4 @@ struct AnimateCreatePrimaryActionPresentation: Equatable {
             || lowercased.contains("changed")
     }
 
-    private var finalRenderStatusNeedsSignIn: Bool {
-        guard let message = workflow.finalRenderSummary.statusMessage?.trimmingCharacters(in: .whitespacesAndNewlines),
-              !message.isEmpty else {
-            return false
-        }
-        if message == L10n.string("workflow.final.signInAgainRender") {
-            return true
-        }
-        let lowercased = message.lowercased()
-        return lowercased.contains("sign in")
-            || lowercased.contains("iniciar sesión")
-            || lowercased.contains("sesion")
-            || lowercased.contains("sesión")
-    }
 }

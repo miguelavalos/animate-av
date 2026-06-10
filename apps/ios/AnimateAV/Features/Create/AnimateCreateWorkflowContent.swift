@@ -349,11 +349,6 @@ private struct AnimateCreateMediaFirstWorkspace: View {
             return
         }
 
-        guard presentation.videoDirectionSummary.hasScenes else {
-            prepareVideoDirection()
-            return
-        }
-
         waitsForFinalRenderPlan = true
         showsCreateVideoConfirmation = false
         prepareFinalRenderPlan(false)
@@ -374,11 +369,7 @@ private struct AnimateCreateMediaFirstWorkspace: View {
     }
 
     private func continueFromCompletedVideoSetupGuide() {
-        if presentation.videoDirectionSummary.hasScenes {
-            primaryFinalRenderAction()
-        } else {
-            prepareVideoDirection()
-        }
+        primaryFinalRenderAction()
     }
 
     private func continueVideoSetup() {
@@ -1346,7 +1337,7 @@ private struct AnimateCreateVideoDirectionCard: View {
     }
 
     private var selectedLookTitle: String {
-        selectedLook?.title ?? "Elegir look"
+        selectedLook?.title ?? L10n.string("create.guided.look.noneSelected.title")
     }
 
     private var canContinueMessageStep: Bool {
@@ -1392,7 +1383,9 @@ private struct AnimateCreateVideoDirectionCard: View {
     private var continueButtonTitle: String {
         switch guideState.step {
         case .look:
-            return selectedLook == nil ? "Elegir look" : L10n.string("create.guided.continue.message")
+            return selectedLook == nil
+                ? L10n.string("create.guided.look.noneSelected.title")
+                : L10n.string("create.guided.continue.message")
         case .scriptIdea:
             return guideState.selectedScriptIdea != .none && hasMessage
                 ? L10n.string("create.guided.continue.editMessage")
@@ -1427,27 +1420,15 @@ private struct AnimateCreateVideoDirectionCard: View {
     }
 
     private var decisionSummaryTitle: String {
-        isUserAdjustedFromAvi
-            ? L10n.string("create.videoDirection.summary.userTitle")
-            : L10n.string("create.videoDirection.summary.aviTitle")
+        L10n.string("create.videoDirection.summary.userTitle")
     }
 
     private var decisionSummaryDetail: String {
-        if isUserAdjustedFromAvi {
-            return L10n.string(
-                "create.videoDirection.summary.userDetail",
-                selectedStyle.title,
-                selectedMusicPreset.title,
-                selectedLookTitle
-            )
-        }
-
         return L10n.string(
-            "create.videoDirection.summary.aviDetail",
+            "create.videoDirection.summary.userDetail",
             selectedStyle.title,
             selectedMusicPreset.title,
-            selectedLookTitle,
-            mediaDetail.trimmingCharacters(in: CharacterSet(charactersIn: ".!?"))
+            selectedLookTitle
         )
     }
 
@@ -3912,10 +3893,17 @@ private struct AnimateCreateLookFamilyTile: View {
 
                     VStack(alignment: .leading, spacing: 4) {
                         HStack(spacing: 6) {
-                            Image(systemName: isSelected ? "checkmark.circle.fill" : family.systemImage)
-                                .font(.system(size: 14, weight: .black))
-                                .foregroundStyle(.white, AVBrandColor.accent)
-                                .accessibilityHidden(true)
+                            if isSelected {
+                                Image(systemName: "checkmark.circle.fill")
+                                    .font(.system(size: 14, weight: .black))
+                                    .foregroundStyle(.white, AVBrandColor.accent)
+                                    .accessibilityHidden(true)
+                            } else {
+                                Image(systemName: family.systemImage)
+                                    .font(.system(size: 14, weight: .black))
+                                    .foregroundStyle(.white)
+                                    .accessibilityHidden(true)
+                            }
 
                             Text(family.title)
                                 .font(.system(size: 13, weight: .black))

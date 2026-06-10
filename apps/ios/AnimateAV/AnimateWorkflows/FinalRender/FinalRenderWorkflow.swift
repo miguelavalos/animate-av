@@ -1,3 +1,4 @@
+import Combine
 import Foundation
 import OSLog
 import Photos
@@ -10,22 +11,25 @@ final class FinalRenderWorkflow: WorkspaceObservingWorkflow {
     @Published private(set) var videoQuote: AnimateVideoQuoteResponse?
     @Published private(set) var isGenerating = false
     @Published private(set) var pendingGalleryVideo: AnimateGalleryVideoRecord?
+    @Published private(set) var pendingGalleryImage: AnimateGalleryImageRecord?
     @Published private(set) var canRetryFinalVideoDownload = false
     @Published private(set) var statusMessage: String?
 
     private var latestFinalJobVideoId: String?
+    private var workspaceErrorCancellable: AnyCancellable?
 
     private let currentUserProvider: any AnimateCurrentUserProviding
     private let authTokenProvider: any AnimateAuthTokenProviding
     private let creditBalanceProvider: any AnimateCreditBalanceProviding
     private let finalRenderClient: AnimateFinalRenderClient
     private let videoQuoteClient: AnimateVideoQuoteClient
-    private let imageGenerationAccountingClient: AnimateImageGenerationAccountingClient?
+    private let uploadClient: AnimateUploadClient?
     private let galleryStore: any AnimateGalleryStoring
     private let logger = Logger(subsystem: "com.avalsys.animateav", category: "final-render")
     private var downloadingArtifactIds = Set<String>()
     private var lastCreditRefreshKey: String?
     private var preparedVideoSourceUpload: PreparedVideoSourceUpload?
+    private var pendingSourceComparisonImageData: Data?
 
     init(
         currentUserProvider: any AnimateCurrentUserProviding,
@@ -34,7 +38,7 @@ final class FinalRenderWorkflow: WorkspaceObservingWorkflow {
         workspaceObserver: any AnimateActiveWorkspaceObserving,
         finalRenderClient: AnimateFinalRenderClient,
         videoQuoteClient: AnimateVideoQuoteClient? = nil,
-        imageGenerationAccountingClient: AnimateImageGenerationAccountingClient? = nil,
+        uploadClient: AnimateUploadClient? = nil,
         galleryStore: any AnimateGalleryStoring = AnimateGalleryStore()
     ) {
         self.currentUserProvider = currentUserProvider
@@ -42,13 +46,23 @@ final class FinalRenderWorkflow: WorkspaceObservingWorkflow {
         self.creditBalanceProvider = creditBalanceProvider
         self.finalRenderClient = finalRenderClient
         self.videoQuoteClient = videoQuoteClient ?? AnimateVideoQuoteClient(baseURLString: finalRenderClient.baseURLString)
-        self.imageGenerationAccountingClient = imageGenerationAccountingClient
+        self.uploadClient = uploadClient
         self.galleryStore = galleryStore
         super.init(workspaceObserver: workspaceObserver)
+        workspaceErrorCancellable = workspaceObserver.workspaceErrorPublisher
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] message in
+                guard let message, !message.isEmpty else { return }
+                self?.logger.error("Animate workspace observation failed: \(message, privacy: .public)")
+                self?.statusMessage = message
+            }
     }
 
     override func workspaceDidChange(_ workspace: AnimateWorkspace?) {
-        finalExport = workspace?.latestArtifact(kind: "final_export")
+        logger.info(
+            "Animate workspace update videoId=\(workspace?.video.id ?? "nil", privacy: .public) finalArtifact=\(workspace?.latestFinalVideoArtifact?.id ?? "nil", privacy: .public) latestJobStatus=\(workspace?.latestRenderJob(kind: "final")?.status ?? "nil", privacy: .public)"
+        )
+        finalExport = workspace?.latestFinalVideoArtifact
         let videoId = workspace?.video.id
         if let workspaceFinalJob = workspace?.latestRenderJob(kind: "final") {
             latestFinalJob = workspaceFinalJob
@@ -123,6 +137,7 @@ final class FinalRenderWorkflow: WorkspaceObservingWorkflow {
     ) async {
         guard let bearerToken = await validatedBearerTokenForFinalRender() else { return }
         guard validateRecoveredSourceMediaAvailable(selectedMedia: selectedMedia) else { return }
+        pendingSourceComparisonImageData = comparisonSourceImageData(from: selectedMedia)
         guard needsRenderPlanForFinalRender(videoId: videoId, removesWatermark: removesWatermark) else {
             statusMessage = L10n.string("workflow.final.planReady")
             return
@@ -146,17 +161,14 @@ final class FinalRenderWorkflow: WorkspaceObservingWorkflow {
         do {
             statusMessage = L10n.string("workflow.final.checkingPlan")
             logger.info("Preparing final render plan videoId=\(videoId, privacy: .public)")
-            let sourceImageUploadId = try await prepareVideoSourceUploadIfNeeded(
-                selectedMedia: selectedMedia,
-                bearerToken: bearerToken
-            )
+            let selectedSourceLocalIdentifiers = selectedSourceLocalIdentifiersForFinalRender(from: selectedMedia)
             AnimateWorkflowDiagnostics.addBreadcrumb(
                 feature: "animate.final_render",
                 operation: "prepare_plan_source",
                 data: [
                     "video_id": videoId,
-                    "has_source_upload": String(sourceImageUploadId != nil),
-                    "selected_source_count": String(selectedSourceLocalIdentifiersForFinalRender(from: selectedMedia).count),
+                    "has_source_upload": "false",
+                    "selected_source_count": String(selectedSourceLocalIdentifiers.count),
                 ]
             )
             let plan = try await prepareRenderPlanWithUploadVisibilityRetry(
@@ -166,8 +178,8 @@ final class FinalRenderWorkflow: WorkspaceObservingWorkflow {
                 creationStyle: creationStyle,
                 form: form,
                 removesWatermark: removesWatermark,
-                selectedSourceLocalIdentifiers: selectedSourceLocalIdentifiersForFinalRender(from: selectedMedia),
-                sourceImageUploadId: sourceImageUploadId
+                selectedSourceLocalIdentifiers: selectedSourceLocalIdentifiers,
+                sourceImageUploadId: nil
             )
             guard isCurrentWorkflowGeneration(generation) else { return }
             renderPlan = plan
@@ -236,6 +248,7 @@ final class FinalRenderWorkflow: WorkspaceObservingWorkflow {
             return
         }
         guard validateRecoveredSourceMediaAvailable(selectedMedia: selectedMedia) else { return }
+        pendingSourceComparisonImageData = comparisonSourceImageData(from: selectedMedia)
         guard !needsRenderPlanForFinalRender(videoId: videoId, removesWatermark: removesWatermark) else {
             self.renderPlan = nil
             statusMessage = L10n.string("workflow.final.checkingPlan")
@@ -269,6 +282,7 @@ final class FinalRenderWorkflow: WorkspaceObservingWorkflow {
         do {
             let selectedSourceLocalIdentifiers = selectedSourceLocalIdentifiersForFinalRender(from: selectedMedia)
             let sourceImageUploadId = try await prepareVideoSourceUploadIfNeeded(
+                videoId: videoId,
                 selectedMedia: selectedMedia,
                 bearerToken: bearerToken
             )
@@ -314,8 +328,8 @@ final class FinalRenderWorkflow: WorkspaceObservingWorkflow {
 
             guard isCurrentWorkflowGeneration(generation) else { return }
 
-            await creditBalanceProvider.refreshCreditBalance()
             workspaceObserver.observeWorkspace(ownerUserId: ownerUserId, videoId: videoId)
+            await creditBalanceProvider.refreshCreditBalance()
             statusMessage = L10n.string("workflow.final.creatingVideo")
         } catch let error as AnimateAPIError {
             guard isCurrentWorkflowGeneration(generation) else { return }
@@ -362,7 +376,7 @@ final class FinalRenderWorkflow: WorkspaceObservingWorkflow {
         }
 
         let refreshKey: String?
-        if let finalExport = workspace.latestArtifact(kind: "final_export") {
+        if let finalExport = workspace.latestFinalVideoArtifact {
             refreshKey = "artifact:\(finalExport.id)"
         } else if let finalJob = workspace.latestRenderJob(kind: "final"),
                   !finalJob.isActiveRender {
@@ -391,10 +405,12 @@ final class FinalRenderWorkflow: WorkspaceObservingWorkflow {
     }
 
     private func finalRenderMessage(for error: AnimateAPIError) -> String {
-        if error.code == "unauthorized"
-            || error.code == "animate_sign_in_required"
+        if error.code == "animate_sign_in_required"
             || error.code == "animate_auth_token_missing" {
             return L10n.string("workflow.final.signInAgainRender")
+        }
+        if error.code == "unauthorized" {
+            return L10n.string("workflow.final.tryAgain")
         }
         if error.code == "insufficient_credits" || error.code == "insufficient_animate_credits" {
             return L10n.string("workflow.final.addCredits")
@@ -446,10 +462,11 @@ final class FinalRenderWorkflow: WorkspaceObservingWorkflow {
     }
 
     private func prepareVideoSourceUploadIfNeeded(
+        videoId: String,
         selectedMedia: [AnimateSelectedMedia],
         bearerToken: String
     ) async throws -> String? {
-        guard let client = imageGenerationAccountingClient,
+        guard let client = uploadClient,
               client.isConfigured,
               let media = selectedMedia
                 .filter(\.selected)
@@ -466,25 +483,20 @@ final class FinalRenderWorkflow: WorkspaceObservingWorkflow {
             return preparedVideoSourceUpload.sourceImageUploadId
         }
 
-        let preparedUpload = try await client.prepareSourceImageUpload(
-            sourceLocalIdentifier: media.sourceLocalIdentifier,
-            originalFilename: media.originalFilename,
-            contentType: media.contentType,
-            byteSize: media.byteSize,
-            sha256: media.sha256,
-            width: nil,
-            height: nil,
-            bearerToken: bearerToken
+        let preparedUpload = try await client.prepareUpload(
+            videoId: videoId,
+            bearerToken: bearerToken,
+            media: media
         )
-        let uploadedSource = try await client.uploadSourceImage(
-            data: media.data,
+        let uploadedSource = try await client.upload(
+            media: media,
             preparedUpload: preparedUpload
         )
         preparedVideoSourceUpload = PreparedVideoSourceUpload(
             cacheKey: cacheKey,
-            sourceImageUploadId: uploadedSource.sourceImageUploadId
+            sourceImageUploadId: uploadedSource.mediaAssetId
         )
-        return uploadedSource.sourceImageUploadId
+        return uploadedSource.mediaAssetId
     }
 
     func selectedSourceLocalIdentifiersForFinalRender(from selectedMedia: [AnimateSelectedMedia]) -> [String] {
@@ -492,6 +504,22 @@ final class FinalRenderWorkflow: WorkspaceObservingWorkflow {
             from: selectedMedia,
             workspaceMedia: activeWorkspace?.mediaAssets ?? []
         )
+    }
+
+    private func comparisonSourceImageData(from selectedMedia: [AnimateSelectedMedia]) -> Data? {
+        let selectedPhoto = selectedMedia
+            .filter { $0.selected && $0.kind == "photo" && !$0.data.isEmpty }
+            .sorted { $0.sortOrder < $1.sortOrder }
+            .first
+        if let selectedPhoto {
+            return selectedPhoto.data
+        }
+
+        return selectedMedia
+            .filter { $0.kind == "photo" && !$0.data.isEmpty }
+            .sorted { $0.sortOrder < $1.sortOrder }
+            .first?
+            .data
     }
 
     func selectedSourceLocalIdentifiersForFinalRender(
@@ -595,13 +623,15 @@ final class FinalRenderWorkflow: WorkspaceObservingWorkflow {
         videoQuote = nil
         preparedVideoSourceUpload = nil
         pendingGalleryVideo = nil
+        pendingGalleryImage = nil
+        pendingSourceComparisonImageData = nil
         canRetryFinalVideoDownload = false
         statusMessage = nil
     }
 
-    func retryFinalVideoDownload() {
-        guard let workspace = activeWorkspace,
-              let artifact = workspace.latestArtifact(kind: "final_export"),
+    func retryFinalVideoDownload(workspace workspaceOverride: AnimateWorkspace? = nil) {
+        guard let workspace = workspaceOverride ?? activeWorkspace,
+              let artifact = workspace.latestFinalVideoArtifact,
               artifact.status == "available"
         else {
             statusMessage = L10n.string("workflow.final.noDownloadReady")
@@ -623,7 +653,7 @@ final class FinalRenderWorkflow: WorkspaceObservingWorkflow {
     private func scheduleLocalGalleryDownloadIfNeeded(workspace: AnimateWorkspace?) {
         guard
             let workspace,
-            let artifact = workspace.latestArtifact(kind: "final_export"),
+            let artifact = workspace.latestFinalVideoArtifact,
             artifact.status == "available",
             pendingGalleryVideo?.artifactId != finalDownloadArtifactId(for: artifact),
             !galleryStore.contains(artifactId: finalDownloadArtifactId(for: artifact)),
@@ -666,17 +696,39 @@ final class FinalRenderWorkflow: WorkspaceObservingWorkflow {
                 bearerToken: bearerToken
             )
             let temporaryFileURL = try await finalRenderClient.downloadFinalArtifact(from: download)
+            var generatedImageRelativePath: String?
+            if let imageArtifact = workspace.latestGeneratedImageArtifact {
+                pendingGalleryImage = try await downloadGeneratedImageToGallery(
+                    artifact: imageArtifact,
+                    bearerToken: bearerToken
+                )
+                generatedImageRelativePath = pendingGalleryImage?.localRelativePath
+            }
+            let sourceImageRelativePath: String?
+            if let pendingSourceComparisonImageData {
+                sourceImageRelativePath = try galleryStore.saveSourceImage(
+                    data: pendingSourceComparisonImageData,
+                    videoId: workspace.video.id,
+                    artifactId: downloadArtifactId
+                )
+            } else {
+                sourceImageRelativePath = nil
+            }
             pendingGalleryVideo = try galleryStore.saveDownloadedVideo(
                 temporaryFileURL: temporaryFileURL,
                 videoId: workspace.video.id,
                 artifactId: downloadArtifactId,
                 title: workspace.video.title,
                 r2Key: download.r2Key ?? artifact.r2Key,
+                sourceImageLocalRelativePath: sourceImageRelativePath,
+                generatedImageLocalRelativePath: generatedImageRelativePath,
                 createdAt: Date()
             )
             canRetryFinalVideoDownload = false
             statusMessage = L10n.string("workflow.final.savedLocal")
         } catch {
+            pendingGalleryVideo = nil
+            pendingGalleryImage = nil
             AnimateWorkflowDiagnostics.capture(
                 error,
                 feature: "animate.final_render",
@@ -695,6 +747,80 @@ final class FinalRenderWorkflow: WorkspaceObservingWorkflow {
         artifact.workflowArtifactId ?? artifact.id
     }
 
+    private func downloadGeneratedImageToGallery(
+        artifact: AnimateArtifact,
+        bearerToken: String
+    ) async throws -> AnimateGalleryImageRecord {
+        let artifactId = finalDownloadArtifactId(for: artifact)
+        if galleryStore.containsImage(artifactId: artifactId) {
+            return AnimateGalleryImageRecord(
+                id: artifactId,
+                artifactId: artifactId,
+                title: L10n.string("gallery.image.defaultTitle"),
+                look: artifact.look,
+                r2Key: artifact.r2Key,
+                localRelativePath: "Images/\(artifactId).jpg",
+                createdAt: artifact.createdAt
+            )
+        }
+
+        let download = try await finalRenderClient.prepareImageArtifactDownload(
+            artifactId: artifactId,
+            bearerToken: bearerToken
+        )
+        let temporaryFileURL = try await finalRenderClient.downloadFinalArtifact(from: download)
+        return try galleryStore.saveDownloadedImage(
+            temporaryFileURL: temporaryFileURL,
+            artifactId: artifactId,
+            title: L10n.string("gallery.image.defaultTitle"),
+            look: artifact.look,
+            r2Key: download.r2Key ?? artifact.r2Key,
+            createdAt: Date(timeIntervalSince1970: artifact.createdAt / 1000)
+        )
+    }
+
+    func prepareUITestFinalExportForGallery(workspace: AnimateWorkspace) {
+        guard AnimateUITestEnvironment.current.isEnabled,
+              let artifact = workspace.latestFinalVideoArtifact
+        else { return }
+
+        do {
+            let temporaryFileURL = FileManager.default.temporaryDirectory
+                .appendingPathComponent("animateav-ui-test-\(UUID().uuidString).mp4")
+            try Data("animateav-ui-test-mock-video".utf8).write(to: temporaryFileURL, options: .atomic)
+            let downloadArtifactId = finalDownloadArtifactId(for: artifact)
+            pendingGalleryVideo = try galleryStore.saveDownloadedVideo(
+                temporaryFileURL: temporaryFileURL,
+                videoId: workspace.video.id,
+                artifactId: downloadArtifactId,
+                title: workspace.video.title,
+                r2Key: artifact.r2Key,
+                sourceImageLocalRelativePath: nil,
+                generatedImageLocalRelativePath: workspace.latestGeneratedImageArtifact.map {
+                    "Images/\(finalDownloadArtifactId(for: $0)).jpg"
+                },
+                createdAt: Date(timeIntervalSince1970: max(workspace.video.updatedAt, artifact.createdAt) / 1000)
+            )
+            if let imageArtifact = workspace.latestGeneratedImageArtifact {
+                pendingGalleryImage = AnimateGalleryImageRecord(
+                    id: finalDownloadArtifactId(for: imageArtifact),
+                    artifactId: finalDownloadArtifactId(for: imageArtifact),
+                    title: L10n.string("gallery.image.defaultTitle"),
+                    look: imageArtifact.look,
+                    r2Key: imageArtifact.r2Key,
+                    localRelativePath: "Images/\(finalDownloadArtifactId(for: imageArtifact)).jpg",
+                    createdAt: imageArtifact.createdAt
+                )
+            }
+            canRetryFinalVideoDownload = false
+            downloadingArtifactIds.remove(artifact.id)
+            statusMessage = L10n.string("workflow.final.savedLocal")
+        } catch {
+            canRetryFinalVideoDownload = true
+            statusMessage = L10n.string("workflow.final.saveLocalFailed")
+        }
+    }
+
     @discardableResult
     func finishFinalExportToGallery() -> Bool {
         guard let pendingGalleryVideo else {
@@ -703,7 +829,12 @@ final class FinalRenderWorkflow: WorkspaceObservingWorkflow {
         }
 
         galleryStore.addRecord(pendingGalleryVideo)
+        if let pendingGalleryImage {
+            galleryStore.addImageRecord(pendingGalleryImage)
+        }
         self.pendingGalleryVideo = nil
+        self.pendingGalleryImage = nil
+        self.pendingSourceComparisonImageData = nil
         canRetryFinalVideoDownload = false
         statusMessage = L10n.string("workflow.final.movedToGallery")
         return true
@@ -718,6 +849,8 @@ final class FinalRenderWorkflow: WorkspaceObservingWorkflow {
         renderPlan = nil
         isGenerating = false
         pendingGalleryVideo = nil
+        pendingGalleryImage = nil
+        pendingSourceComparisonImageData = nil
         canRetryFinalVideoDownload = false
         downloadingArtifactIds.removeAll()
         lastCreditRefreshKey = nil

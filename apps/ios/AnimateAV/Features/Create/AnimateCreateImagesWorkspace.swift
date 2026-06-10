@@ -874,10 +874,17 @@ private struct AnimateCreateImageLookFamilyTile: View {
 
                 VStack(alignment: .leading, spacing: 4) {
                     HStack(spacing: 6) {
-                        Image(systemName: isSelected ? "checkmark.circle.fill" : family.systemImage)
-                            .font(.system(size: 14, weight: .black))
-                            .foregroundStyle(.white, AVBrandColor.accent)
-                            .accessibilityHidden(true)
+                        if isSelected {
+                            Image(systemName: "checkmark.circle.fill")
+                                .font(.system(size: 14, weight: .black))
+                                .foregroundStyle(.white, AVBrandColor.accent)
+                                .accessibilityHidden(true)
+                        } else {
+                            Image(systemName: family.systemImage)
+                                .font(.system(size: 14, weight: .black))
+                                .foregroundStyle(.white)
+                                .accessibilityHidden(true)
+                        }
 
                         Text(family.title)
                             .font(.system(size: 13, weight: .black))

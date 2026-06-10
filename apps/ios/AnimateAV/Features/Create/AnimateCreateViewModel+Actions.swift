@@ -35,6 +35,8 @@ extension AnimateCreateViewModel {
             updateSetupErrorMessage(L10n.string("create.error.noActiveVideo"))
             return
         }
+        cancelOperations()
+        invalidateFinalPlanPreparation()
         if hasLocalAnimateWorkspace {
             resetActiveVideoCreation(force: true)
             return
@@ -188,6 +190,7 @@ extension AnimateCreateViewModel {
 
         runOperation {
             let videoId = await self.resolveVideoIdForPreparation(form: form)
+            guard !Task.isCancelled else { return }
 
             guard let videoId else {
                 self.failFinalVideoCommand(self.videoCreationFailureMessage())
@@ -195,9 +198,11 @@ extension AnimateCreateViewModel {
             }
 
             guard await self.persistSetupEditsIfNeeded(videoId: videoId, form: form) else {
+                guard !Task.isCancelled else { return }
                 self.failFinalVideoCommand(self.videoCreationFailureMessage())
                 return
             }
+            guard !Task.isCancelled else { return }
 
             let inputSignature = self.currentFinalRenderInputSignature(
                 videoId: videoId,
@@ -205,10 +210,11 @@ extension AnimateCreateViewModel {
             )
             let currentRenderPlan = self.confirmableRenderPlan(videoId: videoId)
             let hasCurrentRenderPlan = currentRenderPlan != nil
+            var finalPlanGeneration: Int?
 
             if !hasCurrentRenderPlan {
                 self.clearStaleRenderPlan()
-                self.beginFinalPlanPreparation(inputSignature: inputSignature)
+                finalPlanGeneration = self.beginFinalPlanPreparation(inputSignature: inputSignature)
                 self.updateFinalRenderStatusMessage(L10n.string("workflow.final.checkingPlan"))
             } else if let currentRenderPlan {
                 finalRenderWorkflow.usePreparedRenderPlan(currentRenderPlan)
@@ -216,18 +222,7 @@ extension AnimateCreateViewModel {
             }
             defer {
                 if !hasCurrentRenderPlan {
-                    self.finishFinalPlanPreparation()
-                }
-            }
-
-            if !hasCurrentRenderPlan {
-                guard let mediaUploadWorkflow = self.mediaUploadWorkflow else {
-                    self.failFinalVideoCommand(self.mediaAvailabilityMessage ?? L10n.string("create.error.mediaUnavailable"))
-                    return
-                }
-                guard await mediaUploadWorkflow.persistSelectedMediaForFinalVideo(videoId: videoId) else {
-                    self.failFinalVideoCommand(self.mediaStatusMessage ?? AnimateRecoveryCopy.mediaVideoSaveFailure())
-                    return
+                    self.finishFinalPlanPreparation(generation: finalPlanGeneration)
                 }
             }
 
@@ -235,6 +230,11 @@ extension AnimateCreateViewModel {
                 form: form,
                 removesWatermark: removesWatermark
             )
+            if let finalPlanGeneration {
+                guard self.isCurrentFinalPlanPreparation(finalPlanGeneration) else { return }
+            } else {
+                guard !Task.isCancelled else { return }
+            }
             await finalRenderWorkflow.prepareFinalRenderPlan(
                 videoId: videoId,
                 template: form.template,
@@ -243,6 +243,11 @@ extension AnimateCreateViewModel {
                 selectedMedia: self.selectedMedia,
                 removesWatermark: removesWatermark
             )
+            if let finalPlanGeneration {
+                guard self.isCurrentFinalPlanPreparation(finalPlanGeneration) else { return }
+            } else {
+                guard !Task.isCancelled else { return }
+            }
             guard finalRenderWorkflow.renderPlan != nil else {
                 self.failFinalVideoCommand(
                     finalRenderWorkflow.statusMessage
@@ -430,7 +435,7 @@ extension AnimateCreateViewModel {
             return
         }
 
-        finalRenderWorkflow.retryFinalVideoDownload()
+        finalRenderWorkflow.retryFinalVideoDownload(workspace: effectiveActiveWorkspace)
     }
 
     @discardableResult
