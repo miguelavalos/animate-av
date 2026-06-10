@@ -12,7 +12,11 @@ enum AnimateRootTab: String, CaseIterable, Identifiable {
 
     var id: String { rawValue }
 
-    static let footerTabs: [AnimateRootTab] = [.home, .create, .createImage, .gallery]
+    static func footerTabs(canUseAnimateImageGeneration: Bool) -> [AnimateRootTab] {
+        canUseAnimateImageGeneration
+            ? [.home, .create, .createImage, .gallery]
+            : [.home, .create, .gallery]
+    }
 
     var shellTab: AVAppShellTab<AnimateRootTab> {
         switch self {

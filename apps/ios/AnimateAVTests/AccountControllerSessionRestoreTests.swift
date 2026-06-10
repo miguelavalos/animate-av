@@ -161,6 +161,40 @@ final class AccountControllerSessionRestoreTests: XCTestCase {
         XCTAssertTrue(controller.isSignedIn)
         XCTAssertEqual(controller.currentUserId, internalUser.id)
         XCTAssertNotEqual(controller.currentUserId, providerUser.id)
+        XCTAssertFalse(controller.canUseAnimateImageGeneration)
+    }
+
+    func testActiveProviderSessionPublishesAnimateImageGenerationFeatureFlag() async {
+        let providerUser = AccountAVUser(
+            id: "user_clerk_subject",
+            displayName: "Clerk User",
+            emailAddress: "user@example.com"
+        )
+        let internalUser = AccountAVUser(
+            id: "appsav-test-user-id",
+            displayName: "Account AV Test User",
+            emailAddress: "user@example.com"
+        )
+        AccountControllerURLProtocol.profileUser = internalUser
+        AccountControllerURLProtocol.profileCanUseImageGeneration = true
+        let controller = AccountController(
+            service: StubAVAccountService(user: providerUser),
+            accountProfileClient: accountProfileClient(),
+            balanceClient: balanceClient(),
+            purchaseService: StubAnimatePurchaseService(),
+            userDefaults: isolatedUserDefaults()
+        )
+
+        await controller.syncFromAccountProvider()
+
+        XCTAssertTrue(controller.isSignedIn)
+        XCTAssertEqual(controller.currentUserId, internalUser.id)
+        XCTAssertTrue(controller.canUseAnimateImageGeneration)
+    }
+
+    func testFooterTabsHideImageCreationUnlessFeatureAvailable() {
+        XCTAssertFalse(AnimateRootTab.footerTabs(canUseAnimateImageGeneration: false).contains(.createImage))
+        XCTAssertTrue(AnimateRootTab.footerTabs(canUseAnimateImageGeneration: true).contains(.createImage))
     }
 
     func testPurchasesUseInternalAccountUserId() async throws {
@@ -352,6 +386,7 @@ private final class CapturingAnimatePurchaseService: AnimatePurchaseServicing {
 private final class AccountControllerURLProtocol: URLProtocol {
     nonisolated(unsafe) static var profileUser = AccountAVUser(id: "user-1", displayName: "User One", emailAddress: "user@example.com")
     nonisolated(unsafe) static var profileStatusCode = 200
+    nonisolated(unsafe) static var profileCanUseImageGeneration = false
     nonisolated(unsafe) static var balanceError: Error?
 
     override class func canInit(with request: URLRequest) -> Bool {
@@ -388,6 +423,7 @@ private final class AccountControllerURLProtocol: URLProtocol {
     static func reset() {
         profileUser = AccountAVUser(id: "user-1", displayName: "User One", emailAddress: "user@example.com")
         profileStatusCode = 200
+        profileCanUseImageGeneration = false
         balanceError = nil
     }
 
@@ -400,6 +436,9 @@ private final class AccountControllerURLProtocol: URLProtocol {
                     "id": "\(profileUser.id)",
                     "displayName": "\(profileUser.displayName)",
                     "email": "\(profileUser.emailAddress ?? "")"
+                  },
+                  "features": {
+                    "canUseAnimateImageGeneration": \(profileCanUseImageGeneration)
                   }
                 }
                 """

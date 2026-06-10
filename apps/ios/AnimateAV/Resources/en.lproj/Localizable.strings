@@ -241,7 +241,7 @@
 "avi.focus.inProgress.message" = "%d %@ in In Progress. Finish the next step.";
 "avi.focus.nextMemory.title" = "Start the next video";
 "avi.focus.activeWork.title" = "Videos in progress";
-"avi.focus.signIn.message" = "Avi unlocks after sign in so videos, images, and Credits stay together.";
+"avi.focus.signIn.message" = "Avi unlocks after sign in so videos and Credits stay together.";
 "avi.focus.signIn.title" = "Sign in first";
 "avi.help.choose.detail" = "Pick one photo for Avi to redraw and animate.";
 "avi.help.choose.title" = "Choose photo";
@@ -353,7 +353,7 @@
 "gallery.empty.shortTitle" = "Gallery is waiting";
 "gallery.empty.title" = "Your first video is waiting";
 "gallery.open" = "Open Gallery";
-"gallery.subtitle" = "Your finished cartoon videos and stylized images live here.";
+"gallery.subtitle" = "Your finished cartoon videos live here.";
 "gallery.title" = "Gallery";
 "gallery.video.localFileMissing" = "Local file missing";
 "gallery.video.savedOnDevice" = "Saved on this device";
@@ -390,7 +390,7 @@
 "home.aviBrief.continueVideo" = "Continue %@ from the next unfinished step.";
 "home.aviBrief.firstMemory" = "Start with one photo and let Avi make it move.";
 "home.aviBrief.openInProgress" = "Open In Progress and finish the next step.";
-"home.aviBrief.signIn" = "Sign in so Avi can keep your videos, images, and Credits together.";
+"home.aviBrief.signIn" = "Sign in so Avi can keep your videos and Credits together.";
 "home.header.subtitle" = "Turn one favorite photo into a playful animated video with style, motion, and sound.";
 "home.header.title" = "From photo to cartoon";
 "home.nextActions.detail" = "Make a video, finish a video, or ask Avi for ideas.";
@@ -398,7 +398,7 @@
 "home.videoStatus.empty" = "No cartoon videos yet.";
 "home.videoStatus.synced" = "%d %@ ready in your video library.";
 "home.signIn.action.detail" = "Connect your account before Avi starts animating.";
-"home.signIn.detail" = "Avi needs an account to keep your videos, images, and Credits together.";
+"home.signIn.detail" = "Avi needs an account to keep your videos and Credits together.";
 "home.signIn.title" = "Sign in and start animating";
 "media.item.one" = "item";
 "media.item.other" = "items";
@@ -552,7 +552,7 @@
 "create.continuation.final.message" = "Create or refresh the finished video.";
 "create.continuation.final.title" = "Continue with video";
 "create.continuation.media.message" = "Add one photo and let Avi plan the cartoon.";
-"create.continuation.media.title" = "Continue with image";
+"create.continuation.media.title" = "Continue with photo";
 "create.continuation.video.message" = "Open this video and continue the next unfinished step.";
 "create.continuation.video.title" = "Continue video";
 "create.continuation.story.message" = "Prepare the video from the selected photo.";
@@ -565,7 +565,7 @@
 "create.video.title" = "Create video";
 "create.video.subtitle" = "Turn one photo into an animated scene with a look, message, and voice.";
 "create.current.selected" = "%d items selected.";
-"create.intro.detail" = "Choose one image, pick a look, and create the video.";
+"create.intro.detail" = "Choose one photo, pick a look, and create the video.";
 "create.intro.title" = "Create";
 "create.status.loginRequired" = "Login required";
 "create.status.ready" = "Ready";

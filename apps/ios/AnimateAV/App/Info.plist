@@ -50,7 +50,7 @@
 	<key>ANIMATEAV_OPEN_SOURCE_URL</key>
 	<string>$(ANIMATEAV_OPEN_SOURCE_URL)</string>
 	<key>NSPhotoLibraryUsageDescription</key>
-	<string>Animate AV can import one source photo when you choose to create an animated video or stylized image.</string>
+	<string>Animate AV can import one source photo when you choose to create an animated video.</string>
   <key>CFBundleInfoDictionaryVersion</key>
   <string>6.0</string>
   <key>CFBundleName</key>

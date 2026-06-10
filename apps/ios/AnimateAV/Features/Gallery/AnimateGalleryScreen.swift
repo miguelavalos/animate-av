@@ -7,6 +7,7 @@ import SwiftUI
 struct AnimateGalleryScreen: View {
     let startVideoCreation: () -> Void
     let startImageCreation: () -> Void
+    let canUseAnimateImageGeneration: Bool
 
     @EnvironmentObject private var viewModel: AnimateGalleryViewModel
     @State private var pendingDeletion: AnimateGalleryDeletionTarget?
@@ -31,7 +32,9 @@ struct AnimateGalleryScreen: View {
             }
             .frame(maxWidth: .infinity, alignment: .leading)
 
-            AnimateGalleryAssetKindPicker(selectedAssetKind: selectedAssetKindBinding)
+            if canUseAnimateImageGeneration {
+                AnimateGalleryAssetKindPicker(selectedAssetKind: selectedAssetKindBinding)
+            }
 
             switch selectedAssetKind {
             case .videos:
@@ -126,6 +129,12 @@ struct AnimateGalleryScreen: View {
             }
             .presentationDetents([.height(230)])
         }
+        .onAppear {
+            resetImageSelectionIfUnavailable()
+        }
+        .onChange(of: canUseAnimateImageGeneration) { _, _ in
+            resetImageSelectionIfUnavailable()
+        }
     }
 
     private var deletionConfirmationPresented: Binding<Bool> {
@@ -140,7 +149,8 @@ struct AnimateGalleryScreen: View {
     }
 
     private var selectedAssetKind: AnimateGalleryAssetKind {
-        AnimateGalleryAssetKind(rawValue: selectedAssetKindRaw) ?? .videos
+        guard canUseAnimateImageGeneration else { return .videos }
+        return AnimateGalleryAssetKind(rawValue: selectedAssetKindRaw) ?? .videos
     }
 
     private var selectedAssetKindBinding: Binding<AnimateGalleryAssetKind> {
@@ -160,6 +170,15 @@ struct AnimateGalleryScreen: View {
             break
         }
         pendingDeletion = nil
+    }
+
+    private func resetImageSelectionIfUnavailable() {
+        guard !canUseAnimateImageGeneration else { return }
+        selectedAssetKindRaw = AnimateGalleryAssetKind.videos.rawValue
+        selectedImage = nil
+        if case .image = pendingDeletion {
+            pendingDeletion = nil
+        }
     }
 }
 

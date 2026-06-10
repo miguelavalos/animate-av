@@ -42,6 +42,7 @@ struct AnimateAppShellView: View {
             )
         }
         .onChange(of: createViewModel.imageGenerationQueueNonce) { _, _ in
+            guard accountController.canUseAnimateImageGeneration else { return }
             clearImageDraft()
             galleryViewModel.refreshImages()
             inProgressPreferredAssetKindRaw = "images"
@@ -52,7 +53,9 @@ struct AnimateAppShellView: View {
     private var appScaffold: some View {
         AVAppShellConfiguredScaffold(
             selectedTabID: footerSelectedTab,
-            tabs: AnimateRootTab.footerTabs.map(\.shellTab),
+            tabs: AnimateRootTab.footerTabs(
+                canUseAnimateImageGeneration: accountController.canUseAnimateImageGeneration
+            ).map(\.shellTab),
             assistantID: .avi,
             assistant: footerAssistant,
             hasAssistantActiveContext: selectedTab != .avi && hasAviActiveContext,
@@ -101,6 +104,11 @@ struct AnimateAppShellView: View {
                 .padding(.bottom, 104)
             }
         }
+        .onChange(of: accountController.canUseAnimateImageGeneration) { _, canUseImages in
+            guard !canUseImages else { return }
+            redirectImageGenerationIfUnavailable()
+        }
+        .onAppear(perform: redirectImageGenerationIfUnavailable)
     }
 
     private var footerAssistant: AVAppShellConfiguredAssistant {
@@ -159,32 +167,43 @@ struct AnimateAppShellView: View {
                     bottomSafeAreaPadding: 82
                 )
             case .createImage:
-                AnimateCreateImagesWorkspace(
-                    balance: accountController.creditBalance,
-                    creditBalanceLoadState: accountController.creditBalanceLoadState,
-                    imageGenerationAvailability: createViewModel.imageGenerationAvailability,
-                    isLoadingImageGenerationAvailability: createViewModel.isLoadingImageGenerationAvailability,
-                    isStartingImageGeneration: createViewModel.isStartingImageGeneration,
-                    isPurchasingImageGenerationPack: createViewModel.isPurchasingImageGenerationPack,
-                    imageGenerationAvailabilityMessage: createViewModel.imageGenerationAvailabilityMessage,
-                    selectedImage: $imageDraftImage,
-                    selectedImageData: $imageDraftData,
-                    selectedSourceImageLocalIdentifier: $imageDraftSourceIdentifier,
-                    selectedLooks: $imageDraftLooks,
-                    refreshImageGenerationAvailability: createViewModel.refreshImageGenerationAvailability,
-                    startImageGeneration: createViewModel.startImageGeneration,
-                    purchaseImageGenerationPack: createViewModel.purchaseImageGenerationPack,
-                    openCredits: openCredits,
-                    cancelCreation: cancelImageCreation
-                )
-                .safeAreaPadding(.horizontal, 20)
-                .safeAreaPadding(.top, 12)
-                .safeAreaPadding(.bottom, 82)
+                if accountController.canUseAnimateImageGeneration {
+                    AnimateCreateImagesWorkspace(
+                        balance: accountController.creditBalance,
+                        creditBalanceLoadState: accountController.creditBalanceLoadState,
+                        imageGenerationAvailability: createViewModel.imageGenerationAvailability,
+                        isLoadingImageGenerationAvailability: createViewModel.isLoadingImageGenerationAvailability,
+                        isStartingImageGeneration: createViewModel.isStartingImageGeneration,
+                        isPurchasingImageGenerationPack: createViewModel.isPurchasingImageGenerationPack,
+                        imageGenerationAvailabilityMessage: createViewModel.imageGenerationAvailabilityMessage,
+                        selectedImage: $imageDraftImage,
+                        selectedImageData: $imageDraftData,
+                        selectedSourceImageLocalIdentifier: $imageDraftSourceIdentifier,
+                        selectedLooks: $imageDraftLooks,
+                        refreshImageGenerationAvailability: createViewModel.refreshImageGenerationAvailability,
+                        startImageGeneration: createViewModel.startImageGeneration,
+                        purchaseImageGenerationPack: createViewModel.purchaseImageGenerationPack,
+                        openCredits: openCredits,
+                        cancelCreation: cancelImageCreation
+                    )
+                    .safeAreaPadding(.horizontal, 20)
+                    .safeAreaPadding(.top, 12)
+                    .safeAreaPadding(.bottom, 82)
+                } else {
+                    AnimateCreateScreen(
+                        startSignInFlow: startSignInFlow,
+                        openCredits: openCredits,
+                        cancelCreation: cancelCreation,
+                        finishFinalVideoToGallery: finishFinalVideoToGallery,
+                        bottomSafeAreaPadding: 82
+                    )
+                }
             case .inProgress:
                 AnimateInProgressScreen(
                     balance: accountController.creditBalance,
                     creditBalanceLoadState: accountController.creditBalanceLoadState,
                     preferredAssetKindRaw: inProgressPreferredAssetKindRaw,
+                    canUseAnimateImageGeneration: accountController.canUseAnimateImageGeneration,
                     continueVideo: { request in
                         createViewModel.continueVideo(request.video, focus: request.focus)
                         selectedTab = .create
@@ -202,7 +221,8 @@ struct AnimateAppShellView: View {
             case .gallery:
                 AnimateGalleryScreen(
                     startVideoCreation: startOrContinueVideoCreation,
-                    startImageCreation: startImageCreation
+                    startImageCreation: startImageCreation,
+                    canUseAnimateImageGeneration: accountController.canUseAnimateImageGeneration
                 )
                     .environmentObject(galleryViewModel)
             case .avi:
@@ -235,6 +255,9 @@ struct AnimateAppShellView: View {
 
     private var footerSelectedTab: AnimateRootTab {
         guard chromeItem == nil else { return .profile }
+        guard selectedTab != .createImage || accountController.canUseAnimateImageGeneration else {
+            return .create
+        }
         return selectedTab
     }
 
@@ -263,6 +286,15 @@ struct AnimateAppShellView: View {
     private func cancelImageCreation() {
         clearImageDraft()
         selectRootTab(.home)
+    }
+
+    private func redirectImageGenerationIfUnavailable() {
+        guard !accountController.canUseAnimateImageGeneration else { return }
+        clearImageDraft()
+        inProgressPreferredAssetKindRaw = "videos"
+        if selectedTab == .createImage {
+            selectRootTab(.create)
+        }
     }
 
     private func finishFinalVideoToGallery() {
@@ -299,6 +331,10 @@ struct AnimateAppShellView: View {
     }
 
     private func startImageCreation() {
+        guard accountController.canUseAnimateImageGeneration else {
+            startOrContinueVideoCreation()
+            return
+        }
         selectRootTab(.createImage)
     }
 
@@ -313,6 +349,10 @@ struct AnimateAppShellView: View {
     }
 
     private func selectRootTab(_ tab: AnimateRootTab) {
+        if tab == .createImage, !accountController.canUseAnimateImageGeneration {
+            startOrContinueVideoCreation()
+            return
+        }
         guard selectedTab != tab || chromeItem != nil else { return }
         navigationPath = NavigationPath()
         navigationStackResetID = UUID()

@@ -25,6 +25,13 @@ protocol AnimateAccountStateProviding: AnyObject {
     var displayNamePublisher: AnyPublisher<String?, Never> { get }
     var creditBalancePublisher: AnyPublisher<AnimateCreditBalance, Never> { get }
     var creditBalanceLoadStatePublisher: AnyPublisher<AnimateCreditBalanceLoadState, Never> { get }
+    var canUseAnimateImageGenerationPublisher: AnyPublisher<Bool, Never> { get }
+}
+
+extension AnimateAccountStateProviding {
+    var canUseAnimateImageGenerationPublisher: AnyPublisher<Bool, Never> {
+        Just(false).eraseToAnyPublisher()
+    }
 }
 
 @MainActor

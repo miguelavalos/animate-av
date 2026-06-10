@@ -109,7 +109,7 @@
 "avi.focus.inProgress.message" = "%d %@ in Arbeit. Beende den nächsten Schritt.";
 "avi.focus.nextMemory.title" = "Nächstes Video starten";
 "avi.focus.activeWork.title" = "Videos in Arbeit";
-"avi.focus.signIn.message" = "Avi wird nach der Anmeldung freigeschaltet, damit Videos, Bilder und Credits zusammenbleiben.";
+"avi.focus.signIn.message" = "Avi wird nach der Anmeldung freigeschaltet, damit Videos und Credits zusammenbleiben.";
 "avi.focus.signIn.title" = "Zuerst anmelden";
 "avi.help.choose.detail" = "Wähle ein Foto, damit Avi es neu zeichnet und animiert.";
 "avi.help.choose.title" = "Foto wählen";
@@ -223,7 +223,7 @@
 "gallery.empty.shortTitle" = "Die Galerie wartet";
 "gallery.empty.title" = "Dein erstes Video wartet";
 "gallery.open" = "Galerie öffnen";
-"gallery.subtitle" = "Deine fertigen animierten Videos und stilisierten Bilder sind hier.";
+"gallery.subtitle" = "Deine fertigen animierten Videos sind hier.";
 "gallery.title" = "Galerie";
 "gallery.video.localFileMissing" = "Lokale Datei fehlt";
 "gallery.video.savedOnDevice" = "Auf diesem Gerät gespeichert";
@@ -260,7 +260,7 @@
 "home.aviBrief.continueVideo" = "Fahre mit %@ beim nächsten offenen Schritt fort.";
 "home.aviBrief.firstMemory" = "Starte mit einem Foto und lass Avi es bewegen.";
 "home.aviBrief.openInProgress" = "Öffne In Arbeit und beende den nächsten Schritt.";
-"home.aviBrief.signIn" = "Melde dich an, damit Avi Videos, Bilder und Credits zusammenhält.";
+"home.aviBrief.signIn" = "Melde dich an, damit Avi Videos und Credits zusammenhält.";
 "home.header.subtitle" = "Verwandle ein Lieblingsfoto in ein animiertes Video mit Stil, Bewegung und Ton.";
 "home.header.title" = "Vom Foto zum Zeichentrick";
 "home.nextActions.detail" = "Erstelle ein Video, beende ein Video oder frag Avi nach Ideen.";
@@ -268,7 +268,7 @@
 "home.videoStatus.empty" = "Noch keine animierten Videos.";
 "home.videoStatus.synced" = "%d %@ bereit in deiner Videobibliothek.";
 "home.signIn.action.detail" = "Verbinde dein Konto, bevor Avi mit dem Animieren startet.";
-"home.signIn.detail" = "Avi braucht ein Konto, um Videos, Bilder und Credits zusammenzuhalten.";
+"home.signIn.detail" = "Avi braucht ein Konto, um Videos und Credits zusammenzuhalten.";
 "home.signIn.title" = "Anmelden und los animieren";
 "media.item.one" = "Element";
 "media.item.other" = "Elemente";
@@ -552,7 +552,7 @@
 "create.continuation.final.message" = "Erstelle oder aktualisiere das fertige Video.";
 "create.continuation.final.title" = "Mit Video fortfahren";
 "create.continuation.media.message" = "Füge ein Foto hinzu und bereite das Video vor.";
-"create.continuation.media.title" = "Mit Bild fortfahren";
+"create.continuation.media.title" = "Mit Foto fortfahren";
 "create.continuation.video.message" = "Öffne dieses Video und fahre mit dem nächsten offenen Schritt fort.";
 "create.continuation.video.title" = "Video fortsetzen";
 "create.continuation.story.message" = "Bereite das Video aus dem ausgewählten Foto vor.";
@@ -565,7 +565,7 @@
 "create.video.title" = "Video erstellen";
 "create.video.subtitle" = "Verwandle ein Foto in eine animierte Szene mit Look, Botschaft und Stimme.";
 "create.current.selected" = "%d Elemente ausgewählt.";
-"create.intro.detail" = "Wähle ein Bild, bereite die Ausrichtung vor und erstelle das Video.";
+"create.intro.detail" = "Wähle ein Foto, bereite die Ausrichtung vor und erstelle das Video.";
 "create.intro.title" = "Erstellen";
 "create.status.loginRequired" = "Login erforderlich";
 "create.status.ready" = "Bereit";

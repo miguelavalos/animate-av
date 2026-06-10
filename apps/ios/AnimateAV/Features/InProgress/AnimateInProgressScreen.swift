@@ -17,6 +17,7 @@ struct AnimateInProgressScreen: View {
     let openCredits: () -> Void
     let retryCredits: () -> Void
     let preferredAssetKindRaw: String?
+    let canUseAnimateImageGeneration: Bool
 
     private var presentation: AnimateInProgressPresentation {
         AnimateInProgressPresentation.make(
@@ -38,6 +39,7 @@ struct AnimateInProgressScreen: View {
         balance: AnimateCreditBalance = .empty,
         creditBalanceLoadState: AnimateCreditBalanceLoadState = .loaded,
         preferredAssetKindRaw: String? = nil,
+        canUseAnimateImageGeneration: Bool = false,
         continueVideo: @escaping (AnimateContinuationRequest) -> Void = { _ in },
         startVideoCreation: @escaping () -> Void = {},
         startImageCreation: @escaping () -> Void = {},
@@ -48,6 +50,7 @@ struct AnimateInProgressScreen: View {
         self.balance = balance
         self.creditBalanceLoadState = creditBalanceLoadState
         self.preferredAssetKindRaw = preferredAssetKindRaw
+        self.canUseAnimateImageGeneration = canUseAnimateImageGeneration
         self.continueVideo = continueVideo
         self.startVideoCreation = startVideoCreation
         self.startImageCreation = startImageCreation
@@ -60,7 +63,9 @@ struct AnimateInProgressScreen: View {
         AVAppShellScrollableScreenScaffold {
             AnimateTheme.shellBackground
         } content: {
-            AnimateInProgressAssetKindPicker(selectedAssetKind: selectedAssetKindBinding)
+            if canUseAnimateImageGeneration {
+                AnimateInProgressAssetKindPicker(selectedAssetKind: selectedAssetKindBinding)
+            }
 
             switch selectedAssetKind {
             case .videos:
@@ -100,7 +105,11 @@ struct AnimateInProgressScreen: View {
             }
         }
         .onAppear {
+            resetImageSelectionIfUnavailable()
             applyPreferredAssetKind()
+        }
+        .onChange(of: canUseAnimateImageGeneration) { _, _ in
+            resetImageSelectionIfUnavailable()
         }
         .onChange(of: preferredAssetKindRaw) { _, _ in
             applyPreferredAssetKind()
@@ -139,7 +148,8 @@ struct AnimateInProgressScreen: View {
     }
 
     private var selectedAssetKind: AnimateInProgressAssetKind {
-        AnimateInProgressAssetKind(rawValue: selectedAssetKindRaw) ?? .videos
+        guard canUseAnimateImageGeneration else { return .videos }
+        return AnimateInProgressAssetKind(rawValue: selectedAssetKindRaw) ?? .videos
     }
 
     private var selectedAssetKindBinding: Binding<AnimateInProgressAssetKind> {
@@ -151,9 +161,15 @@ struct AnimateInProgressScreen: View {
 
     private func applyPreferredAssetKind() {
         guard let preferredAssetKindRaw,
+              canUseAnimateImageGeneration || preferredAssetKindRaw != AnimateInProgressAssetKind.images.rawValue,
               AnimateInProgressAssetKind(rawValue: preferredAssetKindRaw) != nil
         else { return }
         selectedAssetKindRaw = preferredAssetKindRaw
+    }
+
+    private func resetImageSelectionIfUnavailable() {
+        guard !canUseAnimateImageGeneration else { return }
+        selectedAssetKindRaw = AnimateInProgressAssetKind.videos.rawValue
     }
 
     private func confirmVideoDeletion() {

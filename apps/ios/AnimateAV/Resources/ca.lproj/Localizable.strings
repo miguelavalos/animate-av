@@ -239,7 +239,7 @@
 "avi.focus.inProgress.message" = "%d %@ a En curs. Acaba el pas següent.";
 "avi.focus.nextMemory.title" = "Començar el vídeo següent";
 "avi.focus.activeWork.title" = "Vídeos en curs";
-"avi.focus.signIn.message" = "Avi es desbloqueja en iniciar sessió perquè vídeos, imatges i crèdits quedin junts.";
+"avi.focus.signIn.message" = "Avi es desbloqueja en iniciar sessió perquè vídeos i crèdits quedin junts.";
 "avi.focus.signIn.title" = "Primer inicia sessió";
 "avi.help.choose.detail" = "Tria una foto perquè Avi la redibuixi i l’animi.";
 "avi.help.choose.title" = "Triar foto";
@@ -351,7 +351,7 @@
 "gallery.empty.shortTitle" = "La Galeria espera";
 "gallery.empty.title" = "El primer vídeo t’espera";
 "gallery.open" = "Obre la galeria";
-"gallery.subtitle" = "Els teus vídeos animats acabats i les imatges amb estil viuen aquí.";
+"gallery.subtitle" = "Els teus vídeos animats acabats viuen aquí.";
 "gallery.title" = "Galeria";
 "gallery.video.localFileMissing" = "Falta el fitxer local";
 "gallery.video.savedOnDevice" = "Desat en aquest dispositiu";
@@ -388,7 +388,7 @@
 "home.aviBrief.continueVideo" = "Continua %@ des de la propera etapa pendent.";
 "home.aviBrief.firstMemory" = "Comença amb una foto i deixa que l’Avi la posi en moviment.";
 "home.aviBrief.openInProgress" = "Obre En curs i acaba el pas següent.";
-"home.aviBrief.signIn" = "Inicia sessió perquè l’Avi mantingui junts vídeos, imatges i crèdits.";
+"home.aviBrief.signIn" = "Inicia sessió perquè l’Avi mantingui junts vídeos i crèdits.";
 "home.header.subtitle" = "Converteix una foto preferida en un vídeo animat amb estil, moviment i so.";
 "home.header.title" = "De foto a dibuix animat";
 "home.nextActions.detail" = "Fes un vídeo, acaba un vídeo o demana idees a l’Avi.";
@@ -396,7 +396,7 @@
 "home.videoStatus.empty" = "Encara no hi ha vídeos animats.";
 "home.videoStatus.synced" = "%d %@ llestos a la teva biblioteca de vídeos.";
 "home.signIn.action.detail" = "Connecta el compte abans que l’Avi comenci a animar.";
-"home.signIn.detail" = "L’Avi necessita un compte per mantenir junts vídeos, imatges i crèdits.";
+"home.signIn.detail" = "L’Avi necessita un compte per mantenir junts vídeos i crèdits.";
 "home.signIn.title" = "Inicia sessió i comença a animar";
 "media.item.one" = "ítem";
 "media.item.other" = "ítems";
@@ -550,7 +550,7 @@
 "create.continuation.final.message" = "Crea o actualitza el vídeo acabat.";
 "create.continuation.final.title" = "Continuar amb el vídeo";
 "create.continuation.media.message" = "Afegeix una foto i prepara el vídeo.";
-"create.continuation.media.title" = "Continuar amb imatge";
+"create.continuation.media.title" = "Continuar amb foto";
 "create.continuation.video.message" = "Obre aquest vídeo i continua el següent pas pendent.";
 "create.continuation.video.title" = "Continuar vídeo";
 "create.continuation.story.message" = "Prepara el vídeo des de la foto seleccionada.";
@@ -563,7 +563,7 @@
 "create.video.title" = "Crear vídeo";
 "create.video.subtitle" = "Converteix una foto en una escena animada amb look, missatge i veu.";
 "create.current.selected" = "%d ítems seleccionats.";
-"create.intro.detail" = "Tria una imatge, prepara la direcció i crea el vídeo.";
+"create.intro.detail" = "Tria una foto, prepara la direcció i crea el vídeo.";
 "create.intro.title" = "Crear";
 "create.status.loginRequired" = "Cal iniciar sessió";
 "create.status.ready" = "A punt";

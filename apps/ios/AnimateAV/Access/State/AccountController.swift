@@ -10,6 +10,7 @@ final class AccountController: ObservableObject {
     @Published private(set) var creditBalance = AnimateCreditBalance.empty
     @Published private(set) var creditBalanceLoadState = AnimateCreditBalanceLoadState.signedOut
     @Published private(set) var purchaseCatalog = AnimatePurchaseCatalog.empty
+    @Published private(set) var canUseAnimateImageGeneration = false
     @Published private(set) var isPurchaseCatalogLoading = false
     @Published private(set) var purchaseCatalogErrorMessage: String?
     @Published private(set) var isPurchaseInProgress = false
@@ -65,7 +66,7 @@ final class AccountController: ObservableObject {
         addAccountBreadcrumb("restore_started")
         switch await service.restoreSession() {
         case .active(let providerUser):
-            guard let resolvedUser = await resolveInternalAccountUser(providerUser: providerUser) else {
+            guard let resolvedProfile = await resolveInternalAccountUser(providerUser: providerUser) else {
                 captureAccountError(
                     AnimateAPIError(code: "animate_account_profile_resolution_failed", message: "Account profile resolution failed."),
                     operation: "restore",
@@ -77,11 +78,10 @@ final class AccountController: ObservableObject {
                 }
                 return
             }
-            user = resolvedUser
-            AVDiagnostics.setUserContext(AVDiagnosticsUserContext(id: resolvedUser.id))
+            publishProfile(resolvedProfile)
             addAccountBreadcrumb("restore_active")
             isAccountSessionTemporarilyUnavailable = false
-            persistLastKnownAccountUser(resolvedUser)
+            persistLastKnownAccountUser(resolvedProfile.user)
             await refreshCreditBalance()
         case .temporarilyUnavailable:
             addAccountBreadcrumb("restore_temporarily_unavailable")
@@ -91,6 +91,7 @@ final class AccountController: ObservableObject {
             }
         case .signedOut, .invalidated:
             user = nil
+            canUseAnimateImageGeneration = false
             AVDiagnostics.clearUserContext()
             addAccountBreadcrumb("restore_signed_out")
             isAccountSessionTemporarilyUnavailable = false
@@ -119,6 +120,7 @@ final class AccountController: ObservableObject {
             try await self.service.signOut()
             await self.purchaseService.logOut()
             self.user = nil
+            self.canUseAnimateImageGeneration = false
             AVDiagnostics.clearUserContext()
             self.addAccountBreadcrumb("sign_out_completed")
             self.isAccountSessionTemporarilyUnavailable = false
@@ -237,10 +239,12 @@ final class AccountController: ObservableObject {
         }
     }
 
-    private func resolveInternalAccountUser(providerUser: AccountAVUser) async -> AccountAVUser? {
+    private func resolveInternalAccountUser(providerUser: AccountAVUser) async -> AnimateAccountProfile? {
         do {
             guard let token = try await service.getToken() else {
-                return AnimateUITestEnvironment.current.hasAccountOverride ? providerUser : nil
+                return AnimateUITestEnvironment.current.hasAccountOverride
+                    ? AnimateAccountProfile(user: providerUser, features: .uiTestDefault)
+                    : nil
             }
             return try await accountProfileClient.fetchCurrentUser(bearerToken: token)
         } catch {
@@ -265,6 +269,13 @@ final class AccountController: ObservableObject {
         creditBalanceLoadState = .signedOut
         purchaseCatalog = .empty
         purchaseCatalogErrorMessage = nil
+        canUseAnimateImageGeneration = false
+    }
+
+    private func publishProfile(_ profile: AnimateAccountProfile) {
+        user = profile.user
+        canUseAnimateImageGeneration = profile.features.canUseAnimateImageGeneration
+        AVDiagnostics.setUserContext(AVDiagnosticsUserContext(id: profile.user.id))
     }
 
     private static func lastKnownAccountUser(from userDefaults: UserDefaults) -> AccountAVUser? {
@@ -418,7 +429,7 @@ struct AnimateAccountProfileClient {
     var baseURLString: String
     var session: URLSession = .shared
 
-    func fetchCurrentUser(bearerToken: String) async throws -> AccountAVUser {
+    func fetchCurrentUser(bearerToken: String) async throws -> AnimateAccountProfile {
         guard let url = URL(string: "\(baseURLString)/v1/me") else {
             throw AnimateAPIError(code: "invalid_account_api_url", message: L10n.string("access.apiURLMissing"))
         }
@@ -437,16 +448,33 @@ struct AnimateAccountProfileClient {
         }
 
         let decoded = try JSONDecoder().decode(AnimateAccountProfileResponse.self, from: data)
-        return AccountAVUser(
+        let user = AccountAVUser(
             id: decoded.user.id,
             displayName: decoded.user.displayName ?? L10n.string("account.displayName.user"),
             emailAddress: decoded.user.email ?? decoded.user.emailAddress
         )
+        return AnimateAccountProfile(
+            user: user,
+            features: decoded.features ?? .publicDefault
+        )
     }
+}
+
+struct AnimateAccountProfile {
+    let user: AccountAVUser
+    let features: AnimateAccountFeatures
+}
+
+struct AnimateAccountFeatures: Decodable, Equatable {
+    let canUseAnimateImageGeneration: Bool
+
+    static let publicDefault = AnimateAccountFeatures(canUseAnimateImageGeneration: false)
+    static let uiTestDefault = AnimateAccountFeatures(canUseAnimateImageGeneration: false)
 }
 
 private struct AnimateAccountProfileResponse: Decodable {
     let user: User
+    let features: AnimateAccountFeatures?
 
     struct User: Decodable {
         let id: String
@@ -630,5 +658,9 @@ extension AccountController: AnimateCurrentUserProviding, AnimateAuthTokenProvid
 
     var creditBalanceLoadStatePublisher: AnyPublisher<AnimateCreditBalanceLoadState, Never> {
         $creditBalanceLoadState.eraseToAnyPublisher()
+    }
+
+    var canUseAnimateImageGenerationPublisher: AnyPublisher<Bool, Never> {
+        $canUseAnimateImageGeneration.eraseToAnyPublisher()
     }
 }
