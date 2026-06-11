@@ -245,8 +245,10 @@ private struct AnimateCreateMediaFirstWorkspace: View {
             .presentationDetents([.large])
             .presentationDragIndicator(.visible)
         }
-        .onChange(of: presentation.finalRenderSummary.renderPlan?.planId) { _, _ in
+        .onChange(of: presentation.finalRenderSummary.renderPlan != nil) { _, _ in
             markVideoSetupGuideCompleteIfFinalPlanExists()
+        }
+        .onChange(of: finalVideoAction.canShowConfirmationSheet) { _, _ in
             presentCreateVideoConfirmationIfReady()
         }
         .onChange(of: presentation.finalRenderSummary.latestFinalJob?.id) { _, jobId in
@@ -262,9 +264,6 @@ private struct AnimateCreateMediaFirstWorkspace: View {
             }
             guard waitsForFinalRenderPlan, !isPreparingPlan else { return }
             presentCreateVideoConfirmationIfReady()
-            if presentation.finalRenderSummary.renderPlan == nil {
-                waitsForFinalRenderPlan = false
-            }
         }
         .onAppear {
             markVideoSetupGuideCompleteIfFinalPlanExists()
@@ -2062,6 +2061,7 @@ private struct AnimateCreateLockedFinalRenderScene: View {
                                 .foregroundStyle(AVBrandColor.textSecondary)
                         }
                     }
+
                 }
                 .frame(maxWidth: .infinity)
             }
@@ -2087,6 +2087,7 @@ private struct AnimateCreateLockedFinalRenderScene: View {
                     .fontWeight(.semibold)
                     .foregroundStyle(AVBrandColor.textSecondary)
                     .fixedSize(horizontal: false, vertical: true)
+
             }
             .padding(14)
             .frame(maxWidth: .infinity)

@@ -154,7 +154,8 @@ struct AnimateFinalRenderClient {
             voiceTone: message.voiceTone,
             creditCost: nil,
             removeWatermark: removesWatermark,
-            renderOptionId: nil
+            renderOptionId: nil,
+            mockNoSpend: Self.shouldUseMockNoSpendFinalRender ? true : nil
         )
 
         var request = URLRequest(url: endpoint)
@@ -227,7 +228,8 @@ struct AnimateFinalRenderClient {
             removeWatermark: removesWatermark,
             renderOptionId: renderOptionId,
             planId: planId,
-            idempotencyKey: "final-confirm:\(videoId):\(planId):\(template.id.rawValue):\(removesWatermark ? "clean" : "watermarked")"
+            idempotencyKey: "final-confirm:\(videoId):\(planId):\(template.id.rawValue):\(removesWatermark ? "clean" : "watermarked")",
+            mockNoSpend: Self.shouldUseMockNoSpendFinalRender ? true : nil
         )
 
         var request = URLRequest(url: endpoint)
@@ -372,6 +374,16 @@ struct AnimateFinalRenderClient {
     private static func nonBlankIdentifiers(_ values: [String]) -> [String]? {
         let identifiers = values.compactMap(nonBlankOptional)
         return identifiers.isEmpty ? nil : identifiers
+    }
+
+    private static var shouldUseMockNoSpendFinalRender: Bool {
+        let environment = Bundle.main.object(forInfoDictionaryKey: "ANIMATEAV_CONFIG_ENVIRONMENT") as? String ?? "dev"
+        switch environment.trimmingCharacters(in: .whitespacesAndNewlines).lowercased() {
+        case "prod", "production":
+            return false
+        default:
+            return true
+        }
     }
 }
 

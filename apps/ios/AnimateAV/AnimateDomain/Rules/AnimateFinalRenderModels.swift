@@ -50,6 +50,7 @@ struct AnimateRenderPlanRequest: Encodable {
     let creditCost: Int?
     let removeWatermark: Bool
     let renderOptionId: String?
+    let mockNoSpend: Bool?
 }
 
 struct AnimateConfirmFinalRenderRequest: Encodable {
@@ -81,6 +82,7 @@ struct AnimateConfirmFinalRenderRequest: Encodable {
     let renderOptionId: String?
     let planId: String
     let idempotencyKey: String
+    let mockNoSpend: Bool?
 }
 
 struct AnimateConfirmFinalRenderResponse: Decodable, Equatable {
