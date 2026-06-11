@@ -226,15 +226,6 @@ extension AnimateCreateViewModel {
                 }
             }
 
-            await finalRenderWorkflow.quoteVideo(
-                form: form,
-                removesWatermark: removesWatermark
-            )
-            if let finalPlanGeneration {
-                guard self.isCurrentFinalPlanPreparation(finalPlanGeneration) else { return }
-            } else {
-                guard !Task.isCancelled else { return }
-            }
             await finalRenderWorkflow.prepareFinalRenderPlan(
                 videoId: videoId,
                 template: form.template,

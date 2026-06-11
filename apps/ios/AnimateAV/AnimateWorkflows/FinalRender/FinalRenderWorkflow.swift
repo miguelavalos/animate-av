@@ -146,6 +146,7 @@ final class FinalRenderWorkflow: WorkspaceObservingWorkflow {
         let generation = beginWorkflowGeneration()
         isGenerating = true
         renderPlan = nil
+        videoQuote = nil
         statusMessage = L10n.string("workflow.final.preparing")
         AnimateWorkflowDiagnostics.addBreadcrumb(
             feature: "animate.final_render",

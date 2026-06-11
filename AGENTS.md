@@ -38,6 +38,10 @@ Mandatory rules:
 - no-spend workflow tests must still exercise quote/check-cost, credit
   confirmation, queued/running/completed UI states, final artifact handoff, and
   Gallery cleanup. Only the paid provider call is mocked.
+- in the final video flow, `/renders/plan` is the source of truth for cost,
+  blockers, watermark choice, and the subsequent confirmation. Do not add a
+  separate `/video/quotes` preflight inside Check cost/Create video; it creates
+  duplicate loading states and can desynchronise UI from the confirmable plan.
 - before declaring the create-video workflow done, validate controlled failure
   paths: provider failure, stale plan, insufficient credits, offline/unavailable
   backend, final artifact missing, and retry. The UI must recover without a
