@@ -75,7 +75,7 @@ final class AnimateCreateAvailabilityPresentationTests: XCTestCase {
 
     func testAvailabilityCopyUsesSingularAndPluralCreditMessages() {
         XCTAssertEqual(AnimateCreateAvailabilityCopy.videoCreationSignInRequired, "Sign in before starting a video.")
-        XCTAssertEqual(AnimateCreateAvailabilityCopy.mediaTemplateFull, "Avi has the photo for this video.")
+        XCTAssertEqual(AnimateCreateAvailabilityCopy.mediaTemplateFull, "This video already has its photo.")
         XCTAssertEqual(AnimateCreateAvailabilityCopy.videoDirectionMissingMedia, "Add one photo before preparing the video.")
         XCTAssertEqual(
             AnimateCreateAvailabilityCopy.finalRenderMissingVideoWorkspace,
