@@ -683,7 +683,7 @@
 "create.final.costDetails.watermarkIncluded" = "Tarjeta final de branding incluida.";
 "create.final.createVideo" = "Crear video final";
 "create.final.checkCredits" = "Ver coste";
-"create.final.checkingCost" = "Comprobando coste";
+"create.final.checkingCost" = "Calculando coste";
 "create.final.retrySetup" = "Intentar de nuevo";
 "create.final.recovery.title" = "El video necesita revisión";
 "create.final.recovery.detail" = "Avi no pudo terminar este video. Puedes intentarlo de nuevo o descartar este video y empezar limpio.";
@@ -906,7 +906,7 @@
 "workflow.final.signInAgainRender" = "Vuelve a iniciar sesión antes de crear el video final.";
 "workflow.final.notConfigured" = "La creación del video final no está configurada para esta build.";
 "workflow.final.preparing" = "Avi está preparando el video final.";
-"workflow.final.checkingPlan" = "Comprobando opciones y créditos.";
+"workflow.final.checkingPlan" = "Avi está revisando tu foto y los créditos disponibles.";
 "workflow.final.needsUsableMedia" = "Avi necesita una imagen utilizable antes de crear el video.";
 "workflow.final.sourceMediaMissing" = "Falta la imagen original de Fotos en este dispositivo. Edita la imagen antes de crear el video final.";
 "workflow.final.planReady" = "Revisa el coste en créditos antes de empezar.";

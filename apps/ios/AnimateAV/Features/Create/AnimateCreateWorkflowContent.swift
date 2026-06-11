@@ -2842,33 +2842,81 @@ private struct AnimateCreateFinalVideoConfirmationSheet: View {
     }
 
     private var checkingCostContent: some View {
-        VStack(alignment: .leading, spacing: 14) {
-            HStack(spacing: 12) {
-                ProgressView()
-                    .tint(AVBrandColor.accent)
-                    .controlSize(.regular)
-                    .frame(width: 38, height: 38)
-                    .background(AVBrandColor.accent.opacity(0.10), in: Circle())
+        VStack(spacing: 14) {
+            VStack(spacing: 12) {
+                checkingCostThumbnail
 
-                VStack(alignment: .leading, spacing: 4) {
+                VStack(spacing: 5) {
                     Text(L10n.string("create.final.checkingCost"))
-                        .font(.system(size: 16, weight: .black))
+                        .font(.system(size: 18, weight: .black))
                         .foregroundStyle(AVBrandColor.textPrimary)
+                        .multilineTextAlignment(.center)
 
                     Text(L10n.string("workflow.final.checkingPlan"))
                         .font(.system(size: 12, weight: .semibold))
                         .foregroundStyle(AVBrandColor.textSecondary)
                         .lineLimit(2)
+                        .multilineTextAlignment(.center)
                         .fixedSize(horizontal: false, vertical: true)
                 }
-            }
 
-            AnimateCreateConfirmationMetric(
-                title: L10n.string("create.final.confirmSheet.media"),
-                value: mediaUsageTitle,
-                systemImage: "photo.stack"
-            )
+                ProgressView()
+                    .tint(AVBrandColor.accent)
+                    .controlSize(.regular)
+            }
+            .padding(.vertical, 18)
+            .padding(.horizontal, 16)
+            .frame(maxWidth: .infinity)
+            .background(AVBrandColor.mutedSurface.opacity(0.62), in: RoundedRectangle(cornerRadius: 8, style: .continuous))
+
+            HStack(alignment: .center, spacing: 10) {
+                Image(systemName: "checkmark.shield.fill")
+                    .font(.system(size: 14, weight: .black))
+                    .foregroundStyle(AVBrandColor.accent)
+                    .frame(width: 30, height: 30)
+                    .background(AVBrandColor.accent.opacity(0.10), in: Circle())
+
+                Text(L10n.string("create.final.costDetails.chargedOnCompletion"))
+                    .font(.system(size: 12, weight: .semibold))
+                    .foregroundStyle(AVBrandColor.textSecondary)
+                    .lineLimit(2)
+                    .fixedSize(horizontal: false, vertical: true)
+            }
+            .padding(12)
+            .frame(maxWidth: .infinity, alignment: .leading)
+            .background(.white.opacity(0.64), in: RoundedRectangle(cornerRadius: 8, style: .continuous))
+            .overlay {
+                RoundedRectangle(cornerRadius: 8, style: .continuous)
+                    .stroke(AVBrandColor.borderSubtle.opacity(0.42), lineWidth: 1)
+            }
         }
+    }
+
+    @ViewBuilder
+    private var checkingCostThumbnail: some View {
+        ZStack(alignment: .bottomTrailing) {
+            Circle()
+                .fill(AVBrandColor.accent.opacity(0.10))
+                .frame(width: 68, height: 68)
+
+            Image("AviFullBody")
+                .resizable()
+                .scaledToFit()
+                .frame(width: 58, height: 58)
+                .offset(y: 2)
+
+            Image(systemName: "creditcard.fill")
+                .font(.system(size: 10, weight: .black))
+                .foregroundStyle(.white)
+                .frame(width: 24, height: 24)
+                .background(AVBrandColor.textPrimary, in: Circle())
+                .overlay {
+                    Circle()
+                        .stroke(.white.opacity(0.9), lineWidth: 1)
+                }
+        }
+        .frame(width: 68, height: 68)
+        .shadow(color: AVBrandColor.ink.opacity(0.08), radius: 8, x: 0, y: 4)
     }
 
     private var primaryActionButton: some View {
@@ -2949,20 +2997,20 @@ private struct AnimateCreateFinalVideoConfirmationSheet: View {
 
     private var header: some View {
         HStack(alignment: .top, spacing: 10) {
-            Image(systemName: "video.fill")
+            Image(systemName: showsPlanPreparation ? "creditcard.fill" : "video.fill")
                 .font(.system(size: 16, weight: .black))
                 .foregroundStyle(.white)
                 .frame(width: 38, height: 38)
                 .background(AVBrandColor.textPrimary, in: Circle())
 
             VStack(alignment: .leading, spacing: 4) {
-                Text(L10n.string("create.final.confirmSheet.title"))
+                Text(showsPlanPreparation ? L10n.string("create.final.checkingCost") : L10n.string("create.final.confirmSheet.title"))
                     .font(.system(size: 20, weight: .black))
                     .foregroundStyle(AVBrandColor.textPrimary)
                     .lineLimit(1)
                     .minimumScaleFactor(0.82)
 
-                Text(L10n.string("create.final.confirmSheet.detail"))
+                Text(showsPlanPreparation ? L10n.string("workflow.final.checkingPlan") : L10n.string("create.final.confirmSheet.detail"))
                     .font(.system(size: 12, weight: .semibold))
                     .foregroundStyle(AVBrandColor.textSecondary)
                     .lineLimit(2)

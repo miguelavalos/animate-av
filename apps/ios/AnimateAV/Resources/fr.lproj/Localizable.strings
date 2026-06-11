@@ -902,7 +902,7 @@
 "workflow.final.signInAgainRender" = "Reconnecte-toi avant de créer la vidéo finale.";
 "workflow.final.notConfigured" = "Le vidéo finale n’est pas configuré pour cette build.";
 "workflow.final.preparing" = "Avi prépare l’export final.";
-"workflow.final.checkingPlan" = "Vérification des options et des crédits.";
+"workflow.final.checkingPlan" = "Avi vérifie ta photo et les crédits disponibles.";
 "workflow.final.needsUsableMedia" = "Avi a besoin d’une image utilisable avant de créer la vidéo.";
 "workflow.final.sourceMediaMissing" = "L’image Photos d’origine manque sur cet appareil. Modifie l’image avant de créer la vidéo finale.";
 "workflow.final.planReady" = "Vérifie le coût en crédits avant de commencer.";

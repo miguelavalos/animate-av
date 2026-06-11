@@ -904,7 +904,7 @@
 "workflow.final.signInAgainRender" = "Melde dich erneut an, bevor du den finalen Export erstellst.";
 "workflow.final.notConfigured" = "Finales Creating ist für diesen Build nicht konfiguriert.";
 "workflow.final.preparing" = "Avi bereitet den finalen Export vor.";
-"workflow.final.checkingPlan" = "Optionen und Credits werden geprüft.";
+"workflow.final.checkingPlan" = "Avi prüft dein Foto und verfügbare Credits.";
 "workflow.final.needsUsableMedia" = "Avi benötigt ein verwendbares Bild, bevor das Video erstellt wird.";
 "workflow.final.sourceMediaMissing" = "Das ursprüngliche Foto fehlt auf diesem Gerät. Bearbeite das Bild, bevor du das finale Video erstellst.";
 "workflow.final.planReady" = "Prüfe die Credit-Kosten vor dem Start.";

@@ -683,7 +683,7 @@
 "create.final.costDetails.watermarkIncluded" = "Branding outro included.";
 "create.final.createVideo" = "Create final video";
 "create.final.checkCredits" = "Check cost";
-"create.final.checkingCost" = "Checking cost";
+"create.final.checkingCost" = "Calculating cost";
 "create.final.retrySetup" = "Try again";
 "create.final.recovery.title" = "Video needs attention";
 "create.final.recovery.detail" = "Avi could not finish this video. You can try again, or discard this video and start clean.";
@@ -906,7 +906,7 @@
 "workflow.final.signInAgainRender" = "Sign in again before creating the final video.";
 "workflow.final.notConfigured" = "Final video creation is not configured for this build.";
 "workflow.final.preparing" = "Avi is preparing the final export.";
-"workflow.final.checkingPlan" = "Checking options and credits.";
+"workflow.final.checkingPlan" = "Avi is checking your photo and available credits.";
 "workflow.final.needsUsableMedia" = "Avi needs a usable photo before creating the video.";
 "workflow.final.sourceMediaMissing" = "The original Photos image is missing on this device. Edit the photo before creating the final video.";
 "workflow.final.planReady" = "Review the credit cost before starting.";

@@ -902,7 +902,7 @@
 "workflow.final.signInAgainRender" = "Torna a iniciar sessió abans de crear l’exportació final.";
 "workflow.final.notConfigured" = "El vídeo final no està configurat per a aquesta build.";
 "workflow.final.preparing" = "Avi està preparant l’exportació final.";
-"workflow.final.checkingPlan" = "Comprovant opcions i crèdits.";
+"workflow.final.checkingPlan" = "L’Avi revisa la foto i els crèdits disponibles.";
 "workflow.final.needsUsableMedia" = "Avi necessita una imatge utilitzable abans de crear el vídeo.";
 "workflow.final.sourceMediaMissing" = "Falta la imatge original de Fotos en aquest dispositiu. Edita la imatge abans de crear el vídeo final.";
 "workflow.final.planReady" = "Revisa el cost en crèdits abans de començar.";
