@@ -269,6 +269,7 @@ private struct AnimateCreateMediaFirstWorkspace: View {
         }
         .onAppear {
             markVideoSetupGuideCompleteIfFinalPlanExists()
+            presentCreateVideoConfirmationIfPreparingPlan()
             openCompactPickerIfRequested(openPickerRequest)
         }
         .onChange(of: openPickerRequest) { _, newValue in
@@ -365,8 +366,16 @@ private struct AnimateCreateMediaFirstWorkspace: View {
     }
 
     private func markVideoSetupGuideCompleteIfFinalPlanExists() {
-        guard presentation.finalRenderSummary.renderPlan != nil else { return }
+        guard presentation.finalRenderSummary.renderPlan != nil
+            || presentation.finalRenderSummary.isPreparingPlan else { return }
         isVideoSetupGuideComplete = true
+    }
+
+    private func presentCreateVideoConfirmationIfPreparingPlan() {
+        guard presentation.finalRenderSummary.isPreparingPlan,
+              presentation.finalRenderSummary.latestFinalJob == nil else { return }
+        waitsForFinalRenderPlan = true
+        showsCreateVideoConfirmation = true
     }
 
     private func continueFromCompletedVideoSetupGuide() {
@@ -1040,7 +1049,9 @@ private struct AnimateCreateVideoDirectionCard: View {
             .presentationDragIndicator(.visible)
         }
         .onAppear {
-            guard !isGuidedFlowComplete, activeGuidedSheet == nil else { return }
+            guard !presentation.finalRenderSummary.isPreparingPlan,
+                  !isGuidedFlowComplete,
+                  activeGuidedSheet == nil else { return }
             activeGuidedSheet = guideState.step
             updateGuidedLookFamilyForCurrentStep()
         }
@@ -1145,11 +1156,11 @@ private struct AnimateCreateVideoDirectionCard: View {
     private var summaryCreateVideoAction: some View {
         VStack(alignment: .leading, spacing: 10) {
             HStack(alignment: .center, spacing: 10) {
-                Image(systemName: "checklist.checked")
+                Image(systemName: "checkmark.seal.fill")
                     .font(.system(size: 14, weight: .black))
-                    .foregroundStyle(.white)
+                    .foregroundStyle(AVBrandColor.accent)
                     .frame(width: 32, height: 32)
-                    .background(AVBrandColor.textPrimary, in: Circle())
+                    .background(AVBrandColor.accent.opacity(0.14), in: Circle())
 
                 VStack(alignment: .leading, spacing: 3) {
                     Text(L10n.string("create.guided.summary.createVideo.title"))

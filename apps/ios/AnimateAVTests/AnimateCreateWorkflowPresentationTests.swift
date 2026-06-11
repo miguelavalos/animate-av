@@ -951,6 +951,7 @@ final class AnimateCreateWorkflowPresentationTests: XCTestCase {
 
     func testCreateUITestFixturesExposePreRenderStates() {
         let storyReadyWorkspace = AnimateCreateUITestFixtures.workspace(for: .storyReady)
+        let checkingCostWorkspace = AnimateCreateUITestFixtures.workspace(for: .videoPlanCheckingCost)
         let videoPlanWorkspace = AnimateCreateUITestFixtures.workspace(for: .videoPlanReady)
         let lowCreditsPlan = AnimateCreateUITestFixtures.renderPlan(for: .videoPlanInsufficientCredits)
         let queuedWorkspace = AnimateCreateUITestFixtures.workspace(for: .finalQueued)
@@ -958,13 +959,16 @@ final class AnimateCreateWorkflowPresentationTests: XCTestCase {
         let fullWorkspace = AnimateCreateUITestFixtures.workspace(for: .full)
 
         XCTAssertEqual(storyReadyWorkspace.video.status, "story_ready")
+        XCTAssertEqual(checkingCostWorkspace.video.status, "story_ready")
         XCTAssertEqual(videoPlanWorkspace.video.status, "story_ready")
         XCTAssertEqual(queuedWorkspace.video.status, "rendering")
         XCTAssertEqual(runningWorkspace.video.status, "rendering")
         XCTAssertEqual(fullWorkspace.video.status, "gallery_ready")
         XCTAssertFalse(storyReadyWorkspace.storyScenes.isEmpty)
+        XCTAssertFalse(checkingCostWorkspace.storyScenes.isEmpty)
         XCTAssertFalse(videoPlanWorkspace.storyScenes.isEmpty)
         XCTAssertTrue(storyReadyWorkspace.renderJobs.isEmpty)
+        XCTAssertTrue(checkingCostWorkspace.renderJobs.isEmpty)
         XCTAssertTrue(videoPlanWorkspace.renderJobs.isEmpty)
         XCTAssertEqual(queuedWorkspace.latestRenderJob(kind: "final")?.status, "queued")
         XCTAssertEqual(runningWorkspace.latestRenderJob(kind: "final")?.status, "running")
@@ -972,6 +976,7 @@ final class AnimateCreateWorkflowPresentationTests: XCTestCase {
         XCTAssertFalse(lowCreditsPlan.canCreateVideo)
         XCTAssertEqual(lowCreditsPlan.createVideoBlockers, ["insufficient_credits"])
         XCTAssertNil(storyReadyWorkspace.latestArtifact(kind: "final_export"))
+        XCTAssertNil(checkingCostWorkspace.latestArtifact(kind: "final_export"))
         XCTAssertNil(videoPlanWorkspace.latestArtifact(kind: "final_export"))
         XCTAssertNil(queuedWorkspace.latestArtifact(kind: "final_export"))
         XCTAssertNil(runningWorkspace.latestArtifact(kind: "final_export"))

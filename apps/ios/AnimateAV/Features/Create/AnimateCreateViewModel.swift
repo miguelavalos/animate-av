@@ -511,7 +511,7 @@ final class AnimateCreateViewModel: ObservableObject {
         switch fixtureMode {
         case .videoPlanReady, .videoPlanReadyNoMessage, .videoPlanReadyWithMessage, .videoPlanInsufficientCredits:
             renderPlan = AnimateCreateUITestFixtures.renderPlan(for: fixtureMode)
-        case .storyReady, .finalQueued, .finalRunning, .full:
+        case .storyReady, .videoPlanCheckingCost, .finalQueued, .finalRunning, .full:
             renderPlan = nil
         }
         if let renderPlan {
@@ -520,10 +520,13 @@ final class AnimateCreateViewModel: ObservableObject {
             finalRenderWorkflow?.clearRenderPlan()
         }
         renderPlanInputSignature = renderPlan.map { currentFinalRenderInputSignature(videoId: $0.videoId) }
+        isPreparingFinalPlan = fixtureMode == .videoPlanCheckingCost
         finalRenderStatusMessage = {
             switch fixtureMode {
             case .storyReady:
                 return nil
+            case .videoPlanCheckingCost:
+                return L10n.string("workflow.final.checkingPlan")
             case .videoPlanReady, .videoPlanReadyNoMessage, .videoPlanReadyWithMessage:
                 return L10n.string("workflow.final.planReady")
             case .videoPlanInsufficientCredits:
@@ -537,7 +540,7 @@ final class AnimateCreateViewModel: ObservableObject {
             }
         }()
         switch fixtureMode {
-        case .videoPlanReady, .videoPlanReadyNoMessage, .videoPlanReadyWithMessage, .videoPlanInsufficientCredits:
+        case .videoPlanCheckingCost, .videoPlanReady, .videoPlanReadyNoMessage, .videoPlanReadyWithMessage, .videoPlanInsufficientCredits:
             pendingFocus = nil
             continuationFocusHint = nil
         case .storyReady, .finalQueued, .finalRunning, .full:
