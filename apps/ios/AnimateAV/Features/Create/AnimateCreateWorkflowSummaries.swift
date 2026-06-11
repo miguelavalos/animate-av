@@ -170,7 +170,7 @@ struct AnimateRenderRealtimePresentation: Equatable {
         canEditSetup = renderJob.canEditSetup ?? !renderJob.isActiveRender
         title = Self.title(status: renderJob.status, phase: renderJob.phase)
         detail = Self.detail(renderJob)
-        progressFraction = Self.progressFraction(renderJob.progressPercent)
+        progressFraction = Self.progressFraction(renderJob.progressPercent, status: renderJob.status)
         systemImage = Self.systemImage(status: renderJob.status, phase: renderJob.phase)
     }
 
@@ -226,7 +226,8 @@ struct AnimateRenderRealtimePresentation: Equatable {
         }
     }
 
-    private static func progressFraction(_ progressPercent: Double?) -> Double? {
+    private static func progressFraction(_ progressPercent: Double?, status: String) -> Double? {
+        guard status == "completed" else { return nil }
         guard let progressPercent else { return nil }
         return min(max(progressPercent / 100, 0), 1)
     }

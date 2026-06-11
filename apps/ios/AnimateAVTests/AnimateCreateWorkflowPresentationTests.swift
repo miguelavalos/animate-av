@@ -857,7 +857,7 @@ final class AnimateCreateWorkflowPresentationTests: XCTestCase {
         )
     }
 
-    func testRealtimeRenderPresentationFormatsActivePhaseAndProgress() {
+    func testRealtimeRenderPresentationFormatsActivePhaseWithoutSyntheticProgress() {
         let job = AnimateCreateTestFixtures.makeRenderJob(
             id: "final-job",
             kind: "final",
@@ -872,7 +872,7 @@ final class AnimateCreateWorkflowPresentationTests: XCTestCase {
 
         XCTAssertEqual(presentation.title, "Animating")
         XCTAssertEqual(presentation.detail, "Rendering your video.")
-        XCTAssertEqual(presentation.progressFraction ?? -1, 0.42, accuracy: 0.001)
+        XCTAssertNil(presentation.progressFraction)
         XCTAssertEqual(presentation.systemImage, "gearshape.2.fill")
         XCTAssertTrue(presentation.isActive)
         XCTAssertFalse(presentation.canEditSetup)
