@@ -337,7 +337,7 @@
 "credits.purchased.detail" = "%d purchased";
 "credits.purchased.title" = "Purchased";
 "credits.reserved.detail" = "%d reserved for active videos.";
-"credits.reserved.title" = "In progress";
+"credits.reserved.title" = "Reserved";
 "credits.title" = "Credits";
 "credits.wallet.subtitle.free" = "%@ available. Upgrade to Pro for monthly credits and no branding.";
 "credits.wallet.subtitle.pro" = "%@ · %@ available.";
