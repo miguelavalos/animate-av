@@ -198,10 +198,10 @@
 "create.template.celebration.summary" = "A bright little greeting from one photo.";
 "create.template.celebration.title" = "Celebration";
 "create.template.duration" = "%d sec";
-"create.template.eventRecap.summary" = "A quick cartoon from one photo.";
+"create.template.eventRecap.summary" = "A quick animated video from one photo.";
 "create.template.eventRecap.title" = "Standard";
 "create.template.mediaRange" = "%d photo";
-"create.template.softRoast.summary" = "A longer playful cartoon from one photo.";
+"create.template.softRoast.summary" = "A longer playful video from one photo.";
 "create.template.softRoast.title" = "Extended";
 "create.theme.birthday.subtitle" = "A short animated message.";
 "create.theme.birthday.title" = "Greeting Clip";
@@ -559,7 +559,7 @@
 "create.continuation.dismiss" = "Dismiss continuation hint";
 "create.continuation.final.message" = "Create or refresh the finished video.";
 "create.continuation.final.title" = "Continue with video";
-"create.continuation.media.message" = "Add one photo and let Avi plan the cartoon.";
+"create.continuation.media.message" = "Add one photo and let Avi plan the video.";
 "create.continuation.media.title" = "Continue with photo";
 "create.continuation.video.message" = "Open this video and continue the next unfinished step.";
 "create.continuation.video.title" = "Continue video";
@@ -568,7 +568,7 @@
 "create.credits.detail" = "Credits are needed before creating the final video.";
 "create.credits.ready" = "Ready for final video creation.";
 "create.credits.setupNow" = "You can still set up this video now.";
-"create.current.addMedia" = "Add one photo to start the cartoon.";
+"create.current.addMedia" = "Add one photo to start the video.";
 "create.current.continue" = "Continue current video";
 "create.video.title" = "Create video";
 "create.video.subtitle" = "Turn one photo into an animated scene with a look, message, and voice.";
@@ -641,7 +641,7 @@
 "create.media.emptySummary" = "Choose one photo from your library.";
 "create.media.finishReorder" = "Done";
 "create.media.orderStory" = "Photo";
-"create.media.panelDetail" = "Add one photo to build the cartoon.";
+"create.media.panelDetail" = "Add one photo to build the video.";
 "create.media.reorder" = "Replace image";
 "create.media.startDetail" = "Start with one photo. It will be redrawn, animated, and paired with audio.";
 "create.media.startTitle" = "Start with a photo";
@@ -673,7 +673,7 @@
 "create.final.confirmMessage" = "Credits are only charged for completed final videos. This video costs %@.";
 "create.final.confirmTitle" = "Create video?";
 "create.final.confirmSheet.title" = "Create final video";
-"create.final.confirmSheet.detail" = "Your photo, cartoon look, and message will be used to create the final video.";
+"create.final.confirmSheet.detail" = "Your photo, look, and message will be used to create the final video.";
 "create.final.confirmSheet.cost" = "Cost";
 "create.final.confirmSheet.media" = "Photo";
 "create.final.confirmSheet.mediaPending" = "Checking image";
@@ -686,7 +686,7 @@
 "create.final.costDetails.noExtraCost" = "No extra cost";
 "create.final.costDetails.title" = "Cost details";
 "create.final.costDetails.total" = "Total";
-"create.final.costDetails.video" = "Cartoon video";
+"create.final.costDetails.video" = "Final video";
 "create.final.costDetails.watermark" = "Branding";
 "create.final.costDetails.watermarkIncluded" = "Branding outro included.";
 "create.final.createVideo" = "Create final video";
@@ -702,7 +702,7 @@
 "create.final.creditPolicy.preflight" = "Avi checks your options and credits before creating.";
 "create.final.creditPolicy.create" = "Credits are only charged for completed final videos. This video costs %@.";
 "create.final.blocker.providerUnavailable" = "This video option is not available yet.";
-"create.final.blocker.videoSetupUnavailable" = "Avi could not prep the cartoon. Try again, or adjust the photo and options.";
+"create.final.blocker.videoSetupUnavailable" = "Avi could not prep the video. Try again, or adjust the photo and options.";
 "create.final.blocker.insufficientCredits" = "You need more credits to create this final video.";
 "create.final.blocker.noUsableMedia" = "Avi needs a usable photo before creating the final video.";
 "create.final.blocker.default" = "Avi cannot create this final video yet.";
@@ -717,7 +717,7 @@
 "create.media.added" = "Image added";
 "create.media.backEditor" = "Back to image editor";
 "create.media.doneReordering" = "Done";
-"create.media.emptyStart" = "Choose one photo to start this cartoon video.";
+"create.media.emptyStart" = "Choose one photo to start this video.";
 "create.media.momentIndex" = "Video %d";
 "create.media.reorderTitle" = "Photo";
 "create.signInLater.detail" = "You can choose an image now. Sign in is required before creating the final video.";
@@ -733,13 +733,13 @@
 "create.media.status.duplicatesOnly" = "That image was already selected.";
 "create.media.status.addedSkippingDuplicates" = "Added %d %@. Skipped %d already selected.";
 "create.aviStatus.ready.title" = "Ready";
-"create.aviStatus.preparing.title" = "Planning cartoon";
+"create.aviStatus.preparing.title" = "Planning video";
 "create.aviStatus.working.title" = "Avi is working";
 "create.aviStatus.storyReady.title" = "Ready to price";
 "create.aviStatus.goodSelection.title" = "Good selection";
 "create.aviStatus.startMedia.title" = "Start with a photo";
 "create.aviStatus.exportReady.detail" = "Your video is ready to download and move to Gallery.";
-"create.aviStatus.preparing.detail" = "Avi is turning the photo into a cartoon plan.";
+"create.aviStatus.preparing.detail" = "Avi is turning the photo into a video plan.";
 "create.aviStatus.storyReady.detail" = "Style, message, and voice are ready.";
 "create.aviStatus.goodSelection.detail" = "This photo is ready. Fine tune the look, voice, or message next.";
 "create.aviStatus.startMedia.detail" = "Add one photo, then choose the look, message, and timing.";
@@ -835,13 +835,13 @@
 "create.guided.script.love" = "Love";
 "create.guided.script.love.message" = "You make everything a little brighter. This video is for you.";
 "create.guided.script.missYou" = "Miss you";
-"create.guided.script.missYou.message" = "Miss you. Sending a little cartoon smile your way.";
+"create.guided.script.missYou.message" = "Miss you. Sending a little animated smile your way.";
 "create.guided.script.holiday" = "Holiday";
 "create.guided.script.holiday.message" = "Wishing you a warm, bright, and magical holiday.";
 "create.guided.script.motivation" = "Motivation";
 "create.guided.script.motivation.message" = "You have got this. Keep going and make it yours.";
 "create.guided.script.funny" = "Funny";
-"create.guided.script.funny.message" = "Cartoon mode activated. Prepare for maximum charm.";
+"create.guided.script.funny.message" = "Charm mode activated. Prepare for maximum personality.";
 "create.guided.voice.title" = "Choose the voice";
 "create.guided.voice.detail" = "Pick who narrates the message.";
 "create.guided.continue.message" = "Continue to message";
@@ -1264,7 +1264,7 @@
 "create.guided.look.noneSelected.detail" = "No look selected yet.";
 "create.look.kawaiiPop.title" = "Kawaii Pop";
 "create.look.kawaiiPop.subtitle" = "Sweet color, sparkle, and playful charm.";
-"create.look.bubbleCartoon.title" = "Bubble Cartoon";
+"create.look.bubbleCartoon.title" = "Bubble Pop";
 "create.look.bubbleCartoon.subtitle" = "Bouncy shapes with soft comic energy.";
 "create.look.heroComic.title" = "Hero Comic";
 "create.look.heroComic.subtitle" = "Bold heroic panels and punchy action.";

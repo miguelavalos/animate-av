@@ -633,7 +633,7 @@ final class AnimateCreateWorkflowPresentationTests: XCTestCase {
         XCTAssertEqual(presentation.buttonIconName, "arrow.clockwise")
         XCTAssertEqual(
             presentation.statusMessage,
-            "Avi could not prep the cartoon. Try again, or adjust the photo and options."
+            "Avi could not prep the video. Try again, or adjust the photo and options."
         )
     }
 

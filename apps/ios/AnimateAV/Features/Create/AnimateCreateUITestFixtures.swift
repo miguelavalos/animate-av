@@ -93,7 +93,7 @@ enum AnimateCreateUITestFixtures {
             storyScene(
                 id: "scene-1",
                 index: 0,
-                caption: "Avi sketches the portrait into a bright cartoon close-up.",
+                caption: "Avi sketches the portrait into a bright animated close-up.",
                 narration: "We start with a playful hello and let the photo come to life."
             ),
             storyScene(
@@ -176,7 +176,7 @@ enum AnimateCreateUITestFixtures {
                 rendererMode: "image_to_video",
                 renderOptionId: "animate_short",
                 renderOptionTitle: "Short animation",
-                userMessage: "Avi will animate the photo with audio into an up to 5 second cartoon video.",
+                userMessage: "Avi will animate the photo with audio into an up to 5 second video.",
                 qualityWarnings: []
             ),
             canCreateVideo: hasCredits,
