@@ -76,7 +76,7 @@ final class AnimateDependencyContainer: ObservableObject {
         realtimeSessionTask?.cancel()
         realtimeSessionStore.clear()
         videosWorkflow.observeAnimateVideos(ownerUserId: nil)
-        galleryObserver.observeGalleryArtifacts(ownerUserId: nil)
+        galleryObserver.clearGalleryArtifacts()
         inProgressViewModel.clearSelection()
         createViewModel.clearSessionState()
         applyUITestFixturesIfNeeded()
@@ -91,7 +91,6 @@ final class AnimateDependencyContainer: ObservableObject {
                 guard self?.observedOwnerUserId == .observed(ownerUserId) else { return }
                 self?.realtimeSessionStore.update(ownerUserId: ownerUserId, realtimeSessionId: realtimeSessionId)
                 self?.videosWorkflow.observeAnimateVideos(ownerUserId: ownerUserId)
-                self?.galleryObserver.observeGalleryArtifacts(ownerUserId: ownerUserId)
             }
         }
     }

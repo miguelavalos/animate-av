@@ -15,6 +15,7 @@ final class AnimateGalleryViewModel: ObservableObject {
     private let authTokenProvider: (any AnimateAuthTokenProviding)?
     private let finalRenderClient: AnimateFinalRenderClient?
     private var remoteArtifacts: [AnimateArtifact] = []
+    private var currentOwnerUserId: String?
     private var downloadingImageIds = Set<String>()
     private var dismissedRemoteVideoIds: Set<String>
     private var dismissedRemoteImageIds = Set<String>()
@@ -53,6 +54,28 @@ final class AnimateGalleryViewModel: ObservableObject {
                 self?.statusMessage = message
             }
             .store(in: &galleryCancellables)
+    }
+
+    func bind(accountStateProvider: any AnimateAccountStateProviding) {
+        accountStateProvider.currentUserIdPublisher
+            .sink { [weak self] ownerUserId in
+                self?.currentOwnerUserId = ownerUserId
+                if ownerUserId == nil {
+                    self?.stopRemoteGalleryObservation()
+                }
+            }
+            .store(in: &galleryCancellables)
+    }
+
+    func startRemoteGalleryObservation() {
+        galleryArtifactsProvider?.observeGalleryArtifacts(ownerUserId: currentOwnerUserId)
+    }
+
+    func stopRemoteGalleryObservation() {
+        galleryArtifactsProvider?.clearGalleryArtifacts()
+        remoteArtifacts = []
+        refreshVideos()
+        refreshImages()
     }
 
     func refreshVideos() {

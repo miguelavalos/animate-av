@@ -39,6 +39,7 @@ struct AnimateViewModelBundle {
         )
         inProgress.bind(to: workflows.videosWorkflow)
         inProgress.bind(accountStateProvider: accountController)
+        gallery.bind(accountStateProvider: accountController)
         avi.bind(to: workflows.videosWorkflow)
         avi.bind(accountStateProvider: accountController)
     }

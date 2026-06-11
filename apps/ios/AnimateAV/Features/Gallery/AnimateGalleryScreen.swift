@@ -130,7 +130,11 @@ struct AnimateGalleryScreen: View {
             .presentationDetents([.height(230)])
         }
         .onAppear {
+            viewModel.startRemoteGalleryObservation()
             resetImageSelectionIfUnavailable()
+        }
+        .onDisappear {
+            viewModel.stopRemoteGalleryObservation()
         }
         .onChange(of: canUseAnimateImageGeneration) { _, _ in
             resetImageSelectionIfUnavailable()

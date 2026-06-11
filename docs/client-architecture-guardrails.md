@@ -104,6 +104,12 @@ stop owner-scoped subscriptions before observing the next user.
 The client should fail closed if no realtime session is available. Do not add a
 fallback that subscribes with only an owner id.
 
+Realtime is for active workflow state and short-lived remote artifact
+availability. Gallery is local-first after download. Do not keep Gallery remote
+artifact subscriptions running for the full signed-in app session just because
+the user is authenticated; start remote Gallery observation only when a screen
+needs remote availability, and stop it when that screen no longer needs it.
+
 ## V1 Media Rule
 
 V1 final videos are animated one-photo videos with backend-generated audio. The

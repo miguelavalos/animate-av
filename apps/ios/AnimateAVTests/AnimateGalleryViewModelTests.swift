@@ -64,11 +64,31 @@ final class AnimateGalleryViewModelTests: XCTestCase {
 
         XCTAssertTrue(viewModel.videos.isEmpty)
     }
+
+    func testRemoteGalleryObservationIsExplicitAndStopsCleanly() {
+        let provider = TestAnimateGalleryArtifactsProvider()
+        let accountState = TestAnimateAccountStateProvider(ownerUserId: "user-1")
+        let viewModel = AnimateGalleryViewModel(
+            galleryStore: TestAnimateGalleryStore(),
+            galleryArtifactsProvider: provider
+        )
+
+        viewModel.bind(accountStateProvider: accountState)
+        viewModel.startRemoteGalleryObservation()
+
+        XCTAssertEqual(provider.observedOwnerUserIds, ["user-1"])
+
+        viewModel.stopRemoteGalleryObservation()
+
+        XCTAssertEqual(provider.clearCount, 1)
+    }
 }
 
 private final class TestAnimateGalleryArtifactsProvider: AnimateGalleryListProviding {
     private let artifactsSubject = CurrentValueSubject<[AnimateArtifact], Never>([])
     private let errorSubject = CurrentValueSubject<String?, Never>(nil)
+    private(set) var observedOwnerUserIds: [String?] = []
+    private(set) var clearCount = 0
 
     var galleryArtifactsPublisher: AnyPublisher<[AnimateArtifact], Never> {
         artifactsSubject.eraseToAnyPublisher()
@@ -78,13 +98,45 @@ private final class TestAnimateGalleryArtifactsProvider: AnimateGalleryListProvi
         errorSubject.eraseToAnyPublisher()
     }
 
-    func observeGalleryArtifacts(ownerUserId: String?) {}
+    func observeGalleryArtifacts(ownerUserId: String?) {
+        observedOwnerUserIds.append(ownerUserId)
+    }
+
     func clearGalleryArtifacts() {
+        clearCount += 1
         artifactsSubject.send([])
     }
 
     func send(_ artifacts: [AnimateArtifact]) {
         artifactsSubject.send(artifacts)
+    }
+}
+
+private final class TestAnimateAccountStateProvider: AnimateAccountStateProviding {
+    private let ownerUserId: String?
+
+    init(ownerUserId: String?) {
+        self.ownerUserId = ownerUserId
+    }
+
+    var isSignedInPublisher: AnyPublisher<Bool, Never> {
+        Just(ownerUserId != nil).eraseToAnyPublisher()
+    }
+
+    var currentUserIdPublisher: AnyPublisher<String?, Never> {
+        Just(ownerUserId).eraseToAnyPublisher()
+    }
+
+    var displayNamePublisher: AnyPublisher<String?, Never> {
+        Just(nil).eraseToAnyPublisher()
+    }
+
+    var creditBalancePublisher: AnyPublisher<AnimateCreditBalance, Never> {
+        Just(.empty).eraseToAnyPublisher()
+    }
+
+    var creditBalanceLoadStatePublisher: AnyPublisher<AnimateCreditBalanceLoadState, Never> {
+        Just(.loaded).eraseToAnyPublisher()
     }
 }
 
@@ -94,6 +146,10 @@ private final class TestAnimateGalleryStore: AnimateGalleryStoring {
     private var existingVideoIds: Set<String>
     private var existingImageIds: Set<String> = []
     private(set) var deletedVideoIds = Set<String>()
+
+    convenience init() {
+        self.init(videoRecords: [], existingVideoIds: [])
+    }
 
     init(videoRecords: [AnimateGalleryVideoRecord], existingVideoIds: Set<String>) {
         self.videoRecords = videoRecords

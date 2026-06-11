@@ -28,6 +28,9 @@ Mandatory rules:
 - treat "no-spend" as "no paid provider call", not "skip user credit workflow";
 - for Animate AV v1, the final flow is create final video -> download -> finish
   -> Gallery. Do not add preview/versioning branches in this public app.
+- treat Convex realtime as active workflow state or short-lived remote artifact
+  availability. Gallery is local-first after download; do not start global
+  Gallery remote subscriptions for the whole signed-in app session.
 
 If the private repo is unavailable, stop and say that the authoritative runbook
 cannot be checked. Do not substitute a guessed local workflow.
