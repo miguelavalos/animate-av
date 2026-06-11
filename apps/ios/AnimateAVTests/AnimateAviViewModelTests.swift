@@ -26,8 +26,8 @@ final class AnimateAviViewModelTests: XCTestCase {
             creditBalance: .empty
         )
 
-        XCTAssertEqual(presentation.workflowFocusTitle, "Video ready to continue")
-        XCTAssertEqual(presentation.workflowFocusMessage, "Continue the active video from Create Video.")
+        XCTAssertEqual(presentation.workflowFocusTitle, "Continue in Create Video")
+        XCTAssertEqual(presentation.workflowFocusMessage, "Open Create Video to finish setup or create the final video.")
         XCTAssertEqual(presentation.workflowFocusSystemImage, "video.badge.checkmark")
     }
 
@@ -106,7 +106,7 @@ final class AnimateAviViewModelTests: XCTestCase {
             ])
         )
 
-        XCTAssertEqual(viewModel.presentation.workflowFocusTitle, "Video ready to continue")
+        XCTAssertEqual(viewModel.presentation.workflowFocusTitle, "Continue in Create Video")
         XCTAssertTrue(viewModel.presentation.creditGuidanceMessage.contains("1 credit available"))
     }
 
@@ -129,7 +129,7 @@ final class AnimateAviViewModelTests: XCTestCase {
         XCTAssertEqual(viewModel.videosSummary.videoCount, 1)
         XCTAssertEqual(viewModel.videosSummary.inProgressCount, 0)
         XCTAssertEqual(viewModel.videosSummary.finishedCount, 1)
-        XCTAssertEqual(viewModel.presentation.workflowFocusTitle, "Start the next video")
+        XCTAssertEqual(viewModel.presentation.workflowFocusTitle, "Ready for the next video")
     }
 
     private func makeVideo(
