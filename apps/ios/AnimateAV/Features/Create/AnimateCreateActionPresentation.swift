@@ -396,7 +396,7 @@ struct AnimateCreatePrimaryActionPresentation: Equatable {
 
     var hasRetryableFinalRenderJob: Bool {
         guard let latestFinalJob = workflow.finalRenderSummary.latestFinalJob,
-              latestFinalJob.canRetry == true else {
+              latestFinalJob.canRetry != false else {
             return false
         }
         return latestFinalJob.status == "failed" || latestFinalJob.status == "cancelled"
