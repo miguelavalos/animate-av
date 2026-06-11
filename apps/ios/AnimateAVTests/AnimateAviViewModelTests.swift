@@ -26,9 +26,9 @@ final class AnimateAviViewModelTests: XCTestCase {
             creditBalance: .empty
         )
 
-        XCTAssertEqual(presentation.workflowFocusTitle, "Videos in progress")
-        XCTAssertTrue(presentation.workflowFocusMessage.contains("1 video in In Progress"))
-        XCTAssertEqual(presentation.workflowFocusSystemImage, "clock.badge.checkmark")
+        XCTAssertEqual(presentation.workflowFocusTitle, "Video ready to continue")
+        XCTAssertEqual(presentation.workflowFocusMessage, "Continue the active video from Create Video.")
+        XCTAssertEqual(presentation.workflowFocusSystemImage, "video.badge.checkmark")
     }
 
     func testCreditGuidanceUsesSpendableBalance() {
@@ -106,11 +106,38 @@ final class AnimateAviViewModelTests: XCTestCase {
             ])
         )
 
-        XCTAssertEqual(viewModel.presentation.workflowFocusTitle, "Videos in progress")
+        XCTAssertEqual(viewModel.presentation.workflowFocusTitle, "Video ready to continue")
         XCTAssertTrue(viewModel.presentation.creditGuidanceMessage.contains("1 credit available"))
     }
 
-    private func makeVideo(id: String, status: String, updatedAt: Double) -> AnimateVideo {
+    func testViewModelExcludesImageAssetsFromAviVideoGuidance() {
+        let summaryProvider = AviVideosSummaryProvider()
+        let accountProvider = AviAccountStateProvider()
+        let viewModel = AnimateAviViewModel()
+        viewModel.bind(to: summaryProvider)
+        viewModel.bind(accountStateProvider: accountProvider)
+
+        accountProvider.isSignedIn.send(true)
+        accountProvider.creditBalance.send(AnimateCreditBalance(proMonthly: 1, promotional: 0, purchased: 0))
+        summaryProvider.summary.send(
+            AnimateInProgressSummary.make(from: [
+                makeVideo(id: "done-video", status: "gallery_ready", updatedAt: 10),
+                makeVideo(id: "active-image", status: "in_progress", updatedAt: 20, assetKind: "image")
+            ])
+        )
+
+        XCTAssertEqual(viewModel.videosSummary.videoCount, 1)
+        XCTAssertEqual(viewModel.videosSummary.inProgressCount, 0)
+        XCTAssertEqual(viewModel.videosSummary.finishedCount, 1)
+        XCTAssertEqual(viewModel.presentation.workflowFocusTitle, "Start the next video")
+    }
+
+    private func makeVideo(
+        id: String,
+        status: String,
+        updatedAt: Double,
+        assetKind: String = "video"
+    ) -> AnimateVideo {
         AnimateVideo(
             id: id,
             template: .birthdayMessage,
@@ -122,7 +149,8 @@ final class AnimateAviViewModelTests: XCTestCase {
             details: nil,
             durationSeconds: 30,
             creditCost: 2,
-            updatedAt: updatedAt
+            updatedAt: updatedAt,
+            assetKind: assetKind
         )
     }
 }

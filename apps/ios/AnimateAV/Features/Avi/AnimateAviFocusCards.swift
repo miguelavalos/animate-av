@@ -27,7 +27,7 @@ struct AnimateAviCurrentFocusCard: View {
                     systemImage: "clock"
                 )
                 AVAviStatPill(
-                    title: L10n.string("library.finished.title"),
+                    title: L10n.string("home.videos.metric.gallery"),
                     value: "\(videosSummary.finishedCount)",
                     systemImage: "checkmark.circle"
                 )

@@ -35,7 +35,7 @@ struct AnimateAviPresentation: Equatable {
         videosSummary: AnimateInProgressSummary
     ) -> String {
         guard isSignedIn else { return L10n.string("avi.focus.signIn.title") }
-        if videosSummary.inProgressCount > 0 { return L10n.string("avi.focus.activeWork.title") }
+        if videosSummary.inProgressCount > 0 { return L10n.string("avi.focus.activeVideo.title") }
         if videosSummary.finishedCount > 0 { return L10n.string("avi.focus.nextMemory.title") }
         return L10n.string("avi.focus.firstMemory.title")
     }
@@ -48,7 +48,7 @@ struct AnimateAviPresentation: Equatable {
             return L10n.string("avi.focus.signIn.message")
         }
         if videosSummary.inProgressCount > 0 {
-            return L10n.string("avi.focus.inProgress.message", videosSummary.inProgressCount, inProgressVideoLabel(videosSummary))
+            return L10n.string("avi.focus.activeVideo.message")
         }
         if videosSummary.finishedCount > 0 {
             return L10n.string("avi.focus.finished.message")
@@ -57,7 +57,7 @@ struct AnimateAviPresentation: Equatable {
     }
 
     private static func workflowFocusSystemImage(videosSummary: AnimateInProgressSummary) -> String {
-        videosSummary.inProgressCount > 0 ? "clock.badge.checkmark" : "sparkles"
+        videosSummary.inProgressCount > 0 ? "video.badge.checkmark" : "sparkles"
     }
 
     private static func creditGuidanceMessage(
@@ -77,7 +77,4 @@ struct AnimateAviPresentation: Equatable {
         return L10n.string("avi.credits.available.message", AnimateCreditCopy.countTitle(creditBalance.spendable))
     }
 
-    private static func inProgressVideoLabel(_ videosSummary: AnimateInProgressSummary) -> String {
-        videosSummary.inProgressCount == 1 ? L10n.string("video.noun.one") : L10n.string("video.noun.other")
-    }
 }

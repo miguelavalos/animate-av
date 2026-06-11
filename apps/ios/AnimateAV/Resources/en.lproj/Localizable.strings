@@ -233,14 +233,14 @@
 "avi.credits.available.message" = "%@ available for video creation.";
 "avi.credits.none.message" = "No credits are available. Credits are needed before creating the final video.";
 "avi.credits.signIn.message" = "Credits appear here after sign in.";
-"avi.currentFocus.detail" = "Avi points to the next step for this animated video.";
-"avi.currentFocus.title" = "Avi’s next nudge";
+"avi.currentFocus.detail" = "Avi keeps the video flow clear: continue the current video or start the next one.";
+"avi.currentFocus.title" = "Current video";
 "avi.focus.empty.message" = "Start with one photo, pick a look, and tell Avi what it should say.";
 "avi.focus.finished.message" = "Finished videos appear in Gallery after they are saved on this device. Start another when the next photo is ready.";
 "avi.focus.firstMemory.title" = "Make the first video";
-"avi.focus.inProgress.message" = "%d %@ in In Progress. Finish the next step.";
+"avi.focus.activeVideo.message" = "Continue the active video from Create Video.";
 "avi.focus.nextMemory.title" = "Start the next video";
-"avi.focus.activeWork.title" = "Videos in progress";
+"avi.focus.activeVideo.title" = "Video ready to continue";
 "avi.focus.signIn.message" = "Avi unlocks after sign in so videos and Credits stay together.";
 "avi.focus.signIn.title" = "Sign in first";
 "avi.help.choose.detail" = "Pick one photo for Avi to redraw and animate.";
@@ -271,6 +271,7 @@
 "avi.library.detail" = "Continue the active video from Create Video. Finished videos stay in Gallery.";
 "avi.library.gallery.detail" = "See finished animated videos saved on this device.";
 "avi.library.inProgress.detail" = "Return to Create Video when a video needs the next step.";
+"avi.stat.active" = "Active";
 "avi.signIn.action.detail" = "Connect your account and unlock Avi’s video guide.";
 "avi.signIn.detail" = "Avi needs your account to see Credits, videos in progress, and saved videos.";
 "avi.signIn.title" = "Sign in to use Avi";

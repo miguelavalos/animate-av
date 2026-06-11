@@ -47,7 +47,7 @@ struct AnimateAviScreen: View {
         } content: {
             AnimateAviGuidanceContent(
                 presentation: presentation,
-                videosSummary: viewModel.videosSummary,
+                videosSummary: viewModel.videosSummary.videoSummary,
                 creditBalance: viewModel.creditBalance,
                 creditBalanceLoadState: viewModel.creditBalanceLoadState,
                 isSignedIn: viewModel.isSignedIn,

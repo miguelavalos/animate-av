@@ -14,7 +14,7 @@ final class AnimateAviViewModel: ObservableObject {
     var presentation: AnimateAviPresentation {
         AnimateAviPresentation.make(
             isSignedIn: isSignedIn,
-            videosSummary: videosSummary,
+            videosSummary: videosSummary.videoSummary,
             creditBalance: creditBalance,
             creditBalanceLoadState: creditBalanceLoadState
         )
@@ -26,7 +26,7 @@ final class AnimateAviViewModel: ObservableObject {
         summaryProvider.inProgressSummaryPublisher
             .removeDuplicates()
             .sink { [weak self] videosSummary in
-                self?.videosSummary = videosSummary
+                self?.videosSummary = videosSummary.videoSummary
             }
             .store(in: &videosCancellables)
     }
