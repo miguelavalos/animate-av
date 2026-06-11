@@ -30,11 +30,12 @@ final class AnimateHomePresentationTests: XCTestCase {
         XCTAssertEqual(presentation.accountTitle, "Account connected")
         XCTAssertEqual(presentation.accountDetail, "Signed in as Ava.")
         XCTAssertEqual(presentation.videoStatusDetail, "No cartoon videos yet.")
+        XCTAssertEqual(presentation.createAction.title, "Create Video")
         XCTAssertTrue(presentation.createAction.isProminent)
         XCTAssertFalse(presentation.createAction.isDisabled)
         XCTAssertEqual(
             presentation.continueVideoAction.detail,
-            "Start or continue from Create Video."
+            "Open Create Video to start with one photo."
         )
     }
 
@@ -49,7 +50,7 @@ final class AnimateHomePresentationTests: XCTestCase {
             ])
         )
 
-        XCTAssertEqual(presentation.latestInProgressAction?.title, "Continue latest video")
+        XCTAssertEqual(presentation.latestInProgressAction?.title, "Continue in Create Video")
         XCTAssertEqual(presentation.latestInProgressAction?.systemImage, "arrow.right.circle")
         XCTAssertTrue(presentation.latestInProgressAction?.isProminent == true)
         XCTAssertFalse(presentation.createAction.isProminent)
@@ -73,7 +74,7 @@ final class AnimateHomePresentationTests: XCTestCase {
         )
         XCTAssertEqual(
             presentation.continueVideoAction.detail,
-            "Continue the video that needs your next step."
+            "Open Create Video to finish the next step."
         )
     }
 
@@ -92,7 +93,7 @@ final class AnimateHomePresentationTests: XCTestCase {
         )
         XCTAssertEqual(
             presentation.continueVideoAction.detail,
-            "Continue the video that needs your next step."
+            "Open Create Video to finish the next step."
         )
     }
 
@@ -111,7 +112,7 @@ final class AnimateHomePresentationTests: XCTestCase {
         XCTAssertNil(presentation.latestInProgressAction)
         XCTAssertEqual(
             presentation.continueVideoAction.detail,
-            "Start or continue from Create Video."
+            "Open Create Video to start with one photo."
         )
     }
 
