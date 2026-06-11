@@ -11,7 +11,6 @@ extension AnimateCreateViewModel {
         isCreatingVideo
             || isImportingMedia
             || isPreparingVideoDirection
-            || isPreparingFinalPlan
             || isGeneratingFinalRender
             || finalVideoCommandState.isRunning
     }

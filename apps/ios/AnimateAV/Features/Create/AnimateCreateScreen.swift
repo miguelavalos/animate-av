@@ -53,14 +53,6 @@ struct AnimateCreateScreen: View {
                 .ignoresSafeArea()
                 .zIndex(10)
             }
-
-            if viewModel.isPreparingFinalPlan {
-                Color.clear
-                    .contentShape(Rectangle())
-                    .ignoresSafeArea()
-                    .zIndex(8)
-                    .accessibilityHidden(true)
-            }
         }
         .background(AnimateTheme.shellBackground.ignoresSafeArea())
         .task {
