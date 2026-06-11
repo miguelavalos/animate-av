@@ -96,7 +96,31 @@ final class AnimateHomePresentationTests: XCTestCase {
         )
     }
 
-    private func makeVideo(id: String, status: String, updatedAt: Double) -> AnimateVideo {
+    func testVideoSummaryExcludesImageAssetsFromHomePresentation() {
+        let mixedSummary = AnimateInProgressSummary.make(from: [
+            makeVideo(id: "video", status: "gallery_ready", updatedAt: 10),
+            makeVideo(id: "image", status: "in_progress", updatedAt: 20, assetKind: "image")
+        ])
+        let presentation = AnimateHomePresentation.make(
+            isSignedIn: true,
+            displayName: nil,
+            videosSummary: mixedSummary.videoSummary
+        )
+
+        XCTAssertEqual(presentation.videoStatusDetail, "1 video in Animate AV.")
+        XCTAssertNil(presentation.latestInProgressAction)
+        XCTAssertEqual(
+            presentation.continueVideoAction.detail,
+            "Start or continue from Create Video."
+        )
+    }
+
+    private func makeVideo(
+        id: String,
+        status: String,
+        updatedAt: Double,
+        assetKind: String = "video"
+    ) -> AnimateVideo {
         AnimateVideo(
             id: id,
             template: .birthdayMessage,
@@ -108,7 +132,8 @@ final class AnimateHomePresentationTests: XCTestCase {
             details: nil,
             durationSeconds: 30,
             creditCost: 2,
-            updatedAt: updatedAt
+            updatedAt: updatedAt,
+            assetKind: assetKind
         )
     }
 }

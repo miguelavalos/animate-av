@@ -16,7 +16,7 @@ struct AnimateHomeScreen: View {
     let selectTab: (AnimateRootTab) -> Void
     let startVideoCreation: () -> Void
     let continueVideo: (AnimateContinuationRequest) -> Void
-    private var videosSummary: AnimateInProgressSummary { viewModel.videosSummary }
+    private var videosSummary: AnimateInProgressSummary { viewModel.videosSummary.videoSummary }
     private var presentation: AnimateHomePresentation {
         AnimateHomePresentation.make(
             isSignedIn: viewModel.isSignedIn,
