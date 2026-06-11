@@ -61,10 +61,12 @@ struct AnimateAppShellView: View {
             hasAssistantActiveContext: selectedTab != .avi && hasAviActiveContext,
             footerConfiguration: footerConfiguration,
             onSelectTab: { tab in
+                guard canNavigateAwayFromCurrentTab else { return }
                 chromeItem = nil
                 selectFooterTab(tab)
             },
             onSelectAssistant: {
+                guard canNavigateAwayFromCurrentTab else { return }
                 chromeItem = nil
                 if createViewModel.hasRecoverableVideoContext {
                     selectRootTab(.create)
@@ -259,6 +261,10 @@ struct AnimateAppShellView: View {
             return .create
         }
         return selectedTab
+    }
+
+    private var canNavigateAwayFromCurrentTab: Bool {
+        !(selectedTab == .create && createViewModel.isPreparingFinalPlan)
     }
 
     private var showsNewVideoFloatingAction: Bool {
