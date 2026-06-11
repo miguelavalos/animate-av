@@ -10,17 +10,17 @@ struct AnimateAviHelpCard: View {
             AVAviInfoRow(
                 title: L10n.string("avi.help.choose.title"),
                 detail: L10n.string("avi.help.choose.detail"),
-                systemImage: "photo.on.rectangle"
+                systemImage: "clock"
             )
             AVAviInfoRow(
                 title: L10n.string("avi.help.story.title"),
                 detail: L10n.string("avi.help.story.detail"),
-                systemImage: "text.bubble"
+                systemImage: "sparkles"
             )
             AVAviInfoRow(
                 title: L10n.string("avi.help.create.title"),
                 detail: L10n.string("avi.help.create.detail"),
-                systemImage: "video.fill"
+                systemImage: "checkmark.circle"
             )
         }
     }

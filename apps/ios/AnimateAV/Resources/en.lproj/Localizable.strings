@@ -226,10 +226,14 @@
 "create.tone.warm.title" = "Warm";
 
 /* Main app pages */
-"avi.creditGuidance.detail" = "Credits are used only when Avi starts creating the final video.";
-"avi.creditGuidance.title" = "Credit use";
-"avi.creditOrder.first" = "First";
-"avi.creditOrder.then" = "Then";
+"avi.creditGuidance.detail" = "Avi shows the cost before creating. Credits are charged only for the final video.";
+"avi.creditGuidance.title" = "Credits";
+"avi.creditOrder.bonus.detail" = "Used last";
+"avi.creditOrder.bonus.title" = "Bonus";
+"avi.creditOrder.included.detail" = "Used first";
+"avi.creditOrder.included.title" = "Monthly";
+"avi.creditOrder.purchased.detail" = "Used next";
+"avi.creditOrder.purchased.title" = "Purchased";
 "avi.credits.available.message" = "%@ available for video creation.";
 "avi.credits.none.message" = "No credits are available. Credits are needed before creating the final video.";
 "avi.credits.signIn.message" = "Credits appear here after sign in.";
@@ -243,14 +247,14 @@
 "avi.focus.activeVideo.title" = "Continue in Create Video";
 "avi.focus.signIn.message" = "Avi unlocks after sign in so videos and Credits stay together.";
 "avi.focus.signIn.title" = "Sign in first";
-"avi.help.choose.detail" = "Pick one photo for Avi to redraw and animate.";
-"avi.help.choose.title" = "Choose photo";
-"avi.help.create.detail" = "Let Avi generate the final animated video and save it.";
-"avi.help.create.title" = "Animate";
-"avi.help.detail" = "Avi turns one photo into a playful animated video with audio.";
-"avi.help.story.detail" = "Pick the look, message, and voice before using Credits.";
-"avi.help.story.title" = "Shape the video";
-"avi.help.title" = "How Avi helps";
+"avi.help.choose.detail" = "Avi queues the request and keeps the screen updated.";
+"avi.help.choose.title" = "Queue";
+"avi.help.create.detail" = "The finished video is saved in Gallery when it is ready.";
+"avi.help.create.title" = "Save";
+"avi.help.detail" = "After you confirm the cost, Avi handles creation and saves the result.";
+"avi.help.story.detail" = "Avi creates the styled video with the selected voice and message.";
+"avi.help.story.title" = "Animate";
+"avi.help.title" = "After confirmation";
 "avi.landing.choose" = "Choose";
 "avi.landing.create" = "Create";
 "avi.landing.detail" = "Choose one photo, pick a look, add a message, and Avi gives it motion and sound.";

@@ -58,9 +58,9 @@ struct AnimateAviCreditGuidanceCard: View {
             detail: L10n.string("avi.creditGuidance.detail")
         ) {
             HStack(spacing: 10) {
-                AVAviStatPill(title: L10n.string("avi.creditOrder.first"), value: L10n.string("credits.proMonthly.title"), systemImage: "calendar")
-                AVAviStatPill(title: L10n.string("avi.creditOrder.then"), value: L10n.string("credits.purchased.title"), systemImage: "creditcard")
-                AVAviStatPill(title: L10n.string("avi.creditOrder.then"), value: L10n.string("credits.other.title"), systemImage: "gift")
+                AVAviStatPill(title: L10n.string("avi.creditOrder.included.detail"), value: L10n.string("avi.creditOrder.included.title"), systemImage: "calendar")
+                AVAviStatPill(title: L10n.string("avi.creditOrder.purchased.detail"), value: L10n.string("avi.creditOrder.purchased.title"), systemImage: "creditcard")
+                AVAviStatPill(title: L10n.string("avi.creditOrder.bonus.detail"), value: L10n.string("avi.creditOrder.bonus.title"), systemImage: "gift")
             }
             Text(message)
                 .foregroundStyle(.secondary)
