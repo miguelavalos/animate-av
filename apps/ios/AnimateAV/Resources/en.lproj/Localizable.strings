@@ -397,10 +397,10 @@
 "home.aviBrief.gallery" = "Your finished videos are waiting in Gallery.";
 "home.aviBrief.signIn" = "Sign in so Avi can keep your videos and Credits together.";
 "home.header.subtitle" = "Turn one favorite photo into a playful animated video with style, motion, and sound.";
-"home.header.title" = "From photo to cartoon";
+"home.header.title" = "From photo to video";
 "home.nextActions.detail" = "Make a video, finish a video, or ask Avi for ideas.";
 "home.nextActions.title" = "What shall we animate?";
-"home.videoStatus.empty" = "No cartoon videos yet.";
+"home.videoStatus.empty" = "No videos yet.";
 "home.videoStatus.synced" = "%d %@ in Animate AV.";
 "home.videos.metric.active" = "Active";
 "home.videos.metric.gallery" = "In Gallery";
@@ -473,7 +473,7 @@
 "tab.inProgress" = "In Progress";
 "inProgress.loadingDetail" = "Loading video detail...";
 "home.latestVideo.eyebrow" = "Latest video";
-"home.videos.emptyRow.title" = "No cartoon videos yet";
+"home.videos.emptyRow.title" = "No videos yet";
 "home.videos.emptyRow.detail" = "Start with one photo and Avi will create your first animated surprise.";
 "credits.available.count" = "%d available";
 "credits.videoCredits.title" = "Credits";
@@ -550,7 +550,7 @@
 "app.onboarding.title" = "Bring a photo to life";
 "app.settings.subtitle" = "Manage %@, credits, video privacy, and support links.";
 "app.splash.status" = "Preparing your studio";
-"app.splash.tagline" = "Private cartoon videos";
+"app.splash.tagline" = "Private animated videos";
 "common.close" = "Close";
 "common.info" = "Info";
 "common.more" = "More actions";

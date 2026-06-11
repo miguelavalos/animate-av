@@ -29,7 +29,7 @@ final class AnimateHomePresentationTests: XCTestCase {
 
         XCTAssertEqual(presentation.accountTitle, "Account connected")
         XCTAssertEqual(presentation.accountDetail, "Signed in as Ava.")
-        XCTAssertEqual(presentation.videoStatusDetail, "No cartoon videos yet.")
+        XCTAssertEqual(presentation.videoStatusDetail, "No videos yet.")
         XCTAssertEqual(presentation.createAction.title, "Create Video")
         XCTAssertTrue(presentation.createAction.isProminent)
         XCTAssertFalse(presentation.createAction.isDisabled)
