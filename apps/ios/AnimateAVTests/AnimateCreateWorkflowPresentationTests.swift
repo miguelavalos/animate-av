@@ -25,7 +25,7 @@ final class AnimateCreateWorkflowPresentationTests: XCTestCase {
         )
 
         XCTAssertFalse(presentation.needsCreditsForPreparedPlan)
-        XCTAssertEqual(presentation.buttonTitle, "Confirm credits · 1 credit")
+        XCTAssertEqual(presentation.buttonTitle, "Create video · 1 credit")
         XCTAssertEqual(presentation.statusMessage, "Credits are only charged for completed final videos. This video costs 1 credit.")
     }
 
@@ -441,7 +441,7 @@ final class AnimateCreateWorkflowPresentationTests: XCTestCase {
 
         XCTAssertEqual(
             presentation.statusMessage,
-            "Video direction is ready. Create the final video or adjust it first."
+            "Ready to price. Review the cost or adjust the setup first."
         )
         XCTAssertEqual(presentation.modeTitle, "Direction")
         XCTAssertEqual(presentation.mediaCountTitle, "2 items")
@@ -468,7 +468,7 @@ final class AnimateCreateWorkflowPresentationTests: XCTestCase {
 
         XCTAssertEqual(
             presentation.statusMessage,
-            "Video direction is ready. Create the final video or adjust it first."
+            "Ready to price. Review the cost or adjust the setup first."
         )
         XCTAssertEqual(presentation.primaryActionTitle, "Refresh direction")
         XCTAssertFalse(presentation.canRunPrimaryAction)
@@ -485,7 +485,7 @@ final class AnimateCreateWorkflowPresentationTests: XCTestCase {
             canRefreshVideoDirection: true
         )
 
-        XCTAssertEqual(presentation.statusMessage, "Ready for Avi to prepare the video direction.")
+        XCTAssertEqual(presentation.statusMessage, "Ready to price.")
         XCTAssertEqual(presentation.modeTitle, "Ready")
         XCTAssertEqual(presentation.mediaCountTitle, "1 item")
         XCTAssertEqual(presentation.primaryActionTitle, "Prepare video")
@@ -556,7 +556,7 @@ final class AnimateCreateWorkflowPresentationTests: XCTestCase {
         )
 
         XCTAssertEqual(presentation.planButtonTitle, "Preparing video...")
-        XCTAssertEqual(presentation.emptyMessage, "Avi can prepare the animation plan from your photo.")
+        XCTAssertEqual(presentation.emptyMessage, "The video setup can be prepared from your photo.")
         XCTAssertEqual(presentation.savedScenes.map(\.id), ["scene-1", "scene-2"])
         XCTAssertTrue(presentation.canPrepareVideoDirection)
         XCTAssertEqual(presentation.availabilityMessage, "Ready.")
@@ -570,9 +570,9 @@ final class AnimateCreateWorkflowPresentationTests: XCTestCase {
         )
 
         XCTAssertFalse(planning.hasRenderPlan)
-        XCTAssertEqual(planning.primaryTitle, "Check credits")
+        XCTAssertEqual(planning.primaryTitle, "Check cost")
         XCTAssertEqual(planning.primaryIconName, "creditcard.fill")
-        XCTAssertEqual(planning.creditPolicyMessage, "Avi checks the photo and credits before animating.")
+        XCTAssertEqual(planning.creditPolicyMessage, "Avi checks your options and credits before creating.")
         XCTAssertTrue(planning.canAffordSelectedCost)
 
         let ready = AnimateCreateFinalVideoActionPresentation(
@@ -587,7 +587,7 @@ final class AnimateCreateWorkflowPresentationTests: XCTestCase {
 
         XCTAssertTrue(ready.hasRenderPlan)
         XCTAssertEqual(ready.totalCreditCostTitle, "2 credits")
-        XCTAssertEqual(ready.primaryTitle, "Confirm credits · 2 credits")
+        XCTAssertEqual(ready.primaryTitle, "Create video · 2 credits")
         XCTAssertEqual(ready.primaryIconName, "video.fill")
         XCTAssertEqual(
             ready.creditPolicyMessage,
@@ -690,7 +690,7 @@ final class AnimateCreateWorkflowPresentationTests: XCTestCase {
 
         XCTAssertTrue(presentation.hasFinalVideoIntent)
         XCTAssertFalse(presentation.canRunPrimaryAction)
-        XCTAssertEqual(presentation.title, "Continue with video")
+        XCTAssertEqual(presentation.title, "Check cost")
         XCTAssertEqual(presentation.buttonTitle, "Uploading media for video creation.")
         XCTAssertEqual(presentation.buttonIconName, "paintbrush.pointed.fill")
         XCTAssertEqual(presentation.statusMessage, "Uploading media for video creation.")
@@ -716,9 +716,9 @@ final class AnimateCreateWorkflowPresentationTests: XCTestCase {
         )
 
         XCTAssertTrue(presentation.canRunPrimaryAction)
-        XCTAssertEqual(presentation.title, "Continue with video")
-        XCTAssertEqual(presentation.buttonTitle, "Elegir look")
-        XCTAssertEqual(presentation.statusMessage, "Elige un look para preparar la dirección del video.")
+        XCTAssertEqual(presentation.title, "Check cost")
+        XCTAssertEqual(presentation.buttonTitle, "Choose a look")
+        XCTAssertEqual(presentation.statusMessage, "You’ll review credits before creating.")
     }
 
     func testPrimaryActionPresentationShowsBackendPlanCostBeforeConfirmation() {
@@ -747,7 +747,7 @@ final class AnimateCreateWorkflowPresentationTests: XCTestCase {
 
         XCTAssertTrue(presentation.canRunPrimaryAction)
         XCTAssertEqual(presentation.title, "Ready to create")
-        XCTAssertEqual(presentation.buttonTitle, "Confirm credits · 2 credits")
+        XCTAssertEqual(presentation.buttonTitle, "Create video · 2 credits")
         XCTAssertEqual(
             presentation.statusMessage,
             "Credits are only charged for completed final videos. This video costs 2 credits."
@@ -850,7 +850,7 @@ final class AnimateCreateWorkflowPresentationTests: XCTestCase {
 
         XCTAssertTrue(presentation.canRunPrimaryAction)
         XCTAssertEqual(presentation.title, "Ready to create")
-        XCTAssertEqual(presentation.buttonTitle, "Confirm credits · 2 credits")
+        XCTAssertEqual(presentation.buttonTitle, "Create video · 2 credits")
         XCTAssertEqual(
             presentation.statusMessage,
             "The video plan changed. Review the latest plan before creating the video."

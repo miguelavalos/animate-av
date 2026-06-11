@@ -377,13 +377,8 @@ struct AnimateFinalRenderClient {
     }
 
     private static var shouldUseMockNoSpendFinalRender: Bool {
-        let environment = Bundle.main.object(forInfoDictionaryKey: "ANIMATEAV_CONFIG_ENVIRONMENT") as? String ?? "dev"
-        switch environment.trimmingCharacters(in: .whitespacesAndNewlines).lowercased() {
-        case "prod", "production":
-            return false
-        default:
-            return true
-        }
+        let value = Bundle.main.object(forInfoDictionaryKey: "ANIMATEAV_MOCK_NO_SPEND_FINAL_RENDER") as? String
+        return ["1", "true", "yes"].contains(value?.trimmingCharacters(in: .whitespacesAndNewlines).lowercased() ?? "")
     }
 }
 

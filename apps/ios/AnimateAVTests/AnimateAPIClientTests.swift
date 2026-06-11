@@ -459,6 +459,7 @@ final class AnimateAPIClientTests: XCTestCase {
         XCTAssertEqual(json["voiceEnabled"] as? Bool, true)
         XCTAssertEqual(json["voiceType"] as? String, AnimateVideoVoiceProfile.adultWoman.rawValue)
         XCTAssertEqual(json["narrationVoice"] as? String, AnimateVideoVoiceProfile.adultWoman.rawValue)
+        XCTAssertNil(json["mockNoSpend"])
     }
 
     func testConfirmFinalRenderUsesBackendOwnedEndpoint() async throws {
@@ -555,6 +556,7 @@ final class AnimateAPIClientTests: XCTestCase {
         XCTAssertEqual(json["sourceImageUploadId"] as? String, "source-upload-1")
         XCTAssertNil(json["generatedImageArtifactId"])
         XCTAssertEqual(json["narrationVoice"] as? String, AnimateVideoVoiceProfile.adultWoman.rawValue)
+        XCTAssertNil(json["mockNoSpend"])
     }
 
     func testVideoQuoteUsesBackendOwnedQuoteEndpoint() async throws {

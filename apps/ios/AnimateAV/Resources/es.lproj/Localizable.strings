@@ -608,12 +608,13 @@
 "access.apiURLMissing" = "La URL de API de Animate AV no está configurada.";
 "create.final.detail" = "Crea el archivo de video final. Solo se descuentan créditos por videos finales completados.";
 "create.final.downloadVideo" = "Descargar video final";
-"create.final.finishGallery" = "Terminar y mover a Galería";
+"create.final.finishGallery" = "Ver en Galería";
+"create.final.viewInGallery" = "Ver en Galería";
 "create.final.readyToDownload.title" = "Video listo";
 "create.final.readyToDownload.detail" = "Descarga el video final en este dispositivo y después muévelo a la Galería.";
 "create.final.readyToDownload.retryDetail" = "El video final está listo. Reintenta la descarga y después muévelo a la Galería.";
 "create.final.readyToFinish.title" = "Listo para Galería";
-"create.final.readyToFinish.detail" = "El video final está guardado en este dispositivo. Termina para mover este video a la Galería.";
+"create.final.readyToFinish.detail" = "Tu video final está guardado y listo para ver.";
 "create.final.retryDownload" = "Reintentar descarga del video final";
 "create.progress.finalNotMade" = "No creado todavía";
 "create.progress.media" = "Foto";
@@ -649,7 +650,7 @@
 "create.discard.currentMessage" = "Esto elimina el video actual, la foto y la dirección.";
 "create.discard.local" = "Descartar borrador";
 "create.discard.localMessage" = "Esto elimina este borrador, la foto y la configuración antes de guardar nada.";
-"create.final.chooseDestination" = "Terminar y mover a Galería";
+"create.final.chooseDestination" = "Ver en Galería";
 "create.final.create" = "Crear final";
 "create.final.creating" = "Creando final...";
 "create.final.video" = "Vídeo";
@@ -682,6 +683,7 @@
 "create.final.costDetails.watermarkIncluded" = "Tarjeta final de branding incluida.";
 "create.final.createVideo" = "Crear video final";
 "create.final.checkCredits" = "Ver coste";
+"create.final.checkingCost" = "Comprobando coste";
 "create.final.retrySetup" = "Intentar de nuevo";
 "create.final.recovery.title" = "El video necesita revisión";
 "create.final.recovery.detail" = "Avi no pudo terminar este video. Puedes intentarlo de nuevo o descartar este video y empezar limpio.";

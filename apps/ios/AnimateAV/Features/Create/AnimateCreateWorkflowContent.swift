@@ -1,7 +1,9 @@
 import AVAppShellFoundation
 import AVBrandFoundation
+import AVFoundation
 import PhotosUI
 import SwiftUI
+import UIKit
 
 struct AnimateCreateWorkflowContent: View {
     @ObservedObject var viewModel: AnimateCreateViewModel
@@ -107,7 +109,10 @@ private struct AnimateCreateMediaFirstWorkspace: View {
             ScrollView {
                 VStack(alignment: .leading, spacing: showsWorkflowDashboard ? 10 : 12) {
                     if showsFinalVideoCompletion {
-                        AnimateCreateFinalVideoReadyScene(presentation: presentation)
+                        AnimateCreateFinalVideoReadyScene(
+                            presentation: presentation,
+                            viewInGallery: finishFinalVideoToGallery
+                        )
                             .padding(.top, 28)
                     } else if showsFinalVideoRecovery {
                         AnimateCreateFinalVideoRecoveryScene(
@@ -689,38 +694,33 @@ struct AnimateCreateBlockingPreparationView: View {
 
 private struct AnimateCreateFinalVideoReadyScene: View {
     let presentation: AnimateCreateWorkflowPresentation
-
-    @State private var isAnimating = false
+    let viewInGallery: () -> Void
 
     var body: some View {
-        VStack(spacing: 18) {
-            Spacer(minLength: 42)
+        VStack(spacing: 16) {
+            Spacer(minLength: 22)
 
-            ZStack {
-                Circle()
-                    .fill(AVBrandColor.accent.opacity(0.10))
-                    .frame(width: 128, height: 128)
-
-                Circle()
-                    .stroke(AVBrandColor.accent.opacity(0.18), lineWidth: 2)
-                    .frame(width: 156, height: 156)
-                    .scaleEffect(isAnimating ? 1.08 : 0.92)
-                    .opacity(isAnimating ? 0.20 : 0.58)
-
-                Image("AviFullBody")
-                    .resizable()
-                    .scaledToFit()
-                    .frame(width: 86, height: 86)
-                    .offset(y: isAnimating ? -4 : 3)
-
-                Image(systemName: iconName)
-                    .font(.system(size: 20, weight: .black))
-                    .foregroundStyle(.white)
-                    .frame(width: 42, height: 42)
-                    .background(AVBrandColor.accent, in: Circle())
-                    .offset(x: 54, y: 48)
-                    .shadow(color: AVBrandColor.accent.opacity(0.24), radius: 10, y: 4)
+            Button(action: viewInGallery) {
+                AnimateCreateFinalVideoPreview(record: presentation.finalRenderSummary.pendingGalleryVideo)
+                    .frame(maxWidth: .infinity)
+                    .aspectRatio(0.78, contentMode: .fit)
+                    .frame(maxHeight: 390)
+                    .clipShape(RoundedRectangle(cornerRadius: 18, style: .continuous))
+                    .overlay(alignment: .center) {
+                        Image(systemName: "play.fill")
+                            .font(.system(size: 26, weight: .black))
+                            .foregroundStyle(.white)
+                            .frame(width: 66, height: 66)
+                            .background(.black.opacity(0.42), in: Circle())
+                    }
+                    .overlay {
+                        RoundedRectangle(cornerRadius: 18, style: .continuous)
+                            .stroke(AVBrandColor.borderSubtle.opacity(0.58), lineWidth: 1)
+                    }
+                    .shadow(color: AVBrandColor.ink.opacity(0.12), radius: 20, y: 10)
             }
+            .buttonStyle(.plain)
+            .accessibilityLabel(L10n.string("create.final.viewInGallery"))
 
             VStack(spacing: 8) {
                 Text(title)
@@ -735,16 +735,19 @@ private struct AnimateCreateFinalVideoReadyScene: View {
                     .padding(.horizontal, 24)
             }
 
-            Spacer(minLength: 120)
+            Button(action: viewInGallery) {
+                Label(L10n.string("create.final.viewInGallery"), systemImage: "rectangle.stack.badge.play.fill")
+                    .font(.system(size: 15, weight: .black))
+                    .frame(maxWidth: 260)
+                    .frame(height: 48)
+            }
+            .buttonStyle(AnimateCreateFinalVideoButtonStyle())
+
+            Spacer(minLength: 86)
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
         .background(AnimateTheme.shellBackground.ignoresSafeArea())
         .transition(.opacity.combined(with: .scale(scale: 0.98)))
-        .onAppear {
-            withAnimation(.easeInOut(duration: 1.05).repeatForever(autoreverses: true)) {
-                isAnimating = true
-            }
-        }
         .accessibilityElement(children: .combine)
         .accessibilityLabel("\(title). \(message)")
     }
@@ -765,10 +768,84 @@ private struct AnimateCreateFinalVideoReadyScene: View {
         return L10n.string("create.final.readyToDownload.detail")
     }
 
-    private var iconName: String {
-        presentation.finalRenderSummary.pendingGalleryVideo != nil
-            ? "checkmark.circle.fill"
-            : "arrow.down.circle.fill"
+}
+
+private struct AnimateCreateFinalVideoPreview: View {
+    let record: AnimateGalleryVideoRecord?
+    @State private var videoThumbnail: UIImage?
+    @State private var fallbackImage: UIImage?
+
+    var body: some View {
+        ZStack {
+            LinearGradient(
+                colors: [
+                    AVBrandColor.accent.opacity(0.16),
+                    Color.white.opacity(0.88),
+                    AVBrandColor.neutral100
+                ],
+                startPoint: .topLeading,
+                endPoint: .bottomTrailing
+            )
+
+            if let videoThumbnail {
+                Image(uiImage: videoThumbnail)
+                    .resizable()
+                    .scaledToFill()
+            } else if let fallbackImage {
+                Image(uiImage: fallbackImage)
+                    .resizable()
+                    .scaledToFill()
+            } else {
+                VStack(spacing: 12) {
+                    Image("AviFullBody")
+                        .resizable()
+                        .scaledToFit()
+                        .frame(width: 104, height: 104)
+
+                    Image(systemName: "checkmark.seal.fill")
+                        .font(.system(size: 34, weight: .black))
+                        .foregroundStyle(AVBrandColor.accent)
+                }
+            }
+        }
+        .task(id: record?.id) {
+            await loadPreview()
+        }
+    }
+
+    private func loadPreview() async {
+        guard let record else { return }
+        let store = AnimateGalleryStore()
+        let videoURL = store.localFileURL(for: record)
+        if store.localFileExists(for: record) {
+            videoThumbnail = await Self.loadVideoThumbnail(url: videoURL)
+        }
+        if videoThumbnail == nil,
+           let generatedPath = record.generatedImageLocalRelativePath {
+            fallbackImage = Self.loadImage(url: store.localFileURL(relativePath: generatedPath))
+        }
+        if videoThumbnail == nil,
+           fallbackImage == nil,
+           let sourcePath = record.sourceImageLocalRelativePath {
+            fallbackImage = Self.loadImage(url: store.localFileURL(relativePath: sourcePath))
+        }
+    }
+
+    private static func loadVideoThumbnail(url: URL) async -> UIImage? {
+        let asset = AVURLAsset(url: url)
+        let generator = AVAssetImageGenerator(asset: asset)
+        generator.appliesPreferredTrackTransform = true
+        generator.maximumSize = CGSize(width: 900, height: 900)
+
+        guard let cgImage = try? await generator.image(at: .zero).image else {
+            return nil
+        }
+        return UIImage(cgImage: cgImage)
+    }
+
+    private static func loadImage(url: URL) -> UIImage? {
+        guard let data = try? Data(contentsOf: url) else { return nil }
+        return UIImage(data: data)
     }
 }
 
@@ -2384,11 +2461,21 @@ private struct AnimateCreatePrimaryActionBar: View {
                 }
 
                 HStack(alignment: .center, spacing: 10) {
-                    Image(systemName: primaryActionPresentation.primaryHeaderIconName)
-                        .font(.system(size: 14, weight: .black))
-                        .foregroundStyle(.white)
-                        .frame(width: 32, height: 32)
-                        .background(primaryHeaderColor, in: Circle())
+                    ZStack {
+                        Image(systemName: primaryActionPresentation.primaryHeaderIconName)
+                            .font(.system(size: 14, weight: .black))
+                            .foregroundStyle(.white)
+                            .frame(width: 32, height: 32)
+                            .background(primaryHeaderColor, in: Circle())
+                            .opacity(presentation.finalRenderSummary.isPreparingPlan ? 0 : 1)
+
+                        if presentation.finalRenderSummary.isPreparingPlan {
+                            ProgressView()
+                                .tint(primaryHeaderColor)
+                                .controlSize(.small)
+                        }
+                    }
+                    .frame(width: 32, height: 32)
 
                     VStack(alignment: .leading, spacing: 3) {
                         if showsPrimaryHeaderTitle {
@@ -2411,12 +2498,22 @@ private struct AnimateCreatePrimaryActionBar: View {
 
                 if primaryActionPresentation.showsPrimaryActionButton {
                     Button(action: primaryAction) {
-                        Label(primaryButtonTitle, systemImage: primaryButtonIconName)
-                            .font(.system(size: 15, weight: .black))
-                            .lineLimit(1)
-                            .minimumScaleFactor(0.8)
-                            .frame(maxWidth: .infinity)
-                            .frame(height: 46)
+                        HStack(spacing: 8) {
+                            if presentation.finalRenderSummary.isPreparingPlan {
+                                ProgressView()
+                                    .tint(.white)
+                                    .controlSize(.small)
+                            } else {
+                                Image(systemName: primaryButtonIconName)
+                            }
+
+                            Text(primaryButtonTitle)
+                        }
+                        .font(.system(size: 15, weight: .black))
+                        .lineLimit(1)
+                        .minimumScaleFactor(0.8)
+                        .frame(maxWidth: .infinity)
+                        .frame(height: 46)
                     }
                     .disabled(!primaryActionPresentation.canRunPrimaryAction)
                     .buttonStyle(AnimateCreateFinalVideoButtonStyle())
@@ -2612,7 +2709,7 @@ private struct AnimateCreateFinalVideoActionDock: View {
     }
 
     private var buttonTitle: String {
-        isReadyToFinish ? L10n.string("create.final.finishGallery") : downloadTitle
+        isReadyToFinish ? L10n.string("create.final.viewInGallery") : downloadTitle
     }
 
     private var buttonIconName: String {

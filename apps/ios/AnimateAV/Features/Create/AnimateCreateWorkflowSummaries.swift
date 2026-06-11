@@ -227,9 +227,7 @@ struct AnimateRenderRealtimePresentation: Equatable {
     }
 
     private static func progressFraction(_ progressPercent: Double?, status: String) -> Double? {
-        guard status == "completed" else { return nil }
-        guard let progressPercent else { return nil }
-        return min(max(progressPercent / 100, 0), 1)
+        nil
     }
 
     private static func systemImage(status: String, phase: String?) -> String {

@@ -176,7 +176,7 @@ struct AnimateCreatePrimaryActionPresentation: Equatable {
             return L10n.string("create.final.video")
         }
         if workflow.finalRenderSummary.isPreparingPlan {
-            return L10n.string("create.final.checkCredits")
+            return L10n.string("create.final.checkingCost")
         }
         if workflow.finalRenderSummary.isGenerating {
             return L10n.string("create.final.creating")

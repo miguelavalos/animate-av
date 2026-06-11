@@ -608,12 +608,13 @@
 "access.apiURLMissing" = "Animate AV API URL is not configured.";
 "create.final.detail" = "Create the final video file. Credits are only charged for completed final videos.";
 "create.final.downloadVideo" = "Download final video";
-"create.final.finishGallery" = "Finish and move to Gallery";
+"create.final.finishGallery" = "View in Gallery";
+"create.final.viewInGallery" = "View in Gallery";
 "create.final.readyToDownload.title" = "Video ready";
 "create.final.readyToDownload.detail" = "Download the final video to this device, then finish and move it to Gallery.";
 "create.final.readyToDownload.retryDetail" = "The final video is ready. Retry the download, then finish and move it to Gallery.";
 "create.final.readyToFinish.title" = "Ready for Gallery";
-"create.final.readyToFinish.detail" = "The final video is saved on this device. Finish to move this video to Gallery.";
+"create.final.readyToFinish.detail" = "Your final video is saved and ready to watch.";
 "create.final.retryDownload" = "Retry final video download";
 "create.progress.finalNotMade" = "Not made yet";
 "create.progress.media" = "Photo";
@@ -649,7 +650,7 @@
 "create.discard.currentMessage" = "This deletes the current video, photo, and direction.";
 "create.discard.local" = "Discard draft";
 "create.discard.localMessage" = "This removes this draft, photo, and setup before anything is saved.";
-"create.final.chooseDestination" = "Finish and move to Gallery";
+"create.final.chooseDestination" = "View in Gallery";
 "create.final.create" = "Create final";
 "create.final.creating" = "Creating final...";
 "create.final.video" = "Video";
@@ -682,6 +683,7 @@
 "create.final.costDetails.watermarkIncluded" = "Branding outro included.";
 "create.final.createVideo" = "Create final video";
 "create.final.checkCredits" = "Check cost";
+"create.final.checkingCost" = "Checking cost";
 "create.final.retrySetup" = "Try again";
 "create.final.recovery.title" = "Video needs attention";
 "create.final.recovery.detail" = "Avi could not finish this video. You can try again, or discard this video and start clean.";
