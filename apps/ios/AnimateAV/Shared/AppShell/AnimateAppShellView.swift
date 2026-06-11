@@ -61,10 +61,12 @@ struct AnimateAppShellView: View {
             hasAssistantActiveContext: selectedTab != .avi && hasAviActiveContext,
             footerConfiguration: footerConfiguration,
             onSelectTab: { tab in
+                guard !createViewModel.isPreparingFinalPlan else { return }
                 chromeItem = nil
                 selectFooterTab(tab)
             },
             onSelectAssistant: {
+                guard !createViewModel.isPreparingFinalPlan else { return }
                 chromeItem = nil
                 if createViewModel.hasRecoverableVideoContext {
                     selectRootTab(.create)
@@ -349,6 +351,7 @@ struct AnimateAppShellView: View {
     }
 
     private func selectRootTab(_ tab: AnimateRootTab) {
+        guard !createViewModel.isPreparingFinalPlan else { return }
         if tab == .createImage, !accountController.canUseAnimateImageGeneration {
             startOrContinueVideoCreation()
             return
@@ -360,6 +363,7 @@ struct AnimateAppShellView: View {
     }
 
     private func selectFooterTab(_ tab: AnimateRootTab) {
+        guard !createViewModel.isPreparingFinalPlan else { return }
         switch tab {
         case .create:
             startOrContinueVideoCreation()
