@@ -250,6 +250,7 @@ private struct AnimateCreateMediaFirstWorkspace: View {
             )
             .presentationDetents([.large])
             .presentationDragIndicator(.visible)
+            .interactiveDismissDisabled(presentation.finalRenderSummary.isPreparingPlan)
         }
         .onChange(of: presentation.finalRenderSummary.renderPlan != nil) { _, _ in
             markVideoSetupGuideCompleteIfFinalPlanExists()
@@ -2867,14 +2868,6 @@ private struct AnimateCreateFinalVideoConfirmationSheet: View {
                 value: mediaUsageTitle,
                 systemImage: "photo.stack"
             )
-
-            Button(action: cancel) {
-                Text(L10n.string("create.action.notNow"))
-                    .font(.system(size: 14, weight: .black))
-                    .frame(maxWidth: .infinity)
-                    .frame(height: 38)
-            }
-            .buttonStyle(AnimateCreateNeutralInlineButtonStyle())
         }
     }
 
