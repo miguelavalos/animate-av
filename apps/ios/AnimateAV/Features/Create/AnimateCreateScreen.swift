@@ -99,7 +99,6 @@ struct AnimateCreateScreen: View {
     private var showsBlockingPreparation: Bool {
         viewModel.workflowPresentation.showsBlockingPreparation
             || viewModel.isPreparingVideoDirectionAction
-            || viewModel.isPreparingFinalPlan
     }
 
     private var automaticPhotoPickerSelectionLimit: Int {
