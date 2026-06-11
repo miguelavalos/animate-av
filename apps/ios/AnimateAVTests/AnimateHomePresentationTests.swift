@@ -15,7 +15,7 @@ final class AnimateHomePresentationTests: XCTestCase {
             "Sign in is required before creating and saving videos."
         )
         XCTAssertTrue(presentation.createAction.isDisabled)
-        XCTAssertTrue(presentation.openInProgressAction.isDisabled)
+        XCTAssertTrue(presentation.continueVideoAction.isDisabled)
         XCTAssertNil(presentation.latestInProgressAction)
         XCTAssertNil(presentation.latestInProgressContinuationRequest)
     }
@@ -33,8 +33,8 @@ final class AnimateHomePresentationTests: XCTestCase {
         XCTAssertTrue(presentation.createAction.isProminent)
         XCTAssertFalse(presentation.createAction.isDisabled)
         XCTAssertEqual(
-            presentation.openInProgressAction.detail,
-            "Unfinished videos will appear here."
+            presentation.continueVideoAction.detail,
+            "Start or continue from Create Video."
         )
     }
 
@@ -69,11 +69,11 @@ final class AnimateHomePresentationTests: XCTestCase {
 
         XCTAssertEqual(
             presentation.videoStatusDetail,
-            "2 videos ready in your video library."
+            "2 videos in Animate AV."
         )
         XCTAssertEqual(
-            presentation.openInProgressAction.detail,
-            "Finish the videos already in progress."
+            presentation.continueVideoAction.detail,
+            "Continue the video that needs your next step."
         )
     }
 
@@ -88,11 +88,11 @@ final class AnimateHomePresentationTests: XCTestCase {
 
         XCTAssertEqual(
             presentation.videoStatusDetail,
-            "1 video ready in your video library."
+            "1 video in Animate AV."
         )
         XCTAssertEqual(
-            presentation.openInProgressAction.detail,
-            "Finish the videos already in progress."
+            presentation.continueVideoAction.detail,
+            "Continue the video that needs your next step."
         )
     }
 

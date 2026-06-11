@@ -96,18 +96,18 @@ struct AnimateHomeVideoStatusCard: View {
     let isSignedIn: Bool
     let videosSummary: AnimateInProgressSummary
     let presentation: AnimateHomePresentation
-    let openInProgress: () -> Void
+    let openVideo: () -> Void
 
     var body: some View {
         AVAppShellDashboardSection(
-            title: L10n.string("library.inProgressAndGallery.title"),
+            title: L10n.string("home.videos.title"),
             detail: presentation.videoStatusDetail
         ) {
             if let latestVideo = videosSummary.latestVideo {
                 AnimateHomeLatestVideoRow(
                     title: latestVideo.title,
                     detail: AnimateVideoFormatting.compactDetail(for: latestVideo),
-                    openVideo: openInProgress
+                    openVideo: openVideo
                 )
             } else if isSignedIn {
                 AnimateHomeEmptyVideoRow()
@@ -121,13 +121,13 @@ struct AnimateHomeVideoStatusCard: View {
         [
             AVAppShellMetric(
                 id: "in-progress",
-                title: L10n.string("inProgress.title"),
+                title: L10n.string("home.videos.metric.active"),
                 value: "\(videosSummary.inProgressCount)",
                 systemImage: "clock"
             ),
             AVAppShellMetric(
                 id: "finished",
-                title: L10n.string("library.finished.title"),
+                title: L10n.string("home.videos.metric.gallery"),
                 value: "\(videosSummary.finishedCount)",
                 systemImage: "checkmark.circle"
             )
@@ -156,8 +156,8 @@ struct AnimateHomeNextActionsCard: View {
 
                 homeActionRow(action: presentation.createAction, perform: startVideoCreation)
 
-                homeActionRow(action: presentation.openInProgressAction) {
-                    selectTab(.inProgress)
+                homeActionRow(action: presentation.continueVideoAction) {
+                    startVideoCreation()
                 }
 
                 homeActionRow(action: presentation.aviGuidanceAction) {

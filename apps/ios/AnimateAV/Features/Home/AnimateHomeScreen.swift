@@ -84,7 +84,7 @@ struct AnimateHomeScreen: View {
                 isSignedIn: viewModel.isSignedIn,
                 videosSummary: videosSummary,
                 presentation: presentation,
-                openInProgress: { selectTab(.inProgress) }
+                openVideo: openLatestVideo
             )
 
             AnimateHomeNextActionsCard(
@@ -135,6 +135,15 @@ struct AnimateHomeScreen: View {
     private var aviContextButtonTitle: String {
         guard viewModel.isSignedIn else { return L10n.string("common.signIn") }
         return createViewModel.hasRecoverableVideoContext ? L10n.string("common.continue") : L10n.string("common.create")
+    }
+
+    private func openLatestVideo() {
+        if videosSummary.latestAnimateVideo != nil {
+            startVideoCreation()
+            return
+        }
+
+        selectTab(.gallery)
     }
 }
 

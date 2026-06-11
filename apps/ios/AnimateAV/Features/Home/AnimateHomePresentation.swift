@@ -6,7 +6,7 @@ struct AnimateHomePresentation {
     let aviBriefDetail: String
     let videoStatusDetail: String
     let createAction: AnimateHomeAction
-    let openInProgressAction: AnimateHomeAction
+    let continueVideoAction: AnimateHomeAction
     let aviGuidanceAction: AnimateHomeAction
     let latestInProgressAction: AnimateHomeAction?
     let latestInProgressContinuationRequest: AnimateContinuationRequest?
@@ -38,12 +38,12 @@ struct AnimateHomePresentation {
                 isProminent: latestAnimateVideo == nil,
                 isDisabled: !isSignedIn
             ),
-            openInProgressAction: AnimateHomeAction(
-                title: L10n.string("home.action.openInProgress.title"),
-                detail: videosSummary.hasVideos
-                    ? L10n.string("home.action.openInProgress.detail.hasVideos")
-                    : L10n.string("home.action.openInProgress.detail.empty"),
-                systemImage: "clock",
+            continueVideoAction: AnimateHomeAction(
+                title: L10n.string("home.action.continueVideo.title"),
+                detail: latestAnimateVideo == nil
+                    ? L10n.string("home.action.continueVideo.detail.empty")
+                    : L10n.string("home.action.continueVideo.detail.hasVideo"),
+                systemImage: "arrow.right.circle",
                 isDisabled: !isSignedIn
             ),
             aviGuidanceAction: AnimateHomeAction(
@@ -82,7 +82,7 @@ struct AnimateHomePresentation {
         }
 
         if videosSummary.hasVideos {
-            return L10n.string("home.aviBrief.openInProgress")
+            return L10n.string("home.aviBrief.gallery")
         }
 
         return L10n.string("home.aviBrief.firstMemory")

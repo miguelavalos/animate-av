@@ -31,11 +31,11 @@ struct AnimateAviLibraryGuidanceCard: View {
 
     var body: some View {
         AVAviGuidanceCard(
-            title: L10n.string("library.inProgressAndGallery.title"),
+            title: L10n.string("home.videos.title"),
             detail: L10n.string("avi.library.detail")
         ) {
             AVAviInfoRow(
-                title: L10n.string("inProgress.title"),
+                title: L10n.string("home.videos.metric.active"),
                 detail: L10n.string("avi.library.inProgress.detail"),
                 systemImage: "clock"
             )
