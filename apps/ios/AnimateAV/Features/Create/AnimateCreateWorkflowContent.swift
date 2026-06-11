@@ -494,13 +494,13 @@ struct AnimateCreateBlockingPreparationView: View {
                     .frame(width: 86, height: 86)
                     .offset(y: isAnimating ? -4 : 3)
 
-                Image(systemName: mode.iconName)
+                Image(systemName: iconName)
                     .font(.system(size: 20, weight: .black))
                     .foregroundStyle(.white)
                     .frame(width: 42, height: 42)
-                    .background(mode.tint, in: Circle())
+                    .background(tint, in: Circle())
                     .offset(x: 54, y: 48)
-                    .shadow(color: mode.tint.opacity(0.24), radius: 10, y: 4)
+                    .shadow(color: tint.opacity(0.24), radius: 10, y: 4)
             }
 
             VStack(spacing: 8) {
@@ -517,17 +517,17 @@ struct AnimateCreateBlockingPreparationView: View {
             }
 
             VStack(spacing: 8) {
-                if let fractionCompleted = progress?.fractionCompleted {
+                if let fractionCompleted = progressFraction {
                     ProgressView(value: fractionCompleted)
-                        .tint(mode.tint)
+                        .tint(tint)
                         .frame(width: 168)
-                    Text(progress?.title ?? L10n.string("create.media.progress.reading"))
+                    Text(progressTitle)
                         .font(.caption)
                         .fontWeight(.black)
                         .foregroundStyle(AVBrandColor.textSecondary)
                 } else {
                     ProgressView()
-                        .tint(mode.tint)
+                        .tint(tint)
                         .controlSize(.regular)
                 }
             }
@@ -547,15 +547,39 @@ struct AnimateCreateBlockingPreparationView: View {
     }
 
     private var title: String {
-        mode.title
+        realtimeStatus?.title ?? mode.title
     }
 
     private var message: String {
-        mode.message(itemCount: progress?.totalCount)
+        realtimeStatus?.detail ?? mode.message(itemCount: mediaProgress?.totalCount)
     }
 
-    private var progress: AnimateMediaImportProgress? {
+    private var iconName: String {
+        realtimeStatus?.systemImage ?? mode.iconName
+    }
+
+    private var tint: Color {
+        realtimeStatus == nil ? mode.tint : AVBrandColor.accent
+    }
+
+    private var progressFraction: Double? {
+        realtimeStatus?.progressFraction ?? mediaProgress?.fractionCompleted
+    }
+
+    private var progressTitle: String {
+        if let progressFraction = realtimeStatus?.progressFraction {
+            return "\(Int((progressFraction * 100).rounded()))%"
+        }
+        return mediaProgress?.title ?? L10n.string("create.media.progress.reading")
+    }
+
+    private var mediaProgress: AnimateMediaImportProgress? {
         presentation.mediaSummary.importProgress
+    }
+
+    private var realtimeStatus: AnimateRenderRealtimePresentation? {
+        guard presentation.finalRenderSummary.latestFinalJob?.isActiveRender == true else { return nil }
+        return presentation.finalRenderSummary.realtimeStatus
     }
 
     private var mode: PreparationMode {
@@ -566,6 +590,9 @@ struct AnimateCreateBlockingPreparationView: View {
             return .prepareFinalPlan
         }
         if presentation.finalRenderSummary.isGenerating {
+            return .createVideo
+        }
+        if presentation.finalRenderSummary.latestFinalJob?.isActiveRender == true {
             return .createVideo
         }
         if presentation.videoDirectionSummary.isPlanning {

@@ -59,6 +59,7 @@ struct AnimateCreateWorkflowPresentation: Equatable {
             || mediaSummary.isImporting
             || videoDirectionSummary.isPlanning
             || (finalRenderSummary.isGenerating && !finalRenderSummary.isPreparingPlan)
+            || finalRenderSummary.latestFinalJob?.isActiveRender == true
     }
 
     var isFinalRenderEditingLocked: Bool {
