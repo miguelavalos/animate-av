@@ -871,7 +871,7 @@ final class AnimateCreateWorkflowPresentationTests: XCTestCase {
         let presentation = AnimateRenderRealtimePresentation(renderJob: job)
 
         XCTAssertEqual(presentation.title, "Animating")
-        XCTAssertEqual(presentation.detail, "Rendering your video.")
+        XCTAssertEqual(presentation.detail, "Avi is animating your video.")
         XCTAssertNil(presentation.progressFraction)
         XCTAssertEqual(presentation.systemImage, "gearshape.2.fill")
         XCTAssertTrue(presentation.isActive)
@@ -892,7 +892,7 @@ final class AnimateCreateWorkflowPresentationTests: XCTestCase {
         XCTAssertEqual(presentation.title, "Needs attention")
         XCTAssertEqual(
             presentation.detail,
-            "Video creation hit a problem. If the final video was not completed, credits will not be charged. Please try again or contact support."
+            "Avi could not create this video. Try again or start a new video."
         )
         XCTAssertEqual(presentation.systemImage, "exclamationmark.triangle.fill")
         XCTAssertFalse(presentation.isActive)
@@ -911,7 +911,7 @@ final class AnimateCreateWorkflowPresentationTests: XCTestCase {
 
         let presentation = AnimateRenderRealtimePresentation(renderJob: job)
 
-        XCTAssertEqual(presentation.detail, "We couldn’t finish this video. No credits were charged.")
+        XCTAssertEqual(presentation.detail, "Avi could not create this video. Try again or start a new video.")
     }
 
     func testRecoveryCopyCoversMediaAndVideoDirectionFailurePaths() {

@@ -25,7 +25,7 @@ final class AnimateInProgressArtifactPresentationTests: XCTestCase {
 
         XCTAssertEqual(finalExport.title, "Final video")
         XCTAssertEqual(finalExport.emptySystemImage, "video.fill")
-        XCTAssertEqual(finalExport.emptyMessage, "Create the final video after preparing the direction.")
+        XCTAssertEqual(finalExport.emptyMessage, "Create the final video after reviewing the setup.")
         XCTAssertEqual(finalExport.artifact?.storageKey, "animateav/final-1.mp4")
     }
 
@@ -105,7 +105,7 @@ final class AnimateInProgressArtifactPresentationTests: XCTestCase {
         XCTAssertEqual(presentations[1].modelTitle, "Configured")
         XCTAssertEqual(
             presentations[0].errorMessage,
-            "Video creation hit a problem. If the final video was not completed, credits will not be charged. Please try again or contact support."
+            "Avi could not create this video. Try again or start a new video."
         )
     }
 
@@ -121,7 +121,7 @@ final class AnimateInProgressArtifactPresentationTests: XCTestCase {
             )
         )
 
-        XCTAssertEqual(presentation.errorMessage, "We couldn’t finish this video. No credits were charged.")
+        XCTAssertEqual(presentation.errorMessage, "Avi could not create this video. Try again or start a new video.")
     }
 
     private func makeArtifact(

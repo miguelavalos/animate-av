@@ -706,7 +706,8 @@
 "create.final.checkingCost" = "Kosten werden berechnet";
 "create.final.retrySetup" = "Erneut versuchen";
 "create.final.recovery.title" = "Video braucht Aufmerksamkeit";
-"create.final.recovery.detail" = "Avi konnte dieses Video nicht fertigstellen. Du kannst es erneut versuchen oder verwerfen und neu beginnen.";
+"create.final.recovery.detail" = "Avi konnte dieses Video nicht erstellen. Versuche es erneut oder starte ein neues Video.";
+"create.final.recovery.retryHint" = "Versuche es erneut, wenn du bereit bist.";
 "create.final.recovery.discard" = "Video verwerfen";
 "create.final.confirmCredits" = "Video erstellen · %@";
 "create.final.createWithCost" = "Video erstellen · %@";
@@ -763,7 +764,7 @@
 "recovery.storyFailure" = "Avi konnte das Video gerade nicht vorbereiten. Es wurden keine Credits verwendet. Bitte versuche es erneut.";
 "recovery.renderStartFailure" = "Die Videoerstellung konnte nicht gestartet werden. Es wurden keine Credits für das finale Video verwendet. Bitte versuche es gleich erneut.";
 "recovery.renderRefreshFailure" = "Der Videostatus konnte nicht aktualisiert werden. Credits werden erst finalisiert, wenn das Video bereit ist. Bitte versuche es erneut.";
-"recovery.failedRenderDetail" = "Bei der Videoerstellung gab es ein Problem. Reservierte Credits werden freigegeben, wenn das Video nicht abgeschlossen wurde. Bitte versuche es erneut oder kontaktiere den Support.";
+"recovery.failedRenderDetail" = "Avi konnte dieses Video nicht erstellen. Versuche es erneut oder starte ein neues Video.";
 "media.item.singular" = "Element";
 "media.item.plural" = "Elemente";
 "media.photoOrClip.singular" = "Foto";
@@ -943,7 +944,7 @@
 "workflow.final.missingVideo" = "Starte oder setze ein Video fort, bevor du den finalen Export erstellst.";
 "workflow.final.addCredits" = "Füge Credits vor dem finalen Video hinzu.";
 "workflow.final.notReady" = "Der finale Export ist noch nicht bereit zum Video creationn.";
-"workflow.final.tryAgain" = "Der Video-Workflow konnte nicht abgeschlossen werden. Bitte versuche es erneut.";
+"workflow.final.tryAgain" = "Das Video konnte nicht abgeschlossen werden. Bitte versuche es erneut.";
 "workflow.final.planChanged" = "Der Videoplan hat sich geändert. Prüfe die Kosten erneut, bevor du das Video erstellst.";
 "workflow.final.notCreatable" = "Dieses Video kann noch nicht erstellt werden. Prüfe Foto, Credits und Optionen.";
 "workflow.final.contactSupport" = "Es gibt ein Serviceproblem. Versuche es später erneut oder kontaktiere den Support.";
@@ -985,6 +986,7 @@
 "create.render.detail.preparing" = "Avi bereitet das Video vor.";
 "create.render.detail.uploading" = "Avi sendet das Bild, um das Video zu erstellen.";
 "create.render.detail.composing" = "Avi ordnet die ausgewählten Elemente an.";
+"create.render.detail.rendering" = "Avi animiert dein Video.";
 "create.render.detail.creating" = "Avi erstellt das Video.";
 "create.render.detail.saving" = "Avi speichert das fertige Video.";
 "create.render.detail.realtime" = "Avi aktualisiert den Videostatus in Echtzeit.";

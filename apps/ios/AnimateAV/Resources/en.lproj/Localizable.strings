@@ -228,6 +228,8 @@
 /* Main app pages */
 "avi.creditGuidance.detail" = "Avi shows the cost before creating. Credits are charged only for the final video.";
 "avi.creditGuidance.title" = "Credits";
+"avi.creditOrder.first" = "First";
+"avi.creditOrder.then" = "Then";
 "avi.creditOrder.bonus.detail" = "Used last";
 "avi.creditOrder.bonus.title" = "Bonus";
 "avi.creditOrder.included.detail" = "Used first";
@@ -242,6 +244,8 @@
 "avi.focus.empty.message" = "Choose one photo in Create Video and Avi will guide the setup.";
 "avi.focus.finished.message" = "No video needs attention. Your finished videos are in Gallery.";
 "avi.focus.firstMemory.title" = "Create your first video";
+"avi.focus.inProgress.message" = "%d %@ in progress. Finish the next step.";
+"avi.focus.activeWork.title" = "Videos in progress";
 "avi.focus.activeVideo.message" = "Open Create Video to finish setup or create the final video.";
 "avi.focus.nextMemory.title" = "Ready for the next video";
 "avi.focus.activeVideo.title" = "Continue in Create Video";
@@ -269,6 +273,10 @@
 "avi.prepare.look.title" = "Choose the look";
 "avi.prepare.media.detail" = "Start with one clear subject so Avi knows what to animate.";
 "avi.prepare.media.title" = "Choose one photo";
+"avi.prepare.occasion.detail" = "Birthdays, thanks, jokes, trips, and small surprises work well.";
+"avi.prepare.occasion.title" = "Choose the moment";
+"avi.prepare.story.detail" = "Shape the video before spending Credits.";
+"avi.prepare.story.title" = "Shape the video";
 "avi.prepare.voice.detail" = "Use a preset voice, add a short message, or keep it simple.";
 "avi.prepare.voice.title" = "Set voice and message";
 "avi.prepare.title" = "Create Video with Avi";
@@ -381,6 +389,9 @@
 "home.action.continueVideo.detail.empty" = "Open Create Video to start with one photo.";
 "home.action.continueVideo.detail.hasVideo" = "Open Create Video to finish the next step.";
 "home.action.continueVideo.title" = "Open Create Video";
+"home.action.openInProgress.detail.empty" = "Unfinished videos will appear here.";
+"home.action.openInProgress.detail.hasVideos" = "Finish videos already in progress.";
+"home.action.openInProgress.title" = "Open In Progress";
 "home.avi.addMedia.detail" = "Choose one photo to start the setup.";
 "home.avi.createVideo.detail" = "Choose one photo, then set the look, voice, and message.";
 "home.avi.createVideo.title" = "Create Video";
@@ -395,6 +406,7 @@
 "home.aviBrief.continueVideo" = "Continue %@ from the next unfinished step.";
 "home.aviBrief.firstMemory" = "Start with one photo and let Avi make it move.";
 "home.aviBrief.gallery" = "Your finished videos are waiting in Gallery.";
+"home.aviBrief.openInProgress" = "Open In Progress and finish the next step.";
 "home.aviBrief.signIn" = "Sign in so Avi can keep your videos and Credits together.";
 "home.header.subtitle" = "Turn one favorite photo into a playful animated video with style, motion, and sound.";
 "home.header.title" = "From photo to video";
@@ -694,7 +706,8 @@
 "create.final.checkingCost" = "Calculating cost";
 "create.final.retrySetup" = "Try again";
 "create.final.recovery.title" = "Video needs attention";
-"create.final.recovery.detail" = "Avi could not finish this video. You can try again, or discard this video and start clean.";
+"create.final.recovery.detail" = "Avi could not create this video. Try again or start a new video.";
+"create.final.recovery.retryHint" = "Try again when you’re ready.";
 "create.final.recovery.discard" = "Discard video";
 "create.final.confirmCredits" = "Create video · %@";
 "create.final.createWithCost" = "Create final video · %@";
@@ -751,7 +764,7 @@
 "recovery.storyFailure" = "Avi couldn’t prepare the video right now. No Credits were used. Please try again.";
 "recovery.renderStartFailure" = "Couldn’t start video creation. No credits were used. Please try again in a moment.";
 "recovery.renderRefreshFailure" = "Couldn’t refresh the video status. Credits are only finalized when the video is ready. Please try again.";
-"recovery.failedRenderDetail" = "Video creation hit a problem. If the final video was not completed, credits will not be charged. Please try again or contact support.";
+"recovery.failedRenderDetail" = "Avi could not create this video. Try again or start a new video.";
 "media.item.singular" = "item";
 "media.item.plural" = "items";
 "media.photoOrClip.singular" = "photo";
@@ -931,7 +944,7 @@
 "workflow.final.missingVideo" = "Start or continue a video before creating the final video.";
 "workflow.final.addCredits" = "Add credits before creating the final video.";
 "workflow.final.notReady" = "Final video is not ready to create.";
-"workflow.final.tryAgain" = "The video workflow could not finish. Please try again.";
+"workflow.final.tryAgain" = "The video could not finish. Please try again.";
 "workflow.final.planChanged" = "The video plan changed. Review the cost again before creating the video.";
 "workflow.final.notCreatable" = "This video is not ready to create yet. Review the photo, credits, and options.";
 "workflow.final.contactSupport" = "There is a service problem. Try again later or contact support.";
@@ -973,6 +986,7 @@
 "create.render.detail.preparing" = "Avi is getting the video ready.";
 "create.render.detail.uploading" = "Avi is sending the photo for video creation.";
 "create.render.detail.composing" = "Avi is preparing the animation.";
+"create.render.detail.rendering" = "Avi is animating your video.";
 "create.render.detail.creating" = "Avi is creating the video.";
 "create.render.detail.saving" = "Avi is saving the finished video.";
 "create.render.detail.realtime" = "Avi is updating the video status in realtime.";

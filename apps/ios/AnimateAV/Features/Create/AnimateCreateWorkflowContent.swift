@@ -2611,7 +2611,10 @@ private struct AnimateCreatePrimaryActionBar: View {
     }
 
     private var primaryStatusMessage: String {
-        guideIsReadyToPrepareDirection
+        if presentation.finalRenderSummary.latestFinalJob?.isTerminalFailure == true {
+            return L10n.string("create.final.recovery.retryHint")
+        }
+        return guideIsReadyToPrepareDirection
             ? L10n.string("create.primary.continuePreflight")
             : primaryActionPresentation.statusMessage ?? L10n.string("create.primary.creditPreflight")
     }

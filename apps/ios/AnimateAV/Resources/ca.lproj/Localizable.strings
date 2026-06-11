@@ -704,7 +704,8 @@
 "create.final.checkingCost" = "Calculant el cost";
 "create.final.retrySetup" = "Torna-ho a provar";
 "create.final.recovery.title" = "El vídeo necessita atenció";
-"create.final.recovery.detail" = "Avi no ha pogut acabar aquest vídeo. Pots tornar-ho a provar o descartar-lo i començar de nou.";
+"create.final.recovery.detail" = "Avi no ha pogut crear aquest vídeo. Torna-ho a provar o comença un vídeo nou.";
+"create.final.recovery.retryHint" = "Torna-ho a provar quan vulguis.";
 "create.final.recovery.discard" = "Descartar vídeo";
 "create.final.confirmCredits" = "Crear vídeo · %@";
 "create.final.createWithCost" = "Crear vídeo · %@";
@@ -761,7 +762,7 @@
 "recovery.storyFailure" = "Avi no ha pogut preparar el vídeo ara mateix. No s’han fet servir Crèdits. Torna-ho a provar.";
 "recovery.renderStartFailure" = "No s’ha pogut iniciar la creació del vídeo. No s’han fet servir crèdits del vídeo final. Torna-ho a provar d’aquí a un moment.";
 "recovery.renderRefreshFailure" = "No s’ha pogut actualitzar l’estat del vídeo. Els crèdits només es finalitzen quan el vídeo està a punt. Torna-ho a provar.";
-"recovery.failedRenderDetail" = "La creació del vídeo ha tingut un problema. Si el vídeo final no s'ha completat, no es cobraran crèdits. Torna-ho a provar o contacta amb suport.";
+"recovery.failedRenderDetail" = "Avi no ha pogut crear aquest vídeo. Torna-ho a provar o comença un vídeo nou.";
 "media.item.singular" = "ítem";
 "media.item.plural" = "ítems";
 "media.photoOrClip.singular" = "foto";
@@ -941,7 +942,7 @@
 "workflow.final.missingVideo" = "Inicia o continua un vídeo abans de crear l’exportació final.";
 "workflow.final.addCredits" = "Afegeix crèdits abans del vídeo final.";
 "workflow.final.notReady" = "L’exportació final encara no està llesta per crear-se.";
-"workflow.final.tryAgain" = "El workflow de vídeo no s’ha pogut completar. Torna-ho a provar.";
+"workflow.final.tryAgain" = "El vídeo no s’ha pogut completar. Torna-ho a provar.";
 "workflow.final.planChanged" = "El pla del vídeo ha canviat. Revisa el cost de nou abans de crear el vídeo.";
 "workflow.final.notCreatable" = "Aquest vídeo encara no està a punt per crear-se. Revisa la foto, els crèdits i les opcions.";
 "workflow.final.contactSupport" = "Hi ha un problema del servei. Torna-ho a provar més tard o contacta amb suport.";
@@ -983,6 +984,7 @@
 "create.render.detail.preparing" = "Avi està preparant el vídeo.";
 "create.render.detail.uploading" = "Avi està enviant la foto per crear el vídeo.";
 "create.render.detail.composing" = "Avi està ordenant els elements seleccionats.";
+"create.render.detail.rendering" = "Avi està animant el teu vídeo.";
 "create.render.detail.creating" = "Avi està creant el vídeo.";
 "create.render.detail.saving" = "Avi està desant el vídeo acabat.";
 "create.render.detail.realtime" = "Avi actualitza l’estat del vídeo en temps real.";

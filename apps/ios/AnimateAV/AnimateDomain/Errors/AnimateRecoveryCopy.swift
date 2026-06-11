@@ -34,10 +34,6 @@ enum AnimateRecoveryCopy {
     }
 
     static func failedRenderDetail(userMessage: String?, errorMessage: String?) -> String {
-        if let userMessage, !userMessage.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
-            return userMessage
-        }
-
         return L10n.string("recovery.failedRenderDetail")
     }
 

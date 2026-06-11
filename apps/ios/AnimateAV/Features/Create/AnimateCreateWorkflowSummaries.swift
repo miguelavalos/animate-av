@@ -206,10 +206,6 @@ struct AnimateRenderRealtimePresentation: Equatable {
             )
         }
 
-        if let userMessage = renderJob.userMessage, !userMessage.isEmpty {
-            return userMessage
-        }
-
         switch renderJob.phase {
         case "preparing":
             return L10n.string("create.render.detail.preparing")
@@ -222,7 +218,13 @@ struct AnimateRenderRealtimePresentation: Equatable {
         case "saving":
             return L10n.string("create.render.detail.saving")
         default:
-            return renderJob.isActiveRender ? L10n.string("create.render.detail.realtime") : L10n.string("create.render.detail.available")
+            if renderJob.isActiveRender {
+                return L10n.string("create.render.detail.realtime")
+            }
+            if let userMessage = renderJob.userMessage, !userMessage.isEmpty {
+                return userMessage
+            }
+            return L10n.string("create.render.detail.available")
         }
     }
 
