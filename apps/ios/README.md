@@ -39,6 +39,15 @@ Do not add a public video preview/review step, generated audio controls,
 captions, subtitles, text overlays, provider/model selection, or cloud media
 storage as v1 client features.
 
+Current product-polish scope:
+
+- Review visible `Gallery` and `In Progress` naming before production smoke; the
+  behavior may stay, but the labels may not fit Animate AV.
+- Review Create Video looks in English first: family names, look names,
+  subtitles, and preview images.
+- Keep the guided voice picker unchanged unless a concrete defect appears.
+- Defer broad localization cleanup until English copy and flow are accepted.
+
 ## First Run Branding
 
 The expected first-run sequence is:

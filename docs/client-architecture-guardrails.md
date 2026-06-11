@@ -110,6 +110,20 @@ artifact subscriptions running for the full signed-in app session just because
 the user is authenticated; start remote Gallery observation only when a screen
 needs remote availability, and stop it when that screen no longer needs it.
 
+## Product Terminology Review Rule
+
+The current app still uses visible `Gallery` and `In Progress` concepts inherited
+from the reusable app foundation. Before changing those labels, audit all
+surface areas that depend on them: Home, bottom navigation, create completion,
+Videos, Images, active jobs, local media availability, and recovery. The
+underlying behavior remains: active workflow state is realtime-backed, completed
+media is local-first after download, and remote artifact availability is
+short-lived.
+
+Do not use Moments AV product language such as memory, moment, story, album, or
+library in visible Animate AV copy unless it is a deliberate compatibility term
+hidden from users.
+
 ## V1 Media Rule
 
 V1 final videos are animated one-photo videos with backend-generated audio. The

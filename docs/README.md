@@ -56,6 +56,16 @@ Gallery item can exist while its video or image file is missing on the current
 device, and redownload is offered only when the backend reports an available
 artifact.
 
+Current polish note: the implementation still contains visible `Gallery` and
+`In Progress` labels from the reusable Apps AV foundation. Those labels are
+under product review for Animate AV. Do not rename backend/local-first media
+behavior blindly; audit the user-facing terminology first.
+
+Create Video look review note: the current target is 8 look families with 8
+looks each, one unique preview asset per look, and deterministic default voice
+mapping by family position. The guided voice picker is accepted for now; review
+the look picker before changing voices.
+
 ## Branding And First Run
 
 Animate AV follows the shared Apps AV first-run sequence:

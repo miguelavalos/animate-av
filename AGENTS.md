@@ -59,6 +59,17 @@ Mandatory rules:
 - when changing loaders or sheets, run the relevant view-model/presentation tests
   and manually inspect the simulator transition. The previous failure mode was a
   visually nicer loader that hid broken sheet/state behavior.
+- current polish priority is Animate AV only. Do not start another app
+  adaptation from this repo.
+- the guided voice picker is accepted for now. Focus Create Video review on the
+  look picker: 8 families, 8 looks per family, one unique preview asset per
+  look, English names/subtitles, and default voice mapping by family position.
+- defer broad localization cleanup until English UX is accepted. Final
+  localization QA must remove stale context, English fallbacks, and `...` in
+  CTAs or info cards.
+- treat visible `Gallery` and `In Progress` wording as inherited terminology
+  under review. Audit Home, navigation, Create completion, Videos/Images,
+  active jobs, and recovery before renaming behavior or labels.
 
 If the private repo is unavailable, stop and say that the authoritative runbook
 cannot be checked. Do not substitute a guessed local workflow.

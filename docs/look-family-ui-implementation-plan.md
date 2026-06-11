@@ -1,67 +1,63 @@
 # Look Family UI Implementation Plan
 
-This plan covers the code and UX work needed before generating any new look
-preview images. The image-generation pass should be a separate follow-up after
-this plan builds, tests, and lands.
+Status: implemented structurally, pending product review.
+
+This document is now the current contract for reviewing the look picker. The
+family UI and 64-look model exist; the remaining work is product polish,
+English naming review, and visual QA before production smoke.
 
 ## Goal
 
-Replace the flat paginated look selector with a style-family flow:
+Maintain the style-family look selector:
 
 1. Show a main grid/list of look families.
 2. Let the user enter one family.
 3. Show exactly 8 looks in that family.
 4. Keep the voice matrix stable by mapping each family to the same 8 voice
    positions.
-5. Use temporary placeholder assets for new looks until the image-generation
-   pass.
+5. Keep one unique final preview asset per look.
 
 This preserves the "8 looks per voice block" rule while making the library
-scale beyond 32 looks without endless pagination.
+scale without endless pagination.
 
 ## Current Audit
 
 - Video look data is centralized in
   `apps/ios/AnimateAV/AnimateDomain/Models/AnimateVideoCreationModels.swift`.
-  `AnimateVideoLook.selectorOrder` currently contains 32 looks, arranged as 4
-  flat pages of 8.
-- `AnimateVideoLook.defaultVoiceProfile` depends on selector index modulo
-  `AnimateVideoVoiceProfile.selectorOrder.count`.
-- The guided video flow uses pagination in
-  `apps/ios/AnimateAV/Features/Create/AnimateCreateWorkflowContent.swift`:
-  `lookPageIndex`, `looksPerPage`, `lookPageCount`, and `visibleLooks`.
-- The setup look chooser in the same file renders the full flat
-  `AnimateVideoLook.selectorOrder` grid without family grouping.
+  `AnimateVideoLook.families` currently contains 8 families with 8 looks each.
+- `AnimateVideoLook.defaultVoiceProfile` depends on the look position in the
+  flattened family order. This preserves one default voice identity per family
+  position unless the user manually overrides the voice.
+- The guided video flow and the full setup look chooser both use family
+  navigation in `AnimateCreateWorkflowContent.swift`.
 - Image generation has a separate enum,
   `AnimateCreateImageLook`, in
   `apps/ios/AnimateAV/Features/Create/AnimateCreateImagesWorkspace.swift`.
-  It mirrors the 32 look cases but already reuses a smaller set of preview
-  assets for several looks.
-- `AnimateCreateImagesLookSheet` also uses flat pagination with 8 looks per
-  page.
-- `AnimateLookVoiceMatrixTests` currently verifies the 32-look selector count,
-  modulo voice mapping, unique video preview assets, and voice override
-  behavior.
-- There are currently 32 unique `Look*.imageset` preview assets for video
+  It mirrors the video look families.
+- `AnimateLookVoiceMatrixTests` verifies family size, selector count, default
+  voice mapping, unique preview assets, asset existence, and manual voice
+  override behavior.
+- There are currently 64 unique `Look*.imageset` preview assets for video
   looks.
-- Look titles/subtitles are localized in the app's `.lproj/Localizable.strings`
-  files. New family titles/subtitles and new looks need localization keys.
+- English look and family titles/subtitles are the current review target.
+  Broad localization cleanup is deferred until the English UX is accepted.
 
 ## Product Decision
 
-Use family navigation for the video look selector first, because that is where
-look + voice pairing matters most. Keep image-generation look selection in
-scope only if we want the whole app to feel consistent in the same commit.
+Use family navigation for the video look selector because that is where look and
+default voice pairing matters most. Do not redesign the voice picker in this
+polish pass; the current eight voice portraits and picker are accepted unless a
+concrete defect appears.
 
-Recommended scope for the first implementation commit:
+Current review scope:
 
-- Migrate the video look selection UX to families.
-- Add shared family data in the domain model.
-- Update the full setup chooser and the guided flow sheet.
-- Add all 64 planned looks to the model with placeholder assets for new looks.
-- Update tests for the new family contract.
-- Optionally migrate the image-generation sheet if the same family structure can
-  be reused without widening the commit too much.
+- Review whether the first family should remain `Popular Looks` or become a
+  more product-specific entry such as recommended starter looks.
+- Review each English family title/subtitle and each look title/subtitle.
+- Review all 64 look images in the app, not only the asset catalog.
+- Keep exactly 8 looks per family and one unique preview asset per look.
+- Keep the manual voice override behavior: once the user chooses a voice,
+  changing looks must not replace that choice.
 
 ## Proposed Families
 
