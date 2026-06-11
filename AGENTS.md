@@ -9,6 +9,7 @@ local runtime flow from this public repo.
 
 - `private/avalsys-suite/docs/platform/native-preview-dev-validation-guide.md`
 - `private/avalsys-suite/docs/animate-av/preview-dev-validation-guide.md`
+- `private/avalsys-suite/docs/animate-av/create-video-workflow-validation-2026-06-11.md`
 - `private/avalsys-suite/docs/agents/plan-step.md` when the user says
   `usa plan-step` or asks for step-by-step plan execution.
 - `private/avalsys-suite/docs/agents/plan-goal.md` when the user says
@@ -42,6 +43,10 @@ Mandatory rules:
   blockers, watermark choice, and the subsequent confirmation. Do not add a
   separate `/video/quotes` preflight inside Check cost/Create video; it creates
   duplicate loading states and can desynchronise UI from the confirmable plan.
+- before adapting this workflow to Moments AV or another app, read the
+  2026-06-11 create-video validation closeout and preserve the generic contract:
+  plan first, confirm second, durable backend workflow ownership, short-lived
+  Convex projection, and local-first Gallery after download.
 - before declaring the create-video workflow done, validate controlled failure
   paths: provider failure, stale plan, insufficient credits, offline/unavailable
   backend, final artifact missing, and retry. The UI must recover without a
