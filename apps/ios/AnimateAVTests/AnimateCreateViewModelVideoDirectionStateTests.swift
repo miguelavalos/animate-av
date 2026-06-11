@@ -96,7 +96,9 @@ final class AnimateCreateViewModelVideoDirectionStateTests: XCTestCase {
         XCTAssertNil(viewModel.latestFinalJob)
         XCTAssertNil(viewModel.workflowPresentation.finalRenderSummary.finalExport)
         XCTAssertNil(viewModel.workflowPresentation.finalRenderSummary.pendingGalleryVideo)
-        XCTAssertFalse(viewModel.workflowPresentation.showsMediaFirstWorkspace)
+        XCTAssertTrue(viewModel.workflowPresentation.showsMediaFirstWorkspace)
+        XCTAssertTrue(viewModel.hasLocalAnimateWorkspace)
+        XCTAssertEqual(viewModel.workflowPresentation.mediaSummary.selectedCount, 0)
     }
 
     func testBeginNewVideoWithoutPickerRequestShowsMediaChoice() {

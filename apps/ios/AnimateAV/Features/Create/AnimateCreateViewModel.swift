@@ -624,9 +624,8 @@ final class AnimateCreateViewModel: ObservableObject {
     }
 
     func clearFinalSessionAfterGalleryMove() {
-        finalRenderWorkflow?.clearFinalSessionAfterGalleryMove()
-        clearWorkflowSnapshots()
-        finalVideoCommandState = .completedInGallery(L10n.string("workflow.final.movedToGallery"))
+        resetActiveVideoCreation(force: true)
+        _ = beginNewVideoCreation(openMediaPicker: false)
     }
 
     private func clearWorkflowSnapshots() {

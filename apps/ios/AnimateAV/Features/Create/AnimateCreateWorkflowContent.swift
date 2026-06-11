@@ -234,6 +234,7 @@ private struct AnimateCreateMediaFirstWorkspace: View {
             AnimateCreateFinalVideoConfirmationSheet(
                 action: finalVideoAction,
                 mediaSummary: presentation.mediaSummary,
+                isPreparingPlan: presentation.finalRenderSummary.isPreparingPlan,
                 confirm: { removesWatermark in
                     showsCreateVideoConfirmation = false
                     waitsForFinalRenderPlan = false
@@ -263,10 +264,6 @@ private struct AnimateCreateMediaFirstWorkspace: View {
             }
         }
         .onChange(of: presentation.finalRenderSummary.isPreparingPlan) { _, isPreparingPlan in
-            if isPreparingPlan, waitsForFinalRenderPlan {
-                showsCreateVideoConfirmation = false
-                return
-            }
             guard waitsForFinalRenderPlan, !isPreparingPlan else { return }
             presentCreateVideoConfirmationIfReady()
         }
@@ -354,7 +351,7 @@ private struct AnimateCreateMediaFirstWorkspace: View {
         }
 
         waitsForFinalRenderPlan = true
-        showsCreateVideoConfirmation = false
+        showsCreateVideoConfirmation = true
         prepareFinalRenderPlan(false)
     }
 
@@ -443,7 +440,10 @@ private struct AnimateCreateMediaFirstWorkspace: View {
     }
 
     private var showsPrimaryActionBar: Bool {
-        (showsFinalVideoCompletion
+        if showsFinalVideoCompletion {
+            return false
+        }
+        return (showsFinalVideoCompletion
             || showsFinalVideoRecovery
             || presentation.finalRenderSummary.latestFinalJob != nil
             || primaryActionPresentation.hasFinalVideoIntent)
@@ -452,7 +452,7 @@ private struct AnimateCreateMediaFirstWorkspace: View {
 
     private var bottomContentPadding: CGFloat {
         if showsFinalVideoCompletion {
-            return 150
+            return 54
         }
         if showsFinalVideoRecovery {
             return 190
@@ -702,9 +702,8 @@ private struct AnimateCreateFinalVideoReadyScene: View {
 
             Button(action: viewInGallery) {
                 AnimateCreateFinalVideoPreview(record: presentation.finalRenderSummary.pendingGalleryVideo)
-                    .frame(maxWidth: .infinity)
+                    .frame(maxWidth: 300)
                     .aspectRatio(0.78, contentMode: .fit)
-                    .frame(maxHeight: 390)
                     .clipShape(RoundedRectangle(cornerRadius: 18, style: .continuous))
                     .overlay(alignment: .center) {
                         Image(systemName: "play.fill")
@@ -720,6 +719,7 @@ private struct AnimateCreateFinalVideoReadyScene: View {
                     .shadow(color: AVBrandColor.ink.opacity(0.12), radius: 20, y: 10)
             }
             .buttonStyle(.plain)
+            .padding(.horizontal, 22)
             .accessibilityLabel(L10n.string("create.final.viewInGallery"))
 
             VStack(spacing: 8) {
@@ -748,7 +748,7 @@ private struct AnimateCreateFinalVideoReadyScene: View {
         .frame(maxWidth: .infinity, maxHeight: .infinity)
         .background(AnimateTheme.shellBackground.ignoresSafeArea())
         .transition(.opacity.combined(with: .scale(scale: 0.98)))
-        .accessibilityElement(children: .combine)
+        .accessibilityElement(children: .contain)
         .accessibilityLabel("\(title). \(message)")
     }
 
@@ -2740,6 +2740,7 @@ private struct AnimateCreateFinalVideoButtonStyle: ButtonStyle {
 private struct AnimateCreateFinalVideoConfirmationSheet: View {
     let action: AnimateCreateFinalVideoActionPresentation
     let mediaSummary: AnimateCreateMediaSummary
+    let isPreparingPlan: Bool
     let confirm: (Bool) -> Void
     let openCredits: () -> Void
     let cancel: () -> Void
@@ -2749,12 +2750,14 @@ private struct AnimateCreateFinalVideoConfirmationSheet: View {
     init(
         action: AnimateCreateFinalVideoActionPresentation,
         mediaSummary: AnimateCreateMediaSummary,
+        isPreparingPlan: Bool,
         confirm: @escaping (Bool) -> Void,
         openCredits: @escaping () -> Void,
         cancel: @escaping () -> Void
     ) {
         self.action = action
         self.mediaSummary = mediaSummary
+        self.isPreparingPlan = isPreparingPlan
         self.confirm = confirm
         self.openCredits = openCredits
         self.cancel = cancel
@@ -2775,6 +2778,9 @@ private struct AnimateCreateFinalVideoConfirmationSheet: View {
         VStack(alignment: .leading, spacing: 16) {
             header
 
+            if showsPlanPreparation {
+                checkingCostContent
+            } else {
             VStack(spacing: 8) {
                 AnimateCreateConfirmationMetric(
                     title: L10n.string("create.final.confirmSheet.cost"),
@@ -2819,6 +2825,45 @@ private struct AnimateCreateFinalVideoConfirmationSheet: View {
                 }
                 .buttonStyle(AnimateCreateNeutralInlineButtonStyle())
             }
+            }
+        }
+    }
+
+    private var checkingCostContent: some View {
+        VStack(alignment: .leading, spacing: 14) {
+            HStack(spacing: 12) {
+                ProgressView()
+                    .tint(AVBrandColor.accent)
+                    .controlSize(.regular)
+                    .frame(width: 38, height: 38)
+                    .background(AVBrandColor.accent.opacity(0.10), in: Circle())
+
+                VStack(alignment: .leading, spacing: 4) {
+                    Text(L10n.string("create.final.checkingCost"))
+                        .font(.system(size: 16, weight: .black))
+                        .foregroundStyle(AVBrandColor.textPrimary)
+
+                    Text(L10n.string("workflow.final.checkingPlan"))
+                        .font(.system(size: 12, weight: .semibold))
+                        .foregroundStyle(AVBrandColor.textSecondary)
+                        .lineLimit(2)
+                        .fixedSize(horizontal: false, vertical: true)
+                }
+            }
+
+            AnimateCreateConfirmationMetric(
+                title: L10n.string("create.final.confirmSheet.media"),
+                value: mediaUsageTitle,
+                systemImage: "photo.stack"
+            )
+
+            Button(action: cancel) {
+                Text(L10n.string("create.action.notNow"))
+                    .font(.system(size: 14, weight: .black))
+                    .frame(maxWidth: .infinity)
+                    .frame(height: 38)
+            }
+            .buttonStyle(AnimateCreateNeutralInlineButtonStyle())
         }
     }
 
@@ -2924,6 +2969,10 @@ private struct AnimateCreateFinalVideoConfirmationSheet: View {
 
     private var plan: AnimateRenderPlan? {
         action.summary.renderPlan?.plan
+    }
+
+    private var showsPlanPreparation: Bool {
+        isPreparingPlan || !action.canShowConfirmationSheet
     }
 
     private var watermark: AnimateRenderWatermarkPlan? {
