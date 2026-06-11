@@ -15,7 +15,7 @@ final class AnimateInProgressPresentationTests: XCTestCase {
                 AnimateInProgressUnavailablePresentation(
                     systemImage: "person.crop.circle.fill",
                     title: "Sign in to make videos",
-                    message: "In Progress and Gallery unlock once your account is connected."
+                    message: "Create Video and Gallery unlock once your account is connected."
                 )
             )
         )
@@ -34,7 +34,7 @@ final class AnimateInProgressPresentationTests: XCTestCase {
                 AnimateInProgressUnavailablePresentation(
                     systemImage: "rectangle.stack.badge.plus",
                     title: "Nothing here yet",
-                    message: "Active cartoons appear in In Progress. Finished ones appear in Gallery."
+                    message: "Active videos appear here. Finished ones appear in Gallery."
                 )
             )
         )

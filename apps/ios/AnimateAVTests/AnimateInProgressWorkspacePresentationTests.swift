@@ -101,7 +101,7 @@ final class AnimateInProgressWorkspacePresentationTests: XCTestCase {
             workspace: makeWorkspace(video: makeVideo(status: "in_progress"))
         )
 
-        XCTAssertEqual(presentation.tiles.map(\.value), ["In Progress", "Not ready", "Not started"])
+        XCTAssertEqual(presentation.tiles.map(\.value), ["Active", "Not ready", "Not started"])
     }
 
     func testMediaSectionPresentationFormatsTitleEmptyStateAndRows() {

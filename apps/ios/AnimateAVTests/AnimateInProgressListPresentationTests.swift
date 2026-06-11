@@ -26,7 +26,7 @@ final class AnimateInProgressListPresentationTests: XCTestCase {
             selectedVideoId: nil
         )
 
-        XCTAssertEqual(presentation.groups.map(\.title), ["In progress", "Finished"])
+        XCTAssertEqual(presentation.groups.map(\.title), ["Active", "Finished"])
         XCTAssertEqual(presentation.groups[0].rows.map(\.id), ["newer-active", "older-active"])
         XCTAssertEqual(presentation.groups[1].rows.map(\.id), ["done"])
     }
