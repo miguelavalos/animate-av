@@ -63,6 +63,9 @@ struct AnimateGalleryScreen: View {
                                 showInfo: {
                                     videoPendingInfo = video
                                 },
+                                renameVideo: {
+                                    videoPendingRename = video
+                                },
                                 deleteVideo: {
                                     pendingDeletion = .video(video)
                                 }
@@ -496,6 +499,7 @@ private struct AnimateGalleryVideoRow: View {
     let openVideo: () -> Void
     let downloadVideo: () -> Void
     let showInfo: () -> Void
+    let renameVideo: () -> Void
     let deleteVideo: () -> Void
 
     var body: some View {
@@ -527,6 +531,7 @@ private struct AnimateGalleryVideoRow: View {
                             video: video,
                             downloadVideo: downloadVideo,
                             showInfo: showInfo,
+                            renameVideo: renameVideo,
                             deleteVideo: deleteVideo
                         )
                     }
@@ -534,7 +539,7 @@ private struct AnimateGalleryVideoRow: View {
                     Spacer(minLength: 0)
 
                     HStack {
-                        Text(video.lookTitle)
+                        Text(video.title)
                             .font(.system(size: 22, weight: .black))
                             .foregroundStyle(.white)
                             .lineLimit(1)
@@ -604,12 +609,19 @@ private struct AnimateGalleryVideoMenu: View {
     let video: AnimateGalleryVideoPresentation
     let downloadVideo: () -> Void
     let showInfo: () -> Void
+    let renameVideo: () -> Void
     let deleteVideo: () -> Void
 
     var body: some View {
         Menu {
             Button(action: showInfo) {
                 Label(L10n.string("common.info"), systemImage: "info.circle")
+            }
+
+            if video.isLocalFileAvailable {
+                Button(action: renameVideo) {
+                    Label(L10n.string("common.rename"), systemImage: "pencil")
+                }
             }
 
             if video.canDownload {
