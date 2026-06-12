@@ -1091,10 +1091,10 @@ private struct AnimateCreateVideoDirectionCard: View {
             AnimateCreateGuidedStepSheet(
                 footer: { continueButton },
                 content: {
-                guidedStepContent(sheetStep)
+                    guidedStepContent(sheetStep)
                 }
             )
-            .presentationDetents([.large])
+            .presentationDetents(guidedSheetDetents(for: sheetStep))
             .presentationDragIndicator(.visible)
         }
         .fullScreenCover(item: $adjustingInlineMedia) { media in
@@ -1162,6 +1162,10 @@ private struct AnimateCreateVideoDirectionCard: View {
             }
         }
         .accessibilityHidden(true)
+    }
+
+    private func guidedSheetDetents(for step: GuidedStep) -> Set<PresentationDetent> {
+        step == .photoFrame ? [.fraction(0.68), .large] : [.large]
     }
 
     private var guidedSummary: some View {
@@ -2110,10 +2114,11 @@ private struct AnimateCreateGuidedPhotoFrameStep: View {
     @ViewBuilder
     private var photoPreview: some View {
         if let media, let image = UIImage(data: media.data) {
+            let previewSize = previewSize(for: image)
             Image(uiImage: image)
                 .resizable()
-                .scaledToFill()
-                .frame(width: 172, height: 306)
+                .scaledToFit()
+                .frame(width: previewSize.width, height: previewSize.height)
                 .clipShape(RoundedRectangle(cornerRadius: 14, style: .continuous))
                 .overlay {
                     RoundedRectangle(cornerRadius: 14, style: .continuous)
@@ -2155,6 +2160,15 @@ private struct AnimateCreateGuidedPhotoFrameStep: View {
             return L10n.string("create.guided.photoFrame.empty")
         }
         return L10n.string("create.guided.photoFrame.ready")
+    }
+
+    private func previewSize(for image: UIImage) -> CGSize {
+        let maxWidth: CGFloat = 294
+        let maxHeight: CGFloat = 420
+        let imageWidth = max(image.size.width, 1)
+        let imageHeight = max(image.size.height, 1)
+        let scale = min(maxWidth / imageWidth, maxHeight / imageHeight)
+        return CGSize(width: imageWidth * scale, height: imageHeight * scale)
     }
 
 }
