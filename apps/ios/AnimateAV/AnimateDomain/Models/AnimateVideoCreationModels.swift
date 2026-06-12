@@ -128,43 +128,43 @@ enum AnimateVideoLook: String, CaseIterable, Identifiable, Codable {
             family(
                 id: "cuteSocial",
                 looks: [.plush, .sticker, .chibi, .miniAvatar, .toyFigure, .soft3d, .kawaiiPop, .rubberHose],
-                heroAssetName: "LookPlush",
+                heroAssetName: "LookSticker",
                 systemImage: "heart.fill"
             ),
             family(
                 id: "comicsInk",
                 looks: [.americanComic, .euroComic, .heroicComic, .noirInk, .editorialCaricature, .graphicNovel, .sundayStrip, .inkWash],
-                heroAssetName: "LookComic",
+                heroAssetName: "LookHeroicComic",
                 systemImage: "text.bubble.fill"
             ),
             family(
                 id: "animeManga",
                 looks: [.shonenAction, .cozySliceOfLife, .magicalFantasyAnime, .cyberAnime, .blackWhiteManga, .shojoRomance, .superDeformed, .animeWatercolor],
-                heroAssetName: "LookAnime",
+                heroAssetName: "LookCyberAnime",
                 systemImage: "bolt.fill"
             ),
             family(
                 id: "paintedHandmade",
                 looks: [.pencilSketch, .charcoal, .oilPainting, .pastelDream, .storybook, .inkMarker, .crayonKids, .acrylicPoster],
-                heroAssetName: "LookWatercolor",
+                heroAssetName: "LookStorybook",
                 systemImage: "paintbrush.pointed.fill"
             ),
             family(
                 id: "digitalGame",
                 looks: [.pixel, .neon, .flatVector, .lowPoly, .voxelWorld, .synthwave, .glitchArt, .isometricGame],
-                heroAssetName: "LookPixel",
+                heroAssetName: "LookSynthwave",
                 systemImage: "gamecontroller.fill"
             ),
             family(
                 id: "fantasyWorlds",
                 looks: [.fantasyQuest, .darkFantasy, .sciFiSpace, .steampunk, .pirateStory, .fairytale, .mythicEpic, .yellowComedy],
-                heroAssetName: "LookFantasyQuest",
+                heroAssetName: "LookMythicEpic",
                 systemImage: "wand.and.stars"
             ),
             family(
                 id: "craftTexture",
                 looks: [.stopMotion, .feltCraft, .collageCutout, .cardboardTheater, .origami, .stainedGlass, .embroideredTextile, .vintagePoster],
-                heroAssetName: "LookStopMotion",
+                heroAssetName: "LookVintagePoster",
                 systemImage: "scissors"
             )
         ]

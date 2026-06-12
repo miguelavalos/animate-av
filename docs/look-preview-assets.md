@@ -16,6 +16,13 @@ where `indexInFamily` is the look position inside its 8-look family. The
 selector is organized as 8 families of 8 looks. Each family repeats the same 8
 voice identities in voice selector order.
 
+The first family grid also follows that same sequence visually. The family at
+screen position `index` uses the preview asset from `family.looks[index]` as
+its `heroAssetName`, so the 8 family tiles represent the same progression as
+the voice selector: child girl, child boy, teen girl, teen boy, adult woman,
+adult man, older woman, older man. Do not point every family hero at position
+0; that makes the first screen repeat the same source identity.
+
 Final look previews have been completed for all 64 looks. Every
 `AnimateVideoLook.assetName` points to a stable, unique
 `Look<PascalCaseLook>.imageset` entry, and placeholder reuse is no longer
