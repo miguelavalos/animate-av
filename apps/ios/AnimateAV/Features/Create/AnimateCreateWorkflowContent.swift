@@ -4612,30 +4612,36 @@ private struct AnimateCreateLookFamilyRail: View {
     let selectFamily: (AnimateVideoLookFamily) -> Void
 
     var body: some View {
-        ScrollView(.horizontal) {
-            HStack(spacing: 10) {
-                ForEach(families) { family in
-                    Button {
-                        selectFamily(family)
-                    } label: {
-                        Image(systemName: family.systemImage)
-                            .font(.system(size: 13, weight: .black))
-                            .foregroundStyle(iconColor(for: family))
-                            .frame(width: 34, height: 34)
-                            .background(backgroundColor(for: family), in: Circle())
-                            .overlay {
-                                Circle()
-                                    .stroke(borderColor(for: family), lineWidth: selectedFamily.id == family.id ? 2 : 1)
-                            }
-                    }
-                    .buttonStyle(.plain)
-                    .accessibilityLabel(L10n.string("create.look.family.accessibility", family.title))
+        HStack(spacing: 0) {
+            let indexedFamilies = Array(families.enumerated())
+            ForEach(indexedFamilies, id: \.element.id) { index, family in
+                familyButton(family)
+
+                if index < indexedFamilies.count - 1 {
+                    Spacer(minLength: 10)
                 }
             }
-            .padding(.horizontal, 2)
-            .padding(.vertical, 4)
         }
-        .scrollIndicators(.hidden)
+        .padding(.horizontal, 2)
+        .padding(.vertical, 4)
+    }
+
+    private func familyButton(_ family: AnimateVideoLookFamily) -> some View {
+        Button {
+            selectFamily(family)
+        } label: {
+            Image(systemName: family.systemImage)
+                .font(.system(size: 13, weight: .black))
+                .foregroundStyle(iconColor(for: family))
+                .frame(width: 34, height: 34)
+                .background(backgroundColor(for: family), in: Circle())
+                .overlay {
+                    Circle()
+                        .stroke(borderColor(for: family), lineWidth: selectedFamily.id == family.id ? 2 : 1)
+                }
+        }
+        .buttonStyle(.plain)
+        .accessibilityLabel(L10n.string("create.look.family.accessibility", family.title))
     }
 
     private func iconColor(for family: AnimateVideoLookFamily) -> Color {
