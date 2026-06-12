@@ -977,10 +977,16 @@ private struct AnimateGalleryVideoPlayerItem: Identifiable {
 private struct AnimateGalleryVideoPlayerSheet: View {
     let item: AnimateGalleryVideoPlayerItem
     @Environment(\.dismiss) private var dismiss
+    @State private var player: AVPlayer
+
+    init(item: AnimateGalleryVideoPlayerItem) {
+        self.item = item
+        _player = State(initialValue: AVPlayer(url: item.url))
+    }
 
     var body: some View {
         NavigationStack {
-            VideoPlayer(player: AVPlayer(url: item.url))
+            VideoPlayer(player: player)
                 .ignoresSafeArea(edges: .bottom)
                 .navigationTitle(item.title)
                 .navigationBarTitleDisplayMode(.inline)
@@ -991,6 +997,13 @@ private struct AnimateGalleryVideoPlayerSheet: View {
                         }
                     }
                 }
+        }
+        .onAppear {
+            player.play()
+        }
+        .onDisappear {
+            player.pause()
+            player.replaceCurrentItem(with: nil)
         }
     }
 }

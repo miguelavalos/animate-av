@@ -7,6 +7,8 @@ struct AnimateArtifact: Identifiable, Decodable, Equatable {
     let r2Key: String
     let title: String?
     let look: String?
+    let videoJobId: String?
+    let imageJobId: String?
     let status: String
     let durationSeconds: Double?
     let creditCost: Int?
@@ -21,6 +23,8 @@ struct AnimateArtifact: Identifiable, Decodable, Equatable {
         r2Key: String,
         title: String? = nil,
         look: String? = nil,
+        videoJobId: String? = nil,
+        imageJobId: String? = nil,
         status: String,
         durationSeconds: Double? = nil,
         creditCost: Int? = nil,
@@ -34,6 +38,8 @@ struct AnimateArtifact: Identifiable, Decodable, Equatable {
         self.r2Key = r2Key
         self.title = title
         self.look = look
+        self.videoJobId = videoJobId
+        self.imageJobId = imageJobId
         self.status = status
         self.durationSeconds = durationSeconds
         self.creditCost = creditCost
@@ -49,6 +55,8 @@ struct AnimateArtifact: Identifiable, Decodable, Equatable {
         case r2Key
         case title
         case look
+        case videoJobId
+        case imageJobId
         case status
         case durationSeconds
         case creditCost
@@ -66,6 +74,8 @@ struct AnimateArtifact: Identifiable, Decodable, Equatable {
         r2Key = try container.decode(String.self, forKey: .r2Key)
         title = try container.decodeIfPresent(String.self, forKey: .title)
         look = try container.decodeIfPresent(String.self, forKey: .look)
+        videoJobId = try container.decodeIfPresent(String.self, forKey: .videoJobId)
+        imageJobId = try container.decodeIfPresent(String.self, forKey: .imageJobId)
         status = try container.decode(String.self, forKey: .status)
         durationSeconds = try container.decodeIfPresent(Double.self, forKey: .durationSeconds)
         creditCost = try container.decodeIfPresent(Int.self, forKey: .creditCost)

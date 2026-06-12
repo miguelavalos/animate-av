@@ -224,6 +224,10 @@ final class AnimateGalleryViewModel: ObservableObject {
                     bearerToken: bearerToken
                 )
                 let temporaryFileURL = try await finalRenderClient.downloadFinalArtifact(from: download)
+                let generatedImageLocalRelativePath = await self?.downloadRelatedGeneratedImage(
+                    for: remoteArtifact,
+                    bearerToken: bearerToken
+                ) ?? video.record.generatedImageLocalRelativePath
                 let record = try self?.galleryStore.saveDownloadedVideo(
                     temporaryFileURL: temporaryFileURL,
                     videoId: video.record.videoId,
@@ -231,7 +235,7 @@ final class AnimateGalleryViewModel: ObservableObject {
                     title: video.title,
                     r2Key: download.r2Key ?? remoteArtifact.r2Key,
                     sourceImageLocalRelativePath: video.record.sourceImageLocalRelativePath,
-                    generatedImageLocalRelativePath: video.record.generatedImageLocalRelativePath,
+                    generatedImageLocalRelativePath: generatedImageLocalRelativePath,
                     createdAt: Date()
                 )
                 if let record {
@@ -242,6 +246,48 @@ final class AnimateGalleryViewModel: ObservableObject {
             } catch {
                 self?.statusMessage = L10n.string("gallery.video.downloadFailed")
             }
+        }
+    }
+
+    private func downloadRelatedGeneratedImage(
+        for finalVideoArtifact: AnimateArtifact,
+        bearerToken: String
+    ) async -> String? {
+        guard let finalRenderClient,
+              let generatedImageArtifact = relatedGeneratedImageArtifact(for: finalVideoArtifact)
+        else { return nil }
+
+        let artifactId = generatedImageArtifact.workflowArtifactId ?? generatedImageArtifact.id
+        if let existingRecord = galleryStore.loadImageRecords().first(where: { $0.artifactId == artifactId }),
+           galleryStore.localFileExists(for: existingRecord) {
+            return existingRecord.localRelativePath
+        }
+
+        do {
+            let download = try await finalRenderClient.prepareImageArtifactDownload(
+                artifactId: artifactId,
+                bearerToken: bearerToken
+            )
+            let temporaryFileURL = try await finalRenderClient.downloadFinalArtifact(from: download)
+            let record = try galleryStore.saveDownloadedImage(
+                temporaryFileURL: temporaryFileURL,
+                artifactId: artifactId,
+                title: L10n.string("gallery.image.defaultTitle"),
+                look: generatedImageArtifact.look,
+                r2Key: download.r2Key ?? generatedImageArtifact.r2Key,
+                createdAt: Date(timeIntervalSince1970: generatedImageArtifact.createdAt / 1000)
+            )
+            galleryStore.addImageRecord(record)
+            return record.localRelativePath
+        } catch {
+            return nil
+        }
+    }
+
+    private func relatedGeneratedImageArtifact(for finalVideoArtifact: AnimateArtifact) -> AnimateArtifact? {
+        guard let videoJobId = finalVideoArtifact.videoJobId else { return nil }
+        return remoteArtifacts.first {
+            $0.kind == "generated_image" && $0.videoJobId == videoJobId
         }
     }
 
