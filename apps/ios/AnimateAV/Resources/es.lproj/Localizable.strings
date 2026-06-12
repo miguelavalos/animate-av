@@ -1042,7 +1042,7 @@
 "create.mediaAdjust.changePhoto" = "Cambiar foto";
 "create.mediaAdjust.crop" = "Ajustar encuadre";
 "create.mediaAdjust.useCrop" = "Guardar encuadre";
-"create.mediaAdjust.fullImage" = "Original";
+"create.mediaAdjust.fullImage" = "Foto completa";
 "create.mediaAdjust.restoreOriginal" = "Restaurar original";
 "create.mediaAdjust.frameApplied" = "Encuadre aplicado";
 "create.mediaAdjust.reset" = "Reiniciar";

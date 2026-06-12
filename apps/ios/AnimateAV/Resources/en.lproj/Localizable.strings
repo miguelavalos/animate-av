@@ -1045,7 +1045,7 @@
 "create.mediaAdjust.adjustFrame" = "Edit frame";
 "create.mediaAdjust.useCrop" = "Save frame";
 "create.mediaAdjust.useFrame" = "Save frame";
-"create.mediaAdjust.fullImage" = "Original";
+"create.mediaAdjust.fullImage" = "Full photo";
 "create.mediaAdjust.restoreOriginal" = "Restore original";
 "create.mediaAdjust.frameApplied" = "Frame applied";
 "create.mediaAdjust.reset" = "Reset";

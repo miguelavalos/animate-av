@@ -1113,13 +1113,13 @@ private struct AnimateCreateVideoDirectionCard: View {
                 save: { adjustedData in
                     updateMediaPhotoData(media, adjustedData)
                     adjustingInlineMedia = nil
-                    guideState.step = .look
-                    activeGuidedSheet = .look
+                    guideState.step = .photoFrame
+                    activeGuidedSheet = .photoFrame
                 },
                 continueWithOriginal: {
                     adjustingInlineMedia = nil
-                    guideState.step = .look
-                    activeGuidedSheet = .look
+                    guideState.step = .photoFrame
+                    activeGuidedSheet = .photoFrame
                 },
                 changePhoto: {
                     adjustingInlineMedia = nil
