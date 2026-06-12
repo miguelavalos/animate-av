@@ -4613,7 +4613,7 @@ private struct AnimateCreateLookFamilyRail: View {
 
     var body: some View {
         ScrollView(.horizontal) {
-            HStack(spacing: 8) {
+            HStack(spacing: 10) {
                 ForEach(families) { family in
                     Button {
                         selectFamily(family)
@@ -4632,7 +4632,8 @@ private struct AnimateCreateLookFamilyRail: View {
                     .accessibilityLabel(L10n.string("create.look.family.accessibility", family.title))
                 }
             }
-            .padding(.vertical, 1)
+            .padding(.horizontal, 2)
+            .padding(.vertical, 4)
         }
         .scrollIndicators(.hidden)
     }
