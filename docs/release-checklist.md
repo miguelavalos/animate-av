@@ -20,8 +20,11 @@ in the private AVALSYS suite.
   before the signed smoke.
 - [ ] Focused tests pass or failures are documented in the private handoff.
 - [ ] Create Video no-spend smoke reaches
-  `Photo / Frame -> Look -> Movement -> optional Message / Voice -> confirmation`
+  `Photo / Frame -> Look -> Movement -> optional Animation Direction -> optional Message / Voice -> confirmation`
   using fixture/mock final-render routes, with no paid provider calls.
+- [ ] Photo / Frame smoke covers choose photo, adjust frame, re-enter frame
+  adjustment from the local original, restore original when available, change
+  photo, and continue to Look without hidden sheets or paid provider calls.
 - [ ] `scripts/check-public-hygiene.sh` passes for normal public repo changes.
 - [ ] `scripts/check-public-release-readiness.sh` passes before App Store release
   candidate handoff.

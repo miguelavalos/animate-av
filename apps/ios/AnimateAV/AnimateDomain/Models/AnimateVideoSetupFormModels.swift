@@ -258,6 +258,7 @@ struct AnimateVideoSetupForm: Equatable {
     var voiceProfile: AnimateVideoVoiceProfile = .adultWoman
     var voiceTone: AnimateVideoVoiceTone = .warm
     var movementDirection: AnimateVideoMovementDirection = .subtleFaithful
+    var animationDirection = ""
 
     var activeMessageText: String? {
         guard hasMessage else { return nil }
@@ -324,6 +325,7 @@ struct AnimateVideoSetupForm: Equatable {
             && voiceProfile == other.voiceProfile
             && voiceTone == other.voiceTone
             && movementDirection == other.movementDirection
+            && animationDirection.trimmingCharacters(in: .whitespacesAndNewlines) == other.animationDirection.trimmingCharacters(in: .whitespacesAndNewlines)
     }
 }
 

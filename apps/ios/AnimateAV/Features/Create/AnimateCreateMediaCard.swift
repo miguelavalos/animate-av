@@ -242,19 +242,13 @@ struct AnimateCreateMediaManagerSheet: View {
                     adjustingMedia = nil
                     hasPresentedInitialAdjuster = false
                     Task { @MainActor in
-                        await Task.yield()
+                        try? await Task.sleep(nanoseconds: 350_000_000)
                         chooseManually()
                     }
                 },
                 cancel: {
                     adjustingMedia = nil
-                    hasPresentedInitialAdjuster = false
-                    Task { @MainActor in
-                        await Task.yield()
-                        dismiss()
-                        await Task.yield()
-                        discardVideoCreation()
-                    }
+                    hasPresentedInitialAdjuster = true
                 }
             )
         }
@@ -599,16 +593,8 @@ struct AnimateCreatePhotoAdjustView: View {
     let changePhoto: () -> Void
     let cancel: () -> Void
 
-    @State private var mode: Mode = .crop
-    @State private var scale: CGFloat = 1
-    @State private var lastScale: CGFloat = 1
-    @State private var offset: CGSize = .zero
-    @State private var lastOffset: CGSize = .zero
-
-    private enum Mode {
-        case review
-        case crop
-    }
+    @State private var cropRect = CGRect(x: 0.32, y: 0.18, width: 0.36, height: 0.64)
+    @State private var activeDragCropRect = CGRect(x: 0.32, y: 0.18, width: 0.36, height: 0.64)
 
     private var image: UIImage? {
         UIImage(data: media.data)
@@ -618,188 +604,180 @@ struct AnimateCreatePhotoAdjustView: View {
         ZStack {
             Color.black.ignoresSafeArea()
 
-            VStack(spacing: 18) {
+            VStack(spacing: 14) {
                 header
 
-                if mode == .review {
-                    reviewImage
-                } else {
-                    cropEditor
-                }
+                cropEditor
 
                 actionBar
             }
-            .padding(.horizontal, 18)
-            .padding(.top, 56)
-            .padding(.bottom, 24)
+            .padding(.horizontal, 14)
+            .padding(.top, 44)
+            .padding(.bottom, 16)
+        }
+        .onAppear {
+            cropRect = constrainedCropRect(cropRect)
+            activeDragCropRect = cropRect
         }
     }
 
     private var header: some View {
         HStack {
             Button(action: cancel) {
-                Text(L10n.string("common.close"))
-                    .font(.system(size: 15, weight: .bold))
+                Text(L10n.string("common.cancel"))
+                    .font(.system(size: 16, weight: .semibold))
                     .foregroundStyle(.white)
-                    .padding(.horizontal, 16)
-                    .frame(height: 42)
-                    .background(.white.opacity(0.14), in: Capsule())
+                    .frame(minWidth: 68, alignment: .leading)
             }
             .buttonStyle(.plain)
 
             Spacer()
 
             Text(L10n.string("create.mediaAdjust.title"))
-                .font(.system(size: 17, weight: .black))
+                .font(.system(size: 17, weight: .semibold))
                 .foregroundStyle(.white)
 
             Spacer()
 
-            Color.clear
-                .frame(width: 132, height: 42)
-        }
-    }
-
-    private var reviewImage: some View {
-        VStack(spacing: 14) {
-            Spacer(minLength: 0)
-
-            if let image {
-                Image(uiImage: image)
-                    .resizable()
-                    .scaledToFit()
-                    .clipShape(RoundedRectangle(cornerRadius: 12, style: .continuous))
-                    .overlay {
-                        RoundedRectangle(cornerRadius: 12, style: .continuous)
-                            .stroke(.white.opacity(0.18), lineWidth: 1)
-                    }
-            } else {
-                fallbackImage
+            Button(action: saveCrop) {
+                Text(L10n.string("common.done"))
+                    .font(.system(size: 16, weight: .bold))
+                    .foregroundStyle(AVBrandColor.accent)
+                    .frame(minWidth: 68, alignment: .trailing)
             }
-
-            Text(L10n.string("create.mediaAdjust.fullImageDetail"))
-                .font(.system(size: 14, weight: .semibold))
-                .foregroundStyle(.white.opacity(0.74))
-                .multilineTextAlignment(.center)
-                .fixedSize(horizontal: false, vertical: true)
-
-            Spacer(minLength: 0)
+            .buttonStyle(.plain)
         }
-        .frame(maxWidth: .infinity, maxHeight: .infinity)
     }
 
     private var cropEditor: some View {
         GeometryReader { proxy in
-            let cropSize = cropFrameSize(in: proxy.size)
+            let imageRect = fittedImageRect(in: proxy.size)
+            let absoluteCropRect = absoluteCropRect(in: imageRect)
 
             ZStack {
-                Color.black.opacity(0.95)
+                Color.black
 
                 if let image {
                     Image(uiImage: image)
                         .resizable()
                         .scaledToFill()
-                        .frame(width: cropSize.width, height: cropSize.height)
-                        .scaleEffect(scale)
-                        .offset(offset)
+                        .frame(width: proxy.size.width, height: proxy.size.height)
+                        .blur(radius: 18)
+                        .opacity(0.18)
                         .clipped()
-                        .frame(width: cropSize.width, height: cropSize.height)
-                        .clipShape(RoundedRectangle(cornerRadius: 16, style: .continuous))
-                        .overlay {
-                            RoundedRectangle(cornerRadius: 16, style: .continuous)
-                                .stroke(.white.opacity(0.86), lineWidth: 2)
-                        }
-                        .gesture(pinchGesture)
-                        .simultaneousGesture(dragGesture)
+
+                    Image(uiImage: image)
+                        .resizable()
+                        .scaledToFit()
+                        .frame(width: imageRect.width, height: imageRect.height)
+                        .position(x: imageRect.midX, y: imageRect.midY)
+                        .clipShape(RoundedRectangle(cornerRadius: 14, style: .continuous))
+
+                    cropOverlay(imageRect: imageRect, cropRect: absoluteCropRect)
                 } else {
                     fallbackImage
-                        .frame(width: cropSize.width, height: cropSize.height)
+                        .frame(width: proxy.size.width, height: proxy.size.height)
                 }
             }
             .frame(width: proxy.size.width, height: proxy.size.height)
-            .overlay(alignment: .bottom) {
-                Text(L10n.string("create.mediaAdjust.frameDetail"))
-                    .font(.system(size: 13, weight: .semibold))
-                    .foregroundStyle(.white.opacity(0.74))
-                    .multilineTextAlignment(.center)
-                    .padding(.horizontal, 16)
-                    .padding(.bottom, 8)
-            }
         }
-        .frame(maxWidth: .infinity, maxHeight: .infinity)
+        .frame(maxWidth: .infinity)
+        .frame(maxHeight: .infinity)
     }
 
     private var actionBar: some View {
-        VStack(spacing: 10) {
-            if mode == .review {
-                Button(action: continueWithOriginal) {
-                    Text(L10n.string("create.mediaAdjust.continueFull"))
-                        .font(.system(size: 16, weight: .black))
-                        .foregroundStyle(AVBrandColor.textPrimary)
-                        .frame(maxWidth: .infinity)
-                        .frame(height: 50)
-                        .background(.white, in: Capsule())
+        HStack {
+            Spacer(minLength: 0)
+            Button(action: resetCrop) {
+                VStack(spacing: 5) {
+                    Image(systemName: "arrow.counterclockwise")
+                        .font(.system(size: 20, weight: .semibold))
+                    Text(L10n.string("create.mediaAdjust.reset"))
+                        .font(.caption.weight(.semibold))
                 }
-                .buttonStyle(.plain)
-
-                Button {
-                    withAnimation(.spring(response: 0.32, dampingFraction: 0.86)) {
-                        mode = .crop
-                    }
-                } label: {
-                    Label(L10n.string("create.mediaAdjust.adjustFrame"), systemImage: "crop")
-                        .font(.system(size: 15, weight: .black))
-                        .foregroundStyle(.white)
-                        .frame(maxWidth: .infinity)
-                        .frame(height: 46)
-                        .background(.white.opacity(0.14), in: Capsule())
-                }
-                .buttonStyle(.plain)
-
-                Button(action: changePhoto) {
-                    Label(L10n.string("create.mediaAdjust.changePhoto"), systemImage: "photo.on.rectangle")
-                        .font(.system(size: 15, weight: .black))
-                        .foregroundStyle(.white)
-                        .frame(maxWidth: .infinity)
-                        .frame(height: 46)
-                        .background(.white.opacity(0.14), in: Capsule())
-                }
-                .buttonStyle(.plain)
-            } else {
-                Button(action: saveCrop) {
-                    Text(L10n.string("create.mediaAdjust.useFrame"))
-                        .font(.system(size: 16, weight: .black))
-                        .foregroundStyle(AVBrandColor.textPrimary)
-                        .frame(maxWidth: .infinity)
-                        .frame(height: 50)
-                        .background(.white, in: Capsule())
-                }
-                .buttonStyle(.plain)
-
-                HStack(spacing: 10) {
-                    Button {
-                        continueWithOriginal()
-                    } label: {
-                        Text(L10n.string("create.mediaAdjust.fullImage"))
-                            .font(.system(size: 14, weight: .black))
-                            .foregroundStyle(.white)
-                            .frame(maxWidth: .infinity)
-                            .frame(height: 44)
-                            .background(.white.opacity(0.14), in: Capsule())
-                    }
-                    .buttonStyle(.plain)
-
-                    Button(action: resetCrop) {
-                        Text(L10n.string("create.mediaAdjust.reset"))
-                            .font(.system(size: 14, weight: .black))
-                            .foregroundStyle(.white)
-                            .frame(maxWidth: .infinity)
-                            .frame(height: 44)
-                            .background(.white.opacity(0.14), in: Capsule())
-                    }
-                    .buttonStyle(.plain)
-                }
+                .foregroundStyle(.white)
+                .frame(width: 88, height: 52)
             }
+            .buttonStyle(.plain)
+            Spacer(minLength: 0)
+        }
+        .frame(maxWidth: .infinity)
+    }
+
+    private func cropOverlay(imageRect: CGRect, cropRect: CGRect) -> some View {
+        ZStack {
+            Path { path in
+                path.addRect(imageRect)
+                path.addRect(cropRect)
+            }
+            .fill(Color.black.opacity(0.48), style: FillStyle(eoFill: true))
+
+            cropGrid(in: cropRect)
+                .stroke(.white.opacity(0.55), lineWidth: 0.8)
+
+            Rectangle()
+                .fill(Color.white.opacity(0.001))
+                .frame(width: cropRect.width, height: cropRect.height)
+                .position(x: cropRect.midX, y: cropRect.midY)
+                .contentShape(Rectangle())
+                .highPriorityGesture(moveCropGesture(in: imageRect))
+
+            Rectangle()
+                .stroke(.black.opacity(0.88), lineWidth: 3)
+                .frame(width: cropRect.width, height: cropRect.height)
+                .position(x: cropRect.midX, y: cropRect.midY)
+
+            Rectangle()
+                .stroke(.white.opacity(0.38), lineWidth: 1)
+                .frame(width: cropRect.width, height: cropRect.height)
+                .position(x: cropRect.midX, y: cropRect.midY)
+
+            ForEach(CropHandle.allCases) { handle in
+                cropHandle(handle, cropRect: cropRect, imageRect: imageRect)
+            }
+        }
+    }
+
+    private func cropGrid(in rect: CGRect) -> Path {
+        Path { path in
+            for fraction in [CGFloat(1.0 / 3.0), CGFloat(2.0 / 3.0)] {
+                let x = rect.minX + rect.width * fraction
+                path.move(to: CGPoint(x: x, y: rect.minY))
+                path.addLine(to: CGPoint(x: x, y: rect.maxY))
+
+                let y = rect.minY + rect.height * fraction
+                path.move(to: CGPoint(x: rect.minX, y: y))
+                path.addLine(to: CGPoint(x: rect.maxX, y: y))
+            }
+        }
+    }
+
+    private func cropHandle(_ handle: CropHandle, cropRect: CGRect, imageRect: CGRect) -> some View {
+        ZStack {
+            Rectangle()
+                .fill(Color.white.opacity(0.001))
+                .frame(width: handle.hitSize(in: cropRect).width, height: handle.hitSize(in: cropRect).height)
+
+            cropHandleShape(handle)
+        }
+        .position(handle.position(in: cropRect))
+        .contentShape(Rectangle())
+        .highPriorityGesture(resizeCropGesture(handle: handle, imageRect: imageRect))
+    }
+
+    @ViewBuilder
+    private func cropHandleShape(_ handle: CropHandle) -> some View {
+        if handle.isCorner {
+            CropCornerHandle(corner: handle)
+                .frame(width: 34, height: 34)
+        } else {
+            RoundedRectangle(cornerRadius: 1, style: .continuous)
+                .fill(.black.opacity(0.92))
+                .frame(width: handle.isHorizontalEdge ? 42 : 4, height: handle.isHorizontalEdge ? 4 : 42)
+                .overlay {
+                    RoundedRectangle(cornerRadius: 1, style: .continuous)
+                        .stroke(.white.opacity(0.35), lineWidth: 0.8)
+                }
         }
     }
 
@@ -809,39 +787,52 @@ struct AnimateCreatePhotoAdjustView: View {
                 .fill(.white.opacity(0.12))
             Image(systemName: "photo.fill")
                 .font(.system(size: 36, weight: .bold))
-                .foregroundStyle(.white.opacity(0.74))
+                .foregroundStyle(.white.opacity(0.75))
         }
     }
 
-    private var pinchGesture: some Gesture {
-        MagnificationGesture()
-            .onChanged { value in
-                scale = min(max(lastScale * value, 1), 5)
-            }
-            .onEnded { _ in
-                lastScale = scale
-            }
-    }
-
-    private var dragGesture: some Gesture {
+    private func moveCropGesture(in imageRect: CGRect) -> some Gesture {
         DragGesture()
             .onChanged { value in
-                offset = CGSize(
-                    width: lastOffset.width + value.translation.width,
-                    height: lastOffset.height + value.translation.height
+                let dx = value.translation.width / max(imageRect.width, 1)
+                let dy = value.translation.height / max(imageRect.height, 1)
+                cropRect = constrainedCropRect(
+                    CGRect(
+                        x: activeDragCropRect.minX + dx,
+                        y: activeDragCropRect.minY + dy,
+                        width: activeDragCropRect.width,
+                        height: activeDragCropRect.height
+                    )
                 )
             }
             .onEnded { _ in
-                lastOffset = offset
+                activeDragCropRect = cropRect
+            }
+    }
+
+    private func resizeCropGesture(handle: CropHandle, imageRect: CGRect) -> some Gesture {
+        DragGesture()
+            .onChanged { value in
+                let dx = value.translation.width / max(imageRect.width, 1)
+                let dy = value.translation.height / max(imageRect.height, 1)
+                cropRect = constrainedCropRect(
+                    handle.resized(
+                        activeDragCropRect,
+                        dx: dx,
+                        dy: dy,
+                        aspect: normalizedCropAspect()
+                    )
+                )
+            }
+            .onEnded { _ in
+                activeDragCropRect = cropRect
             }
     }
 
     private func resetCrop() {
         withAnimation(.spring(response: 0.28, dampingFraction: 0.86)) {
-            scale = 1
-            lastScale = 1
-            offset = .zero
-            lastOffset = .zero
+            cropRect = defaultCropRect()
+            activeDragCropRect = cropRect
         }
     }
 
@@ -861,33 +852,238 @@ struct AnimateCreatePhotoAdjustView: View {
             UIColor.black.setFill()
             context.fill(CGRect(origin: .zero, size: outputSize))
 
-            let baseScale = max(
-                outputSize.width / image.size.width,
-                outputSize.height / image.size.height
+            let sourceRect = CGRect(
+                x: cropRect.minX * image.size.width,
+                y: cropRect.minY * image.size.height,
+                width: cropRect.width * image.size.width,
+                height: cropRect.height * image.size.height
             )
-            let drawSize = CGSize(
-                width: image.size.width * baseScale * scale,
-                height: image.size.height * baseScale * scale
+            let scale = max(
+                outputSize.width / max(sourceRect.width, 1),
+                outputSize.height / max(sourceRect.height, 1)
             )
-            let offsetScale = outputSize.width / max(cropFrameSize(in: CGSize(width: 360, height: 640)).width, 1)
-            let drawOrigin = CGPoint(
-                x: (outputSize.width - drawSize.width) / 2 + offset.width * offsetScale,
-                y: (outputSize.height - drawSize.height) / 2 + offset.height * offsetScale
+            let scaledSourceSize = CGSize(width: sourceRect.width * scale, height: sourceRect.height * scale)
+            let drawRect = CGRect(
+                x: (outputSize.width - scaledSourceSize.width) / 2 - sourceRect.minX * scale,
+                y: (outputSize.height - scaledSourceSize.height) / 2 - sourceRect.minY * scale,
+                width: image.size.width * scale,
+                height: image.size.height * scale
             )
-            image.draw(in: CGRect(origin: drawOrigin, size: drawSize))
+            image.draw(in: drawRect)
         }
         return rendered.jpegData(compressionQuality: 0.92)
     }
 
-    private func cropFrameSize(in size: CGSize) -> CGSize {
-        let maxWidth = min(size.width, size.height * 9 / 16)
-        let width = min(maxWidth, size.width - 8)
-        let height = width * 16 / 9
-        if height <= size.height - 36 {
-            return CGSize(width: width, height: height)
+    private func fittedImageRect(in size: CGSize) -> CGRect {
+        guard let image else {
+            return CGRect(origin: .zero, size: size)
         }
-        let boundedHeight = max(size.height - 36, 180)
-        return CGSize(width: boundedHeight * 9 / 16, height: boundedHeight)
+        let available = CGSize(width: max(size.width - 4, 1), height: max(size.height - 4, 1))
+        let imageAspect = image.size.width / max(image.size.height, 1)
+        let availableAspect = available.width / max(available.height, 1)
+        let fittedSize: CGSize
+        if imageAspect > availableAspect {
+            fittedSize = CGSize(width: available.width, height: available.width / imageAspect)
+        } else {
+            fittedSize = CGSize(width: available.height * imageAspect, height: available.height)
+        }
+        return CGRect(
+            x: (size.width - fittedSize.width) / 2,
+            y: (size.height - fittedSize.height) / 2,
+            width: fittedSize.width,
+            height: fittedSize.height
+        )
+    }
+
+    private func absoluteCropRect(in imageRect: CGRect) -> CGRect {
+        CGRect(
+            x: imageRect.minX + cropRect.minX * imageRect.width,
+            y: imageRect.minY + cropRect.minY * imageRect.height,
+            width: cropRect.width * imageRect.width,
+            height: cropRect.height * imageRect.height
+        )
+    }
+
+    private func defaultCropRect() -> CGRect {
+        constrainedCropRect(CGRect(x: 0.32, y: 0.18, width: 0.36, height: 0.64))
+    }
+
+    private func constrainedCropRect(_ rect: CGRect) -> CGRect {
+        let normalizedAspect = normalizedCropAspect()
+        var width = min(max(rect.width, 0.24), 0.90)
+        var height = width / normalizedAspect
+        if height > 0.90 {
+            height = 0.90
+            width = height * normalizedAspect
+        }
+        let x = min(max(rect.midX - width / 2, 0), 1 - width)
+        let y = min(max(rect.midY - height / 2, 0), 1 - height)
+        return CGRect(x: x, y: y, width: width, height: height)
+    }
+
+    private func normalizedCropAspect() -> CGFloat {
+        let outputAspect = CGFloat(9.0 / 16.0)
+        let imageAspect = image.map { $0.size.width / max($0.size.height, 1) } ?? 1
+        return outputAspect / max(imageAspect, 0.001)
+    }
+}
+
+private enum CropHandle: CaseIterable, Identifiable {
+    case top
+    case bottom
+    case leading
+    case trailing
+    case topLeading
+    case topTrailing
+    case bottomLeading
+    case bottomTrailing
+
+    var id: String { String(describing: self) }
+
+    var isCorner: Bool {
+        switch self {
+        case .topLeading, .topTrailing, .bottomLeading, .bottomTrailing:
+            true
+        case .top, .bottom, .leading, .trailing:
+            false
+        }
+    }
+
+    var isHorizontalEdge: Bool {
+        self == .top || self == .bottom
+    }
+
+    func position(in rect: CGRect) -> CGPoint {
+        switch self {
+        case .top:
+            CGPoint(x: rect.midX, y: rect.minY)
+        case .bottom:
+            CGPoint(x: rect.midX, y: rect.maxY)
+        case .leading:
+            CGPoint(x: rect.minX, y: rect.midY)
+        case .trailing:
+            CGPoint(x: rect.maxX, y: rect.midY)
+        case .topLeading:
+            CGPoint(x: rect.minX, y: rect.minY)
+        case .topTrailing:
+            CGPoint(x: rect.maxX, y: rect.minY)
+        case .bottomLeading:
+            CGPoint(x: rect.minX, y: rect.maxY)
+        case .bottomTrailing:
+            CGPoint(x: rect.maxX, y: rect.maxY)
+        }
+    }
+
+    func hitSize(in rect: CGRect) -> CGSize {
+        switch self {
+        case .top, .bottom:
+            CGSize(width: max(rect.width - 72, 44), height: 64)
+        case .leading, .trailing:
+            CGSize(width: 64, height: max(rect.height - 72, 44))
+        case .topLeading, .topTrailing, .bottomLeading, .bottomTrailing:
+            CGSize(width: 72, height: 72)
+        }
+    }
+
+    func resized(_ rect: CGRect, dx: CGFloat, dy: CGFloat, aspect: CGFloat) -> CGRect {
+        let signedDelta: CGFloat
+        switch self {
+        case .top:
+            signedDelta = -dy * aspect
+        case .bottom:
+            signedDelta = dy * aspect
+        case .leading:
+            signedDelta = -dx
+        case .trailing:
+            signedDelta = dx
+        case .topLeading:
+            signedDelta = min(-dx, -dy * aspect)
+        case .topTrailing:
+            signedDelta = min(dx, -dy * aspect)
+        case .bottomLeading:
+            signedDelta = min(-dx, dy * aspect)
+        case .bottomTrailing:
+            signedDelta = min(dx, dy * aspect)
+        }
+
+        let width = rect.width + signedDelta
+        let height = width / aspect
+
+        switch self {
+        case .top:
+            return CGRect(x: rect.midX - width / 2, y: rect.maxY - height, width: width, height: height)
+        case .bottom:
+            return CGRect(x: rect.midX - width / 2, y: rect.minY, width: width, height: height)
+        case .leading:
+            return CGRect(x: rect.maxX - width, y: rect.midY - height / 2, width: width, height: height)
+        case .trailing:
+            return CGRect(x: rect.minX, y: rect.midY - height / 2, width: width, height: height)
+        case .topLeading:
+            return CGRect(x: rect.maxX - width, y: rect.maxY - height, width: width, height: height)
+        case .topTrailing:
+            return CGRect(x: rect.minX, y: rect.maxY - height, width: width, height: height)
+        case .bottomLeading:
+            return CGRect(x: rect.maxX - width, y: rect.minY, width: width, height: height)
+        case .bottomTrailing:
+            return CGRect(x: rect.minX, y: rect.minY, width: width, height: height)
+        }
+    }
+}
+
+private struct CropCornerHandle: View {
+    let corner: CropHandle
+
+    var body: some View {
+        Path { path in
+            let length: CGFloat = 18
+            switch corner {
+            case .topLeading:
+                path.move(to: CGPoint(x: 0, y: length))
+                path.addLine(to: .zero)
+                path.addLine(to: CGPoint(x: length, y: 0))
+            case .topTrailing:
+                path.move(to: CGPoint(x: 34 - length, y: 0))
+                path.addLine(to: CGPoint(x: 34, y: 0))
+                path.addLine(to: CGPoint(x: 34, y: length))
+            case .bottomLeading:
+                path.move(to: CGPoint(x: 0, y: 34 - length))
+                path.addLine(to: CGPoint(x: 0, y: 34))
+                path.addLine(to: CGPoint(x: length, y: 34))
+            case .bottomTrailing:
+                path.move(to: CGPoint(x: 34 - length, y: 34))
+                path.addLine(to: CGPoint(x: 34, y: 34))
+                path.addLine(to: CGPoint(x: 34, y: 34 - length))
+            case .top, .bottom, .leading, .trailing:
+                break
+            }
+        }
+        .stroke(.black.opacity(0.92), style: StrokeStyle(lineWidth: 4, lineCap: .square, lineJoin: .miter))
+        .overlay {
+            Path { path in
+                let length: CGFloat = 18
+                switch corner {
+                case .topLeading:
+                    path.move(to: CGPoint(x: 0, y: length))
+                    path.addLine(to: .zero)
+                    path.addLine(to: CGPoint(x: length, y: 0))
+                case .topTrailing:
+                    path.move(to: CGPoint(x: 34 - length, y: 0))
+                    path.addLine(to: CGPoint(x: 34, y: 0))
+                    path.addLine(to: CGPoint(x: 34, y: length))
+                case .bottomLeading:
+                    path.move(to: CGPoint(x: 0, y: 34 - length))
+                    path.addLine(to: CGPoint(x: 0, y: 34))
+                    path.addLine(to: CGPoint(x: length, y: 34))
+                case .bottomTrailing:
+                    path.move(to: CGPoint(x: 34 - length, y: 34))
+                    path.addLine(to: CGPoint(x: 34, y: 34))
+                    path.addLine(to: CGPoint(x: 34, y: 34 - length))
+                case .top, .bottom, .leading, .trailing:
+                    break
+                }
+            }
+            .stroke(.white.opacity(0.35), style: StrokeStyle(lineWidth: 1, lineCap: .square, lineJoin: .miter))
+        }
     }
 }
 

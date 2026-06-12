@@ -22,8 +22,16 @@ adjustment, photo replacement, and discard. Use "Adjust frame" or "Photo /
 Frame" language in Animate AV; do not expose prior-product multi-photo editing,
 sorting, empty media actions, or "crop" as the normal visible flow.
 If the user adjusts the frame, that adjusted image is the workflow source photo.
-The client should avoid creating a separate persisted pre-adjustment media state
-unless a recovery issue requires it later.
+The client should retain the imported source-photo bytes locally while the draft
+is editable, then derive the active workflow image from those bytes. Re-entering
+frame adjustment must edit from the local original, not from a prior cropped
+derivative. Restore-original is a local operation that copies the retained
+original back into the active workflow image.
+
+The backend receives only the active workflow image. Do not upload both the
+local original and adjusted image in v1. If metadata is useful, it may identify
+that a frame adjustment was applied, but the private backend should not be
+treated as the source of truth for restoring the user's pre-adjusted photo.
 
 Movement is a separate client setup choice from Message / Voice. It describes
 what visually moves in the animation. Message and voice remain optional, and a
@@ -134,7 +142,7 @@ underlying behavior remains: active workflow state is realtime-backed, completed
 media is local-first after download, and remote artifact availability is
 short-lived.
 
-Do not use prior product language such as memory, moment, story, album, or
+Do not use adjacent product language such as memory, moment, story, album, or
 library in visible Animate AV copy unless it is a deliberate compatibility term
 hidden from users.
 

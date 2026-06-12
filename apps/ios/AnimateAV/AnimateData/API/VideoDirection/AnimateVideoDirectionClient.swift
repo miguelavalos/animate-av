@@ -66,6 +66,7 @@ struct AnimateVideoDirectionClient {
             mediaUse: form.mediaUse.rawValue,
             movementDirection: form.movementDirection.rawValue,
             motionDirection: form.movementDirection.rawValue,
+            animationDirection: Self.nonBlankOptional(form.animationDirection),
             occasion: form.occasion,
             details: form.activeMessageText ?? "",
             narrationVoice: form.activeVoiceProfile?.rawValue ?? "none",
@@ -116,6 +117,11 @@ struct AnimateVideoDirectionClient {
                 try await Task.sleep(nanoseconds: retryPolicy.delayNanoseconds(forAttempt: attempt))
             }
         }
+    }
+
+    private static func nonBlankOptional(_ value: String?) -> String? {
+        let trimmed = value?.trimmingCharacters(in: .whitespacesAndNewlines) ?? ""
+        return trimmed.isEmpty ? nil : trimmed
     }
 }
 

@@ -34,6 +34,7 @@ struct AnimateRenderPlanRequest: Encodable {
     let mediaUse: String
     let movementDirection: String?
     let motionDirection: String?
+    let animationDirection: String?
     let selectedSourceLocalIdentifiers: [String]?
     let sourceImageUploadId: String?
     let generatedImageArtifactId: String?
@@ -66,6 +67,7 @@ struct AnimateConfirmFinalRenderRequest: Encodable {
     let mediaUse: String
     let movementDirection: String?
     let motionDirection: String?
+    let animationDirection: String?
     let selectedSourceLocalIdentifiers: [String]?
     let sourceImageUploadId: String?
     let generatedImageArtifactId: String?

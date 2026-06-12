@@ -64,8 +64,11 @@ xcodebuild test -project apps/ios/AnimateAV.xcodeproj -scheme AnimateAV -destina
 
 - [ ] App launches in a simulator build safe for public QA.
 - [ ] Create Video no-spend smoke reaches Photo / Frame, Look, Movement,
-  optional Message / Voice, and final confirmation with synthetic or fixture
-  media only.
+  optional Animation Direction, optional Message / Voice, and final confirmation
+  with synthetic or fixture media only.
+- [ ] Photo / Frame smoke covers choose photo, adjust frame, re-enter frame
+  adjustment from the local original, restore original when available, change
+  photo, and continue to Look without hidden sheets or paid provider calls.
 - [ ] The normal Create Video path does not show inherited multi-photo editing,
   sorting, empty media actions, or visible `Crop` language.
 - [ ] No debug URLs, local config, tokens, account identifiers, receipts, or

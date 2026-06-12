@@ -29,7 +29,7 @@ credit commit/release.
 Current v1 flow:
 
 ```text
-Photo / Frame -> Look -> Movement -> optional Message / Voice -> backend infers duration and quotes credits -> generate animated video -> local download -> Gallery
+Photo / Frame -> Look -> Movement -> optional Animation Direction -> optional Message / Voice -> backend infers duration and quotes credits -> generate animated video -> local download -> Gallery
 ```
 
 Photo / Frame is the normal source-photo step. It lets the user choose one
@@ -37,9 +37,20 @@ photo, keep the full photo, adjust the frame, change photo, or discard the
 draft. Do not route the normal Animate AV path through inherited multi-photo
 editing, sorting, empty media actions, or visible `Crop` language.
 
+The Photo / Frame step owns the local source-photo decision. The iOS draft
+should keep the imported photo bytes as local-only original data and derive the
+active workflow image from them. Frame adjustment updates only the active image;
+re-entering frame adjustment should start from the local original, not from a
+previously cropped derivative. Restore-original behavior is local UI state and
+must not require backend recovery.
+
 Movement is separate from Message / Voice. It controls what visually moves in
 the animation, while Message and Voice remain optional. A one-photo video with
 no message and no narration is a valid v1 setup.
+
+Animation Direction is an optional user-authored instruction for what the image
+should do when it comes alive. It may be selected from simple presets or entered
+as custom text, and it remains independent from narrated Message / Voice.
 
 Images are a separate v1 workflow: choose one source photo, generate a stylized
 image, then download/share it or use it as video input when synced state allows.
@@ -50,6 +61,12 @@ before upload. The full image remains the default unless the user explicitly
 chooses Adjust frame, and that adjusted image becomes the source photo for the
 workflow.
 
+Upload and backend generation receive only the active image selected by the
+user: either the unadjusted source photo or the saved frame adjustment. Do not
+upload the local original copy alongside the active image in v1. The original
+copy exists only to support local editing, restore-original, and repeat
+adjustment flows before the user confirms paid backend work.
+
 Do not add a public video preview/review step, generated audio controls,
 captions, subtitles, text overlays, provider/model selection, or cloud media
 storage as v1 client features.
@@ -58,9 +75,9 @@ Current product-polish scope:
 
 - Review visible `Gallery` and `In Progress` naming before production smoke; the
   behavior may stay, but the labels may not fit Animate AV.
-- Keep Create Video aligned to Photo / Frame, Look, Movement, and optional
-  Message / Voice. Avoid reintroducing inherited multi-photo edit surfaces in
-  the normal path.
+- Keep Create Video aligned to Photo / Frame, Look, Movement, optional
+  Animation Direction, and optional Message / Voice. Avoid reintroducing
+  inherited multi-photo edit surfaces in the normal path.
 - Review Create Video looks in English first: family names, look names,
   subtitles, and preview images.
 - Keep the guided voice picker unchanged unless a concrete defect appears.

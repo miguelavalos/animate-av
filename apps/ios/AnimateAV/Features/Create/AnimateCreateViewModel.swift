@@ -717,6 +717,8 @@ final class AnimateCreateViewModel: ObservableObject {
             finalForm.voiceTone.rawValue,
             finalForm.duration.rawValue,
             finalForm.mediaUse.rawValue,
+            finalForm.movementDirection.rawValue,
+            finalForm.animationDirection.trimmingCharacters(in: .whitespacesAndNewlines),
             finalForm.occasion.trimmingCharacters(in: .whitespacesAndNewlines),
             mediaSignature,
             "\(removesWatermark)"
@@ -836,6 +838,11 @@ final class AnimateCreateViewModel: ObservableObject {
 
     func selectMovementDirection(_ movementDirection: AnimateVideoMovementDirection) {
         form.movementDirection = movementDirection
+        markLocalSetupEdited()
+    }
+
+    func updateAnimationDirection(_ animationDirection: String) {
+        form.animationDirection = String(animationDirection.prefix(220))
         markLocalSetupEdited()
     }
 
