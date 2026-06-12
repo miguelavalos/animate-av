@@ -17,7 +17,7 @@ Animate AV uses eight narrator faces in the guided voice picker. These portraits
 
 ## Generation Requirements
 
-- Use a square source image, at least `1024x1024`, exported to `512x512` for the asset catalog.
+- Use a square reference portrait, at least `1024x1024`, exported to `512x512` for the asset catalog.
 - Frame as head and shoulders, not full body.
 - Keep eyes around 38-42% from the top of the canvas.
 - Leave enough padding around hair, ears, chin, and shoulders for a circular avatar crop.
