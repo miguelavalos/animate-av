@@ -1044,44 +1044,6 @@ private struct AnimateCreateVideoDirectionCard: View {
                     }
                     .frame(maxWidth: .infinity, alignment: .leading)
 
-                    Menu {
-                        Section(L10n.string("create.videoDirection.menu.userActions")) {
-                            Button {
-                                guideState.step = .photoFrame
-                                activeGuidedSheet = .photoFrame
-                            } label: {
-                                Label(L10n.string("create.guided.photoFrame.title"), systemImage: "photo")
-                            }
-                            Button(action: choosePhoto) {
-                                Label(L10n.string("create.mediaAdjust.changePhoto"), systemImage: "photo.on.rectangle")
-                            }
-                            if canShowDiscardAction {
-                                Button(role: .destructive, action: discardVideoCreation) {
-                                    Label(discardActionTitle, systemImage: discardActionIconName)
-                                }
-                            }
-                        }
-
-                        Section(L10n.string("create.videoDirection.menu.aviActions")) {
-                            if canUndoAutoStyleSuggestion {
-                                Button(action: undoAutoStyleSuggestion) {
-                                    Label(L10n.string("create.aviDirection.undoSuggestion"), systemImage: "arrow.uturn.backward")
-                                }
-                            } else if showsUseAviSuggestion {
-                                Button(action: useAutoStyleSuggestion) {
-                                    Label(L10n.string("create.aviDirection.useSuggestion"), systemImage: "sparkles")
-                                }
-                            }
-                        }
-                    } label: {
-                        Image(systemName: "ellipsis")
-                            .font(.system(size: 15, weight: .black))
-                            .foregroundStyle(AVBrandColor.textSecondary)
-                            .frame(width: 34, height: 34)
-                            .background(AVBrandColor.mutedSurface.opacity(0.62), in: Circle())
-                    }
-                    .buttonStyle(.plain)
-                    .accessibilityLabel(L10n.string("create.videoDirection.menu.accessibility"))
                 }
 
                 if isGuidedFlowComplete {
@@ -1175,8 +1137,8 @@ private struct AnimateCreateVideoDirectionCard: View {
         .accessibilityHidden(true)
     }
 
-    private func guidedSheetDetents(for step: GuidedStep) -> Set<PresentationDetent> {
-        step == .photoFrame ? [.fraction(0.68), .large] : [.large]
+    private func guidedSheetDetents(for _: GuidedStep) -> Set<PresentationDetent> {
+        [.large]
     }
 
     private var guidedSummary: some View {
