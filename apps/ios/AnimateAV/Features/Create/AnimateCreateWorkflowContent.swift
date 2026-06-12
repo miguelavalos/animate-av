@@ -1459,9 +1459,9 @@ private struct AnimateCreateVideoDirectionCard: View {
                 stepHeader(L10n.string("create.guided.script.title"), L10n.string("create.guided.script.detail"))
                 AnimateCreateGuidedTemplateMenu(
                     title: L10n.string("create.guided.script.template"),
-                    selectedTitle: guideState.selectedScriptIdea.title,
-                    selectedDetail: guideState.selectedScriptIdea.previewText,
-                    options: ScriptIdea.allCases,
+                    selectedTitle: selectedScriptIdea.title,
+                    selectedDetail: selectedScriptIdea.previewText,
+                    options: ScriptIdea.menuOptions,
                     select: {
                         guideState.selectScriptIdea($0)
                         applyScriptIdea($0)
@@ -1634,7 +1634,7 @@ private struct AnimateCreateVideoDirectionCard: View {
     }
 
     private var hasMessage: Bool {
-        form.hasMessage
+        !form.details.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty
     }
 
     private var selectedLookTitle: String {
@@ -1665,6 +1665,13 @@ private struct AnimateCreateVideoDirectionCard: View {
 
     private var canContinueMessageStep: Bool {
         form.details.trimmingCharacters(in: .whitespacesAndNewlines).count >= minimumMessageCharacterCount
+    }
+
+    private var selectedScriptIdea: ScriptIdea {
+        if form.details.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
+            return .none
+        }
+        return guideState.selectedScriptIdea == .none ? .custom : guideState.selectedScriptIdea
     }
 
     private func continueStep() {
@@ -1764,11 +1771,14 @@ private struct AnimateCreateVideoDirectionCard: View {
         if let style = styles.first(where: { $0.id == idea.styleID }) {
             selectStyle(style)
         }
-        form.hasMessage = idea != .none
-        form.voiceEnabled = idea != .none && form.audioEnabled
         if idea != .custom {
             updateMessage(idea.defaultMessage)
         }
+        let hasText = !(idea == .custom ? form.details : idea.defaultMessage)
+            .trimmingCharacters(in: .whitespacesAndNewlines)
+            .isEmpty
+        form.hasMessage = hasText
+        form.voiceEnabled = hasText && form.audioEnabled
         form.occasion = idea.title
     }
 
@@ -2427,6 +2437,10 @@ enum ScriptIdea: String, CaseIterable, Identifiable, AnimateCreateGuidedTemplate
     case funny
 
     var id: String { rawValue }
+
+    static var menuOptions: [ScriptIdea] {
+        [.none, .birthday, .congratulations, .love, .missYou, .holiday, .motivation, .funny]
+    }
 
     var title: String {
         switch self {
