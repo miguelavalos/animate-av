@@ -239,6 +239,11 @@ extension AnimateVideoSetupTone {
     }
 }
 
+enum AnimateVideoSetupLimits {
+    static let messageCharacterLimit = 180
+    static let animationDirectionCharacterLimit = 500
+}
+
 struct AnimateVideoSetupForm: Equatable {
     var creationMode: AnimateVideoCreationMode = .quick
     var look: AnimateVideoLook = .cartoon

@@ -66,6 +66,8 @@ xcodebuild test -project apps/ios/AnimateAV.xcodeproj -scheme AnimateAV -destina
 - [ ] Create Video no-spend smoke reaches Foto y encuadre, Look, Movement,
   optional Animation Direction, optional Message / Voice, and final confirmation
   with synthetic or fixture media only.
+- [ ] Animation Direction accepts custom visual instructions and the final
+  summary preserves them separately from the narrated Message.
 - [ ] Foto y encuadre smoke covers choose photo, adjust frame, re-enter frame
   adjustment from the locally retained original, restore original when
   available, change photo, and continue to Look without hidden sheets or paid

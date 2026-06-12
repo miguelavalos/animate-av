@@ -1394,10 +1394,10 @@
 "create.look.embroideredTextile.subtitle" = "Threaded texture with stitched character detail.";
 "create.guided.direction.tab" = "Direction";
 "create.guided.direction.title" = "Animation direction";
-"create.guided.direction.detail" = "Tell Animate AV what the photo should do when it comes alive. Optional and works without voice.";
+"create.guided.direction.detail" = "Describe the action, camera, and visual details. Optional and works without voice.";
 "create.guided.direction.none" = "No extra direction";
-"create.guided.direction.customLabel" = "Custom";
-"create.guided.direction.tip" = "Example: have the person look at camera and wave gently without changing their identity.";
+"create.guided.direction.customLabel" = "Visual instructions";
+"create.guided.direction.tip" = "Example: push the camera in slowly, preserve faces, and animate the background with soft wind.";
 "create.guided.summary.direction" = "Direction";
 "create.guided.continue.direction" = "Continue to direction";
 "create.guided.direction.gentleReveal.title" = "Gentle reveal";

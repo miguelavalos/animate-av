@@ -78,6 +78,8 @@ Current product-polish scope:
 - Keep Create Video aligned to Photo / Frame, Look, Movement, optional
   Animation Direction, and optional Message / Voice. Avoid reintroducing
   inherited multi-photo edit surfaces in the normal path.
+- Treat Animation Direction as visual guidance for action, camera, and scene
+  behavior. It may be longer than the narrated Message and works without Voice.
 - Review Create Video looks in English first: family names, look names,
   subtitles, and preview images.
 - Keep the guided voice picker unchanged unless a concrete defect appears.

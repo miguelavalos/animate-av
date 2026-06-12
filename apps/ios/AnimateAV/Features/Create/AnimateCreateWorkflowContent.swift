@@ -1483,7 +1483,7 @@ private struct AnimateCreateVideoDirectionCard: View {
                             .font(.system(size: 12, weight: .black))
                             .foregroundStyle(AVBrandColor.textPrimary)
                         Spacer()
-                        Text("\(form.animationDirection.count)/220")
+                        Text("\(form.animationDirection.count)/\(AnimateVideoSetupLimits.animationDirectionCharacterLimit)")
                             .font(.caption.weight(.bold))
                             .foregroundStyle(AVBrandColor.textSecondary)
                     }

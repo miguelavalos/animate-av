@@ -1393,10 +1393,10 @@
 "create.mediaAdjust.frameDetail" = "Mueve o redimensiona el marco para elegir qué parte animar.";
 "create.guided.direction.tab" = "Dirección";
 "create.guided.direction.title" = "Dirección de animación";
-"create.guided.direction.detail" = "Indica qué debería hacer la foto al cobrar vida. Es opcional y no necesita voz.";
+"create.guided.direction.detail" = "Describe la acción, cámara y detalles visuales. Es opcional y funciona aunque no haya voz.";
 "create.guided.direction.none" = "Sin dirección adicional";
-"create.guided.direction.customLabel" = "Personalizado";
-"create.guided.direction.tip" = "Ejemplo: que la persona mire a cámara y salude suavemente, sin cambiar su identidad.";
+"create.guided.direction.customLabel" = "Instrucciones visuales";
+"create.guided.direction.tip" = "Ejemplo: acerca la cámara lentamente, conserva las caras y anima el fondo con viento suave.";
 "create.guided.summary.direction" = "Dirección";
 "create.guided.continue.direction" = "Continuar a dirección";
 "create.guided.direction.gentleReveal.title" = "Revelado suave";

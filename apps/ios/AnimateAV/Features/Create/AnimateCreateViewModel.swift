@@ -815,7 +815,7 @@ final class AnimateCreateViewModel: ObservableObject {
     }
 
     func updateVideoMessage(_ message: String) {
-        form.details = String(message.prefix(180))
+        form.details = String(message.prefix(AnimateVideoSetupLimits.messageCharacterLimit))
         form.hasMessage = !form.details.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty
         if !form.hasMessage {
             form.voiceEnabled = false
@@ -842,7 +842,7 @@ final class AnimateCreateViewModel: ObservableObject {
     }
 
     func updateAnimationDirection(_ animationDirection: String) {
-        form.animationDirection = String(animationDirection.prefix(220))
+        form.animationDirection = String(animationDirection.prefix(AnimateVideoSetupLimits.animationDirectionCharacterLimit))
         markLocalSetupEdited()
     }
 
