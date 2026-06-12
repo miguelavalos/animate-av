@@ -19,8 +19,8 @@ Photo / Frame -> Look -> Movement -> optional Message / Voice -> backend infers 
 
 The Photo / Frame step owns source-photo choice, full-photo use, frame
 adjustment, photo replacement, and discard. Use "Adjust frame" or "Photo /
-Frame" language in Animate AV; do not expose Moments AV-style multi-photo
-editing, sorting, empty media actions, or "crop" as the normal visible flow.
+Frame" language in Animate AV; do not expose prior-product multi-photo editing,
+sorting, empty media actions, or "crop" as the normal visible flow.
 If the user adjusts the frame, that adjusted image is the workflow source photo.
 The client should avoid creating a separate persisted pre-adjustment media state
 unless a recovery issue requires it later.

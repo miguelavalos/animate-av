@@ -39,11 +39,15 @@ Mandatory rules:
 - no-spend workflow tests must still exercise quote/check-cost, credit
   confirmation, queued/running/completed UI states, final artifact handoff, and
   Gallery cleanup. Only the paid provider call is mocked.
+- the normal Animate AV Create Video path is Photo / Frame -> Look -> Movement
+  -> optional Message / Voice -> confirmation. Do not reintroduce inherited
+  multi-photo edit, sorting, empty media action, or visible crop language in this
+  one-photo flow.
 - in the final video flow, `/renders/plan` is the source of truth for cost,
   blockers, watermark choice, and the subsequent confirmation. Do not add a
   separate `/video/quotes` preflight inside Check cost/Create video; it creates
   duplicate loading states and can desynchronise UI from the confirmable plan.
-- before adapting this workflow to Moments AV or another app, read the
+- before adapting this workflow to a prior app or another app, read the
   2026-06-11 create-video validation closeout and preserve the generic contract:
   plan first, confirm second, durable backend workflow ownership, short-lived
   Convex projection, and local-first Gallery after download.

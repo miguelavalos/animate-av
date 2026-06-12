@@ -26,10 +26,22 @@ docs/
   README.md
   install-ios.md
   production-config.md
+  client-architecture-guardrails.md
   release-checklist.md
   release-evidence-template.md
   canonical-asset-handoff.md
+  look-preview-assets.md
 ```
+
+The current public product shape is a one-photo creation flow:
+
+```text
+Photo / Frame -> Look -> Movement -> optional Message / Voice -> Check cost -> Create video -> local download -> Gallery
+```
+
+Generated images are a separate source-photo workflow. Public docs should not
+describe inherited multi-photo editing, provider/model routing, pricing
+strategy, or generated video preview/versioning as Animate AV client features.
 
 ## Local Setup
 

@@ -19,6 +19,9 @@ in the private AVALSYS suite.
   both `com.avalsys.animateav.dev` and `com.avalsys.animateav` uninstalled
   before the signed smoke.
 - [ ] Focused tests pass or failures are documented in the private handoff.
+- [ ] Create Video no-spend smoke reaches
+  `Photo / Frame -> Look -> Movement -> optional Message / Voice -> confirmation`
+  using fixture/mock final-render routes, with no paid provider calls.
 - [ ] `scripts/check-public-hygiene.sh` passes for normal public repo changes.
 - [ ] `scripts/check-public-release-readiness.sh` passes before App Store release
   candidate handoff.

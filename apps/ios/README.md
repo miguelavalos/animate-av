@@ -29,18 +29,26 @@ credit commit/release.
 Current v1 flow:
 
 ```text
-Choose source photo -> choose style and message -> backend infers duration and quotes credits -> generate animated video -> local download -> Gallery
+Photo / Frame -> Look -> Movement -> optional Message / Voice -> backend infers duration and quotes credits -> generate animated video -> local download -> Gallery
 ```
+
+Photo / Frame is the normal source-photo step. It lets the user choose one
+photo, keep the full photo, adjust the frame, change photo, or discard the
+draft. Do not route the normal Animate AV path through inherited multi-photo
+editing, sorting, empty media actions, or visible `Crop` language.
+
+Movement is separate from Message / Voice. It controls what visually moves in
+the animation, while Message and Voice remain optional. A one-photo video with
+no message and no narration is a valid v1 setup.
 
 Images are a separate v1 workflow: choose one source photo, generate a stylized
 image, then download/share it or use it as video input when synced state allows.
 
 Animate AV's default generation contract is fidelity to the user's source
 photo. The client must not silently crop, zoom, reframe, or isolate a person
-before upload. If a future "adjust image" step is added, the full image remains
-the default, any crop must be explicitly chosen by the user, and the app should
-retain enough local metadata to distinguish original image, used image, and
-generated image in Gallery/Info.
+before upload. The full image remains the default unless the user explicitly
+chooses Adjust frame, and that adjusted image becomes the source photo for the
+workflow.
 
 Do not add a public video preview/review step, generated audio controls,
 captions, subtitles, text overlays, provider/model selection, or cloud media
@@ -50,6 +58,9 @@ Current product-polish scope:
 
 - Review visible `Gallery` and `In Progress` naming before production smoke; the
   behavior may stay, but the labels may not fit Animate AV.
+- Keep Create Video aligned to Photo / Frame, Look, Movement, and optional
+  Message / Voice. Avoid reintroducing inherited multi-photo edit surfaces in
+  the normal path.
 - Review Create Video looks in English first: family names, look names,
   subtitles, and preview images.
 - Keep the guided voice picker unchanged unless a concrete defect appears.

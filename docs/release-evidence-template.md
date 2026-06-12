@@ -63,6 +63,11 @@ xcodebuild test -project apps/ios/AnimateAV.xcodeproj -scheme AnimateAV -destina
 ## Manual Public QA
 
 - [ ] App launches in a simulator build safe for public QA.
+- [ ] Create Video no-spend smoke reaches Photo / Frame, Look, Movement,
+  optional Message / Voice, and final confirmation with synthetic or fixture
+  media only.
+- [ ] The normal Create Video path does not show inherited multi-photo editing,
+  sorting, empty media actions, or visible `Crop` language.
 - [ ] No debug URLs, local config, tokens, account identifiers, receipts, or
   private user data appear in visible UI.
 - [ ] Public setup docs match the current repository shape.

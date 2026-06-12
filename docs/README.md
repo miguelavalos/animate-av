@@ -31,13 +31,16 @@ handoff values belong in the private AVALSYS suite.
   prompt for finishing GPT Image 2 look previews on another machine.
 - [app-store-screenshots.md](app-store-screenshots.md): public screenshot safety
   rules for non-secret captures.
+- [app-privacy-inventory.md](app-privacy-inventory.md), [app-review-notes.md](app-review-notes.md),
+  and [app-store-metadata.md](app-store-metadata.md): public placeholders that
+  intentionally keep private release material out of this repo.
 
 ## Current Public Product Shape
 
 V1 is a signed-in one-photo animation workflow:
 
 ```text
-Photo / Frame -> Look -> Movement -> optional Message / Voice -> backend infers duration and quotes credits -> generate animated video -> local download -> Gallery
+Photo / Frame -> Look -> Movement -> optional Message / Voice -> Check cost -> Create video -> local download -> Gallery
 ```
 
 Photo / Frame is the normal source-photo step: choose one photo, use the full
@@ -49,6 +52,10 @@ metadata.
 Movement is a separate setup choice from Message / Voice. It controls what
 visually moves in the animation. Message and voice are optional; a visual-only
 video with no message and no narration is a valid v1 path.
+
+Local no-spend QA may use fixture or mock final-render routes to reach the
+confirmation and queued/completed states. Do not use public docs to authorize a
+paid provider smoke; that approval belongs in the private runbook.
 
 The public client may also expose image generation from a source photo as a
 separate Images workflow. Generated images are visible user assets and may be
