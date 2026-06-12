@@ -1028,10 +1028,11 @@ private struct AnimateCreateVideoDirectionCard: View {
                                 .frame(width: 30, height: 30)
                                 .background(iconColor, in: Circle())
 
-                            Text(L10n.string("create.storyDirection.title"))
+                            Text(L10n.string("create.storyDirection.cardTitle"))
                                 .font(.system(size: 20, weight: .black))
                                 .foregroundStyle(AVBrandColor.textPrimary)
-                                .lineLimit(2)
+                                .lineLimit(1)
+                                .minimumScaleFactor(0.85)
                                 .fixedSize(horizontal: false, vertical: true)
                         }
 
