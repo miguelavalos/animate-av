@@ -174,6 +174,54 @@ enum AnimateVideoVoiceTone: String, CaseIterable, Identifiable {
     }
 }
 
+enum AnimateVideoMovementDirection: String, CaseIterable, Identifiable, Codable {
+    case subtleFaithful
+    case livingPortrait
+    case livingBackground
+    case cinematic
+    case celebration
+    case custom
+
+    var id: String { rawValue }
+
+    static var selectorOrder: [AnimateVideoMovementDirection] {
+        [.subtleFaithful, .livingPortrait, .livingBackground, .cinematic, .celebration, .custom]
+    }
+
+    var title: String {
+        switch self {
+        case .subtleFaithful: L10n.string("create.movement.subtleFaithful.title")
+        case .livingPortrait: L10n.string("create.movement.livingPortrait.title")
+        case .livingBackground: L10n.string("create.movement.livingBackground.title")
+        case .cinematic: L10n.string("create.movement.cinematic.title")
+        case .celebration: L10n.string("create.movement.celebration.title")
+        case .custom: L10n.string("create.movement.custom.title")
+        }
+    }
+
+    var detail: String {
+        switch self {
+        case .subtleFaithful: L10n.string("create.movement.subtleFaithful.detail")
+        case .livingPortrait: L10n.string("create.movement.livingPortrait.detail")
+        case .livingBackground: L10n.string("create.movement.livingBackground.detail")
+        case .cinematic: L10n.string("create.movement.cinematic.detail")
+        case .celebration: L10n.string("create.movement.celebration.detail")
+        case .custom: L10n.string("create.movement.custom.detail")
+        }
+    }
+
+    var systemImage: String {
+        switch self {
+        case .subtleFaithful: "camera.aperture"
+        case .livingPortrait: "person.crop.circle"
+        case .livingBackground: "leaf.fill"
+        case .cinematic: "movieclapper.fill"
+        case .celebration: "sparkles"
+        case .custom: "slider.horizontal.3"
+        }
+    }
+}
+
 extension AnimateVideoSetupTone {
     init(musicPreset: AnimateVideoMusicPreset) {
         switch musicPreset {
@@ -209,6 +257,7 @@ struct AnimateVideoSetupForm: Equatable {
     var voiceEnabled = false
     var voiceProfile: AnimateVideoVoiceProfile = .adultWoman
     var voiceTone: AnimateVideoVoiceTone = .warm
+    var movementDirection: AnimateVideoMovementDirection = .subtleFaithful
 
     var activeMessageText: String? {
         guard hasMessage else { return nil }
@@ -274,6 +323,7 @@ struct AnimateVideoSetupForm: Equatable {
             && voiceEnabled == other.voiceEnabled
             && voiceProfile == other.voiceProfile
             && voiceTone == other.voiceTone
+            && movementDirection == other.movementDirection
     }
 }
 

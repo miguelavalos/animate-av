@@ -7,7 +7,7 @@ final class AnimateCreateVideoSetupGuideStateTests: XCTestCase {
         state.selectScriptIdea(.none)
 
         XCTAssertEqual(state.selectedScriptIdea, .none)
-        XCTAssertEqual(state.step, .look)
+        XCTAssertEqual(state.step, .photoFrame)
         XCTAssertFalse(state.isComplete)
     }
 
@@ -16,6 +16,21 @@ final class AnimateCreateVideoSetupGuideStateTests: XCTestCase {
 
         var result = state.continueStep(
             hasSelectedLook: true,
+            hasSelectedPhoto: true,
+            hasMessage: false,
+            canContinueMessageStep: false
+        )
+        XCTAssertEqual(result.activeSheet, .look)
+        result = state.continueStep(
+            hasSelectedLook: true,
+            hasSelectedPhoto: true,
+            hasMessage: false,
+            canContinueMessageStep: false
+        )
+        XCTAssertEqual(result.activeSheet, .movement)
+        result = state.continueStep(
+            hasSelectedLook: true,
+            hasSelectedPhoto: true,
             hasMessage: false,
             canContinueMessageStep: false
         )
@@ -26,6 +41,7 @@ final class AnimateCreateVideoSetupGuideStateTests: XCTestCase {
         state.selectScriptIdea(.none)
         result = state.continueStep(
             hasSelectedLook: true,
+            hasSelectedPhoto: true,
             hasMessage: false,
             canContinueMessageStep: false
         )
@@ -39,27 +55,39 @@ final class AnimateCreateVideoSetupGuideStateTests: XCTestCase {
     func testMessageFlowRequiresVoiceStepBeforeCompletion() {
         var state = AnimateCreateVideoSetupGuideState()
 
-        XCTAssertEqual(
-            state.continueStep(hasSelectedLook: true, hasMessage: false, canContinueMessageStep: false).activeSheet,
-            .scriptIdea
-        )
+        XCTAssertEqual(continueReady(&state).activeSheet, .look)
+        XCTAssertEqual(continueReady(&state).activeSheet, .movement)
+        XCTAssertEqual(continueReady(&state).activeSheet, .scriptIdea)
 
         state.selectScriptIdea(.birthday)
         XCTAssertEqual(
-            state.continueStep(hasSelectedLook: true, hasMessage: true, canContinueMessageStep: true).activeSheet,
+            continueReady(&state, hasMessage: true, canContinueMessageStep: true).activeSheet,
             .scriptMessage
         )
         XCTAssertFalse(state.isComplete)
 
         XCTAssertEqual(
-            state.continueStep(hasSelectedLook: true, hasMessage: true, canContinueMessageStep: true).activeSheet,
+            continueReady(&state, hasMessage: true, canContinueMessageStep: true).activeSheet,
             .voice
         )
         XCTAssertFalse(state.isComplete)
 
         XCTAssertNil(
-            state.continueStep(hasSelectedLook: true, hasMessage: true, canContinueMessageStep: true).activeSheet
+            continueReady(&state, hasMessage: true, canContinueMessageStep: true).activeSheet
         )
         XCTAssertTrue(state.isComplete)
+    }
+
+    private func continueReady(
+        _ state: inout AnimateCreateVideoSetupGuideState,
+        hasMessage: Bool = false,
+        canContinueMessageStep: Bool = false
+    ) -> AnimateCreateVideoSetupGuideState.ContinueResult {
+        state.continueStep(
+            hasSelectedLook: true,
+            hasSelectedPhoto: true,
+            hasMessage: hasMessage,
+            canContinueMessageStep: canContinueMessageStep
+        )
     }
 }

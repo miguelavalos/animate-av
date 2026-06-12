@@ -834,6 +834,11 @@ final class AnimateCreateViewModel: ObservableObject {
         markLocalSetupEdited()
     }
 
+    func selectMovementDirection(_ movementDirection: AnimateVideoMovementDirection) {
+        form.movementDirection = movementDirection
+        markLocalSetupEdited()
+    }
+
     private func markLocalSetupEdited() {
         hasLocalSetupEdits = true
         clearStaleRenderPlan()

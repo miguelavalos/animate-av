@@ -14,12 +14,20 @@ renders the state returned by the configured backend/realtime layer.
 The current v1 user flow is:
 
 ```text
-Choose source photo -> optionally crop -> choose style and message -> backend infers duration and quotes credits -> generate animated video -> local download -> Gallery
+Photo / Frame -> Look -> Movement -> optional Message / Voice -> backend infers duration and quotes credits -> generate animated video -> local download -> Gallery
 ```
 
-If the user crops the selected photo, that adjusted image is the workflow source
-photo. The client should avoid creating a separate persisted pre-crop media
-state unless a recovery issue requires it later.
+The Photo / Frame step owns source-photo choice, full-photo use, frame
+adjustment, photo replacement, and discard. Use "Adjust frame" or "Photo /
+Frame" language in Animate AV; do not expose Moments AV-style multi-photo
+editing, sorting, empty media actions, or "crop" as the normal visible flow.
+If the user adjusts the frame, that adjusted image is the workflow source photo.
+The client should avoid creating a separate persisted pre-adjustment media state
+unless a recovery issue requires it later.
+
+Movement is a separate client setup choice from Message / Voice. It describes
+what visually moves in the animation. Message and voice remain optional, and a
+valid one-photo video can be confirmed with no message and no narration.
 
 Images use the same ownership model with a simpler output: choose one source
 photo, generate a stylized image, then download/share it or use it as video
@@ -46,6 +54,8 @@ The iOS app must not:
 The iOS app may:
 
 - collect user media choices and setup options;
+- collect a client-side movement direction and send it as tolerant additional
+  request metadata when supported by the backend;
 - show local editing affordances before final confirmation;
 - request an official backend quote/plan;
 - confirm the selected backend quote/plan;
@@ -131,9 +141,10 @@ hidden from users.
 ## V1 Media Rule
 
 V1 final videos are animated one-photo videos with backend-generated audio. The
-client must not present audio controls, narration, voiceover, voice cloning,
-music, captions, subtitles, text overlays, or user audio uploads as available v1
-features.
+client must not present multi-photo sorting, album-style edit screens, audio
+controls, voice cloning, captions, subtitles, text overlays, or user audio
+uploads as available v1 features. Message and voice presets may be offered only
+as optional setup choices.
 
 ## Public Documentation Boundary
 

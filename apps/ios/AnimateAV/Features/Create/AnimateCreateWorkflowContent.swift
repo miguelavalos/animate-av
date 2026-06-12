@@ -33,6 +33,7 @@ struct AnimateCreateWorkflowContent: View {
                     selectStyle: viewModel.selectCreationStyle,
                     selectLook: viewModel.selectLook,
                     selectMusicPreset: viewModel.selectMusicPreset,
+                    selectMovementDirection: viewModel.selectMovementDirection,
                     useAutoStyleSuggestion: viewModel.useAutoStyleSuggestion,
                     undoAutoStyleSuggestion: viewModel.undoAutoStyleSuggestion,
                     openPickerRequest: 0,
@@ -77,6 +78,7 @@ private struct AnimateCreateMediaFirstWorkspace: View {
     let selectStyle: (AnimateVideoCreationStyle) -> Void
     let selectLook: (AnimateVideoLook) -> Void
     let selectMusicPreset: (AnimateVideoMusicPreset) -> Void
+    let selectMovementDirection: (AnimateVideoMovementDirection) -> Void
     let useAutoStyleSuggestion: () -> Void
     let undoAutoStyleSuggestion: () -> Void
     let openPickerRequest: Int
@@ -153,7 +155,10 @@ private struct AnimateCreateMediaFirstWorkspace: View {
                             undoAutoStyleSuggestion: undoAutoStyleSuggestion,
                             selectStyle: selectStyle,
                             selectLook: selectLook,
+                            selectMovementDirection: selectMovementDirection,
                             editMedia: { showsCompactMediaManager = true },
+                            choosePhoto: presentCompactPhotoPicker,
+                            updateMediaPhotoData: updateMediaPhotoData,
                             changeTheme: { showsThemeChooser = true },
                             changeLook: { showsLookChooser = true },
                             changeVoice: { showsVoiceChooser = true },
@@ -222,12 +227,9 @@ private struct AnimateCreateMediaFirstWorkspace: View {
         }
         .onChange(of: presentation.mediaSummary.selectedMedia) { _, newMedia in
             guard shouldOpenMediaManagerAfterImport,
-                  newMedia.contains(where: { $0.kind == "photo" }) else { return }
+                  newMedia.contains(where: { $0.kind == "photo" || $0.kind == "image" }) else { return }
             shouldOpenMediaManagerAfterImport = false
-            Task { @MainActor in
-                await Task.yield()
-                showsCompactMediaManager = true
-            }
+            isReviewingImportedMedia = false
         }
         .onChange(of: selectedLook) { _, newValue in
             if newValue == nil {
@@ -961,7 +963,10 @@ private struct AnimateCreateVideoDirectionCard: View {
     let undoAutoStyleSuggestion: () -> Void
     let selectStyle: (AnimateVideoCreationStyle) -> Void
     let selectLook: (AnimateVideoLook) -> Void
+    let selectMovementDirection: (AnimateVideoMovementDirection) -> Void
     let editMedia: () -> Void
+    let choosePhoto: () -> Void
+    let updateMediaPhotoData: (AnimateSelectedMedia, Data) -> Void
     let changeTheme: () -> Void
     let changeLook: () -> Void
     let changeVoice: () -> Void
@@ -977,6 +982,7 @@ private struct AnimateCreateVideoDirectionCard: View {
     @State private var guideState = AnimateCreateVideoSetupGuideState()
     @State private var activeGuidedSheet: GuidedStep?
     @State private var guidedLookFamily: AnimateVideoLookFamily?
+    @State private var adjustingInlineMedia: AnimateSelectedMedia?
     @State private var handledContinueGuidedFlowRequest = 0
 
     private let minimumMessageCharacterCount = 3
@@ -1017,8 +1023,14 @@ private struct AnimateCreateVideoDirectionCard: View {
 
                     Menu {
                         Section(L10n.string("create.videoDirection.menu.userActions")) {
-                            Button(action: editMedia) {
-                                Label(L10n.string("create.media.editTitle"), systemImage: "photo.stack")
+                            Button {
+                                guideState.step = .photoFrame
+                                activeGuidedSheet = .photoFrame
+                            } label: {
+                                Label(L10n.string("create.guided.photoFrame.title"), systemImage: "photo")
+                            }
+                            Button(action: choosePhoto) {
+                                Label(L10n.string("create.mediaAdjust.changePhoto"), systemImage: "photo.on.rectangle")
                             }
                             if canShowDiscardAction {
                                 Button(role: .destructive, action: discardVideoCreation) {
@@ -1073,6 +1085,30 @@ private struct AnimateCreateVideoDirectionCard: View {
             .presentationDetents([.large])
             .presentationDragIndicator(.visible)
         }
+        .fullScreenCover(item: $adjustingInlineMedia) { media in
+            AnimateCreatePhotoAdjustView(
+                media: media,
+                save: { adjustedData in
+                    updateMediaPhotoData(media, adjustedData)
+                    adjustingInlineMedia = nil
+                    guideState.step = .look
+                    activeGuidedSheet = .look
+                },
+                continueWithOriginal: {
+                    adjustingInlineMedia = nil
+                    guideState.step = .look
+                    activeGuidedSheet = .look
+                },
+                changePhoto: {
+                    adjustingInlineMedia = nil
+                    choosePhoto()
+                },
+                cancel: {
+                    adjustingInlineMedia = nil
+                    discardVideoCreation()
+                }
+            )
+        }
         .onAppear {
             guard !presentation.finalRenderSummary.isPreparingPlan,
                   !isGuidedFlowComplete,
@@ -1121,10 +1157,22 @@ private struct AnimateCreateVideoDirectionCard: View {
 
             VStack(spacing: 8) {
                 summaryEditRow(
+                    title: L10n.string("create.guided.summary.photoFrame"),
+                    detail: photoFrameSummaryDetail,
+                    icon: "photo.fill",
+                    editStep: .photoFrame
+                )
+                summaryEditRow(
                     title: L10n.string("create.guided.summary.look"),
                     detail: selectedLookTitle,
                     icon: "paintbrush.pointed.fill",
                     editStep: .look
+                )
+                summaryEditRow(
+                    title: L10n.string("create.guided.summary.movement"),
+                    detail: form.movementDirection.title,
+                    icon: form.movementDirection.systemImage,
+                    editStep: .movement
                 )
                 summaryEditRow(
                     title: L10n.string("create.guided.summary.message"),
@@ -1155,10 +1203,22 @@ private struct AnimateCreateVideoDirectionCard: View {
 
             VStack(spacing: 8) {
                 summaryEditRow(
+                    title: L10n.string("create.guided.summary.photoFrame"),
+                    detail: photoFrameSummaryDetail,
+                    icon: "photo.fill",
+                    editStep: .photoFrame
+                )
+                summaryEditRow(
                     title: L10n.string("create.guided.summary.look"),
                     detail: selectedLookTitle,
                     icon: "paintbrush.pointed.fill",
                     editStep: .look
+                )
+                summaryEditRow(
+                    title: L10n.string("create.guided.summary.movement"),
+                    detail: form.movementDirection.title,
+                    icon: form.movementDirection.systemImage,
+                    editStep: .movement
                 )
                 summaryEditRow(
                     title: L10n.string("create.guided.summary.message"),
@@ -1251,6 +1311,23 @@ private struct AnimateCreateVideoDirectionCard: View {
     @ViewBuilder
     private func guidedStepContent(_ sheetStep: GuidedStep) -> some View {
         switch sheetStep {
+        case .photoFrame:
+            VStack(alignment: .leading, spacing: 10) {
+                stepHeader(L10n.string("create.guided.photoFrame.title"), L10n.string("create.guided.photoFrame.detail"))
+                AnimateCreateGuidedPhotoFrameStep(
+                    media: selectedPhotoMedia,
+                    isImporting: presentation.mediaSummary.isImporting,
+                    choosePhoto: choosePhoto,
+                    useFullPhoto: continueStep,
+                    adjustFrame: {
+                        if let selectedPhotoMedia {
+                            adjustingInlineMedia = selectedPhotoMedia
+                        }
+                    },
+                    changePhoto: choosePhoto,
+                    discardVideoCreation: discardVideoCreation
+                )
+            }
         case .look:
             VStack(alignment: .leading, spacing: 10) {
                 if let family = activeGuidedLookFamily {
@@ -1316,6 +1393,19 @@ private struct AnimateCreateVideoDirectionCard: View {
             .onAppear {
                 if guidedLookFamily == nil, selectedLook != nil {
                     guidedLookFamily = AnimateVideoLook.family(containing: selectedLook)
+                }
+            }
+        case .movement:
+            VStack(alignment: .leading, spacing: 10) {
+                stepHeader(L10n.string("create.guided.movement.title"), L10n.string("create.guided.movement.detail"))
+                LazyVGrid(columns: Array(repeating: GridItem(.flexible(), spacing: 8), count: 2), spacing: 8) {
+                    ForEach(AnimateVideoMovementDirection.selectorOrder) { movement in
+                        AnimateCreateGuidedMovementTile(
+                            movement: movement,
+                            isSelected: form.movementDirection == movement,
+                            select: { selectMovementDirection(movement) }
+                        )
+                    }
                 }
             }
         case .scriptIdea:
@@ -1452,9 +1542,24 @@ private struct AnimateCreateVideoDirectionCard: View {
                 .frame(maxWidth: .infinity)
                 .frame(height: 44)
         }
-        .disabled((guideState.step == .look && selectedLook == nil) || (guideState.step == .scriptMessage && !canContinueMessageStep))
+        .disabled(isContinueDisabled)
         .buttonStyle(AnimateCreateSoftActionButtonStyle())
-        .opacity(((guideState.step == .look && selectedLook == nil) || (guideState.step == .scriptMessage && !canContinueMessageStep)) ? 0.62 : 1)
+        .opacity(isContinueDisabled ? 0.62 : 1)
+    }
+
+    private var isContinueDisabled: Bool {
+        switch guideState.step {
+        case .photoFrame:
+            return selectedPhotoMedia == nil || presentation.mediaSummary.isImporting
+        case .look:
+            return selectedLook == nil
+        case .movement:
+            return false
+        case .scriptMessage:
+            return !canContinueMessageStep
+        case .scriptIdea, .voice:
+            return false
+        }
     }
 
     private func stepHeader(_ title: String, _ detail: String) -> some View {
@@ -1469,7 +1574,7 @@ private struct AnimateCreateVideoDirectionCard: View {
     }
 
     private var activeSteps: [GuidedStep] {
-        hasMessage ? [.look, .scriptIdea, .scriptMessage, .voice] : [.look, .scriptIdea]
+        hasMessage ? [.photoFrame, .look, .movement, .scriptIdea, .scriptMessage, .voice] : [.photoFrame, .look, .movement, .scriptIdea]
     }
 
     private var hasMessage: Bool {
@@ -1480,6 +1585,17 @@ private struct AnimateCreateVideoDirectionCard: View {
         selectedLook?.title ?? L10n.string("create.guided.look.noneSelected.title")
     }
 
+    private var photoFrameSummaryDetail: String {
+        selectedPhotoMedia == nil
+            ? L10n.string("create.guided.photoFrame.empty")
+            : L10n.string("create.guided.photoFrame.ready")
+    }
+
+    private var selectedPhotoMedia: AnimateSelectedMedia? {
+        presentation.mediaSummary.selectedMedia.first(where: { ($0.kind == "photo" || $0.kind == "image") && $0.selected })
+            ?? presentation.mediaSummary.selectedMedia.first(where: { $0.kind == "photo" || $0.kind == "image" })
+    }
+
     private var canContinueMessageStep: Bool {
         form.details.trimmingCharacters(in: .whitespacesAndNewlines).count >= minimumMessageCharacterCount
     }
@@ -1487,6 +1603,7 @@ private struct AnimateCreateVideoDirectionCard: View {
     private func continueStep() {
         let result = guideState.continueStep(
             hasSelectedLook: selectedLook != nil,
+            hasSelectedPhoto: selectedPhotoMedia != nil,
             hasMessage: hasMessage,
             canContinueMessageStep: canContinueMessageStep
         )
@@ -1522,10 +1639,16 @@ private struct AnimateCreateVideoDirectionCard: View {
 
     private var continueButtonTitle: String {
         switch guideState.step {
+        case .photoFrame:
+            return selectedPhotoMedia == nil
+                ? L10n.string("create.media.choose")
+                : L10n.string("create.mediaAdjust.continueFull")
         case .look:
             return selectedLook == nil
                 ? L10n.string("create.guided.look.noneSelected.title")
-                : L10n.string("create.guided.continue.message")
+                : L10n.string("create.guided.continue.movement")
+        case .movement:
+            return L10n.string("create.guided.continue.message")
         case .scriptIdea:
             return guideState.selectedScriptIdea != .none && hasMessage
                 ? L10n.string("create.guided.continue.editMessage")
@@ -1719,7 +1842,7 @@ struct AnimateCreateVideoSetupGuideState: Equatable {
         var clearsMessage = false
     }
 
-    var step: GuidedStep = .look
+    var step: GuidedStep = .photoFrame
     var selectedScriptIdea: ScriptIdea = .none
     var isComplete = false
 
@@ -1732,14 +1855,26 @@ struct AnimateCreateVideoSetupGuideState: Equatable {
 
     mutating func continueStep(
         hasSelectedLook: Bool,
+        hasSelectedPhoto: Bool,
         hasMessage: Bool,
         canContinueMessageStep: Bool
     ) -> ContinueResult {
         switch step {
+        case .photoFrame:
+            guard hasSelectedPhoto else {
+                return ContinueResult(activeSheet: .photoFrame)
+            }
+            step = .look
+            isComplete = false
+            return ContinueResult(activeSheet: .look)
         case .look:
             guard hasSelectedLook else {
                 return ContinueResult(activeSheet: .look)
             }
+            step = .movement
+            isComplete = false
+            return ContinueResult(activeSheet: .movement)
+        case .movement:
             step = .scriptIdea
             isComplete = false
             return ContinueResult(activeSheet: .scriptIdea)
@@ -1775,8 +1910,167 @@ struct AnimateCreateVideoSetupGuideState: Equatable {
     }
 }
 
+private struct AnimateCreateGuidedPhotoFrameStep: View {
+    let media: AnimateSelectedMedia?
+    let isImporting: Bool
+    let choosePhoto: () -> Void
+    let useFullPhoto: () -> Void
+    let adjustFrame: () -> Void
+    let changePhoto: () -> Void
+    let discardVideoCreation: () -> Void
+
+    var body: some View {
+        VStack(alignment: .leading, spacing: 12) {
+            photoPreview
+
+            VStack(spacing: 8) {
+                Button(action: primaryAction) {
+                    Label(primaryTitle, systemImage: primaryIcon)
+                        .font(.system(size: 14, weight: .black))
+                        .frame(maxWidth: .infinity)
+                        .frame(height: 44)
+                }
+                .disabled(isImporting)
+                .buttonStyle(AnimateCreateSoftActionButtonStyle())
+
+                if media != nil {
+                    Button(action: adjustFrame) {
+                        Label(L10n.string("create.mediaAdjust.adjustFrame"), systemImage: "crop")
+                            .font(.system(size: 14, weight: .black))
+                            .frame(maxWidth: .infinity)
+                            .frame(height: 42)
+                    }
+                    .buttonStyle(AnimateCreateSoftActionButtonStyle())
+
+                    Button(action: changePhoto) {
+                        Label(L10n.string("create.mediaAdjust.changePhoto"), systemImage: "photo.on.rectangle")
+                            .font(.system(size: 14, weight: .black))
+                            .frame(maxWidth: .infinity)
+                            .frame(height: 42)
+                    }
+                    .buttonStyle(AnimateCreateSoftActionButtonStyle())
+                }
+            }
+
+            Menu {
+                Button(role: .destructive, action: discardVideoCreation) {
+                    Label(L10n.string("create.discard.current"), systemImage: "trash")
+                }
+            } label: {
+                Label(L10n.string("create.videoDirection.menu.accessibility"), systemImage: "ellipsis.circle")
+                    .font(.system(size: 13, weight: .black))
+                    .foregroundStyle(AVBrandColor.textSecondary)
+            }
+            .buttonStyle(.plain)
+        }
+    }
+
+    @ViewBuilder
+    private var photoPreview: some View {
+        if let media, let image = UIImage(data: media.data) {
+            Image(uiImage: image)
+                .resizable()
+                .scaledToFit()
+                .frame(maxWidth: .infinity)
+                .frame(minHeight: 260)
+                .background(Color.black.opacity(0.92), in: RoundedRectangle(cornerRadius: 14, style: .continuous))
+                .clipShape(RoundedRectangle(cornerRadius: 14, style: .continuous))
+                .overlay {
+                    RoundedRectangle(cornerRadius: 14, style: .continuous)
+                        .stroke(AVBrandColor.borderSubtle.opacity(0.7), lineWidth: 1)
+                }
+        } else {
+            VStack(spacing: 12) {
+                Image(systemName: isImporting ? "photo.badge.clock" : "photo.badge.plus")
+                    .font(.system(size: 38, weight: .bold))
+                    .foregroundStyle(AVBrandColor.accent)
+                Text(photoPreviewFallbackText)
+                    .font(.system(size: 14, weight: .semibold))
+                    .foregroundStyle(AVBrandColor.textSecondary)
+                    .multilineTextAlignment(.center)
+            }
+            .frame(maxWidth: .infinity)
+            .frame(height: 260)
+            .background(AVBrandColor.mutedSurface, in: RoundedRectangle(cornerRadius: 14, style: .continuous))
+        }
+    }
+
+    private var photoPreviewFallbackText: String {
+        if isImporting {
+            return L10n.string("create.mediaCard.import.readingSelected")
+        }
+        if media == nil {
+            return L10n.string("create.guided.photoFrame.empty")
+        }
+        return L10n.string("create.guided.photoFrame.ready")
+    }
+
+    private var primaryAction: () -> Void {
+        media == nil ? choosePhoto : useFullPhoto
+    }
+
+    private var primaryTitle: String {
+        media == nil ? L10n.string("create.media.choose") : L10n.string("create.mediaAdjust.continueFull")
+    }
+
+    private var primaryIcon: String {
+        media == nil ? "photo.badge.plus" : "checkmark.circle.fill"
+    }
+}
+
+private struct AnimateCreateGuidedMovementTile: View {
+    let movement: AnimateVideoMovementDirection
+    let isSelected: Bool
+    let select: () -> Void
+
+    var body: some View {
+        Button(action: select) {
+            VStack(alignment: .leading, spacing: 8) {
+                HStack(spacing: 8) {
+                    Image(systemName: movement.systemImage)
+                        .font(.system(size: 14, weight: .black))
+                        .foregroundStyle(isSelected ? .white : AVBrandColor.accent)
+                        .frame(width: 30, height: 30)
+                        .background(isSelected ? AVBrandColor.accent : AVBrandColor.accent.opacity(0.10), in: Circle())
+
+                    Spacer(minLength: 0)
+
+                    if isSelected {
+                        Image(systemName: "checkmark.circle.fill")
+                            .font(.system(size: 14, weight: .black))
+                            .foregroundStyle(AVBrandColor.accent)
+                    }
+                }
+
+                Text(movement.title)
+                    .font(.system(size: 13, weight: .black))
+                    .foregroundStyle(AVBrandColor.textPrimary)
+                    .lineLimit(2)
+                    .minimumScaleFactor(0.82)
+
+                Text(movement.detail)
+                    .font(.system(size: 11, weight: .semibold))
+                    .foregroundStyle(AVBrandColor.textSecondary)
+                    .lineLimit(3)
+                    .fixedSize(horizontal: false, vertical: true)
+            }
+            .padding(12)
+            .frame(maxWidth: .infinity, minHeight: 126, alignment: .topLeading)
+            .background(isSelected ? AVBrandColor.accent.opacity(0.09) : AVBrandColor.mutedSurface, in: RoundedRectangle(cornerRadius: 10, style: .continuous))
+            .overlay {
+                RoundedRectangle(cornerRadius: 10, style: .continuous)
+                    .stroke(isSelected ? AVBrandColor.accent.opacity(0.48) : AVBrandColor.borderSubtle.opacity(0.5), lineWidth: isSelected ? 2 : 1)
+            }
+        }
+        .buttonStyle(.plain)
+        .accessibilityLabel(movement.title)
+    }
+}
+
 enum GuidedStep: String, CaseIterable, Identifiable {
+    case photoFrame
     case look
+    case movement
     case scriptIdea
     case scriptMessage
     case voice
@@ -1785,7 +2079,9 @@ enum GuidedStep: String, CaseIterable, Identifiable {
 
     var title: String {
         switch self {
+        case .photoFrame: L10n.string("create.guided.photoFrame.tab")
         case .look: L10n.string("create.guided.look.tab")
+        case .movement: L10n.string("create.guided.movement.tab")
         case .scriptIdea: L10n.string("create.guided.script.tab")
         case .scriptMessage: L10n.string("create.guided.message.tab")
         case .voice: L10n.string("create.guided.voice.tab")

@@ -18,6 +18,8 @@ struct AnimateVideoDirectionRequest: Encodable {
     let mood: String
     let duration: String
     let mediaUse: String
+    let movementDirection: String?
+    let motionDirection: String?
     let occasion: String
     let details: String
     let narrationVoice: String
@@ -59,6 +61,7 @@ enum AnimateVideoDirectionInputSignature {
             form.voiceTone.rawValue,
             form.duration.rawValue,
             form.mediaUse.rawValue,
+            form.movementDirection.rawValue,
             form.occasion.trimmingCharacters(in: .whitespacesAndNewlines),
             mediaSignature
         ].joined(separator: "\u{1F}")

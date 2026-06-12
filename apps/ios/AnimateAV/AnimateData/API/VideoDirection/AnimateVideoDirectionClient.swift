@@ -64,6 +64,8 @@ struct AnimateVideoDirectionClient {
             mood: form.tone.rawValue,
             duration: form.duration.rawValue,
             mediaUse: form.mediaUse.rawValue,
+            movementDirection: form.movementDirection.rawValue,
+            motionDirection: form.movementDirection.rawValue,
             occasion: form.occasion,
             details: form.activeMessageText ?? "",
             narrationVoice: form.activeVoiceProfile?.rawValue ?? "none",

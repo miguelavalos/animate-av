@@ -273,7 +273,7 @@ struct AnimateCreateMediaManagerSheet: View {
 
     private func presentInitialAdjusterIfNeeded(_ media: [AnimateSelectedMedia]) {
         guard !hasPresentedInitialAdjuster,
-              let firstPhoto = media.first(where: { $0.kind == "photo" }),
+              let firstPhoto = media.first(where: { $0.kind == "photo" || $0.kind == "image" }),
               media.count == 1 else { return }
         hasPresentedInitialAdjuster = true
         Task { @MainActor in
@@ -532,7 +532,7 @@ private struct AnimateCreateManageableMediaTile: View {
             .opacity(isImporting ? 0.45 : 1)
             .accessibilityLabel(L10n.string("create.mediaCard.removeMedia"))
 
-            if media.kind == "photo" {
+            if media.kind == "photo" || media.kind == "image" {
                 Button(action: adjust) {
                     Image(systemName: "crop")
                         .font(.system(size: 10, weight: .black))
@@ -544,7 +544,7 @@ private struct AnimateCreateManageableMediaTile: View {
                 .padding(.trailing, 1)
                 .disabled(isImporting)
                 .opacity(isImporting ? 0.45 : 1)
-                .accessibilityLabel(L10n.string("create.mediaCard.adjustCrop"))
+                .accessibilityLabel(L10n.string("create.mediaCard.adjustFrame"))
             }
         }
         .accessibilityLabel(L10n.string("create.mediaCard.mediaAccessibility", localizedKind, index + 1))
@@ -574,7 +574,7 @@ private struct AnimateCreateManageableMediaTile: View {
 
     @ViewBuilder
     private var thumbnail: some View {
-        if media.kind == "photo", let image = UIImage(data: media.data) {
+        if (media.kind == "photo" || media.kind == "image"), let image = UIImage(data: media.data) {
             Image(uiImage: image)
                 .resizable()
                 .scaledToFill()
@@ -592,7 +592,7 @@ private struct AnimateCreateManageableMediaTile: View {
     }
 }
 
-private struct AnimateCreatePhotoAdjustView: View {
+struct AnimateCreatePhotoAdjustView: View {
     let media: AnimateSelectedMedia
     let save: (Data) -> Void
     let continueWithOriginal: () -> Void
@@ -718,7 +718,7 @@ private struct AnimateCreatePhotoAdjustView: View {
             }
             .frame(width: proxy.size.width, height: proxy.size.height)
             .overlay(alignment: .bottom) {
-                Text(L10n.string("create.mediaAdjust.cropDetail"))
+                Text(L10n.string("create.mediaAdjust.frameDetail"))
                     .font(.system(size: 13, weight: .semibold))
                     .foregroundStyle(.white.opacity(0.74))
                     .multilineTextAlignment(.center)
@@ -747,7 +747,7 @@ private struct AnimateCreatePhotoAdjustView: View {
                         mode = .crop
                     }
                 } label: {
-                    Label(L10n.string("create.mediaAdjust.crop"), systemImage: "crop")
+                    Label(L10n.string("create.mediaAdjust.adjustFrame"), systemImage: "crop")
                         .font(.system(size: 15, weight: .black))
                         .foregroundStyle(.white)
                         .frame(maxWidth: .infinity)
@@ -767,7 +767,7 @@ private struct AnimateCreatePhotoAdjustView: View {
                 .buttonStyle(.plain)
             } else {
                 Button(action: saveCrop) {
-                    Text(L10n.string("create.mediaAdjust.useCrop"))
+                    Text(L10n.string("create.mediaAdjust.useFrame"))
                         .font(.system(size: 16, weight: .black))
                         .foregroundStyle(AVBrandColor.textPrimary)
                         .frame(maxWidth: .infinity)
@@ -931,7 +931,7 @@ private struct AnimateCreateMediaZoomView: View {
 
     @ViewBuilder
     private var zoomContent: some View {
-        if media.kind == "photo", let image = UIImage(data: media.data) {
+        if (media.kind == "photo" || media.kind == "image"), let image = UIImage(data: media.data) {
             Image(uiImage: image)
                 .resizable()
                 .scaledToFit()
@@ -1105,7 +1105,7 @@ private struct AnimateCreateMediaReorderRow: View {
 
     @ViewBuilder
     private var thumbnail: some View {
-        if media.kind == "photo", let image = UIImage(data: media.data) {
+        if (media.kind == "photo" || media.kind == "image"), let image = UIImage(data: media.data) {
             Image(uiImage: image)
                 .resizable()
                 .scaledToFill()
