@@ -249,7 +249,7 @@ final class AnimateGalleryViewModel: ObservableObject {
                     temporaryFileURL: temporaryFileURL,
                     videoId: video.record.videoId,
                     artifactId: artifactId,
-                    title: video.title,
+                    title: video.displayTitle,
                     r2Key: download.r2Key ?? remoteArtifact.r2Key,
                     sourceImageLocalRelativePath: video.record.sourceImageLocalRelativePath,
                     generatedImageLocalRelativePath: generatedImageLocalRelativePath,

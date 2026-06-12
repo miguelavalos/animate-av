@@ -105,7 +105,11 @@ struct AnimateHomeVideoStatusCard: View {
         ) {
             if let latestVideo = videosSummary.latestVideo {
                 AnimateHomeLatestVideoRow(
-                    title: latestVideo.title,
+                    title: AnimateGalleryVideoPresentation.displayTitle(
+                        title: latestVideo.title,
+                        lookTitle: latestVideo.look.formattedAnimateLookTitle,
+                        createdAt: latestVideo.updatedAt
+                    ),
                     detail: AnimateVideoFormatting.compactDetail(for: latestVideo),
                     openVideo: openVideo
                 )

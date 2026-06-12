@@ -78,7 +78,12 @@ struct AnimateHomePresentation {
         }
 
         if let latestVideo = videosSummary.latestAnimateVideo {
-            return L10n.string("home.aviBrief.continueVideo", latestVideo.title)
+            let title = AnimateGalleryVideoPresentation.displayTitle(
+                title: latestVideo.title,
+                lookTitle: latestVideo.look.formattedAnimateLookTitle,
+                createdAt: latestVideo.updatedAt
+            )
+            return L10n.string("home.aviBrief.continueVideo", title)
         }
 
         if videosSummary.hasVideos {

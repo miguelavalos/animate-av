@@ -715,15 +715,19 @@ final class FinalRenderWorkflow: WorkspaceObservingWorkflow {
             } else {
                 sourceImageRelativePath = nil
             }
+            let createdAt = Date()
             pendingGalleryVideo = try galleryStore.saveDownloadedVideo(
                 temporaryFileURL: temporaryFileURL,
                 videoId: workspace.video.id,
                 artifactId: downloadArtifactId,
-                title: workspace.video.title,
+                title: AnimateGalleryVideoPresentation.automaticTitle(
+                    lookTitle: workspace.video.look.formattedAnimateLookTitle,
+                    createdAt: createdAt.timeIntervalSince1970 * 1000
+                ),
                 r2Key: download.r2Key ?? artifact.r2Key,
                 sourceImageLocalRelativePath: sourceImageRelativePath,
                 generatedImageLocalRelativePath: generatedImageRelativePath,
-                createdAt: Date()
+                createdAt: createdAt
             )
             canRetryFinalVideoDownload = false
             statusMessage = L10n.string("workflow.final.savedLocal")

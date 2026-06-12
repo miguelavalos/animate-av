@@ -59,6 +59,9 @@ struct AnimateGalleryVideoPresentation: Identifiable, Equatable {
     var id: String { record.id }
     var title: String { record.title }
     var lookTitle: String { remoteArtifact?.look?.formattedAnimateLookTitle ?? record.title }
+    var displayTitle: String {
+        Self.displayTitle(title: record.title, lookTitle: lookTitle, createdAt: record.createdAt)
+    }
     var isLocalFileAvailable: Bool { availability == .savedOnDevice }
     var canDownload: Bool { availability == .downloadAvailable }
     var availabilityTitle: String {
@@ -74,6 +77,28 @@ struct AnimateGalleryVideoPresentation: Identifiable, Equatable {
         case .remoteMetadataOnly:
             return L10n.string("gallery.video.remoteMetadataOnly")
         }
+    }
+
+    static func automaticTitle(lookTitle: String, createdAt: Double) -> String {
+        guard createdAt > 0 else { return lookTitle }
+        return "\(lookTitle) · \(AnimateDateFormatting.formattedDate(milliseconds: createdAt))"
+    }
+
+    static func displayTitle(title: String, lookTitle: String, createdAt: Double) -> String {
+        if isGenericTitle(title) {
+            return automaticTitle(lookTitle: lookTitle, createdAt: createdAt)
+        }
+        return title
+    }
+
+    private static func isGenericTitle(_ title: String) -> Bool {
+        let normalizedTitle = title.trimmingCharacters(in: .whitespacesAndNewlines).lowercased()
+        return [
+            L10n.string("gallery.video.defaultTitle"),
+            "Animate AV video",
+            "Animate video",
+            "Video Animate"
+        ].map { $0.lowercased() }.contains(normalizedTitle)
     }
 }
 
@@ -154,7 +179,7 @@ struct AnimateGalleryImagePresentation: Identifiable, Equatable {
 
 }
 
-private extension String {
+extension String {
     var formattedAnimateLookTitle: String {
         replacingOccurrences(of: "-", with: " ")
             .replacingOccurrences(of: "_", with: " ")

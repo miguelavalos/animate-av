@@ -539,7 +539,7 @@ private struct AnimateGalleryVideoRow: View {
                     Spacer(minLength: 0)
 
                     HStack {
-                        Text(video.title)
+                        Text(video.displayTitle)
                             .font(.system(size: 22, weight: .black))
                             .foregroundStyle(.white)
                             .lineLimit(1)
@@ -949,7 +949,7 @@ private struct AnimateGalleryRenameSheet: View {
     init(video: AnimateGalleryVideoPresentation, save: @escaping (String) -> Void) {
         self.video = video
         self.save = save
-        _title = State(initialValue: video.title)
+        _title = State(initialValue: video.displayTitle)
     }
 
     var body: some View {
@@ -986,7 +986,7 @@ private struct AnimateGalleryVideoPlayerItem: Identifiable {
 
     init(video: AnimateGalleryVideoPresentation) {
         id = video.id
-        title = video.title
+        title = video.displayTitle
         url = video.localFileURL ?? URL(fileURLWithPath: "/dev/null")
     }
 }
