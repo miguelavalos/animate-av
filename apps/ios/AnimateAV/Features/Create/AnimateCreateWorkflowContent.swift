@@ -2094,11 +2094,11 @@ private struct AnimateCreateGuidedPhotoFrameStep: View {
     @ViewBuilder
     private var photoPreview: some View {
         if let media, let image = UIImage(data: media.data) {
-            let previewSize = previewSize(for: image)
             Image(uiImage: image)
                 .resizable()
                 .scaledToFit()
-                .frame(width: previewSize.width, height: previewSize.height)
+                .frame(maxWidth: .infinity)
+                .frame(maxHeight: 420)
                 .clipShape(RoundedRectangle(cornerRadius: 14, style: .continuous))
                 .overlay {
                     RoundedRectangle(cornerRadius: 14, style: .continuous)
@@ -2140,15 +2140,6 @@ private struct AnimateCreateGuidedPhotoFrameStep: View {
             return L10n.string("create.guided.photoFrame.empty")
         }
         return L10n.string("create.guided.photoFrame.ready")
-    }
-
-    private func previewSize(for image: UIImage) -> CGSize {
-        let maxWidth: CGFloat = 294
-        let maxHeight: CGFloat = 420
-        let imageWidth = max(image.size.width, 1)
-        let imageHeight = max(image.size.height, 1)
-        let scale = min(maxWidth / imageWidth, maxHeight / imageHeight)
-        return CGSize(width: imageWidth * scale, height: imageHeight * scale)
     }
 
 }
