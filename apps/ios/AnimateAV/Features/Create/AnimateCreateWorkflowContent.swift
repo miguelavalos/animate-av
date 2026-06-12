@@ -29,6 +29,7 @@ struct AnimateCreateWorkflowContent: View {
                     importPickerItems: viewModel.importPickerItems,
                     removeMedia: viewModel.removeMedia,
                     updateMediaPhotoData: viewModel.updateMedia,
+                    restoreOriginalPhotoData: viewModel.restoreOriginalMedia,
                     restoreLocalMediaForEditing: viewModel.restoreLocalMediaForEditing,
                     selectStyle: viewModel.selectCreationStyle,
                     selectLook: viewModel.selectLook,
@@ -75,6 +76,7 @@ private struct AnimateCreateMediaFirstWorkspace: View {
     let importPickerItems: ([PhotosPickerItem]) -> Void
     let removeMedia: (AnimateSelectedMedia) -> Void
     let updateMediaPhotoData: (AnimateSelectedMedia, Data) -> Void
+    let restoreOriginalPhotoData: (AnimateSelectedMedia) -> Void
     let restoreLocalMediaForEditing: () -> Void
     let selectStyle: (AnimateVideoCreationStyle) -> Void
     let selectLook: (AnimateVideoLook) -> Void
@@ -163,6 +165,7 @@ private struct AnimateCreateMediaFirstWorkspace: View {
                             choosePhoto: presentCompactPhotoPicker,
                             removeMedia: removeMedia,
                             updateMediaPhotoData: updateMediaPhotoData,
+                            restoreOriginalPhotoData: restoreOriginalPhotoData,
                             changeTheme: { showsThemeChooser = true },
                             changeLook: { showsLookChooser = true },
                             changeVoice: { showsVoiceChooser = true },
@@ -971,6 +974,7 @@ private struct AnimateCreateVideoDirectionCard: View {
     let choosePhoto: () -> Void
     let removeMedia: (AnimateSelectedMedia) -> Void
     let updateMediaPhotoData: (AnimateSelectedMedia, Data) -> Void
+    let restoreOriginalPhotoData: (AnimateSelectedMedia) -> Void
     let changeTheme: () -> Void
     let changeLook: () -> Void
     let changeVoice: () -> Void
@@ -1345,7 +1349,15 @@ private struct AnimateCreateVideoDirectionCard: View {
                             adjustingInlineMedia = selectedPhotoMedia
                         }
                     },
-                    changePhoto: replaceStepPhoto
+                    changePhoto: replaceStepPhoto,
+                    restoreOriginal: {
+                        if let selectedPhotoMedia {
+                            restoreOriginalPhotoData(selectedPhotoMedia)
+                            isGuidedFlowComplete = false
+                            guideState.step = .photoFrame
+                            activeGuidedSheet = .photoFrame
+                        }
+                    }
                 )
             }
         case .look:
@@ -2034,6 +2046,7 @@ private struct AnimateCreateGuidedPhotoFrameStep: View {
     let choosePhoto: () -> Void
     let adjustFrame: () -> Void
     let changePhoto: () -> Void
+    let restoreOriginal: () -> Void
 
     var body: some View {
         VStack(alignment: .leading, spacing: 12) {
@@ -2066,6 +2079,18 @@ private struct AnimateCreateGuidedPhotoFrameStep: View {
                 .buttonStyle(AnimateCreatePhotoFrameSecondaryButtonStyle())
             }
             .frame(maxWidth: .infinity)
+
+            if media?.hasFrameAdjustment == true {
+                Button(action: restoreOriginal) {
+                    Label(L10n.string("create.mediaAdjust.restoreOriginal"), systemImage: "arrow.uturn.backward")
+                        .font(.system(size: 13, weight: .bold))
+                        .foregroundStyle(AVBrandColor.textSecondary)
+                        .frame(maxWidth: .infinity)
+                        .frame(height: 34)
+                        .background(AVBrandColor.mutedSurface.opacity(0.56), in: Capsule())
+                }
+                .buttonStyle(.plain)
+            }
         }
     }
 
@@ -2081,6 +2106,17 @@ private struct AnimateCreateGuidedPhotoFrameStep: View {
                 .overlay {
                     RoundedRectangle(cornerRadius: 14, style: .continuous)
                         .stroke(AVBrandColor.borderSubtle.opacity(0.7), lineWidth: 1)
+                }
+                .overlay(alignment: .topTrailing) {
+                    if media.hasFrameAdjustment {
+                        Text(L10n.string("create.mediaAdjust.frameApplied"))
+                            .font(.system(size: 10, weight: .black))
+                            .foregroundStyle(AVBrandColor.textPrimary)
+                            .padding(.horizontal, 8)
+                            .padding(.vertical, 5)
+                            .background(.ultraThinMaterial, in: Capsule())
+                            .padding(8)
+                    }
                 }
                 .frame(maxWidth: .infinity)
         } else {

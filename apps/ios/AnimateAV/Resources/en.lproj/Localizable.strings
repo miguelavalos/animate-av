@@ -1046,6 +1046,8 @@
 "create.mediaAdjust.useCrop" = "Save frame";
 "create.mediaAdjust.useFrame" = "Save frame";
 "create.mediaAdjust.fullImage" = "Original";
+"create.mediaAdjust.restoreOriginal" = "Restore original";
+"create.mediaAdjust.frameApplied" = "Frame applied";
 "create.mediaAdjust.reset" = "Reset";
 "create.mediaAdjust.cropDetail" = "Move the frame to choose what the video should animate.";
 "create.mediaAdjust.frameDetail" = "Move or resize the frame to choose what the video should animate.";

@@ -1041,6 +1041,8 @@
 "create.mediaAdjust.crop" = "Retallar";
 "create.mediaAdjust.useCrop" = "Usar retall";
 "create.mediaAdjust.fullImage" = "Foto completa";
+"create.mediaAdjust.restoreOriginal" = "Restaurar original";
+"create.mediaAdjust.frameApplied" = "Enquadrament aplicat";
 "create.mediaAdjust.reset" = "Restablir";
 "create.mediaAdjust.cropDetail" = "Pessiga i arrossega per triar la part usada al vídeo.";
 "create.mediaRows.removeNamed" = "Treure %@";

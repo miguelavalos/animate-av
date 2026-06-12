@@ -1041,6 +1041,8 @@
 "create.mediaAdjust.crop" = "Recadrer";
 "create.mediaAdjust.useCrop" = "Utiliser le recadrage";
 "create.mediaAdjust.fullImage" = "Photo entière";
+"create.mediaAdjust.restoreOriginal" = "Restaurer l’original";
+"create.mediaAdjust.frameApplied" = "Recadrage appliqué";
 "create.mediaAdjust.reset" = "Réinitialiser";
 "create.mediaAdjust.cropDetail" = "Pince et fais glisser pour choisir la partie utilisée dans la vidéo.";
 "create.mediaRows.removeNamed" = "Retirer %@";

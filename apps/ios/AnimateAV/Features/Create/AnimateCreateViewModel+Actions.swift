@@ -90,6 +90,11 @@ extension AnimateCreateViewModel {
         mediaUploadWorkflow?.update(media, withPhotoData: data)
     }
 
+    func restoreOriginalMedia(_ media: AnimateSelectedMedia) {
+        markPreparedVideoDirectionMediaEdited()
+        mediaUploadWorkflow?.restoreOriginalPhotoData(media)
+    }
+
     func restoreLocalMediaForEditing() {
         mediaUploadWorkflow?.restoreLocalMediaForEditing()
     }

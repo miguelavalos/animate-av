@@ -1043,6 +1043,8 @@
 "create.mediaAdjust.crop" = "Ajustar encuadre";
 "create.mediaAdjust.useCrop" = "Guardar encuadre";
 "create.mediaAdjust.fullImage" = "Original";
+"create.mediaAdjust.restoreOriginal" = "Restaurar original";
+"create.mediaAdjust.frameApplied" = "Encuadre aplicado";
 "create.mediaAdjust.reset" = "Reiniciar";
 "create.mediaAdjust.cropDetail" = "Arrastra el marco para elegir qué parte animar.";
 "create.mediaRows.removeNamed" = "Quitar %@";

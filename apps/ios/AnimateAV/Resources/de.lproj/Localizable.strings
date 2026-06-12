@@ -1043,6 +1043,8 @@
 "create.mediaAdjust.crop" = "Zuschneiden";
 "create.mediaAdjust.useCrop" = "Ausschnitt verwenden";
 "create.mediaAdjust.fullImage" = "Vollständiges Foto";
+"create.mediaAdjust.restoreOriginal" = "Original wiederherstellen";
+"create.mediaAdjust.frameApplied" = "Ausschnitt angewendet";
 "create.mediaAdjust.reset" = "Zurücksetzen";
 "create.mediaAdjust.cropDetail" = "Ziehe und zoome, um den Bereich für das Video auszuwählen.";
 "create.mediaRows.removeNamed" = "%@ entfernen";

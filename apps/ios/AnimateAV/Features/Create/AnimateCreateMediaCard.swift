@@ -597,7 +597,7 @@ struct AnimateCreatePhotoAdjustView: View {
     @State private var activeDragCropRect = CGRect(x: 0.32, y: 0.18, width: 0.36, height: 0.64)
 
     private var image: UIImage? {
-        UIImage(data: media.data)
+        UIImage(data: media.sourceImageDataForEditing)
     }
 
     var body: some View {

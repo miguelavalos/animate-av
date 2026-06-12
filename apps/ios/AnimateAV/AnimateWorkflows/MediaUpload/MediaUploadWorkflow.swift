@@ -112,6 +112,19 @@ final class MediaUploadWorkflow: WorkspaceObservingWorkflow {
         statusMessage = L10n.string("create.media.status.ready")
     }
 
+    func restoreOriginalPhotoData(_ media: AnimateSelectedMedia) {
+        guard let index = selectedMedia.firstIndex(where: { $0.id == media.id }),
+              selectedMedia[index].kind == "photo",
+              let originalData = selectedMedia[index].originalData else { return }
+        let digest = SHA256.hash(data: originalData)
+            .map { String(format: "%02x", $0) }
+            .joined()
+        selectedMedia[index] = selectedMedia[index].restoredOriginalPhotoData(
+            sha256: digest
+        )
+        statusMessage = L10n.string("create.media.status.ready")
+    }
+
     override func workspaceDidChange(_ workspace: AnimateWorkspace?) {
         guard selectedMedia.isEmpty,
               let workspace,

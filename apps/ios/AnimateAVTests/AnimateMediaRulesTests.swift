@@ -49,6 +49,41 @@ final class AnimateMediaRulesTests: XCTestCase {
         )
     }
 
+    func testPhotoFrameAdjustmentKeepsOriginalDataForLaterEditing() {
+        let original = Data([1, 2, 3, 4])
+        let cropped = Data([9, 8, 7])
+        let media = makeLocalMedia(
+            id: "00000000-0000-0000-0000-000000000301",
+            selected: true,
+            data: original
+        )
+
+        let adjusted = media.updatedPhotoData(cropped, sha256: "croppedhash")
+
+        XCTAssertEqual(adjusted.data, cropped)
+        XCTAssertEqual(adjusted.sourceImageDataForEditing, original)
+        XCTAssertTrue(adjusted.hasFrameAdjustment)
+        XCTAssertTrue(adjusted.sourceLocalIdentifier.contains(":crop:"))
+    }
+
+    func testRestoringOriginalPhotoDataClearsFrameAdjustment() {
+        let original = Data([1, 2, 3, 4])
+        let cropped = Data([9, 8, 7])
+        let media = makeLocalMedia(
+            id: "00000000-0000-0000-0000-000000000302",
+            selected: true,
+            data: original
+        )
+        let adjusted = media.updatedPhotoData(cropped, sha256: "croppedhash")
+
+        let restored = adjusted.restoredOriginalPhotoData(sha256: "originalhash")
+
+        XCTAssertEqual(restored.data, original)
+        XCTAssertEqual(restored.sourceImageDataForEditing, original)
+        XCTAssertFalse(restored.hasFrameAdjustment)
+        XCTAssertEqual(restored.sourceLocalIdentifier, media.sourceLocalIdentifier)
+    }
+
     func testAutoStyleSuggestionUsesSingleLocalSceneryImageForTravel() {
         let media = [
             makeLocalMedia(
@@ -80,6 +115,7 @@ final class AnimateMediaRulesTests: XCTestCase {
     private func makeLocalMedia(
         id: String,
         selected: Bool,
+        data: Data = Data([1, 2, 3, 4]),
         analysis: AVLocalMediaAnalysis? = nil
     ) -> AnimateSelectedMedia {
         AnimateSelectedMedia(
@@ -90,7 +126,7 @@ final class AnimateMediaRulesTests: XCTestCase {
             kind: "photo",
             byteSize: 4,
             sha256: "abcd",
-            data: Data([1, 2, 3, 4]),
+            data: data,
             capturedAt: nil,
             analysis: analysis,
             sortOrder: 0,
