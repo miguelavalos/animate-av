@@ -640,17 +640,19 @@ private struct AnimateGalleryVideoMenu: View {
 private struct AnimateGalleryVideoInfoSheet: View {
     let video: AnimateGalleryVideoPresentation
     @Environment(\.dismiss) private var dismiss
+    @EnvironmentObject private var viewModel: AnimateGalleryViewModel
 
     var body: some View {
+        let currentVideo = viewModel.videos.first { $0.id == video.id } ?? video
         NavigationStack {
             ScrollView {
                 VStack(alignment: .leading, spacing: 14) {
                     AnimateGalleryVideoInfoHero(
-                        sourceImageURL: video.sourceImageURL,
-                        generatedImageURL: video.generatedImageURL
+                        sourceImageURL: currentVideo.sourceImageURL,
+                        generatedImageURL: currentVideo.generatedImageURL
                     )
 
-                    AnimateGalleryMetadataPanel(rows: metadataRows)
+                    AnimateGalleryMetadataPanel(rows: metadataRows(for: currentVideo))
                 }
                 .padding(16)
             }
@@ -665,9 +667,12 @@ private struct AnimateGalleryVideoInfoSheet: View {
                 }
             }
         }
+        .onAppear {
+            viewModel.prepareVideoInfo(video)
+        }
     }
 
-    private var metadataRows: [AnimateGalleryMetadataRow] {
+    private func metadataRows(for video: AnimateGalleryVideoPresentation) -> [AnimateGalleryMetadataRow] {
         let artifact = video.remoteArtifact
         var rows = [
             AnimateGalleryMetadataRow(title: L10n.string("gallery.info.look"), value: video.lookTitle)
@@ -725,7 +730,7 @@ private struct AnimateGalleryVideoInfoHero: View {
                         generatedImageURL: generatedImageURL
                     )
                 } else {
-                    AnimateGalleryImageThumbnail(url: generatedImageURL)
+                    AnimateGalleryImageThumbnail(url: generatedImageURL ?? sourceImageURL)
                 }
             }
             .frame(height: 230)
