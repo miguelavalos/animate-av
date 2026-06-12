@@ -40,7 +40,7 @@ handoff values belong in the private AVALSYS suite.
 V1 is a signed-in one-photo animation workflow:
 
 ```text
-Foto y encuadre -> Look -> Movement -> optional Message / Voice -> Check cost -> Create video -> local download -> Gallery
+Foto y encuadre -> Look -> Animation -> optional Message / Voice -> Check cost -> Create video -> local download -> Gallery
 ```
 
 Foto y encuadre is the normal source-photo step: choose one photo, use the full
@@ -50,9 +50,10 @@ workflow. The client may retain the imported original locally while the draft is
 editable so re-entering frame adjustment and restore-original work without
 backend state.
 
-Movement is a separate setup choice from Message / Voice. It controls what
-visually moves in the animation. Message and voice are optional; a visual-only
-video with no message and no narration is a valid v1 path.
+Animation is a separate setup choice from Message / Voice. It captures optional
+visual direction for what should happen in the animated scene. Message and voice
+are optional; a visual-only video with no message and no narration is a valid v1
+path.
 
 Local no-spend QA may use fixture or mock final-render routes to reach the
 confirmation and queued/completed states. Do not use public docs to authorize a

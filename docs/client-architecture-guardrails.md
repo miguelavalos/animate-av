@@ -14,7 +14,7 @@ renders the state returned by the configured backend/realtime layer.
 The current v1 user flow is:
 
 ```text
-Foto y encuadre -> Look -> Movement -> optional Message / Voice -> backend infers duration and quotes credits -> generate animated video -> local download -> Gallery
+Foto y encuadre -> Look -> Animation -> optional Message / Voice -> backend infers duration and quotes credits -> generate animated video -> local download -> Gallery
 ```
 
 The Foto y encuadre step owns source-photo choice, full-photo use, frame
@@ -33,9 +33,10 @@ local original and adjusted image in v1. If metadata is useful, it may identify
 that a frame adjustment was applied, but the private backend should not be
 treated as the source of truth for restoring the user's pre-adjusted photo.
 
-Movement is a separate client setup choice from Message / Voice. It describes
-what visually moves in the animation. Message and voice remain optional, and a
-valid one-photo video can be confirmed with no message and no narration.
+Animation is a separate client setup choice from Message / Voice. It captures
+optional visual direction for what should happen in the animated scene. Message
+and voice remain optional, and a valid one-photo video can be confirmed with no
+message and no narration.
 
 Images use the same ownership model with a simpler output: choose one source
 photo, generate a stylized image, then download/share it or use it as video
@@ -62,7 +63,7 @@ The iOS app must not:
 The iOS app may:
 
 - collect user media choices and setup options;
-- collect a client-side movement direction and send it as tolerant additional
+- collect client-side animation direction and send it as tolerant additional
   request metadata when supported by the backend;
 - show local editing affordances before final confirmation;
 - request an official backend quote/plan;

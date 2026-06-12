@@ -29,7 +29,7 @@ credit commit/release.
 Current v1 flow:
 
 ```text
-Photo / Frame -> Look -> Movement -> optional Animation Direction -> optional Message / Voice -> backend infers duration and quotes credits -> generate animated video -> local download -> Gallery
+Photo / Frame -> Look -> Animation -> optional Message / Voice -> backend infers duration and quotes credits -> generate animated video -> local download -> Gallery
 ```
 
 Photo / Frame is the normal source-photo step. It lets the user choose one
@@ -44,13 +44,11 @@ re-entering frame adjustment should start from the local original, not from a
 previously cropped derivative. Restore-original behavior is local UI state and
 must not require backend recovery.
 
-Movement is separate from Message / Voice. It controls what visually moves in
-the animation, while Message and Voice remain optional. A one-photo video with
-no message and no narration is a valid v1 setup.
-
-Animation Direction is an optional user-authored instruction for what the image
-should do when it comes alive. It may be selected from simple presets or entered
-as custom text, and it remains independent from narrated Message / Voice.
+Animation is separate from Message / Voice. It captures optional visual
+direction for what the image should do when it comes alive. Users may choose no
+extra direction, start from a visual template, or type custom visual
+instructions. Message and Voice remain optional, and a one-photo video with no
+message and no narration is a valid v1 setup.
 
 Images are a separate v1 workflow: choose one source photo, generate a stylized
 image, then download/share it or use it as video input when synced state allows.
@@ -75,10 +73,10 @@ Current product-polish scope:
 
 - Review visible `Gallery` and `In Progress` naming before production smoke; the
   behavior may stay, but the labels may not fit Animate AV.
-- Keep Create Video aligned to Photo / Frame, Look, Movement, optional
-  Animation Direction, and optional Message / Voice. Avoid reintroducing
+- Keep Create Video aligned to Photo / Frame, Look, Animation, optional
+  Message / Voice. Avoid reintroducing
   inherited multi-photo edit surfaces in the normal path.
-- Treat Animation Direction as visual guidance for action, camera, and scene
+- Treat Animation as visual guidance for action, camera, and scene
   behavior. It may be longer than the narrated Message and works without Voice.
 - Review Create Video looks in English first: family names, look names,
   subtitles, and preview images.

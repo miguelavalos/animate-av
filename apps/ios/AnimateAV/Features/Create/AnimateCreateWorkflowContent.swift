@@ -1170,15 +1170,9 @@ private struct AnimateCreateVideoDirectionCard: View {
                 )
                 summaryEditRow(
                     title: L10n.string("create.guided.summary.movement"),
-                    detail: form.movementDirection.title,
+                    detail: animationSummaryDetail,
                     icon: form.movementDirection.systemImage,
                     editStep: .movement
-                )
-                summaryEditRow(
-                    title: L10n.string("create.guided.summary.direction"),
-                    detail: animationDirectionSummaryDetail,
-                    icon: "sparkles.tv.fill",
-                    editStep: .animationDirection
                 )
                 summaryEditRow(
                     title: L10n.string("create.guided.summary.message"),
@@ -1222,15 +1216,9 @@ private struct AnimateCreateVideoDirectionCard: View {
                 )
                 summaryEditRow(
                     title: L10n.string("create.guided.summary.movement"),
-                    detail: form.movementDirection.title,
+                    detail: animationSummaryDetail,
                     icon: form.movementDirection.systemImage,
                     editStep: .movement
-                )
-                summaryEditRow(
-                    title: L10n.string("create.guided.summary.direction"),
-                    detail: animationDirectionSummaryDetail,
-                    icon: "sparkles.tv.fill",
-                    editStep: .animationDirection
                 )
                 summaryEditRow(
                     title: L10n.string("create.guided.summary.message"),
@@ -1418,41 +1406,40 @@ private struct AnimateCreateVideoDirectionCard: View {
         case .movement:
             VStack(alignment: .leading, spacing: 10) {
                 stepHeader(L10n.string("create.guided.movement.title"), L10n.string("create.guided.movement.detail"))
-                LazyVGrid(columns: Array(repeating: GridItem(.flexible(), spacing: 8), count: 2), spacing: 8) {
-                    ForEach(AnimateVideoMovementDirection.selectorOrder) { movement in
-                        AnimateCreateGuidedMovementTile(
-                            movement: movement,
-                            isSelected: form.movementDirection == movement,
-                            select: { selectMovementDirection(movement) }
-                        )
-                    }
-                }
-            }
-        case .animationDirection:
-            VStack(alignment: .leading, spacing: 10) {
-                stepHeader(L10n.string("create.guided.direction.title"), L10n.string("create.guided.direction.detail"))
-                LazyVGrid(columns: Array(repeating: GridItem(.flexible(), spacing: 8), count: 2), spacing: 8) {
-                    ForEach(AnimationDirectionPreset.allCases) { preset in
-                        AnimateCreateGuidedAnimationDirectionTile(
-                            preset: preset,
-                            isSelected: isAnimationDirectionPresetSelected(preset),
-                            select: { applyAnimationDirectionPreset(preset) }
-                        )
-                    }
-                }
+                AnimateCreateGuidedTemplateMenu(
+                    title: L10n.string("create.guided.direction.template"),
+                    selectedTitle: selectedAnimationDirectionPreset.title,
+                    selectedDetail: selectedAnimationDirectionPreset.detail,
+                    options: AnimationDirectionPreset.menuOptions,
+                    select: applyAnimationDirectionPreset
+                )
                 VStack(alignment: .leading, spacing: 8) {
                     HStack {
                         Text(L10n.string("create.guided.direction.customLabel"))
                             .font(.system(size: 12, weight: .black))
                             .foregroundStyle(AVBrandColor.textPrimary)
                         Spacer()
+                        if !form.animationDirection.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
+                            Button {
+                                applyAnimationDirectionPreset(.none)
+                            } label: {
+                                Label(L10n.string("create.guided.direction.clear"), systemImage: "xmark.circle.fill")
+                                    .font(.system(size: 12, weight: .black))
+                                    .labelStyle(.titleAndIcon)
+                            }
+                            .buttonStyle(.plain)
+                            .foregroundStyle(AVBrandColor.textSecondary)
+                        }
                         Text("\(form.animationDirection.count)/\(AnimateVideoSetupLimits.animationDirectionCharacterLimit)")
                             .font(.caption.weight(.bold))
                             .foregroundStyle(AVBrandColor.textSecondary)
                     }
                     TextEditor(text: Binding(
                         get: { form.animationDirection },
-                        set: { updateAnimationDirection($0) }
+                        set: {
+                            selectMovementDirection(.custom)
+                            updateAnimationDirection($0)
+                        }
                     ))
                     .font(.system(size: 15, weight: .semibold))
                     .frame(minHeight: 120)
@@ -1470,45 +1457,48 @@ private struct AnimateCreateVideoDirectionCard: View {
         case .scriptIdea:
             VStack(alignment: .leading, spacing: 10) {
                 stepHeader(L10n.string("create.guided.script.title"), L10n.string("create.guided.script.detail"))
-                LazyVGrid(columns: Array(repeating: GridItem(.flexible(), spacing: 8), count: 2), spacing: 8) {
-                    ForEach(ScriptIdea.allCases) { idea in
-                        AnimateCreateGuidedScriptIdeaTile(
-                            idea: idea,
-                            isSelected: guideState.selectedScriptIdea == idea,
-                            select: {
-                                guideState.selectScriptIdea(idea)
-                                applyScriptIdea(idea)
-                            }
-                        )
+                AnimateCreateGuidedTemplateMenu(
+                    title: L10n.string("create.guided.script.template"),
+                    selectedTitle: guideState.selectedScriptIdea.title,
+                    selectedDetail: guideState.selectedScriptIdea.previewText,
+                    options: ScriptIdea.allCases,
+                    select: {
+                        guideState.selectScriptIdea($0)
+                        applyScriptIdea($0)
                     }
-                }
-            }
-        case .scriptMessage:
-            VStack(alignment: .leading, spacing: 10) {
-                stepHeader(L10n.string("create.guided.message.title"), L10n.string("create.guided.message.detail"))
+                )
                 VStack(alignment: .leading, spacing: 8) {
                     HStack {
                         Text(L10n.string("create.guided.script.message"))
                             .font(.system(size: 12, weight: .black))
                         Spacer()
-                        Button {
-                            updateMessage("")
-                        } label: {
-                            Label(L10n.string("create.guided.message.clear"), systemImage: "xmark.circle.fill")
-                                .font(.system(size: 12, weight: .black))
-                                .labelStyle(.titleAndIcon)
+                        if hasMessage {
+                            Button {
+                                guideState.selectScriptIdea(.none)
+                                form.hasMessage = false
+                                form.voiceEnabled = false
+                                updateMessage("")
+                            } label: {
+                                Label(L10n.string("create.guided.message.clear"), systemImage: "xmark.circle.fill")
+                                    .font(.system(size: 12, weight: .black))
+                                    .labelStyle(.titleAndIcon)
+                            }
+                            .buttonStyle(.plain)
+                            .foregroundStyle(AVBrandColor.textSecondary)
                         }
-                        .buttonStyle(.plain)
-                        .foregroundStyle(AVBrandColor.textSecondary)
-                        .disabled(!hasMessage)
-                        .opacity(hasMessage ? 1 : 0.45)
                         Text("\(form.details.count)/180")
                             .font(.caption.weight(.bold))
                             .foregroundStyle(AVBrandColor.textSecondary)
                     }
                     TextEditor(text: Binding(
                         get: { form.details },
-                        set: { updateMessage($0) }
+                        set: {
+                            let hasText = !$0.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty
+                            guideState.selectScriptIdea(hasText ? .custom : .none)
+                            form.hasMessage = hasText
+                            form.voiceEnabled = hasText && form.audioEnabled
+                            updateMessage($0)
+                        }
                     ))
                     .font(.system(size: 15, weight: .semibold))
                     .frame(minHeight: 210)
@@ -1521,7 +1511,7 @@ private struct AnimateCreateVideoDirectionCard: View {
                     Text(L10n.string("create.guided.script.tip"))
                         .font(.caption.weight(.semibold))
                         .foregroundStyle(AVBrandColor.textSecondary)
-                    if !canContinueMessageStep {
+                    if guideState.selectedScriptIdea != .none && !canContinueMessageStep {
                         Text(L10n.string("create.guided.message.minimum", minimumMessageCharacterCount))
                             .font(.caption.weight(.bold))
                             .foregroundStyle(AVBrandColor.textSecondary)
@@ -1614,11 +1604,10 @@ private struct AnimateCreateVideoDirectionCard: View {
             return selectedLook == nil
         case .movement:
             return false
-        case .animationDirection:
-            return false
-        case .scriptMessage:
-            return !canContinueMessageStep
         case .scriptIdea, .voice:
+            if guideState.step == .scriptIdea, guideState.selectedScriptIdea != .none {
+                return !canContinueMessageStep
+            }
             return false
         }
     }
@@ -1641,7 +1630,7 @@ private struct AnimateCreateVideoDirectionCard: View {
     }
 
     private var activeSteps: [GuidedStep] {
-        hasMessage ? [.photoFrame, .look, .movement, .animationDirection, .scriptIdea, .scriptMessage, .voice] : [.photoFrame, .look, .movement, .animationDirection, .scriptIdea]
+        hasMessage ? [.photoFrame, .look, .movement, .scriptIdea, .voice] : [.photoFrame, .look, .movement, .scriptIdea]
     }
 
     private var hasMessage: Bool {
@@ -1661,9 +1650,12 @@ private struct AnimateCreateVideoDirectionCard: View {
             : L10n.string("create.guided.photoFrame.ready")
     }
 
-    private var animationDirectionSummaryDetail: String {
+    private var animationSummaryDetail: String {
         let trimmed = form.animationDirection.trimmingCharacters(in: .whitespacesAndNewlines)
-        return trimmed.isEmpty ? L10n.string("create.guided.direction.none") : trimmed
+        guard !trimmed.isEmpty else {
+            return L10n.string("create.guided.direction.none")
+        }
+        return trimmed
     }
 
     private var selectedPhotoMedia: AnimateSelectedMedia? {
@@ -1758,15 +1750,9 @@ private struct AnimateCreateVideoDirectionCard: View {
                 ? L10n.string("create.guided.look.noneSelected.title")
                 : L10n.string("create.guided.continue.movement")
         case .movement:
-            return L10n.string("create.guided.continue.direction")
-        case .animationDirection:
             return L10n.string("create.guided.continue.message")
         case .scriptIdea:
             return guideState.selectedScriptIdea != .none && hasMessage
-                ? L10n.string("create.guided.continue.editMessage")
-                : L10n.string("create.guided.continue.finish")
-        case .scriptMessage:
-            return hasMessage
                 ? L10n.string("create.guided.continue.voice")
                 : L10n.string("create.guided.continue.finish")
         case .voice:
@@ -1780,16 +1766,27 @@ private struct AnimateCreateVideoDirectionCard: View {
         }
         form.hasMessage = idea != .none
         form.voiceEnabled = idea != .none && form.audioEnabled
-        updateMessage(idea.defaultMessage)
+        if idea != .custom {
+            updateMessage(idea.defaultMessage)
+        }
         form.occasion = idea.title
     }
 
     private func applyAnimationDirectionPreset(_ preset: AnimationDirectionPreset) {
-        updateAnimationDirection(preset.promptText)
+        selectMovementDirection(preset.movementDirection)
+        if preset != .custom {
+            updateAnimationDirection(preset.promptText)
+        }
     }
 
-    private func isAnimationDirectionPresetSelected(_ preset: AnimationDirectionPreset) -> Bool {
-        form.animationDirection.trimmingCharacters(in: .whitespacesAndNewlines) == preset.promptText
+    private var selectedAnimationDirectionPreset: AnimationDirectionPreset {
+        let trimmed = form.animationDirection.trimmingCharacters(in: .whitespacesAndNewlines)
+        if trimmed.isEmpty {
+            return .none
+        }
+        return AnimationDirectionPreset.allCases.first {
+            !$0.promptText.isEmpty && $0.promptText == trimmed
+        } ?? .custom
     }
 
     private var isUserAdjustedFromAvi: Bool {
@@ -1995,10 +1992,6 @@ struct AnimateCreateVideoSetupGuideState: Equatable {
             isComplete = false
             return ContinueResult(activeSheet: .movement)
         case .movement:
-            step = .animationDirection
-            isComplete = false
-            return ContinueResult(activeSheet: .animationDirection)
-        case .animationDirection:
             step = .scriptIdea
             isComplete = false
             return ContinueResult(activeSheet: .scriptIdea)
@@ -2007,15 +2000,7 @@ struct AnimateCreateVideoSetupGuideState: Equatable {
                 completeWithoutMessage()
                 return ContinueResult(activeSheet: nil, clearsMessage: true)
             }
-            if hasMessage {
-                step = .scriptMessage
-                isComplete = false
-                return ContinueResult(activeSheet: .scriptMessage)
-            }
-            isComplete = true
-            return ContinueResult(activeSheet: nil)
-        case .scriptMessage:
-            if canContinueMessageStep {
+            if hasMessage && canContinueMessageStep {
                 step = .voice
                 isComplete = false
                 return ContinueResult(activeSheet: .voice)
@@ -2219,6 +2204,65 @@ private struct AnimateCreateGuidedMovementTile: View {
     }
 }
 
+protocol AnimateCreateGuidedTemplateOption: Identifiable {
+    var title: String { get }
+    var detail: String { get }
+    var systemImage: String { get }
+}
+
+private struct AnimateCreateGuidedTemplateMenu<Option: AnimateCreateGuidedTemplateOption>: View {
+    let title: String
+    let selectedTitle: String
+    let selectedDetail: String
+    let options: [Option]
+    let select: (Option) -> Void
+
+    var body: some View {
+        VStack(alignment: .leading, spacing: 7) {
+            Text(title)
+                .font(.system(size: 12, weight: .black))
+                .foregroundStyle(AVBrandColor.textPrimary)
+
+            Menu {
+                ForEach(options) { option in
+                    Button {
+                        select(option)
+                    } label: {
+                        Label(option.title, systemImage: option.systemImage)
+                    }
+                }
+            } label: {
+                HStack(spacing: 10) {
+                    VStack(alignment: .leading, spacing: 3) {
+                        Text(selectedTitle)
+                            .font(.system(size: 15, weight: .black))
+                            .foregroundStyle(AVBrandColor.textPrimary)
+                            .lineLimit(1)
+                        Text(selectedDetail)
+                            .font(.system(size: 12, weight: .semibold))
+                            .foregroundStyle(AVBrandColor.textSecondary)
+                            .multilineTextAlignment(.leading)
+                            .lineLimit(2)
+                            .fixedSize(horizontal: false, vertical: true)
+                    }
+                    Spacer(minLength: 8)
+                    Image(systemName: "chevron.up.chevron.down")
+                        .font(.system(size: 13, weight: .black))
+                        .foregroundStyle(AVBrandColor.textSecondary)
+                }
+                .padding(.horizontal, 12)
+                .padding(.vertical, 11)
+                .frame(maxWidth: .infinity, alignment: .leading)
+                .background(AVBrandColor.cardSurface, in: RoundedRectangle(cornerRadius: 12, style: .continuous))
+                .overlay {
+                    RoundedRectangle(cornerRadius: 12, style: .continuous)
+                        .stroke(AVBrandColor.borderSubtle.opacity(0.72), lineWidth: 1)
+                }
+            }
+        }
+    }
+}
+
 private struct AnimateCreateGuidedAnimationDirectionTile: View {
     let preset: AnimationDirectionPreset
     let isSelected: Bool
@@ -2270,9 +2314,7 @@ enum GuidedStep: String, CaseIterable, Identifiable {
     case photoFrame
     case look
     case movement
-    case animationDirection
     case scriptIdea
-    case scriptMessage
     case voice
 
     var id: String { rawValue }
@@ -2282,61 +2324,100 @@ enum GuidedStep: String, CaseIterable, Identifiable {
         case .photoFrame: L10n.string("create.guided.photoFrame.tab")
         case .look: L10n.string("create.guided.look.tab")
         case .movement: L10n.string("create.guided.movement.tab")
-        case .animationDirection: L10n.string("create.guided.direction.tab")
         case .scriptIdea: L10n.string("create.guided.script.tab")
-        case .scriptMessage: L10n.string("create.guided.message.tab")
         case .voice: L10n.string("create.guided.voice.tab")
         }
     }
 }
 
-enum AnimationDirectionPreset: String, CaseIterable, Identifiable {
+enum AnimationDirectionPreset: String, CaseIterable, Identifiable, AnimateCreateGuidedTemplateOption {
+    case none
     case gentleReveal
     case subjectWave
     case environmentMagic
     case cameraPush
+    case cinematic
+    case celebration
+    case custom
 
     var id: String { rawValue }
 
+    static var menuOptions: [AnimationDirectionPreset] {
+        [.none, .gentleReveal, .subjectWave, .environmentMagic, .cameraPush, .cinematic, .celebration]
+    }
+
     var title: String {
         switch self {
+        case .none: L10n.string("create.guided.direction.none")
         case .gentleReveal: L10n.string("create.guided.direction.gentleReveal.title")
         case .subjectWave: L10n.string("create.guided.direction.subjectWave.title")
         case .environmentMagic: L10n.string("create.guided.direction.environmentMagic.title")
         case .cameraPush: L10n.string("create.guided.direction.cameraPush.title")
+        case .cinematic: L10n.string("create.guided.direction.cinematic.title")
+        case .celebration: L10n.string("create.guided.direction.celebration.title")
+        case .custom: L10n.string("create.guided.direction.custom.title")
         }
     }
 
     var detail: String {
         switch self {
+        case .none: L10n.string("create.guided.direction.none.detail")
         case .gentleReveal: L10n.string("create.guided.direction.gentleReveal.detail")
         case .subjectWave: L10n.string("create.guided.direction.subjectWave.detail")
         case .environmentMagic: L10n.string("create.guided.direction.environmentMagic.detail")
         case .cameraPush: L10n.string("create.guided.direction.cameraPush.detail")
+        case .cinematic: L10n.string("create.guided.direction.cinematic.detail")
+        case .celebration: L10n.string("create.guided.direction.celebration.detail")
+        case .custom: L10n.string("create.guided.direction.custom.detail")
         }
     }
 
     var promptText: String {
         switch self {
+        case .none, .custom: ""
         case .gentleReveal: L10n.string("create.guided.direction.gentleReveal.prompt")
         case .subjectWave: L10n.string("create.guided.direction.subjectWave.prompt")
         case .environmentMagic: L10n.string("create.guided.direction.environmentMagic.prompt")
         case .cameraPush: L10n.string("create.guided.direction.cameraPush.prompt")
+        case .cinematic: L10n.string("create.guided.direction.cinematic.prompt")
+        case .celebration: L10n.string("create.guided.direction.celebration.prompt")
         }
     }
 
     var systemImage: String {
         switch self {
+        case .none: "sparkles.slash"
         case .gentleReveal: "sun.max.fill"
         case .subjectWave: "hand.wave.fill"
         case .environmentMagic: "sparkles"
         case .cameraPush: "camera.viewfinder"
+        case .cinematic: "movieclapper.fill"
+        case .celebration: "party.popper.fill"
+        case .custom: "slider.horizontal.3"
+        }
+    }
+
+    var movementDirection: AnimateVideoMovementDirection {
+        switch self {
+        case .none, .gentleReveal:
+            return .subtleFaithful
+        case .subjectWave:
+            return .livingPortrait
+        case .environmentMagic:
+            return .livingBackground
+        case .cameraPush, .cinematic:
+            return .cinematic
+        case .celebration:
+            return .celebration
+        case .custom:
+            return .custom
         }
     }
 }
 
-enum ScriptIdea: String, CaseIterable, Identifiable {
+enum ScriptIdea: String, CaseIterable, Identifiable, AnimateCreateGuidedTemplateOption {
     case none
+    case custom
     case birthday
     case congratulations
     case love
@@ -2350,6 +2431,7 @@ enum ScriptIdea: String, CaseIterable, Identifiable {
     var title: String {
         switch self {
         case .none: L10n.string("create.guided.script.none")
+        case .custom: L10n.string("create.guided.script.custom")
         case .birthday: L10n.string("create.guided.script.birthday")
         case .congratulations: L10n.string("create.guided.script.congratulations")
         case .love: L10n.string("create.guided.script.love")
@@ -2363,6 +2445,7 @@ enum ScriptIdea: String, CaseIterable, Identifiable {
     var systemImage: String {
         switch self {
         case .none: "speaker.slash.fill"
+        case .custom: "slider.horizontal.3"
         case .birthday: "gift.fill"
         case .congratulations: "party.popper.fill"
         case .love: "heart.fill"
@@ -2376,6 +2459,7 @@ enum ScriptIdea: String, CaseIterable, Identifiable {
     var accentColor: Color {
         switch self {
         case .none: AVBrandColor.textSecondary
+        case .custom: AVBrandColor.accent
         case .birthday: .pink
         case .congratulations: .orange
         case .love: .red
@@ -2388,7 +2472,7 @@ enum ScriptIdea: String, CaseIterable, Identifiable {
 
     var defaultMessage: String {
         switch self {
-        case .none: ""
+        case .none, .custom: ""
         case .birthday: L10n.string("create.guided.script.birthday.message")
         case .congratulations: L10n.string("create.guided.script.congratulations.message")
         case .love: L10n.string("create.guided.script.love.message")
@@ -2402,13 +2486,18 @@ enum ScriptIdea: String, CaseIterable, Identifiable {
     var previewText: String {
         switch self {
         case .none: L10n.string("create.guided.script.none.preview")
+        case .custom: L10n.string("create.guided.script.custom.preview")
         default: defaultMessage
         }
     }
 
+    var detail: String {
+        previewText
+    }
+
     var styleID: AnimateVideoCreationStyleID {
         switch self {
-        case .none, .motivation:
+        case .none, .custom, .motivation:
             return .celebration
         case .birthday:
             return .birthday
