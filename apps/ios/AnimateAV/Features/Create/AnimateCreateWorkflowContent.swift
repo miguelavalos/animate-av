@@ -1624,14 +1624,20 @@ private struct AnimateCreateVideoDirectionCard: View {
     }
 
     private func stepHeader(_ title: String, _ detail: String) -> some View {
-        VStack(alignment: .leading, spacing: 2) {
+        VStack(alignment: .leading, spacing: 6) {
             Text(title)
-                .font(.system(size: 18, weight: .black))
+                .font(.system(size: 20, weight: .black))
                 .foregroundStyle(AVBrandColor.textPrimary)
+                .lineLimit(2)
+                .fixedSize(horizontal: false, vertical: true)
             Text(detail)
-                .font(.system(size: 13, weight: .semibold))
+                .font(.system(size: 14, weight: .semibold))
                 .foregroundStyle(AVBrandColor.textSecondary)
+                .lineLimit(3)
+                .fixedSize(horizontal: false, vertical: true)
         }
+        .padding(.top, 8)
+        .padding(.bottom, 8)
     }
 
     private var activeSteps: [GuidedStep] {

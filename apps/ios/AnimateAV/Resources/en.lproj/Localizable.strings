@@ -1288,9 +1288,9 @@
 "create.voiceProfile.adultWoman.detail" = "Adult";
 "create.voiceProfile.adultMan.title" = "Man";
 "create.voiceProfile.adultMan.detail" = "Adult";
-"create.voiceProfile.elderWoman.title" = "Woman";
+"create.voiceProfile.elderWoman.title" = "Older woman";
 "create.voiceProfile.elderWoman.detail" = "Older";
-"create.voiceProfile.elderMan.title" = "Man";
+"create.voiceProfile.elderMan.title" = "Older man";
 "create.voiceProfile.elderMan.detail" = "Older";
 "create.voiceTone.warm.title" = "Warm";
 "create.voiceTone.cheerful.title" = "Cheerful";

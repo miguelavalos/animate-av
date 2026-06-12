@@ -1259,9 +1259,9 @@
 "create.voiceProfile.adultWoman.detail" = "Adulta";
 "create.voiceProfile.adultMan.title" = "Hombre";
 "create.voiceProfile.adultMan.detail" = "Adulto";
-"create.voiceProfile.elderWoman.title" = "Mujer";
+"create.voiceProfile.elderWoman.title" = "Mujer mayor";
 "create.voiceProfile.elderWoman.detail" = "Mayor";
-"create.voiceProfile.elderMan.title" = "Hombre";
+"create.voiceProfile.elderMan.title" = "Hombre mayor";
 "create.voiceProfile.elderMan.detail" = "Mayor";
 "create.voiceTone.warm.title" = "Cálida";
 "create.voiceTone.cheerful.title" = "Alegre";
