@@ -18,6 +18,23 @@ struct AnimateSelectedMedia: Identifiable, Equatable {
     var displaySize: String {
         ByteCountFormatter.string(fromByteCount: Int64(byteSize), countStyle: .file)
     }
+
+    func updatedPhotoData(_ data: Data, sha256: String) -> AnimateSelectedMedia {
+        AnimateSelectedMedia(
+            id: id,
+            sourceLocalIdentifier: "\(sourceLocalIdentifier):crop:\(sha256.prefix(12))",
+            originalFilename: originalFilename,
+            contentType: "image/jpeg",
+            kind: kind,
+            byteSize: data.count,
+            sha256: sha256,
+            data: data,
+            capturedAt: capturedAt,
+            analysis: analysis,
+            sortOrder: sortOrder,
+            selected: selected
+        )
+    }
 }
 
 struct AnimatePreparedUpload: Decodable, Equatable, Sendable {

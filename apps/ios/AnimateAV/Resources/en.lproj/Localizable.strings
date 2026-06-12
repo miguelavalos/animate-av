@@ -1022,6 +1022,7 @@
 "create.mediaCard.item.singular" = "item";
 "create.mediaCard.item.plural" = "items";
 "create.mediaCard.removeMedia" = "Remove photo";
+"create.mediaCard.adjustCrop" = "Adjust crop";
 "create.mediaCard.closePreview" = "Close preview";
 "create.mediaCard.videoPreview" = "Image preview";
 "create.mediaCard.mediaPreview" = "Photo preview";
@@ -1034,6 +1035,14 @@
 "create.mediaCard.kind.photo" = "Photo";
 "create.mediaCard.backToDashboard" = "Back to dashboard";
 "create.mediaCard.mediaAccessibility" = "%@ %d";
+"create.mediaAdjust.title" = "Adjust photo";
+"create.mediaAdjust.fullImageDetail" = "We'll use the full photo by default. Crop only if you want Animate AV to focus on one part.";
+"create.mediaAdjust.continueFull" = "Continue with full photo";
+"create.mediaAdjust.crop" = "Crop";
+"create.mediaAdjust.useCrop" = "Use crop";
+"create.mediaAdjust.fullImage" = "Full photo";
+"create.mediaAdjust.reset" = "Reset";
+"create.mediaAdjust.cropDetail" = "Pinch and drag to choose the part used for the video.";
 "create.mediaRows.removeNamed" = "Remove %@";
 "create.mediaRows.removeFromVideo" = "Remove from selection";
 "create.workflowContent.videoPlan" = "Final check";

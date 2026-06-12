@@ -1020,6 +1020,7 @@
 "create.mediaCard.item.singular" = "element";
 "create.mediaCard.item.plural" = "elements";
 "create.mediaCard.removeMedia" = "Eliminar imatge";
+"create.mediaCard.adjustCrop" = "Ajustar retall";
 "create.mediaCard.closePreview" = "Tancar previsualització";
 "create.mediaCard.videoPreview" = "Previsualització de vídeo";
 "create.mediaCard.mediaPreview" = "Previsualització d’imatge";
@@ -1032,6 +1033,14 @@
 "create.mediaCard.kind.photo" = "Foto";
 "create.mediaCard.backToDashboard" = "Tornar al tauler";
 "create.mediaCard.mediaAccessibility" = "%@ %d";
+"create.mediaAdjust.title" = "Ajustar foto";
+"create.mediaAdjust.fullImageDetail" = "Farem servir la foto completa per defecte. Retalla només si vols que Animate AV se centri en una part.";
+"create.mediaAdjust.continueFull" = "Continuar amb la foto completa";
+"create.mediaAdjust.crop" = "Retallar";
+"create.mediaAdjust.useCrop" = "Usar retall";
+"create.mediaAdjust.fullImage" = "Foto completa";
+"create.mediaAdjust.reset" = "Restablir";
+"create.mediaAdjust.cropDetail" = "Pessiga i arrossega per triar la part usada al vídeo.";
 "create.mediaRows.removeNamed" = "Treure %@";
 "create.mediaRows.removeFromVideo" = "Treure de la selecció";
 "create.workflowContent.videoPlan" = "Comprovació final";

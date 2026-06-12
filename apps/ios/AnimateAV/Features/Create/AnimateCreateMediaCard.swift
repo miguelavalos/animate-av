@@ -122,12 +122,15 @@ struct AnimateCreateMediaManagerSheet: View {
     let isImporting: Bool
     let importProgress: AnimateMediaImportProgress?
     let removeMedia: (AnimateSelectedMedia) -> Void
+    let updateMediaPhotoData: (AnimateSelectedMedia, Data) -> Void
     let restoreLocalMediaForEditing: () -> Void
     let chooseManually: () -> Void
 
     @Environment(\.dismiss) private var dismiss
     @State private var workingMedia: [AnimateSelectedMedia] = []
     @State private var zoomedMedia: AnimateSelectedMedia?
+    @State private var adjustingMedia: AnimateSelectedMedia?
+    @State private var hasPresentedInitialAdjuster = false
 
     private let columns = [
         GridItem(.adaptive(minimum: 106, maximum: 106), spacing: 16)
@@ -141,9 +144,11 @@ struct AnimateCreateMediaManagerSheet: View {
         .onAppear {
             restoreLocalMediaForEditing()
             workingMedia = selectedMedia
+            presentInitialAdjusterIfNeeded(selectedMedia)
         }
         .onChange(of: selectedMedia) { _, newMedia in
             workingMedia = newMedia
+            presentInitialAdjusterIfNeeded(newMedia)
         }
     }
 
@@ -187,6 +192,9 @@ struct AnimateCreateMediaManagerSheet: View {
                                         zoom: {
                                             zoomedMedia = media
                                         },
+                                        adjust: {
+                                            adjustingMedia = media
+                                        },
                                         remove: {
                                             removeMedia(media)
                                         }
@@ -216,6 +224,23 @@ struct AnimateCreateMediaManagerSheet: View {
                 zoomedMedia = nil
             }
         }
+        .fullScreenCover(item: $adjustingMedia) { media in
+            AnimateCreatePhotoAdjustView(
+                media: media,
+                save: { adjustedData in
+                    updateMediaPhotoData(media, adjustedData)
+                    adjustingMedia = nil
+                    hasPresentedInitialAdjuster = true
+                },
+                continueWithOriginal: {
+                    adjustingMedia = nil
+                    hasPresentedInitialAdjuster = true
+                },
+                cancel: {
+                    adjustingMedia = nil
+                }
+            )
+        }
     }
 
     private var editHeader: some View {
@@ -227,6 +252,17 @@ struct AnimateCreateMediaManagerSheet: View {
 
     private var displayCount: Int {
         workingMedia.isEmpty ? syncedMediaAssets.count : workingMedia.count
+    }
+
+    private func presentInitialAdjusterIfNeeded(_ media: [AnimateSelectedMedia]) {
+        guard !hasPresentedInitialAdjuster,
+              let firstPhoto = media.first(where: { $0.kind == "photo" }),
+              media.count == 1 else { return }
+        hasPresentedInitialAdjuster = true
+        Task { @MainActor in
+            await Task.yield()
+            adjustingMedia = firstPhoto
+        }
     }
 }
 
@@ -427,6 +463,7 @@ private struct AnimateCreateManageableMediaTile: View {
     let index: Int
     let isImporting: Bool
     let zoom: () -> Void
+    let adjust: () -> Void
     let remove: () -> Void
 
     var body: some View {
@@ -477,6 +514,21 @@ private struct AnimateCreateManageableMediaTile: View {
             .disabled(isImporting)
             .opacity(isImporting ? 0.45 : 1)
             .accessibilityLabel(L10n.string("create.mediaCard.removeMedia"))
+
+            if media.kind == "photo" {
+                Button(action: adjust) {
+                    Image(systemName: "crop")
+                        .font(.system(size: 10, weight: .black))
+                        .foregroundStyle(AVBrandColor.textPrimary)
+                        .frame(width: 24, height: 24)
+                        .background(.white.opacity(0.92), in: Circle())
+                }
+                .padding(.top, 28)
+                .padding(.trailing, 1)
+                .disabled(isImporting)
+                .opacity(isImporting ? 0.45 : 1)
+                .accessibilityLabel(L10n.string("create.mediaCard.adjustCrop"))
+            }
         }
         .accessibilityLabel(L10n.string("create.mediaCard.mediaAccessibility", localizedKind, index + 1))
     }
@@ -520,6 +572,296 @@ private struct AnimateCreateManageableMediaTile: View {
             }
             .frame(width: mediaFrame.width, height: mediaFrame.height)
         }
+    }
+}
+
+private struct AnimateCreatePhotoAdjustView: View {
+    let media: AnimateSelectedMedia
+    let save: (Data) -> Void
+    let continueWithOriginal: () -> Void
+    let cancel: () -> Void
+
+    @State private var mode: Mode = .review
+    @State private var scale: CGFloat = 1
+    @State private var lastScale: CGFloat = 1
+    @State private var offset: CGSize = .zero
+    @State private var lastOffset: CGSize = .zero
+
+    private enum Mode {
+        case review
+        case crop
+    }
+
+    private var image: UIImage? {
+        UIImage(data: media.data)
+    }
+
+    var body: some View {
+        ZStack {
+            Color.black.ignoresSafeArea()
+
+            VStack(spacing: 18) {
+                header
+
+                if mode == .review {
+                    reviewImage
+                } else {
+                    cropEditor
+                }
+
+                actionBar
+            }
+            .padding(.horizontal, 18)
+            .padding(.top, 18)
+            .padding(.bottom, 24)
+        }
+    }
+
+    private var header: some View {
+        HStack {
+            Button(action: cancel) {
+                Text(L10n.string("common.cancel"))
+                    .font(.system(size: 15, weight: .bold))
+                    .foregroundStyle(.white)
+                    .padding(.horizontal, 16)
+                    .frame(height: 42)
+                    .background(.white.opacity(0.14), in: Capsule())
+            }
+            .buttonStyle(.plain)
+
+            Spacer()
+
+            Text(L10n.string("create.mediaAdjust.title"))
+                .font(.system(size: 17, weight: .black))
+                .foregroundStyle(.white)
+
+            Spacer()
+
+            Color.clear
+                .frame(width: 82, height: 42)
+        }
+    }
+
+    private var reviewImage: some View {
+        VStack(spacing: 14) {
+            Spacer(minLength: 0)
+
+            if let image {
+                Image(uiImage: image)
+                    .resizable()
+                    .scaledToFit()
+                    .clipShape(RoundedRectangle(cornerRadius: 12, style: .continuous))
+                    .overlay {
+                        RoundedRectangle(cornerRadius: 12, style: .continuous)
+                            .stroke(.white.opacity(0.18), lineWidth: 1)
+                    }
+            } else {
+                fallbackImage
+            }
+
+            Text(L10n.string("create.mediaAdjust.fullImageDetail"))
+                .font(.system(size: 14, weight: .semibold))
+                .foregroundStyle(.white.opacity(0.74))
+                .multilineTextAlignment(.center)
+                .fixedSize(horizontal: false, vertical: true)
+
+            Spacer(minLength: 0)
+        }
+        .frame(maxWidth: .infinity, maxHeight: .infinity)
+    }
+
+    private var cropEditor: some View {
+        GeometryReader { proxy in
+            let cropSize = cropFrameSize(in: proxy.size)
+
+            ZStack {
+                Color.black.opacity(0.95)
+
+                if let image {
+                    Image(uiImage: image)
+                        .resizable()
+                        .scaledToFill()
+                        .frame(width: cropSize.width, height: cropSize.height)
+                        .scaleEffect(scale)
+                        .offset(offset)
+                        .clipped()
+                        .frame(width: cropSize.width, height: cropSize.height)
+                        .clipShape(RoundedRectangle(cornerRadius: 16, style: .continuous))
+                        .overlay {
+                            RoundedRectangle(cornerRadius: 16, style: .continuous)
+                                .stroke(.white.opacity(0.86), lineWidth: 2)
+                        }
+                        .gesture(pinchGesture)
+                        .simultaneousGesture(dragGesture)
+                } else {
+                    fallbackImage
+                        .frame(width: cropSize.width, height: cropSize.height)
+                }
+            }
+            .frame(width: proxy.size.width, height: proxy.size.height)
+            .overlay(alignment: .bottom) {
+                Text(L10n.string("create.mediaAdjust.cropDetail"))
+                    .font(.system(size: 13, weight: .semibold))
+                    .foregroundStyle(.white.opacity(0.74))
+                    .multilineTextAlignment(.center)
+                    .padding(.horizontal, 16)
+                    .padding(.bottom, 8)
+            }
+        }
+        .frame(maxWidth: .infinity, maxHeight: .infinity)
+    }
+
+    private var actionBar: some View {
+        VStack(spacing: 10) {
+            if mode == .review {
+                Button(action: continueWithOriginal) {
+                    Text(L10n.string("create.mediaAdjust.continueFull"))
+                        .font(.system(size: 16, weight: .black))
+                        .foregroundStyle(AVBrandColor.textPrimary)
+                        .frame(maxWidth: .infinity)
+                        .frame(height: 50)
+                        .background(.white, in: Capsule())
+                }
+                .buttonStyle(.plain)
+
+                Button {
+                    withAnimation(.spring(response: 0.32, dampingFraction: 0.86)) {
+                        mode = .crop
+                    }
+                } label: {
+                    Label(L10n.string("create.mediaAdjust.crop"), systemImage: "crop")
+                        .font(.system(size: 15, weight: .black))
+                        .foregroundStyle(.white)
+                        .frame(maxWidth: .infinity)
+                        .frame(height: 46)
+                        .background(.white.opacity(0.14), in: Capsule())
+                }
+                .buttonStyle(.plain)
+            } else {
+                Button(action: saveCrop) {
+                    Text(L10n.string("create.mediaAdjust.useCrop"))
+                        .font(.system(size: 16, weight: .black))
+                        .foregroundStyle(AVBrandColor.textPrimary)
+                        .frame(maxWidth: .infinity)
+                        .frame(height: 50)
+                        .background(.white, in: Capsule())
+                }
+                .buttonStyle(.plain)
+
+                HStack(spacing: 10) {
+                    Button {
+                        withAnimation(.spring(response: 0.32, dampingFraction: 0.86)) {
+                            mode = .review
+                        }
+                    } label: {
+                        Text(L10n.string("create.mediaAdjust.fullImage"))
+                            .font(.system(size: 14, weight: .black))
+                            .foregroundStyle(.white)
+                            .frame(maxWidth: .infinity)
+                            .frame(height: 44)
+                            .background(.white.opacity(0.14), in: Capsule())
+                    }
+                    .buttonStyle(.plain)
+
+                    Button(action: resetCrop) {
+                        Text(L10n.string("create.mediaAdjust.reset"))
+                            .font(.system(size: 14, weight: .black))
+                            .foregroundStyle(.white)
+                            .frame(maxWidth: .infinity)
+                            .frame(height: 44)
+                            .background(.white.opacity(0.14), in: Capsule())
+                    }
+                    .buttonStyle(.plain)
+                }
+            }
+        }
+    }
+
+    private var fallbackImage: some View {
+        ZStack {
+            RoundedRectangle(cornerRadius: 12, style: .continuous)
+                .fill(.white.opacity(0.12))
+            Image(systemName: "photo.fill")
+                .font(.system(size: 36, weight: .bold))
+                .foregroundStyle(.white.opacity(0.74))
+        }
+    }
+
+    private var pinchGesture: some Gesture {
+        MagnificationGesture()
+            .onChanged { value in
+                scale = min(max(lastScale * value, 1), 5)
+            }
+            .onEnded { _ in
+                lastScale = scale
+            }
+    }
+
+    private var dragGesture: some Gesture {
+        DragGesture()
+            .onChanged { value in
+                offset = CGSize(
+                    width: lastOffset.width + value.translation.width,
+                    height: lastOffset.height + value.translation.height
+                )
+            }
+            .onEnded { _ in
+                lastOffset = offset
+            }
+    }
+
+    private func resetCrop() {
+        withAnimation(.spring(response: 0.28, dampingFraction: 0.86)) {
+            scale = 1
+            lastScale = 1
+            offset = .zero
+            lastOffset = .zero
+        }
+    }
+
+    private func saveCrop() {
+        guard let image,
+              let data = renderCrop(from: image) else {
+            continueWithOriginal()
+            return
+        }
+        save(data)
+    }
+
+    private func renderCrop(from image: UIImage) -> Data? {
+        let outputSize = CGSize(width: 1080, height: 1920)
+        let renderer = UIGraphicsImageRenderer(size: outputSize)
+        let rendered = renderer.image { context in
+            UIColor.black.setFill()
+            context.fill(CGRect(origin: .zero, size: outputSize))
+
+            let baseScale = max(
+                outputSize.width / image.size.width,
+                outputSize.height / image.size.height
+            )
+            let drawSize = CGSize(
+                width: image.size.width * baseScale * scale,
+                height: image.size.height * baseScale * scale
+            )
+            let offsetScale = outputSize.width / max(cropFrameSize(in: CGSize(width: 360, height: 640)).width, 1)
+            let drawOrigin = CGPoint(
+                x: (outputSize.width - drawSize.width) / 2 + offset.width * offsetScale,
+                y: (outputSize.height - drawSize.height) / 2 + offset.height * offsetScale
+            )
+            image.draw(in: CGRect(origin: drawOrigin, size: drawSize))
+        }
+        return rendered.jpegData(compressionQuality: 0.92)
+    }
+
+    private func cropFrameSize(in size: CGSize) -> CGSize {
+        let maxWidth = min(size.width, size.height * 9 / 16)
+        let width = min(maxWidth, size.width - 8)
+        let height = width * 16 / 9
+        if height <= size.height - 36 {
+            return CGSize(width: width, height: height)
+        }
+        let boundedHeight = max(size.height - 36, 180)
+        return CGSize(width: boundedHeight * 9 / 16, height: boundedHeight)
     }
 }
 

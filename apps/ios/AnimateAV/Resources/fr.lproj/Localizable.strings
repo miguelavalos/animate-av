@@ -1020,6 +1020,7 @@
 "create.mediaCard.item.singular" = "élément";
 "create.mediaCard.item.plural" = "éléments";
 "create.mediaCard.removeMedia" = "Retirer l’image";
+"create.mediaCard.adjustCrop" = "Ajuster le recadrage";
 "create.mediaCard.closePreview" = "Fermer l’aperçu";
 "create.mediaCard.videoPreview" = "Aperçu vidéo";
 "create.mediaCard.mediaPreview" = "Aperçu de l’image";
@@ -1032,6 +1033,14 @@
 "create.mediaCard.kind.photo" = "Photo";
 "create.mediaCard.backToDashboard" = "Retour au tableau";
 "create.mediaCard.mediaAccessibility" = "%@ %d";
+"create.mediaAdjust.title" = "Ajuster la photo";
+"create.mediaAdjust.fullImageDetail" = "Nous utiliserons la photo entière par défaut. Recadre seulement si tu veux qu’Animate AV se concentre sur une partie.";
+"create.mediaAdjust.continueFull" = "Continuer avec la photo entière";
+"create.mediaAdjust.crop" = "Recadrer";
+"create.mediaAdjust.useCrop" = "Utiliser le recadrage";
+"create.mediaAdjust.fullImage" = "Photo entière";
+"create.mediaAdjust.reset" = "Réinitialiser";
+"create.mediaAdjust.cropDetail" = "Pince et fais glisser pour choisir la partie utilisée dans la vidéo.";
 "create.mediaRows.removeNamed" = "Retirer %@";
 "create.mediaRows.removeFromVideo" = "Retirer de la sélection";
 "create.workflowContent.videoPlan" = "Vérification finale";

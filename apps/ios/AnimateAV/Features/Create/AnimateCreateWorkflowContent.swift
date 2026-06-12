@@ -28,6 +28,7 @@ struct AnimateCreateWorkflowContent: View {
                     pickerItems: $pickerItems,
                     importPickerItems: viewModel.importPickerItems,
                     removeMedia: viewModel.removeMedia,
+                    updateMediaPhotoData: viewModel.updateMedia,
                     restoreLocalMediaForEditing: viewModel.restoreLocalMediaForEditing,
                     selectStyle: viewModel.selectCreationStyle,
                     selectLook: viewModel.selectLook,
@@ -70,6 +71,7 @@ private struct AnimateCreateMediaFirstWorkspace: View {
     @Binding var pickerItems: [PhotosPickerItem]
     let importPickerItems: ([PhotosPickerItem]) -> Void
     let removeMedia: (AnimateSelectedMedia) -> Void
+    let updateMediaPhotoData: (AnimateSelectedMedia, Data) -> Void
     let restoreLocalMediaForEditing: () -> Void
     let selectStyle: (AnimateVideoCreationStyle) -> Void
     let selectLook: (AnimateVideoLook) -> Void
@@ -99,6 +101,7 @@ private struct AnimateCreateMediaFirstWorkspace: View {
     @State private var showsDiscardVideoConfirmation = false
     @State private var showsCompactPhotoPicker = false
     @State private var showsCompactMediaManager = false
+    @State private var shouldOpenMediaManagerAfterImport = false
     @State private var handledOpenPickerRequest = 0
     @State private var handledOpenAlbumRequest = 0
     @State private var continueGuidedFlowRequest = 0
@@ -208,8 +211,18 @@ private struct AnimateCreateMediaFirstWorkspace: View {
         )
         .onChange(of: pickerItems) { _, newItems in
             guard !newItems.isEmpty else { return }
+            shouldOpenMediaManagerAfterImport = true
             importPickerItems(newItems)
             pickerItems = []
+        }
+        .onChange(of: presentation.mediaSummary.selectedMedia) { _, newMedia in
+            guard shouldOpenMediaManagerAfterImport,
+                  newMedia.contains(where: { $0.kind == "photo" }) else { return }
+            shouldOpenMediaManagerAfterImport = false
+            Task { @MainActor in
+                await Task.yield()
+                showsCompactMediaManager = true
+            }
         }
         .onChange(of: selectedLook) { _, newValue in
             if newValue == nil {
@@ -224,6 +237,7 @@ private struct AnimateCreateMediaFirstWorkspace: View {
                 isImporting: presentation.mediaSummary.isImporting,
                 importProgress: presentation.mediaSummary.importProgress,
                 removeMedia: removeMedia,
+                updateMediaPhotoData: updateMediaPhotoData,
                 restoreLocalMediaForEditing: restoreLocalMediaForEditing,
                 chooseManually: {
                     presentCompactPhotoPicker()

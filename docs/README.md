@@ -37,8 +37,12 @@ handoff values belong in the private AVALSYS suite.
 V1 is a signed-in one-photo animation workflow:
 
 ```text
-Choose source photo -> choose style and message -> backend infers duration and quotes credits -> generate animated video -> local download -> Gallery
+Choose source photo -> optionally crop -> choose style and message -> backend infers duration and quotes credits -> generate animated video -> local download -> Gallery
 ```
+
+If the user crops the selected photo, the cropped image becomes the source
+photo for that workflow. The public client does not need to keep a separate
+pre-crop copy for workflow metadata.
 
 The public client may also expose image generation from a source photo as a
 separate Images workflow. Generated images are visible user assets and may be

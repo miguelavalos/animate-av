@@ -1,3 +1,4 @@
+import CryptoKit
 import Foundation
 import OSLog
 import PhotosUI
@@ -96,6 +97,19 @@ final class MediaUploadWorkflow: WorkspaceObservingWorkflow {
     func remove(_ media: AnimateSelectedMedia) {
         selectedMedia.removeAll { $0.id == media.id }
         normalizeOrder()
+    }
+
+    func update(_ media: AnimateSelectedMedia, withPhotoData data: Data) {
+        guard let index = selectedMedia.firstIndex(where: { $0.id == media.id }),
+              selectedMedia[index].kind == "photo" else { return }
+        let digest = SHA256.hash(data: data)
+            .map { String(format: "%02x", $0) }
+            .joined()
+        selectedMedia[index] = selectedMedia[index].updatedPhotoData(
+            data,
+            sha256: digest
+        )
+        statusMessage = L10n.string("create.media.status.ready")
     }
 
     override func workspaceDidChange(_ workspace: AnimateWorkspace?) {
