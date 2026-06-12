@@ -102,6 +102,7 @@ private struct AnimateCreateMediaFirstWorkspace: View {
     @State private var showsCompactPhotoPicker = false
     @State private var showsCompactMediaManager = false
     @State private var shouldOpenMediaManagerAfterImport = false
+    @State private var isReviewingImportedMedia = false
     @State private var handledOpenPickerRequest = 0
     @State private var handledOpenAlbumRequest = 0
     @State private var continueGuidedFlowRequest = 0
@@ -160,6 +161,7 @@ private struct AnimateCreateMediaFirstWorkspace: View {
                             updateVoiceTone: updateVoiceTone,
                             continueGuidedFlowRequest: continueGuidedFlowRequest,
                             isGuidedFlowComplete: $isVideoSetupGuideComplete,
+                            suppressAutoGuidedSheet: isReviewingImportedMedia,
                             discardVideoCreation: { showsDiscardVideoConfirmation = true }
                         )
                     } else if hasFinalVideoState {
@@ -212,6 +214,7 @@ private struct AnimateCreateMediaFirstWorkspace: View {
         .onChange(of: pickerItems) { _, newItems in
             guard !newItems.isEmpty else { return }
             shouldOpenMediaManagerAfterImport = true
+            isReviewingImportedMedia = true
             importPickerItems(newItems)
             pickerItems = []
         }
@@ -243,6 +246,9 @@ private struct AnimateCreateMediaFirstWorkspace: View {
                     presentCompactPhotoPicker()
                 }
             )
+            .onDisappear {
+                isReviewingImportedMedia = false
+            }
         }
         .sheet(isPresented: $showsCreateVideoConfirmation) {
             AnimateCreateFinalVideoConfirmationSheet(
@@ -962,6 +968,7 @@ private struct AnimateCreateVideoDirectionCard: View {
     let updateVoiceTone: (AnimateVideoVoiceTone) -> Void
     let continueGuidedFlowRequest: Int
     @Binding var isGuidedFlowComplete: Bool
+    let suppressAutoGuidedSheet: Bool
     let discardVideoCreation: () -> Void
 
     @State private var guideState = AnimateCreateVideoSetupGuideState()
@@ -1066,6 +1073,7 @@ private struct AnimateCreateVideoDirectionCard: View {
         .onAppear {
             guard !presentation.finalRenderSummary.isPreparingPlan,
                   !isGuidedFlowComplete,
+                  !suppressAutoGuidedSheet,
                   activeGuidedSheet == nil else { return }
             activeGuidedSheet = guideState.step
             updateGuidedLookFamilyForCurrentStep()
