@@ -47,11 +47,10 @@ Maintenance rules:
 - Keep every final PNG normalized to exactly `1024x576`.
 - Keep `AnimateVideoLook.assetName` unique across all 64 looks.
 - Do not introduce shared placeholders for final looks.
-- Keep family hero assets aligned with the first-screen voice progression:
-  family at position `index` uses `family.looks[index].assetName`. The family
-  grid should visually read as child girl, child boy, teen girl, teen boy,
-  adult woman, adult man, older woman, older man instead of repeating one
-  source identity.
+- Keep family hero assets curated for the first-screen voice progression. The
+  family grid should visually read as child girl, child boy, teen girl, teen
+  boy, adult woman, adult man, older woman, older man where the available style
+  assets allow it, instead of repeating one source identity.
 - If replacing a preview, preserve the same imageset and filename unless there
   is a deliberate model rename.
 - No text, logos, watermarks, extra people, or busy backgrounds in look

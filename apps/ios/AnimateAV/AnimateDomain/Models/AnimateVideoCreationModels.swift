@@ -134,7 +134,7 @@ enum AnimateVideoLook: String, CaseIterable, Identifiable, Codable {
             family(
                 id: "comicsInk",
                 looks: [.americanComic, .euroComic, .heroicComic, .noirInk, .editorialCaricature, .graphicNovel, .sundayStrip, .inkWash],
-                heroAssetName: "LookHeroicComic",
+                heroAssetName: "LookNoirInk",
                 systemImage: "text.bubble.fill"
             ),
             family(
@@ -164,7 +164,7 @@ enum AnimateVideoLook: String, CaseIterable, Identifiable, Codable {
             family(
                 id: "craftTexture",
                 looks: [.stopMotion, .feltCraft, .collageCutout, .cardboardTheater, .origami, .stainedGlass, .embroideredTextile, .vintagePoster],
-                heroAssetName: "LookVintagePoster",
+                heroAssetName: "LookInkWash",
                 systemImage: "scissors"
             )
         ]

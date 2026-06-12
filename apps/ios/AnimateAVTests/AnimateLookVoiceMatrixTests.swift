@@ -52,14 +52,19 @@ final class AnimateLookVoiceMatrixTests: XCTestCase {
         }
     }
 
-    func testFamilyHeroAssetsFollowFirstScreenVoiceProgression() {
-        for (index, family) in AnimateVideoLook.families.enumerated() {
-            XCTAssertEqual(
-                family.heroAssetName,
-                family.looks[index].assetName,
-                "Family \(family.id) hero should use the look matching its first-screen voice position."
-            )
-        }
+    func testFamilyHeroAssetsUseCuratedFirstScreenProgression() {
+        let expectedHeroAssets = [
+            "LookCartoon",
+            "LookSticker",
+            "LookNoirInk",
+            "LookCyberAnime",
+            "LookStorybook",
+            "LookSynthwave",
+            "LookMythicEpic",
+            "LookInkWash",
+        ]
+
+        XCTAssertEqual(AnimateVideoLook.families.map(\.heroAssetName), expectedHeroAssets)
     }
 
     func testEachLookReferencesUniqueAvailablePreviewAsset() {
