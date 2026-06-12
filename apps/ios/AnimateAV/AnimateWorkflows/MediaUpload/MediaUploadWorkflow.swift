@@ -99,6 +99,57 @@ final class MediaUploadWorkflow: WorkspaceObservingWorkflow {
         normalizeOrder()
     }
 
+    func replace(_ media: AnimateSelectedMedia, withPickerItems items: [PhotosPickerItem]) async {
+        guard !items.isEmpty else { return }
+        let generation = beginWorkflowGeneration()
+        beginImport(totalCount: 1)
+        AnimateMediaUploadDiagnostics.addBreadcrumb(
+            operation: "replace",
+            source: "picker",
+            assetCount: 1
+        )
+
+        do {
+            let imported = try await MediaPickerImport.load(
+                items: items,
+                limit: 1,
+                startingSortOrder: media.sortOrder,
+                progress: { [weak self] completedCount, totalCount in
+                    self?.updateImportProgress(completedCount: completedCount, totalCount: totalCount)
+                }
+            )
+
+            guard isCurrentWorkflowGeneration(generation) else { return }
+            guard var replacement = imported.first else {
+                statusMessage = L10n.string("workflow.media.noNewMedia")
+                endImport()
+                return
+            }
+
+            replacement.sortOrder = media.sortOrder
+            if let index = selectedMedia.firstIndex(where: { $0.id == media.id }) {
+                selectedMedia[index] = replacement
+            } else {
+                selectedMedia.removeAll()
+                selectedMedia.append(replacement)
+            }
+            normalizeOrder()
+            statusMessage = L10n.string("create.media.status.ready")
+        } catch {
+            guard isCurrentWorkflowGeneration(generation) else { return }
+            AnimateMediaUploadDiagnostics.captureImportError(
+                error,
+                source: "picker",
+                requestedCount: 1,
+                remainingSlots: 1
+            )
+            statusMessage = AnimateRecoveryCopy.mediaImportFailure()
+        }
+
+        guard isCurrentWorkflowGeneration(generation) else { return }
+        endImport()
+    }
+
     func update(_ media: AnimateSelectedMedia, withPhotoData data: Data) {
         guard let index = selectedMedia.firstIndex(where: { $0.id == media.id }),
               selectedMedia[index].kind == "photo" else { return }

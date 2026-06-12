@@ -80,6 +80,18 @@ extension AnimateCreateViewModel {
         }
     }
 
+    func replaceMedia(_ media: AnimateSelectedMedia, withPickerItems items: [PhotosPickerItem]) {
+        guard !isFinalRenderEditingLocked, let mediaUploadWorkflow else {
+            updateSetupErrorMessage(mediaAvailabilityMessage ?? L10n.string("create.error.mediaUnavailable"))
+            return
+        }
+        markPreparedVideoDirectionMediaEdited()
+
+        runOperation {
+            await mediaUploadWorkflow.replace(media, withPickerItems: items)
+        }
+    }
+
     func removeMedia(_ media: AnimateSelectedMedia) {
         markPreparedVideoDirectionMediaEdited()
         mediaUploadWorkflow?.remove(media)
