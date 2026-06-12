@@ -41,6 +41,7 @@ struct AnimateCreateWorkflowContent: View {
                     updateVoiceProfile: viewModel.updateVoiceProfile,
                     updateVoiceTone: viewModel.updateVoiceTone,
                     discardVideoCreation: viewModel.discardVideoCreation,
+                    cancelLocalVideoCreationDraft: viewModel.cancelLocalVideoCreationDraft,
                     startSignInFlow: startSignInFlow,
                     openCredits: openCredits,
                     prepareVideoDirection: viewModel.prepareVideoDirection,
@@ -84,6 +85,7 @@ private struct AnimateCreateMediaFirstWorkspace: View {
     let updateVoiceProfile: (AnimateVideoVoiceProfile) -> Void
     let updateVoiceTone: (AnimateVideoVoiceTone) -> Void
     let discardVideoCreation: () -> Void
+    let cancelLocalVideoCreationDraft: () -> Void
     let startSignInFlow: () -> Void
     let openCredits: () -> Void
     let prepareVideoDirection: () -> Void
@@ -242,6 +244,7 @@ private struct AnimateCreateMediaFirstWorkspace: View {
                 removeMedia: removeMedia,
                 updateMediaPhotoData: updateMediaPhotoData,
                 restoreLocalMediaForEditing: restoreLocalMediaForEditing,
+                discardVideoCreation: cancelLocalVideoCreationDraft,
                 chooseManually: {
                     presentCompactPhotoPicker()
                 }

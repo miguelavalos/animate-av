@@ -1036,8 +1036,10 @@
 "create.mediaCard.backToDashboard" = "Back to dashboard";
 "create.mediaCard.mediaAccessibility" = "%@ %d";
 "create.mediaAdjust.title" = "Adjust photo";
+"create.mediaAdjust.cancelCreation" = "Cancel creation";
 "create.mediaAdjust.fullImageDetail" = "We'll use the full photo by default. Crop only if you want Animate AV to focus on one part.";
 "create.mediaAdjust.continueFull" = "Continue with full photo";
+"create.mediaAdjust.changePhoto" = "Change photo";
 "create.mediaAdjust.crop" = "Crop";
 "create.mediaAdjust.useCrop" = "Use crop";
 "create.mediaAdjust.fullImage" = "Full photo";

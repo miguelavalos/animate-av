@@ -58,6 +58,11 @@ extension AnimateCreateViewModel {
         }
     }
 
+    func cancelLocalVideoCreationDraft() {
+        resetActiveVideoCreation(force: true)
+        _ = beginNewVideoCreation(openMediaPicker: false)
+    }
+
     func importPickerItems(_ items: [PhotosPickerItem]) {
         guard canAddMedia, let mediaUploadWorkflow else {
             updateSetupErrorMessage(mediaAvailabilityMessage ?? L10n.string("create.error.mediaUnavailable"))

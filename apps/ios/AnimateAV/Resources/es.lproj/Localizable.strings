@@ -1036,8 +1036,10 @@
 "create.mediaCard.backToDashboard" = "Volver al panel";
 "create.mediaCard.mediaAccessibility" = "%@ %d";
 "create.mediaAdjust.title" = "Ajustar foto";
+"create.mediaAdjust.cancelCreation" = "Cancelar creación";
 "create.mediaAdjust.fullImageDetail" = "Usaremos la foto completa por defecto. Recorta solo si quieres que Animate AV se centre en una parte.";
 "create.mediaAdjust.continueFull" = "Continuar con foto completa";
+"create.mediaAdjust.changePhoto" = "Cambiar foto";
 "create.mediaAdjust.crop" = "Recortar";
 "create.mediaAdjust.useCrop" = "Usar recorte";
 "create.mediaAdjust.fullImage" = "Foto completa";

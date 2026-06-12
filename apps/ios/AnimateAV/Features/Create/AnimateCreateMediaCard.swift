@@ -124,6 +124,7 @@ struct AnimateCreateMediaManagerSheet: View {
     let removeMedia: (AnimateSelectedMedia) -> Void
     let updateMediaPhotoData: (AnimateSelectedMedia, Data) -> Void
     let restoreLocalMediaForEditing: () -> Void
+    let discardVideoCreation: () -> Void
     let chooseManually: () -> Void
 
     @Environment(\.dismiss) private var dismiss
@@ -236,8 +237,24 @@ struct AnimateCreateMediaManagerSheet: View {
                     adjustingMedia = nil
                     hasPresentedInitialAdjuster = true
                 },
+                changePhoto: {
+                    removeMedia(media)
+                    adjustingMedia = nil
+                    hasPresentedInitialAdjuster = false
+                    Task { @MainActor in
+                        await Task.yield()
+                        chooseManually()
+                    }
+                },
                 cancel: {
                     adjustingMedia = nil
+                    hasPresentedInitialAdjuster = false
+                    Task { @MainActor in
+                        await Task.yield()
+                        dismiss()
+                        await Task.yield()
+                        discardVideoCreation()
+                    }
                 }
             )
         }
@@ -579,6 +596,7 @@ private struct AnimateCreatePhotoAdjustView: View {
     let media: AnimateSelectedMedia
     let save: (Data) -> Void
     let continueWithOriginal: () -> Void
+    let changePhoto: () -> Void
     let cancel: () -> Void
 
     @State private var mode: Mode = .review
@@ -612,7 +630,7 @@ private struct AnimateCreatePhotoAdjustView: View {
                 actionBar
             }
             .padding(.horizontal, 18)
-            .padding(.top, 18)
+            .padding(.top, 56)
             .padding(.bottom, 24)
         }
     }
@@ -620,7 +638,7 @@ private struct AnimateCreatePhotoAdjustView: View {
     private var header: some View {
         HStack {
             Button(action: cancel) {
-                Text(L10n.string("common.cancel"))
+                Text(L10n.string("create.mediaAdjust.cancelCreation"))
                     .font(.system(size: 15, weight: .bold))
                     .foregroundStyle(.white)
                     .padding(.horizontal, 16)
@@ -638,7 +656,7 @@ private struct AnimateCreatePhotoAdjustView: View {
             Spacer()
 
             Color.clear
-                .frame(width: 82, height: 42)
+                .frame(width: 132, height: 42)
         }
     }
 
@@ -730,6 +748,16 @@ private struct AnimateCreatePhotoAdjustView: View {
                     }
                 } label: {
                     Label(L10n.string("create.mediaAdjust.crop"), systemImage: "crop")
+                        .font(.system(size: 15, weight: .black))
+                        .foregroundStyle(.white)
+                        .frame(maxWidth: .infinity)
+                        .frame(height: 46)
+                        .background(.white.opacity(0.14), in: Capsule())
+                }
+                .buttonStyle(.plain)
+
+                Button(action: changePhoto) {
+                    Label(L10n.string("create.mediaAdjust.changePhoto"), systemImage: "photo.on.rectangle")
                         .font(.system(size: 15, weight: .black))
                         .foregroundStyle(.white)
                         .frame(maxWidth: .infinity)
