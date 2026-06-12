@@ -14,13 +14,13 @@ renders the state returned by the configured backend/realtime layer.
 The current v1 user flow is:
 
 ```text
-Photo / Frame -> Look -> Movement -> optional Message / Voice -> backend infers duration and quotes credits -> generate animated video -> local download -> Gallery
+Foto y encuadre -> Look -> Movement -> optional Message / Voice -> backend infers duration and quotes credits -> generate animated video -> local download -> Gallery
 ```
 
-The Photo / Frame step owns source-photo choice, full-photo use, frame
-adjustment, photo replacement, and discard. Use "Adjust frame" or "Photo /
-Frame" language in Animate AV; do not expose prior-product multi-photo editing,
-sorting, empty media actions, or "crop" as the normal visible flow.
+The Foto y encuadre step owns source-photo choice, full-photo use, frame
+adjustment, photo replacement, and discard. Use "frame"/"encuadre" language in
+Animate AV; do not expose prior-product multi-photo editing, sorting, empty
+media actions, or "crop"/"recorte" as the normal visible flow.
 If the user adjusts the frame, that adjusted image is the workflow source photo.
 The client should retain the imported source-photo bytes locally while the draft
 is editable, then derive the active workflow image from those bytes. Re-entering

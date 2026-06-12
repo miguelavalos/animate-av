@@ -1022,7 +1022,7 @@
 "create.mediaCard.item.singular" = "elemento";
 "create.mediaCard.item.plural" = "elementos";
 "create.mediaCard.removeMedia" = "Quitar foto";
-"create.mediaCard.adjustCrop" = "Ajustar recorte";
+"create.mediaCard.adjustCrop" = "Ajustar encuadre";
 "create.mediaCard.closePreview" = "Cerrar vista previa";
 "create.mediaCard.videoPreview" = "Vista previa de imagen";
 "create.mediaCard.mediaPreview" = "Vista previa de foto";

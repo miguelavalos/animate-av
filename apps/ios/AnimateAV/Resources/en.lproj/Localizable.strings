@@ -1130,15 +1130,15 @@
 "create.workflowContent.tipPickVideos" = "Pick the image, then choose the style, message, and pacing.";
 "create.workflowContent.planDetail" = "%ds · %d photo";
 
-"create.guided.photoFrame.tab" = "Photo / Frame";
-"create.guided.photoFrame.title" = "Photo / Frame";
+"create.guided.photoFrame.tab" = "Photo and frame";
+"create.guided.photoFrame.title" = "Photo and frame";
 "create.guided.photoFrame.detail" = "Choose the source photo and decide whether Animate AV uses the whole image or a tighter frame.";
 "create.guided.photoFrame.empty" = "Choose one photo to start this video.";
 "create.guided.photoFrame.ready" = "Photo selected. Full image is ready unless you adjust the frame.";
 "create.guided.movement.tab" = "Movement";
 "create.guided.movement.title" = "Movement";
 "create.guided.movement.detail" = "Choose what should visually move in the animation. Message and voice stay optional.";
-"create.guided.summary.photoFrame" = "Photo / Frame";
+"create.guided.summary.photoFrame" = "Photo and frame";
 "create.guided.summary.movement" = "Movement";
 "create.guided.continue.look" = "Continue to look";
 "create.guided.continue.movement" = "Continue to movement";

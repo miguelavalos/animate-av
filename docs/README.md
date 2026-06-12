@@ -40,14 +40,15 @@ handoff values belong in the private AVALSYS suite.
 V1 is a signed-in one-photo animation workflow:
 
 ```text
-Photo / Frame -> Look -> Movement -> optional Message / Voice -> Check cost -> Create video -> local download -> Gallery
+Foto y encuadre -> Look -> Movement -> optional Message / Voice -> Check cost -> Create video -> local download -> Gallery
 ```
 
-Photo / Frame is the normal source-photo step: choose one photo, use the full
+Foto y encuadre is the normal source-photo step: choose one photo, use the full
 photo, adjust the frame, change photo, or discard the draft. If the user adjusts
-the frame, that adjusted image becomes the source photo for that workflow. The
-public client does not need to keep a separate pre-adjustment copy for workflow
-metadata.
+the frame, that adjusted image becomes the active source photo for that
+workflow. The client may retain the imported original locally while the draft is
+editable so re-entering frame adjustment and restore-original work without
+backend state.
 
 Movement is a separate setup choice from Message / Voice. It controls what
 visually moves in the animation. Message and voice are optional; a visual-only
