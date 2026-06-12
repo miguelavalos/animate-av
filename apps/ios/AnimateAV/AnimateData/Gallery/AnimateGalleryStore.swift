@@ -35,6 +35,7 @@ protocol AnimateGalleryStoring {
     func addRecord(_ record: AnimateGalleryVideoRecord)
     func addImageRecord(_ record: AnimateGalleryImageRecord)
     func renameRecord(_ record: AnimateGalleryVideoRecord, title: String)
+    func renameImageRecord(_ record: AnimateGalleryImageRecord, title: String)
     func deleteRecord(_ record: AnimateGalleryVideoRecord, deleteLocalFile: Bool)
     func deleteImageRecord(_ record: AnimateGalleryImageRecord, deleteLocalFile: Bool)
 }
@@ -211,6 +212,15 @@ struct AnimateGalleryStore: AnimateGalleryStoring {
         guard !trimmedTitle.isEmpty else { return }
 
         saveRecords(loadRecords().map { currentRecord in
+            currentRecord.id == record.id ? currentRecord.renamed(trimmedTitle) : currentRecord
+        })
+    }
+
+    func renameImageRecord(_ record: AnimateGalleryImageRecord, title: String) {
+        let trimmedTitle = title.trimmingCharacters(in: .whitespacesAndNewlines)
+        guard !trimmedTitle.isEmpty else { return }
+
+        saveImageRecords(loadImageRecords().map { currentRecord in
             currentRecord.id == record.id ? currentRecord.renamed(trimmedTitle) : currentRecord
         })
     }

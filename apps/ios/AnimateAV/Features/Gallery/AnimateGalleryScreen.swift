@@ -15,6 +15,7 @@ struct AnimateGalleryScreen: View {
     @State private var selectedImage: AnimateGalleryImagePresentation?
     @State private var videoPendingInfo: AnimateGalleryVideoPresentation?
     @State private var videoPendingRename: AnimateGalleryVideoPresentation?
+    @State private var imagePendingRename: AnimateGalleryImagePresentation?
     @SceneStorage("animate.gallery.selectedAssetKind") private var selectedAssetKindRaw = AnimateGalleryAssetKind.videos.rawValue
 
     var body: some View {
@@ -34,6 +35,7 @@ struct AnimateGalleryScreen: View {
 
             if canUseAnimateImageGeneration {
                 AnimateGalleryAssetKindPicker(selectedAssetKind: selectedAssetKindBinding)
+                    .zIndex(1)
             }
 
             switch selectedAssetKind {
@@ -96,6 +98,9 @@ struct AnimateGalleryScreen: View {
                         downloadImage: { image in
                             viewModel.downloadImage(image)
                         },
+                        renameImage: { image in
+                            imagePendingRename = image
+                        },
                         deleteImage: { image in
                             pendingDeletion = .image(image)
                         }
@@ -129,6 +134,12 @@ struct AnimateGalleryScreen: View {
         .sheet(item: $videoPendingRename) { video in
             AnimateGalleryRenameSheet(video: video) { title in
                 viewModel.renameVideo(video, title: title)
+            }
+            .presentationDetents([.height(230)])
+        }
+        .sheet(item: $imagePendingRename) { image in
+            AnimateGalleryRenameSheet(title: image.displayTitle) { title in
+                viewModel.renameImage(image, title: title)
             }
             .presentationDetents([.height(230)])
         }
@@ -203,6 +214,8 @@ private struct AnimateGalleryAssetKindPicker: View {
                         isSelected: selectedAssetKind == kind
                     )
                 }
+                .padding(.vertical, 4)
+                .contentShape(Rectangle())
                 .buttonStyle(.plain)
                 .accessibilityAddTraits(selectedAssetKind == kind ? .isSelected : [])
             }
@@ -224,6 +237,7 @@ private struct AnimateGalleryAssetKindPill: View {
             .foregroundStyle(isSelected ? .white : AVBrandColor.textPrimary)
             .background(background)
             .overlay(border)
+            .contentShape(RoundedRectangle(cornerRadius: 14, style: .continuous))
     }
 
     private var background: some View {
@@ -241,6 +255,7 @@ private struct AnimateGalleryImagesGrid: View {
     let images: [AnimateGalleryImagePresentation]
     let openImage: (AnimateGalleryImagePresentation) -> Void
     let downloadImage: (AnimateGalleryImagePresentation) -> Void
+    let renameImage: (AnimateGalleryImagePresentation) -> Void
     let deleteImage: (AnimateGalleryImagePresentation) -> Void
 
     private let horizontalSpacing: CGFloat = 12
@@ -254,6 +269,7 @@ private struct AnimateGalleryImagesGrid: View {
                     tileWidth: itemWidth,
                     openImage: { openImage(image) },
                     downloadImage: { downloadImage(image) },
+                    renameImage: { renameImage(image) },
                     deleteImage: { deleteImage(image) }
                 )
                 .frame(width: itemWidth, alignment: .top)
@@ -285,6 +301,7 @@ private struct AnimateGalleryImageTile: View {
     let tileWidth: CGFloat
     let openImage: () -> Void
     let downloadImage: () -> Void
+    let renameImage: () -> Void
     let deleteImage: () -> Void
 
     var body: some View {
@@ -303,6 +320,7 @@ private struct AnimateGalleryImageTile: View {
                     AnimateGalleryImageMenu(
                         image: image,
                         downloadImage: downloadImage,
+                        renameImage: renameImage,
                         deleteImage: deleteImage
                     )
                     .padding(7)
@@ -311,10 +329,10 @@ private struct AnimateGalleryImageTile: View {
                 .contentShape(RoundedRectangle(cornerRadius: 10, style: .continuous))
             }
             .buttonStyle(.plain)
-            .accessibilityLabel(image.lookTitle)
+            .accessibilityLabel(image.displayTitle)
 
             VStack(alignment: .leading, spacing: 1) {
-                Text(image.lookTitle)
+                Text(image.displayTitle)
                     .font(.system(size: 13, weight: .black))
                     .foregroundStyle(AVBrandColor.textPrimary)
                     .lineLimit(1)
@@ -329,6 +347,7 @@ private struct AnimateGalleryImageTile: View {
 private struct AnimateGalleryImageMenu: View {
     let image: AnimateGalleryImagePresentation
     let downloadImage: () -> Void
+    let renameImage: () -> Void
     let deleteImage: () -> Void
 
     var body: some View {
@@ -342,6 +361,12 @@ private struct AnimateGalleryImageMenu: View {
             if let localFileURL = image.localFileURL {
                 ShareLink(item: localFileURL) {
                     Label(L10n.string("common.share"), systemImage: "square.and.arrow.up")
+                }
+            }
+
+            if image.localFileURL != nil, image.record != nil {
+                Button(action: renameImage) {
+                    Label(L10n.string("common.rename"), systemImage: "pencil")
                 }
             }
 
@@ -375,7 +400,7 @@ private struct AnimateGalleryImageZoomSheet: View {
                     .clipShape(RoundedRectangle(cornerRadius: 14, style: .continuous))
                     .padding(16)
             }
-            .navigationTitle(image.lookTitle)
+            .navigationTitle(image.displayTitle)
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem(placement: .topBarLeading) {
@@ -550,6 +575,9 @@ private struct AnimateGalleryVideoRow: View {
                 }
                 .padding(12)
             }
+            .frame(height: 184)
+            .contentShape(RoundedRectangle(cornerRadius: 14, style: .continuous))
+            .clipped()
         }
         .buttonStyle(.plain)
         .disabled(!video.isLocalFileAvailable && !video.canDownload)
@@ -941,15 +969,17 @@ private struct AnimateGalleryVideoThumbnail: View {
 }
 
 private struct AnimateGalleryRenameSheet: View {
-    let video: AnimateGalleryVideoPresentation
     let save: (String) -> Void
     @Environment(\.dismiss) private var dismiss
     @State private var title: String
 
-    init(video: AnimateGalleryVideoPresentation, save: @escaping (String) -> Void) {
-        self.video = video
+    init(title: String, save: @escaping (String) -> Void) {
         self.save = save
-        _title = State(initialValue: video.displayTitle)
+        _title = State(initialValue: title)
+    }
+
+    init(video: AnimateGalleryVideoPresentation, save: @escaping (String) -> Void) {
+        self.init(title: video.displayTitle, save: save)
     }
 
     var body: some View {

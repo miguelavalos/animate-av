@@ -1538,6 +1538,7 @@ private struct TestGalleryStore: AnimateGalleryStoring {
     func addRecord(_ record: AnimateGalleryVideoRecord) {}
     func addImageRecord(_ record: AnimateGalleryImageRecord) {}
     func renameRecord(_ record: AnimateGalleryVideoRecord, title: String) {}
+    func renameImageRecord(_ record: AnimateGalleryImageRecord, title: String) {}
     func deleteRecord(_ record: AnimateGalleryVideoRecord, deleteLocalFile: Bool) {}
     func deleteImageRecord(_ record: AnimateGalleryImageRecord, deleteLocalFile: Bool) {}
 }

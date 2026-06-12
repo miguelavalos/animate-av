@@ -220,8 +220,6 @@ private struct AnimateCreateMediaFirstWorkspace: View {
         )
         .onChange(of: pickerItems) { _, newItems in
             guard !newItems.isEmpty else { return }
-            shouldOpenMediaManagerAfterImport = true
-            isReviewingImportedMedia = true
             importPickerItems(newItems)
             pickerItems = []
         }
@@ -1105,7 +1103,7 @@ private struct AnimateCreateVideoDirectionCard: View {
                 },
                 cancel: {
                     adjustingInlineMedia = nil
-                    discardVideoCreation()
+                    activeGuidedSheet = .photoFrame
                 }
             )
         }
@@ -1318,14 +1316,13 @@ private struct AnimateCreateVideoDirectionCard: View {
                     media: selectedPhotoMedia,
                     isImporting: presentation.mediaSummary.isImporting,
                     choosePhoto: choosePhoto,
-                    useFullPhoto: continueStep,
                     adjustFrame: {
                         if let selectedPhotoMedia {
+                            activeGuidedSheet = nil
                             adjustingInlineMedia = selectedPhotoMedia
                         }
                     },
-                    changePhoto: choosePhoto,
-                    discardVideoCreation: discardVideoCreation
+                    changePhoto: choosePhoto
                 )
             }
         case .look:
@@ -1642,7 +1639,7 @@ private struct AnimateCreateVideoDirectionCard: View {
         case .photoFrame:
             return selectedPhotoMedia == nil
                 ? L10n.string("create.media.choose")
-                : L10n.string("create.mediaAdjust.continueFull")
+                : L10n.string("create.guided.continue.look")
         case .look:
             return selectedLook == nil
                 ? L10n.string("create.guided.look.noneSelected.title")
@@ -1914,26 +1911,24 @@ private struct AnimateCreateGuidedPhotoFrameStep: View {
     let media: AnimateSelectedMedia?
     let isImporting: Bool
     let choosePhoto: () -> Void
-    let useFullPhoto: () -> Void
     let adjustFrame: () -> Void
     let changePhoto: () -> Void
-    let discardVideoCreation: () -> Void
 
     var body: some View {
         VStack(alignment: .leading, spacing: 12) {
             photoPreview
 
             VStack(spacing: 8) {
-                Button(action: primaryAction) {
-                    Label(primaryTitle, systemImage: primaryIcon)
-                        .font(.system(size: 14, weight: .black))
-                        .frame(maxWidth: .infinity)
-                        .frame(height: 44)
-                }
-                .disabled(isImporting)
-                .buttonStyle(AnimateCreateSoftActionButtonStyle())
-
-                if media != nil {
+                if media == nil {
+                    Button(action: choosePhoto) {
+                        Label(L10n.string("create.media.choose"), systemImage: "photo.badge.plus")
+                            .font(.system(size: 14, weight: .black))
+                            .frame(maxWidth: .infinity)
+                            .frame(height: 44)
+                    }
+                    .disabled(isImporting)
+                    .buttonStyle(AnimateCreateSoftActionButtonStyle())
+                } else {
                     Button(action: adjustFrame) {
                         Label(L10n.string("create.mediaAdjust.adjustFrame"), systemImage: "crop")
                             .font(.system(size: 14, weight: .black))
@@ -1951,17 +1946,6 @@ private struct AnimateCreateGuidedPhotoFrameStep: View {
                     .buttonStyle(AnimateCreateSoftActionButtonStyle())
                 }
             }
-
-            Menu {
-                Button(role: .destructive, action: discardVideoCreation) {
-                    Label(L10n.string("create.discard.current"), systemImage: "trash")
-                }
-            } label: {
-                Label(L10n.string("create.videoDirection.menu.accessibility"), systemImage: "ellipsis.circle")
-                    .font(.system(size: 13, weight: .black))
-                    .foregroundStyle(AVBrandColor.textSecondary)
-            }
-            .buttonStyle(.plain)
         }
     }
 
@@ -2005,17 +1989,6 @@ private struct AnimateCreateGuidedPhotoFrameStep: View {
         return L10n.string("create.guided.photoFrame.ready")
     }
 
-    private var primaryAction: () -> Void {
-        media == nil ? choosePhoto : useFullPhoto
-    }
-
-    private var primaryTitle: String {
-        media == nil ? L10n.string("create.media.choose") : L10n.string("create.mediaAdjust.continueFull")
-    }
-
-    private var primaryIcon: String {
-        media == nil ? "photo.badge.plus" : "checkmark.circle.fill"
-    }
 }
 
 private struct AnimateCreateGuidedMovementTile: View {

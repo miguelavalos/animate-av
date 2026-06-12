@@ -128,6 +128,18 @@ struct AnimateGalleryImageRecord: Identifiable, Codable, Equatable {
         self.localRelativePath = localRelativePath
         self.createdAt = createdAt
     }
+
+    func renamed(_ title: String) -> AnimateGalleryImageRecord {
+        AnimateGalleryImageRecord(
+            id: id,
+            artifactId: artifactId,
+            title: title,
+            look: look,
+            r2Key: r2Key,
+            localRelativePath: localRelativePath,
+            createdAt: createdAt
+        )
+    }
 }
 
 enum AnimateGalleryVideoAvailability: String, Equatable {
@@ -145,6 +157,11 @@ struct AnimateGalleryImagePresentation: Identifiable, Equatable {
 
     var id: String { record?.id ?? remoteArtifact?.workflowArtifactId ?? remoteArtifact?.id ?? UUID().uuidString }
     var title: String { record?.title ?? L10n.string("gallery.image.defaultTitle") }
+    var displayTitle: String {
+        guard let record else { return lookTitle }
+        let trimmedTitle = record.title.trimmingCharacters(in: .whitespacesAndNewlines)
+        return trimmedTitle.isEmpty ? lookTitle : trimmedTitle
+    }
     var lookTitle: String {
         let rawLook = record?.look ?? remoteArtifact?.look ?? parsedLookFromTitle
         guard let rawLook else { return title }

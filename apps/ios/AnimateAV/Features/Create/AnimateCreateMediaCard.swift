@@ -599,7 +599,7 @@ struct AnimateCreatePhotoAdjustView: View {
     let changePhoto: () -> Void
     let cancel: () -> Void
 
-    @State private var mode: Mode = .review
+    @State private var mode: Mode = .crop
     @State private var scale: CGFloat = 1
     @State private var lastScale: CGFloat = 1
     @State private var offset: CGSize = .zero
@@ -638,7 +638,7 @@ struct AnimateCreatePhotoAdjustView: View {
     private var header: some View {
         HStack {
             Button(action: cancel) {
-                Text(L10n.string("create.mediaAdjust.cancelCreation"))
+                Text(L10n.string("common.close"))
                     .font(.system(size: 15, weight: .bold))
                     .foregroundStyle(.white)
                     .padding(.horizontal, 16)
@@ -778,9 +778,7 @@ struct AnimateCreatePhotoAdjustView: View {
 
                 HStack(spacing: 10) {
                     Button {
-                        withAnimation(.spring(response: 0.32, dampingFraction: 0.86)) {
-                            mode = .review
-                        }
+                        continueWithOriginal()
                     } label: {
                         Text(L10n.string("create.mediaAdjust.fullImage"))
                             .font(.system(size: 14, weight: .black))

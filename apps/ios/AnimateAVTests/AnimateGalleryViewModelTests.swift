@@ -212,6 +212,9 @@ private final class TestAnimateGalleryStore: AnimateGalleryStoring {
     func addRecord(_ record: AnimateGalleryVideoRecord) { videoRecords = [record] + videoRecords.filter { $0.id != record.id } }
     func addImageRecord(_ record: AnimateGalleryImageRecord) { imageRecords = [record] + imageRecords.filter { $0.id != record.id } }
     func renameRecord(_ record: AnimateGalleryVideoRecord, title: String) {}
+    func renameImageRecord(_ record: AnimateGalleryImageRecord, title: String) {
+        imageRecords = imageRecords.map { $0.id == record.id ? $0.renamed(title) : $0 }
+    }
     func deleteRecord(_ record: AnimateGalleryVideoRecord, deleteLocalFile: Bool) {
         deletedVideoIds.insert(record.id)
         existingVideoIds.remove(record.id)

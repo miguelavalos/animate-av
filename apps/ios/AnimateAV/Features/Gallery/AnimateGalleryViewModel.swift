@@ -202,6 +202,15 @@ final class AnimateGalleryViewModel: ObservableObject {
         refreshVideos()
     }
 
+    func renameImage(_ image: AnimateGalleryImagePresentation, title: String) {
+        guard let record = image.record,
+              image.localFileURL != nil
+        else { return }
+
+        galleryStore.renameImageRecord(record, title: title)
+        refreshImages()
+    }
+
     func prepareVideoInfo(_ video: AnimateGalleryVideoPresentation) {
         guard video.generatedImageURL == nil,
               let authTokenProvider

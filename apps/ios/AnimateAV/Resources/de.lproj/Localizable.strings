@@ -1371,6 +1371,7 @@
 "create.guided.movement.detail" = "Choose what should visually move in the animation. Message and voice stay optional.";
 "create.guided.summary.photoFrame" = "Photo / Frame";
 "create.guided.summary.movement" = "Movement";
+"create.guided.continue.look" = "Weiter zum Look";
 "create.guided.continue.movement" = "Continue to movement";
 "create.movement.subtleFaithful.title" = "Subtle and faithful";
 "create.movement.subtleFaithful.detail" = "Gentle camera life while preserving the photo.";
