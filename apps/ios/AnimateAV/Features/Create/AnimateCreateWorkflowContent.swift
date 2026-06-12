@@ -163,6 +163,7 @@ private struct AnimateCreateMediaFirstWorkspace: View {
                             updateAnimationDirection: updateAnimationDirection,
                             editMedia: { showsCompactMediaManager = true },
                             choosePhoto: presentCompactPhotoPicker,
+                            isPhotoPickerPresented: showsCompactPhotoPicker,
                             removeMedia: removeMedia,
                             updateMediaPhotoData: updateMediaPhotoData,
                             restoreOriginalPhotoData: restoreOriginalPhotoData,
@@ -972,6 +973,7 @@ private struct AnimateCreateVideoDirectionCard: View {
     let updateAnimationDirection: (String) -> Void
     let editMedia: () -> Void
     let choosePhoto: () -> Void
+    let isPhotoPickerPresented: Bool
     let removeMedia: (AnimateSelectedMedia) -> Void
     let updateMediaPhotoData: (AnimateSelectedMedia, Data) -> Void
     let restoreOriginalPhotoData: (AnimateSelectedMedia) -> Void
@@ -1137,6 +1139,14 @@ private struct AnimateCreateVideoDirectionCard: View {
             guard request > handledContinueGuidedFlowRequest else { return }
             handledContinueGuidedFlowRequest = request
             continueStep()
+        }
+        .onChange(of: isPhotoPickerPresented) { _, isPresented in
+            guard !isPresented,
+                  shouldReturnToPhotoFrameAfterPicker,
+                  activeGuidedSheet == nil else { return }
+            isGuidedFlowComplete = false
+            guideState.step = .photoFrame
+            activeGuidedSheet = .photoFrame
         }
         .onChange(of: presentation.mediaSummary.selectedMedia) { _, newMedia in
             handlePhotoPickerResult(newMedia)
@@ -1659,8 +1669,11 @@ private struct AnimateCreateVideoDirectionCard: View {
     }
 
     private var photoFrameSummaryDetail: String {
-        selectedPhotoMedia == nil
-            ? L10n.string("create.guided.photoFrame.empty")
+        guard let selectedPhotoMedia else {
+            return L10n.string("create.guided.photoFrame.empty")
+        }
+        return selectedPhotoMedia.hasFrameAdjustment
+            ? L10n.string("create.mediaAdjust.frameApplied")
             : L10n.string("create.guided.photoFrame.ready")
     }
 
@@ -1708,7 +1721,7 @@ private struct AnimateCreateVideoDirectionCard: View {
 
         if let previous = mediaPendingReplacement {
             let replacementPhotos = photos.filter { $0.id != previous.id }
-            guard let replacement = replacementPhotos.last else { return }
+            guard let replacement = replacementPhotos.last ?? photos.last else { return }
             shouldReturnToPhotoFrameAfterPicker = false
             mediaPendingReplacement = nil
             isGuidedFlowComplete = false
@@ -2100,8 +2113,7 @@ private struct AnimateCreateGuidedPhotoFrameStep: View {
             Image(uiImage: image)
                 .resizable()
                 .scaledToFill()
-                .frame(maxWidth: 200)
-                .aspectRatio(9.0 / 16.0, contentMode: .fit)
+                .frame(width: 172, height: 306)
                 .clipShape(RoundedRectangle(cornerRadius: 14, style: .continuous))
                 .overlay {
                     RoundedRectangle(cornerRadius: 14, style: .continuous)
