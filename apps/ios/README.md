@@ -35,6 +35,13 @@ Choose source photo -> choose style and message -> backend infers duration and q
 Images are a separate v1 workflow: choose one source photo, generate a stylized
 image, then download/share it or use it as video input when synced state allows.
 
+Animate AV's default generation contract is fidelity to the user's source
+photo. The client must not silently crop, zoom, reframe, or isolate a person
+before upload. If a future "adjust image" step is added, the full image remains
+the default, any crop must be explicitly chosen by the user, and the app should
+retain enough local metadata to distinguish original image, used image, and
+generated image in Gallery/Info.
+
 Do not add a public video preview/review step, generated audio controls,
 captions, subtitles, text overlays, provider/model selection, or cloud media
 storage as v1 client features.
