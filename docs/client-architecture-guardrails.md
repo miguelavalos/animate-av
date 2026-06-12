@@ -155,6 +155,12 @@ controls, voice cloning, captions, subtitles, text overlays, or user audio
 uploads as available v1 features. Message and voice presets may be offered only
 as optional setup choices.
 
+Create Video text entry should rely on the native iOS keyboard, including
+system dictation when the user has it enabled. Do not add an in-app microphone
+button for v1 unless the flow also adds explicit speech recognition and
+microphone permissions, listening states, cancellation, error handling, and
+device QA.
+
 ## Public Documentation Boundary
 
 Keep this public repo limited to client behavior and public-safe build/test
