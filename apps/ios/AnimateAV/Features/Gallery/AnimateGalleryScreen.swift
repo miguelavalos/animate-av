@@ -766,13 +766,13 @@ private struct AnimateGalleryBeforeAfterImageView: View {
         GeometryReader { proxy in
             ZStack(alignment: .leading) {
                 if let sourceImage, let generatedImage {
-                    Image(uiImage: sourceImage)
+                    Image(uiImage: generatedImage)
                         .resizable()
                         .scaledToFill()
                         .frame(width: proxy.size.width, height: proxy.size.height)
                         .clipped()
 
-                    Image(uiImage: generatedImage)
+                    Image(uiImage: sourceImage)
                         .resizable()
                         .scaledToFill()
                         .frame(width: proxy.size.width, height: proxy.size.height)
@@ -810,7 +810,7 @@ private struct AnimateGalleryBeforeAfterImageView: View {
                 DragGesture(minimumDistance: 0)
                     .onChanged { value in
                         let width = max(proxy.size.width, 1)
-                        reveal = min(max(value.location.x / width, 0.02), 0.98)
+                        reveal = min(max(value.location.x / width, 0), 1)
                     }
             )
         }
