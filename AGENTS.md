@@ -39,10 +39,10 @@ Mandatory rules:
 - no-spend workflow tests must still exercise quote/check-cost, credit
   confirmation, queued/running/completed UI states, final artifact handoff, and
   Gallery cleanup. Only the paid provider call is mocked.
-- the normal Animate AV Create Video path is Photo / Frame -> Look -> Movement
-  -> optional Message / Voice -> confirmation. Do not reintroduce inherited
-  multi-photo edit, sorting, empty media action, or visible crop language in this
-  one-photo flow.
+- the normal Animate AV Create Video path is Photo and framing -> Style ->
+  Animation -> optional Message / Voice -> confirmation. Do not reintroduce
+  inherited multi-photo edit, sorting, empty media action, or visible crop
+  language in this one-photo flow.
 - in the final video flow, `/renders/plan` is the source of truth for cost,
   blockers, watermark choice, and the subsequent confirmation. Do not add a
   separate `/video/quotes` preflight inside Check cost/Create video; it creates
@@ -66,11 +66,12 @@ Mandatory rules:
 - current polish priority is Animate AV only. Do not start another app
   adaptation from this repo.
 - the guided voice picker is accepted for now. Focus Create Video review on the
-  look picker: 8 families, 8 looks per family, one unique preview asset per
-  look, English names/subtitles, and default voice mapping by family position.
-- defer broad localization cleanup until English UX is accepted. Final
-  localization QA must remove stale context, English fallbacks, and `...` in
-  CTAs or info cards.
+  style picker: 8 families, 8 looks per family, one unique preview asset per
+  look, localized names/subtitles, and default voice mapping by family position.
+- runtime localization cleanup has been completed for the shipped locales
+  `en`, `es`, `ca`, `fr`, and `de`. Future visible copy changes must keep key
+  sets and placeholders synchronized, avoid inherited Moments/Tune wording, and
+  keep `...` out of CTAs or info cards.
 - treat visible `Gallery` and `In Progress` wording as inherited terminology
   under review. Audit Home, navigation, Create completion, Videos/Images,
   active jobs, and recovery before renaming behavior or labels.

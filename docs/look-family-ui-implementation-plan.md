@@ -39,8 +39,9 @@ scale without endless pagination.
   override behavior.
 - There are currently 64 unique `Look*.imageset` preview assets for video
   looks.
-- English look and family titles/subtitles are the current review target.
-  Broad localization cleanup is deferred until the English UX is accepted.
+- Look and family titles/subtitles are localized for the shipped runtime
+  locales. Future copy changes must update `en`, `es`, `ca`, `fr`, and `de`
+  together and preserve placeholder parity.
 
 ## Product Decision
 
@@ -53,7 +54,8 @@ Current review scope:
 
 - Review whether the first family should remain `Popular Looks` or become a
   more product-specific entry such as recommended starter looks.
-- Review each English family title/subtitle and each look title/subtitle.
+- Review each family title/subtitle and each look title/subtitle across the
+  shipped locales when changing product copy.
 - Review all 64 look images in the app, not only the asset catalog.
 - Keep exactly 8 looks per family and one unique preview asset per look.
 - Keep the manual voice override behavior: once the user chooses a voice,

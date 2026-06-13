@@ -29,15 +29,15 @@ credit commit/release.
 Current v1 flow:
 
 ```text
-Photo / Frame -> Look -> Animation -> optional Message / Voice -> backend infers duration and quotes credits -> generate animated video -> local download -> Gallery
+Photo and framing -> Style -> Animation -> optional Message / Voice -> backend infers duration and quotes credits -> generate animated video -> local download -> Gallery
 ```
 
-Photo / Frame is the normal source-photo step. It lets the user choose one
+Photo and framing is the normal source-photo step. It lets the user choose one
 photo, keep the full photo, adjust the frame, change photo, or discard the
 draft. Do not route the normal Animate AV path through inherited multi-photo
 editing, sorting, empty media actions, or visible `Crop` language.
 
-The Photo / Frame step owns the local source-photo decision. The iOS draft
+The Photo and framing step owns the local source-photo decision. The iOS draft
 should keep the imported photo bytes as local-only original data and derive the
 active workflow image from them. Frame adjustment updates only the active image;
 re-entering frame adjustment should start from the local original, not from a
@@ -73,15 +73,17 @@ Current product-polish scope:
 
 - Review visible `Gallery` and `In Progress` naming before production smoke; the
   behavior may stay, but the labels may not fit Animate AV.
-- Keep Create Video aligned to Photo / Frame, Look, Animation, optional
+- Keep Create Video aligned to Photo and framing, Style, Animation, optional
   Message / Voice. Avoid reintroducing
   inherited multi-photo edit surfaces in the normal path.
 - Treat Animation as visual guidance for action, camera, and scene
   behavior. It may be longer than the narrated Message and works without Voice.
-- Review Create Video looks in English first: family names, look names,
-  subtitles, and preview images.
+- Review Create Video style families, look names, subtitles, and preview images
+  across the shipped locales when product copy changes.
 - Keep the guided voice picker unchanged unless a concrete defect appears.
-- Defer broad localization cleanup until English copy and flow are accepted.
+- Runtime localization is active for `en`, `es`, `ca`, `fr`, and `de`. Keep
+  every `Localizable.strings` key set synchronized and validate placeholders
+  before release.
 
 ## First Run Branding
 

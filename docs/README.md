@@ -80,10 +80,11 @@ Current polish note: the implementation still contains visible `Gallery` and
 under product review for Animate AV. Do not rename backend/local-first media
 behavior blindly; audit the user-facing terminology first.
 
-Create Video look review note: the current target is 8 look families with 8
-looks each, one unique preview asset per look, and deterministic default voice
-mapping by family position. The guided voice picker is accepted for now; review
-the look picker before changing voices.
+Create Video style review note: the current target is 8 look families with 8
+looks each, one unique preview asset per look, deterministic default voice
+mapping by family position, and synchronized runtime copy for `en`, `es`, `ca`,
+`fr`, and `de`. The guided voice picker is accepted for now; review the style
+picker before changing voices.
 
 ## Branding And First Run
 
