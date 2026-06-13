@@ -4,6 +4,7 @@ struct AnimateVideoDirectionClient {
     var baseURLString: String
     var session: URLSession = .shared
     var retryPolicy = AnimateNetworkRetryPolicy()
+    private let commandRetryPolicy = AnimateNetworkRetryPolicy.singleAttempt
 
     var isConfigured: Bool {
         URL(string: baseURLString.trimmingCharacters(in: .whitespacesAndNewlines)) != nil
@@ -84,7 +85,7 @@ struct AnimateVideoDirectionClient {
         request.setValue("Bearer \(bearerToken)", forHTTPHeaderField: "Authorization")
         request.httpBody = try JSONEncoder().encode(requestBody)
 
-        let (data, response) = try await retryingData(for: request)
+        let (data, response) = try await commandRetryPolicy.runData(session: session, request: request)
         guard let httpResponse = response as? HTTPURLResponse, 200..<300 ~= httpResponse.statusCode else {
             let apiError = AnimateAPIError.decode(
                 from: data,
@@ -103,23 +104,6 @@ struct AnimateVideoDirectionClient {
         }
 
         return plan
-    }
-
-    private func retryingData(for request: URLRequest) async throws -> (Data, URLResponse) {
-        var attempt = 0
-
-        while true {
-            do {
-                return try await session.data(for: request)
-            } catch {
-                guard retryPolicy.shouldRetry(error: error, attempt: attempt) else {
-                    throw error
-                }
-
-                attempt += 1
-                try await Task.sleep(nanoseconds: retryPolicy.delayNanoseconds(forAttempt: attempt))
-            }
-        }
     }
 
     private static func nonBlankOptional(_ value: String?) -> String? {

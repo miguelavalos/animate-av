@@ -4,6 +4,7 @@ struct AnimateImageGenerationAccountingClient {
     var baseURLString: String
     var session: URLSession = .shared
     var retryPolicy = AnimateNetworkRetryPolicy()
+    private let commandRetryPolicy = AnimateNetworkRetryPolicy.singleAttempt
 
     var isConfigured: Bool {
         URL(string: baseURLString.trimmingCharacters(in: .whitespacesAndNewlines)) != nil
@@ -25,7 +26,7 @@ struct AnimateImageGenerationAccountingClient {
         request.httpMethod = "GET"
         request.setValue("Bearer \(bearerToken)", forHTTPHeaderField: "Authorization")
 
-        let (data, response) = try await retryPolicy.runData(session: session, request: request)
+        let (data, response) = try await commandRetryPolicy.runData(session: session, request: request)
         guard let httpResponse = response as? HTTPURLResponse, 200..<300 ~= httpResponse.statusCode else {
             throw AnimateAPIError.decode(
                 from: data,
@@ -65,7 +66,7 @@ struct AnimateImageGenerationAccountingClient {
         request.setValue("Bearer \(bearerToken)", forHTTPHeaderField: "Authorization")
         request.httpBody = try JSONEncoder().encode(body)
 
-        let (data, response) = try await retryPolicy.runData(session: session, request: request)
+        let (data, response) = try await commandRetryPolicy.runData(session: session, request: request)
         guard let httpResponse = response as? HTTPURLResponse, 200..<300 ~= httpResponse.statusCode else {
             throw AnimateAPIError.decode(
                 from: data,
@@ -114,7 +115,7 @@ struct AnimateImageGenerationAccountingClient {
         request.setValue("Bearer \(bearerToken)", forHTTPHeaderField: "Authorization")
         request.httpBody = try JSONEncoder().encode(body)
 
-        let (data, response) = try await retryPolicy.runData(session: session, request: request)
+        let (data, response) = try await commandRetryPolicy.runData(session: session, request: request)
         guard let httpResponse = response as? HTTPURLResponse, 200..<300 ~= httpResponse.statusCode else {
             throw AnimateAPIError.decode(
                 from: data,

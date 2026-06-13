@@ -1,6 +1,8 @@
 import Foundation
 
 struct AnimateNetworkRetryPolicy: Sendable {
+    static let singleAttempt = AnimateNetworkRetryPolicy(maximumRetries: 0)
+
     var maximumRetries = 2
     var baseDelayNanoseconds: UInt64 = 300_000_000
 
@@ -102,6 +104,7 @@ struct AnimateFinalRenderClient {
     var baseURLString: String
     var session: URLSession = .shared
     var retryPolicy = AnimateNetworkRetryPolicy()
+    private let commandRetryPolicy = AnimateNetworkRetryPolicy.singleAttempt
 
     var isConfigured: Bool {
         URL(string: baseURLString.trimmingCharacters(in: .whitespacesAndNewlines)) != nil
@@ -170,7 +173,7 @@ struct AnimateFinalRenderClient {
         request.setValue("Bearer \(bearerToken)", forHTTPHeaderField: "Authorization")
         request.httpBody = try JSONEncoder().encode(body)
 
-        let (data, response) = try await retryPolicy.runData(session: session, request: request)
+        let (data, response) = try await commandRetryPolicy.runData(session: session, request: request)
         guard let httpResponse = response as? HTTPURLResponse, 200..<300 ~= httpResponse.statusCode else {
             throw AnimateAPIError.decode(
                 from: data,
@@ -250,7 +253,7 @@ struct AnimateFinalRenderClient {
         request.setValue("Bearer \(bearerToken)", forHTTPHeaderField: "Authorization")
         request.httpBody = try JSONEncoder().encode(body)
 
-        let (data, response) = try await retryPolicy.runData(session: session, request: request)
+        let (data, response) = try await commandRetryPolicy.runData(session: session, request: request)
         guard let httpResponse = response as? HTTPURLResponse, 200..<300 ~= httpResponse.statusCode else {
             throw AnimateAPIError.decode(
                 from: data,

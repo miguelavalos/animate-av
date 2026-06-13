@@ -282,7 +282,7 @@ final class AnimateAPIClientTests: XCTestCase {
         XCTAssertEqual(AnimateURLProtocolMock.lastRequest?.value(forHTTPHeaderField: "Authorization"), "Bearer token-1")
     }
 
-    func testVideoDirectionRetriesTransientNetworkLoss() async throws {
+    func testVideoDirectionDoesNotRetryTransientNetworkLoss() async throws {
         AnimateURLProtocolMock.failuresBeforeSuccess = 1
         let session = makeMockSession(
             json: """
@@ -309,15 +309,47 @@ final class AnimateAPIClientTests: XCTestCase {
             retryPolicy: AnimateNetworkRetryPolicy(maximumRetries: 1, baseDelayNanoseconds: 1)
         )
 
-        _ = try await client.generatePlan(
-            videoId: "video-1",
-            ownerUserId: "user-1",
-            bearerToken: "token-1",
-            form: AnimateVideoSetupForm(template: .birthdayMessage),
-            mediaAssets: []
+        do {
+            _ = try await client.generatePlan(
+                videoId: "video-1",
+                ownerUserId: "user-1",
+                bearerToken: "token-1",
+                form: AnimateVideoSetupForm(template: .birthdayMessage),
+                mediaAssets: []
+            )
+            XCTFail("Expected command request to fail without retrying.")
+        } catch {
+            XCTAssertEqual(AnimateURLProtocolMock.requestCount, 1)
+        }
+    }
+
+    func testConfirmFinalRenderDoesNotRetryTransientNetworkLoss() async throws {
+        AnimateURLProtocolMock.failuresBeforeSuccess = 1
+        let session = makeMockSession(json: "{}")
+        let client = AnimateFinalRenderClient(
+            baseURLString: accountAPIBaseURL,
+            session: session,
+            retryPolicy: AnimateNetworkRetryPolicy(maximumRetries: 1, baseDelayNanoseconds: 1)
         )
 
-        XCTAssertEqual(AnimateURLProtocolMock.requestCount, 2)
+        do {
+            _ = try await client.confirmFinalRender(
+                videoId: "video-1",
+                bearerToken: "token-1",
+                template: .birthdayMessage,
+                creationStyle: nil,
+                form: AnimateVideoSetupForm(template: .birthdayMessage),
+                removesWatermark: false,
+                selectedSourceLocalIdentifiers: ["local-1"],
+                sourceImageUploadId: "source-upload-1",
+                generatedImageArtifactId: nil,
+                planId: "plan-1",
+                renderOptionId: "standard_video"
+            )
+            XCTFail("Expected command request to fail without retrying.")
+        } catch {
+            XCTAssertEqual(AnimateURLProtocolMock.requestCount, 1)
+        }
     }
 
     func testPrepareRenderPlanSendsContractSafePayload() async throws {
@@ -716,6 +748,28 @@ final class AnimateAPIClientTests: XCTestCase {
         XCTAssertEqual(response.sourceImageUploadId, "source-upload-1")
         XCTAssertEqual(response.jobs.first?.imageJobId, "convex-image-job-1")
         XCTAssertEqual(response.availability.availableImages, 49)
+    }
+
+    func testImageGenerationStartDoesNotRetryTransientNetworkLoss() async throws {
+        AnimateURLProtocolMock.failuresBeforeSuccess = 1
+        let session = makeMockSession(json: "{}")
+        let client = AnimateImageGenerationAccountingClient(
+            baseURLString: accountAPIBaseURL,
+            session: session,
+            retryPolicy: AnimateNetworkRetryPolicy(maximumRetries: 1, baseDelayNanoseconds: 1)
+        )
+
+        do {
+            _ = try await client.startGeneration(
+                sourceImageUploadId: "source-upload-1",
+                looks: ["cartoon"],
+                idempotencyKey: "start-key-1",
+                bearerToken: "token-1"
+            )
+            XCTFail("Expected command request to fail without retrying.")
+        } catch {
+            XCTAssertEqual(AnimateURLProtocolMock.requestCount, 1)
+        }
     }
 
     func testSourceImagePrepareUploadUsesBackendOwnedEndpoint() async throws {

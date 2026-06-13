@@ -34,16 +34,6 @@ final class AnimateCreateVideoSetupGuideStateTests: XCTestCase {
             hasMessage: false,
             canContinueMessageStep: false
         )
-        XCTAssertEqual(result.activeSheet, .animationDirection)
-        XCTAssertFalse(result.clearsMessage)
-        XCTAssertFalse(state.isComplete)
-
-        result = state.continueStep(
-            hasSelectedLook: true,
-            hasSelectedPhoto: true,
-            hasMessage: false,
-            canContinueMessageStep: false
-        )
         XCTAssertEqual(result.activeSheet, .scriptIdea)
         XCTAssertFalse(result.clearsMessage)
         XCTAssertFalse(state.isComplete)
@@ -67,16 +57,9 @@ final class AnimateCreateVideoSetupGuideStateTests: XCTestCase {
 
         XCTAssertEqual(continueReady(&state).activeSheet, .look)
         XCTAssertEqual(continueReady(&state).activeSheet, .movement)
-        XCTAssertEqual(continueReady(&state).activeSheet, .animationDirection)
         XCTAssertEqual(continueReady(&state).activeSheet, .scriptIdea)
 
         state.selectScriptIdea(.birthday)
-        XCTAssertEqual(
-            continueReady(&state, hasMessage: true, canContinueMessageStep: true).activeSheet,
-            .scriptMessage
-        )
-        XCTAssertFalse(state.isComplete)
-
         XCTAssertEqual(
             continueReady(&state, hasMessage: true, canContinueMessageStep: true).activeSheet,
             .voice
