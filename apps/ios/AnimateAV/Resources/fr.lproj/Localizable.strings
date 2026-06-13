@@ -1300,7 +1300,7 @@
 "create.guided.summary.photoFrame" = "Photo et cadrage";
 "create.guided.summary.movement" = "Animation";
 "create.guided.continue.look" = "Continuer vers le style";
-"create.guided.continue.movement" = "Continue to movement";
+"create.guided.continue.movement" = "Continuer vers l’animation";
 "create.movement.subtleFaithful.title" = "Subtil et fidèle";
 "create.movement.subtleFaithful.detail" = "Mouvement de caméra doux en préservant la photo.";
 "create.movement.livingPortrait.title" = "Portrait vivant";

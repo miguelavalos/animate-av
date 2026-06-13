@@ -1302,7 +1302,7 @@
 "create.guided.summary.photoFrame" = "Foto und Bildausschnitt";
 "create.guided.summary.movement" = "Animation";
 "create.guided.continue.look" = "Weiter zum Stil";
-"create.guided.continue.movement" = "Continue to movement";
+"create.guided.continue.movement" = "Weiter zur Animation";
 "create.movement.subtleFaithful.title" = "Subtil und originalgetreu";
 "create.movement.subtleFaithful.detail" = "Sanfte Kamerabewegung, während das Foto erhalten bleibt.";
 "create.movement.livingPortrait.title" = "Lebendiges Porträt";

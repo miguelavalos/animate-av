@@ -38,6 +38,15 @@ optional visual direction for what should happen in the animated scene. Message
 and voice remain optional, and a valid one-photo video can be confirmed with no
 message and no narration.
 
+Create Video status cards, Avi guidance, summary rows, and fixed action bars
+must follow the guided client state before backend-ready legacy state. A saved
+story direction or previous fixture state is not enough to show credit review.
+Credit review becomes visible only after a renderable local photo exists, the
+user has selected a look/style, and the guided Animation / Message / optional
+Voice path is complete. If the local photo data is missing or cannot decode as
+an image, the client must reset visible state to Foto y encuadre and block
+later-step actions.
+
 Images use the same ownership model with a simpler output: choose one source
 photo, generate a stylized image, then download/share it or use it as video
 input when synced state allows.

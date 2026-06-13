@@ -55,6 +55,13 @@ visual direction for what should happen in the animated scene. Message and voice
 are optional; a visual-only video with no message and no narration is a valid v1
 path.
 
+The client must treat the guided setup state as the source of truth for the
+visible Create Video status. It must not show "Check cost" or "Ready to review
+credits" until a renderable local source photo exists, a look/style is selected,
+and the guided Animation / Message / optional Voice steps have been completed.
+If the source photo is missing or no longer renderable, the UI resets to Foto y
+encuadre and hides later steps and credit actions.
+
 Local no-spend QA may use fixture or mock final-render routes to reach the
 confirmation and queued/completed states. Do not use public docs to authorize a
 paid provider smoke; that approval belongs in the private runbook.
