@@ -1,4 +1,3 @@
-import AVAppShellFoundation
 import AVBrandFoundation
 import Photos
 import SwiftUI
@@ -11,18 +10,18 @@ enum AnimateSharedMediaItem: Identifiable, Equatable {
     var id: String {
         switch self {
         case .local(let media):
-            return media.id.uuidString
+            media.id.uuidString
         case .synced(let media):
-            return media.id
+            media.id
         }
     }
 
     var kind: String {
         switch self {
         case .local(let media):
-            return media.kind
+            media.kind
         case .synced(let media):
-            return media.kind
+            media.kind
         }
     }
 
@@ -65,30 +64,6 @@ struct AnimateSharedMediaSummaryStack: View {
             }
         }
         .frame(width: 92, height: 92, alignment: .center)
-        .frame(width: 92, height: 92)
-    }
-}
-
-struct AnimateSharedMediaStrip: View {
-    let localMedia: [AnimateSelectedMedia]
-    let syncedMedia: [AnimateMediaAsset]
-    var maxCount = 12
-    var tileSize: CGFloat = 58
-
-    private var items: [AnimateSharedMediaItem] {
-        Array(AnimateSharedMediaItem.preferred(localMedia: localMedia, syncedMedia: syncedMedia).prefix(maxCount))
-    }
-
-    var body: some View {
-        ScrollView(.horizontal) {
-            HStack(spacing: 9) {
-                ForEach(Array(items.enumerated()), id: \.element.id) { index, item in
-                    AnimateSharedMediaIndexedTile(item: item, index: index, size: tileSize)
-                }
-            }
-            .padding(.vertical, 2)
-        }
-        .scrollIndicators(.hidden)
     }
 }
 
@@ -181,136 +156,6 @@ struct AnimateSharedMediaFallbackThumbnail: View {
     }
 }
 
-struct AnimateCreateMediaRow: View {
-    let media: AnimateSelectedMedia
-    let remove: () -> Void
-
-    var body: some View {
-        AVAppShellInfoRow(
-            title: media.originalFilename,
-            detail: "\(localizedKind(media.kind)) · \(media.displaySize)",
-            systemImage: media.kind == "video" ? "video.fill" : "photo.fill"
-        ) {
-            Button(role: .destructive, action: remove) {
-                Image(systemName: "minus.circle")
-                    .font(.system(size: 18, weight: .semibold))
-            }
-            .buttonStyle(.plain)
-            .accessibilityLabel(L10n.string("create.mediaRows.removeNamed", media.originalFilename))
-        }
-    }
-
-    private func localizedKind(_ kind: String) -> String {
-        kind == "video" ? L10n.string("create.mediaCard.kind.video") : L10n.string("create.mediaCard.kind.photo")
-    }
-}
-
-struct AnimateCreateMediaThumbnailTile: View {
-    let media: AnimateSelectedMedia
-    let index: Int
-    let openDetails: () -> Void
-
-    var body: some View {
-        Button(action: openDetails) {
-            ZStack(alignment: .bottomLeading) {
-                thumbnail
-
-                Text("\(index + 1)")
-                    .font(.system(size: 11, weight: .black))
-                    .foregroundStyle(.white)
-                    .padding(.horizontal, 7)
-                    .padding(.vertical, 4)
-                    .background(.black.opacity(0.48), in: Capsule())
-                    .padding(7)
-            }
-            .aspectRatio(1, contentMode: .fit)
-            .clipShape(RoundedRectangle(cornerRadius: 8, style: .continuous))
-        }
-        .buttonStyle(.plain)
-        .accessibilityLabel(L10n.string("create.mediaCard.mediaAccessibility", localizedKind, index + 1))
-    }
-
-    private var localizedKind: String {
-        media.kind == "video" ? L10n.string("create.mediaCard.kind.video") : L10n.string("create.mediaCard.kind.photo")
-    }
-
-    @ViewBuilder
-    private var thumbnail: some View {
-        if media.kind == "photo", let image = UIImage(data: media.data) {
-            Image(uiImage: image)
-                .resizable()
-                .scaledToFill()
-                .frame(maxWidth: .infinity, maxHeight: .infinity)
-                .clipped()
-        } else {
-            ZStack {
-                AVBrandColor.neutral100
-                Image(systemName: media.kind == "video" ? "video.fill" : "photo.fill")
-                    .font(.system(size: 24, weight: .semibold))
-                    .foregroundStyle(AnimateTheme.highlight)
-            }
-        }
-    }
-}
-
-struct AnimateCreateMediaDetailSheet: View {
-    let media: AnimateSelectedMedia
-    let remove: () -> Void
-
-    var body: some View {
-        VStack(alignment: .leading, spacing: 16) {
-            preview
-
-            VStack(alignment: .leading, spacing: 6) {
-                Text(localizedKind)
-                    .font(.system(size: 20, weight: .black))
-                    .foregroundStyle(AVBrandColor.textPrimary)
-
-                Text(media.displaySize)
-                    .font(AVBrandTypography.captionStrong)
-                    .foregroundStyle(AVBrandColor.textSecondary)
-            }
-
-            Button(role: .destructive, action: remove) {
-                Label(L10n.string("create.mediaRows.removeFromVideo"), systemImage: "trash")
-                    .frame(maxWidth: .infinity)
-            }
-            .buttonStyle(.bordered)
-
-            Spacer(minLength: 0)
-        }
-        .padding(20)
-        .presentationDetents([.medium])
-        .presentationDragIndicator(.visible)
-    }
-
-    @ViewBuilder
-    private var preview: some View {
-        if media.kind == "photo", let image = UIImage(data: media.data) {
-            Image(uiImage: image)
-                .resizable()
-                .scaledToFill()
-                .frame(maxWidth: .infinity)
-                .aspectRatio(1.25, contentMode: .fit)
-                .clipShape(RoundedRectangle(cornerRadius: 8, style: .continuous))
-        } else {
-            ZStack {
-                AVBrandColor.neutral100
-                Image(systemName: media.kind == "video" ? "video.fill" : "photo.fill")
-                    .font(.system(size: 44, weight: .semibold))
-                    .foregroundStyle(AnimateTheme.highlight)
-            }
-            .frame(maxWidth: .infinity)
-            .aspectRatio(1.25, contentMode: .fit)
-            .clipShape(RoundedRectangle(cornerRadius: 8, style: .continuous))
-        }
-    }
-
-    private var localizedKind: String {
-        media.kind == "video" ? L10n.string("create.mediaCard.kind.video") : L10n.string("create.mediaCard.kind.photo")
-    }
-}
-
 struct AnimateCreateSyncedMediaThumbnailTile: View {
     let media: AnimateMediaAsset
     let index: Int
@@ -396,30 +241,5 @@ private enum AnimateCreateLocalPhotoThumbnailLoader {
                 continuation.resume(returning: image)
             }
         }
-    }
-}
-
-struct AnimateCreateSyncedMediaRow: View {
-    let media: AnimateMediaAsset
-
-    var body: some View {
-        AVAppShellInfoRow(
-            title: "\(AnimateStatusRules.displayKind(media.kind)) \(Int(media.sortOrder) + 1)",
-            detail: AnimateVideoFormatting.mediaAssetDetail(media),
-            systemImage: media.kind == "video" ? "video.fill" : "photo.fill"
-        ) {
-            Image(systemName: "checkmark.circle.fill")
-                .foregroundStyle(AnimateTheme.highlight)
-                .font(.system(size: 18, weight: .semibold))
-        }
-    }
-}
-
-struct AnimateCreateEmptySectionRow: View {
-    let systemImage: String
-    let message: String
-
-    var body: some View {
-        AVAppShellInlineMessage(message: message, systemImage: systemImage)
     }
 }

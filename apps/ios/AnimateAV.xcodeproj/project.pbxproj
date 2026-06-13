@@ -42,7 +42,6 @@
 		25FDEA10E1866873449D14CA /* AccountController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A46B7887BA17BECA78D03777 /* AccountController.swift */; };
 		27C7010B33F0AA0BDBA2D530 /* AnimateRevenueCatPurchaseService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7642F835D8EB2313438BB1C5 /* AnimateRevenueCatPurchaseService.swift */; };
 		27FCC18D0DBBCC01BF29C343 /* AnimateAviScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = A61BA7E27A2E8D0127BA0575 /* AnimateAviScreen.swift */; };
-		281EE9F488B4F8E36E238762 /* AnimateCreateVideoDirectionCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 80C52B4BF9A11EDFE939EDA6 /* AnimateCreateVideoDirectionCard.swift */; };
 		296BD3C8F52A2DD696FE66D6 /* AnimateInProgressProgressSection.swift in Sources */ = {isa = PBXBuildFile; fileRef = E4E66DA9A3AC02947AB861AC /* AnimateInProgressProgressSection.swift */; };
 		2A31F7F2A6009726BFD0CB23 /* AnimateAviViewModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C13E1D534FFAD38AA5BFDAB0 /* AnimateAviViewModelTests.swift */; };
 		2A478E225E7DD981A0884A6D /* AnimateInProgressListGroup.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC3686B3081E5366CC256E80 /* AnimateInProgressListGroup.swift */; };
@@ -61,6 +60,7 @@
 		3E304E3254433A22F5BFCD71 /* AnimateFormatting.swift in Sources */ = {isa = PBXBuildFile; fileRef = 18DB6E9D33734AB4316174E4 /* AnimateFormatting.swift */; };
 		3E9AA23776BA133843CBE9AA /* AnimateVideoTemplateModels.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC2099384CFEF21CBC6B45B3 /* AnimateVideoTemplateModels.swift */; };
 		3E9C81C293494BF25246E326 /* AnimateCreateMediaCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9FFDE855F5F008B8E7E94FEB /* AnimateCreateMediaCard.swift */; };
+		3F9A4B1094478A63BF3CC862 /* AnimateCreateMediaRows.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0C766B791B94B0F863980C2 /* AnimateCreateMediaRows.swift */; };
 		40395F111A325249FA7669CE /* WorkspaceObservingWorkflow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D2117570E128B0B05FD08D7 /* WorkspaceObservingWorkflow.swift */; };
 		41730078490E593A9D151D3D /* AVSettingsFoundation in Frameworks */ = {isa = PBXBuildFile; productRef = 75E26B9A88E4C3E7FF0EF28F /* AVSettingsFoundation */; };
 		42FC2C9384715D012125AEC8 /* AnimateInProgressWorkspaceHeaderPresentation.swift in Sources */ = {isa = PBXBuildFile; fileRef = D379BF171DC081DAB5DDE7CE /* AnimateInProgressWorkspaceHeaderPresentation.swift */; };
@@ -89,7 +89,6 @@
 		5CA454E4B3FCC14C03130F80 /* AnimateAppShellView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 671708948EFE325820D59A4A /* AnimateAppShellView.swift */; };
 		5CEBF46CE267E0F17F6EA9D5 /* AnimateUploadClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24003299FC7911EE6CC7C98F /* AnimateUploadClient.swift */; };
 		5CEEB17AD4FD574F2A57198D /* AnimateCreditProducts.swift in Sources */ = {isa = PBXBuildFile; fileRef = 29816ADEF6A7D83AB53CB866 /* AnimateCreditProducts.swift */; };
-		5F3FFB909883497AF46C271B /* AnimateCreateProgressComponents.swift in Sources */ = {isa = PBXBuildFile; fileRef = 14E0872EE9B7956B31286670 /* AnimateCreateProgressComponents.swift */; };
 		5F722622A8C4DFB99AF32B59 /* AnimateInProgressWorkspaceDetail.swift in Sources */ = {isa = PBXBuildFile; fileRef = CF8AF85459BB2D640533641A /* AnimateInProgressWorkspaceDetail.swift */; };
 		624417419631D74D890C83E5 /* AnimateVideoCreationWorkflow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8ACC2B239B5DE27268B7D045 /* AnimateVideoCreationWorkflow.swift */; };
 		63D1E46503590C8BD2DC710C /* AnimateRenderStatusClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A7BD45EAE2608DE2A3CE675 /* AnimateRenderStatusClient.swift */; };
@@ -98,7 +97,6 @@
 		67AD7FA21FCB702B5363A11A /* AnimateRenderJob.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6EF64CAD0EC05383DA966154 /* AnimateRenderJob.swift */; };
 		6B76F816E195555ED41A3576 /* AnimateInProgressVideosWorkflowContracts.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73E9D4ACB0ADA835B5B2511F /* AnimateInProgressVideosWorkflowContracts.swift */; };
 		6D279F04925C53142ED4C1DC /* AnimateHomeSections.swift in Sources */ = {isa = PBXBuildFile; fileRef = 46A8E1CD7E8934A0A2A040E3 /* AnimateHomeSections.swift */; };
-		6D5D5BD5339D26DD6F12652E /* AnimateCreateMediaRows.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C62F720B42062CB275C3737 /* AnimateCreateMediaRows.swift */; };
 		70C27823474E69578FF83E3F /* AnimateCreateVideoDirectionRows.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6B238ADE90A5DFAEAA2C7171 /* AnimateCreateVideoDirectionRows.swift */; };
 		731F954334106C5675E17033 /* AnimateRecoveryCopy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 57E85C5F37D0B4A1B8336ACC /* AnimateRecoveryCopy.swift */; };
 		7868566F88D4499EE1954DFA /* AnimateCreateVideoSetupGuideStateTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E8C24C0C807D5D9D0CBD7D9F /* AnimateCreateVideoSetupGuideStateTests.swift */; };
@@ -172,7 +170,6 @@
 		CB82A99F460886B027BAA1E6 /* AnimateHomeCreditComponents.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD939C3CCB513101EE73F2E0 /* AnimateHomeCreditComponents.swift */; };
 		CD621B0615636F6DEA0FE6C5 /* AnimateCreateTestFixtures.swift in Sources */ = {isa = PBXBuildFile; fileRef = C3DF6F578EA73CED7A3827ED /* AnimateCreateTestFixtures.swift */; };
 		CE11572CECD38640CFC08160 /* AnimateCreateBindingState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C643D9379944E9FE0EE14A1 /* AnimateCreateBindingState.swift */; };
-		D12698A1AEB513D2F682936F /* AnimateCreateRenderRows.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8EB6D17FEF3139999ED41086 /* AnimateCreateRenderRows.swift */; };
 		D2411288F4C6A78D5C6667F5 /* AnimateCreateOverviewCards.swift in Sources */ = {isa = PBXBuildFile; fileRef = E295EF5914D1F014D4184BC8 /* AnimateCreateOverviewCards.swift */; };
 		D3979CB88B9BBBD668298808 /* AnimateWorkspaceLookups.swift in Sources */ = {isa = PBXBuildFile; fileRef = CFB20A37D1BEF18B8BBCA4E1 /* AnimateWorkspaceLookups.swift */; };
 		D3CE0D50AA93B9D64B8CFE5A /* AnimateCreateViewModel+Capabilities.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4605252A846ED4791032F2B4 /* AnimateCreateViewModel+Capabilities.swift */; };
@@ -226,7 +223,6 @@
 		0FF6D086B7E4D68092CDCD14 /* AnimateMediaAutoStyleSuggestion.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnimateMediaAutoStyleSuggestion.swift; sourceTree = "<group>"; };
 		0FF894EB08D2996306F5C4B7 /* AnimateFinalRenderModels.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnimateFinalRenderModels.swift; sourceTree = "<group>"; };
 		11F37F6D3E50B15D24DA625E /* MediaUploadPersistence.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MediaUploadPersistence.swift; sourceTree = "<group>"; };
-		14E0872EE9B7956B31286670 /* AnimateCreateProgressComponents.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnimateCreateProgressComponents.swift; sourceTree = "<group>"; };
 		15B4B1517C76E0DAFBD8F13B /* AnimateCreditGateTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnimateCreditGateTests.swift; sourceTree = "<group>"; };
 		18DB6E9D33734AB4316174E4 /* AnimateFormatting.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnimateFormatting.swift; sourceTree = "<group>"; };
 		19FC0994E47515FC672C7EE5 /* AnimateWorkflowBundle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnimateWorkflowBundle.swift; sourceTree = "<group>"; };
@@ -241,7 +237,6 @@
 		275D027023F688743FC87C14 /* AnimateInProgressProgressModelTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnimateInProgressProgressModelTests.swift; sourceTree = "<group>"; };
 		29816ADEF6A7D83AB53CB866 /* AnimateCreditProducts.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnimateCreditProducts.swift; sourceTree = "<group>"; };
 		29D314035C53B3F66BCA44FE /* AnimateInProgressWorkspacePresentation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnimateInProgressWorkspacePresentation.swift; sourceTree = "<group>"; };
-		2C62F720B42062CB275C3737 /* AnimateCreateMediaRows.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnimateCreateMediaRows.swift; sourceTree = "<group>"; };
 		2D59629D3D06A0E090C6C25E /* AnimateContinuation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnimateContinuation.swift; sourceTree = "<group>"; };
 		2E4689EF1994C5A673E18015 /* AnimateInProgressArtifactPresentation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnimateInProgressArtifactPresentation.swift; sourceTree = "<group>"; };
 		2FC2E2AD85EAE531415BAF15 /* AnimateInProgressWorkspaceSummaryPresentation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnimateInProgressWorkspaceSummaryPresentation.swift; sourceTree = "<group>"; };
@@ -304,7 +299,6 @@
 		7C029E23218DAE1E7E873DDE /* AnimateCreateAvailabilityPresentationTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnimateCreateAvailabilityPresentationTests.swift; sourceTree = "<group>"; };
 		7DAF371054D0BF5CA516180D /* AnimateHomePresentation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnimateHomePresentation.swift; sourceTree = "<group>"; };
 		7E158D4CF3730D111D45D57E /* AnimateWorkspaceCommandClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnimateWorkspaceCommandClient.swift; sourceTree = "<group>"; };
-		80C52B4BF9A11EDFE939EDA6 /* AnimateCreateVideoDirectionCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnimateCreateVideoDirectionCard.swift; sourceTree = "<group>"; };
 		80F90A17D43E7641BD095D1C /* AnimateCreateViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnimateCreateViewModel.swift; sourceTree = "<group>"; };
 		82CD289F6451F0362124DE8C /* AnimateInProgressListSummaryRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnimateInProgressListSummaryRow.swift; sourceTree = "<group>"; };
 		82EC3DBDDB512940FB60CEF3 /* AnimateMediaDeduplicatorTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnimateMediaDeduplicatorTests.swift; sourceTree = "<group>"; };
@@ -319,7 +313,6 @@
 		89C8382180686ACDA114CDCA /* AnimateRealtimeSessionClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnimateRealtimeSessionClient.swift; sourceTree = "<group>"; };
 		8ACC2B239B5DE27268B7D045 /* AnimateVideoCreationWorkflow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnimateVideoCreationWorkflow.swift; sourceTree = "<group>"; };
 		8E03D202E012265443B85D4F /* AnimateViewModelBundle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnimateViewModelBundle.swift; sourceTree = "<group>"; };
-		8EB6D17FEF3139999ED41086 /* AnimateCreateRenderRows.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnimateCreateRenderRows.swift; sourceTree = "<group>"; };
 		9464AF74E88DC959236D7C4F /* AnimateInProgressDetailComponents.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnimateInProgressDetailComponents.swift; sourceTree = "<group>"; };
 		955B03CF582923D0473F8D91 /* account-av */ = {isa = PBXFileReference; lastKnownFileType = folder; name = "account-av"; path = "../../../account-av"; sourceTree = SOURCE_ROOT; };
 		96ED7D51080F1DF098DD426E /* AnimateInProgressWorkspaceChrome.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnimateInProgressWorkspaceChrome.swift; sourceTree = "<group>"; };
@@ -386,6 +379,7 @@
 		DD459D9DF472D1A543315281 /* AnimateInProgressListSummaryPill.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnimateInProgressListSummaryPill.swift; sourceTree = "<group>"; };
 		DE6324F5C56546A52C065ABB /* AnimateInProgressPresentation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnimateInProgressPresentation.swift; sourceTree = "<group>"; };
 		E18E805C3F2AF47B255194C2 /* AnimateAviPresentation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnimateAviPresentation.swift; sourceTree = "<group>"; };
+		E0C766B791B94B0F863980C2 /* AnimateCreateMediaRows.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnimateCreateMediaRows.swift; sourceTree = "<group>"; };
 		E295EF5914D1F014D4184BC8 /* AnimateCreateOverviewCards.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnimateCreateOverviewCards.swift; sourceTree = "<group>"; };
 		E2E751F7DADF2B2D30303248 /* AnimateCreateOperationRunner.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnimateCreateOperationRunner.swift; sourceTree = "<group>"; };
 		E45ADEF9D75391618084EA5E /* AnimateAviViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnimateAviViewModel.swift; sourceTree = "<group>"; };
@@ -521,14 +515,11 @@
 				0C643D9379944E9FE0EE14A1 /* AnimateCreateBindingState.swift */,
 				AAC4117AE936523A8C09F76A /* AnimateCreateImagesWorkspace.swift */,
 				9FFDE855F5F008B8E7E94FEB /* AnimateCreateMediaCard.swift */,
-				2C62F720B42062CB275C3737 /* AnimateCreateMediaRows.swift */,
+				E0C766B791B94B0F863980C2 /* AnimateCreateMediaRows.swift */,
 				E2E751F7DADF2B2D30303248 /* AnimateCreateOperationRunner.swift */,
 				E295EF5914D1F014D4184BC8 /* AnimateCreateOverviewCards.swift */,
-				14E0872EE9B7956B31286670 /* AnimateCreateProgressComponents.swift */,
-				8EB6D17FEF3139999ED41086 /* AnimateCreateRenderRows.swift */,
 				A21A163F667B6C8882B0AC49 /* AnimateCreateScreen.swift */,
 				79B67CA893C58B6BD0AF30C8 /* AnimateCreateUITestFixtures.swift */,
-				80C52B4BF9A11EDFE939EDA6 /* AnimateCreateVideoDirectionCard.swift */,
 				9F5B36F304E65B0EE6559726 /* AnimateCreateVideoDirectionPresentation.swift */,
 				6B238ADE90A5DFAEAA2C7171 /* AnimateCreateVideoDirectionRows.swift */,
 				80F90A17D43E7641BD095D1C /* AnimateCreateViewModel.swift */,
@@ -1175,14 +1166,11 @@
 				CE11572CECD38640CFC08160 /* AnimateCreateBindingState.swift in Sources */,
 				33E7263E97155D86C53B4B45 /* AnimateCreateImagesWorkspace.swift in Sources */,
 				3E9C81C293494BF25246E326 /* AnimateCreateMediaCard.swift in Sources */,
-				6D5D5BD5339D26DD6F12652E /* AnimateCreateMediaRows.swift in Sources */,
+				3F9A4B1094478A63BF3CC862 /* AnimateCreateMediaRows.swift in Sources */,
 				8E0B4599436F33822BEC2B74 /* AnimateCreateOperationRunner.swift in Sources */,
 				D2411288F4C6A78D5C6667F5 /* AnimateCreateOverviewCards.swift in Sources */,
-				5F3FFB909883497AF46C271B /* AnimateCreateProgressComponents.swift in Sources */,
-				D12698A1AEB513D2F682936F /* AnimateCreateRenderRows.swift in Sources */,
 				58008EE897078DF18B5C230B /* AnimateCreateScreen.swift in Sources */,
 				A8E259107A207D6090E9F4C9 /* AnimateCreateUITestFixtures.swift in Sources */,
-				281EE9F488B4F8E36E238762 /* AnimateCreateVideoDirectionCard.swift in Sources */,
 				14ED15748EAAF407A9DA127E /* AnimateCreateVideoDirectionPresentation.swift in Sources */,
 				70C27823474E69578FF83E3F /* AnimateCreateVideoDirectionRows.swift in Sources */,
 				2079A0068B6FE71BA6D4BF63 /* AnimateCreateViewModel+Actions.swift in Sources */,

@@ -2,63 +2,6 @@ import AVAppShellFoundation
 import AVBrandFoundation
 import SwiftUI
 
-struct AnimateCreateIntroCard: View {
-    let isSignedIn: Bool
-
-    var body: some View {
-        AVAppShellCard {
-            AVAppShellContentHeader(
-                title: L10n.string("create.intro.title"),
-                detail: L10n.string("create.intro.detail")
-            )
-            AVStatusPill(title: isSignedIn ? L10n.string("create.status.ready") : L10n.string("create.status.loginRequired"), isUppercased: false)
-        }
-    }
-}
-
-struct AnimateCreateContinuationHintCard: View {
-    let focus: AnimateContinuationFocus?
-    let dismiss: () -> Void
-
-    var body: some View {
-        if let focus {
-            AVAppShellCard {
-                AVAppShellInfoRow(
-                    title: focus.title,
-                    detail: focus.message,
-                    systemImage: focus.systemImage
-                ) {
-                    Button(action: dismiss) {
-                        Image(systemName: "xmark.circle.fill")
-                            .font(.title3)
-                    }
-                    .buttonStyle(.plain)
-                    .foregroundStyle(.secondary)
-                    .accessibilityLabel(L10n.string("create.continuation.dismiss"))
-                }
-            }
-        }
-    }
-}
-
-struct AnimateCreateCreditsCard: View {
-    let balance: AnimateCreditBalance
-
-    var body: some View {
-        AVAppShellCard {
-            AVAppShellContentHeader(
-                title: L10n.string("credits.available.title"),
-                detail: L10n.string("create.credits.detail")
-            )
-            AVAppShellInfoRow(
-                title: AnimateCreditCopy.countTitle(balance.spendable),
-                detail: balance.spendable > 0 ? L10n.string("create.credits.ready") : L10n.string("create.credits.setupNow"),
-                systemImage: "creditcard"
-            )
-        }
-    }
-}
-
 struct AnimateCurrentCreationCard: View {
     let selectedCount: Int
     let continueCreation: () -> Void

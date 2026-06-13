@@ -124,39 +124,3 @@ struct AnimateCreateScreen: View {
         }
     }
 }
-
-enum AnimateCreateAssetKind: String, CaseIterable, Identifiable {
-    case video
-    case images
-
-    var id: String { rawValue }
-
-    var title: String {
-        switch self {
-        case .video:
-            L10n.string("create.assetKind.video")
-        case .images:
-            L10n.string("create.assetKind.images")
-        }
-    }
-}
-
-enum AnimateCreateSection: Hashable {
-    case video
-    case media
-    case story
-    case finalRender
-
-    init(focus: AnimateContinuationFocus) {
-        switch focus {
-        case .video:
-            self = .video
-        case .media:
-            self = .media
-        case .story:
-            self = .story
-        case .finalRender:
-            self = .finalRender
-        }
-    }
-}
