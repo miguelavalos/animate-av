@@ -1013,13 +1013,13 @@ private struct AnimateCreateVideoDirectionCard: View {
 
                     VStack(alignment: .leading, spacing: 7) {
                         HStack(spacing: 9) {
-                            Image(systemName: videoDirection.iconName)
+                            Image(systemName: setupCardIconName)
                                 .font(.system(size: 14, weight: .black))
                                 .foregroundStyle(.white)
                                 .frame(width: 30, height: 30)
                                 .background(iconColor, in: Circle())
 
-                            Text(L10n.string("create.storyDirection.cardTitle"))
+                            Text(setupCardTitle)
                                 .font(.system(size: 20, weight: .black))
                                 .foregroundStyle(AVBrandColor.textPrimary)
                                 .lineLimit(1)
@@ -1027,7 +1027,7 @@ private struct AnimateCreateVideoDirectionCard: View {
                                 .fixedSize(horizontal: false, vertical: true)
                         }
 
-                        Text(videoDirection.statusMessage)
+                        Text(setupCardStatusMessage)
                             .font(.system(size: 13, weight: .semibold))
                             .foregroundStyle(AVBrandColor.textSecondary)
                             .lineLimit(2)
@@ -1835,7 +1835,26 @@ private struct AnimateCreateVideoDirectionCard: View {
     }
 
     private var iconColor: Color {
-        presentation.videoDirectionSummary.hasScenes ? AVBrandColor.accent : AVBrandColor.textPrimary
+        if selectedPhotoMedia == nil {
+            return AVBrandColor.accent
+        }
+        return presentation.videoDirectionSummary.hasScenes ? AVBrandColor.accent : AVBrandColor.textPrimary
+    }
+
+    private var setupCardIconName: String {
+        selectedPhotoMedia == nil ? "photo.fill" : videoDirection.iconName
+    }
+
+    private var setupCardTitle: String {
+        selectedPhotoMedia == nil
+            ? L10n.string("create.guided.photoFrame.title")
+            : L10n.string("create.storyDirection.cardTitle")
+    }
+
+    private var setupCardStatusMessage: String {
+        selectedPhotoMedia == nil
+            ? L10n.string("create.guided.photoFrame.empty")
+            : videoDirection.statusMessage
     }
 
     private var mediaDetail: String {
