@@ -270,7 +270,7 @@
 "home.avi.currentVideo.title" = "Aktuelles Video";
 "home.avi.preparing.detail" = "Avi verwandelt das Foto in einen Videoplan.";
 "home.avi.preparing.title" = "Avi wärmt sich auf";
-"home.avi.selected.detail" = "%d %@ ausgewählt. Jetzt wählst du den Stil.";
+"home.avi.selected.detail" = "%d %@. Wähle jetzt Stil und Animation.";
 "home.avi.signIn.detail" = "Verbinde dein Konto, damit Avi deine animierten Videos speichern kann.";
 "home.avi.signIn.title" = "Anmelden zum Erstellen";
 "home.aviBrief.continueVideo" = "Fahre mit %@ beim nächsten offenen Schritt fort.";
@@ -710,9 +710,9 @@
 "create.aviStatus.startMedia.title" = "Mit einem Foto beginnen";
 "create.aviStatus.exportReady.detail" = "Dein Video ist bereit zum Laden und Verschieben in die Galerie.";
 "create.aviStatus.preparing.detail" = "Avi verwandelt das Foto in einen Videoplan.";
-"create.aviStatus.storyReady.detail" = "Stil, Nachricht und Stimme sind bereit.";
-"create.aviStatus.goodSelection.detail" = "Dieses Foto ist bereit. Passe danach Stil, Stimme oder Nachricht an.";
-"create.aviStatus.startMedia.detail" = "Füge ein Foto hinzu und wähle dann Stil, Nachricht und Tempo.";
+"create.aviStatus.storyReady.detail" = "Foto, Stil und Animation sind bereit. Prüfe die Kosten vor dem Erstellen.";
+"create.aviStatus.goodSelection.detail" = "Dieses Foto ist bereit. Wähle als Nächstes Stil und Animation.";
+"create.aviStatus.startMedia.detail" = "Füge ein Foto hinzu und wähle dann Stil, Animation und Nachricht.";
 "recovery.mediaImportFailure" = "Dieses Foto konnte nicht hinzugefügt werden. Es bleibt auf diesem Gerät; versuche es erneut oder wähle ein anderes Bild.";
 "recovery.mediaUploadUnavailable" = "Der Foto-Upload ist noch nicht bereit. Dein Foto bleibt auf diesem Gerät; versuche es gleich erneut.";
 "recovery.mediaStorySaveFailure" = "Das Foto für das Video konnte nicht gespeichert werden. Dein Foto bleibt auf diesem Gerät; versuche es erneut oder wähle ein anderes Bild.";

@@ -1,3 +1,5 @@
+import UIKit
+
 extension AnimateCreateViewModel {
     var workspaceSummary: AnimateCreateWorkspaceSummary {
         AnimateCreateWorkspaceSummary.make(
@@ -44,6 +46,13 @@ extension AnimateCreateViewModel {
 
     var mediaSelectedCount: Int {
         mediaSummary.effectiveMediaCount
+    }
+
+    var hasRenderableSelectedPhoto: Bool {
+        effectiveSelectedMedia.contains { media in
+            (media.kind == "photo" || media.kind == "image")
+                && UIImage(data: media.data) != nil
+        }
     }
 
     var mediaRemainingSlots: Int {

@@ -381,7 +381,7 @@
 "home.avi.currentVideo.title" = "Vídeo actual";
 "home.avi.preparing.detail" = "L’Avi està convertint la foto en un pla de vídeo.";
 "home.avi.preparing.title" = "L’Avi escalfa motors";
-"home.avi.selected.detail" = "%d %@ seleccionats. Ara toca triar l’estil.";
+"home.avi.selected.detail" = "%d %@. Ara toca triar l’estil i l’animació.";
 "home.avi.signIn.detail" = "Connecta el compte perquè l’Avi desi els teus vídeos animats.";
 "home.avi.signIn.title" = "Inicia sessió per crear";
 "home.aviBrief.continueVideo" = "Continua %@ des de la propera etapa pendent.";
@@ -708,9 +708,9 @@
 "create.aviStatus.startMedia.title" = "Comença amb una foto";
 "create.aviStatus.exportReady.detail" = "El vídeo està a punt per baixar-lo i moure’l a Galeria.";
 "create.aviStatus.preparing.detail" = "L’Avi està convertint la foto en un pla de vídeo.";
-"create.aviStatus.storyReady.detail" = "Estil, missatge i veu a punt.";
-"create.aviStatus.goodSelection.detail" = "Aquesta foto està a punt. Ajusta l’estil, la veu o el missatge després.";
-"create.aviStatus.startMedia.detail" = "Afegeix una foto i després tria l’estil, el missatge i el ritme.";
+"create.aviStatus.storyReady.detail" = "Foto, estil i animació a punt. Revisa el cost abans de crear.";
+"create.aviStatus.goodSelection.detail" = "Aquesta foto està a punt. Continua amb l’estil i l’animació.";
+"create.aviStatus.startMedia.detail" = "Afegeix una foto i després tria l’estil, l’animació i el missatge.";
 "recovery.mediaImportFailure" = "No s’ha pogut afegir aquesta foto. Continua en aquest dispositiu; torna-ho a provar o tria una altra imatge.";
 "recovery.mediaUploadUnavailable" = "La pujada de la foto encara no està a punt. La teva foto continua en aquest dispositiu; torna-ho a provar d’aquí a un moment.";
 "recovery.mediaStorySaveFailure" = "No s’ha pogut guardar la foto per al vídeo. La teva foto continua en aquest dispositiu; torna-ho a provar o tria una altra imatge.";

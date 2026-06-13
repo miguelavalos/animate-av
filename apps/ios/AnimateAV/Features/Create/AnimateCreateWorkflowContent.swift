@@ -1037,7 +1037,7 @@ private struct AnimateCreateVideoDirectionCard: View {
 
                 }
 
-                if isGuidedFlowComplete {
+                if isEffectiveGuidedFlowComplete {
                     guidedSummary
                 } else {
                     guidedPendingSummary
@@ -1086,11 +1086,12 @@ private struct AnimateCreateVideoDirectionCard: View {
             )
         }
         .onAppear {
+            resetGuidedFlowIfPhotoIsMissing()
             guard !presentation.finalRenderSummary.isPreparingPlan,
-                  !isGuidedFlowComplete,
+                  !isEffectiveGuidedFlowComplete,
                   !suppressAutoGuidedSheet,
                   activeGuidedSheet == nil else { return }
-            activeGuidedSheet = guideState.step
+            activeGuidedSheet = effectiveGuideStep
             updateGuidedLookFamilyForCurrentStep()
         }
         .onChange(of: activeGuidedSheet) { _, _ in
@@ -1114,6 +1115,7 @@ private struct AnimateCreateVideoDirectionCard: View {
         }
         .onChange(of: presentation.mediaSummary.selectedMedia) { _, newMedia in
             handlePhotoPickerResult(newMedia)
+            resetGuidedFlowIfPhotoIsMissing()
         }
     }
 
@@ -1146,40 +1148,7 @@ private struct AnimateCreateVideoDirectionCard: View {
                 aviSuggestionDetail: aviSuggestionSummaryDetail
             )
 
-            VStack(spacing: 8) {
-                summaryEditRow(
-                    title: L10n.string("create.guided.summary.photoFrame"),
-                    detail: photoFrameSummaryDetail,
-                    icon: "photo.fill",
-                    editStep: .photoFrame
-                )
-                summaryEditRow(
-                    title: L10n.string("create.guided.summary.look"),
-                    detail: selectedLookTitle,
-                    icon: "paintbrush.pointed.fill",
-                    editStep: .look
-                )
-                summaryEditRow(
-                    title: L10n.string("create.guided.summary.movement"),
-                    detail: animationSummaryDetail,
-                    icon: form.movementDirection.systemImage,
-                    editStep: .movement
-                )
-                summaryEditRow(
-                    title: L10n.string("create.guided.summary.message"),
-                    detail: hasMessage ? form.details : L10n.string("create.guided.script.none"),
-                    icon: "text.bubble.fill",
-                    editStep: .scriptIdea
-                )
-                if hasMessage {
-                    summaryEditRow(
-                        title: L10n.string("create.guided.summary.voice"),
-                        detail: "\(form.voiceProfile.title) · \(form.voiceTone.title)",
-                        icon: "waveform",
-                        editStep: .voice
-                    )
-                }
-            }
+            summaryRows
 
             summaryCreateVideoAction
         }
@@ -1192,40 +1161,7 @@ private struct AnimateCreateVideoDirectionCard: View {
                 L10n.string("create.guided.summary.detail")
             )
 
-            VStack(spacing: 8) {
-                summaryEditRow(
-                    title: L10n.string("create.guided.summary.photoFrame"),
-                    detail: photoFrameSummaryDetail,
-                    icon: "photo.fill",
-                    editStep: .photoFrame
-                )
-                summaryEditRow(
-                    title: L10n.string("create.guided.summary.look"),
-                    detail: selectedLookTitle,
-                    icon: "paintbrush.pointed.fill",
-                    editStep: .look
-                )
-                summaryEditRow(
-                    title: L10n.string("create.guided.summary.movement"),
-                    detail: animationSummaryDetail,
-                    icon: form.movementDirection.systemImage,
-                    editStep: .movement
-                )
-                summaryEditRow(
-                    title: L10n.string("create.guided.summary.message"),
-                    detail: hasMessage ? form.details : L10n.string("create.guided.script.none"),
-                    icon: "text.bubble.fill",
-                    editStep: .scriptIdea
-                )
-                if hasMessage {
-                    summaryEditRow(
-                        title: L10n.string("create.guided.summary.voice"),
-                        detail: "\(form.voiceProfile.title) · \(form.voiceTone.title)",
-                        icon: "waveform",
-                        editStep: .voice
-                    )
-                }
-            }
+            summaryRows
 
         }
     }
@@ -1588,7 +1524,7 @@ private struct AnimateCreateVideoDirectionCard: View {
     }
 
     private var isContinueDisabled: Bool {
-        switch guideState.step {
+        switch effectiveGuideStep {
         case .photoFrame:
             return selectedPhotoMedia == nil || presentation.mediaSummary.isImporting
         case .look:
@@ -1624,6 +1560,46 @@ private struct AnimateCreateVideoDirectionCard: View {
         hasMessage ? [.photoFrame, .look, .movement, .scriptIdea, .voice] : [.photoFrame, .look, .movement, .scriptIdea]
     }
 
+    @ViewBuilder
+    private var summaryRows: some View {
+        VStack(spacing: 8) {
+            summaryEditRow(
+                title: L10n.string("create.guided.summary.photoFrame"),
+                detail: photoFrameSummaryDetail,
+                icon: "photo.fill",
+                editStep: .photoFrame
+            )
+            if selectedPhotoMedia != nil {
+                summaryEditRow(
+                    title: L10n.string("create.guided.summary.look"),
+                    detail: selectedLookTitle,
+                    icon: "paintbrush.pointed.fill",
+                    editStep: .look
+                )
+                summaryEditRow(
+                    title: L10n.string("create.guided.summary.movement"),
+                    detail: animationSummaryDetail,
+                    icon: form.movementDirection.systemImage,
+                    editStep: .movement
+                )
+                summaryEditRow(
+                    title: L10n.string("create.guided.summary.message"),
+                    detail: hasMessage ? form.details : L10n.string("create.guided.script.none"),
+                    icon: "text.bubble.fill",
+                    editStep: .scriptIdea
+                )
+                if hasMessage {
+                    summaryEditRow(
+                        title: L10n.string("create.guided.summary.voice"),
+                        detail: "\(form.voiceProfile.title) · \(form.voiceTone.title)",
+                        icon: "waveform",
+                        editStep: .voice
+                    )
+                }
+            }
+        }
+    }
+
     private var hasMessage: Bool {
         !form.details.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty
     }
@@ -1650,8 +1626,13 @@ private struct AnimateCreateVideoDirectionCard: View {
     }
 
     private var selectedPhotoMedia: AnimateSelectedMedia? {
-        presentation.mediaSummary.selectedMedia.first(where: { ($0.kind == "photo" || $0.kind == "image") && $0.selected })
-            ?? presentation.mediaSummary.selectedMedia.first(where: { $0.kind == "photo" || $0.kind == "image" })
+        presentation.mediaSummary.selectedMedia.first(where: { isRenderablePhotoMedia($0) && $0.selected })
+            ?? presentation.mediaSummary.selectedMedia.first(where: isRenderablePhotoMedia)
+    }
+
+    private func isRenderablePhotoMedia(_ media: AnimateSelectedMedia) -> Bool {
+        (media.kind == "photo" || media.kind == "image")
+            && UIImage(data: media.data) != nil
     }
 
     private var canContinueMessageStep: Bool {
@@ -1676,6 +1657,23 @@ private struct AnimateCreateVideoDirectionCard: View {
         activeGuidedSheet = result.activeSheet
         if result.clearsMessage {
             updateMessage("")
+        }
+    }
+
+    private var effectiveGuideStep: GuidedStep {
+        selectedPhotoMedia == nil ? .photoFrame : guideState.step
+    }
+
+    private var isEffectiveGuidedFlowComplete: Bool {
+        selectedPhotoMedia != nil && isGuidedFlowComplete
+    }
+
+    private func resetGuidedFlowIfPhotoIsMissing() {
+        guard selectedPhotoMedia == nil else { return }
+        isGuidedFlowComplete = false
+        guideState.step = .photoFrame
+        if activeGuidedSheet != nil {
+            activeGuidedSheet = .photoFrame
         }
     }
 
@@ -1738,7 +1736,7 @@ private struct AnimateCreateVideoDirectionCard: View {
     }
 
     private var continueButtonTitle: String {
-        switch guideState.step {
+        switch effectiveGuideStep {
         case .photoFrame:
             return selectedPhotoMedia == nil
                 ? L10n.string("create.media.choose")
@@ -2038,7 +2036,7 @@ private struct AnimateCreateGuidedPhotoFrameStep: View {
 
     @ViewBuilder
     private var photoActions: some View {
-        if media == nil {
+        if !hasRenderableMedia {
             Button(action: choosePhoto) {
                 Label(L10n.string("create.media.choose"), systemImage: "photo.badge.plus")
                     .font(.system(size: 14, weight: .black))
@@ -2122,10 +2120,15 @@ private struct AnimateCreateGuidedPhotoFrameStep: View {
         if isImporting {
             return L10n.string("create.mediaCard.import.readingSelected")
         }
-        if media == nil {
+        if !hasRenderableMedia {
             return L10n.string("create.guided.photoFrame.empty")
         }
         return L10n.string("create.guided.photoFrame.ready")
+    }
+
+    private var hasRenderableMedia: Bool {
+        guard let media else { return false }
+        return UIImage(data: media.data) != nil
     }
 
 }
@@ -2831,13 +2834,10 @@ private struct AnimateCreateCompactAviGuide: View {
         if presentation.finalRenderSummary.latestFinalJob != nil {
             return L10n.string("create.aviStatus.working.title")
         }
-        if presentation.videoDirectionSummary.hasScenes
-            || presentation.finalRenderSummary.renderPlan != nil
-            || presentation.canPrepareFinalRenderPlan
-            || presentation.canGenerateFinalRender {
+        if isReadyToReviewCredits {
             return L10n.string("create.aviStatus.storyReady.title")
         }
-        if presentation.mediaSummary.selectedCount > 0 || !presentation.mediaSummary.syncedMediaAssets.isEmpty {
+        if hasSelectedMedia {
             return L10n.string("create.aviStatus.goodSelection.title")
         }
         return L10n.string("create.aviStatus.startMedia.title")
@@ -2853,16 +2853,30 @@ private struct AnimateCreateCompactAviGuide: View {
         if let realtimeStatus = presentation.finalRenderSummary.realtimeStatus {
             return realtimeStatus.detail
         }
-        if presentation.videoDirectionSummary.hasScenes
-            || presentation.finalRenderSummary.renderPlan != nil
-            || presentation.canPrepareFinalRenderPlan
-            || presentation.canGenerateFinalRender {
+        if isReadyToReviewCredits {
             return L10n.string("create.aviStatus.storyReady.detail")
         }
-        if presentation.mediaSummary.selectedCount > 0 || !presentation.mediaSummary.syncedMediaAssets.isEmpty {
+        if hasSelectedMedia {
             return L10n.string("create.aviStatus.goodSelection.detail")
         }
         return L10n.string("create.aviStatus.startMedia.detail")
+    }
+
+    private var hasSelectedMedia: Bool {
+        presentation.mediaSummary.selectedMedia.contains { media in
+            (media.kind == "photo" || media.kind == "image")
+                && UIImage(data: media.data) != nil
+        }
+    }
+
+    private var isReadyToReviewCredits: Bool {
+        hasSelectedMedia
+            && (
+                presentation.videoDirectionSummary.hasScenes
+                    || presentation.finalRenderSummary.renderPlan != nil
+                    || presentation.canPrepareFinalRenderPlan
+                    || presentation.canGenerateFinalRender
+            )
     }
 }
 
@@ -2951,7 +2965,7 @@ private struct AnimateCreatePrimaryActionBar: View {
                         .frame(maxWidth: .infinity)
                         .frame(height: 46)
                     }
-                    .disabled(!primaryActionPresentation.canRunPrimaryAction)
+                    .disabled(!canRunPrimaryAction)
                     .buttonStyle(AnimateCreateFinalVideoButtonStyle())
                 }
 
@@ -3023,20 +3037,32 @@ private struct AnimateCreatePrimaryActionBar: View {
     }
 
     private var primaryTitle: String {
-        guideIsReadyToPrepareDirection ? L10n.string("create.primary.continueWithVideo") : primaryActionPresentation.title
+        guard hasRenderablePhoto else {
+            return L10n.string("create.guided.photoFrame.title")
+        }
+        return guideIsReadyToPrepareDirection ? L10n.string("create.primary.continueWithVideo") : primaryActionPresentation.title
     }
 
     private var primaryButtonTitle: String {
-        guideIsReadyToPrepareDirection ? L10n.string("create.primary.continueWithVideo") : primaryActionPresentation.buttonTitle
+        guard hasRenderablePhoto else {
+            return L10n.string("create.media.choose")
+        }
+        return guideIsReadyToPrepareDirection ? L10n.string("create.primary.continueWithVideo") : primaryActionPresentation.buttonTitle
     }
 
     private var primaryButtonIconName: String {
-        guideIsReadyToPrepareDirection ? "video.fill" : primaryActionPresentation.buttonIconName
+        guard hasRenderablePhoto else {
+            return "photo.badge.plus"
+        }
+        return guideIsReadyToPrepareDirection ? "video.fill" : primaryActionPresentation.buttonIconName
     }
 
     private var primaryStatusMessage: String {
         if presentation.finalRenderSummary.latestFinalJob?.isTerminalFailure == true {
             return L10n.string("create.final.recovery.retryHint")
+        }
+        guard hasRenderablePhoto else {
+            return L10n.string("create.guided.photoFrame.empty")
         }
         return guideIsReadyToPrepareDirection
             ? L10n.string("create.primary.continuePreflight")
@@ -3044,10 +3070,22 @@ private struct AnimateCreatePrimaryActionBar: View {
     }
 
     private var guideIsReadyToPrepareDirection: Bool {
-        primaryActionPresentation.hasFinalVideoIntent
+        hasRenderablePhoto
+            && primaryActionPresentation.hasFinalVideoIntent
             && !primaryActionPresentation.hasCompletedVideoDirection
             && primaryActionPresentation.hasSelectedVideoLook
             && isVideoSetupGuideComplete
+    }
+
+    private var canRunPrimaryAction: Bool {
+        hasRenderablePhoto || primaryActionPresentation.canRunPrimaryAction
+    }
+
+    private var hasRenderablePhoto: Bool {
+        presentation.mediaSummary.selectedMedia.contains { media in
+            (media.kind == "photo" || media.kind == "image")
+                && UIImage(data: media.data) != nil
+        }
     }
 
     private var primaryHeaderColor: Color {
@@ -3068,6 +3106,10 @@ private struct AnimateCreatePrimaryActionBar: View {
     }
 
     private func primaryAction() {
+        guard hasRenderablePhoto else {
+            continueVideoSetup()
+            return
+        }
         if presentation.finalRenderSummary.pendingGalleryVideo != nil {
             return
         }

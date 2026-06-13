@@ -101,6 +101,9 @@ struct AnimateHomeScreen: View {
     private var aviContextTitle: String {
         guard viewModel.isSignedIn else { return L10n.string("home.avi.signIn.title") }
         if createViewModel.hasRecoverableVideoContext {
+            guard createViewModel.hasRenderableSelectedPhoto else {
+                return L10n.string("home.avi.createVideo.title")
+            }
             if createViewModel.finalRenderSummary.latestFinalJob != nil || createViewModel.finalRenderSummary.isGenerating {
                 return L10n.string("home.avi.creating.title")
             }
@@ -117,6 +120,9 @@ struct AnimateHomeScreen: View {
             return L10n.string("home.avi.signIn.detail")
         }
         if createViewModel.hasRecoverableVideoContext {
+            guard createViewModel.hasRenderableSelectedPhoto else {
+                return L10n.string("home.avi.addMedia.detail")
+            }
             let count = createViewModel.mediaSelectedCount
             if createViewModel.finalRenderSummary.latestFinalJob != nil || createViewModel.finalRenderSummary.isGenerating {
                 return createViewModel.finalRenderSummary.statusMessage ?? L10n.string("home.avi.creating.detail")
