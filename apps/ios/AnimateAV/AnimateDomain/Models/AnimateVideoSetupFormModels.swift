@@ -263,6 +263,8 @@ struct AnimateVideoSetupForm: Equatable {
     var voiceProfile: AnimateVideoVoiceProfile = .adultWoman
     var voiceTone: AnimateVideoVoiceTone = .warm
     var movementDirection: AnimateVideoMovementDirection = .subtleFaithful
+    var visualDirectionMode: AnimateVisualDirectionMode = .none
+    var visualDirectionTemplateId: String?
     var animationDirection = ""
 
     var activeMessageText: String? {
@@ -330,8 +332,16 @@ struct AnimateVideoSetupForm: Equatable {
             && voiceProfile == other.voiceProfile
             && voiceTone == other.voiceTone
             && movementDirection == other.movementDirection
+            && visualDirectionMode == other.visualDirectionMode
+            && visualDirectionTemplateId == other.visualDirectionTemplateId
             && animationDirection.trimmingCharacters(in: .whitespacesAndNewlines) == other.animationDirection.trimmingCharacters(in: .whitespacesAndNewlines)
     }
+}
+
+enum AnimateVisualDirectionMode: String, Codable, Equatable {
+    case none
+    case template
+    case custom
 }
 
 enum AnimateVideoSetupRules {

@@ -36,7 +36,11 @@ treated as the source of truth for restoring the user's pre-adjusted photo.
 Animation is a separate client setup choice from Message / Voice. It captures
 optional visual direction for what should happen in the animated scene. Message
 and voice remain optional, and a valid one-photo video can be confirmed with no
-message and no narration.
+message and no narration. Direction templates must travel to the backend as
+stable template IDs. The backend owns the English provider prompt for each
+template; client-localized titles, details, and examples are display copy only.
+Custom visual instructions are capped client-side and sent as user text only
+when the user has actually typed non-empty text.
 
 Create Video status cards, Avi guidance, summary rows, and fixed action bars
 must follow the guided client state before backend-ready legacy state. A saved

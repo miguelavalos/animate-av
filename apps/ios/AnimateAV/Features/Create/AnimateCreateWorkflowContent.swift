@@ -36,6 +36,7 @@ struct AnimateCreateWorkflowContent: View {
                     selectLook: viewModel.selectLook,
                     selectMusicPreset: viewModel.selectMusicPreset,
                     selectMovementDirection: viewModel.selectMovementDirection,
+                    selectVisualDirection: viewModel.selectVisualDirection,
                     updateAnimationDirection: viewModel.updateAnimationDirection,
                     useAutoStyleSuggestion: viewModel.useAutoStyleSuggestion,
                     undoAutoStyleSuggestion: viewModel.undoAutoStyleSuggestion,
@@ -84,6 +85,7 @@ private struct AnimateCreateMediaFirstWorkspace: View {
     let selectLook: (AnimateVideoLook) -> Void
     let selectMusicPreset: (AnimateVideoMusicPreset) -> Void
     let selectMovementDirection: (AnimateVideoMovementDirection) -> Void
+    let selectVisualDirection: (AnimateVisualDirectionMode, String?) -> Void
     let updateAnimationDirection: (String) -> Void
     let useAutoStyleSuggestion: () -> Void
     let undoAutoStyleSuggestion: () -> Void
@@ -164,6 +166,7 @@ private struct AnimateCreateMediaFirstWorkspace: View {
                             selectStyle: selectStyle,
                             selectLook: selectLook,
                             selectMovementDirection: selectMovementDirection,
+                            selectVisualDirection: selectVisualDirection,
                             updateAnimationDirection: updateAnimationDirection,
                             editMedia: { showsCompactMediaManager = true },
                             choosePhoto: presentCompactPhotoPicker,
@@ -974,6 +977,7 @@ private struct AnimateCreateVideoDirectionCard: View {
     let selectStyle: (AnimateVideoCreationStyle) -> Void
     let selectLook: (AnimateVideoLook) -> Void
     let selectMovementDirection: (AnimateVideoMovementDirection) -> Void
+    let selectVisualDirection: (AnimateVisualDirectionMode, String?) -> Void
     let updateAnimationDirection: (String) -> Void
     let editMedia: () -> Void
     let choosePhoto: () -> Void
@@ -1366,7 +1370,9 @@ private struct AnimateCreateVideoDirectionCard: View {
                     TextEditor(text: Binding(
                         get: { form.animationDirection },
                         set: {
-                            selectMovementDirection(.custom)
+                            let trimmed = $0.trimmingCharacters(in: .whitespacesAndNewlines)
+                            selectMovementDirection(trimmed.isEmpty ? .subtleFaithful : .custom)
+                            selectVisualDirection(trimmed.isEmpty ? .none : .custom, nil)
                             updateAnimationDirection($0)
                         }
                     ))
@@ -1620,11 +1626,15 @@ private struct AnimateCreateVideoDirectionCard: View {
     }
 
     private var animationSummaryDetail: String {
-        let trimmed = form.animationDirection.trimmingCharacters(in: .whitespacesAndNewlines)
-        guard !trimmed.isEmpty else {
+        switch form.visualDirectionMode {
+        case .none:
             return L10n.string("create.guided.direction.none")
+        case .template:
+            return selectedAnimationDirectionPreset.title
+        case .custom:
+            let trimmed = form.animationDirection.trimmingCharacters(in: .whitespacesAndNewlines)
+            return trimmed.isEmpty ? L10n.string("create.guided.direction.none") : trimmed
         }
-        return trimmed
     }
 
     private var selectedPhotoMedia: AnimateSelectedMedia? {
@@ -1775,19 +1785,28 @@ private struct AnimateCreateVideoDirectionCard: View {
 
     private func applyAnimationDirectionPreset(_ preset: AnimationDirectionPreset) {
         selectMovementDirection(preset.movementDirection)
-        if preset != .custom {
-            updateAnimationDirection(preset.promptText)
+        switch preset {
+        case .none:
+            updateAnimationDirection("")
+            selectVisualDirection(.none, nil)
+        case .custom:
+            let trimmed = form.animationDirection.trimmingCharacters(in: .whitespacesAndNewlines)
+            selectVisualDirection(trimmed.isEmpty ? .none : .custom, nil)
+        default:
+            updateAnimationDirection("")
+            selectVisualDirection(.template, preset.rawValue)
         }
     }
 
     private var selectedAnimationDirectionPreset: AnimationDirectionPreset {
-        let trimmed = form.animationDirection.trimmingCharacters(in: .whitespacesAndNewlines)
-        if trimmed.isEmpty {
+        switch form.visualDirectionMode {
+        case .none:
             return .none
+        case .template:
+            return AnimationDirectionPreset(rawValue: form.visualDirectionTemplateId ?? "") ?? .none
+        case .custom:
+            return form.animationDirection.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty ? .none : .custom
         }
-        return AnimationDirectionPreset.allCases.first {
-            !$0.promptText.isEmpty && $0.promptText == trimmed
-        } ?? .custom
     }
 
     private var isUserAdjustedFromAvi: Bool {
@@ -3156,7 +3175,7 @@ private struct AnimateCreatePrimaryActionBar: View {
     }
 
     private var canRunPrimaryAction: Bool {
-        hasRenderablePhoto || primaryActionPresentation.canRunPrimaryAction
+        hasRenderablePhoto ? primaryActionPresentation.canRunPrimaryAction : true
     }
 
     private var hasRenderablePhoto: Bool {

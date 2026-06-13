@@ -47,8 +47,10 @@ must not require backend recovery.
 Animation is separate from Message / Voice. It captures optional visual
 direction for what the image should do when it comes alive. Users may choose no
 extra direction, start from a visual template, or type custom visual
-instructions. Message and Voice remain optional, and a one-photo video with no
-message and no narration is a valid v1 setup.
+instructions. The app sends `none`, a stable template id, or custom text; it
+does not send localized template copy as the provider prompt. Message and Voice
+remain optional, and a one-photo video with no message and no narration is a
+valid v1 setup.
 
 Images are a separate v1 workflow: choose one source photo, generate a stylized
 image, then download/share it or use it as video input when synced state allows.

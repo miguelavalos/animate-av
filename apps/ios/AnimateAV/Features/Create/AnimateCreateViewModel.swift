@@ -718,6 +718,8 @@ final class AnimateCreateViewModel: ObservableObject {
             finalForm.duration.rawValue,
             finalForm.mediaUse.rawValue,
             finalForm.movementDirection.rawValue,
+            finalForm.visualDirectionMode.rawValue,
+            finalForm.visualDirectionTemplateId ?? "",
             finalForm.animationDirection.trimmingCharacters(in: .whitespacesAndNewlines),
             finalForm.occasion.trimmingCharacters(in: .whitespacesAndNewlines),
             mediaSignature,
@@ -841,8 +843,25 @@ final class AnimateCreateViewModel: ObservableObject {
         markLocalSetupEdited()
     }
 
+    func selectVisualDirection(_ mode: AnimateVisualDirectionMode, templateId: String?) {
+        form.visualDirectionMode = mode
+        form.visualDirectionTemplateId = templateId
+        if mode != .custom {
+            form.animationDirection = ""
+        }
+        markLocalSetupEdited()
+    }
+
     func updateAnimationDirection(_ animationDirection: String) {
-        form.animationDirection = String(animationDirection.prefix(AnimateVideoSetupLimits.animationDirectionCharacterLimit))
+        let value = String(animationDirection.prefix(AnimateVideoSetupLimits.animationDirectionCharacterLimit))
+        form.animationDirection = value
+        if value.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
+            form.visualDirectionMode = .none
+            form.visualDirectionTemplateId = nil
+        } else {
+            form.visualDirectionMode = .custom
+            form.visualDirectionTemplateId = nil
+        }
         markLocalSetupEdited()
     }
 

@@ -51,9 +51,11 @@ editable so re-entering frame adjustment and restore-original work without
 backend state.
 
 Animation is a separate setup choice from Message / Voice. It captures optional
-visual direction for what should happen in the animated scene. Message and voice
-are optional; a visual-only video with no message and no narration is a valid v1
-path.
+visual direction for what should happen in the animated scene. The iOS client
+sends stable visual direction mode/template identifiers plus custom text only
+when the user writes their own instructions; localized template copy is display
+text, not the backend prompt. Message and voice are optional; a visual-only
+video with no message and no narration is a valid v1 path.
 
 The client must treat the guided setup state as the source of truth for the
 visible Create Video status. It must not show "Check cost" or "Ready to review

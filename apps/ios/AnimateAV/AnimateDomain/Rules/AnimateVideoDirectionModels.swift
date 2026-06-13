@@ -20,6 +20,9 @@ struct AnimateVideoDirectionRequest: Encodable {
     let mediaUse: String
     let movementDirection: String?
     let motionDirection: String?
+    let visualDirectionMode: String?
+    let visualDirectionTemplateId: String?
+    let visualDirectionText: String?
     let animationDirection: String?
     let occasion: String
     let details: String
@@ -63,6 +66,8 @@ enum AnimateVideoDirectionInputSignature {
             form.duration.rawValue,
             form.mediaUse.rawValue,
             form.movementDirection.rawValue,
+            form.visualDirectionMode.rawValue,
+            form.visualDirectionTemplateId ?? "",
             form.animationDirection.trimmingCharacters(in: .whitespacesAndNewlines),
             form.occasion.trimmingCharacters(in: .whitespacesAndNewlines),
             mediaSignature
