@@ -141,7 +141,8 @@ private struct AnimateCreateMediaFirstWorkspace: View {
                         AnimateCreateVideoHeader()
 
                         AnimateCreateCompactAviGuide(
-                            presentation: presentation
+                            presentation: presentation,
+                            isVideoSetupGuideComplete: isVideoSetupGuideComplete
                         )
                     }
 
@@ -239,6 +240,7 @@ private struct AnimateCreateMediaFirstWorkspace: View {
             pickerItems = []
         }
         .onChange(of: presentation.mediaSummary.selectedMedia) { _, newMedia in
+            isVideoSetupGuideComplete = false
             guard shouldOpenMediaManagerAfterImport,
                   newMedia.contains(where: { $0.kind == "photo" || $0.kind == "image" }) else { return }
             shouldOpenMediaManagerAfterImport = false
@@ -1838,23 +1840,49 @@ private struct AnimateCreateVideoDirectionCard: View {
         if selectedPhotoMedia == nil {
             return AVBrandColor.accent
         }
+        if selectedLook == nil {
+            return AVBrandColor.textPrimary
+        }
         return presentation.videoDirectionSummary.hasScenes ? AVBrandColor.accent : AVBrandColor.textPrimary
     }
 
     private var setupCardIconName: String {
-        selectedPhotoMedia == nil ? "photo.fill" : videoDirection.iconName
+        if selectedPhotoMedia == nil {
+            return "photo.fill"
+        }
+        if selectedLook == nil {
+            return "paintbrush.pointed.fill"
+        }
+        if !isEffectiveGuidedFlowComplete {
+            return "camera.aperture"
+        }
+        return videoDirection.iconName
     }
 
     private var setupCardTitle: String {
-        selectedPhotoMedia == nil
-            ? L10n.string("create.guided.photoFrame.title")
-            : L10n.string("create.storyDirection.cardTitle")
+        if selectedPhotoMedia == nil {
+            return L10n.string("create.guided.photoFrame.title")
+        }
+        if selectedLook == nil {
+            return L10n.string("create.guided.look.title")
+        }
+        if !isEffectiveGuidedFlowComplete {
+            return L10n.string("create.guided.movement.title")
+        }
+        return L10n.string("create.storyDirection.cardTitle")
     }
 
     private var setupCardStatusMessage: String {
-        selectedPhotoMedia == nil
-            ? L10n.string("create.guided.photoFrame.empty")
-            : videoDirection.statusMessage
+        if selectedPhotoMedia == nil {
+            return L10n.string("create.guided.photoFrame.empty")
+        }
+        if selectedLook == nil {
+            return L10n.string("create.guided.look.noneSelected.title")
+        }
+        if !isEffectiveGuidedFlowComplete {
+            return L10n.string("create.guided.movement.detail")
+        }
+        return videoDirection.statusMessage
     }
 
     private var mediaDetail: String {
@@ -2809,6 +2837,7 @@ private struct AnimateCreateVideoHeader: View {
 
 private struct AnimateCreateCompactAviGuide: View {
     let presentation: AnimateCreateWorkflowPresentation
+    let isVideoSetupGuideComplete: Bool
 
     var body: some View {
         AVAppShellCard {
@@ -2856,6 +2885,9 @@ private struct AnimateCreateCompactAviGuide: View {
         if isReadyToReviewCredits {
             return L10n.string("create.aviStatus.storyReady.title")
         }
+        if hasSelectedMedia, presentation.selectedLook != nil, !isVideoSetupGuideComplete {
+            return L10n.string("create.guided.movement.title")
+        }
         if hasSelectedMedia {
             return L10n.string("create.aviStatus.goodSelection.title")
         }
@@ -2875,6 +2907,9 @@ private struct AnimateCreateCompactAviGuide: View {
         if isReadyToReviewCredits {
             return L10n.string("create.aviStatus.storyReady.detail")
         }
+        if hasSelectedMedia, presentation.selectedLook != nil, !isVideoSetupGuideComplete {
+            return L10n.string("create.guided.movement.detail")
+        }
         if hasSelectedMedia {
             return L10n.string("create.aviStatus.goodSelection.detail")
         }
@@ -2890,11 +2925,11 @@ private struct AnimateCreateCompactAviGuide: View {
 
     private var isReadyToReviewCredits: Bool {
         hasSelectedMedia
+            && presentation.selectedLook != nil
             && (
-                presentation.videoDirectionSummary.hasScenes
-                    || presentation.finalRenderSummary.renderPlan != nil
-                    || presentation.canPrepareFinalRenderPlan
-                    || presentation.canGenerateFinalRender
+                presentation.finalRenderSummary.renderPlan != nil
+                    || presentation.finalRenderSummary.videoQuote != nil
+                    || isVideoSetupGuideComplete
             )
     }
 }
@@ -3059,6 +3094,12 @@ private struct AnimateCreatePrimaryActionBar: View {
         guard hasRenderablePhoto else {
             return L10n.string("create.guided.photoFrame.title")
         }
+        guard primaryActionPresentation.hasSelectedVideoLook else {
+            return L10n.string("create.guided.look.noneSelected.title")
+        }
+        guard isVideoSetupGuideComplete else {
+            return L10n.string("create.guided.movement.title")
+        }
         return guideIsReadyToPrepareDirection ? L10n.string("create.primary.continueWithVideo") : primaryActionPresentation.title
     }
 
@@ -3066,12 +3107,24 @@ private struct AnimateCreatePrimaryActionBar: View {
         guard hasRenderablePhoto else {
             return L10n.string("create.media.choose")
         }
+        guard primaryActionPresentation.hasSelectedVideoLook else {
+            return L10n.string("create.guided.look.noneSelected.title")
+        }
+        guard isVideoSetupGuideComplete else {
+            return L10n.string("create.guided.continue.movement")
+        }
         return guideIsReadyToPrepareDirection ? L10n.string("create.primary.continueWithVideo") : primaryActionPresentation.buttonTitle
     }
 
     private var primaryButtonIconName: String {
         guard hasRenderablePhoto else {
             return "photo.badge.plus"
+        }
+        guard primaryActionPresentation.hasSelectedVideoLook else {
+            return "paintbrush.pointed.fill"
+        }
+        guard isVideoSetupGuideComplete else {
+            return "camera.aperture"
         }
         return guideIsReadyToPrepareDirection ? "video.fill" : primaryActionPresentation.buttonIconName
     }
@@ -3082,6 +3135,12 @@ private struct AnimateCreatePrimaryActionBar: View {
         }
         guard hasRenderablePhoto else {
             return L10n.string("create.guided.photoFrame.empty")
+        }
+        guard primaryActionPresentation.hasSelectedVideoLook else {
+            return L10n.string("create.guided.look.noneSelected.detail")
+        }
+        guard isVideoSetupGuideComplete else {
+            return L10n.string("create.guided.movement.detail")
         }
         return guideIsReadyToPrepareDirection
             ? L10n.string("create.primary.continuePreflight")
@@ -3139,6 +3198,8 @@ private struct AnimateCreatePrimaryActionBar: View {
             generateFinalRender()
         } else if presentation.finalRenderSummary.latestFinalJob != nil {
             return
+        } else if !primaryActionPresentation.hasSelectedVideoLook || !isVideoSetupGuideComplete {
+            continueVideoSetup()
         } else if primaryActionPresentation.hasFinalVideoIntent {
             if primaryActionPresentation.needsSignInForVideoDirection
                 || primaryActionPresentation.needsSignInForFinalRender {
