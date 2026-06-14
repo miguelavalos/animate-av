@@ -14,6 +14,10 @@ in the private AVALSYS suite.
 - [ ] For TestFlight/App Store handoff, the private production local config has
   been generated and `scripts/check-ios-runtime-config.sh --env prod
   --configuration Release` passes before archive/upload.
+- [ ] Release archive/upload follows the shared Tune AV pattern: repair
+  `Sentry.framework.dSYM` inside the `.xcarchive`, verify matching app and
+  Sentry dSYM UUIDs, and only then export/upload. Do not accept a missing Sentry
+  dSYM warning as a completed release.
 - [ ] Account AV login matches the Tune AV signed iOS pattern: publishable key,
   keychain service, and keychain access group are exposed in runtime config,
   passed into Account AV/Clerk setup, and validated before TestFlight.

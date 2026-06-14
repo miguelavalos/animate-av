@@ -42,6 +42,10 @@ Mandatory rules:
   pass, and validate `ACCOUNTAV_KEYCHAIN_SERVICE` and
   `ACCOUNTAV_KEYCHAIN_ACCESS_GROUP` through the same common Account AV pattern;
   do not rely on hidden Clerk/Account AV keychain defaults in signed builds.
+- for TestFlight/App Store archive/upload, compare against Tune AV before
+  uploading. Animate AV release archives must repair `Sentry.framework.dSYM`,
+  verify app and Sentry dSYM UUIDs, and only then export/upload. A successful
+  upload with a missing Sentry dSYM warning is not a completed release.
 - use the mock final-render route for no-spend validation unless private docs
   explicitly approve a paid provider smoke;
 - treat "no-spend" as "no paid provider call", not "skip user credit workflow";
