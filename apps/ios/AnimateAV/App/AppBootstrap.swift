@@ -72,6 +72,7 @@ struct AnimateAppBootstrapView: View {
 
     private var shouldShowOnboarding: Bool {
         guard !authenticationWasSkipped else { return false }
+        guard !dependencies.accountController.isAccountSessionTemporarilyUnavailable else { return false }
         let rootGate = AVProductAccountAuthFlowRootGate(
             accountState: dependencies.accountController.productAccountState,
             authPresentationState: authPresentationState
@@ -106,6 +107,7 @@ struct AnimateAppBootstrapView: View {
     private func showInitialOnboardingAfterSplashIfNeeded() {
         guard initialAccountRestoreCompleted else { return }
         guard !dependencies.accountController.isSignedIn else { return }
+        guard !dependencies.accountController.isAccountSessionTemporarilyUnavailable else { return }
         guard !authenticationWasSkipped else { return }
         authPresentationState = .onboardingCollapsed
     }
