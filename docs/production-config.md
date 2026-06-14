@@ -73,11 +73,18 @@ and app wiring must make these values explicit:
 The Release keychain access group must match the production bundle boundary
 (`935PM55U6R.com.avalsys.animateav`). The Debug keychain access group must
 match the debug bundle boundary (`935PM55U6R.com.avalsys.animateav.dev`).
+The Release keychain service must be `com.avalsys.animateav.account.v2`; the
+Debug keychain service must be `com.avalsys.animateav.dev.account.v2`.
 
 Do not treat a build as auth-ready if the app only passes the publishable key to
 Account AV or depends on hidden Clerk keychain defaults. The private native
 Clerk session standard and Tune AV implementation are the source of truth for
 the exact signed-runtime pattern.
+
+Session restore and token lookup must fail closed as temporarily unavailable
+rather than leaving the launch splash waiting indefinitely. If Clerk or keychain
+storage hangs, the app must continue into guest/temporarily unavailable account
+state and surface sign-in again instead of blocking launch.
 
 Do not treat auth failures from unsigned simulator builds as production auth
 evidence. Signed-in flows require a signed install using the validated runtime

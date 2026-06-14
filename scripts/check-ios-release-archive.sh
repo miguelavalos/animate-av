@@ -6,6 +6,8 @@ expected_build=""
 expected_version=""
 expected_bundle_id="${ANIMATEAV_IOS_BUNDLE_ID:-com.avalsys.animateav}"
 expected_team_id="${ANIMATEAV_APPLE_TEAM_ID:-935PM55U6R}"
+expected_keychain_service="${ANIMATEAV_KEYCHAIN_SERVICE:-com.avalsys.animateav.account.v2}"
+expected_keychain_access_group="${ANIMATEAV_KEYCHAIN_ACCESS_GROUP:-935PM55U6R.com.avalsys.animateav}"
 
 usage() {
   cat <<'USAGE'
@@ -16,6 +18,7 @@ Usage:
 Validates the final Animate AV iOS release archive before App Store Connect upload:
 - app version and build;
 - bundle identifier;
+- Account AV keychain service and access group;
 - signing team;
 - arm64 archive architecture;
 - app dSYM UUID;
@@ -82,11 +85,15 @@ fi
 version="$(plist_print "$app_info" "CFBundleShortVersionString")"
 build="$(plist_print "$app_info" "CFBundleVersion")"
 bundle_id="$(plist_print "$app_info" "CFBundleIdentifier")"
+keychain_service="$(plist_print "$app_info" "ACCOUNTAV_KEYCHAIN_SERVICE")"
+keychain_access_group="$(plist_print "$app_info" "ACCOUNTAV_KEYCHAIN_ACCESS_GROUP")"
 archive_team="$(plist_print "$archive_path/Info.plist" "ApplicationProperties:Team")"
 architectures="$(plist_print "$archive_path/Info.plist" "ApplicationProperties:Architectures")"
 app_binary="$app_path/AnimateAV"
 
 [ "$bundle_id" = "$expected_bundle_id" ] || fail "bundle id must be $expected_bundle_id, got ${bundle_id:-<missing>}"
+[ "$keychain_service" = "$expected_keychain_service" ] || fail "ACCOUNTAV_KEYCHAIN_SERVICE must be $expected_keychain_service, got ${keychain_service:-<missing>}"
+[ "$keychain_access_group" = "$expected_keychain_access_group" ] || fail "ACCOUNTAV_KEYCHAIN_ACCESS_GROUP must be $expected_keychain_access_group, got ${keychain_access_group:-<missing>}"
 [ -f "$app_binary" ] || fail "app binary is missing: $app_binary"
 [ -n "$archive_team" ] || fail "archive metadata is missing ApplicationProperties:Team; Xcode will not export this archive"
 [ -n "$architectures" ] || fail "archive metadata is missing ApplicationProperties:Architectures; Xcode will not export this archive"
@@ -135,6 +142,8 @@ iOS release archive passed.
   version: $version
   build: $build
   bundle id: $bundle_id
+  Account AV keychain service: $keychain_service
+  Account AV keychain access group: $keychain_access_group
   team id: $codesign_team
   app UUID: $app_uuid
   Sentry UUID: $sentry_uuid

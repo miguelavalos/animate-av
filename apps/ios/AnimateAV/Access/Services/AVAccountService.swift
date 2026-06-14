@@ -15,16 +15,22 @@ protocol AVAccountService {
 
 enum AVAccountServiceError: LocalizedError {
     case unavailable
+    case timedOut
 
     var errorDescription: String? {
         switch self {
         case .unavailable:
+            L10n.string("account.error.unavailable")
+        case .timedOut:
             L10n.string("account.error.unavailable")
         }
     }
 }
 
 struct DefaultAVAccountService: AVAccountService {
+    private static let restoreTimeout: Duration = .seconds(8)
+    private static let tokenTimeout: Duration = .seconds(8)
+
     private let accountService = ClerkAccountAVService(
         publishableKeyProvider: { AppConfig.avAccountKey },
         keychainServiceProvider: { Bundle.main.accountAVNonEmptyStringValue(for: "ACCOUNTAV_KEYCHAIN_SERVICE") },
@@ -49,14 +55,22 @@ struct DefaultAVAccountService: AVAccountService {
         if let uiTestAccountUser = Self.uiTestAccountUser {
             return .active(uiTestAccountUser)
         }
-        return await accountService.restoreSession()
+        do {
+            return try await withTimeout(Self.restoreTimeout) {
+                await accountService.restoreSession()
+            }
+        } catch {
+            return .temporarilyUnavailable(accountService.providerSessionUser)
+        }
     }
 
     func getToken() async throws -> String? {
         if Self.uiTestAccountUser != nil {
             return nil
         }
-        return try await accountService.getToken()
+        return try await withTimeout(Self.tokenTimeout) {
+            try await accountService.getToken()
+        }
     }
 
     func signInWithApple() async throws {
@@ -83,6 +97,27 @@ struct DefaultAVAccountService: AVAccountService {
             displayName: AnimateUITestEnvironment.accountUserDisplayName,
             emailAddress: AnimateUITestEnvironment.accountUserEmailAddress
         )
+    }
+}
+
+private func withTimeout<T: Sendable>(
+    _ timeout: Duration,
+    operation: @escaping @Sendable () async throws -> T
+) async throws -> T {
+    try await withThrowingTaskGroup(of: T.self) { group in
+        group.addTask {
+            try await operation()
+        }
+        group.addTask {
+            try await Task.sleep(for: timeout)
+            throw AVAccountServiceError.timedOut
+        }
+
+        guard let result = try await group.next() else {
+            throw AVAccountServiceError.timedOut
+        }
+        group.cancelAll()
+        return result
     }
 }
 

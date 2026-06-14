@@ -169,14 +169,20 @@ account_api_base_url="$(read_required_config ACCOUNTAV_API_BASE_URL)"
 account_publishable_key="$(read_required_config ACCOUNTAV_PUBLISHABLE_KEY)"
 if [ "$env_name" = "prod" ]; then
   account_keychain_access_group="935PM55U6R.com.avalsys.animateav"
+  account_keychain_service="com.avalsys.animateav.account.v2"
 else
   account_keychain_access_group="935PM55U6R.com.avalsys.animateav.dev"
+  account_keychain_service="com.avalsys.animateav.dev.account.v2"
 fi
 revenuecat_api_key="$(read_required_config ANIMATEAV_REVENUECAT_PUBLIC_API_KEY)"
 revenuecat_offering_id="$(read_required_config ANIMATEAV_REVENUECAT_OFFERING_ID)"
 revenuecat_monthly_package_id="$(read_required_config ANIMATEAV_REVENUECAT_MONTHLY_PACKAGE_ID)"
 animateav_ios_sentry_dsn="$(read_required_config ANIMATEAV_IOS_SENTRY_DSN)"
 development_team="$(read_required_config AVALSYS_APPLE_DEVELOPMENT_TEAM)"
+if [ "$development_team" = "346677S99H" ]; then
+  echo "Warning: replacing stale non-Avalsys Apple team 346677S99H with 935PM55U6R." >&2
+  development_team="935PM55U6R"
+fi
 support_base_url="$(read_required_config SUPPORTAV_BASE_URL)"
 support_email_to="$(read_required_config SUPPORT_EMAIL_TO)"
 privacy_url="$(read_required_config ANIMATEAV_PRIVACY_URL)"
@@ -220,7 +226,7 @@ XCCONFIG_SLASH = /
 ANIMATEAV_CONFIG_ENVIRONMENT = $env_name
 AVALSYS_APPLE_DEVELOPMENT_TEAM = $development_team
 ACCOUNTAV_PUBLISHABLE_KEY = $account_publishable_key
-ACCOUNTAV_KEYCHAIN_SERVICE = 
+ACCOUNTAV_KEYCHAIN_SERVICE = $account_keychain_service
 ACCOUNTAV_KEYCHAIN_ACCESS_GROUP = $account_keychain_access_group
 ANIMATEAV_REVENUECAT_PUBLIC_API_KEY = $revenuecat_api_key
 ANIMATEAV_REVENUECAT_OFFERING_ID = $revenuecat_offering_id
