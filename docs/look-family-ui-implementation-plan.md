@@ -1,6 +1,6 @@
 # Look Family UI Implementation Plan
 
-Status: implemented structurally, pending product review.
+Status: implemented and aligned with the simplified Create Video flow.
 
 This document is now the current contract for reviewing the look picker. The
 family UI and 64-look model exist; the remaining work is product polish,
@@ -13,30 +13,26 @@ Maintain the style-family look selector:
 1. Show a main grid/list of look families.
 2. Let the user enter one family.
 3. Show exactly 8 looks in that family.
-4. Keep the voice matrix stable by mapping each family to the same 8 voice
-   positions.
-5. Keep one unique final preview asset per look.
+4. Keep one unique final preview asset per look.
+5. Keep look selection independent from voice-over selection.
 
-This preserves the "8 looks per voice block" rule while making the library
-scale without endless pagination.
+The voice-over selector is no longer tied to look position. It appears only when
+the user adds a message and offers adult narrator choices.
 
 ## Current Audit
 
 - Video look data is centralized in
   `apps/ios/AnimateAV/AnimateDomain/Models/AnimateVideoCreationModels.swift`.
   `AnimateVideoLook.families` currently contains 8 families with 8 looks each.
-- `AnimateVideoLook.defaultVoiceProfile` depends on the look position in the
-  flattened family order. This preserves one default voice identity per family
-  position unless the user manually overrides the voice.
-- The guided video flow and the full setup look chooser both use family
-  navigation in `AnimateCreateWorkflowContent.swift`.
+- The simplified create flow uses family navigation for look selection and keeps
+  voice-over selection independent from the chosen look.
 - Image generation has a separate enum,
   `AnimateCreateImageLook`, in
   `apps/ios/AnimateAV/Features/Create/AnimateCreateImagesWorkspace.swift`.
   It mirrors the video look families.
-- `AnimateLookVoiceMatrixTests` verifies family size, selector count, default
-  voice mapping, unique preview assets, asset existence, and manual voice
-  override behavior.
+- `AnimateLookVoiceMatrixTests` verifies family size, adult narrator selector
+  count, unique preview assets, asset existence, and that look changes do not
+  alter narrator voice.
 - There are currently 64 unique `Look*.imageset` preview assets for video
   looks.
 - Look and family titles/subtitles are localized for the shipped runtime
@@ -45,10 +41,8 @@ scale without endless pagination.
 
 ## Product Decision
 
-Use family navigation for the video look selector because that is where look and
-default voice pairing matters most. Do not redesign the voice picker in this
-polish pass; the current eight voice portraits and picker are accepted unless a
-concrete defect appears.
+Use family navigation for the video look selector because look is the strongest
+user-facing control. Voice-over is a separate optional message control.
 
 Current review scope:
 
@@ -58,8 +52,7 @@ Current review scope:
   shipped locales when changing product copy.
 - Review all 64 look images in the app, not only the asset catalog.
 - Keep exactly 8 looks per family and one unique preview asset per look.
-- Keep the manual voice override behavior: once the user chooses a voice,
-  changing looks must not replace that choice.
+- Keep narrator selection independent from look selection.
 
 ## Proposed Families
 

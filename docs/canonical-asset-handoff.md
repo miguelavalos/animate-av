@@ -55,6 +55,15 @@ Checksum: sha256 f9b0d53651949a23544d15e5b980e64d2b2bde3db7955598e9846b1e8444fe5
 Purpose: splash and large branding surfaces
 Approved: yes
 
+Asset: Full transparent Animate AV logo, dark appearance
+Repo path: apps/ios/AnimateAV/App/Assets.xcassets/AnimateAVLogo.imageset/animate-av-logo-transparent-dark.png
+Type: full logo
+Export size: 1000 x 195
+Format: PNG
+Checksum: sha256 e2e4f327fd9756436b3b72125f97d5d438615795f28300b6daae8341abd75bb1
+Purpose: splash and large branding surfaces in dark appearance
+Approved: yes
+
 Asset: Animate AV header wordmark
 Repo path: apps/ios/AnimateAV/App/Assets.xcassets/AnimateHeaderWordmark.imageset/animate-header-wordmark.png
 Type: wordmark
