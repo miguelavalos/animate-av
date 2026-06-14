@@ -36,6 +36,11 @@ Mandatory rules:
   defines one;
 - use Infisical/Varlock-backed private tooling for config, deploy keys, and
   secret resolution;
+- for Account AV login, onboarding, session restore, or TestFlight auth work,
+  compare against Tune AV before editing or uploading. Animate AV must expose,
+  pass, and validate `ACCOUNTAV_KEYCHAIN_SERVICE` and
+  `ACCOUNTAV_KEYCHAIN_ACCESS_GROUP` through the same common Account AV pattern;
+  do not rely on hidden Clerk/Account AV keychain defaults in signed builds.
 - use the mock final-render route for no-spend validation unless private docs
   explicitly approve a paid provider smoke;
 - treat "no-spend" as "no paid provider call", not "skip user credit workflow";

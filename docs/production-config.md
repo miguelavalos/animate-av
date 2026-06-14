@@ -60,6 +60,25 @@ builds use the production bundle identifier and must use the matching
 production Account AV environment. Use the private release runbook for the
 remaining production archive and App Store Connect checks.
 
+### Account AV Login Parity
+
+Animate AV signed iOS builds must follow the common Account AV pattern used by
+Tune AV. Before TestFlight auth testing or upload, the generated runtime config
+and app wiring must make these values explicit:
+
+- `ACCOUNTAV_PUBLISHABLE_KEY`
+- `ACCOUNTAV_KEYCHAIN_SERVICE`
+- `ACCOUNTAV_KEYCHAIN_ACCESS_GROUP`
+
+The Release keychain access group must match the production bundle boundary
+(`935PM55U6R.com.avalsys.animateav`). The Debug keychain access group must
+match the debug bundle boundary (`935PM55U6R.com.avalsys.animateav.dev`).
+
+Do not treat a build as auth-ready if the app only passes the publishable key to
+Account AV or depends on hidden Clerk keychain defaults. The private native
+Clerk session standard and Tune AV implementation are the source of truth for
+the exact signed-runtime pattern.
+
 Do not treat auth failures from unsigned simulator builds as production auth
 evidence. Signed-in flows require a signed install using the validated runtime
 config. If an unsigned build was installed first, uninstall both development and

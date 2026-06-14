@@ -14,6 +14,9 @@ in the private AVALSYS suite.
 - [ ] For TestFlight/App Store handoff, the private production local config has
   been generated and `scripts/check-ios-runtime-config.sh --env prod
   --configuration Release` passes before archive/upload.
+- [ ] Account AV login matches the Tune AV signed iOS pattern: publishable key,
+  keychain service, and keychain access group are exposed in runtime config,
+  passed into Account AV/Clerk setup, and validated before TestFlight.
 - [ ] Auth, account, credit, purchase, upload, render, and deletion smokes use a
   signed install. Any simulator that previously ran an unsigned build has had
   both `com.avalsys.animateav.dev` and `com.avalsys.animateav` uninstalled
