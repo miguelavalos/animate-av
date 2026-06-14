@@ -253,12 +253,13 @@ extension AnimateCreateViewModel {
                 }
             }
 
+            let selectedMedia = self.effectiveSelectedMedia
             await finalRenderWorkflow.prepareFinalRenderPlan(
                 videoId: videoId,
                 template: form.template,
                 creationStyle: creationStyleId,
                 form: form,
-                selectedMedia: self.selectedMedia,
+                selectedMedia: selectedMedia,
                 removesWatermark: removesWatermark
             )
             if let finalPlanGeneration {
@@ -287,14 +288,29 @@ extension AnimateCreateViewModel {
 
             self.beginFinalVideoCommand(.confirming(L10n.string("workflow.final.creatingVideo")))
             self.updateFinalRenderStatusMessage(L10n.string("workflow.final.creatingVideo"))
-            await finalRenderWorkflow.confirmPreparedFinalRender(
+            let didStartFinalRender = await finalRenderWorkflow.confirmPreparedFinalRender(
                 videoId: videoId,
                 template: form.template,
                 creationStyle: creationStyleId,
                 form: form,
-                selectedMedia: self.selectedMedia,
+                selectedMedia: selectedMedia,
                 removesWatermark: removesWatermark
             )
+            if didStartFinalRender {
+                if let pendingGalleryVideo = finalRenderWorkflow.pendingGalleryVideo {
+                    self.acceptPendingGalleryVideo(pendingGalleryVideo)
+                    self.beginFinalVideoCommand(.completedDownloadReady(
+                        finalRenderWorkflow.statusMessage ?? L10n.string("workflow.final.savedLocal")
+                    ))
+                    self.updateFinalRenderStatusMessage(
+                        finalRenderWorkflow.statusMessage ?? L10n.string("workflow.final.savedLocal")
+                    )
+                    return
+                }
+                self.beginFinalVideoCommand(.queued(L10n.string("workflow.final.creatingVideo")))
+                self.updateFinalRenderStatusMessage(L10n.string("workflow.final.creatingVideo"))
+                return
+            }
             guard finalRenderWorkflow.latestFinalJob != nil
                     || finalRenderWorkflow.finalExport != nil
                     || finalRenderWorkflow.pendingGalleryVideo != nil
@@ -351,14 +367,29 @@ extension AnimateCreateViewModel {
                 finalRenderWorkflow.usePreparedRenderPlan(preparedRenderPlan)
             }
 
-            await finalRenderWorkflow.confirmPreparedFinalRender(
+            let didStartFinalRender = await finalRenderWorkflow.confirmPreparedFinalRender(
                 videoId: context.videoId,
                 template: context.template,
                 creationStyle: self.selectedCreationStyle.id,
                 form: form,
-                selectedMedia: self.selectedMedia,
+                selectedMedia: self.effectiveSelectedMedia,
                 removesWatermark: removesWatermark
             )
+            if didStartFinalRender {
+                if let pendingGalleryVideo = finalRenderWorkflow.pendingGalleryVideo {
+                    self.acceptPendingGalleryVideo(pendingGalleryVideo)
+                    self.beginFinalVideoCommand(.completedDownloadReady(
+                        finalRenderWorkflow.statusMessage ?? L10n.string("workflow.final.savedLocal")
+                    ))
+                    self.updateFinalRenderStatusMessage(
+                        finalRenderWorkflow.statusMessage ?? L10n.string("workflow.final.savedLocal")
+                    )
+                    return
+                }
+                self.beginFinalVideoCommand(.queued(L10n.string("workflow.final.creatingVideo")))
+                self.updateFinalRenderStatusMessage(L10n.string("workflow.final.creatingVideo"))
+                return
+            }
             guard finalRenderWorkflow.latestFinalJob != nil
                     || finalRenderWorkflow.finalExport != nil
                     || finalRenderWorkflow.pendingGalleryVideo != nil

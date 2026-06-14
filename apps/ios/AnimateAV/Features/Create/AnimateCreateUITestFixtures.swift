@@ -211,7 +211,7 @@ enum AnimateCreateUITestFixtures {
             kind: kind,
             byteSize: kind == "video" ? 8_800_000 : 2_400_000,
             sha256: "ui-test-\(id)",
-            data: Data([1, 2, 3, 4]),
+            data: Data(base64Encoded: "iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mP8z8BQDwAFgwJ/luznxAAAAABJRU5ErkJggg==") ?? Data(),
             capturedAt: nil,
             sortOrder: Int(sortOrder),
             selected: true

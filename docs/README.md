@@ -40,7 +40,7 @@ handoff values belong in the private AVALSYS suite.
 V1 is a signed-in one-photo animation workflow:
 
 ```text
-Foto y encuadre -> Look -> Animation -> optional Message / Voice -> Check cost -> Create video -> local download -> Gallery
+Foto y encuadre -> Look and motion -> optional Message -> Check cost -> Create video -> local download -> Gallery
 ```
 
 Foto y encuadre is the normal source-photo step: choose one photo, use the full
@@ -50,12 +50,15 @@ workflow. The client may retain the imported original locally while the draft is
 editable so re-entering frame adjustment and restore-original work without
 backend state.
 
-Animation is a separate setup choice from Message / Voice. It captures optional
-visual direction for what should happen in the animated scene. The iOS client
-sends stable visual direction mode/template identifiers plus custom text only
-when the user writes their own instructions; localized template copy is display
-text, not the backend prompt. Message and voice are optional; a visual-only
-video with no message and no narration is a valid v1 path.
+Look and motion is the main creative choice. The selected look guides both the
+generated image and the short animation. Motion guidance is intentionally simple
+and conservative; the client should not promise scene-accurate custom scripts or
+complex choreography.
+
+Message is optional. When present, it is delivered as off-screen narration over
+the video. The client should present narrator choices as voice-over only, not as
+voices for people in the photo. A visual-only video with no message and no
+narration is a valid v1 path.
 
 The client must treat the guided setup state as the source of truth for the
 visible Create Video status. It must not show "Check cost" or "Ready to review
@@ -90,10 +93,10 @@ under product review for Animate AV. Do not rename backend/local-first media
 behavior blindly; audit the user-facing terminology first.
 
 Create Video style review note: the current target is 8 look families with 8
-looks each, one unique preview asset per look, deterministic default voice
-mapping by family position, and synchronized runtime copy for `en`, `es`, `ca`,
-`fr`, and `de`. The guided voice picker is accepted for now; review the style
-picker before changing voices.
+looks each, one unique preview asset per look, simple motion guidance, optional
+voice-over message, and synchronized runtime copy for `en`, `es`, `ca`, `fr`,
+and `de`. Do not reintroduce look-to-character-voice coupling; voice-over is
+independent from the people shown in the photo.
 
 ## Branding And First Run
 

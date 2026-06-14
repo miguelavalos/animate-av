@@ -34,6 +34,7 @@ extension AnimateCreateViewModel {
             videoQuote: videoQuote,
             finalExport: effectiveFinalExport,
             pendingGalleryVideo: pendingGalleryVideo,
+            generatedImagePreviewLocalRelativePath: pendingGalleryImage?.localRelativePath,
             canRetryFinalVideoDownload: canRetryFinalVideoDownload,
             latestFinalJob: effectiveLatestFinalJob,
             isGenerating: isGeneratingFinalRender,

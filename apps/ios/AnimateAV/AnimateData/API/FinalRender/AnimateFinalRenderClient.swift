@@ -1,4 +1,5 @@
 import Foundation
+import CryptoKit
 
 struct AnimateNetworkRetryPolicy: Sendable {
     static let singleAttempt = AnimateNetworkRetryPolicy(maximumRetries: 0)
@@ -132,6 +133,7 @@ struct AnimateFinalRenderClient {
             .appendingPathComponent("renders")
             .appendingPathComponent("plan")
         let message = Self.videoMessageIntent(form)
+        let visualDirection = Self.videoVisualDirection(form)
         let body = AnimateRenderPlanRequest(
             videoId: videoId,
             creationMode: form.creationMode.rawValue,
@@ -142,10 +144,10 @@ struct AnimateFinalRenderClient {
             mediaUse: form.mediaUse.rawValue,
             movementDirection: form.movementDirection.rawValue,
             motionDirection: form.movementDirection.rawValue,
-            visualDirectionMode: form.visualDirectionMode.rawValue,
-            visualDirectionTemplateId: Self.nonBlankOptional(form.visualDirectionTemplateId),
-            visualDirectionText: form.visualDirectionMode == .custom ? Self.nonBlankOptional(form.animationDirection) : nil,
-            animationDirection: form.visualDirectionMode == .custom ? Self.nonBlankOptional(form.animationDirection) : nil,
+            visualDirectionMode: visualDirection.mode,
+            visualDirectionTemplateId: visualDirection.templateId,
+            visualDirectionText: nil,
+            animationDirection: nil,
             selectedSourceLocalIdentifiers: Self.nonBlankIdentifiers(selectedSourceLocalIdentifiers),
             sourceImageUploadId: Self.nonBlankOptional(sourceImageUploadId),
             generatedImageArtifactId: Self.nonBlankOptional(generatedImageArtifactId),
@@ -164,7 +166,9 @@ struct AnimateFinalRenderClient {
             creditCost: nil,
             removeWatermark: removesWatermark,
             renderOptionId: nil,
-            mockNoSpend: Self.shouldUseMockNoSpendFinalRender ? true : nil
+            mockNoSpend: Self.shouldUseMockNoSpendFinalRender ? true : nil,
+            mockExecutionPreset: Self.mockExecutionPreset,
+            startsWithSourcePhoto: form.startsWithSourcePhoto
         )
 
         var request = URLRequest(url: endpoint)
@@ -210,6 +214,18 @@ struct AnimateFinalRenderClient {
             .appendingPathComponent("final")
             .appendingPathComponent("confirm")
         let message = Self.videoMessageIntent(form)
+        let visualDirection = Self.videoVisualDirection(form)
+        let idempotencyInputSignature = Self.finalConfirmInputSignature(
+            form: form,
+            creationStyle: creationStyle,
+            removesWatermark: removesWatermark,
+            selectedSourceLocalIdentifiers: selectedSourceLocalIdentifiers,
+            sourceImageUploadId: sourceImageUploadId,
+            generatedImageArtifactId: generatedImageArtifactId,
+            renderOptionId: renderOptionId,
+            message: message,
+            visualDirection: visualDirection
+        )
         let body = AnimateConfirmFinalRenderRequest(
             videoId: videoId,
             creationMode: form.creationMode.rawValue,
@@ -220,10 +236,10 @@ struct AnimateFinalRenderClient {
             mediaUse: form.mediaUse.rawValue,
             movementDirection: form.movementDirection.rawValue,
             motionDirection: form.movementDirection.rawValue,
-            visualDirectionMode: form.visualDirectionMode.rawValue,
-            visualDirectionTemplateId: Self.nonBlankOptional(form.visualDirectionTemplateId),
-            visualDirectionText: form.visualDirectionMode == .custom ? Self.nonBlankOptional(form.animationDirection) : nil,
-            animationDirection: form.visualDirectionMode == .custom ? Self.nonBlankOptional(form.animationDirection) : nil,
+            visualDirectionMode: visualDirection.mode,
+            visualDirectionTemplateId: visualDirection.templateId,
+            visualDirectionText: nil,
+            animationDirection: nil,
             selectedSourceLocalIdentifiers: Self.nonBlankIdentifiers(selectedSourceLocalIdentifiers),
             sourceImageUploadId: Self.nonBlankOptional(sourceImageUploadId),
             generatedImageArtifactId: Self.nonBlankOptional(generatedImageArtifactId),
@@ -243,8 +259,10 @@ struct AnimateFinalRenderClient {
             removeWatermark: removesWatermark,
             renderOptionId: renderOptionId,
             planId: planId,
-            idempotencyKey: "final-confirm:\(videoId):\(planId):\(template.id.rawValue):\(removesWatermark ? "clean" : "watermarked")",
-            mockNoSpend: Self.shouldUseMockNoSpendFinalRender ? true : nil
+            idempotencyKey: "final-confirm:\(videoId):\(planId):\(template.id.rawValue):\(removesWatermark ? "clean" : "watermarked"):\(form.startsWithSourcePhoto ? "source-photo-intro" : "no-source-photo-intro"):\(idempotencyInputSignature)",
+            mockNoSpend: Self.shouldUseMockNoSpendFinalRender ? true : nil,
+            mockExecutionPreset: Self.mockExecutionPreset,
+            startsWithSourcePhoto: form.startsWithSourcePhoto
         )
 
         var request = URLRequest(url: endpoint)
@@ -364,6 +382,61 @@ struct AnimateFinalRenderClient {
         return trimmed
     }
 
+    private static func finalConfirmInputSignature(
+        form: AnimateVideoSetupForm,
+        creationStyle: AnimateVideoCreationStyleID?,
+        removesWatermark: Bool,
+        selectedSourceLocalIdentifiers: [String],
+        sourceImageUploadId: String?,
+        generatedImageArtifactId: String?,
+        renderOptionId: String?,
+        message: (
+            hasMessage: Bool,
+            messageText: String?,
+            audioEnabled: Bool,
+            musicEnabled: Bool,
+            voiceEnabled: Bool,
+            voiceType: String?,
+            voiceTone: String?
+        ),
+        visualDirection: (
+            mode: String,
+            templateId: String?
+        )
+    ) -> String {
+        let sourceSignature = nonBlankIdentifiers(selectedSourceLocalIdentifiers)?
+            .joined(separator: ",") ?? ""
+        let input = [
+            form.creationMode.rawValue,
+            creationStyle?.rawValue ?? "",
+            form.look.rawValue,
+            form.theme.rawValue,
+            form.tone.rawValue,
+            form.duration.rawValue,
+            form.mediaUse.rawValue,
+            form.movementDirection.rawValue,
+            visualDirection.mode,
+            visualDirection.templateId ?? "",
+            form.animationDirection.trimmingCharacters(in: .whitespacesAndNewlines),
+            form.occasion.trimmingCharacters(in: .whitespacesAndNewlines),
+            String(message.hasMessage),
+            message.messageText ?? "",
+            String(message.audioEnabled),
+            String(message.musicEnabled),
+            String(message.voiceEnabled),
+            message.voiceType ?? "",
+            message.voiceTone ?? "",
+            sourceSignature,
+            sourceImageUploadId ?? "",
+            generatedImageArtifactId ?? "",
+            renderOptionId ?? "",
+            String(removesWatermark),
+            String(form.startsWithSourcePhoto)
+        ].joined(separator: "|")
+        let digest = SHA256.hash(data: Data(input.utf8))
+        return digest.prefix(8).map { String(format: "%02x", $0) }.joined()
+    }
+
     private static func videoMessageIntent(_ form: AnimateVideoSetupForm) -> (
         hasMessage: Bool,
         messageText: String?,
@@ -386,14 +459,42 @@ struct AnimateFinalRenderClient {
         )
     }
 
+    private static func videoVisualDirection(_ form: AnimateVideoSetupForm) -> (
+        mode: String,
+        templateId: String?
+    ) {
+        guard form.visualDirectionMode == .template else {
+            return (AnimateVisualDirectionMode.none.rawValue, nil)
+        }
+        return (
+            form.visualDirectionMode.rawValue,
+            nonBlankOptional(form.visualDirectionTemplateId)
+        )
+    }
+
     private static func nonBlankIdentifiers(_ values: [String]) -> [String]? {
         let identifiers = values.compactMap(nonBlankOptional)
         return identifiers.isEmpty ? nil : identifiers
     }
 
     private static var shouldUseMockNoSpendFinalRender: Bool {
-        let value = Bundle.main.object(forInfoDictionaryKey: "ANIMATEAV_MOCK_NO_SPEND_FINAL_RENDER") as? String
-        return ["1", "true", "yes"].contains(value?.trimmingCharacters(in: .whitespacesAndNewlines).lowercased() ?? "")
+        let environmentValue = ProcessInfo.processInfo.environment["ANIMATEAV_MOCK_NO_SPEND_FINAL_RENDER"]
+        let plistValue = Bundle.main.object(forInfoDictionaryKey: "ANIMATEAV_MOCK_NO_SPEND_FINAL_RENDER") as? String
+        let launchArgumentValue = AnimateLaunchSettings
+            .merged(environment: ProcessInfo.processInfo.environment)["ANIMATEAV_MOCK_NO_SPEND_FINAL_RENDER"]
+        return [environmentValue, plistValue, launchArgumentValue].contains { value in
+            ["1", "true", "yes"].contains(value?.trimmingCharacters(in: .whitespacesAndNewlines).lowercased() ?? "")
+        }
+    }
+
+    private static var mockExecutionPreset: String? {
+        let environmentValue = ProcessInfo.processInfo.environment["ANIMATEAV_MOCK_EXECUTION_PRESET"]
+        let plistValue = Bundle.main.object(forInfoDictionaryKey: "ANIMATEAV_MOCK_EXECUTION_PRESET") as? String
+        let launchArgumentValue = AnimateLaunchSettings
+            .merged(environment: ProcessInfo.processInfo.environment)["ANIMATEAV_MOCK_EXECUTION_PRESET"]
+        let value = (environmentValue ?? plistValue ?? launchArgumentValue)?
+            .trimmingCharacters(in: .whitespacesAndNewlines)
+        return value?.isEmpty == false ? value : nil
     }
 }
 

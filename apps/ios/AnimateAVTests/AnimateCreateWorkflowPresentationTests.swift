@@ -871,8 +871,8 @@ final class AnimateCreateWorkflowPresentationTests: XCTestCase {
         let presentation = AnimateRenderRealtimePresentation(renderJob: job)
 
         XCTAssertEqual(presentation.title, "Animating")
-        XCTAssertEqual(presentation.detail, "Avi is animating your video.")
-        XCTAssertNil(presentation.progressFraction)
+        XCTAssertEqual(presentation.detail, "Avi is animating your video. This step can take a few minutes.")
+        XCTAssertEqual(presentation.progressFraction, 0.42)
         XCTAssertEqual(presentation.systemImage, "gearshape.2.fill")
         XCTAssertTrue(presentation.isActive)
         XCTAssertFalse(presentation.canEditSetup)

@@ -67,6 +67,7 @@ final class AnimateDependencyContainer: ObservableObject {
         self.inProgressViewModel = viewModels.inProgress
         self.galleryViewModel = viewModels.gallery
         self.aviViewModel = viewModels.avi
+        applyUITestFixturesIfNeeded()
     }
 
     func handleAccountChange(ownerUserId: String?) {

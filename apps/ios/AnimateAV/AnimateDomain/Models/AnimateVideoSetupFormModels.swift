@@ -38,111 +38,60 @@ enum AnimateVideoSetupTempo: String, CaseIterable, Identifiable {
 }
 
 enum AnimateVideoVoiceProfile: String, CaseIterable, Identifiable {
-    case childGirl
-    case childBoy
-    case teenGirl
-    case teenBoy
-    case adultWoman
-    case adultMan
-    case elderWoman
-    case elderMan
+    case narratorWoman
+    case narratorMan
 
     var id: String { rawValue }
 
     static var selectorOrder: [AnimateVideoVoiceProfile] {
-        [
-            .childGirl,
-            .childBoy,
-            .teenGirl,
-            .teenBoy,
-            .adultWoman,
-            .adultMan,
-            .elderWoman,
-            .elderMan
-        ]
+        [.narratorWoman, .narratorMan]
     }
 
     var title: String {
         switch self {
-        case .childGirl: L10n.string("create.voiceProfile.childGirl.title")
-        case .childBoy: L10n.string("create.voiceProfile.childBoy.title")
-        case .teenGirl: L10n.string("create.voiceProfile.teenGirl.title")
-        case .teenBoy: L10n.string("create.voiceProfile.teenBoy.title")
-        case .adultWoman: L10n.string("create.voiceProfile.adultWoman.title")
-        case .adultMan: L10n.string("create.voiceProfile.adultMan.title")
-        case .elderWoman: L10n.string("create.voiceProfile.elderWoman.title")
-        case .elderMan: L10n.string("create.voiceProfile.elderMan.title")
+        case .narratorWoman: L10n.string("create.voiceProfile.narratorWoman.title")
+        case .narratorMan: L10n.string("create.voiceProfile.narratorMan.title")
         }
     }
 
     var detail: String {
         switch self {
-        case .childGirl: L10n.string("create.voiceProfile.childGirl.detail")
-        case .childBoy: L10n.string("create.voiceProfile.childBoy.detail")
-        case .teenGirl: L10n.string("create.voiceProfile.teenGirl.detail")
-        case .teenBoy: L10n.string("create.voiceProfile.teenBoy.detail")
-        case .adultWoman: L10n.string("create.voiceProfile.adultWoman.detail")
-        case .adultMan: L10n.string("create.voiceProfile.adultMan.detail")
-        case .elderWoman: L10n.string("create.voiceProfile.elderWoman.detail")
-        case .elderMan: L10n.string("create.voiceProfile.elderMan.detail")
+        case .narratorWoman: L10n.string("create.voiceProfile.narratorWoman.detail")
+        case .narratorMan: L10n.string("create.voiceProfile.narratorMan.detail")
         }
     }
 
     var portraitAssetName: String {
         switch self {
-        case .childGirl: "VoiceChildGirl"
-        case .childBoy: "VoiceChildBoy"
-        case .teenGirl: "VoiceTeenGirl"
-        case .teenBoy: "VoiceTeenBoy"
-        case .adultWoman: "VoiceAdultWoman"
-        case .adultMan: "VoiceAdultMan"
-        case .elderWoman: "VoiceElderWoman"
-        case .elderMan: "VoiceElderMan"
+        case .narratorWoman: "VoiceAdultWoman"
+        case .narratorMan: "VoiceAdultMan"
         }
     }
 
     var avatarSystemImage: String {
         switch self {
-        case .childGirl, .teenGirl, .adultWoman, .elderWoman: "person.fill"
-        case .childBoy, .teenBoy, .adultMan, .elderMan: "person.fill"
+        case .narratorWoman, .narratorMan: "person.fill"
         }
     }
 
     var accentColor: Color {
         switch self {
-        case .childGirl: Color(red: 0.95, green: 0.42, blue: 0.58)
-        case .childBoy: Color(red: 0.30, green: 0.58, blue: 0.92)
-        case .teenGirl: Color(red: 0.72, green: 0.40, blue: 0.88)
-        case .teenBoy: Color(red: 0.23, green: 0.68, blue: 0.64)
-        case .adultWoman: Color(red: 0.88, green: 0.48, blue: 0.28)
-        case .adultMan: Color(red: 0.35, green: 0.52, blue: 0.84)
-        case .elderWoman: Color(red: 0.62, green: 0.56, blue: 0.78)
-        case .elderMan: Color(red: 0.52, green: 0.62, blue: 0.46)
+        case .narratorWoman: Color(red: 0.88, green: 0.48, blue: 0.28)
+        case .narratorMan: Color(red: 0.35, green: 0.52, blue: 0.84)
         }
     }
 
     var skinColor: Color {
         switch self {
-        case .childGirl: Color(red: 0.78, green: 0.50, blue: 0.35)
-        case .childBoy: Color(red: 0.93, green: 0.71, blue: 0.50)
-        case .teenGirl: Color(red: 0.40, green: 0.25, blue: 0.18)
-        case .teenBoy: Color(red: 0.69, green: 0.42, blue: 0.28)
-        case .adultWoman: Color(red: 0.86, green: 0.62, blue: 0.43)
-        case .adultMan: Color(red: 0.34, green: 0.22, blue: 0.16)
-        case .elderWoman: Color(red: 0.74, green: 0.55, blue: 0.42)
-        case .elderMan: Color(red: 0.90, green: 0.72, blue: 0.58)
+        case .narratorWoman: Color(red: 0.86, green: 0.62, blue: 0.43)
+        case .narratorMan: Color(red: 0.34, green: 0.22, blue: 0.16)
         }
     }
 
     var hairColor: Color {
         switch self {
-        case .childGirl: Color(red: 0.20, green: 0.10, blue: 0.06)
-        case .childBoy: Color(red: 0.67, green: 0.42, blue: 0.18)
-        case .teenGirl: Color(red: 0.08, green: 0.07, blue: 0.07)
-        case .teenBoy: Color(red: 0.14, green: 0.10, blue: 0.08)
-        case .adultWoman: Color(red: 0.36, green: 0.18, blue: 0.08)
-        case .adultMan: Color(red: 0.04, green: 0.04, blue: 0.04)
-        case .elderWoman, .elderMan: Color(red: 0.82, green: 0.82, blue: 0.78)
+        case .narratorWoman: Color(red: 0.36, green: 0.18, blue: 0.08)
+        case .narratorMan: Color(red: 0.04, green: 0.04, blue: 0.04)
         }
     }
 }
@@ -185,7 +134,7 @@ enum AnimateVideoMovementDirection: String, CaseIterable, Identifiable, Codable 
     var id: String { rawValue }
 
     static var selectorOrder: [AnimateVideoMovementDirection] {
-        [.subtleFaithful, .livingPortrait, .livingBackground, .cinematic, .celebration, .custom]
+        [.subtleFaithful, .livingPortrait, .livingBackground, .cinematic, .celebration]
     }
 
     var title: String {
@@ -240,7 +189,7 @@ extension AnimateVideoSetupTone {
 }
 
 enum AnimateVideoSetupLimits {
-    static let messageCharacterLimit = 180
+    static let messageCharacterLimit = 150
     static let animationDirectionCharacterLimit = 500
 }
 
@@ -260,21 +209,21 @@ struct AnimateVideoSetupForm: Equatable {
     var audioEnabled = true
     var musicEnabled = true
     var voiceEnabled = false
-    var voiceProfile: AnimateVideoVoiceProfile = .adultWoman
+    var voiceProfile: AnimateVideoVoiceProfile = .narratorWoman
     var voiceTone: AnimateVideoVoiceTone = .warm
     var movementDirection: AnimateVideoMovementDirection = .subtleFaithful
     var visualDirectionMode: AnimateVisualDirectionMode = .none
     var visualDirectionTemplateId: String?
     var animationDirection = ""
+    var startsWithSourcePhoto = true
 
     var activeMessageText: String? {
-        guard hasMessage else { return nil }
         let trimmed = details.trimmingCharacters(in: .whitespacesAndNewlines)
         return trimmed.isEmpty ? nil : trimmed
     }
 
     var activeVoiceProfile: AnimateVideoVoiceProfile? {
-        guard hasMessage, audioEnabled, voiceEnabled, activeMessageText != nil else { return nil }
+        guard audioEnabled, activeMessageText != nil else { return nil }
         return voiceProfile
     }
 
@@ -335,6 +284,7 @@ struct AnimateVideoSetupForm: Equatable {
             && visualDirectionMode == other.visualDirectionMode
             && visualDirectionTemplateId == other.visualDirectionTemplateId
             && animationDirection.trimmingCharacters(in: .whitespacesAndNewlines) == other.animationDirection.trimmingCharacters(in: .whitespacesAndNewlines)
+            && startsWithSourcePhoto == other.startsWithSourcePhoto
     }
 }
 

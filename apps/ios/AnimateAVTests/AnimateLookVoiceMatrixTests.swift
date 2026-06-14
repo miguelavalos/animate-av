@@ -21,35 +21,8 @@ final class AnimateLookVoiceMatrixTests: XCTestCase {
         XCTAssertEqual(Set(AnimateVideoLook.allCases).count, 64)
     }
 
-    func testLookLibraryIsOrganizedInCompleteVoiceBlocks() {
-        XCTAssertEqual(AnimateVideoVoiceProfile.selectorOrder.count, 8)
-        XCTAssertEqual(AnimateVideoLook.selectorOrder.count % AnimateVideoVoiceProfile.selectorOrder.count, 0)
-    }
-
-    func testEachLookBlockMapsToVoiceSelectorOrder() {
-        let voiceOrder = AnimateVideoVoiceProfile.selectorOrder
-
-        for (index, look) in AnimateVideoLook.selectorOrder.enumerated() {
-            XCTAssertEqual(
-                look.defaultVoiceProfile,
-                voiceOrder[index % voiceOrder.count],
-                "Look \(look.rawValue) at selector index \(index) should use the voice in the same block position."
-            )
-        }
-    }
-
-    func testEveryFamilyPositionMapsToVoiceSelectorOrder() {
-        let voiceOrder = AnimateVideoVoiceProfile.selectorOrder
-
-        for family in AnimateVideoLook.families {
-            for (index, look) in family.looks.enumerated() {
-                XCTAssertEqual(
-                    look.defaultVoiceProfile,
-                    voiceOrder[index],
-                    "Look \(look.rawValue) in family \(family.id) position \(index) should use the matching voice."
-                )
-            }
-        }
+    func testVoiceSelectorUsesAdultVoiceOverNarrators() {
+        XCTAssertEqual(AnimateVideoVoiceProfile.selectorOrder, [.narratorWoman, .narratorMan])
     }
 
     func testFamilyHeroAssetsUseCuratedFirstScreenProgression() {
@@ -79,22 +52,22 @@ final class AnimateLookVoiceMatrixTests: XCTestCase {
         }
     }
 
-    func testSelectingLookAppliesDefaultVoiceWhenVoiceWasNotManuallyChanged() {
+    func testSelectingLookDoesNotChangeDefaultNarratorVoice() {
         let viewModel = AnimateCreateViewModel()
 
         viewModel.selectLook(.anime)
 
         XCTAssertEqual(viewModel.form.look, .anime)
-        XCTAssertEqual(viewModel.form.voiceProfile, AnimateVideoLook.anime.defaultVoiceProfile)
+        XCTAssertEqual(viewModel.form.voiceProfile, .narratorWoman)
     }
 
-    func testSelectingLookDoesNotOverrideManualVoiceSelection() {
+    func testSelectingLookDoesNotChangeSelectedNarratorVoice() {
         let viewModel = AnimateCreateViewModel()
 
-        viewModel.updateVoiceProfile(.elderMan)
+        viewModel.updateVoiceProfile(.narratorMan)
         viewModel.selectLook(.anime)
 
         XCTAssertEqual(viewModel.form.look, .anime)
-        XCTAssertEqual(viewModel.form.voiceProfile, .elderMan)
+        XCTAssertEqual(viewModel.form.voiceProfile, .narratorMan)
     }
 }

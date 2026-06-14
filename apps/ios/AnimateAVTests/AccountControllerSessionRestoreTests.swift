@@ -78,7 +78,7 @@ final class AccountControllerSessionRestoreTests: XCTestCase {
         XCTAssertTrue(restoredController.isAccountSessionTemporarilyUnavailable)
     }
 
-    func testProviderSignedOutPreservesLastKnownUserUntilManualSignOut() async {
+    func testProviderSignedOutClearsLastKnownUser() async {
         let userDefaults = isolatedUserDefaults()
         let user = AccountAVUser(id: "signed-out-user", displayName: "Signed Out User", emailAddress: "signed@example.com")
         AccountControllerURLProtocol.profileUser = user
@@ -100,9 +100,9 @@ final class AccountControllerSessionRestoreTests: XCTestCase {
         )
         await signedOutController.syncFromAccountProvider()
 
-        XCTAssertTrue(signedOutController.isSignedIn)
-        XCTAssertEqual(signedOutController.currentUserId, user.id)
-        XCTAssertTrue(signedOutController.isAccountSessionTemporarilyUnavailable)
+        XCTAssertFalse(signedOutController.isSignedIn)
+        XCTAssertNil(signedOutController.currentUserId)
+        XCTAssertFalse(signedOutController.isAccountSessionTemporarilyUnavailable)
     }
 
     func testProviderSignedOutWithoutLastKnownUserStaysSignedOut() async {
@@ -288,6 +288,33 @@ final class AccountControllerSessionRestoreTests: XCTestCase {
         XCTAssertFalse(controller.isSignedIn)
         XCTAssertNil(controller.currentUserId)
         XCTAssertTrue(controller.isAccountSessionTemporarilyUnavailable)
+    }
+
+    func testCreditBalanceRefreshWithoutTokenClearsLastKnownUser() async {
+        let userDefaults = isolatedUserDefaults()
+        let user = AccountAVUser(id: "tokenless-user", displayName: "Tokenless User", emailAddress: "tokenless@example.com")
+        AccountControllerURLProtocol.profileUser = user
+        let signedInController = AccountController(
+            service: StubAVAccountService(user: user),
+            accountProfileClient: accountProfileClient(),
+            balanceClient: balanceClient(),
+            purchaseService: StubAnimatePurchaseService(),
+            userDefaults: userDefaults
+        )
+        await signedInController.syncFromAccountProvider()
+
+        let restoredController = AccountController(
+            service: StubAVAccountService(user: user, token: nil),
+            accountProfileClient: accountProfileClient(),
+            balanceClient: balanceClient(),
+            purchaseService: StubAnimatePurchaseService(),
+            userDefaults: userDefaults
+        )
+        await restoredController.refreshCreditBalance()
+
+        XCTAssertFalse(restoredController.isSignedIn)
+        XCTAssertNil(restoredController.currentUserId)
+        XCTAssertEqual(restoredController.creditBalanceLoadState, .signedOut)
     }
 
     private func accountProfileClient() -> AnimateAccountProfileClient {

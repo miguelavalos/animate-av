@@ -33,6 +33,7 @@ struct AnimateCreateFinalRenderState {
     let renderPlan: AnimateRenderPlanResponse?
     var videoQuote: AnimateVideoQuoteResponse? = nil
     var pendingGalleryVideo: AnimateGalleryVideoRecord? = nil
+    var pendingGalleryImage: AnimateGalleryImageRecord? = nil
     var canRetryFinalVideoDownload = false
     let statusMessage: String?
     let isGenerating: Bool

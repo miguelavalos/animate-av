@@ -29,7 +29,7 @@ credit commit/release.
 Current v1 flow:
 
 ```text
-Photo and framing -> Style -> Animation -> optional Message / Voice -> backend infers duration and quotes credits -> generate animated video -> local download -> Gallery
+Photo and framing -> Look and motion -> optional Message -> backend quotes credits -> create video -> local download -> Gallery
 ```
 
 Photo and framing is the normal source-photo step. It lets the user choose one
@@ -44,13 +44,15 @@ re-entering frame adjustment should start from the local original, not from a
 previously cropped derivative. Restore-original behavior is local UI state and
 must not require backend recovery.
 
-Animation is separate from Message / Voice. It captures optional visual
-direction for what the image should do when it comes alive. Users may choose no
-extra direction, start from a visual template, or type custom visual
-instructions. The app sends `none`, a stable template id, or custom text; it
-does not send localized template copy as the provider prompt. Message and Voice
-remain optional, and a one-photo video with no message and no narration is a
-valid v1 setup.
+Look and motion is the main creative setup surface. It chooses the visual style
+and a simple movement guide for the generated image-to-video step. Keep motion
+copy modest: it can guide the result, but the client must not promise precise
+custom choreography, exact actions, or scene-by-scene scripting.
+
+Message remains optional. When present, the backend creates off-screen
+voice-over; it is not character dialogue and is not linked to people in the
+source photo. A one-photo video with no message and no narration is a valid v1
+setup.
 
 Images are a separate v1 workflow: choose one source photo, generate a stylized
 image, then download/share it or use it as video input when synced state allows.
@@ -75,14 +77,15 @@ Current product-polish scope:
 
 - Review visible `Gallery` and `In Progress` naming before production smoke; the
   behavior may stay, but the labels may not fit Animate AV.
-- Keep Create Video aligned to Photo and framing, Style, Animation, optional
-  Message / Voice. Avoid reintroducing
+- Keep Create Video aligned to Photo and framing, Look and motion, and optional
+  Message. Avoid reintroducing
   inherited multi-photo edit surfaces in the normal path.
-- Treat Animation as visual guidance for action, camera, and scene
-  behavior. It may be longer than the narrated Message and works without Voice.
+- Treat motion as lightweight visual guidance. It works without Message and
+  should stay stable enough for a low-cost consumer flow.
 - Review Create Video style families, look names, subtitles, and preview images
   across the shipped locales when product copy changes.
-- Keep the guided voice picker unchanged unless a concrete defect appears.
+- Keep narrator voice-over independent from selected look and source-photo
+  people.
 - Runtime localization is active for `en`, `es`, `ca`, `fr`, and `de`. Keep
   every `Localizable.strings` key set synchronized and validate placeholders
   before release.

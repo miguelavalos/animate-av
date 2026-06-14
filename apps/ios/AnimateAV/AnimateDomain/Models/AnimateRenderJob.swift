@@ -7,6 +7,7 @@ struct AnimateRenderJob: Identifiable, Decodable, Equatable {
     let phase: String?
     let progressPercent: Double?
     let userMessage: String?
+    let script: String?
     let canEditSetup: Bool?
     let canRetry: Bool?
     let baseCreditCost: Double?
@@ -33,6 +34,7 @@ struct AnimateRenderJob: Identifiable, Decodable, Equatable {
         phase: String? = nil,
         progressPercent: Double? = nil,
         userMessage: String? = nil,
+        script: String? = nil,
         canEditSetup: Bool? = nil,
         canRetry: Bool? = nil,
         baseCreditCost: Double? = nil,
@@ -58,6 +60,7 @@ struct AnimateRenderJob: Identifiable, Decodable, Equatable {
         self.phase = phase
         self.progressPercent = progressPercent
         self.userMessage = userMessage
+        self.script = script
         self.canEditSetup = canEditSetup
         self.canRetry = canRetry
         self.baseCreditCost = baseCreditCost
@@ -85,6 +88,7 @@ struct AnimateRenderJob: Identifiable, Decodable, Equatable {
         case phase
         case progressPercent
         case userMessage
+        case script
         case canEditSetup
         case canRetry
         case baseCreditCost

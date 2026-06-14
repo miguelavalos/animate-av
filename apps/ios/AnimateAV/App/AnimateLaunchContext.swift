@@ -16,9 +16,10 @@ struct AnimateLaunchContext {
     static let current = AnimateLaunchContext(environment: ProcessInfo.processInfo.environment)
 
     init(environment: [String: String]) {
-        isUITesting = environment["ANIMATEAV_UI_TESTS"] == "1"
-        shouldDisableSplash = isUITesting || environment["ANIMATEAV_DISABLE_SPLASH"] == "1"
-        preferredTab = environment["ANIMATEAV_OPEN_TAB"].flatMap(Tab.init(rawValue:))
+        let settings = AnimateLaunchSettings.merged(environment: environment)
+        isUITesting = settings["ANIMATEAV_UI_TESTS"] == "1"
+        shouldDisableSplash = isUITesting || settings["ANIMATEAV_DISABLE_SPLASH"] == "1"
+        preferredTab = settings["ANIMATEAV_OPEN_TAB"].flatMap(Tab.init(rawValue:))
     }
 }
 
@@ -27,18 +28,22 @@ struct AnimateUITestEnvironment {
 
     static let current = AnimateUITestEnvironment(environment: ProcessInfo.processInfo.environment)
 
+    private var settings: [String: String] {
+        AnimateLaunchSettings.merged(environment: environment)
+    }
+
     var isEnabled: Bool {
-        environment["ANIMATEAV_UI_TESTS"] == "1"
+        settings["ANIMATEAV_UI_TESTS"] == "1"
     }
 
     var accountMode: String? {
         guard isEnabled else { return nil }
-        return environment["ANIMATEAV_UI_TESTS_ACCOUNT_MODE"]
+        return settings["ANIMATEAV_UI_TESTS_ACCOUNT_MODE"]
     }
 
     var createFixture: String? {
         guard isEnabled else { return nil }
-        return environment["ANIMATEAV_CREATE_FIXTURE"]
+        return settings["ANIMATEAV_CREATE_FIXTURE"]
     }
 
     var hasAccountOverride: Bool {
@@ -48,4 +53,31 @@ struct AnimateUITestEnvironment {
     static let accountUserId = "animate-ui-test-user"
     static let accountUserDisplayName = "Animate UI Test User"
     static let accountUserEmailAddress = "animate-ui-test@example.test"
+}
+
+enum AnimateLaunchSettings {
+    static func merged(environment: [String: String]) -> [String: String] {
+        var settings = environment
+        let arguments = CommandLine.arguments.dropFirst()
+        var index = arguments.startIndex
+        while index < arguments.endIndex {
+            let argument = arguments[index]
+            if let separatorIndex = argument.firstIndex(of: "=") {
+                let key = String(argument[..<separatorIndex]).trimmingCharacters(in: CharacterSet(charactersIn: "-"))
+                let value = String(argument[argument.index(after: separatorIndex)...])
+                if !key.isEmpty {
+                    settings[key] = value
+                }
+            } else if argument.hasPrefix("-") {
+                let key = String(argument.drop(while: { $0 == "-" }))
+                let nextIndex = arguments.index(after: index)
+                if nextIndex < arguments.endIndex, !arguments[nextIndex].hasPrefix("-") {
+                    settings[key] = arguments[nextIndex]
+                    index = nextIndex
+                }
+            }
+            index = arguments.index(after: index)
+        }
+        return settings
+    }
 }

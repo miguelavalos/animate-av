@@ -76,6 +76,7 @@ final class AnimateCreateViewModel: ObservableObject {
     @Published private(set) var imageGenerationAvailabilityMessage: String?
     @Published private(set) var imageGenerationQueueNonce = UUID()
     @Published private(set) var pendingGalleryVideo: AnimateGalleryVideoRecord?
+    @Published private(set) var pendingGalleryImage: AnimateGalleryImageRecord?
     @Published private(set) var canRetryFinalVideoDownload = false
     @Published private(set) var finalRenderStatusMessage: String?
     @Published private(set) var isGeneratingFinalRender = false
@@ -102,7 +103,6 @@ final class AnimateCreateViewModel: ObservableObject {
     private var hasLocalSetupEdits = false
     private var hasUserStyleOverride = false
     private var hasUserLookOverride = false
-    private var hasUserVoiceOverride = false
     private var autoStyleUndoSelection: (style: AnimateVideoCreationStyle, musicPreset: AnimateVideoMusicPreset, form: AnimateVideoSetupForm)?
 
     var activeVideo: AnimateVideo? {
@@ -430,7 +430,6 @@ final class AnimateCreateViewModel: ObservableObject {
         isLocalVideoCreationStarted = false
         hasLocalSetupEdits = false
         hasUserLookOverride = false
-        hasUserVoiceOverride = false
     }
 
     func continueVideo(_ video: AnimateVideo, focus: AnimateContinuationFocus = .video) {
@@ -439,7 +438,6 @@ final class AnimateCreateViewModel: ObservableObject {
         isLocalVideoCreationStarted = false
         hasLocalSetupEdits = false
         hasUserLookOverride = false
-        hasUserVoiceOverride = false
         pendingFocus = focus
         continuationFocusHint = focus
 
@@ -482,7 +480,7 @@ final class AnimateCreateViewModel: ObservableObject {
         form.audioEnabled = true
         form.musicEnabled = true
         form.voiceEnabled = fixtureHasMessage
-        form.voiceProfile = .adultWoman
+        form.voiceProfile = .narratorWoman
         form.voiceTone = .warm
         selectedVideoLook = form.look
         selectedCreationStyle = creationStyles.first(where: { $0.id == form.theme })
@@ -503,6 +501,7 @@ final class AnimateCreateViewModel: ObservableObject {
         activeWorkspace = workspace
         finalExport = workspace.latestFinalVideoArtifact
         pendingGalleryVideo = nil
+        pendingGalleryImage = nil
         latestFinalJob = workspace.latestRenderJob(kind: "final")
         if fixtureMode == .full {
             finalRenderWorkflow?.prepareUITestFinalExportForGallery(workspace: workspace)
@@ -621,7 +620,6 @@ final class AnimateCreateViewModel: ObservableObject {
         hasLocalSetupEdits = false
         hasUserStyleOverride = false
         hasUserLookOverride = false
-        hasUserVoiceOverride = false
         selectedVideoLook = nil
         applyStyleDefaults(selectedCreationStyle)
     }
@@ -643,6 +641,7 @@ final class AnimateCreateViewModel: ObservableObject {
         latestFinalJob = nil
         renderPlan = nil
         pendingGalleryVideo = nil
+        pendingGalleryImage = nil
         canRetryFinalVideoDownload = false
         finalRenderStatusMessage = nil
         finalVideoCommandState = .idle
@@ -708,7 +707,7 @@ final class AnimateCreateViewModel: ObservableObject {
             finalForm.look.rawValue,
             finalForm.theme.rawValue,
             finalForm.tone.rawValue,
-            "\(finalForm.hasMessage)",
+            "\(finalForm.activeMessageText != nil)",
             finalForm.activeMessageText ?? "",
             "\(finalForm.audioEnabled)",
             "\(finalForm.musicEnabled)",
@@ -755,6 +754,9 @@ final class AnimateCreateViewModel: ObservableObject {
     func confirmableRenderPlan(videoId: String) -> AnimateRenderPlanResponse? {
         guard let renderPlan else { return nil }
         guard renderPlan.videoId == videoId, renderPlan.canCreateVideo else { return nil }
+        guard renderPlanInputSignature == currentFinalRenderInputSignature(videoId: videoId) else {
+            return nil
+        }
         return renderPlan
     }
 
@@ -789,6 +791,10 @@ final class AnimateCreateViewModel: ObservableObject {
         finalVideoCommandState = state
     }
 
+    func acceptPendingGalleryVideo(_ video: AnimateGalleryVideoRecord?) {
+        pendingGalleryVideo = video
+    }
+
     func failFinalVideoCommand(_ message: String) {
         finalVideoCommandState = .failed(message)
         updateFinalRenderStatusMessage(message)
@@ -803,15 +809,17 @@ final class AnimateCreateViewModel: ObservableObject {
         renderPlan = nil
         renderPlanInputSignature = nil
         pendingRenderPlanInputSignature = nil
+        finalVideoCommandState = .idle
+        finalRenderStatusMessage = nil
+        if latestFinalJob?.isTerminalFailure == true {
+            latestFinalJob = nil
+        }
         finalRenderWorkflow?.clearRenderPlan()
     }
 
     func selectLook(_ look: AnimateVideoLook) {
         selectedVideoLook = look
         form.look = look
-        if !hasUserVoiceOverride {
-            form.voiceProfile = look.defaultVoiceProfile
-        }
         hasUserLookOverride = true
         markLocalSetupEdited()
     }
@@ -828,7 +836,6 @@ final class AnimateCreateViewModel: ObservableObject {
     func updateVoiceProfile(_ profile: AnimateVideoVoiceProfile) {
         form.voiceProfile = profile
         form.voiceEnabled = form.hasMessage && form.audioEnabled
-        hasUserVoiceOverride = true
         markLocalSetupEdited()
     }
 
@@ -844,24 +851,16 @@ final class AnimateCreateViewModel: ObservableObject {
     }
 
     func selectVisualDirection(_ mode: AnimateVisualDirectionMode, templateId: String?) {
-        form.visualDirectionMode = mode
-        form.visualDirectionTemplateId = templateId
-        if mode != .custom {
-            form.animationDirection = ""
-        }
+        form.visualDirectionMode = mode == .template ? .template : .none
+        form.visualDirectionTemplateId = mode == .template ? templateId : nil
+        form.animationDirection = ""
         markLocalSetupEdited()
     }
 
     func updateAnimationDirection(_ animationDirection: String) {
-        let value = String(animationDirection.prefix(AnimateVideoSetupLimits.animationDirectionCharacterLimit))
-        form.animationDirection = value
-        if value.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
-            form.visualDirectionMode = .none
-            form.visualDirectionTemplateId = nil
-        } else {
-            form.visualDirectionMode = .custom
-            form.visualDirectionTemplateId = nil
-        }
+        form.animationDirection = ""
+        form.visualDirectionMode = .none
+        form.visualDirectionTemplateId = nil
         markLocalSetupEdited()
     }
 
@@ -1058,6 +1057,7 @@ extension AnimateCreateViewModel {
             renderPlanInputSignature = nil
         }
         pendingGalleryVideo = state.pendingGalleryVideo
+        pendingGalleryImage = state.pendingGalleryImage
         canRetryFinalVideoDownload = state.canRetryFinalVideoDownload
         finalRenderStatusMessage = normalizedFinalRenderStatusMessage(
             state.statusMessage,
@@ -1075,7 +1075,6 @@ extension AnimateCreateViewModel {
             if continuedForm.matchesPersistedSetup(of: form) {
                 hasLocalSetupEdits = false
                 hasUserLookOverride = false
-                hasUserVoiceOverride = false
             }
             return
         }
@@ -1102,7 +1101,6 @@ extension AnimateCreateViewModel {
             lastPreparedVideoDirectionInputSignature = workspaceSignature
             hasLocalSetupEdits = false
             hasUserLookOverride = false
-            hasUserVoiceOverride = false
             return
         }
 

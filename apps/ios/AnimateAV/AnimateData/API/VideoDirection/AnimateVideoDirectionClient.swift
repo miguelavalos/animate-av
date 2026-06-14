@@ -57,6 +57,7 @@ struct AnimateVideoDirectionClient {
             .appendingPathComponent("story")
             .appendingPathComponent("plans")
 
+        let visualDirection = Self.videoVisualDirection(form)
         let requestBody = AnimateVideoDirectionRequest(
             videoId: videoId,
             creationMode: form.creationMode.rawValue,
@@ -67,10 +68,10 @@ struct AnimateVideoDirectionClient {
             mediaUse: form.mediaUse.rawValue,
             movementDirection: form.movementDirection.rawValue,
             motionDirection: form.movementDirection.rawValue,
-            visualDirectionMode: form.visualDirectionMode.rawValue,
-            visualDirectionTemplateId: Self.nonBlankOptional(form.visualDirectionTemplateId),
-            visualDirectionText: form.visualDirectionMode == .custom ? Self.nonBlankOptional(form.animationDirection) : nil,
-            animationDirection: form.visualDirectionMode == .custom ? Self.nonBlankOptional(form.animationDirection) : nil,
+            visualDirectionMode: visualDirection.mode,
+            visualDirectionTemplateId: visualDirection.templateId,
+            visualDirectionText: nil,
+            animationDirection: nil,
             occasion: form.occasion,
             details: form.activeMessageText ?? "",
             narrationVoice: form.activeVoiceProfile?.rawValue ?? "none",
@@ -109,6 +110,19 @@ struct AnimateVideoDirectionClient {
     private static func nonBlankOptional(_ value: String?) -> String? {
         let trimmed = value?.trimmingCharacters(in: .whitespacesAndNewlines) ?? ""
         return trimmed.isEmpty ? nil : trimmed
+    }
+
+    private static func videoVisualDirection(_ form: AnimateVideoSetupForm) -> (
+        mode: String,
+        templateId: String?
+    ) {
+        guard form.visualDirectionMode == .template else {
+            return (AnimateVisualDirectionMode.none.rawValue, nil)
+        }
+        return (
+            form.visualDirectionMode.rawValue,
+            nonBlankOptional(form.visualDirectionTemplateId)
+        )
     }
 }
 

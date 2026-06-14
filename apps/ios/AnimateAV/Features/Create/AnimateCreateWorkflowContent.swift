@@ -133,6 +133,8 @@ private struct AnimateCreateMediaFirstWorkspace: View {
                     } else if showsFinalVideoRecovery {
                         AnimateCreateFinalVideoRecoveryScene(
                             presentation: presentation,
+                            retryVideoCreation: primaryFinalRenderAction,
+                            choosePhoto: presentCompactPhotoPicker,
                             discardVideoCreation: { showsDiscardVideoConfirmation = true }
                         )
                         .padding(.top, 28)
@@ -212,6 +214,7 @@ private struct AnimateCreateMediaFirstWorkspace: View {
                         generateFinalRender: primaryFinalRenderAction,
                         continueFromCompletedVideoSetupGuide: continueFromCompletedVideoSetupGuide,
                         continueVideoSetup: continueVideoSetup,
+                        choosePhoto: presentCompactPhotoPicker,
                         isVideoSetupGuideComplete: isVideoSetupGuideComplete,
                         openCreateVideoConfirmation: { showsCreateVideoConfirmation = true },
                         retryFinalVideoDownload: retryFinalVideoDownload,
@@ -528,31 +531,14 @@ struct AnimateCreateBlockingPreparationView: View {
         VStack(spacing: 18) {
             Spacer(minLength: 42)
 
-            ZStack {
-                Circle()
-                    .fill(mode.tint.opacity(0.10))
-                    .frame(width: 128, height: 128)
-
-                Circle()
-                    .stroke(mode.tint.opacity(0.18), lineWidth: 2)
-                    .frame(width: 156, height: 156)
-                    .scaleEffect(isAnimating ? 1.08 : 0.92)
-                    .opacity(isAnimating ? 0.20 : 0.58)
-
-                Image("AviFullBody")
-                    .resizable()
-                    .scaledToFit()
-                    .frame(width: 86, height: 86)
-                    .offset(y: isAnimating ? -4 : 3)
-
-                Image(systemName: iconName)
-                    .font(.system(size: 20, weight: .black))
-                    .foregroundStyle(.white)
-                    .frame(width: 42, height: 42)
-                    .background(tint, in: Circle())
-                    .offset(x: 54, y: 48)
-                    .shadow(color: tint.opacity(0.24), radius: 10, y: 4)
-            }
+            AnimateCreateRenderProgressScene(
+                status: realtimeStatus,
+                sourceImage: sourceImage,
+                generatedImageLocalRelativePath: presentation.finalRenderSummary.generatedImagePreviewLocalRelativePath,
+                fallbackIconName: iconName,
+                tint: tint,
+                isAnimating: isAnimating
+            )
 
             VStack(spacing: 8) {
                 Text(title)
@@ -567,22 +553,22 @@ struct AnimateCreateBlockingPreparationView: View {
                     .padding(.horizontal, 24)
             }
 
-            VStack(spacing: 8) {
-                if let fractionCompleted = progressFraction {
-                    ProgressView(value: fractionCompleted)
-                        .tint(tint)
-                        .frame(width: 168)
-                    Text(progressTitle)
-                        .font(.caption)
-                        .fontWeight(.black)
-                        .foregroundStyle(AVBrandColor.textSecondary)
-                } else {
-                    ProgressView()
-                        .tint(tint)
-                        .controlSize(.regular)
+            if let realtimeStatus {
+                HStack(spacing: 7) {
+                    ForEach(realtimeStatus.steps) { step in
+                        Circle()
+                            .fill(dotColor(for: step.state))
+                            .frame(width: step.state == .current ? 8 : 6, height: step.state == .current ? 8 : 6)
+                    }
                 }
+                .padding(.top, 4)
+                .accessibilityHidden(true)
+            } else {
+                ProgressView()
+                    .tint(tint)
+                    .controlSize(.regular)
+                    .padding(.top, 4)
             }
-            .padding(.top, 4)
 
             Spacer(minLength: 120)
         }
@@ -628,9 +614,25 @@ struct AnimateCreateBlockingPreparationView: View {
         presentation.mediaSummary.importProgress
     }
 
+    private var sourceImage: UIImage? {
+        presentation.mediaSummary.selectedMedia.first(where: \.selected)
+            .flatMap { UIImage(data: $0.sourceImageDataForEditing) }
+    }
+
     private var realtimeStatus: AnimateRenderRealtimePresentation? {
         guard presentation.finalRenderSummary.latestFinalJob?.isActiveRender == true else { return nil }
         return presentation.finalRenderSummary.realtimeStatus
+    }
+
+    private func dotColor(for state: AnimateRenderRealtimePresentation.Step.State) -> Color {
+        switch state {
+        case .done, .current:
+            return AVBrandColor.accent
+        case .failed:
+            return .orange
+        case .pending:
+            return AVBrandColor.textSecondary.opacity(0.30)
+        }
     }
 
     private var mode: PreparationMode {
@@ -735,6 +737,249 @@ struct AnimateCreateBlockingPreparationView: View {
             case .createVideo:
                 return L10n.string("create.preparation.createVideo.detail")
             }
+        }
+    }
+}
+
+private struct AnimateCreateRenderProgressScene: View {
+    let status: AnimateRenderRealtimePresentation?
+    let sourceImage: UIImage?
+    let generatedImageLocalRelativePath: String?
+    let fallbackIconName: String
+    let tint: Color
+    let isAnimating: Bool
+
+    @State private var generatedImage: UIImage?
+
+    var body: some View {
+        ZStack {
+            RoundedRectangle(cornerRadius: 26, style: .continuous)
+                .fill(
+                    LinearGradient(
+                        colors: [
+                            tint.opacity(0.12),
+                            Color.white.opacity(0.88),
+                            AVBrandColor.neutral100.opacity(0.95)
+                        ],
+                        startPoint: .topLeading,
+                        endPoint: .bottomTrailing
+                    )
+                )
+                .frame(width: 246, height: 310)
+                .shadow(color: AVBrandColor.textPrimary.opacity(0.08), radius: 24, y: 14)
+
+            switch visualStage {
+            case .sourcePhoto:
+                photoLayer(image: sourceImage, isStyled: false)
+                    .overlay(alignment: .bottomTrailing) {
+                        aviGuideBadge(systemImage: "wand.and.stars")
+                    }
+                    .transition(.asymmetric(insertion: .scale.combined(with: .opacity), removal: .opacity))
+            case .styledImage:
+                photoLayer(image: styledPreviewImage, isStyled: true)
+                    .overlay(alignment: .bottomTrailing) {
+                        aviGuideBadge(systemImage: "sparkles")
+                    }
+                    .transition(.blurReplace)
+            case .voiceover:
+                photoLayer(image: styledPreviewImage, isStyled: true)
+                    .overlay(alignment: .bottom) {
+                        voiceoverWaves
+                            .padding(.bottom, 26)
+                    }
+                    .overlay(alignment: .bottomTrailing) {
+                        aviGuideBadge(systemImage: "waveform")
+                    }
+                    .transition(.blurReplace)
+            case .animatingVideo:
+                photoLayer(image: styledPreviewImage, isStyled: true)
+                    .overlay {
+                        videoMotionOverlay
+                    }
+                    .overlay(alignment: .bottomTrailing) {
+                        aviGuideBadge(systemImage: "play.fill")
+                    }
+                    .transition(.blurReplace)
+            case .finishing, .completed:
+                finishingCollage
+                    .overlay(alignment: .bottomTrailing) {
+                        aviGuideBadge(systemImage: "checkmark")
+                    }
+                    .transition(.scale.combined(with: .opacity))
+            case .failed:
+                failedScene
+                    .transition(.opacity)
+            }
+        }
+        .animation(.spring(response: 0.55, dampingFraction: 0.82), value: visualStage)
+        .task(id: generatedImageLocalRelativePath) {
+            generatedImage = Self.loadGeneratedImage(relativePath: generatedImageLocalRelativePath)
+        }
+        .accessibilityHidden(true)
+    }
+
+    private var visualStage: AnimateRenderRealtimePresentation.VisualStage {
+        status?.visualStage ?? .sourcePhoto
+    }
+
+    private var styledPreviewImage: UIImage? {
+        generatedImage ?? sourceImage
+    }
+
+    private func photoLayer(image: UIImage?, isStyled: Bool) -> some View {
+        ZStack {
+            if let image {
+                Image(uiImage: image)
+                    .resizable()
+                    .scaledToFill()
+                    .saturation(isStyled && generatedImage == nil ? 1.18 : 1)
+                    .contrast(isStyled && generatedImage == nil ? 1.08 : 1)
+                    .brightness(isStyled && generatedImage == nil ? 0.03 : 0)
+                    .overlay {
+                        if isStyled && generatedImage == nil {
+                            LinearGradient(
+                                colors: [
+                                    AVBrandColor.accent.opacity(0.22),
+                                    Color.clear,
+                                    Color.white.opacity(0.18)
+                                ],
+                                startPoint: .topLeading,
+                                endPoint: .bottomTrailing
+                            )
+                            .blendMode(.softLight)
+                        }
+                    }
+            } else {
+                fallbackImage
+            }
+        }
+        .frame(width: isStyled ? 198 : 182, height: isStyled ? 252 : 238)
+        .clipShape(RoundedRectangle(cornerRadius: 20, style: .continuous))
+        .overlay {
+            RoundedRectangle(cornerRadius: 20, style: .continuous)
+                .stroke(Color.white.opacity(0.72), lineWidth: 2)
+        }
+        .rotationEffect(.degrees(isStyled ? -2 : 2))
+        .scaleEffect(isAnimating ? (isStyled ? 1.025 : 1.015) : (isStyled ? 0.99 : 0.985))
+        .shadow(color: AVBrandColor.textPrimary.opacity(0.16), radius: 18, y: 10)
+        .overlay(alignment: .topTrailing) {
+            if isStyled {
+                Image(systemName: "sparkles")
+                    .font(.system(size: 18, weight: .black))
+                    .foregroundStyle(.white)
+                    .frame(width: 38, height: 38)
+                    .background(AVBrandColor.accent, in: Circle())
+                    .offset(x: 12, y: -12)
+            }
+        }
+    }
+
+    private var fallbackImage: some View {
+        ZStack {
+            Circle()
+                .fill(tint.opacity(0.10))
+                .frame(width: 126, height: 126)
+
+            Image("AviFullBody")
+                .resizable()
+                .scaledToFit()
+                .frame(width: 86, height: 86)
+
+            Image(systemName: fallbackIconName)
+                .font(.system(size: 18, weight: .black))
+                .foregroundStyle(.white)
+                .frame(width: 38, height: 38)
+                .background(tint, in: Circle())
+                .offset(x: 54, y: 48)
+        }
+    }
+
+    private func aviGuideBadge(systemImage: String) -> some View {
+        ZStack(alignment: .bottomTrailing) {
+            Image("AviFullBody")
+                .resizable()
+                .scaledToFit()
+                .frame(width: 70, height: 70)
+                .padding(8)
+                .background(.white.opacity(0.92), in: Circle())
+                .shadow(color: AVBrandColor.textPrimary.opacity(0.16), radius: 14, y: 8)
+                .offset(x: 28, y: 24)
+
+            Image(systemName: systemImage)
+                .font(.system(size: 12, weight: .black))
+                .foregroundStyle(.white)
+                .frame(width: 28, height: 28)
+                .background(AVBrandColor.accent, in: Circle())
+                .offset(x: 30, y: 22)
+        }
+    }
+
+    private var voiceoverWaves: some View {
+        HStack(spacing: 5) {
+            ForEach(0..<7, id: \.self) { index in
+                Capsule()
+                    .fill(.white.opacity(0.92))
+                    .frame(width: 6, height: isAnimating ? CGFloat(16 + (index % 3) * 9) : CGFloat(10 + ((index + 1) % 3) * 8))
+                    .animation(.easeInOut(duration: 0.55).repeatForever(autoreverses: true).delay(Double(index) * 0.06), value: isAnimating)
+            }
+        }
+        .padding(.horizontal, 16)
+        .padding(.vertical, 10)
+        .background(.black.opacity(0.30), in: Capsule())
+    }
+
+    private var videoMotionOverlay: some View {
+        ZStack {
+            RoundedRectangle(cornerRadius: 20, style: .continuous)
+                .strokeBorder(.white.opacity(0.76), lineWidth: 2)
+                .scaleEffect(isAnimating ? 1.04 : 0.96)
+                .opacity(isAnimating ? 0.30 : 0.70)
+
+            Image(systemName: "play.fill")
+                .font(.system(size: 24, weight: .black))
+                .foregroundStyle(.white)
+                .frame(width: 62, height: 62)
+                .background(.black.opacity(0.28), in: Circle())
+        }
+    }
+
+    private var finishingCollage: some View {
+        ZStack {
+            photoLayer(image: sourceImage, isStyled: false)
+                .frame(width: 142, height: 194)
+                .offset(x: -42, y: -26)
+                .rotationEffect(.degrees(-8))
+
+            photoLayer(image: styledPreviewImage, isStyled: true)
+                .frame(width: 154, height: 206)
+                .offset(x: 34, y: 10)
+                .rotationEffect(.degrees(6))
+
+            Image(systemName: "checkmark.seal.fill")
+                .font(.system(size: 38, weight: .black))
+                .foregroundStyle(AVBrandColor.accent)
+                .frame(width: 58, height: 58)
+                .background(.white, in: Circle())
+                .offset(x: 76, y: 118)
+        }
+        .frame(width: 230, height: 284)
+    }
+
+    private static func loadGeneratedImage(relativePath: String?) -> UIImage? {
+        guard let relativePath, !relativePath.isEmpty else { return nil }
+        let url = AnimateGalleryStore().localFileURL(relativePath: relativePath)
+        guard let data = try? Data(contentsOf: url) else { return nil }
+        return UIImage(data: data)
+    }
+
+    private var failedScene: some View {
+        VStack(spacing: 14) {
+            fallbackImage
+                .frame(width: 150, height: 150)
+
+            Image(systemName: "exclamationmark.triangle.fill")
+                .font(.system(size: 30, weight: .black))
+                .foregroundStyle(.orange)
         }
     }
 }
@@ -898,6 +1143,8 @@ private struct AnimateCreateFinalVideoPreview: View {
 
 private struct AnimateCreateFinalVideoRecoveryScene: View {
     let presentation: AnimateCreateWorkflowPresentation
+    let retryVideoCreation: () -> Void
+    let choosePhoto: () -> Void
     let discardVideoCreation: () -> Void
 
     var body: some View {
@@ -940,13 +1187,33 @@ private struct AnimateCreateFinalVideoRecoveryScene: View {
                     .padding(.horizontal, 24)
             }
 
-            Button(role: .destructive, action: discardVideoCreation) {
-                Label(L10n.string("create.final.recovery.discard"), systemImage: "trash")
-                    .font(.system(size: 14, weight: .black))
-                    .frame(maxWidth: 240)
-                    .frame(height: 44)
+            VStack(spacing: 10) {
+                if presentation.finalRenderSummary.latestFinalJob?.canRetry != false {
+                    Button(action: retryVideoCreation) {
+                        Label(L10n.string("create.final.retrySetup"), systemImage: "arrow.clockwise")
+                            .font(.system(size: 14, weight: .black))
+                            .frame(maxWidth: 240)
+                            .frame(height: 44)
+                    }
+                    .buttonStyle(AnimateCreateFinalVideoButtonStyle())
+                }
+
+                Button(action: choosePhoto) {
+                    Label(L10n.string("create.media.choose"), systemImage: "photo.badge.plus")
+                        .font(.system(size: 14, weight: .black))
+                        .frame(maxWidth: 240)
+                        .frame(height: 44)
+                }
+                .buttonStyle(AnimateCreateSoftActionButtonStyle())
+
+                Button(role: .destructive, action: discardVideoCreation) {
+                    Label(L10n.string("create.final.recovery.discard"), systemImage: "trash")
+                        .font(.system(size: 14, weight: .black))
+                        .frame(maxWidth: 240)
+                        .frame(height: 44)
+                }
+                .buttonStyle(AnimateCreateSoftActionButtonStyle())
             }
-            .buttonStyle(AnimateCreateSoftActionButtonStyle())
 
             Spacer(minLength: 100)
         }
@@ -1249,6 +1516,7 @@ private struct AnimateCreateVideoDirectionCard: View {
                 stepHeader(L10n.string("create.guided.photoFrame.title"), L10n.string("create.guided.photoFrame.detail"))
                 AnimateCreateGuidedPhotoFrameStep(
                     media: selectedPhotoMedia,
+                    startsWithSourcePhoto: $form.startsWithSourcePhoto,
                     pickerItems: $pickerItems,
                     isImporting: presentation.mediaSummary.isImporting,
                     choosePhoto: choosePhoto,
@@ -1329,6 +1597,7 @@ private struct AnimateCreateVideoDirectionCard: View {
                     if selectedLook != nil {
                         selectedLookStrip
                     }
+                    guidedMotionSelector
                 }
             }
             .onAppear {
@@ -1346,131 +1615,110 @@ private struct AnimateCreateVideoDirectionCard: View {
                     options: AnimationDirectionPreset.menuOptions,
                     select: applyAnimationDirectionPreset
                 )
-                VStack(alignment: .leading, spacing: 8) {
-                    HStack {
-                        Text(L10n.string("create.guided.direction.customLabel"))
-                            .font(.system(size: 12, weight: .black))
-                            .foregroundStyle(AVBrandColor.textPrimary)
-                        Spacer()
-                        if !form.animationDirection.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
-                            Button {
-                                applyAnimationDirectionPreset(.none)
-                            } label: {
-                                Label(L10n.string("create.guided.direction.clear"), systemImage: "xmark.circle.fill")
-                                    .font(.system(size: 12, weight: .black))
-                                    .labelStyle(.titleAndIcon)
-                            }
-                            .buttonStyle(.plain)
-                            .foregroundStyle(AVBrandColor.textSecondary)
-                        }
-                        Text("\(form.animationDirection.count)/\(AnimateVideoSetupLimits.animationDirectionCharacterLimit)")
-                            .font(.caption.weight(.bold))
-                            .foregroundStyle(AVBrandColor.textSecondary)
-                    }
-                    TextEditor(text: Binding(
-                        get: { form.animationDirection },
-                        set: {
-                            let trimmed = $0.trimmingCharacters(in: .whitespacesAndNewlines)
-                            selectMovementDirection(trimmed.isEmpty ? .subtleFaithful : .custom)
-                            selectVisualDirection(trimmed.isEmpty ? .none : .custom, nil)
-                            updateAnimationDirection($0)
-                        }
-                    ))
-                    .font(.system(size: 15, weight: .semibold))
-                    .frame(minHeight: 120)
-                    .padding(10)
-                    .background(AVBrandColor.cardSurface, in: RoundedRectangle(cornerRadius: 14, style: .continuous))
-                    .overlay {
-                        RoundedRectangle(cornerRadius: 14, style: .continuous)
-                            .stroke(AVBrandColor.borderSubtle.opacity(0.7), lineWidth: 1)
-                    }
-                    Text(L10n.string("create.guided.direction.tip"))
-                        .font(.caption.weight(.semibold))
-                        .foregroundStyle(AVBrandColor.textSecondary)
-                }
+                Text(L10n.string("create.guided.direction.tip"))
+                    .font(.caption.weight(.semibold))
+                    .foregroundStyle(AVBrandColor.textSecondary)
             }
         case .scriptIdea:
             VStack(alignment: .leading, spacing: 10) {
                 stepHeader(L10n.string("create.guided.script.title"), L10n.string("create.guided.script.detail"))
-                AnimateCreateGuidedTemplateMenu(
-                    title: L10n.string("create.guided.script.template"),
-                    selectedTitle: selectedScriptIdea.title,
-                    selectedDetail: selectedScriptIdea.previewText,
-                    options: ScriptIdea.menuOptions,
-                    select: {
-                        guideState.selectScriptIdea($0)
-                        applyScriptIdea($0)
-                    }
-                )
-                VStack(alignment: .leading, spacing: 8) {
-                    HStack {
-                        Text(L10n.string("create.guided.script.message"))
-                            .font(.system(size: 12, weight: .black))
-                        Spacer()
-                        if hasMessage {
-                            Button {
-                                guideState.selectScriptIdea(.none)
-                                form.hasMessage = false
-                                form.voiceEnabled = false
-                                updateMessage("")
-                            } label: {
-                                Label(L10n.string("create.guided.message.clear"), systemImage: "xmark.circle.fill")
-                                    .font(.system(size: 12, weight: .black))
-                                    .labelStyle(.titleAndIcon)
+                LazyVGrid(columns: Array(repeating: GridItem(.flexible(), spacing: 8), count: 2), spacing: 8) {
+                    AnimateCreateGuidedMessageModeTile(
+                        title: L10n.string("create.guided.script.none"),
+                        detail: L10n.string("create.guided.script.none.preview"),
+                        systemImage: "sparkles",
+                        isSelected: guideState.selectedScriptIdea == .none && !hasMessage,
+                        select: {
+                            guideState.selectScriptIdea(.none)
+                            form.hasMessage = false
+                            form.voiceEnabled = false
+                            updateMessage("")
+                        }
+                    )
+                    AnimateCreateGuidedMessageModeTile(
+                        title: L10n.string("create.guided.script.message"),
+                        detail: L10n.string("create.guided.script.custom.preview"),
+                        systemImage: "text.bubble.fill",
+                        isSelected: wantsMessage,
+                        select: {
+                            guideState.selectScriptIdea(.custom)
+                            form.hasMessage = hasMessage
+                            form.voiceEnabled = hasMessage && form.audioEnabled
+                        }
+                    )
+                }
+
+                if wantsMessage {
+                    VStack(alignment: .leading, spacing: 8) {
+                        HStack {
+                            Text(L10n.string("create.guided.script.message"))
+                                .font(.system(size: 12, weight: .black))
+                            Spacer()
+                            if hasMessage {
+                                Button {
+                                    guideState.selectScriptIdea(.none)
+                                    form.hasMessage = false
+                                    form.voiceEnabled = false
+                                    updateMessage("")
+                                } label: {
+                                    Label(L10n.string("create.guided.message.clear"), systemImage: "xmark.circle.fill")
+                                        .font(.system(size: 12, weight: .black))
+                                        .labelStyle(.titleAndIcon)
+                                }
+                                .buttonStyle(.plain)
+                                .foregroundStyle(AVBrandColor.textSecondary)
                             }
-                            .buttonStyle(.plain)
-                            .foregroundStyle(AVBrandColor.textSecondary)
+                            Text("\(form.details.count)/\(AnimateVideoSetupLimits.messageCharacterLimit)")
+                                .font(.caption.weight(.bold))
+                                .foregroundStyle(AVBrandColor.textSecondary)
                         }
-                        Text("\(form.details.count)/180")
-                            .font(.caption.weight(.bold))
-                            .foregroundStyle(AVBrandColor.textSecondary)
-                    }
-                    TextEditor(text: Binding(
-                        get: { form.details },
-                        set: {
-                            let hasText = !$0.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty
-                            guideState.selectScriptIdea(hasText ? .custom : .none)
-                            form.hasMessage = hasText
-                            form.voiceEnabled = hasText && form.audioEnabled
-                            updateMessage($0)
+                        TextEditor(text: Binding(
+                            get: { form.details },
+                            set: {
+                                guideState.selectedScriptIdea = .custom
+                                let hasText = !$0.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty
+                                form.hasMessage = hasText
+                                form.voiceEnabled = hasText && form.audioEnabled
+                                updateMessage($0)
+                            }
+                        ))
+                        .font(.system(size: 15, weight: .semibold))
+                        .frame(minHeight: 160)
+                        .padding(10)
+                        .background(AVBrandColor.cardSurface, in: RoundedRectangle(cornerRadius: 14, style: .continuous))
+                        .overlay {
+                            RoundedRectangle(cornerRadius: 14, style: .continuous)
+                                .stroke(AVBrandColor.borderSubtle.opacity(0.7), lineWidth: 1)
                         }
-                    ))
-                    .font(.system(size: 15, weight: .semibold))
-                    .frame(minHeight: 210)
-                    .padding(10)
-                    .background(AVBrandColor.cardSurface, in: RoundedRectangle(cornerRadius: 14, style: .continuous))
-                    .overlay {
-                        RoundedRectangle(cornerRadius: 14, style: .continuous)
-                            .stroke(AVBrandColor.borderSubtle.opacity(0.7), lineWidth: 1)
-                    }
-                    Text(L10n.string("create.guided.script.tip"))
-                        .font(.caption.weight(.semibold))
-                        .foregroundStyle(AVBrandColor.textSecondary)
-                    if guideState.selectedScriptIdea != .none && !canContinueMessageStep {
-                        Text(L10n.string("create.guided.message.minimum", minimumMessageCharacterCount))
-                            .font(.caption.weight(.bold))
+                        Text(L10n.string("create.guided.script.tip"))
+                            .font(.caption.weight(.semibold))
                             .foregroundStyle(AVBrandColor.textSecondary)
-                            .fixedSize(horizontal: false, vertical: true)
+                        if !canContinueMessageStep {
+                            Text(L10n.string("create.guided.message.minimum", minimumMessageCharacterCount))
+                                .font(.caption.weight(.bold))
+                                .foregroundStyle(AVBrandColor.textSecondary)
+                                .fixedSize(horizontal: false, vertical: true)
+                        }
                     }
+                    VStack(alignment: .leading, spacing: 10) {
+                        Text(L10n.string("create.guided.voice.title"))
+                            .font(.system(size: 12, weight: .black))
+                            .foregroundStyle(AVBrandColor.textPrimary)
+                        LazyVGrid(columns: Array(repeating: GridItem(.flexible(), spacing: 8), count: 2), spacing: 8) {
+                            ForEach(AnimateVideoVoiceProfile.selectorOrder) { profile in
+                                AnimateCreateGuidedVoiceTile(
+                                    profile: profile,
+                                    isSelected: form.voiceProfile == profile,
+                                    select: { updateVoiceProfile(profile) }
+                                )
+                            }
+                        }
+                    }
+                    .padding(.top, 4)
                 }
             }
         case .voice:
-            VStack(alignment: .leading, spacing: 10) {
-                stepHeader(L10n.string("create.guided.voice.title"), L10n.string("create.guided.voice.detail"))
-                LazyVGrid(columns: Array(repeating: GridItem(.flexible(), spacing: 8), count: 2), spacing: 8) {
-                    ForEach(AnimateVideoVoiceProfile.selectorOrder) { profile in
-                        AnimateCreateGuidedVoiceTile(
-                            profile: profile,
-                            isSelected: form.voiceProfile == profile,
-                            select: { updateVoiceProfile(profile) }
-                        )
-                    }
-                }
-                AnimateCreateVoiceTonePicker(
-                    selectedTone: form.voiceTone,
-                    selectTone: updateVoiceTone
-                )
-            }
+            EmptyView()
         }
     }
 
@@ -1540,7 +1788,7 @@ private struct AnimateCreateVideoDirectionCard: View {
         case .movement:
             return false
         case .scriptIdea, .voice:
-            if guideState.step == .scriptIdea, guideState.selectedScriptIdea != .none {
+            if guideState.step == .scriptIdea, wantsMessage {
                 return !canContinueMessageStep
             }
             return false
@@ -1565,7 +1813,7 @@ private struct AnimateCreateVideoDirectionCard: View {
     }
 
     private var activeSteps: [GuidedStep] {
-        hasMessage ? [.photoFrame, .look, .movement, .scriptIdea, .voice] : [.photoFrame, .look, .movement, .scriptIdea]
+        [.photoFrame, .look, .scriptIdea]
     }
 
     @ViewBuilder
@@ -1585,25 +1833,11 @@ private struct AnimateCreateVideoDirectionCard: View {
                     editStep: .look
                 )
                 summaryEditRow(
-                    title: L10n.string("create.guided.summary.movement"),
-                    detail: animationSummaryDetail,
-                    icon: form.movementDirection.systemImage,
-                    editStep: .movement
-                )
-                summaryEditRow(
                     title: L10n.string("create.guided.summary.message"),
                     detail: hasMessage ? form.details : L10n.string("create.guided.script.none"),
                     icon: "text.bubble.fill",
                     editStep: .scriptIdea
                 )
-                if hasMessage {
-                    summaryEditRow(
-                        title: L10n.string("create.guided.summary.voice"),
-                        detail: "\(form.voiceProfile.title) · \(form.voiceTone.title)",
-                        icon: "waveform",
-                        editStep: .voice
-                    )
-                }
             }
         }
     }
@@ -1612,8 +1846,36 @@ private struct AnimateCreateVideoDirectionCard: View {
         !form.details.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty
     }
 
+    private var wantsMessage: Bool {
+        guideState.selectedScriptIdea != .none || hasMessage
+    }
+
     private var selectedLookTitle: String {
         selectedLook?.title ?? L10n.string("create.guided.look.noneSelected.title")
+    }
+
+    private var guidedMotionSelector: some View {
+        VStack(alignment: .leading, spacing: 7) {
+            HStack(spacing: 8) {
+                Text(L10n.string("create.guided.motion.title"))
+                    .font(.system(size: 12, weight: .black))
+                    .foregroundStyle(AVBrandColor.textPrimary)
+                Text(selectedAnimationDirectionPreset.title)
+                    .font(.caption.weight(.bold))
+                    .foregroundStyle(AVBrandColor.textSecondary)
+                Spacer()
+            }
+            LazyVGrid(columns: Array(repeating: GridItem(.flexible(), spacing: 6), count: 3), spacing: 6) {
+                ForEach(AnimationDirectionPreset.motionOptions) { preset in
+                    AnimateCreateGuidedMotionTile(
+                        preset: preset,
+                        isSelected: selectedAnimationDirectionPreset == preset,
+                        select: { applyAnimationDirectionPreset(preset) }
+                    )
+                }
+            }
+        }
+        .padding(.top, 2)
     }
 
     private var photoFrameSummaryDetail: String {
@@ -1756,14 +2018,10 @@ private struct AnimateCreateVideoDirectionCard: View {
         case .look:
             return selectedLook == nil
                 ? L10n.string("create.guided.look.noneSelected.title")
-                : L10n.string("create.guided.continue.movement")
-        case .movement:
-            return L10n.string("create.guided.continue.message")
+                : L10n.string("create.guided.continue.message")
         case .scriptIdea:
-            return guideState.selectedScriptIdea != .none && hasMessage
-                ? L10n.string("create.guided.continue.voice")
-                : L10n.string("create.guided.continue.finish")
-        case .voice:
+            return L10n.string("create.guided.continue.finish")
+        case .movement, .voice:
             return L10n.string("create.guided.continue.finish")
         }
     }
@@ -1873,7 +2131,7 @@ private struct AnimateCreateVideoDirectionCard: View {
             return "paintbrush.pointed.fill"
         }
         if !isEffectiveGuidedFlowComplete {
-            return "camera.aperture"
+            return "text.bubble.fill"
         }
         return videoDirection.iconName
     }
@@ -1886,7 +2144,7 @@ private struct AnimateCreateVideoDirectionCard: View {
             return L10n.string("create.guided.look.title")
         }
         if !isEffectiveGuidedFlowComplete {
-            return L10n.string("create.guided.movement.title")
+            return L10n.string("create.guided.script.title")
         }
         return L10n.string("create.storyDirection.cardTitle")
     }
@@ -1899,7 +2157,7 @@ private struct AnimateCreateVideoDirectionCard: View {
             return L10n.string("create.guided.look.noneSelected.title")
         }
         if !isEffectiveGuidedFlowComplete {
-            return L10n.string("create.guided.movement.detail")
+            return L10n.string("create.guided.script.detail")
         }
         return videoDirection.statusMessage
     }
@@ -2053,25 +2311,24 @@ struct AnimateCreateVideoSetupGuideState: Equatable {
             guard hasSelectedLook else {
                 return ContinueResult(activeSheet: .look)
             }
-            step = .movement
+            step = .scriptIdea
             isComplete = false
-            return ContinueResult(activeSheet: .movement)
+            return ContinueResult(activeSheet: .scriptIdea)
         case .movement:
             step = .scriptIdea
             isComplete = false
             return ContinueResult(activeSheet: .scriptIdea)
         case .scriptIdea:
-            if selectedScriptIdea == .none {
+            if !hasMessage {
                 completeWithoutMessage()
                 return ContinueResult(activeSheet: nil, clearsMessage: true)
             }
             if hasMessage && canContinueMessageStep {
-                step = .voice
-                isComplete = false
-                return ContinueResult(activeSheet: .voice)
+                isComplete = true
+                return ContinueResult(activeSheet: nil)
             }
-            isComplete = true
-            return ContinueResult(activeSheet: nil)
+            isComplete = false
+            return ContinueResult(activeSheet: .scriptIdea)
         case .voice:
             isComplete = true
             return ContinueResult(activeSheet: nil)
@@ -2086,6 +2343,7 @@ struct AnimateCreateVideoSetupGuideState: Equatable {
 
 private struct AnimateCreateGuidedPhotoFrameStep: View {
     let media: AnimateSelectedMedia?
+    @Binding var startsWithSourcePhoto: Bool
     @Binding var pickerItems: [PhotosPickerItem]
     let isImporting: Bool
     let choosePhoto: () -> Void
@@ -2096,6 +2354,9 @@ private struct AnimateCreateGuidedPhotoFrameStep: View {
     var body: some View {
         VStack(alignment: .leading, spacing: 12) {
             photoActions
+            if hasRenderableMedia {
+                sourcePhotoTransitionToggle
+            }
             photoPreview
         }
     }
@@ -2139,6 +2400,24 @@ private struct AnimateCreateGuidedPhotoFrameStep: View {
                 .buttonStyle(.plain)
             }
         }
+    }
+
+    private var sourcePhotoTransitionToggle: some View {
+        Toggle(isOn: $startsWithSourcePhoto) {
+            VStack(alignment: .leading, spacing: 2) {
+                Text(L10n.string("create.mediaTransition.sourcePhoto.title"))
+                    .font(.system(size: 13, weight: .black))
+                    .foregroundStyle(AVBrandColor.textPrimary)
+                Text(L10n.string(startsWithSourcePhoto ? "create.mediaTransition.sourcePhoto.enabledDetail" : "create.mediaTransition.sourcePhoto.disabledDetail"))
+                    .font(.caption.weight(.semibold))
+                    .foregroundStyle(AVBrandColor.textSecondary)
+                    .fixedSize(horizontal: false, vertical: true)
+            }
+        }
+        .toggleStyle(.switch)
+        .tint(AVBrandColor.accent)
+        .padding(12)
+        .background(AVBrandColor.mutedSurface, in: RoundedRectangle(cornerRadius: 12, style: .continuous))
     }
 
     @ViewBuilder
@@ -2307,6 +2586,7 @@ enum GuidedStep: String, CaseIterable, Identifiable {
 enum AnimationDirectionPreset: String, CaseIterable, Identifiable, AnimateCreateGuidedTemplateOption {
     case none
     case gentleReveal
+    case playful
     case subjectWave
     case environmentMagic
     case cameraPush
@@ -2317,13 +2597,18 @@ enum AnimationDirectionPreset: String, CaseIterable, Identifiable, AnimateCreate
     var id: String { rawValue }
 
     static var menuOptions: [AnimationDirectionPreset] {
-        [.none, .gentleReveal, .subjectWave, .environmentMagic, .cameraPush, .cinematic, .celebration]
+        motionOptions
+    }
+
+    static var motionOptions: [AnimationDirectionPreset] {
+        [.none, .celebration, .gentleReveal, .playful, .cinematic]
     }
 
     var title: String {
         switch self {
         case .none: L10n.string("create.guided.direction.none")
         case .gentleReveal: L10n.string("create.guided.direction.gentleReveal.title")
+        case .playful: L10n.string("create.guided.direction.playful.title")
         case .subjectWave: L10n.string("create.guided.direction.subjectWave.title")
         case .environmentMagic: L10n.string("create.guided.direction.environmentMagic.title")
         case .cameraPush: L10n.string("create.guided.direction.cameraPush.title")
@@ -2337,6 +2622,7 @@ enum AnimationDirectionPreset: String, CaseIterable, Identifiable, AnimateCreate
         switch self {
         case .none: L10n.string("create.guided.direction.none.detail")
         case .gentleReveal: L10n.string("create.guided.direction.gentleReveal.detail")
+        case .playful: L10n.string("create.guided.direction.playful.detail")
         case .subjectWave: L10n.string("create.guided.direction.subjectWave.detail")
         case .environmentMagic: L10n.string("create.guided.direction.environmentMagic.detail")
         case .cameraPush: L10n.string("create.guided.direction.cameraPush.detail")
@@ -2350,6 +2636,7 @@ enum AnimationDirectionPreset: String, CaseIterable, Identifiable, AnimateCreate
         switch self {
         case .none, .custom: ""
         case .gentleReveal: L10n.string("create.guided.direction.gentleReveal.prompt")
+        case .playful: L10n.string("create.guided.direction.playful.prompt")
         case .subjectWave: L10n.string("create.guided.direction.subjectWave.prompt")
         case .environmentMagic: L10n.string("create.guided.direction.environmentMagic.prompt")
         case .cameraPush: L10n.string("create.guided.direction.cameraPush.prompt")
@@ -2361,7 +2648,8 @@ enum AnimationDirectionPreset: String, CaseIterable, Identifiable, AnimateCreate
     var systemImage: String {
         switch self {
         case .none: "sparkles.slash"
-        case .gentleReveal: "sun.max.fill"
+        case .gentleReveal: "heart.fill"
+        case .playful: "face.smiling.fill"
         case .subjectWave: "hand.wave.fill"
         case .environmentMagic: "sparkles"
         case .cameraPush: "camera.viewfinder"
@@ -2375,6 +2663,8 @@ enum AnimationDirectionPreset: String, CaseIterable, Identifiable, AnimateCreate
         switch self {
         case .none, .gentleReveal:
             return .subtleFaithful
+        case .playful:
+            return .livingPortrait
         case .subjectWave:
             return .livingPortrait
         case .environmentMagic:
@@ -2590,6 +2880,78 @@ private struct AnimateCreateGuidedVoiceTile: View {
             }
             .padding(8)
             .frame(height: 84)
+            .background(isSelected ? AVBrandColor.accent.opacity(0.08) : AVBrandColor.cardSurface, in: RoundedRectangle(cornerRadius: 12, style: .continuous))
+            .overlay(
+                RoundedRectangle(cornerRadius: 12, style: .continuous)
+                    .stroke(isSelected ? AVBrandColor.accent : AVBrandColor.borderSubtle.opacity(0.75), lineWidth: isSelected ? 2 : 1)
+            )
+        }
+        .buttonStyle(.plain)
+    }
+}
+
+private struct AnimateCreateGuidedMessageModeTile: View {
+    let title: String
+    let detail: String
+    let systemImage: String
+    let isSelected: Bool
+    let select: () -> Void
+
+    var body: some View {
+        Button(action: select) {
+            VStack(alignment: .leading, spacing: 8) {
+                HStack {
+                    Image(systemName: systemImage)
+                        .font(.system(size: 16, weight: .black))
+                        .foregroundStyle(isSelected ? AVBrandColor.accent : AVBrandColor.textSecondary)
+                    Spacer()
+                    Image(systemName: isSelected ? "checkmark.circle.fill" : "circle")
+                        .font(.system(size: 15, weight: .black))
+                        .foregroundStyle(isSelected ? AVBrandColor.accent : AVBrandColor.textSecondary)
+                }
+                Text(title)
+                    .font(.system(size: 14, weight: .black))
+                    .foregroundStyle(AVBrandColor.textPrimary)
+                    .lineLimit(1)
+                    .minimumScaleFactor(0.72)
+                Text(detail)
+                    .font(.system(size: 11, weight: .bold))
+                    .foregroundStyle(AVBrandColor.textSecondary)
+                    .lineLimit(2)
+                    .fixedSize(horizontal: false, vertical: true)
+            }
+            .padding(12)
+            .frame(maxWidth: .infinity, minHeight: 104, alignment: .topLeading)
+            .background(isSelected ? AVBrandColor.accent.opacity(0.08) : AVBrandColor.cardSurface, in: RoundedRectangle(cornerRadius: 12, style: .continuous))
+            .overlay(
+                RoundedRectangle(cornerRadius: 12, style: .continuous)
+                    .stroke(isSelected ? AVBrandColor.accent : AVBrandColor.borderSubtle.opacity(0.75), lineWidth: isSelected ? 2 : 1)
+            )
+        }
+        .buttonStyle(.plain)
+    }
+}
+
+private struct AnimateCreateGuidedMotionTile: View {
+    let preset: AnimationDirectionPreset
+    let isSelected: Bool
+    let select: () -> Void
+
+    var body: some View {
+        Button(action: select) {
+            HStack(spacing: 6) {
+                Image(systemName: preset.systemImage)
+                    .font(.system(size: 12, weight: .black))
+                    .foregroundStyle(isSelected ? AVBrandColor.accent : AVBrandColor.textSecondary)
+                Text(preset.title)
+                    .font(.system(size: 11, weight: .black))
+                    .foregroundStyle(AVBrandColor.textPrimary)
+                    .lineLimit(1)
+                    .minimumScaleFactor(0.7)
+            }
+            .padding(.horizontal, 9)
+            .frame(maxWidth: .infinity)
+            .frame(height: 38)
             .background(isSelected ? AVBrandColor.accent.opacity(0.08) : AVBrandColor.cardSurface, in: RoundedRectangle(cornerRadius: 12, style: .continuous))
             .overlay(
                 RoundedRectangle(cornerRadius: 12, style: .continuous)
@@ -2961,6 +3323,7 @@ private struct AnimateCreatePrimaryActionBar: View {
     let generateFinalRender: () -> Void
     let continueFromCompletedVideoSetupGuide: () -> Void
     let continueVideoSetup: () -> Void
+    let choosePhoto: () -> Void
     let isVideoSetupGuideComplete: Bool
     let openCreateVideoConfirmation: () -> Void
     let retryFinalVideoDownload: () -> Void
@@ -3204,7 +3567,7 @@ private struct AnimateCreatePrimaryActionBar: View {
 
     private func primaryAction() {
         guard hasRenderablePhoto else {
-            continueVideoSetup()
+            choosePhoto()
             return
         }
         if presentation.finalRenderSummary.pendingGalleryVideo != nil {
@@ -3860,7 +4223,7 @@ private struct AnimateCreateRealtimeRenderStatusPanel: View {
     let status: AnimateRenderRealtimePresentation
 
     var body: some View {
-        VStack(alignment: .leading, spacing: 9) {
+        VStack(alignment: .leading, spacing: 12) {
             HStack(alignment: .top, spacing: 9) {
                 Image(systemName: status.systemImage)
                     .font(.system(size: 13, weight: .black))
@@ -3879,13 +4242,6 @@ private struct AnimateCreateRealtimeRenderStatusPanel: View {
                         .foregroundStyle(AVBrandColor.textSecondary)
                         .fixedSize(horizontal: false, vertical: true)
                 }
-            }
-
-            if let progressFraction = status.progressFraction {
-                ProgressView(value: progressFraction)
-                    .tint(iconColor)
-                    .accessibilityLabel(L10n.string("create.workflowContent.finalVideoProgress"))
-                    .accessibilityValue("\(Int((progressFraction * 100).rounded())) percent")
             }
 
             if status.isActive && !status.canEditSetup {

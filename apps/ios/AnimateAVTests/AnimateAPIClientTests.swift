@@ -5,6 +5,7 @@ import XCTest
 final class AnimateAPIClientTests: XCTestCase {
     override func tearDown() {
         AnimateURLProtocolMock.reset()
+        unsetenv("ANIMATEAV_MOCK_NO_SPEND_FINAL_RENDER")
         super.tearDown()
     }
 
@@ -424,6 +425,63 @@ final class AnimateAPIClientTests: XCTestCase {
         XCTAssertEqual(json["sourceImageUploadId"] as? String, "source-upload-1")
         XCTAssertNil(json["generatedImageArtifactId"])
         XCTAssertNil(json["creditCost"])
+        XCTAssertEqual(json["startsWithSourcePhoto"] as? Bool, true)
+    }
+
+    func testPrepareRenderPlanUsesMockNoSpendEnvironmentOverride() async throws {
+        setenv("ANIMATEAV_MOCK_NO_SPEND_FINAL_RENDER", "1", 1)
+        let session = makeMockSession(
+            json: """
+            {
+              "appId": "animateav",
+              "videoId": "video-1",
+              "planId": "plan-1",
+              "canCreateVideo": true,
+              "createVideoBlockers": [],
+              "generatedAt": "2026-05-16T16:00:00Z",
+              "plan": {
+                "schemaVersion": 1,
+                "secondsPerCredit": 15,
+                "renderOptionId": "short_video",
+                "renderOptionTitle": "Short Video",
+                "creationMode": "quick",
+                "look": "real",
+                "theme": "travel",
+                "mood": "cinematic",
+                "duration": "auto",
+                "mediaUse": "aviPick",
+                "creditCost": 0,
+                "totalCreditCost": 0,
+                "targetDurationMs": 15000,
+                "minimumDurationMs": 8000,
+                "fps": 24,
+                "rendererMode": "guided_generative",
+                "plannedAssetCount": 1,
+                "usedAssetCount": 1,
+                "rejectedAssetCount": 0,
+                "qualityWarnings": [],
+                "userMessage": "Ready."
+              }
+            }
+            """
+        )
+        let client = AnimateFinalRenderClient(baseURLString: accountAPIBaseURL, session: session)
+
+        _ = try await client.prepareRenderPlan(
+            videoId: "video-1",
+            bearerToken: "token-1",
+            template: .partyRecap,
+            creationStyle: nil,
+            form: AnimateVideoSetupForm(template: .partyRecap),
+            removesWatermark: false,
+            selectedSourceLocalIdentifiers: ["local-1"],
+            sourceImageUploadId: "source-upload-1",
+            generatedImageArtifactId: nil
+        )
+
+        let body = try XCTUnwrap(AnimateURLProtocolMock.lastRequestBody)
+        let json = try XCTUnwrap(JSONSerialization.jsonObject(with: body) as? [String: Any])
+        XCTAssertEqual(json["mockNoSpend"] as? Bool, true)
     }
 
     func testPrepareRenderPlanSendsCustomScriptForDurationInference() async throws {
@@ -489,9 +547,10 @@ final class AnimateAPIClientTests: XCTestCase {
         XCTAssertEqual(json["hasMessage"] as? Bool, true)
         XCTAssertEqual(json["messageText"] as? String, "Happy birthday, Ana. Your photo turns into a watercolor celebration.")
         XCTAssertEqual(json["voiceEnabled"] as? Bool, true)
-        XCTAssertEqual(json["voiceType"] as? String, AnimateVideoVoiceProfile.adultWoman.rawValue)
-        XCTAssertEqual(json["narrationVoice"] as? String, AnimateVideoVoiceProfile.adultWoman.rawValue)
+        XCTAssertEqual(json["voiceType"] as? String, AnimateVideoVoiceProfile.narratorWoman.rawValue)
+        XCTAssertEqual(json["narrationVoice"] as? String, AnimateVideoVoiceProfile.narratorWoman.rawValue)
         XCTAssertNil(json["mockNoSpend"])
+        XCTAssertEqual(json["startsWithSourcePhoto"] as? Bool, true)
     }
 
     func testConfirmFinalRenderUsesBackendOwnedEndpoint() async throws {
@@ -587,7 +646,7 @@ final class AnimateAPIClientTests: XCTestCase {
         let json = try XCTUnwrap(JSONSerialization.jsonObject(with: body) as? [String: Any])
         XCTAssertEqual(json["sourceImageUploadId"] as? String, "source-upload-1")
         XCTAssertNil(json["generatedImageArtifactId"])
-        XCTAssertEqual(json["narrationVoice"] as? String, AnimateVideoVoiceProfile.adultWoman.rawValue)
+        XCTAssertEqual(json["narrationVoice"] as? String, AnimateVideoVoiceProfile.narratorWoman.rawValue)
         XCTAssertNil(json["mockNoSpend"])
     }
 

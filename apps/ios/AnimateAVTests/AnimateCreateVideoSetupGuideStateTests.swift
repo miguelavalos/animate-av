@@ -27,13 +27,6 @@ final class AnimateCreateVideoSetupGuideStateTests: XCTestCase {
             hasMessage: false,
             canContinueMessageStep: false
         )
-        XCTAssertEqual(result.activeSheet, .movement)
-        result = state.continueStep(
-            hasSelectedLook: true,
-            hasSelectedPhoto: true,
-            hasMessage: false,
-            canContinueMessageStep: false
-        )
         XCTAssertEqual(result.activeSheet, .scriptIdea)
         XCTAssertFalse(result.clearsMessage)
         XCTAssertFalse(state.isComplete)
@@ -52,24 +45,29 @@ final class AnimateCreateVideoSetupGuideStateTests: XCTestCase {
         XCTAssertEqual(state.step, .scriptIdea)
     }
 
-    func testMessageFlowRequiresVoiceStepBeforeCompletion() {
+    func testMessageFlowCompletesFromMessageStep() {
         var state = AnimateCreateVideoSetupGuideState()
 
         XCTAssertEqual(continueReady(&state).activeSheet, .look)
-        XCTAssertEqual(continueReady(&state).activeSheet, .movement)
         XCTAssertEqual(continueReady(&state).activeSheet, .scriptIdea)
 
         state.selectScriptIdea(.birthday)
-        XCTAssertEqual(
-            continueReady(&state, hasMessage: true, canContinueMessageStep: true).activeSheet,
-            .voice
-        )
-        XCTAssertFalse(state.isComplete)
-
         XCTAssertNil(
             continueReady(&state, hasMessage: true, canContinueMessageStep: true).activeSheet
         )
         XCTAssertTrue(state.isComplete)
+    }
+
+    func testMessageFlowStaysOnMessageStepUntilMinimumTextIsReady() {
+        var state = AnimateCreateVideoSetupGuideState(step: .scriptIdea)
+
+        state.selectScriptIdea(.custom)
+        let result = continueReady(&state, hasMessage: true, canContinueMessageStep: false)
+
+        XCTAssertEqual(result.activeSheet, .scriptIdea)
+        XCTAssertFalse(result.clearsMessage)
+        XCTAssertFalse(state.isComplete)
+        XCTAssertEqual(state.step, .scriptIdea)
     }
 
     private func continueReady(

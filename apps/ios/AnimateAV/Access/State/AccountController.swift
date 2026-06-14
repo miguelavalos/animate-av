@@ -110,10 +110,15 @@ final class AccountController: ObservableObject {
             addAccountBreadcrumb("restore_temporarily_unavailable")
         }
 
-        if diagnosticEvents.contains(.providerSignedOut), productAccountState.user != nil {
-            addAccountBreadcrumb("restore_signed_out_preserved_local_user")
-        } else if diagnosticEvents.contains(.providerSignedOut) {
+        if diagnosticEvents.contains(.providerSignedOut) {
             addAccountBreadcrumb("restore_signed_out")
+            user = nil
+            canUseAnimateImageGeneration = false
+            AVDiagnostics.clearUserContext()
+            isAccountSessionTemporarilyUnavailable = false
+            clearLastKnownAccountUser()
+            resetSignedOutAccountState()
+            return
         }
 
         switch productAccountState {
@@ -256,12 +261,20 @@ final class AccountController: ObservableObject {
             resetSignedOutAccountState()
             return
         }
+        if AnimateUITestEnvironment.current.hasAccountOverride {
+            creditBalance = AnimateCreateUITestFixtures.balance
+            creditBalanceLoadState = .loaded
+            isAccountSessionTemporarilyUnavailable = false
+            persistLastKnownAccountUser(user)
+            return
+        }
 
         let previousCreditBalanceLoadState = creditBalanceLoadState
         creditBalanceLoadState = .loading
         do {
             guard let token = try await currentBackendBearerToken(for: user) else {
-                throw AnimateAPIError(code: "animate_auth_token_missing", message: L10n.string("access.signInRequired.generic"))
+                handleMissingAuthTokenDuringCreditBalanceRefresh()
+                return
             }
             creditBalance = try await balanceClient.fetchBalance(bearerToken: token)
             creditBalanceLoadState = .loaded
@@ -280,6 +293,17 @@ final class AccountController: ObservableObject {
             creditBalanceLoadState = AnimateCreditBalanceLoadState.failureState(for: error)
             errorMessage = error.localizedDescription
         }
+    }
+
+    private func handleMissingAuthTokenDuringCreditBalanceRefresh() {
+        addAccountBreadcrumb("credit_balance_auth_token_missing")
+        user = nil
+        canUseAnimateImageGeneration = false
+        AVDiagnostics.clearUserContext()
+        isAccountSessionTemporarilyUnavailable = false
+        clearLastKnownAccountUser()
+        resetSignedOutAccountState()
+        errorMessage = L10n.string("access.signInRequired.generic")
     }
 
     func currentBearerToken() async throws -> String? {

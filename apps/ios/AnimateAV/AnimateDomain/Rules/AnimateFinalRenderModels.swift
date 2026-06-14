@@ -57,6 +57,8 @@ struct AnimateRenderPlanRequest: Encodable {
     let removeWatermark: Bool
     let renderOptionId: String?
     let mockNoSpend: Bool?
+    let mockExecutionPreset: String?
+    let startsWithSourcePhoto: Bool
 }
 
 struct AnimateConfirmFinalRenderRequest: Encodable {
@@ -95,6 +97,8 @@ struct AnimateConfirmFinalRenderRequest: Encodable {
     let planId: String
     let idempotencyKey: String
     let mockNoSpend: Bool?
+    let mockExecutionPreset: String?
+    let startsWithSourcePhoto: Bool
 }
 
 struct AnimateConfirmFinalRenderResponse: Decodable, Equatable {
