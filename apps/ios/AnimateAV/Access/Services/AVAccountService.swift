@@ -27,6 +27,8 @@ enum AVAccountServiceError: LocalizedError {
 struct DefaultAVAccountService: AVAccountService {
     private let accountService = ClerkAccountAVService(
         publishableKeyProvider: { AppConfig.avAccountKey },
+        keychainServiceProvider: { Bundle.main.accountAVNonEmptyStringValue(for: "ACCOUNTAV_KEYCHAIN_SERVICE") },
+        keychainAccessGroupProvider: { Bundle.main.accountAVNonEmptyStringValue(for: "ACCOUNTAV_KEYCHAIN_ACCESS_GROUP") },
         fallbackDisplayName: L10n.string("account.displayName.user"),
         loggerSubsystem: "com.avalsys.animateav"
     )
@@ -81,5 +83,13 @@ struct DefaultAVAccountService: AVAccountService {
             displayName: AnimateUITestEnvironment.accountUserDisplayName,
             emailAddress: AnimateUITestEnvironment.accountUserEmailAddress
         )
+    }
+}
+
+private extension Bundle {
+    func accountAVNonEmptyStringValue(for key: String) -> String? {
+        let rawValue = object(forInfoDictionaryKey: key) as? String ?? ""
+        let trimmedValue = rawValue.trimmingCharacters(in: .whitespacesAndNewlines)
+        return trimmedValue.isEmpty || trimmedValue == "$(inherited)" ? nil : trimmedValue
     }
 }

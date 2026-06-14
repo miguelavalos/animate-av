@@ -100,6 +100,7 @@ config_environment="$(setting ANIMATEAV_CONFIG_ENVIRONMENT)"
 api_base_url="$(setting ACCOUNTAV_API_BASE_URL)"
 convex_url="$(setting ANIMATEAV_CONVEX_URL)"
 publishable_key="$(setting ACCOUNTAV_PUBLISHABLE_KEY)"
+keychain_access_group="$(setting ACCOUNTAV_KEYCHAIN_ACCESS_GROUP)"
 revenuecat_api_key="$(setting ANIMATEAV_REVENUECAT_PUBLIC_API_KEY)"
 revenuecat_offering_id="$(setting ANIMATEAV_REVENUECAT_OFFERING_ID)"
 revenuecat_monthly_package_id="$(setting ANIMATEAV_REVENUECAT_MONTHLY_PACKAGE_ID)"
@@ -120,6 +121,7 @@ for item in \
   "ACCOUNTAV_API_BASE_URL:$api_base_url" \
   "ANIMATEAV_CONVEX_URL:$convex_url" \
   "ACCOUNTAV_PUBLISHABLE_KEY:$publishable_key" \
+  "ACCOUNTAV_KEYCHAIN_ACCESS_GROUP:$keychain_access_group" \
   "ANIMATEAV_REVENUECAT_PUBLIC_API_KEY:$revenuecat_api_key" \
   "ANIMATEAV_REVENUECAT_OFFERING_ID:$revenuecat_offering_id" \
   "ANIMATEAV_REVENUECAT_MONTHLY_PACKAGE_ID:$revenuecat_monthly_package_id" \
@@ -157,8 +159,10 @@ fi
 
 if [ "$configuration" = "Release" ]; then
   [ "$product_bundle_identifier" = "com.avalsys.animateav" ] || fail "Release bundle must be com.avalsys.animateav, got $product_bundle_identifier"
+  [ "$keychain_access_group" = "935PM55U6R.com.avalsys.animateav" ] || fail "Release ACCOUNTAV_KEYCHAIN_ACCESS_GROUP must be 935PM55U6R.com.avalsys.animateav, got $keychain_access_group"
 elif [ "$configuration" = "Debug" ]; then
   [ "$product_bundle_identifier" = "com.avalsys.animateav.dev" ] || fail "Debug bundle must be com.avalsys.animateav.dev, got $product_bundle_identifier"
+  [ "$keychain_access_group" = "935PM55U6R.com.avalsys.animateav.dev" ] || fail "Debug ACCOUNTAV_KEYCHAIN_ACCESS_GROUP must be 935PM55U6R.com.avalsys.animateav.dev, got $keychain_access_group"
 fi
 
 if [ "$env_name" = "prod" ]; then
@@ -211,6 +215,7 @@ Animate AV iOS runtime config ($env_name)
   open source URL: $open_source_url
   code sign entitlements: $code_sign_entitlements
   Account AV redirect URI: $product_bundle_identifier://callback
+  Account AV keychain access group: $keychain_access_group
   publishable key: $redacted_key
   RevenueCat key: $redacted_revenuecat_key
   RevenueCat offering: $revenuecat_offering_id

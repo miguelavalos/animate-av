@@ -20,6 +20,7 @@ billing, or deletion flows, follow the private AVALSYS guide. Do not invent a
 local runtime flow from this public repo.
 
 - `private/avalsys-suite/docs/platform/native-preview-dev-validation-guide.md`
+- `private/avalsys-suite/docs/platform/account-av-ios-testflight-contract.md`
 - `private/avalsys-suite/docs/animate-av/production-simulator-loop-audit-runbook.md`
 - `private/avalsys-suite/docs/animate-av/create-video-workflow-validation-2026-06-11.md`
 - `private/avalsys-suite/docs/agents/plan-step.md` when the user says

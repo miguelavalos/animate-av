@@ -167,6 +167,11 @@ escape_xcconfig_value() {
 animate_convex_url="$(read_required_config ANIMATEAV_CONVEX_URL)"
 account_api_base_url="$(read_required_config ACCOUNTAV_API_BASE_URL)"
 account_publishable_key="$(read_required_config ACCOUNTAV_PUBLISHABLE_KEY)"
+if [ "$env_name" = "prod" ]; then
+  account_keychain_access_group="935PM55U6R.com.avalsys.animateav"
+else
+  account_keychain_access_group="935PM55U6R.com.avalsys.animateav.dev"
+fi
 revenuecat_api_key="$(read_required_config ANIMATEAV_REVENUECAT_PUBLIC_API_KEY)"
 revenuecat_offering_id="$(read_required_config ANIMATEAV_REVENUECAT_OFFERING_ID)"
 revenuecat_monthly_package_id="$(read_required_config ANIMATEAV_REVENUECAT_MONTHLY_PACKAGE_ID)"
@@ -215,6 +220,8 @@ XCCONFIG_SLASH = /
 ANIMATEAV_CONFIG_ENVIRONMENT = $env_name
 AVALSYS_APPLE_DEVELOPMENT_TEAM = $development_team
 ACCOUNTAV_PUBLISHABLE_KEY = $account_publishable_key
+ACCOUNTAV_KEYCHAIN_SERVICE = 
+ACCOUNTAV_KEYCHAIN_ACCESS_GROUP = $account_keychain_access_group
 ANIMATEAV_REVENUECAT_PUBLIC_API_KEY = $revenuecat_api_key
 ANIMATEAV_REVENUECAT_OFFERING_ID = $revenuecat_offering_id
 ANIMATEAV_REVENUECAT_MONTHLY_PACKAGE_ID = $revenuecat_monthly_package_id
