@@ -3,6 +3,7 @@ node_modules/
 .build/
 .swiftpm/
 DerivedData/
+.derived-data/
 .DerivedData*/
 *.xcuserstate
 xcuserdata/
