@@ -14,10 +14,11 @@ Maintain the style-family look selector:
 2. Let the user enter one family.
 3. Show exactly 8 looks in that family.
 4. Keep one unique final preview asset per look.
-5. Keep look selection independent from voice-over selection.
+5. Keep look selection independent from message/dedication controls.
 
-The voice-over selector is no longer tied to look position. It appears only when
-the user adds a message and offers adult narrator choices.
+The historical voice-over selector is no longer part of the simplified Animate
+AV V1 product direction. If dedication is exposed, it is a written/composed card
+control, independent from look position.
 
 ## Current Audit
 
@@ -25,14 +26,14 @@ the user adds a message and offers adult narrator choices.
   `apps/ios/AnimateAV/AnimateDomain/Models/AnimateVideoCreationModels.swift`.
   `AnimateVideoLook.families` currently contains 8 families with 8 looks each.
 - The simplified create flow uses family navigation for look selection and keeps
-  voice-over selection independent from the chosen look.
+  any dedication control independent from the chosen look.
 - Image generation has a separate enum,
   `AnimateCreateImageLook`, in
   `apps/ios/AnimateAV/Features/Create/AnimateCreateImagesWorkspace.swift`.
   It mirrors the video look families.
-- `AnimateLookVoiceMatrixTests` verifies family size, adult narrator selector
-  count, unique preview assets, asset existence, and that look changes do not
-  alter narrator voice.
+- Existing look matrix tests verify family size, unique preview assets, asset
+  existence, and historical voice independence. Rewrite or remove the voice
+  assertions when the simplified card flow removes narrator UI.
 - There are currently 64 unique `Look*.imageset` preview assets for video
   looks.
 - Look and family titles/subtitles are localized for the shipped runtime
@@ -42,7 +43,8 @@ the user adds a message and offers adult narrator choices.
 ## Product Decision
 
 Use family navigation for the video look selector because look is the strongest
-user-facing control. Voice-over is a separate optional message control.
+user-facing control. Written dedication, if exposed, is a separate optional card
+control.
 
 Current review scope:
 
@@ -52,7 +54,7 @@ Current review scope:
   shipped locales when changing product copy.
 - Review all 64 look images in the app, not only the asset catalog.
 - Keep exactly 8 looks per family and one unique preview asset per look.
-- Keep narrator selection independent from look selection.
+- Keep dedication/message controls independent from look selection.
 
 ## Proposed Families
 

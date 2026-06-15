@@ -62,7 +62,7 @@ Mandatory rules:
   confirmation, queued/running/completed UI states, final artifact handoff, and
   Gallery cleanup. Only the paid provider call is mocked.
 - the normal Animate AV Create Video path is Photo and framing -> Style ->
-  Animation -> optional Message / Voice -> confirmation. Do not reintroduce
+  Animation -> optional written Dedication -> confirmation. Do not reintroduce
   inherited multi-photo edit, sorting, empty media action, or visible crop
   language in this one-photo flow.
 - in the final video flow, `/renders/plan` is the source of truth for cost,

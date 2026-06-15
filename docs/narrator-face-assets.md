@@ -1,7 +1,12 @@
 # Narrator Face Assets
 
-Animate AV currently uses adult voice-over narrators only. The voice-over is an
-off-screen message track; it is not a character voice for people in the photo.
+Status: historical asset provenance. Animate AV V1 is no longer a voice product;
+user-facing narrator, TTS, and voice-tone controls should stay hidden or
+disabled. Keep this document only to explain older asset/test provenance.
+
+Animate AV previously used adult voice-over narrators only. The voice-over was
+an off-screen message track; it was not a character voice for people in the
+photo.
 
 The asset catalog still contains older narrator portraits because historical
 look previews were generated from those references. They are kept as asset
@@ -20,9 +25,9 @@ provenance, not as the current runtime voice selector contract.
 | `elderWoman` | `VoiceElderWoman` | Older woman |
 | `elderMan` | `VoiceElderMan` | Older man, clearly 75-85 |
 
-## Current Runtime Voices
+## Former Runtime Voices
 
-The shipped selector uses:
+The former selector used:
 
 | Voice profile | Asset catalog image | Runtime role |
 | --- | --- | --- |
@@ -37,8 +42,9 @@ The shipped selector uses:
 - Leave enough padding around hair, ears, chin, and shoulders for a circular avatar crop.
 - Use consistent natural daylight, a warm off-white wall or courtyard background, and subtle greenery.
 - Avoid side bands, pillarbox margins, watermarks, text, sunglasses, hats, busy backgrounds, and cropped heads.
-- Runtime narrator portraits must still read at `60x60` in the voice-over
-  picker.
+- Runtime narrator portraits may still exist for historical tests or archived
+  previews, but they are not part of the simplified Animate AV V1 product
+  promise.
 
 ## Legacy Look Reference Matrix
 
@@ -46,15 +52,15 @@ Earlier previews used the eight portrait references as stable identity anchors
 across the look library. That historical matrix is useful only when auditing or
 regenerating preview assets.
 
-Current product behavior:
+Historical product behavior:
 
 - Selecting a look does not change the narrator voice.
-- The voice selector is available only when the user adds a message.
-- Voice-over options are adult narrator choices, independent from the photo
+- The voice selector was available only when the user added a message.
+- Voice-over options were adult narrator choices, independent from the photo
   subjects.
 
-Use `AnimateLookVoiceMatrixTests` as the executable source of truth for the
-64-look family count, two adult narrator choices, unique assets, and the rule
-that look selection does not change the selected narrator.
+Use current Create Video tests as the executable source of truth. Any remaining
+voice-matrix tests should be treated as legacy coverage until the simplified
+card flow removes or rewrites them.
 
 When regenerating any look preview, start from the relevant narrator face and explicitly preserve age, gender presentation, face shape, hairstyle, skin tone, and expression.

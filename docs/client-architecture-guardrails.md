@@ -14,7 +14,7 @@ renders the state returned by the configured backend/realtime layer.
 The current v1 user flow is:
 
 ```text
-Foto y encuadre -> Look -> Animation -> optional Message / Voice -> backend infers duration and quotes credits -> generate animated video -> local download -> Gallery
+Foto y encuadre -> Look -> Animation -> optional written Dedication -> quote credits -> generate animated card -> local download -> Gallery
 ```
 
 The Foto y encuadre step owns source-photo choice, full-photo use, frame
@@ -33,22 +33,22 @@ local original and adjusted image in v1. If metadata is useful, it may identify
 that a frame adjustment was applied, but the private backend should not be
 treated as the source of truth for restoring the user's pre-adjusted photo.
 
-Animation is a separate client setup choice from Message / Voice. It captures
-optional visual direction for what should happen in the animated scene. Message
-and voice remain optional, and a valid one-photo video can be confirmed with no
-message and no narration. Direction templates must travel to the backend as
-stable template IDs. The backend owns the English provider prompt for each
-template; client-localized titles, details, and examples are display copy only.
-Custom visual instructions are capped client-side and sent as user text only
-when the user has actually typed non-empty text.
+Animation is a separate client setup choice from optional written Dedication. It
+captures optional visual direction for what should happen in the animated scene.
+A valid one-photo video can be confirmed with no message, no dedication, and no
+voice. Direction templates must travel to the backend as stable template IDs.
+The backend owns the English provider prompt for each template;
+client-localized titles, details, and examples are display copy only. Custom
+visual instructions are capped client-side and sent as user text only when the
+user has actually typed non-empty text.
 
 Create Video status cards, Avi guidance, summary rows, and fixed action bars
 must follow the guided client state before backend-ready legacy state. A saved
 story direction or previous fixture state is not enough to show credit review.
 Credit review becomes visible only after a renderable local photo exists, the
-user has selected a look/style, and the guided Animation / Message / optional
-Voice path is complete. If the local photo data is missing or cannot decode as
-an image, the client must reset visible state to Foto y encuadre and block
+user has selected a look/style, and the guided Animation / optional Dedication
+path is complete. If the local photo data is missing or cannot decode as an
+image, the client must reset visible state to Foto y encuadre and block
 later-step actions.
 
 Images use the same ownership model with a simpler output: choose one source
@@ -162,11 +162,11 @@ hidden from users.
 
 ## V1 Media Rule
 
-V1 final videos are animated one-photo videos with backend-generated audio. The
-client must not present multi-photo sorting, album-style edit screens, audio
-controls, voice cloning, captions, subtitles, text overlays, or user audio
-uploads as available v1 features. Message and voice presets may be offered only
-as optional setup choices.
+V1 final videos are animated one-photo card videos. The client must not present
+multi-photo sorting, album-style edit screens, audio controls, voice presets,
+voice cloning, captions, subtitles, or user audio uploads as available v1
+features. If a written dedication is exposed, it is a controlled card/compositor
+input, not a prompt asking the model to draw readable text.
 
 Create Video text entry should rely on the native iOS keyboard, including
 system dictation when the user has it enabled. Do not add an in-app microphone

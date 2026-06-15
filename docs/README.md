@@ -55,15 +55,16 @@ generated image and the short animation. Motion guidance is intentionally simple
 and conservative; the client should not promise scene-accurate custom scripts or
 complex choreography.
 
-Message is optional. When present, it is delivered as off-screen narration over
-the video. The client should present narrator choices as voice-over only, not as
-voices for people in the photo. A visual-only video with no message and no
-narration is a valid v1 path.
+Message/dedication is optional. The simplified V1 direction treats Animate AV as
+a visual animated card: user-facing voice-over, narrator tone, voice cloning,
+and custom audio controls should stay hidden or disabled. If a written
+dedication is exposed, it must be rendered by deterministic composition, not by
+asking the generative model to draw readable text inside the image/video.
 
 The client must treat the guided setup state as the source of truth for the
 visible Create Video status. It must not show "Check cost" or "Ready to review
 credits" until a renderable local source photo exists, a look/style is selected,
-and the guided Animation / Message / optional Voice steps have been completed.
+and the guided Animation / optional Dedication steps have been completed.
 If the source photo is missing or no longer renderable, the UI resets to Foto y
 encuadre and hides later steps and credit actions.
 
@@ -77,9 +78,9 @@ downloaded, shared, or used as video input when the signed backend supports that
 state.
 
 The public client should not describe a generated video preview step,
-model/provider choices, generated audio options, captions, subtitles, text
-overlays, or permanent cloud media storage as v1 features. Video output always
-has backend-generated audio in v1; the user does not upload or edit audio.
+model/provider choices, generated audio options, captions, subtitles, voice-over
+controls, or permanent cloud media storage as v1 features. The user does not
+upload, clone, or edit audio in Animate AV V1.
 
 Backend-backed in-progress video/image state and finished Gallery metadata may
 recover after sign-in. Local media files remain device-local availability: a
@@ -94,9 +95,9 @@ behavior blindly; audit the user-facing terminology first.
 
 Create Video style review note: the current target is 8 look families with 8
 looks each, one unique preview asset per look, simple motion guidance, optional
-voice-over message, and synchronized runtime copy for `en`, `es`, `ca`, `fr`,
-and `de`. Do not reintroduce look-to-character-voice coupling; voice-over is
-independent from the people shown in the photo.
+written dedication, and synchronized runtime copy for `en`, `es`, `ca`, `fr`,
+and `de`. Do not reintroduce look-to-character-voice coupling; Animate AV V1 is
+not a voice product.
 
 ## Branding And First Run
 

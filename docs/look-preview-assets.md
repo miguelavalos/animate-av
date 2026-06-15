@@ -14,8 +14,8 @@ portrait = legacyPortraitOrder[indexInFamily]
 ```
 
 where `indexInFamily` is the look position inside its 8-look family. This is
-asset provenance only. Runtime look selection does not change the voice-over
-narrator.
+asset provenance only. Runtime look selection does not imply a narrator or
+voice choice in the simplified Animate AV V1 direction.
 
 The first family grid uses a curated set of 8 `heroAssetName` previews. Keep
 that screen visually balanced by age/gender position where the available assets
@@ -34,6 +34,6 @@ Current asset state:
 - All 64 previews exist as `1024x576` PNG files in matching `Look*.imageset`
   folders.
 - The asset matrix is fully unique: each look has its own `assetName`.
-- `AnimateLookVoiceMatrixTests` verifies family count, family size, adult
-  narrator selector count, unique look preview assets, asset existence, and that
-  look changes do not alter narrator voice.
+- Existing matrix tests verify family count, family size, unique look preview
+  assets, asset existence, and historical voice independence. Rewrite or remove
+  narrator-specific assertions when the simplified card flow removes narrator UI.
