@@ -38,8 +38,12 @@ enum AppConfig {
         Bundle.main.object(forInfoDictionaryKey: "ANIMATEAV_CONVEX_URL") as? String ?? ""
     }
 
-    static var animateAPIBaseURL: String {
+    static var accountAPIBaseURL: String {
         Bundle.main.object(forInfoDictionaryKey: "ACCOUNTAV_API_BASE_URL") as? String ?? ""
+    }
+
+    static var animateAPIBaseURL: String {
+        Bundle.main.object(forInfoDictionaryKey: "ANIMATEAV_API_BASE_URL") as? String ?? ""
     }
 
     static var supportURL: URL {

@@ -91,6 +91,7 @@ INFISICAL_CLIENT_SECRET=
 
 ANIMATEAV_CONVEX_URL=infisical()
 ACCOUNTAV_API_BASE_URL=infisical()
+ANIMATEAV_API_BASE_URL=infisical()
 ACCOUNTAV_PUBLISHABLE_KEY=infisical()
 ANIMATEAV_REVENUECAT_PUBLIC_API_KEY=infisical()
 ANIMATEAV_REVENUECAT_OFFERING_ID=infisical()
@@ -166,6 +167,7 @@ escape_xcconfig_value() {
 
 animate_convex_url="$(read_required_config ANIMATEAV_CONVEX_URL)"
 account_api_base_url="$(read_required_config ACCOUNTAV_API_BASE_URL)"
+animate_api_base_url="$(read_required_config ANIMATEAV_API_BASE_URL)"
 account_publishable_key="$(read_required_config ACCOUNTAV_PUBLISHABLE_KEY)"
 if [ "$env_name" = "prod" ]; then
   account_keychain_access_group="935PM55U6R.com.avalsys.animateav"
@@ -192,6 +194,7 @@ open_source_url="$(read_required_config ANIMATEAV_OPEN_SOURCE_URL)"
 
 require_http_url ANIMATEAV_CONVEX_URL "$animate_convex_url"
 require_http_url ACCOUNTAV_API_BASE_URL "$account_api_base_url"
+require_http_url ANIMATEAV_API_BASE_URL "$animate_api_base_url"
 require_http_url SUPPORTAV_BASE_URL "$support_base_url"
 case "$support_email_to" in
   *@*) ;;
@@ -213,8 +216,10 @@ require_revenuecat_public_key "$revenuecat_api_key"
 
 if [ "$env_name" = "staging" ]; then
   require_expected_url ACCOUNTAV_API_BASE_URL "$account_api_base_url" "https://api-account-av-preview.avalsys.com"
+  require_expected_url ANIMATEAV_API_BASE_URL "$animate_api_base_url" "https://api-animate-av-preview.avalsys.com"
 elif [ "$env_name" = "prod" ]; then
   require_expected_url ACCOUNTAV_API_BASE_URL "$account_api_base_url" "https://api-account-av.avalsys.com"
+  require_expected_url ANIMATEAV_API_BASE_URL "$animate_api_base_url" "https://api-animate-av.avalsys.com"
 fi
 
 generated_at="$(date -u '+%Y-%m-%dT%H:%M:%SZ')"
@@ -233,6 +238,7 @@ ANIMATEAV_REVENUECAT_OFFERING_ID = $revenuecat_offering_id
 ANIMATEAV_REVENUECAT_MONTHLY_PACKAGE_ID = $revenuecat_monthly_package_id
 ANIMATEAV_IOS_SENTRY_DSN = $(escape_xcconfig_value "$animateav_ios_sentry_dsn")
 ACCOUNTAV_API_BASE_URL = $(escape_xcconfig_value "$account_api_base_url")
+ANIMATEAV_API_BASE_URL = $(escape_xcconfig_value "$animate_api_base_url")
 ANIMATEAV_CONVEX_URL = $(escape_xcconfig_value "$animate_convex_url")
 SUPPORTAV_BASE_URL = $(escape_xcconfig_value "$support_base_url")
 SUPPORT_EMAIL_TO = $support_email_to

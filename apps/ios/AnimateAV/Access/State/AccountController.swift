@@ -36,7 +36,7 @@ final class AccountController: ObservableObject {
         userDefaults: UserDefaults = .standard
     ) {
         self.service = service
-        self.accountProfileClient = accountProfileClient ?? AnimateAccountProfileClient(baseURLString: AppConfig.animateAPIBaseURL)
+        self.accountProfileClient = accountProfileClient ?? AnimateAccountProfileClient(baseURLString: AppConfig.accountAPIBaseURL)
         self.balanceClient = balanceClient ?? AnimateCreditBalanceClient(baseURLString: AppConfig.animateAPIBaseURL)
         self.promoCodeClient = promoCodeClient ?? AnimatePromoCodeClient(baseURLString: AppConfig.animateAPIBaseURL)
         self.purchaseService = purchaseService

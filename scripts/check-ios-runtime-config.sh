@@ -5,8 +5,10 @@ repo_root="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 env_name=""
 configuration="Debug"
 destination_args=(-destination "generic/platform=iOS")
-preview_worker_api_url="https://api-account-av-preview.avalsys.com"
-production_worker_api_url="https://api-account-av.avalsys.com"
+preview_account_api_url="https://api-account-av-preview.avalsys.com"
+production_account_api_url="https://api-account-av.avalsys.com"
+preview_animate_api_url="https://api-animate-av-preview.avalsys.com"
+production_animate_api_url="https://api-animate-av.avalsys.com"
 
 usage() {
   cat <<'USAGE'
@@ -97,7 +99,8 @@ require_present() {
 
 product_bundle_identifier="$(setting PRODUCT_BUNDLE_IDENTIFIER)"
 config_environment="$(setting ANIMATEAV_CONFIG_ENVIRONMENT)"
-api_base_url="$(setting ACCOUNTAV_API_BASE_URL)"
+account_api_base_url="$(setting ACCOUNTAV_API_BASE_URL)"
+animate_api_base_url="$(setting ANIMATEAV_API_BASE_URL)"
 convex_url="$(setting ANIMATEAV_CONVEX_URL)"
 publishable_key="$(setting ACCOUNTAV_PUBLISHABLE_KEY)"
 keychain_service="$(setting ACCOUNTAV_KEYCHAIN_SERVICE)"
@@ -119,7 +122,8 @@ code_sign_entitlements="$(setting CODE_SIGN_ENTITLEMENTS)"
 for item in \
   "PRODUCT_BUNDLE_IDENTIFIER:$product_bundle_identifier" \
   "ANIMATEAV_CONFIG_ENVIRONMENT:$config_environment" \
-  "ACCOUNTAV_API_BASE_URL:$api_base_url" \
+  "ACCOUNTAV_API_BASE_URL:$account_api_base_url" \
+  "ANIMATEAV_API_BASE_URL:$animate_api_base_url" \
   "ANIMATEAV_CONVEX_URL:$convex_url" \
   "ACCOUNTAV_PUBLISHABLE_KEY:$publishable_key" \
   "ACCOUNTAV_KEYCHAIN_SERVICE:$keychain_service" \
@@ -170,11 +174,13 @@ elif [ "$configuration" = "Debug" ]; then
 fi
 
 if [ "$env_name" = "prod" ]; then
-  [ "$api_base_url" = "$production_worker_api_url" ] || fail "prod API URL mismatch"
+  [ "$account_api_base_url" = "$production_account_api_url" ] || fail "prod Account API URL mismatch"
+  [ "$animate_api_base_url" = "$production_animate_api_url" ] || fail "prod Animate API URL mismatch"
   [[ "$publishable_key" == pk_live_* ]] || fail "prod publishable key must use pk_live"
   if printf '%s\n%s\n%s\n%s\n%s\n%s\n%s\n' \
       "$product_bundle_identifier" \
-      "$api_base_url" \
+      "$account_api_base_url" \
+      "$animate_api_base_url" \
       "$convex_url" \
       "$support_base_url" \
       "$privacy_url" \
@@ -184,10 +190,12 @@ if [ "$env_name" = "prod" ]; then
     fail "prod settings contain preview/local/dev values"
   fi
 elif [ "$env_name" = "staging" ]; then
-  [ "$api_base_url" = "$preview_worker_api_url" ] || fail "staging API URL mismatch"
+  [ "$account_api_base_url" = "$preview_account_api_url" ] || fail "staging Account API URL mismatch"
+  [ "$animate_api_base_url" = "$preview_animate_api_url" ] || fail "staging Animate API URL mismatch"
   [[ "$publishable_key" == pk_test_* ]] || fail "staging publishable key must use pk_test"
 else
-  [ "$api_base_url" = "$preview_worker_api_url" ] || fail "dev API URL must be preview worker"
+  [ "$account_api_base_url" = "$preview_account_api_url" ] || fail "dev Account API URL must be preview worker"
+  [ "$animate_api_base_url" = "$preview_animate_api_url" ] || fail "dev Animate API URL must be preview worker"
   [[ "$publishable_key" == pk_test_* ]] || fail "$env_name publishable key must use pk_test"
 fi
 
@@ -209,7 +217,8 @@ Animate AV iOS runtime config ($env_name)
   build number: $current_project_version
   config environment: $config_environment
   development team: ${development_team:-unknown}
-  Account AV API: $api_base_url
+  Account AV API: $account_api_base_url
+  Animate AV API: $animate_api_base_url
   Account AV keychain service: $keychain_service
   Account AV keychain access group: $keychain_access_group
   Convex URL: $convex_url

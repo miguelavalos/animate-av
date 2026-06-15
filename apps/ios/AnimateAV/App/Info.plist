@@ -43,6 +43,8 @@
 	<string>$(ANIMATEAV_CONVEX_URL)</string>
 	<key>ACCOUNTAV_API_BASE_URL</key>
 	<string>$(ACCOUNTAV_API_BASE_URL)</string>
+	<key>ANIMATEAV_API_BASE_URL</key>
+	<string>$(ANIMATEAV_API_BASE_URL)</string>
 	<key>SUPPORTAV_BASE_URL</key>
 	<string>$(SUPPORTAV_BASE_URL)</string>
 	<key>SUPPORT_EMAIL_TO</key>
