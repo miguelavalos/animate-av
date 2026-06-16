@@ -43,6 +43,7 @@ final class AccountControllerSessionRestoreTests: XCTestCase {
             userDefaults: isolatedUserDefaults()
         )
         await controller.syncFromAccountProvider()
+        await waitForCreditBalanceLoaded(controller)
         XCTAssertEqual(controller.creditBalanceLoadState, .loaded)
 
         AccountControllerURLProtocol.balanceError = URLError(.cancelled)
@@ -336,6 +337,16 @@ final class AccountControllerSessionRestoreTests: XCTestCase {
         let userDefaults = UserDefaults(suiteName: suiteName)!
         userDefaults.removePersistentDomain(forName: suiteName)
         return userDefaults
+    }
+
+    private func waitForCreditBalanceLoaded(
+        _ controller: AccountController,
+        timeoutNanoseconds: UInt64 = 250_000_000
+    ) async {
+        let deadline = ContinuousClock.now.advanced(by: .nanoseconds(Int(timeoutNanoseconds)))
+        while controller.creditBalanceLoadState != .loaded, ContinuousClock.now < deadline {
+            try? await Task.sleep(nanoseconds: 5_000_000)
+        }
     }
 }
 

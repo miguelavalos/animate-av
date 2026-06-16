@@ -10,6 +10,7 @@ struct AnimateAppBootstrapView: View {
     @State private var authenticationWasSkipped = false
     @State private var initialSplashIsPresented = true
     @State private var initialAccountRestoreCompleted = false
+    @State private var initialAccountRestoreInProgress = false
     @State private var didApplyLaunchTab = false
     @State private var postAuthenticationSplashIsPresented = false
 
@@ -62,8 +63,7 @@ struct AnimateAppBootstrapView: View {
         }
         .task(id: scenePhase) {
             guard scenePhase == .active else { return }
-            await dependencies.accountController.syncFromAccountProvider()
-            initialAccountRestoreCompleted = true
+            await restoreInitialAccountSessionIfNeeded()
         }
         .onReceive(dependencies.accountController.currentUserIdPublisher) { ownerUserId in
             dependencies.handleAccountChange(ownerUserId: ownerUserId)
@@ -114,6 +114,9 @@ struct AnimateAppBootstrapView: View {
 
     private func restoreInitialAccountSessionIfNeeded() async {
         guard !initialAccountRestoreCompleted else { return }
+        guard !initialAccountRestoreInProgress else { return }
+        initialAccountRestoreInProgress = true
+        defer { initialAccountRestoreInProgress = false }
         await dependencies.accountController.syncFromAccountProvider()
         initialAccountRestoreCompleted = true
     }
@@ -140,14 +143,12 @@ struct AnimateAppBootstrapView: View {
 
     private func startAppleSignIn() async throws {
         try await dependencies.accountController.signInWithApple()
-        await dependencies.accountController.syncFromAccountProvider()
         authenticationWasSkipped = false
         authPresentationState = .hidden
     }
 
     private func startGoogleSignIn() async throws {
         try await dependencies.accountController.signInWithGoogle()
-        await dependencies.accountController.syncFromAccountProvider()
         authenticationWasSkipped = false
         authPresentationState = .hidden
     }
