@@ -19,8 +19,10 @@ implementation plan.
 - Every final look has a unique `Look*.imageset` preview asset.
 - Look selection is independent from Animation and optional written
   Message/Dedication.
-- Animation is its own guided Create Video step after Look and before
-  Message/Dedication.
+- The Look step must stay focused on visual style. Do not add animation preset
+  cards, message inputs, voice controls, or audio controls to the look flow.
+- Animation guidance is collected as free text in the next guided step, together
+  with optional written Message/Dedication.
 - Animate AV V1 is not a voice product. Do not add visible narrator, voice,
   tone, generated-audio, or in-app audio controls to the look flow.
 
@@ -29,23 +31,22 @@ implementation plan.
 The visible guided setup order is:
 
 ```text
-Photo and framing -> Look & Animation -> optional written Message/Dedication
+Photo and framing -> Look -> Guide and optional written Message/Dedication
 ```
 
 Credit review becomes visible only after:
 
 - a renderable local source photo exists;
 - a look has been selected;
-- the Look & Animation step has captured either the default motion, a template,
-  or optional custom guidance;
-- the optional Message/Dedication step has been completed or skipped.
+- the Guide and optional Message/Dedication step has been completed or skipped.
 
-The setup summary must show Photo/framing, Look & Animation, and Message in
-that order.
+The setup summary must show Photo/framing, Look, and Guide and Message in that
+order.
 
 Any compact/basic guide shown outside the sheet must mirror the same setup
-state. It can point the user to the next required action, but it must not merge
-Look and Animation or add a separate review step before credit confirmation.
+state. It can point the user to the next required action, but it must not put
+animation presets or message entry back into the Look step, and it must not add
+a separate review step before credit confirmation.
 
 ## Families And Looks
 
@@ -162,6 +163,6 @@ After any look picker, look model, preview asset, or visible look copy change:
 - run `AnimateLookFamilyMatrixTests`;
 - build the iOS app for Simulator;
 - inspect the family grid and at least two complete family detail screens;
-- verify the guided Create Video summary still shows Photo/framing, Look,
-  Animation, and Message in order;
+- verify the guided Create Video summary still shows Photo/framing, Look, and
+  Guide and Message in order;
 - check that no visible voice/audio/tone controls appear in Create Video.

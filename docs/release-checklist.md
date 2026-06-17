@@ -27,7 +27,7 @@ in the private AVALSYS suite.
   before the signed smoke.
 - [ ] Focused tests pass or failures are documented in the private handoff.
 - [ ] Create Video no-spend smoke reaches
-  `Foto y encuadre -> Look & Animation -> optional written Dedication -> confirmation`
+  `Foto y encuadre -> Look -> Guide and optional written Dedication -> confirmation`
   using fixture/mock final-render routes, with no paid provider calls.
 - [ ] Foto y encuadre smoke covers choose photo, adjust frame, re-enter frame
   adjustment from the locally retained original, restore original when
