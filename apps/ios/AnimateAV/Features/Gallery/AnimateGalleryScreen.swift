@@ -837,7 +837,8 @@ private struct AnimateGalleryBeforeAfterImageView: View {
     var body: some View {
         GeometryReader { proxy in
             ZStack(alignment: .leading) {
-                if let sourceImage, let generatedImage {
+                switch displayState {
+                case let .comparison(sourceImage, generatedImage):
                     Image(uiImage: generatedImage)
                         .resizable()
                         .scaledToFill()
@@ -873,14 +874,21 @@ private struct AnimateGalleryBeforeAfterImageView: View {
                         }
                         .shadow(color: .black.opacity(0.20), radius: 10, y: 4)
                         .position(x: proxy.size.width * reveal, y: proxy.size.height / 2)
-                } else {
-                    AnimateGalleryImageThumbnail(url: generatedImageURL)
+                case let .single(image):
+                    Image(uiImage: image)
+                        .resizable()
+                        .scaledToFill()
+                        .frame(width: proxy.size.width, height: proxy.size.height)
+                        .clipped()
+                case .placeholder:
+                    AnimateGalleryVideoThumbnail(url: nil, isAvailable: false)
                 }
             }
             .contentShape(Rectangle())
             .gesture(
                 DragGesture(minimumDistance: 0)
                     .onChanged { value in
+                        guard case .comparison = displayState else { return }
                         let width = max(proxy.size.width, 1)
                         reveal = min(max(value.location.x / width, 0), 1)
                     }
@@ -890,6 +898,25 @@ private struct AnimateGalleryBeforeAfterImageView: View {
             sourceImage = Self.loadImage(url: sourceImageURL)
             generatedImage = Self.loadImage(url: generatedImageURL)
         }
+    }
+
+    private var displayState: DisplayState {
+        switch (sourceImage, generatedImage) {
+        case let (.some(sourceImage), .some(generatedImage)):
+            return .comparison(sourceImage: sourceImage, generatedImage: generatedImage)
+        case let (_, .some(generatedImage)):
+            return .single(generatedImage)
+        case let (.some(sourceImage), nil):
+            return .single(sourceImage)
+        case (nil, nil):
+            return .placeholder
+        }
+    }
+
+    private enum DisplayState {
+        case comparison(sourceImage: UIImage, generatedImage: UIImage)
+        case single(UIImage)
+        case placeholder
     }
 
     private var comparisonLabels: some View {
