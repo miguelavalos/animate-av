@@ -706,9 +706,13 @@ private struct AnimateGalleryVideoMenu: View {
         } label: {
             Image(systemName: "ellipsis")
                 .font(.system(size: 15, weight: .black))
-                .foregroundStyle(AVBrandColor.textPrimary)
+                .foregroundStyle(.white)
                 .frame(width: 42, height: 42)
-                .background(.white.opacity(0.92), in: Circle())
+                .background(.black.opacity(0.36), in: Circle())
+                .overlay(
+                    Circle()
+                        .stroke(.white.opacity(0.18), lineWidth: 1)
+                )
         }
     }
 }
