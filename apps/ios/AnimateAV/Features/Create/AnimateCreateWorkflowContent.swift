@@ -427,6 +427,8 @@ private struct AnimateCreateMediaFirstWorkspace: View {
     }
 
     private func discardCurrentVideoCreation() {
+        waitsForFinalRenderPlan = false
+        showsCreateVideoConfirmation = false
         discardVideoCreation()
     }
 
@@ -1564,40 +1566,62 @@ private struct AnimateCreateVideoDirectionCard: View {
                 }
             }
         case .scriptIdea:
-            VStack(alignment: .leading, spacing: 10) {
-                stepHeader(L10n.string("create.guided.script.title"), L10n.string("create.guided.script.detail"))
+            VStack(alignment: .leading, spacing: 18) {
+                Text(L10n.string("create.guided.script.title"))
+                    .font(.system(size: 20, weight: .black))
+                    .foregroundStyle(AVBrandColor.textPrimary)
+                    .lineLimit(2)
+                    .fixedSize(horizontal: false, vertical: true)
+
                 animationGuidanceSection
 
-                LazyVGrid(columns: Array(repeating: GridItem(.flexible(), spacing: 8), count: 2), spacing: 8) {
-                    AnimateCreateGuidedMessageModeTile(
-                        title: L10n.string("create.guided.script.none"),
-                        detail: L10n.string("create.guided.script.none.preview"),
-                        systemImage: "sparkles",
-                        isSelected: guideState.selectedScriptIdea == .none && !hasMessage,
-                        select: {
-                            guideState.selectScriptIdea(.none)
-                            form.hasMessage = false
-                            form.voiceEnabled = false
-                            updateMessage("")
-                        }
-                    )
-                    AnimateCreateGuidedMessageModeTile(
-                        title: L10n.string("create.guided.script.message"),
-                        detail: L10n.string("create.guided.script.custom.preview"),
-                        systemImage: "text.bubble.fill",
-                        isSelected: wantsMessage,
-                        select: {
-                            guideState.selectScriptIdea(.custom)
-                            form.hasMessage = hasMessage
-                            form.voiceEnabled = false
-                        }
-                    )
+                VStack(alignment: .leading, spacing: 10) {
+                    Rectangle()
+                        .fill(AVBrandColor.borderSubtle.opacity(0.55))
+                        .frame(height: 1)
+                        .padding(.bottom, 2)
+
+                    VStack(alignment: .leading, spacing: 4) {
+                        Text(L10n.string("create.guided.message.sectionTitle"))
+                            .font(.system(size: 14, weight: .black))
+                            .foregroundStyle(AVBrandColor.textPrimary)
+                        Text(L10n.string("create.guided.message.sectionDetail"))
+                            .font(.caption.weight(.semibold))
+                            .foregroundStyle(AVBrandColor.textSecondary)
+                            .fixedSize(horizontal: false, vertical: true)
+                    }
+
+                    LazyVGrid(columns: Array(repeating: GridItem(.flexible(), spacing: 8), count: 2), spacing: 8) {
+                        AnimateCreateGuidedMessageModeTile(
+                            title: L10n.string("create.guided.script.none"),
+                            detail: L10n.string("create.guided.script.none.preview"),
+                            systemImage: "sparkles",
+                            isSelected: guideState.selectedScriptIdea == .none && !hasMessage,
+                            select: {
+                                guideState.selectScriptIdea(.none)
+                                form.hasMessage = false
+                                form.voiceEnabled = false
+                                updateMessage("")
+                            }
+                        )
+                        AnimateCreateGuidedMessageModeTile(
+                            title: L10n.string("create.guided.script.message"),
+                            detail: L10n.string("create.guided.script.custom.preview"),
+                            systemImage: "text.bubble.fill",
+                            isSelected: wantsMessage,
+                            select: {
+                                guideState.selectScriptIdea(.custom)
+                                form.hasMessage = hasMessage
+                                form.voiceEnabled = false
+                            }
+                        )
+                    }
                 }
 
                 if wantsMessage {
                     VStack(alignment: .leading, spacing: 8) {
                         HStack {
-                            Text(L10n.string("create.guided.script.message"))
+                            Text(L10n.string("create.guided.message.inputLabel"))
                                 .font(.system(size: 12, weight: .black))
                             Spacer()
                             if hasMessage {
@@ -1773,13 +1797,19 @@ private struct AnimateCreateVideoDirectionCard: View {
 
     private var animationGuidanceSection: some View {
         VStack(alignment: .leading, spacing: 10) {
-            Text(L10n.string("create.guided.direction.tip"))
-                .font(.caption.weight(.semibold))
-                .foregroundStyle(AVBrandColor.textSecondary)
+            VStack(alignment: .leading, spacing: 4) {
+                Text(L10n.string("create.guided.direction.customLabel"))
+                    .font(.system(size: 14, weight: .black))
+                    .foregroundStyle(AVBrandColor.textPrimary)
+                Text(L10n.string("create.guided.direction.tip"))
+                    .font(.caption.weight(.semibold))
+                    .foregroundStyle(AVBrandColor.textSecondary)
+                    .fixedSize(horizontal: false, vertical: true)
+            }
 
             VStack(alignment: .leading, spacing: 8) {
                 HStack {
-                    Text(L10n.string("create.guided.direction.customLabel"))
+                    Text(L10n.string("create.guided.direction.inputLabel"))
                         .font(.system(size: 12, weight: .black))
                         .foregroundStyle(AVBrandColor.textPrimary)
                     Spacer()
@@ -4320,8 +4350,11 @@ private struct AnimateCreateLookFamilyNavigator: View {
                 .font(.system(size: 14, weight: .black))
                 .foregroundStyle(AVBrandColor.textPrimary)
                 .frame(width: 36, height: 36)
-                .background(.white.opacity(0.92), in: Circle())
-                .shadow(color: AVBrandColor.ink.opacity(0.06), radius: 8, x: 0, y: 3)
+                .background(AVBrandColor.mutedSurface.opacity(0.92), in: Circle())
+                .overlay {
+                    Circle()
+                        .stroke(AVBrandColor.borderSubtle.opacity(0.72), lineWidth: 1)
+                }
         }
         .buttonStyle(.plain)
         .accessibilityLabel(accessibilityLabel)

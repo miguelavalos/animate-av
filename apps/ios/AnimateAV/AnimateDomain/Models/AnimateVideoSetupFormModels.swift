@@ -190,7 +190,7 @@ extension AnimateVideoSetupTone {
 
 enum AnimateVideoSetupLimits {
     static let messageCharacterLimit = 150
-    static let animationDirectionCharacterLimit = 150
+    static let animationDirectionCharacterLimit = 80
 }
 
 struct AnimateVideoSetupForm: Equatable {
