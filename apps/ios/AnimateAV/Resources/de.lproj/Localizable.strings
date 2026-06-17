@@ -243,6 +243,7 @@
 "gallery.video.localFileMissing" = "Lokale Datei fehlt";
 "gallery.video.savedOnDevice" = "Auf diesem Gerät gespeichert";
 "gallery.video.downloadAvailable" = "Download verfügbar";
+"gallery.video.downloadAction" = "Laden";
 "gallery.video.downloadUnavailable" = "Download nicht verfügbar";
 "gallery.video.remoteMetadataOnly" = "Nur Cloud-Metadaten";
 "gallery.video.redownload" = "Erneut laden";

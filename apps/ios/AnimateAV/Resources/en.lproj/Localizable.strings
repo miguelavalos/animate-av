@@ -357,6 +357,7 @@
 "gallery.video.localFileMissing" = "Local file missing";
 "gallery.video.savedOnDevice" = "Saved on this device";
 "gallery.video.downloadAvailable" = "Download available";
+"gallery.video.downloadAction" = "Download";
 "gallery.video.downloadUnavailable" = "Download unavailable";
 "gallery.video.remoteMetadataOnly" = "Cloud metadata only";
 "gallery.video.redownload" = "Download again";

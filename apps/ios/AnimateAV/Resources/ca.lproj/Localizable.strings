@@ -354,6 +354,7 @@
 "gallery.video.localFileMissing" = "Falta el fitxer local";
 "gallery.video.savedOnDevice" = "Desat en aquest dispositiu";
 "gallery.video.downloadAvailable" = "Descàrrega disponible";
+"gallery.video.downloadAction" = "Baixar";
 "gallery.video.downloadUnavailable" = "Descàrrega no disponible";
 "gallery.video.remoteMetadataOnly" = "Només metadades al núvol";
 "gallery.video.redownload" = "Torna a descarregar";

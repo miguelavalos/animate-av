@@ -354,6 +354,7 @@
 "gallery.video.localFileMissing" = "Fichier local manquant";
 "gallery.video.savedOnDevice" = "Enregistrée sur cet appareil";
 "gallery.video.downloadAvailable" = "Téléchargement disponible";
+"gallery.video.downloadAction" = "Télécharger";
 "gallery.video.downloadUnavailable" = "Téléchargement indisponible";
 "gallery.video.remoteMetadataOnly" = "Métadonnées cloud uniquement";
 "gallery.video.redownload" = "Télécharger à nouveau";

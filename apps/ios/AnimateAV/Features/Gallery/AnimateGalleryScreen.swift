@@ -564,11 +564,24 @@ private struct AnimateGalleryVideoRow: View {
                     Spacer(minLength: 0)
 
                     HStack {
-                        Text(video.displayTitle)
-                            .font(.system(size: 22, weight: .black))
-                            .foregroundStyle(.white)
-                            .lineLimit(1)
-                            .minimumScaleFactor(0.82)
+                        VStack(alignment: .leading, spacing: 6) {
+                            Text(video.displayTitle)
+                                .font(.system(size: 22, weight: .black))
+                                .foregroundStyle(.white)
+                                .lineLimit(1)
+                                .minimumScaleFactor(0.82)
+
+                            if let availabilityBadgeTitle {
+                                Text(availabilityBadgeTitle)
+                                    .font(.system(size: 11, weight: .black))
+                                    .foregroundStyle(.white)
+                                    .lineLimit(1)
+                                    .minimumScaleFactor(0.86)
+                                    .padding(.horizontal, 9)
+                                    .padding(.vertical, 5)
+                                    .background(availabilityBadgeBackground, in: Capsule())
+                            }
+                        }
 
                         Spacer(minLength: 0)
                     }
@@ -581,6 +594,23 @@ private struct AnimateGalleryVideoRow: View {
         }
         .buttonStyle(.plain)
         .disabled(!video.isLocalFileAvailable && !video.canDownload)
+    }
+
+    private var availabilityBadgeTitle: String? {
+        switch video.availability {
+        case .savedOnDevice:
+            nil
+        case .downloadAvailable:
+            L10n.string("gallery.video.downloadAction")
+        case .localFileMissing:
+            video.availabilityTitle
+        case .downloadUnavailable, .remoteMetadataOnly:
+            L10n.string("gallery.video.downloadUnavailable")
+        }
+    }
+
+    private var availabilityBadgeBackground: Color {
+        video.canDownload ? AVBrandColor.accent.opacity(0.86) : .black.opacity(0.42)
     }
 
     private func primaryAction() {
