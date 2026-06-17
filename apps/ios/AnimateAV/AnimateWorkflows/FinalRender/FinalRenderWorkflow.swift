@@ -944,6 +944,13 @@ final class FinalRenderWorkflow: WorkspaceObservingWorkflow {
     @discardableResult
     func finishFinalExportToGallery() -> Bool {
         guard let pendingGalleryVideo else {
+            if let finalExport,
+               galleryStore.contains(artifactId: finalDownloadArtifactId(for: finalExport)) {
+                canRetryFinalVideoDownload = false
+                statusMessage = L10n.string("workflow.final.movedToGallery")
+                return true
+            }
+
             statusMessage = L10n.string("workflow.final.downloadBeforeGallery")
             return false
         }
