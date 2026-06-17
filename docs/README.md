@@ -40,7 +40,7 @@ handoff values belong in the private AVALSYS suite.
 V1 is a signed-in one-photo animation workflow:
 
 ```text
-Foto y encuadre -> Look and motion -> optional Message -> Check cost -> Create video -> local download -> Gallery
+Foto y encuadre -> Look -> Animation -> optional Message -> Check cost -> Create video -> local download -> Gallery
 ```
 
 Foto y encuadre is the normal source-photo step: choose one photo, use the full
@@ -50,10 +50,9 @@ workflow. The client may retain the imported original locally while the draft is
 editable so re-entering frame adjustment and restore-original work without
 backend state.
 
-Look and motion is the main creative choice. The selected look guides both the
-generated image and the short animation. Motion guidance is intentionally simple
-and conservative; the client should not promise scene-accurate custom scripts or
-complex choreography.
+Look is the main visual style choice. Animation is a separate guided setup step
+that captures simple, conservative motion direction for the short video. The
+client should not promise scene-accurate custom scripts or complex choreography.
 
 Message/dedication is optional. The simplified V1 direction treats Animate AV as
 a visual animated card: user-facing voice-over, narrator tone, voice cloning,
@@ -67,6 +66,10 @@ credits" until a renderable local source photo exists, a look/style is selected,
 and the guided Animation / optional Dedication steps have been completed.
 If the source photo is missing or no longer renderable, the UI resets to Foto y
 encuadre and hides later steps and credit actions.
+
+The basic guide is a compact status/helper surface for the same setup order. It
+is not an additional step and must not describe unavailable audio, voice,
+provider, preview-versioning, or cloud-storage features.
 
 Local no-spend QA may use fixture or mock final-render routes to reach the
 confirmation and queued/completed states. Do not use public docs to authorize a
@@ -93,11 +96,11 @@ Current polish note: the implementation still contains visible `Gallery` and
 under product review for Animate AV. Do not rename backend/local-first media
 behavior blindly; audit the user-facing terminology first.
 
-Create Video style review note: the current target is 8 look families with 8
-looks each, one unique preview asset per look, simple motion guidance, optional
-written dedication, and synchronized runtime copy for `en`, `es`, `ca`, `fr`,
-and `de`. Do not reintroduce look-to-character-voice coupling; Animate AV V1 is
-not a voice product.
+Create Video style review note: the shipped client has 8 look families with 8
+looks each, one unique preview asset per look, Animation as its own guided step,
+optional written Message/Dedication, and synchronized runtime copy for `en`,
+`es`, `ca`, `fr`, and `de`. Do not reintroduce look-to-character-voice
+coupling; Animate AV V1 is not a voice product.
 
 ## Branding And First Run
 

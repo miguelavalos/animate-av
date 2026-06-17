@@ -761,16 +761,6 @@ private struct AnimateCreateRenderProgressScene: View {
                         aviGuideBadge(systemImage: "sparkles")
                     }
                     .transition(.blurReplace)
-            case .voiceover:
-                photoLayer(image: styledPreviewImage, isStyled: true)
-                    .overlay(alignment: .bottom) {
-                        voiceoverWaves
-                            .padding(.bottom, 26)
-                    }
-                    .overlay(alignment: .bottomTrailing) {
-                        aviGuideBadge(systemImage: "waveform")
-                    }
-                    .transition(.blurReplace)
             case .animatingVideo:
                 photoLayer(image: styledPreviewImage, isStyled: true)
                     .overlay {
@@ -892,20 +882,6 @@ private struct AnimateCreateRenderProgressScene: View {
                 .background(AVBrandColor.accent, in: Circle())
                 .offset(x: 30, y: 22)
         }
-    }
-
-    private var voiceoverWaves: some View {
-        HStack(spacing: 5) {
-            ForEach(0..<7, id: \.self) { index in
-                Capsule()
-                    .fill(.white.opacity(0.92))
-                    .frame(width: 6, height: isAnimating ? CGFloat(16 + (index % 3) * 9) : CGFloat(10 + ((index + 1) % 3) * 8))
-                    .animation(.easeInOut(duration: 0.55).repeatForever(autoreverses: true).delay(Double(index) * 0.06), value: isAnimating)
-            }
-        }
-        .padding(.horizontal, 16)
-        .padding(.vertical, 10)
-        .background(.black.opacity(0.30), in: Capsule())
     }
 
     private var videoMotionOverlay: some View {
@@ -1574,7 +1550,6 @@ private struct AnimateCreateVideoDirectionCard: View {
                     if selectedLook != nil {
                         selectedLookStrip
                     }
-                    guidedMotionSelector
                 }
             }
             .onAppear {
@@ -1773,7 +1748,7 @@ private struct AnimateCreateVideoDirectionCard: View {
     }
 
     private var activeSteps: [GuidedStep] {
-        [.photoFrame, .look, .scriptIdea]
+        [.photoFrame, .look, .movement, .scriptIdea]
     }
 
     @ViewBuilder
@@ -1791,6 +1766,12 @@ private struct AnimateCreateVideoDirectionCard: View {
                     detail: selectedLookTitle,
                     icon: "paintbrush.pointed.fill",
                     editStep: .look
+                )
+                summaryEditRow(
+                    title: L10n.string("create.guided.summary.movement"),
+                    detail: animationSummaryDetail,
+                    icon: "camera.aperture",
+                    editStep: .movement
                 )
                 summaryEditRow(
                     title: L10n.string("create.guided.summary.message"),
@@ -1812,30 +1793,6 @@ private struct AnimateCreateVideoDirectionCard: View {
 
     private var selectedLookTitle: String {
         selectedLook?.title ?? L10n.string("create.guided.look.noneSelected.title")
-    }
-
-    private var guidedMotionSelector: some View {
-        VStack(alignment: .leading, spacing: 7) {
-            HStack(spacing: 8) {
-                Text(L10n.string("create.guided.motion.title"))
-                    .font(.system(size: 12, weight: .black))
-                    .foregroundStyle(AVBrandColor.textPrimary)
-                Text(selectedAnimationDirectionPreset.title)
-                    .font(.caption.weight(.bold))
-                    .foregroundStyle(AVBrandColor.textSecondary)
-                Spacer()
-            }
-            LazyVGrid(columns: Array(repeating: GridItem(.flexible(), spacing: 6), count: 3), spacing: 6) {
-                ForEach(AnimationDirectionPreset.motionOptions) { preset in
-                    AnimateCreateGuidedMotionTile(
-                        preset: preset,
-                        isSelected: selectedAnimationDirectionPreset == preset,
-                        select: { applyAnimationDirectionPreset(preset) }
-                    )
-                }
-            }
-        }
-        .padding(.top, 2)
     }
 
     private var photoFrameSummaryDetail: String {
@@ -1978,10 +1935,10 @@ private struct AnimateCreateVideoDirectionCard: View {
         case .look:
             return selectedLook == nil
                 ? L10n.string("create.guided.look.noneSelected.title")
-                : L10n.string("create.guided.continue.message")
-        case .scriptIdea:
-            return L10n.string("create.guided.continue.finish")
+                : L10n.string("create.guided.continue.movement")
         case .movement:
+            return L10n.string("create.guided.continue.message")
+        case .scriptIdea:
             return L10n.string("create.guided.continue.finish")
         }
     }
@@ -2091,7 +2048,7 @@ private struct AnimateCreateVideoDirectionCard: View {
             return "paintbrush.pointed.fill"
         }
         if !isEffectiveGuidedFlowComplete {
-            return "text.bubble.fill"
+            return guideState.step == .scriptIdea ? "text.bubble.fill" : "camera.aperture"
         }
         return videoDirection.iconName
     }
@@ -2104,7 +2061,9 @@ private struct AnimateCreateVideoDirectionCard: View {
             return L10n.string("create.guided.look.title")
         }
         if !isEffectiveGuidedFlowComplete {
-            return L10n.string("create.guided.script.title")
+            return guideState.step == .scriptIdea
+                ? L10n.string("create.guided.script.title")
+                : L10n.string("create.guided.movement.title")
         }
         return L10n.string("create.storyDirection.cardTitle")
     }
@@ -2117,7 +2076,9 @@ private struct AnimateCreateVideoDirectionCard: View {
             return L10n.string("create.guided.look.noneSelected.title")
         }
         if !isEffectiveGuidedFlowComplete {
-            return L10n.string("create.guided.script.detail")
+            return guideState.step == .scriptIdea
+                ? L10n.string("create.guided.script.detail")
+                : L10n.string("create.guided.movement.detail")
         }
         return videoDirection.statusMessage
     }
@@ -2271,9 +2232,9 @@ struct AnimateCreateVideoSetupGuideState: Equatable {
             guard hasSelectedLook else {
                 return ContinueResult(activeSheet: .look)
             }
-            step = .scriptIdea
+            step = .movement
             isComplete = false
-            return ContinueResult(activeSheet: .scriptIdea)
+            return ContinueResult(activeSheet: .movement)
         case .movement:
             step = .scriptIdea
             isComplete = false
@@ -2552,10 +2513,6 @@ enum AnimationDirectionPreset: String, CaseIterable, Identifiable, AnimateCreate
     var id: String { rawValue }
 
     static var menuOptions: [AnimationDirectionPreset] {
-        motionOptions
-    }
-
-    static var motionOptions: [AnimationDirectionPreset] {
         [.none, .celebration, .gentleReveal, .playful, .cinematic]
     }
 
@@ -2828,36 +2785,6 @@ private struct AnimateCreateGuidedMessageModeTile: View {
             }
             .padding(12)
             .frame(maxWidth: .infinity, minHeight: 104, alignment: .topLeading)
-            .background(isSelected ? AVBrandColor.accent.opacity(0.08) : AVBrandColor.cardSurface, in: RoundedRectangle(cornerRadius: 12, style: .continuous))
-            .overlay(
-                RoundedRectangle(cornerRadius: 12, style: .continuous)
-                    .stroke(isSelected ? AVBrandColor.accent : AVBrandColor.borderSubtle.opacity(0.75), lineWidth: isSelected ? 2 : 1)
-            )
-        }
-        .buttonStyle(.plain)
-    }
-}
-
-private struct AnimateCreateGuidedMotionTile: View {
-    let preset: AnimationDirectionPreset
-    let isSelected: Bool
-    let select: () -> Void
-
-    var body: some View {
-        Button(action: select) {
-            HStack(spacing: 6) {
-                Image(systemName: preset.systemImage)
-                    .font(.system(size: 12, weight: .black))
-                    .foregroundStyle(isSelected ? AVBrandColor.accent : AVBrandColor.textSecondary)
-                Text(preset.title)
-                    .font(.system(size: 11, weight: .black))
-                    .foregroundStyle(AVBrandColor.textPrimary)
-                    .lineLimit(1)
-                    .minimumScaleFactor(0.7)
-            }
-            .padding(.horizontal, 9)
-            .frame(maxWidth: .infinity)
-            .frame(height: 38)
             .background(isSelected ? AVBrandColor.accent.opacity(0.08) : AVBrandColor.cardSurface, in: RoundedRectangle(cornerRadius: 12, style: .continuous))
             .overlay(
                 RoundedRectangle(cornerRadius: 12, style: .continuous)

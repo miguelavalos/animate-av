@@ -193,7 +193,7 @@ struct AnimateCreatePrimaryActionPresentation: Equatable {
         if hasFinalVideoIntent {
             if !hasCompletedVideoDirection {
                 return hasSelectedVideoLook
-                    ? L10n.string("create.guided.continue.message")
+                    ? L10n.string("create.guided.continue.movement")
                     : L10n.string("create.guided.look.noneSelected.title")
             }
             if finalVideoAction.hasBlockedRenderPlan {

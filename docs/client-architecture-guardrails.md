@@ -51,6 +51,12 @@ path is complete. If the local photo data is missing or cannot decode as an
 image, the client must reset visible state to Foto y encuadre and block
 later-step actions.
 
+The basic guide is a lightweight state guide, not a separate product step. It
+may summarize the next required action and open the relevant guided sheet, but
+it must mirror the same Photo/framing -> Look -> Animation -> optional written
+Dedication order and must not introduce voice, audio, preview-versioning, or
+extra review branches.
+
 Images use the same ownership model with a simpler output: choose one source
 photo, generate a stylized image, then download/share it or use it as video
 input when synced state allows.

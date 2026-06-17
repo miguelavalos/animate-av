@@ -3,7 +3,7 @@ import XCTest
 @testable import AnimateAV
 
 @MainActor
-final class AnimateLookVoiceMatrixTests: XCTestCase {
+final class AnimateLookFamilyMatrixTests: XCTestCase {
     func testLookLibraryHasEightCompleteFamilies() {
         XCTAssertEqual(AnimateVideoLook.families.count, 8)
         XCTAssertEqual(AnimateVideoLook.selectorOrder.count, 64)
@@ -19,10 +19,6 @@ final class AnimateLookVoiceMatrixTests: XCTestCase {
         XCTAssertEqual(familyLooks, AnimateVideoLook.selectorOrder)
         XCTAssertEqual(Set(familyLooks).count, 64)
         XCTAssertEqual(Set(AnimateVideoLook.allCases).count, 64)
-    }
-
-    func testVoiceSelectorUsesAdultVoiceOverNarrators() {
-        XCTAssertEqual(AnimateVideoVoiceProfile.selectorOrder, [.narratorWoman, .narratorMan])
     }
 
     func testFamilyHeroAssetsUseCuratedFirstScreenProgression() {
@@ -52,22 +48,10 @@ final class AnimateLookVoiceMatrixTests: XCTestCase {
         }
     }
 
-    func testSelectingLookDoesNotChangeDefaultNarratorVoice() {
-        let viewModel = AnimateCreateViewModel()
-
-        viewModel.selectLook(.anime)
-
-        XCTAssertEqual(viewModel.form.look, .anime)
-        XCTAssertEqual(viewModel.form.voiceProfile, .narratorWoman)
-    }
-
-    func testSelectingLookDoesNotChangeSelectedNarratorVoice() {
-        let viewModel = AnimateCreateViewModel()
-
-        viewModel.updateVoiceProfile(.narratorMan)
-        viewModel.selectLook(.anime)
-
-        XCTAssertEqual(viewModel.form.look, .anime)
-        XCTAssertEqual(viewModel.form.voiceProfile, .narratorMan)
+    func testPublishedLookNamesMatchCurrentProductGuide() {
+        XCTAssertEqual(AnimateVideoLook.rubberHose.title, L10n.string("create.look.rubberHose.title"))
+        XCTAssertEqual(AnimateVideoLook.rubberHose.title, "Bubble Cartoon")
+        XCTAssertEqual(AnimateVideoLook.flatVector.title, "HD-2D Adventure")
+        XCTAssertEqual(AnimateVideoLook.yellowComedy.title, "Cozy Magic")
     }
 }

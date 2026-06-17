@@ -67,10 +67,10 @@ Mandatory rules:
 - no-spend workflow tests must still exercise quote/check-cost, credit
   confirmation, queued/running/completed UI states, final artifact handoff, and
   Gallery cleanup. Only the paid provider call is mocked.
-- the normal Animate AV Create Video path is Photo and framing -> Style ->
-  Animation -> optional written Dedication -> confirmation. Do not reintroduce
-  inherited multi-photo edit, sorting, empty media action, or visible crop
-  language in this one-photo flow.
+- the normal Animate AV Create Video path is Photo and framing -> Look ->
+  Animation -> optional written Message/Dedication -> confirmation. The guided
+  UI, setup summary, and action card must keep Animation as a separate step
+  between Look and Message/Dedication.
 - in the final video flow, `/renders/plan` is the source of truth for cost,
   blockers, watermark choice, and the subsequent confirmation. Do not add a
   separate `/video/quotes` preflight inside Check cost/Create video; it creates
@@ -93,9 +93,11 @@ Mandatory rules:
   visually nicer loader that hid broken sheet/state behavior.
 - current polish priority is Animate AV only. Do not start another app
   adaptation from this repo.
-- the guided voice picker is accepted for now. Focus Create Video review on the
-  style picker: 8 families, 8 looks per family, one unique preview asset per
-  look, localized names/subtitles, and default voice mapping by family position.
+- Animate AV V1 is not a voice product. Do not reintroduce visible voice,
+  narrator, tone, generated-audio, or in-app audio controls. Focus Create Video
+  review on one source photo, 8 look families, 8 looks per family, one unique
+  preview asset per look, localized names/subtitles, Animation as its own guided
+  step, optional written Message/Dedication, and clean credit confirmation.
 - runtime localization cleanup has been completed for the shipped locales
   `en`, `es`, `ca`, `fr`, and `de`. Future visible copy changes must keep key
   sets and placeholders synchronized, avoid inherited Moments/Tune wording, and

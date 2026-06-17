@@ -178,13 +178,12 @@ struct AnimateRenderRealtimePresentation: Equatable {
         progressFraction = Self.progressFraction(renderJob.progressPercent, status: renderJob.status)
         systemImage = Self.systemImage(status: renderJob.status, phase: renderJob.phase)
         visualStage = Self.visualStage(status: renderJob.status, phase: renderJob.phase)
-        steps = Self.steps(status: renderJob.status, phase: renderJob.phase, includesAudio: hasMessage)
+        steps = Self.steps(status: renderJob.status, phase: renderJob.phase)
     }
 
     enum VisualStage: Equatable {
         case sourcePhoto
         case styledImage
-        case voiceover
         case animatingVideo
         case finishing
         case completed
@@ -216,7 +215,7 @@ struct AnimateRenderRealtimePresentation: Equatable {
         case "generating_image":
             return L10n.string("create.render.phase.image")
         case "generating_audio":
-            return L10n.string("create.render.phase.audio")
+            return L10n.string("create.render.phase.rendering")
         case "uploading":
             return L10n.string("create.render.phase.uploading")
         case "composing":
@@ -248,7 +247,7 @@ struct AnimateRenderRealtimePresentation: Equatable {
         case "generating_image":
             return L10n.string("create.render.detail.image")
         case "generating_audio":
-            return L10n.string("create.render.detail.audio")
+            return L10n.string("create.render.detail.rendering")
         case "uploading":
             return L10n.string("create.render.detail.uploading")
         case "composing":
@@ -282,7 +281,7 @@ struct AnimateRenderRealtimePresentation: Equatable {
         case "generating_image":
             return "photo.fill"
         case "generating_audio":
-            return "waveform"
+            return "gearshape.2.fill"
         case "uploading":
             return "icloud.and.arrow.up.fill"
         case "composing":
@@ -296,17 +295,12 @@ struct AnimateRenderRealtimePresentation: Equatable {
         }
     }
 
-    private static func steps(status: String, phase: String?, includesAudio: Bool) -> [Step] {
-        var orderedSteps: [(id: String, title: String, detail: String, icon: String)] = [
-            ("generating_image", L10n.string("create.render.step.image.title"), L10n.string("create.render.step.image.detail"), "photo.fill")
-        ]
-        if includesAudio {
-            orderedSteps.append(("generating_audio", L10n.string("create.render.step.audio.title"), L10n.string("create.render.step.audio.detail"), "waveform"))
-        }
-        orderedSteps.append(contentsOf: [
+    private static func steps(status: String, phase: String?) -> [Step] {
+        let orderedSteps: [(id: String, title: String, detail: String, icon: String)] = [
+            ("generating_image", L10n.string("create.render.step.image.title"), L10n.string("create.render.step.image.detail"), "photo.fill"),
             (id: "animating_video", title: L10n.string("create.render.step.video.title"), detail: L10n.string("create.render.step.video.detail"), icon: "sparkles.tv.fill"),
             (id: "saving", title: L10n.string("create.render.step.finish.title"), detail: L10n.string("create.render.step.finish.detail"), icon: "square.and.arrow.down.fill")
-        ])
+        ]
         let normalizedPhase = normalizedPhase(phase)
         let currentIndex = orderedSteps.firstIndex { $0.id == normalizedPhase } ?? 0
 
@@ -325,7 +319,7 @@ struct AnimateRenderRealtimePresentation: Equatable {
         switch phase {
         case "preparing", "preparing_source":
             return "generating_image"
-        case "rendering":
+        case "generating_audio", "rendering":
             return "animating_video"
         case "completed":
             return "saving"
@@ -352,7 +346,7 @@ struct AnimateRenderRealtimePresentation: Equatable {
         case "generating_image", "preparing", "preparing_source":
             return .sourcePhoto
         case "generating_audio":
-            return .voiceover
+            return .animatingVideo
         case "animating_video", "rendering":
             return .animatingVideo
         case "saving", "completed":

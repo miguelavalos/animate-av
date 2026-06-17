@@ -141,7 +141,7 @@
 		AF3BEFBE8DDC18A80D288957 /* AnimateStatusRulesTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3F6AD72314F4BDB84C5BD7D /* AnimateStatusRulesTests.swift */; };
 		B0D98EC4BAA4A6F242AD129E /* AccountControllerSessionRestoreTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 51D0E9A918C07CAE445BE5B1 /* AccountControllerSessionRestoreTests.swift */; };
 		B2828B812D7A354F7D65F04F /* AVLaunchFoundation in Frameworks */ = {isa = PBXBuildFile; productRef = 4B3EF81651B2A70B0858AB2E /* AVLaunchFoundation */; };
-		B5C526B06D822E94CC656998 /* AnimateLookVoiceMatrixTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B07D40F67D595D334758C3A1 /* AnimateLookVoiceMatrixTests.swift */; };
+		B5C526B06D822E94CC656998 /* AnimateLookFamilyMatrixTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B07D40F67D595D334758C3A1 /* AnimateLookFamilyMatrixTests.swift */; };
 		B776E8016E86EFA077612FE0 /* AnimateVideoCreationModels.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44B7CF1E0C34BDD4D22DC1AC /* AnimateVideoCreationModels.swift */; };
 		BA0FFE0C96B8F671042F7A04 /* AnimateCreditCopy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 736ADE8047FDF48CD4662F70 /* AnimateCreditCopy.swift */; };
 		BA153D9C6487188B021B1E5D /* AnimateCreateAvailabilityPresentationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C029E23218DAE1E7E873DDE /* AnimateCreateAvailabilityPresentationTests.swift */; };
@@ -336,7 +336,7 @@
 		AE1DC055C0739B41C971804E /* AnimateAVSplashView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnimateAVSplashView.swift; sourceTree = "<group>"; };
 		AECC5029E378B079E4DC9B85 /* apple */ = {isa = PBXFileReference; lastKnownFileType = folder; name = apple; path = "../../../apps-av/apple"; sourceTree = SOURCE_ROOT; };
 		B03E862B016AFC32F5D56341 /* AnimateVideosWorkflow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnimateVideosWorkflow.swift; sourceTree = "<group>"; };
-		B07D40F67D595D334758C3A1 /* AnimateLookVoiceMatrixTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnimateLookVoiceMatrixTests.swift; sourceTree = "<group>"; };
+		B07D40F67D595D334758C3A1 /* AnimateLookFamilyMatrixTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnimateLookFamilyMatrixTests.swift; sourceTree = "<group>"; };
 		B08FA5D583B3EF6ACF167E6E /* AnimateWorkspaceSelectionWorkflow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnimateWorkspaceSelectionWorkflow.swift; sourceTree = "<group>"; };
 		B0A456C5ADA131E9E3E7BE70 /* AVAccountService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AVAccountService.swift; sourceTree = "<group>"; };
 		B1A3FBA0C9FC14DBBC3FF5A2 /* AnimateInProgressList.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnimateInProgressList.swift; sourceTree = "<group>"; };
@@ -811,7 +811,7 @@
 				BF13A90B1A370DE01610E315 /* AnimateInProgressPresentationTests.swift */,
 				275D027023F688743FC87C14 /* AnimateInProgressProgressModelTests.swift */,
 				EB50A8AC8B169432D3AAD0FD /* AnimateInProgressWorkspacePresentationTests.swift */,
-				B07D40F67D595D334758C3A1 /* AnimateLookVoiceMatrixTests.swift */,
+				B07D40F67D595D334758C3A1 /* AnimateLookFamilyMatrixTests.swift */,
 				82EC3DBDDB512940FB60CEF3 /* AnimateMediaDeduplicatorTests.swift */,
 				F040C2220EDC9F9CB5486A55 /* AnimateMediaRulesTests.swift */,
 				06B13485A04681D3768A9381 /* AnimateNewVideoStartControllerTests.swift */,
@@ -1316,7 +1316,7 @@
 				FB3FADE8D05875B148C6A28B /* AnimateInProgressPresentationTests.swift in Sources */,
 				BE7A07220E471F6E6F2E847B /* AnimateInProgressProgressModelTests.swift in Sources */,
 				A6815989BA128CA6F1F659A4 /* AnimateInProgressWorkspacePresentationTests.swift in Sources */,
-				B5C526B06D822E94CC656998 /* AnimateLookVoiceMatrixTests.swift in Sources */,
+				B5C526B06D822E94CC656998 /* AnimateLookFamilyMatrixTests.swift in Sources */,
 				EE3B040D7D86FF498F413E49 /* AnimateMediaDeduplicatorTests.swift in Sources */,
 				A83AA5FC4F44350B2193C102 /* AnimateMediaRulesTests.swift in Sources */,
 				7C974AAD23174DA7D10ADC09 /* AnimateNewVideoStartControllerTests.swift in Sources */,

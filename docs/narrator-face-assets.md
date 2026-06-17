@@ -1,8 +1,9 @@
 # Narrator Face Assets
 
 Status: historical asset provenance. Animate AV V1 is no longer a voice product;
-user-facing narrator, TTS, and voice-tone controls should stay hidden or
-disabled. Keep this document only to explain older asset/test provenance.
+user-facing narrator, TTS, generated-audio, and voice-tone controls must stay
+out of the visible product. Keep this document only to explain older asset
+provenance.
 
 Animate AV previously used adult voice-over narrators only. The voice-over was
 an off-screen message track; it was not a character voice for people in the
@@ -54,13 +55,13 @@ regenerating preview assets.
 
 Historical product behavior:
 
-- Selecting a look does not change the narrator voice.
+- Selecting a look did not change the narrator voice.
 - The voice selector was available only when the user added a message.
 - Voice-over options were adult narrator choices, independent from the photo
   subjects.
 
-Use current Create Video tests as the executable source of truth. Any remaining
-voice-matrix tests should be treated as legacy coverage until the simplified
-card flow removes or rewrites them.
+Use current Create Video and `AnimateLookFamilyMatrixTests` coverage as the
+executable source of truth. Voice-matrix tests are no longer part of the current
+runtime contract.
 
 When regenerating any look preview, start from the relevant narrator face and explicitly preserve age, gender presentation, face shape, hairstyle, skin tone, and expression.
