@@ -28,7 +28,7 @@ The committed configs intentionally leave runtime endpoints and publishable
 client keys blank. A public simulator build can still compile without signing:
 
 ```bash
-xcodebuild -project apps/ios/AnimateAV.xcodeproj -scheme AnimateAV -destination 'generic/platform=iOS Simulator' CODE_SIGNING_ALLOWED=NO build
+xcodebuild -project apps/ios/AnimateAV.xcodeproj -scheme AnimateAV -destination 'generic/platform=iOS Simulator' -derivedDataPath .DerivedData-public-compile CODE_SIGNING_ALLOWED=NO build
 ```
 
 This verifies the app compiles. Do not use this unsigned build for sign-in,
@@ -83,7 +83,7 @@ For any flow that depends on a real account session, build and launch without
 `CODE_SIGNING_ALLOWED=NO`:
 
 ```bash
-xcodebuild -project apps/ios/AnimateAV.xcodeproj -scheme AnimateAV -destination 'platform=iOS Simulator,name=iPhone 17' build
+xcodebuild -project apps/ios/AnimateAV.xcodeproj -scheme AnimateAV -destination 'platform=iOS Simulator,name=iPhone 17' -derivedDataPath .DerivedData-signed-smoke build
 ```
 
 Do not diagnose onboarding, Sign in with Apple, Google OAuth, persisted sessions,
@@ -133,11 +133,29 @@ resolver issue.
 Run the focused simulator test suite after generating the Xcode project:
 
 ```bash
-xcodebuild test -project apps/ios/AnimateAV.xcodeproj -scheme AnimateAV -destination 'platform=iOS Simulator,name=iPhone 16,OS=18.5' CODE_SIGNING_ALLOWED=NO
+xcodebuild test -project apps/ios/AnimateAV.xcodeproj -scheme AnimateAV -destination 'platform=iOS Simulator,name=iPhone 16,OS=18.5' -derivedDataPath .DerivedData-tests CODE_SIGNING_ALLOWED=NO
 ```
 
 If the requested simulator is unavailable, pick an installed iPhone simulator
 and keep the destination explicit.
+
+## Local Build Cache Cleanup
+
+Xcode `DerivedData` can grow by several gigabytes per build/test profile. Keep
+agent-owned build output repo-local and purpose-named with `-derivedDataPath`
+as shown above, then remove it after the validation run is no longer needed.
+
+Measure first:
+
+```bash
+find . -type d \( -name '.DerivedData*' -o -name '.derived-data*' -o -name 'DerivedData' \) -prune -print0 | xargs -0 du -sh
+```
+
+Clean only when no active build is using those directories:
+
+```bash
+find . -type d \( -name '.DerivedData*' -o -name '.derived-data*' -o -name 'DerivedData' \) -prune -print0 | xargs -0 rm -rf
+```
 
 ## Public Config Hygiene
 
