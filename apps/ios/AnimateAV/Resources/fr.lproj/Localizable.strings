@@ -643,7 +643,6 @@
 "create.status.refreshing" = "Actualisation";
 "create.action.notNow" = "Pas maintenant";
 "create.discard.confirmTitle" = "Supprimer la vidéo ?";
-"create.discard.draftConfirmTitle" = "Supprimer le brouillon ?";
 "create.discard.closeDraft" = "Fermer le brouillon";
 "create.discard.keep" = "Garder la vidéo";
 "create.final.confirmMessage" = "Les crédits ne sont facturés que pour les vidéos finales terminées. Cette vidéo coûte %@.";

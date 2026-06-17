@@ -643,7 +643,6 @@
 "create.status.refreshing" = "Actualitzant";
 "create.action.notNow" = "Ara no";
 "create.discard.confirmTitle" = "Descartar vídeo?";
-"create.discard.draftConfirmTitle" = "Descartar esborrany?";
 "create.discard.closeDraft" = "Tancar esborrany";
 "create.discard.keep" = "Mantenir vídeo";
 "create.final.confirmMessage" = "Els crèdits només es cobren per vídeos finals completats. Aquest vídeo costa %@.";

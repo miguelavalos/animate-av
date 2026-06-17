@@ -209,7 +209,6 @@ private struct AnimateCreateMediaFirstWorkspace: View {
                         choosePhoto: presentCompactPhotoPicker,
                         isVideoSetupGuideComplete: isVideoSetupGuideComplete,
                         openCreateVideoConfirmation: { showsCreateVideoConfirmation = true },
-                        discardVideoCreation: { showsDiscardVideoConfirmation = true },
                         retryFinalVideoDownload: retryFinalVideoDownload,
                         finishFinalVideoToGallery: finishFinalVideoToGallery
                     )
@@ -315,7 +314,7 @@ private struct AnimateCreateMediaFirstWorkspace: View {
         .onChange(of: openPickerRequest) { _, newValue in
             openCompactPickerIfRequested(newValue)
         }
-        .alert(discardConfirmationTitle, isPresented: $showsDiscardVideoConfirmation) {
+        .alert(L10n.string("create.discard.confirmTitle"), isPresented: $showsDiscardVideoConfirmation) {
             Button(L10n.string("create.discard.keep"), role: .cancel) {}
             Button(discardConfirmationActionTitle, role: .destructive) {
                 discardCurrentVideoCreation()
@@ -432,19 +431,11 @@ private struct AnimateCreateMediaFirstWorkspace: View {
     }
 
     private var discardConfirmationActionTitle: String {
-        presentation.finalRenderSummary.finalExport == nil
-            ? L10n.string("create.discard.closeDraft")
-            : L10n.string("create.discard.current")
-    }
-
-    private var discardConfirmationTitle: String {
-        presentation.finalRenderSummary.finalExport == nil
-            ? L10n.string("create.discard.draftConfirmTitle")
-            : L10n.string("create.discard.confirmTitle")
+        presentation.hasUnsavedLocalVideo ? L10n.string("create.discard.local") : L10n.string("create.discard.current")
     }
 
     private var discardConfirmationMessage: String {
-        if presentation.finalRenderSummary.finalExport == nil {
+        if presentation.hasUnsavedLocalVideo {
             return L10n.string("create.discard.localMessage")
         }
 
@@ -1288,7 +1279,7 @@ private struct AnimateCreateVideoDirectionCard: View {
         }
         .sheet(item: $activeGuidedSheet) { sheetStep in
             AnimateCreateGuidedStepSheet(
-                footer: { guidedFooter },
+                footer: { continueButton },
                 content: {
                     guidedStepContent(sheetStep)
                 }
@@ -1709,21 +1700,6 @@ private struct AnimateCreateVideoDirectionCard: View {
         .disabled(isContinueDisabled)
         .buttonStyle(AnimateCreateGuidedFooterButtonStyle())
         .opacity(isContinueDisabled ? 0.62 : 1)
-    }
-
-    private var guidedFooter: some View {
-        VStack(spacing: 8) {
-            continueButton
-
-            if canShowDiscardAction {
-                Button(action: discardVideoCreation) {
-                    Label(discardActionTitle, systemImage: discardActionIconName)
-                        .font(.system(size: 12, weight: .black))
-                        .frame(maxWidth: .infinity)
-                }
-                .buttonStyle(AnimateCreateDestructiveInlineButtonStyle())
-            }
-        }
     }
 
     private var isContinueDisabled: Bool {
@@ -2148,11 +2124,11 @@ private struct AnimateCreateVideoDirectionCard: View {
 
 
     private var discardActionTitle: String {
-        L10n.string("create.discard.closeDraft")
+        presentation.hasUnsavedLocalVideo ? L10n.string("create.discard.closeDraft") : L10n.string("create.discard.current")
     }
 
     private var discardActionIconName: String {
-        "xmark.circle"
+        presentation.hasUnsavedLocalVideo ? "xmark.circle" : "trash"
     }
 
     private var canShowDiscardAction: Bool {
@@ -3198,7 +3174,6 @@ private struct AnimateCreatePrimaryActionBar: View {
     let choosePhoto: () -> Void
     let isVideoSetupGuideComplete: Bool
     let openCreateVideoConfirmation: () -> Void
-    let discardVideoCreation: () -> Void
     let retryFinalVideoDownload: () -> Void
     let finishFinalVideoToGallery: () -> Void
 
@@ -3278,15 +3253,6 @@ private struct AnimateCreatePrimaryActionBar: View {
                     .buttonStyle(AnimateCreateFinalVideoButtonStyle())
                 }
 
-                if canShowDiscardAction {
-                    Button(action: discardVideoCreation) {
-                        Label(discardActionTitle, systemImage: discardActionIconName)
-                            .font(.system(size: 12, weight: .black))
-                            .frame(maxWidth: .infinity)
-                    }
-                    .buttonStyle(AnimateCreateDestructiveInlineButtonStyle())
-                }
-
                 if let uploadProgress = presentation.mediaSummary.importProgress,
                    presentation.mediaSummary.isImporting {
                     ProgressView(value: uploadProgress.fractionCompleted ?? 0)
@@ -3353,20 +3319,6 @@ private struct AnimateCreatePrimaryActionBar: View {
             return AVBrandColor.accent
         }
         return AVBrandColor.textSecondary
-    }
-
-    private var discardActionTitle: String {
-        L10n.string("create.discard.closeDraft")
-    }
-
-    private var discardActionIconName: String {
-        "xmark.circle"
-    }
-
-    private var canShowDiscardAction: Bool {
-        presentation.hasActiveVideoWorkspace
-            && presentation.finalRenderSummary.latestFinalJob?.isActiveRender != true
-            && !presentation.finalRenderSummary.isPreparingPlan
     }
 
     private var primaryTitle: String {
@@ -3499,25 +3451,6 @@ private struct AnimateCreatePrimaryActionBar: View {
         } else if primaryActionPresentation.needsSignInForVideoDirection {
             startSignInFlow()
         }
-    }
-}
-
-private struct AnimateCreateDestructiveInlineButtonStyle: ButtonStyle {
-    @Environment(\.isEnabled) private var isEnabled
-
-    func makeBody(configuration: Configuration) -> some View {
-        configuration.label
-            .foregroundStyle(isEnabled ? .red.opacity(0.88) : AVBrandColor.textSecondary.opacity(0.55))
-            .padding(.horizontal, AVBrandSpacing.sm)
-            .padding(.vertical, 7)
-            .background(
-                isEnabled ? Color.red.opacity(configuration.isPressed ? 0.16 : 0.09) : AVBrandColor.mutedSurface.opacity(0.42),
-                in: Capsule()
-            )
-            .overlay {
-                Capsule()
-                    .stroke(isEnabled ? Color.red.opacity(0.26) : AVBrandColor.borderSubtle.opacity(0.22), lineWidth: 1)
-            }
     }
 }
 

@@ -646,7 +646,6 @@
 "create.status.refreshing" = "Actualizando";
 "create.action.notNow" = "Ahora no";
 "create.discard.confirmTitle" = "¿Descartar video?";
-"create.discard.draftConfirmTitle" = "¿Descartar creación?";
 "create.discard.closeDraft" = "Descartar creación";
 "create.discard.keep" = "Mantener video";
 "create.final.confirmMessage" = "Solo se descuentan créditos por videos finales completados. Este video cuesta %@.";

@@ -645,7 +645,6 @@
 "create.status.refreshing" = "Aktualisieren";
 "create.action.notNow" = "Jetzt nicht";
 "create.discard.confirmTitle" = "Video verwerfen?";
-"create.discard.draftConfirmTitle" = "Entwurf verwerfen?";
 "create.discard.closeDraft" = "Entwurf schließen";
 "create.discard.keep" = "Video behalten";
 "create.final.confirmMessage" = "Credits werden nur fuer abgeschlossene finale Videos berechnet. Dieses Video kostet %@.";

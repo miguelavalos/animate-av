@@ -646,7 +646,6 @@
 "create.status.refreshing" = "Refreshing";
 "create.action.notNow" = "Not now";
 "create.discard.confirmTitle" = "Discard video?";
-"create.discard.draftConfirmTitle" = "Discard draft?";
 "create.discard.closeDraft" = "Close draft";
 "create.discard.keep" = "Keep video";
 "create.final.confirmMessage" = "Credits are only charged for completed final videos. This video costs %@.";
