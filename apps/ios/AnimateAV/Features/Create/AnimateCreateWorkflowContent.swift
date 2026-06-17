@@ -1692,13 +1692,13 @@ private struct AnimateCreateVideoDirectionCard: View {
 
     private var continueButton: some View {
         Button(action: continueStep) {
-            Text(continueButtonTitle)
+            Label(continueButtonTitle, systemImage: "film.circle.fill")
                 .font(.system(size: 15, weight: .black))
                 .frame(maxWidth: .infinity)
                 .frame(height: 44)
         }
         .disabled(isContinueDisabled)
-        .buttonStyle(AnimateCreateSoftActionButtonStyle())
+        .buttonStyle(AnimateCreateGuidedFooterButtonStyle())
         .opacity(isContinueDisabled ? 0.62 : 1)
     }
 
@@ -2175,10 +2175,38 @@ private struct AnimateCreateGuidedStepSheet<Content: View, Footer: View>: View {
                         .padding(.horizontal, 20)
                         .padding(.top, 12)
                         .padding(.bottom, 12)
-                        .background(.ultraThinMaterial)
                 }
+                .background(AnimateTheme.shellBackground.opacity(0.96))
             }
         }
+    }
+}
+
+private struct AnimateCreateGuidedFooterButtonStyle: ButtonStyle {
+    @Environment(\.isEnabled) private var isEnabled
+
+    func makeBody(configuration: Configuration) -> some View {
+        configuration.label
+            .foregroundStyle(isEnabled ? AVBrandColor.textInverse : AVBrandColor.textSecondary.opacity(0.7))
+            .padding(.horizontal, AVBrandSpacing.md)
+            .background(background(configuration: configuration), in: Capsule())
+            .overlay {
+                Capsule()
+                    .stroke(
+                        isEnabled ? AVBrandColor.accent.opacity(0.35) : AVBrandColor.borderSubtle.opacity(0.45),
+                        lineWidth: 1
+                    )
+            }
+            .shadow(color: isEnabled ? AVBrandColor.accent.opacity(0.20) : .clear, radius: 14, y: 8)
+            .scaleEffect(configuration.isPressed ? 0.98 : 1)
+    }
+
+    private func background(configuration: Configuration) -> Color {
+        if !isEnabled {
+            return AVBrandColor.mutedSurface.opacity(0.68)
+        }
+
+        return configuration.isPressed ? AVBrandColor.accent.opacity(0.82) : AVBrandColor.accent
     }
 }
 
