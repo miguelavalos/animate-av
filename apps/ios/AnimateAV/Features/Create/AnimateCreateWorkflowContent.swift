@@ -1717,17 +1717,36 @@ private struct AnimateCreateVideoDirectionCard: View {
     }
 
     private func stepHeader(_ title: String, _ detail: String) -> some View {
-        VStack(alignment: .leading, spacing: 6) {
-            Text(title)
-                .font(.system(size: 20, weight: .black))
-                .foregroundStyle(AVBrandColor.textPrimary)
-                .lineLimit(2)
-                .fixedSize(horizontal: false, vertical: true)
-            Text(detail)
-                .font(.system(size: 14, weight: .semibold))
-                .foregroundStyle(AVBrandColor.textSecondary)
-                .lineLimit(3)
-                .fixedSize(horizontal: false, vertical: true)
+        HStack(alignment: .top, spacing: 12) {
+            VStack(alignment: .leading, spacing: 6) {
+                Text(title)
+                    .font(.system(size: 20, weight: .black))
+                    .foregroundStyle(AVBrandColor.textPrimary)
+                    .lineLimit(2)
+                    .fixedSize(horizontal: false, vertical: true)
+                Text(detail)
+                    .font(.system(size: 14, weight: .semibold))
+                    .foregroundStyle(AVBrandColor.textSecondary)
+                    .lineLimit(3)
+                    .fixedSize(horizontal: false, vertical: true)
+            }
+            .frame(maxWidth: .infinity, alignment: .leading)
+
+            Menu {
+                Section(L10n.string("create.videoDirection.menu.userActions")) {
+                    Button(role: .destructive, action: discardVideoCreation) {
+                        Label(L10n.string("create.discard.closeDraft"), systemImage: "xmark.circle")
+                    }
+                }
+            } label: {
+                Image(systemName: "ellipsis")
+                    .font(.system(size: 15, weight: .black))
+                    .foregroundStyle(AVBrandColor.textSecondary)
+                    .frame(width: 36, height: 36)
+                    .background(AVBrandColor.mutedSurface, in: Circle())
+            }
+            .buttonStyle(.plain)
+            .accessibilityLabel(L10n.string("create.videoDirection.menu.accessibility"))
         }
         .padding(.top, 8)
         .padding(.bottom, 8)
