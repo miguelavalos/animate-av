@@ -1221,6 +1221,7 @@ private struct AnimateCreateVideoDirectionCard: View {
     @State private var activeGuidedSheet: GuidedStep?
     @State private var guidedLookFamily: AnimateVideoLookFamily?
     @State private var adjustingInlineMedia: AnimateSelectedMedia?
+    @State private var showsGuidedPhotoPicker = false
     @State private var shouldReturnToPhotoFrameAfterPicker = false
     @State private var handledContinueGuidedFlowRequest = 0
 
@@ -1286,6 +1287,12 @@ private struct AnimateCreateVideoDirectionCard: View {
             )
             .presentationDetents(guidedSheetDetents(for: sheetStep))
             .presentationDragIndicator(.visible)
+            .photosPicker(
+                isPresented: $showsGuidedPhotoPicker,
+                selection: $pickerItems,
+                maxSelectionCount: 1,
+                matching: .images
+            )
         }
         .fullScreenCover(item: $adjustingInlineMedia) { media in
             AnimateCreatePhotoAdjustView(
@@ -1470,7 +1477,6 @@ private struct AnimateCreateVideoDirectionCard: View {
                 AnimateCreateGuidedPhotoFrameStep(
                     media: selectedPhotoMedia,
                     startsWithSourcePhoto: $form.startsWithSourcePhoto,
-                    pickerItems: $pickerItems,
                     isImporting: presentation.mediaSummary.isImporting,
                     choosePhoto: choosePhoto,
                     adjustFrame: {
@@ -1479,7 +1485,7 @@ private struct AnimateCreateVideoDirectionCard: View {
                             adjustingInlineMedia = selectedPhotoMedia
                         }
                     },
-                    preparePhotoReplacement: preparePhotoReplacement,
+                    changePhoto: requestPhotoReplacement,
                     restoreOriginal: {
                         if let selectedPhotoMedia {
                             restoreOriginalPhotoData(selectedPhotoMedia)
@@ -1940,6 +1946,11 @@ private struct AnimateCreateVideoDirectionCard: View {
         }
     }
 
+    private func requestPhotoReplacement() {
+        preparePhotoReplacement()
+        showsGuidedPhotoPicker = true
+    }
+
     private func handlePhotoPickerResult(_ media: [AnimateSelectedMedia]) {
         guard shouldReturnToPhotoFrameAfterPicker else { return }
         let photos = media.filter { $0.kind == "photo" || $0.kind == "image" }
@@ -2335,11 +2346,10 @@ struct AnimateCreateVideoSetupGuideState: Equatable {
 private struct AnimateCreateGuidedPhotoFrameStep: View {
     let media: AnimateSelectedMedia?
     @Binding var startsWithSourcePhoto: Bool
-    @Binding var pickerItems: [PhotosPickerItem]
     let isImporting: Bool
     let choosePhoto: () -> Void
     let adjustFrame: () -> Void
-    let preparePhotoReplacement: () -> Void
+    let changePhoto: () -> Void
     let restoreOriginal: () -> Void
 
     var body: some View {
@@ -2370,10 +2380,9 @@ private struct AnimateCreateGuidedPhotoFrameStep: View {
                 }
                 .buttonStyle(AnimateCreatePhotoFrameSecondaryButtonStyle())
 
-                PhotosPicker(selection: $pickerItems, maxSelectionCount: 1, matching: .images) {
+                Button(action: changePhoto) {
                     Label(L10n.string("create.mediaAdjust.changePhoto"), systemImage: "photo.on.rectangle")
                 }
-                .simultaneousGesture(TapGesture().onEnded(preparePhotoReplacement))
                 .disabled(isImporting)
                 .buttonStyle(AnimateCreatePhotoFrameSecondaryButtonStyle())
             }
