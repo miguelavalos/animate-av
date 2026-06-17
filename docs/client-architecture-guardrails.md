@@ -14,7 +14,7 @@ renders the state returned by the configured backend/realtime layer.
 The current v1 user flow is:
 
 ```text
-Foto y encuadre -> Look -> Animation -> optional written Dedication -> quote credits -> generate animated card -> local download -> Gallery
+Foto y encuadre -> Look & Animation -> optional written Dedication -> quote credits -> generate animated card -> local download -> Gallery
 ```
 
 The Foto y encuadre step owns source-photo choice, full-photo use, frame
@@ -33,8 +33,9 @@ local original and adjusted image in v1. If metadata is useful, it may identify
 that a frame adjustment was applied, but the private backend should not be
 treated as the source of truth for restoring the user's pre-adjusted photo.
 
-Animation is a separate client setup choice from optional written Dedication. It
-captures optional visual direction for what should happen in the animated scene.
+Animation is a separate client setup choice from optional written Dedication,
+but it is collected inside the Look & Animation guided sheet. It captures
+optional visual direction for what should happen in the animated scene.
 A valid one-photo video can be confirmed with no message, no dedication, and no
 voice. Direction templates must travel to the backend as stable template IDs.
 The backend owns the English provider prompt for each template;
@@ -46,14 +47,14 @@ Create Video status cards, Avi guidance, summary rows, and fixed action bars
 must follow the guided client state before backend-ready legacy state. A saved
 story direction or previous fixture state is not enough to show credit review.
 Credit review becomes visible only after a renderable local photo exists, the
-user has selected a look/style, and the guided Animation / optional Dedication
+user has selected a look/style, and the guided Look & Animation / optional Dedication
 path is complete. If the local photo data is missing or cannot decode as an
 image, the client must reset visible state to Foto y encuadre and block
 later-step actions.
 
 The basic guide is a lightweight state guide, not a separate product step. It
 may summarize the next required action and open the relevant guided sheet, but
-it must mirror the same Photo/framing -> Look -> Animation -> optional written
+it must mirror the same Photo/framing -> Look & Animation -> optional written
 Dedication order and must not introduce voice, audio, preview-versioning, or
 extra review branches.
 

@@ -70,8 +70,8 @@ struct AnimateVideoDirectionClient {
             motionDirection: form.movementDirection.rawValue,
             visualDirectionMode: visualDirection.mode,
             visualDirectionTemplateId: visualDirection.templateId,
-            visualDirectionText: nil,
-            animationDirection: nil,
+            visualDirectionText: visualDirection.text,
+            animationDirection: visualDirection.text,
             occasion: form.occasion,
             details: form.activeMessageText ?? "",
             narrationVoice: form.activeVoiceProfile?.rawValue ?? "none",
@@ -114,15 +114,25 @@ struct AnimateVideoDirectionClient {
 
     private static func videoVisualDirection(_ form: AnimateVideoSetupForm) -> (
         mode: String,
-        templateId: String?
+        templateId: String?,
+        text: String?
     ) {
-        guard form.visualDirectionMode == .template else {
-            return (AnimateVisualDirectionMode.none.rawValue, nil)
+        switch form.visualDirectionMode {
+        case .template:
+            return (
+                form.visualDirectionMode.rawValue,
+                nonBlankOptional(form.visualDirectionTemplateId),
+                nil
+            )
+        case .custom:
+            let text = nonBlankOptional(form.animationDirection)
+            guard text != nil else {
+                return (AnimateVisualDirectionMode.none.rawValue, nil, nil)
+            }
+            return (form.visualDirectionMode.rawValue, nil, text)
+        case .none:
+            return (AnimateVisualDirectionMode.none.rawValue, nil, nil)
         }
-        return (
-            form.visualDirectionMode.rawValue,
-            nonBlankOptional(form.visualDirectionTemplateId)
-        )
     }
 }
 

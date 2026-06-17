@@ -63,7 +63,7 @@ xcodebuild test -project apps/ios/AnimateAV.xcodeproj -scheme AnimateAV -destina
 ## Manual Public QA
 
 - [ ] App launches in a simulator build safe for public QA.
-- [ ] Create Video no-spend smoke reaches Foto y encuadre, Estilo, Animación,
+- [ ] Create Video no-spend smoke reaches Foto y encuadre, Estilo y animación,
   optional written Dedication, and final confirmation
   with synthetic or fixture media only.
 - [ ] Runtime localization lint/key parity passes for `en`, `es`, `ca`, `fr`,

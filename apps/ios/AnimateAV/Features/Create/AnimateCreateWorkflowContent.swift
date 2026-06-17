@@ -1505,6 +1505,7 @@ private struct AnimateCreateVideoDirectionCard: View {
                     .buttonStyle(.plain)
 
                     stepHeader(family.title, family.subtitle)
+                    animationGuidanceSection
 
                     AnimateCreateLookFamilyNavigator(
                         family: family,
@@ -1536,6 +1537,7 @@ private struct AnimateCreateVideoDirectionCard: View {
                     .gesture(guidedLookFamilySwipeGesture)
                 } else {
                     stepHeader(L10n.string("create.guided.look.title"), L10n.string("create.guided.look.detail"))
+                    animationGuidanceSection
                     AnimateCreateTwoColumnGrid(items: AnimateVideoLook.families, verticalSpacing: 10, itemHeight: 104) { family in
                         AnimateCreateLookFamilyTile(
                             family: family,
@@ -1556,20 +1558,6 @@ private struct AnimateCreateVideoDirectionCard: View {
                 if guidedLookFamily == nil, selectedLook != nil {
                     guidedLookFamily = AnimateVideoLook.family(containing: selectedLook)
                 }
-            }
-        case .movement:
-            VStack(alignment: .leading, spacing: 10) {
-                stepHeader(L10n.string("create.guided.movement.title"), L10n.string("create.guided.movement.detail"))
-                AnimateCreateGuidedTemplateMenu(
-                    title: L10n.string("create.guided.direction.template"),
-                    selectedTitle: selectedAnimationDirectionPreset.title,
-                    selectedDetail: selectedAnimationDirectionPreset.detail,
-                    options: AnimationDirectionPreset.menuOptions,
-                    select: applyAnimationDirectionPreset
-                )
-                Text(L10n.string("create.guided.direction.tip"))
-                    .font(.caption.weight(.semibold))
-                    .foregroundStyle(AVBrandColor.textSecondary)
             }
         case .scriptIdea:
             VStack(alignment: .leading, spacing: 10) {
@@ -1720,8 +1708,6 @@ private struct AnimateCreateVideoDirectionCard: View {
             return selectedPhotoMedia == nil || presentation.mediaSummary.isImporting
         case .look:
             return selectedLook == nil
-        case .movement:
-            return false
         case .scriptIdea:
             if guideState.step == .scriptIdea, wantsMessage {
                 return !canContinueMessageStep
@@ -1747,8 +1733,65 @@ private struct AnimateCreateVideoDirectionCard: View {
         .padding(.bottom, 8)
     }
 
+    private var animationGuidanceSection: some View {
+        VStack(alignment: .leading, spacing: 10) {
+            LazyVGrid(columns: Array(repeating: GridItem(.flexible(), spacing: 8), count: 2), spacing: 8) {
+                ForEach(AnimationDirectionPreset.menuOptions) { preset in
+                    AnimateCreateGuidedMessageModeTile(
+                        title: preset.title,
+                        detail: preset.detail,
+                        systemImage: preset.systemImage,
+                        isSelected: selectedAnimationDirectionPreset == preset,
+                        select: {
+                            applyAnimationDirectionPreset(preset)
+                        }
+                    )
+                }
+            }
+            Text(L10n.string("create.guided.direction.tip"))
+                .font(.caption.weight(.semibold))
+                .foregroundStyle(AVBrandColor.textSecondary)
+
+            VStack(alignment: .leading, spacing: 8) {
+                HStack {
+                    Text(L10n.string("create.guided.direction.customLabel"))
+                        .font(.system(size: 12, weight: .black))
+                        .foregroundStyle(AVBrandColor.textPrimary)
+                    Spacer()
+                    if !form.animationDirection.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
+                        Button {
+                            updateAnimationDirection("")
+                        } label: {
+                            Label(L10n.string("create.guided.direction.clear"), systemImage: "xmark.circle.fill")
+                                .font(.system(size: 12, weight: .black))
+                                .labelStyle(.titleAndIcon)
+                        }
+                        .buttonStyle(.plain)
+                        .foregroundStyle(AVBrandColor.textSecondary)
+                    }
+                    Text("\(form.animationDirection.count)/\(AnimateVideoSetupLimits.animationDirectionCharacterLimit)")
+                        .font(.caption.weight(.bold))
+                        .foregroundStyle(AVBrandColor.textSecondary)
+                }
+
+                TextEditor(text: Binding(
+                    get: { form.animationDirection },
+                    set: { updateAnimationDirection($0) }
+                ))
+                .font(.system(size: 15, weight: .semibold))
+                .frame(minHeight: 112)
+                .padding(10)
+                .background(AVBrandColor.cardSurface, in: RoundedRectangle(cornerRadius: 14, style: .continuous))
+                .overlay {
+                    RoundedRectangle(cornerRadius: 14, style: .continuous)
+                        .stroke(AVBrandColor.borderSubtle.opacity(0.7), lineWidth: 1)
+                }
+            }
+        }
+    }
+
     private var activeSteps: [GuidedStep] {
-        [.photoFrame, .look, .movement, .scriptIdea]
+        [.photoFrame, .look, .scriptIdea]
     }
 
     @ViewBuilder
@@ -1763,15 +1806,9 @@ private struct AnimateCreateVideoDirectionCard: View {
             if selectedPhotoMedia != nil {
                 summaryEditRow(
                     title: L10n.string("create.guided.summary.look"),
-                    detail: selectedLookTitle,
+                    detail: "\(selectedLookTitle) · \(animationSummaryDetail)",
                     icon: "paintbrush.pointed.fill",
                     editStep: .look
-                )
-                summaryEditRow(
-                    title: L10n.string("create.guided.summary.movement"),
-                    detail: animationSummaryDetail,
-                    icon: "camera.aperture",
-                    editStep: .movement
                 )
                 summaryEditRow(
                     title: L10n.string("create.guided.summary.message"),
@@ -1935,9 +1972,7 @@ private struct AnimateCreateVideoDirectionCard: View {
         case .look:
             return selectedLook == nil
                 ? L10n.string("create.guided.look.noneSelected.title")
-                : L10n.string("create.guided.continue.movement")
-        case .movement:
-            return L10n.string("create.guided.continue.message")
+                : L10n.string("create.guided.continue.message")
         case .scriptIdea:
             return L10n.string("create.guided.continue.finish")
         }
@@ -2232,10 +2267,6 @@ struct AnimateCreateVideoSetupGuideState: Equatable {
             guard hasSelectedLook else {
                 return ContinueResult(activeSheet: .look)
             }
-            step = .movement
-            isComplete = false
-            return ContinueResult(activeSheet: .movement)
-        case .movement:
             step = .scriptIdea
             isComplete = false
             return ContinueResult(activeSheet: .scriptIdea)
@@ -2486,7 +2517,6 @@ private struct AnimateCreateGuidedTemplateMenu<Option: AnimateCreateGuidedTempla
 enum GuidedStep: String, CaseIterable, Identifiable {
     case photoFrame
     case look
-    case movement
     case scriptIdea
 
     var id: String { rawValue }
@@ -2495,7 +2525,6 @@ enum GuidedStep: String, CaseIterable, Identifiable {
         switch self {
         case .photoFrame: L10n.string("create.guided.photoFrame.tab")
         case .look: L10n.string("create.guided.look.tab")
-        case .movement: L10n.string("create.guided.movement.tab")
         case .scriptIdea: L10n.string("create.guided.script.tab")
         }
     }
@@ -2515,7 +2544,7 @@ enum AnimationDirectionPreset: String, CaseIterable, Identifiable, AnimateCreate
     var id: String { rawValue }
 
     static var menuOptions: [AnimationDirectionPreset] {
-        [.none, .celebration, .gentleReveal, .playful, .cinematic]
+        [.none, .subjectWave, .cameraPush, .environmentMagic]
     }
 
     var title: String {

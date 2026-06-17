@@ -29,18 +29,19 @@ implementation plan.
 The visible guided setup order is:
 
 ```text
-Photo and framing -> Look -> Animation -> optional written Message/Dedication
+Photo and framing -> Look & Animation -> optional written Message/Dedication
 ```
 
 Credit review becomes visible only after:
 
 - a renderable local source photo exists;
 - a look has been selected;
-- the Animation step has been completed;
+- the Look & Animation step has captured either the default motion, a template,
+  or optional custom guidance;
 - the optional Message/Dedication step has been completed or skipped.
 
-The setup summary must show Photo/framing, Look, Animation, and Message in that
-order.
+The setup summary must show Photo/framing, Look & Animation, and Message in
+that order.
 
 Any compact/basic guide shown outside the sheet must mirror the same setup
 state. It can point the user to the next required action, but it must not merge

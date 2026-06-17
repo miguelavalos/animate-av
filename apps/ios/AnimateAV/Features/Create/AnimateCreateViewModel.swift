@@ -850,15 +850,17 @@ final class AnimateCreateViewModel: ObservableObject {
     }
 
     func selectVisualDirection(_ mode: AnimateVisualDirectionMode, templateId: String?) {
-        form.visualDirectionMode = mode == .template ? .template : .none
+        form.visualDirectionMode = mode
         form.visualDirectionTemplateId = mode == .template ? templateId : nil
-        form.animationDirection = ""
+        if mode != .custom {
+            form.animationDirection = ""
+        }
         markLocalSetupEdited()
     }
 
     func updateAnimationDirection(_ animationDirection: String) {
-        form.animationDirection = ""
-        form.visualDirectionMode = .none
+        form.animationDirection = String(animationDirection.prefix(AnimateVideoSetupLimits.animationDirectionCharacterLimit))
+        form.visualDirectionMode = form.animationDirection.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty ? .none : .custom
         form.visualDirectionTemplateId = nil
         markLocalSetupEdited()
     }
