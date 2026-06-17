@@ -65,7 +65,7 @@ struct AnimateHomeAccountCard: View {
             AVAppShellMetric(
                 id: "spendable-loading",
                 title: L10n.string("credits.available.title"),
-                value: "...",
+                value: "--",
                 systemImage: "creditcard"
             )
         ]

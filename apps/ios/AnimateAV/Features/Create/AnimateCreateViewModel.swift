@@ -479,7 +479,7 @@ final class AnimateCreateViewModel: ObservableObject {
         form.hasMessage = fixtureHasMessage
         form.audioEnabled = true
         form.musicEnabled = true
-        form.voiceEnabled = fixtureHasMessage
+        form.voiceEnabled = false
         form.voiceProfile = .narratorWoman
         form.voiceTone = .warm
         selectedVideoLook = form.look
@@ -827,21 +827,19 @@ final class AnimateCreateViewModel: ObservableObject {
     func updateVideoMessage(_ message: String) {
         form.details = String(message.prefix(AnimateVideoSetupLimits.messageCharacterLimit))
         form.hasMessage = !form.details.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty
-        if !form.hasMessage {
-            form.voiceEnabled = false
-        }
+        form.voiceEnabled = false
         markLocalSetupEdited()
     }
 
     func updateVoiceProfile(_ profile: AnimateVideoVoiceProfile) {
         form.voiceProfile = profile
-        form.voiceEnabled = form.hasMessage && form.audioEnabled
+        form.voiceEnabled = false
         markLocalSetupEdited()
     }
 
     func updateVoiceTone(_ tone: AnimateVideoVoiceTone) {
         form.voiceTone = tone
-        form.voiceEnabled = form.hasMessage && form.audioEnabled
+        form.voiceEnabled = false
         markLocalSetupEdited()
     }
 

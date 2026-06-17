@@ -546,9 +546,9 @@ final class AnimateAPIClientTests: XCTestCase {
         XCTAssertNil(json["script"])
         XCTAssertEqual(json["hasMessage"] as? Bool, true)
         XCTAssertEqual(json["messageText"] as? String, "Happy birthday, Ana. Your photo turns into a watercolor celebration.")
-        XCTAssertEqual(json["voiceEnabled"] as? Bool, true)
-        XCTAssertEqual(json["voiceType"] as? String, AnimateVideoVoiceProfile.narratorWoman.rawValue)
-        XCTAssertEqual(json["narrationVoice"] as? String, AnimateVideoVoiceProfile.narratorWoman.rawValue)
+        XCTAssertEqual(json["voiceEnabled"] as? Bool, false)
+        XCTAssertNil(json["voiceType"])
+        XCTAssertNil(json["narrationVoice"])
         XCTAssertNil(json["mockNoSpend"])
         XCTAssertEqual(json["startsWithSourcePhoto"] as? Bool, true)
     }
@@ -646,7 +646,9 @@ final class AnimateAPIClientTests: XCTestCase {
         let json = try XCTUnwrap(JSONSerialization.jsonObject(with: body) as? [String: Any])
         XCTAssertEqual(json["sourceImageUploadId"] as? String, "source-upload-1")
         XCTAssertNil(json["generatedImageArtifactId"])
-        XCTAssertEqual(json["narrationVoice"] as? String, AnimateVideoVoiceProfile.narratorWoman.rawValue)
+        XCTAssertEqual(json["voiceEnabled"] as? Bool, false)
+        XCTAssertNil(json["voiceType"])
+        XCTAssertNil(json["narrationVoice"])
         XCTAssertNil(json["mockNoSpend"])
     }
 

@@ -100,7 +100,7 @@ enum AnimateCreateUITestFixtures {
                 id: "scene-2",
                 index: 1,
                 caption: "The character waves, smiles, and lands on the celebration message.",
-                narration: "Then the motion, voice, and style turn it into a tiny animated greeting."
+                narration: "Then the motion, message, and style turn it into a tiny animated greeting."
             )
         ]
     }

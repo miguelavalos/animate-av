@@ -20,9 +20,9 @@ struct AnimateAviPreparationCard: View {
                 systemImage: "paintbrush"
             )
             AVAviInfoRow(
-                title: L10n.string("avi.prepare.voice.title"),
-                detail: L10n.string("avi.prepare.voice.detail"),
-                systemImage: "waveform"
+                title: L10n.string("avi.prepare.message.title"),
+                detail: L10n.string("avi.prepare.message.detail"),
+                systemImage: "text.bubble.fill"
             )
             AVAviActionInfoRow(
                 title: L10n.string("avi.prepare.action.title"),

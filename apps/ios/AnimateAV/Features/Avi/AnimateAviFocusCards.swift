@@ -43,7 +43,7 @@ struct AnimateAviCurrentFocusCard: View {
 
     private var creditValue: String {
         guard creditBalanceLoadState.hasLoadedBalance else {
-            return creditBalanceLoadState == .signedOut ? "--" : "..."
+            return "--"
         }
         return "\(creditBalance.spendable)"
     }

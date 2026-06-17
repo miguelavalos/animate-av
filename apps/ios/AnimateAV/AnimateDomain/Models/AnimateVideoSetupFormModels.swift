@@ -223,8 +223,7 @@ struct AnimateVideoSetupForm: Equatable {
     }
 
     var activeVoiceProfile: AnimateVideoVoiceProfile? {
-        guard audioEnabled, activeMessageText != nil else { return nil }
-        return voiceProfile
+        nil
     }
 
     var title: String {
@@ -260,7 +259,7 @@ struct AnimateVideoSetupForm: Equatable {
         form.duration = AnimateVideoDuration(rawValue: video.duration) ?? .auto
         form.mediaUse = AnimateVideoMediaUse(rawValue: video.mediaUse) ?? .aviPick
         form.hasMessage = !(video.details ?? "").trimmingCharacters(in: .whitespacesAndNewlines).isEmpty
-        form.voiceEnabled = form.hasMessage
+        form.voiceEnabled = false
         return form
     }
 

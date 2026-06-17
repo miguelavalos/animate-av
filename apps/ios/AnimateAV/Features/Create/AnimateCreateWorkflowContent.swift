@@ -43,8 +43,6 @@ struct AnimateCreateWorkflowContent: View {
                     openPickerRequest: 0,
                     consumeOpenPickerRequest: {},
                     updateMessage: viewModel.updateVideoMessage,
-                    updateVoiceProfile: viewModel.updateVoiceProfile,
-                    updateVoiceTone: viewModel.updateVoiceTone,
                     discardVideoCreation: viewModel.discardVideoCreation,
                     cancelLocalVideoCreationDraft: viewModel.cancelLocalVideoCreationDraft,
                     startSignInFlow: startSignInFlow,
@@ -92,8 +90,6 @@ private struct AnimateCreateMediaFirstWorkspace: View {
     let openPickerRequest: Int
     let consumeOpenPickerRequest: () -> Void
     let updateMessage: (String) -> Void
-    let updateVoiceProfile: (AnimateVideoVoiceProfile) -> Void
-    let updateVoiceTone: (AnimateVideoVoiceTone) -> Void
     let discardVideoCreation: () -> Void
     let cancelLocalVideoCreationDraft: () -> Void
     let startSignInFlow: () -> Void
@@ -106,7 +102,6 @@ private struct AnimateCreateMediaFirstWorkspace: View {
 
     @State private var showsThemeChooser = false
     @State private var showsLookChooser = false
-    @State private var showsVoiceChooser = false
     @State private var showsCreateVideoConfirmation = false
     @State private var waitsForFinalRenderPlan = false
     @State private var showsDiscardVideoConfirmation = false
@@ -178,10 +173,7 @@ private struct AnimateCreateMediaFirstWorkspace: View {
                             restoreOriginalPhotoData: restoreOriginalPhotoData,
                             changeTheme: { showsThemeChooser = true },
                             changeLook: { showsLookChooser = true },
-                            changeVoice: { showsVoiceChooser = true },
                             updateMessage: updateMessage,
-                            updateVoiceProfile: updateVoiceProfile,
-                            updateVoiceTone: updateVoiceTone,
                             continueGuidedFlowRequest: continueGuidedFlowRequest,
                             isGuidedFlowComplete: $isVideoSetupGuideComplete,
                             mediaPendingReplacement: $mediaPendingReplacement,
@@ -349,18 +341,6 @@ private struct AnimateCreateMediaFirstWorkspace: View {
                 dismiss: { showsLookChooser = false }
             )
             .id(selectedLook?.rawValue ?? "none")
-        }
-        .navigationDestination(isPresented: $showsVoiceChooser) {
-            AnimateCreateVoiceChooserPage(
-                allowedMusic: selectedStyle.allowedMusic,
-                selectedMusicPreset: selectedMusicPreset,
-                selectMusicPreset: {
-                    selectMusicPreset($0)
-                    showsVoiceChooser = false
-                },
-                dismiss: { showsVoiceChooser = false }
-            )
-            .id(selectedMusicPreset.rawValue)
         }
     }
 
@@ -1254,10 +1234,7 @@ private struct AnimateCreateVideoDirectionCard: View {
     let restoreOriginalPhotoData: (AnimateSelectedMedia) -> Void
     let changeTheme: () -> Void
     let changeLook: () -> Void
-    let changeVoice: () -> Void
     let updateMessage: (String) -> Void
-    let updateVoiceProfile: (AnimateVideoVoiceProfile) -> Void
-    let updateVoiceTone: (AnimateVideoVoiceTone) -> Void
     let continueGuidedFlowRequest: Int
     @Binding var isGuidedFlowComplete: Bool
     @Binding var mediaPendingReplacement: AnimateSelectedMedia?
@@ -1643,7 +1620,7 @@ private struct AnimateCreateVideoDirectionCard: View {
                         select: {
                             guideState.selectScriptIdea(.custom)
                             form.hasMessage = hasMessage
-                            form.voiceEnabled = hasMessage && form.audioEnabled
+                            form.voiceEnabled = false
                         }
                     )
                 }
@@ -1678,7 +1655,7 @@ private struct AnimateCreateVideoDirectionCard: View {
                                 guideState.selectedScriptIdea = .custom
                                 let hasText = !$0.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty
                                 form.hasMessage = hasText
-                                form.voiceEnabled = hasText && form.audioEnabled
+                                form.voiceEnabled = false
                                 updateMessage($0)
                             }
                         ))
@@ -1700,25 +1677,8 @@ private struct AnimateCreateVideoDirectionCard: View {
                                 .fixedSize(horizontal: false, vertical: true)
                         }
                     }
-                    VStack(alignment: .leading, spacing: 10) {
-                        Text(L10n.string("create.guided.voice.title"))
-                            .font(.system(size: 12, weight: .black))
-                            .foregroundStyle(AVBrandColor.textPrimary)
-                        LazyVGrid(columns: Array(repeating: GridItem(.flexible(), spacing: 8), count: 2), spacing: 8) {
-                            ForEach(AnimateVideoVoiceProfile.selectorOrder) { profile in
-                                AnimateCreateGuidedVoiceTile(
-                                    profile: profile,
-                                    isSelected: form.voiceProfile == profile,
-                                    select: { updateVoiceProfile(profile) }
-                                )
-                            }
-                        }
-                    }
-                    .padding(.top, 4)
                 }
             }
-        case .voice:
-            EmptyView()
         }
     }
 
@@ -1787,7 +1747,7 @@ private struct AnimateCreateVideoDirectionCard: View {
             return selectedLook == nil
         case .movement:
             return false
-        case .scriptIdea, .voice:
+        case .scriptIdea:
             if guideState.step == .scriptIdea, wantsMessage {
                 return !canContinueMessageStep
             }
@@ -2021,7 +1981,7 @@ private struct AnimateCreateVideoDirectionCard: View {
                 : L10n.string("create.guided.continue.message")
         case .scriptIdea:
             return L10n.string("create.guided.continue.finish")
-        case .movement, .voice:
+        case .movement:
             return L10n.string("create.guided.continue.finish")
         }
     }
@@ -2037,7 +1997,7 @@ private struct AnimateCreateVideoDirectionCard: View {
             .trimmingCharacters(in: .whitespacesAndNewlines)
             .isEmpty
         form.hasMessage = hasText
-        form.voiceEnabled = hasText && form.audioEnabled
+        form.voiceEnabled = false
         form.occasion = idea.title
     }
 
@@ -2329,9 +2289,6 @@ struct AnimateCreateVideoSetupGuideState: Equatable {
             }
             isComplete = false
             return ContinueResult(activeSheet: .scriptIdea)
-        case .voice:
-            isComplete = true
-            return ContinueResult(activeSheet: nil)
         }
     }
 
@@ -2568,7 +2525,6 @@ enum GuidedStep: String, CaseIterable, Identifiable {
     case look
     case movement
     case scriptIdea
-    case voice
 
     var id: String { rawValue }
 
@@ -2578,7 +2534,6 @@ enum GuidedStep: String, CaseIterable, Identifiable {
         case .look: L10n.string("create.guided.look.tab")
         case .movement: L10n.string("create.guided.movement.tab")
         case .scriptIdea: L10n.string("create.guided.script.tab")
-        case .voice: L10n.string("create.guided.voice.tab")
         }
     }
 }
@@ -2841,55 +2796,6 @@ private struct AnimateCreateGuidedLookTile: View {
     }
 }
 
-private struct AnimateCreateGuidedVoiceTile: View {
-    let profile: AnimateVideoVoiceProfile
-    let isSelected: Bool
-    let select: () -> Void
-
-    var body: some View {
-        Button(action: select) {
-            HStack(spacing: 10) {
-                Image(profile.portraitAssetName)
-                    .resizable()
-                    .scaledToFill()
-                .frame(width: 60, height: 60)
-                .clipShape(Circle())
-                .overlay {
-                    Circle()
-                        .stroke(isSelected ? AVBrandColor.accent : .white.opacity(0.92), lineWidth: isSelected ? 2 : 1)
-                }
-                .shadow(color: AVBrandColor.ink.opacity(0.10), radius: 5, y: 2)
-
-                VStack(alignment: .leading, spacing: 2) {
-                    Text(profile.title)
-                        .font(.system(size: 12, weight: .black))
-                        .foregroundStyle(AVBrandColor.textPrimary)
-                        .minimumScaleFactor(0.72)
-                        .lineLimit(1)
-                    Text(profile.detail)
-                        .font(.system(size: 10, weight: .bold))
-                        .foregroundStyle(AVBrandColor.textSecondary)
-                        .minimumScaleFactor(0.64)
-                        .lineLimit(1)
-                }
-                .frame(maxWidth: .infinity, alignment: .leading)
-
-                Image(systemName: isSelected ? "checkmark.circle.fill" : "circle")
-                    .font(.system(size: 15, weight: .black))
-                    .foregroundStyle(isSelected ? AVBrandColor.accent : AVBrandColor.textSecondary)
-            }
-            .padding(8)
-            .frame(height: 84)
-            .background(isSelected ? AVBrandColor.accent.opacity(0.08) : AVBrandColor.cardSurface, in: RoundedRectangle(cornerRadius: 12, style: .continuous))
-            .overlay(
-                RoundedRectangle(cornerRadius: 12, style: .continuous)
-                    .stroke(isSelected ? AVBrandColor.accent : AVBrandColor.borderSubtle.opacity(0.75), lineWidth: isSelected ? 2 : 1)
-            )
-        }
-        .buttonStyle(.plain)
-    }
-}
-
 private struct AnimateCreateGuidedMessageModeTile: View {
     let title: String
     let detail: String
@@ -2959,50 +2865,6 @@ private struct AnimateCreateGuidedMotionTile: View {
             )
         }
         .buttonStyle(.plain)
-    }
-}
-
-private struct AnimateCreateVoiceTonePicker: View {
-    let selectedTone: AnimateVideoVoiceTone
-    let selectTone: (AnimateVideoVoiceTone) -> Void
-
-    var body: some View {
-        VStack(alignment: .leading, spacing: 8) {
-            Text(L10n.string("create.voiceTone.section.title"))
-                .font(.system(size: 12, weight: .black))
-                .foregroundStyle(AVBrandColor.textPrimary)
-
-            LazyVGrid(columns: Array(repeating: GridItem(.flexible(), spacing: 8), count: 2), spacing: 8) {
-                ForEach(AnimateVideoVoiceTone.allCases) { tone in
-                    Button {
-                        selectTone(tone)
-                    } label: {
-                        HStack(spacing: 8) {
-                            Image(systemName: tone.systemImage)
-                                .font(.system(size: 13, weight: .black))
-                                .frame(width: 22)
-
-                            Text(tone.title)
-                                .font(.system(size: 12, weight: .black))
-                                .minimumScaleFactor(0.78)
-                                .fixedSize(horizontal: false, vertical: true)
-                        }
-                        .foregroundStyle(selectedTone == tone ? AVBrandColor.textInverse : AVBrandColor.textSecondary)
-                        .frame(maxWidth: .infinity)
-                        .frame(height: 52)
-                        .background(selectedTone == tone ? AVBrandColor.accent : AVBrandColor.cardSurface, in: RoundedRectangle(cornerRadius: 12, style: .continuous))
-                        .overlay(
-                            RoundedRectangle(cornerRadius: 12, style: .continuous)
-                                .stroke(selectedTone == tone ? AVBrandColor.accent : AVBrandColor.borderSubtle.opacity(0.7), lineWidth: 1)
-                        )
-                    }
-                    .buttonStyle(.plain)
-                }
-            }
-            .padding(5)
-            .background(AVBrandColor.mutedSurface, in: RoundedRectangle(cornerRadius: 16, style: .continuous))
-        }
-        .padding(.top, 2)
     }
 }
 
@@ -4748,68 +4610,6 @@ private struct AnimateCreateLookImageTile: View {
                     .stroke(isSelected ? AVBrandColor.accent : AVBrandColor.borderSubtle.opacity(0.7), lineWidth: isSelected ? 2 : 1)
             }
             .shadow(color: AVBrandColor.ink.opacity(isSelected ? 0.12 : 0.05), radius: isSelected ? 8 : 4, x: 0, y: 3)
-    }
-}
-
-private struct AnimateCreateVoiceChooserPage: View {
-    let allowedMusic: [AnimateVideoMusicPreset]
-    let selectedMusicPreset: AnimateVideoMusicPreset
-    let selectMusicPreset: (AnimateVideoMusicPreset) -> Void
-    let dismiss: () -> Void
-
-    @State private var setupMusicPreset: AnimateVideoMusicPreset
-
-    init(
-        allowedMusic: [AnimateVideoMusicPreset],
-        selectedMusicPreset: AnimateVideoMusicPreset,
-        selectMusicPreset: @escaping (AnimateVideoMusicPreset) -> Void,
-        dismiss: @escaping () -> Void
-    ) {
-        self.allowedMusic = allowedMusic
-        self.selectedMusicPreset = selectedMusicPreset
-        self.selectMusicPreset = selectMusicPreset
-        self.dismiss = dismiss
-        _setupMusicPreset = State(initialValue: selectedMusicPreset)
-    }
-
-    var body: some View {
-        AnimateCreateVisualOptionChooserPage(
-            title: L10n.string("create.selector.voice.title"),
-            introTitle: L10n.string("create.selector.voice.intro.title"),
-            introDetail: L10n.string("create.selector.voice.intro.detail"),
-            dismiss: dismiss,
-            confirm: applySelection
-        ) {
-            AnimateCreateTwoColumnGrid(items: allowedMusic) { preset in
-                    AnimateCreateVisualOptionTile(
-                        title: preset.title,
-                        detail: detail(for: preset),
-                        assetName: preset.assetName,
-                        isSelected: setupMusicPreset == preset,
-                        select: { setupMusicPreset = preset }
-                    )
-            }
-        }
-    }
-
-    private func applySelection() {
-        selectMusicPreset(setupMusicPreset)
-        dismiss()
-    }
-
-    private func detail(for preset: AnimateVideoMusicPreset) -> String {
-        switch preset {
-        case .warm:
-            return L10n.string("create.selector.voice.warm.detail")
-        case .fun:
-            return L10n.string("create.selector.voice.fun.detail")
-        case .cinematic:
-            return L10n.string("create.selector.voice.cinematic.detail")
-        case .calm:
-            return L10n.string("create.selector.voice.calm.detail")
-        case .upbeat:
-            return L10n.string("create.selector.voice.upbeat.detail")
-        }
     }
 }
 
