@@ -171,10 +171,10 @@ animate_api_base_url="$(read_required_config ANIMATEAV_API_BASE_URL)"
 account_publishable_key="$(read_required_config ACCOUNTAV_PUBLISHABLE_KEY)"
 if [ "$env_name" = "prod" ]; then
   account_keychain_access_group="935PM55U6R.com.avalsys.animateav"
-  account_keychain_service="com.avalsys.animateav.account.v2"
+  account_keychain_service=""
 else
   account_keychain_access_group="935PM55U6R.com.avalsys.animateav.dev"
-  account_keychain_service="com.avalsys.animateav.dev.account.v2"
+  account_keychain_service=""
 fi
 revenuecat_api_key="$(read_required_config ANIMATEAV_REVENUECAT_PUBLIC_API_KEY)"
 revenuecat_offering_id="$(read_required_config ANIMATEAV_REVENUECAT_OFFERING_ID)"

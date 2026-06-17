@@ -73,8 +73,11 @@ and app wiring must make these values explicit:
 The Release keychain access group must match the production bundle boundary
 (`935PM55U6R.com.avalsys.animateav`). The Debug keychain access group must
 match the debug bundle boundary (`935PM55U6R.com.avalsys.animateav.dev`).
-The Release keychain service must be `com.avalsys.animateav.account.v2`; the
-Debug keychain service must be `com.avalsys.animateav.dev.account.v2`.
+For iOS, `ACCOUNTAV_KEYCHAIN_SERVICE` must be present but empty/inherited so
+Clerk uses the bundle identifier as the keychain service. Do not set an
+Animate-specific `.account.v2` service for iOS; that stores the activated Clerk
+session under a different service and can make production login appear to
+complete without restoring on the next launch.
 
 Do not treat a build as auth-ready if the app only passes the publishable key to
 Account AV or depends on hidden Clerk keychain defaults. The private native

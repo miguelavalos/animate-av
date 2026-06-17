@@ -126,7 +126,6 @@ for item in \
   "ANIMATEAV_API_BASE_URL:$animate_api_base_url" \
   "ANIMATEAV_CONVEX_URL:$convex_url" \
   "ACCOUNTAV_PUBLISHABLE_KEY:$publishable_key" \
-  "ACCOUNTAV_KEYCHAIN_SERVICE:$keychain_service" \
   "ACCOUNTAV_KEYCHAIN_ACCESS_GROUP:$keychain_access_group" \
   "ANIMATEAV_REVENUECAT_PUBLIC_API_KEY:$revenuecat_api_key" \
   "ANIMATEAV_REVENUECAT_OFFERING_ID:$revenuecat_offering_id" \
@@ -165,11 +164,11 @@ fi
 
 if [ "$configuration" = "Release" ]; then
   [ "$product_bundle_identifier" = "com.avalsys.animateav" ] || fail "Release bundle must be com.avalsys.animateav, got $product_bundle_identifier"
-  [ "$keychain_service" = "com.avalsys.animateav.account.v2" ] || fail "Release ACCOUNTAV_KEYCHAIN_SERVICE must be com.avalsys.animateav.account.v2, got $keychain_service"
+  [ -z "$keychain_service" ] || [ "$keychain_service" = '$(inherited)' ] || fail "Release ACCOUNTAV_KEYCHAIN_SERVICE must be empty so Clerk uses the bundle id service, got $keychain_service"
   [ "$keychain_access_group" = "935PM55U6R.com.avalsys.animateav" ] || fail "Release ACCOUNTAV_KEYCHAIN_ACCESS_GROUP must be 935PM55U6R.com.avalsys.animateav, got $keychain_access_group"
 elif [ "$configuration" = "Debug" ]; then
   [ "$product_bundle_identifier" = "com.avalsys.animateav.dev" ] || fail "Debug bundle must be com.avalsys.animateav.dev, got $product_bundle_identifier"
-  [ "$keychain_service" = "com.avalsys.animateav.dev.account.v2" ] || fail "Debug ACCOUNTAV_KEYCHAIN_SERVICE must be com.avalsys.animateav.dev.account.v2, got $keychain_service"
+  [ -z "$keychain_service" ] || [ "$keychain_service" = '$(inherited)' ] || fail "Debug ACCOUNTAV_KEYCHAIN_SERVICE must be empty so Clerk uses the bundle id service, got $keychain_service"
   [ "$keychain_access_group" = "935PM55U6R.com.avalsys.animateav.dev" ] || fail "Debug ACCOUNTAV_KEYCHAIN_ACCESS_GROUP must be 935PM55U6R.com.avalsys.animateav.dev, got $keychain_access_group"
 fi
 

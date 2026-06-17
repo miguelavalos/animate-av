@@ -6,7 +6,7 @@ expected_build=""
 expected_version=""
 expected_bundle_id="${ANIMATEAV_IOS_BUNDLE_ID:-com.avalsys.animateav}"
 expected_team_id="${ANIMATEAV_APPLE_TEAM_ID:-935PM55U6R}"
-expected_keychain_service="${ANIMATEAV_KEYCHAIN_SERVICE:-com.avalsys.animateav.account.v2}"
+expected_keychain_service="${ANIMATEAV_KEYCHAIN_SERVICE:-}"
 expected_keychain_access_group="${ANIMATEAV_KEYCHAIN_ACCESS_GROUP:-935PM55U6R.com.avalsys.animateav}"
 
 usage() {
@@ -92,7 +92,11 @@ architectures="$(plist_print "$archive_path/Info.plist" "ApplicationProperties:A
 app_binary="$app_path/AnimateAV"
 
 [ "$bundle_id" = "$expected_bundle_id" ] || fail "bundle id must be $expected_bundle_id, got ${bundle_id:-<missing>}"
-[ "$keychain_service" = "$expected_keychain_service" ] || fail "ACCOUNTAV_KEYCHAIN_SERVICE must be $expected_keychain_service, got ${keychain_service:-<missing>}"
+if [ -n "$expected_keychain_service" ]; then
+  [ "$keychain_service" = "$expected_keychain_service" ] || fail "ACCOUNTAV_KEYCHAIN_SERVICE must be $expected_keychain_service, got ${keychain_service:-<missing>}"
+else
+  [ -z "$keychain_service" ] || [ "$keychain_service" = '$(inherited)' ] || fail "ACCOUNTAV_KEYCHAIN_SERVICE must be empty so Clerk uses the bundle id service, got $keychain_service"
+fi
 [ "$keychain_access_group" = "$expected_keychain_access_group" ] || fail "ACCOUNTAV_KEYCHAIN_ACCESS_GROUP must be $expected_keychain_access_group, got ${keychain_access_group:-<missing>}"
 [ -f "$app_binary" ] || fail "app binary is missing: $app_binary"
 [ -n "$archive_team" ] || fail "archive metadata is missing ApplicationProperties:Team; Xcode will not export this archive"
