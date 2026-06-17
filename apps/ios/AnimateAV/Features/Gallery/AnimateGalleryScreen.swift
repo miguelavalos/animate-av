@@ -728,6 +728,7 @@ private struct AnimateGalleryVideoInfoSheet: View {
             ScrollView {
                 VStack(alignment: .leading, spacing: 14) {
                     AnimateGalleryVideoInfoHero(
+                        videoURL: currentVideo.localFileURL,
                         sourceImageURL: currentVideo.sourceImageURL,
                         generatedImageURL: currentVideo.generatedImageURL
                     )
@@ -798,6 +799,7 @@ private struct AnimateGalleryVideoInfoSheet: View {
 }
 
 private struct AnimateGalleryVideoInfoHero: View {
+    let videoURL: URL?
     let sourceImageURL: URL?
     let generatedImageURL: URL?
 
@@ -809,8 +811,10 @@ private struct AnimateGalleryVideoInfoHero: View {
                         sourceImageURL: sourceImageURL,
                         generatedImageURL: generatedImageURL
                     )
-                } else {
+                } else if generatedImageURL != nil || sourceImageURL != nil {
                     AnimateGalleryImageThumbnail(url: generatedImageURL ?? sourceImageURL)
+                } else {
+                    AnimateGalleryVideoThumbnail(url: videoURL, isAvailable: videoURL != nil)
                 }
             }
             .frame(height: 230)
