@@ -1732,24 +1732,34 @@ private struct AnimateCreateVideoDirectionCard: View {
             }
             .frame(maxWidth: .infinity, alignment: .leading)
 
-            Menu {
-                Section(L10n.string("create.videoDirection.menu.userActions")) {
-                    Button(role: .destructive, action: discardVideoCreation) {
-                        Label(L10n.string("create.discard.closeDraft"), systemImage: "xmark.circle")
+            if canShowDiscardAction {
+                Menu {
+                    Section(L10n.string("create.videoDirection.menu.userActions")) {
+                        Button(role: .destructive, action: requestDiscardFromGuidedSheet) {
+                            Label(L10n.string("create.discard.closeDraft"), systemImage: "xmark.circle")
+                        }
                     }
+                } label: {
+                    Image(systemName: "ellipsis")
+                        .font(.system(size: 15, weight: .black))
+                        .foregroundStyle(AVBrandColor.textSecondary)
+                        .frame(width: 36, height: 36)
+                        .background(AVBrandColor.mutedSurface, in: Circle())
                 }
-            } label: {
-                Image(systemName: "ellipsis")
-                    .font(.system(size: 15, weight: .black))
-                    .foregroundStyle(AVBrandColor.textSecondary)
-                    .frame(width: 36, height: 36)
-                    .background(AVBrandColor.mutedSurface, in: Circle())
+                .buttonStyle(.plain)
+                .accessibilityLabel(L10n.string("create.videoDirection.menu.accessibility"))
             }
-            .buttonStyle(.plain)
-            .accessibilityLabel(L10n.string("create.videoDirection.menu.accessibility"))
         }
         .padding(.top, 8)
         .padding(.bottom, 8)
+    }
+
+    private func requestDiscardFromGuidedSheet() {
+        activeGuidedSheet = nil
+        Task { @MainActor in
+            await Task.yield()
+            discardVideoCreation()
+        }
     }
 
     private var animationGuidanceSection: some View {
