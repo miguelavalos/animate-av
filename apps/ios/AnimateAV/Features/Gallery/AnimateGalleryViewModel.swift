@@ -318,28 +318,33 @@ final class AnimateGalleryViewModel: ObservableObject {
         for record: AnimateGalleryVideoRecord,
         remoteArtifact: AnimateArtifact?
     ) -> RelatedGeneratedImage? {
-        if let remoteArtifact,
-           let videoJobId = remoteArtifact.videoJobId {
-            if let artifact = remoteArtifacts.first(where: {
-                $0.kind == "generated_image" && $0.videoJobId == videoJobId
-            }) {
-                return RelatedGeneratedImage(
-                    artifactId: artifact.workflowArtifactId ?? artifact.id,
-                    look: artifact.look,
-                    r2Key: artifact.r2Key,
-                    createdAt: artifact.createdAt
-                )
+        if let generatedImageArtifactId = remoteArtifact?.generatedImageArtifactId,
+           !generatedImageArtifactId.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
+            let artifact = remoteArtifacts.first {
+                $0.kind == "generated_image"
+                    && ($0.id == generatedImageArtifactId || $0.workflowArtifactId == generatedImageArtifactId)
             }
+            return RelatedGeneratedImage(
+                artifactId: artifact?.workflowArtifactId ?? generatedImageArtifactId,
+                look: artifact?.look ?? remoteArtifact?.look,
+                r2Key: artifact?.r2Key,
+                createdAt: artifact?.createdAt ?? remoteArtifact?.createdAt ?? record.createdAt
+            )
         }
 
-        let artifactId = record.artifactId
+        if let videoJobId = remoteArtifact?.videoJobId,
+           let artifact = remoteArtifacts.first(where: {
+               $0.kind == "generated_image" && $0.videoJobId == videoJobId
+           }) {
+            return RelatedGeneratedImage(
+                artifactId: artifact.workflowArtifactId ?? artifact.id,
+                look: artifact.look,
+                r2Key: artifact.r2Key,
+                createdAt: artifact.createdAt
+            )
+        }
 
-        return RelatedGeneratedImage(
-            artifactId: artifactId,
-            look: remoteArtifact?.look,
-            r2Key: nil,
-            createdAt: remoteArtifact?.createdAt ?? record.createdAt
-        )
+        return nil
     }
 
     private func generatedImageURL(
