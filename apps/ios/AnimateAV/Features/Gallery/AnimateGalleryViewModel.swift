@@ -82,9 +82,7 @@ final class AnimateGalleryViewModel: ObservableObject {
         let localRecords = galleryStore.loadRecords()
         var presentations: [AnimateGalleryVideoPresentation] = localRecords.map { record in
             let localFileExists = galleryStore.localFileExists(for: record)
-            let remoteArtifact = remoteArtifacts.first {
-                $0.id == record.artifactId || $0.workflowArtifactId == record.artifactId
-            }
+            let remoteArtifact = remoteVideoArtifact(matching: record)
             return AnimateGalleryVideoPresentation(
                 record: record,
                 localFileURL: galleryStore.localFileURL(for: record),
@@ -212,15 +210,24 @@ final class AnimateGalleryViewModel: ObservableObject {
     }
 
     func prepareVideoInfo(_ video: AnimateGalleryVideoPresentation) {
-        guard video.generatedImageURL == nil,
+        guard video.generatedImageURL == nil || video.sourceImageURL == nil,
               let authTokenProvider
         else { return }
 
         Task { [weak self] in
             guard let bearerToken = try? await authTokenProvider.currentBearerToken() else { return }
-            _ = await self?.downloadRelatedGeneratedImage(
+            let sourceImageLocalRelativePath = await self?.downloadRelatedSourceImage(
                 for: video,
                 bearerToken: bearerToken
+            ) ?? video.record.sourceImageLocalRelativePath
+            let generatedImageLocalRelativePath = await self?.downloadRelatedGeneratedImage(
+                for: video,
+                bearerToken: bearerToken
+            ) ?? video.record.generatedImageLocalRelativePath
+            self?.updateVideoRecord(
+                video.record,
+                sourceImageLocalRelativePath: sourceImageLocalRelativePath,
+                generatedImageLocalRelativePath: generatedImageLocalRelativePath
             )
             self?.refreshImages()
             self?.refreshVideos()
@@ -254,13 +261,17 @@ final class AnimateGalleryViewModel: ObservableObject {
                     for: video,
                     bearerToken: bearerToken
                 ) ?? video.record.generatedImageLocalRelativePath
+                let sourceImageLocalRelativePath = await self?.downloadRelatedSourceImage(
+                    for: video,
+                    bearerToken: bearerToken
+                ) ?? video.record.sourceImageLocalRelativePath
                 let record = try self?.galleryStore.saveDownloadedVideo(
                     temporaryFileURL: temporaryFileURL,
                     videoId: video.record.videoId,
                     artifactId: artifactId,
                     title: video.displayTitle,
                     r2Key: download.r2Key ?? remoteArtifact.r2Key,
-                    sourceImageLocalRelativePath: video.record.sourceImageLocalRelativePath,
+                    sourceImageLocalRelativePath: sourceImageLocalRelativePath,
                     generatedImageLocalRelativePath: generatedImageLocalRelativePath,
                     createdAt: Date()
                 )
@@ -272,6 +283,61 @@ final class AnimateGalleryViewModel: ObservableObject {
             } catch {
                 self?.statusMessage = L10n.string("gallery.video.downloadFailed")
             }
+        }
+    }
+
+    private func updateVideoRecord(
+        _ record: AnimateGalleryVideoRecord,
+        sourceImageLocalRelativePath: String?,
+        generatedImageLocalRelativePath: String?
+    ) {
+        guard sourceImageLocalRelativePath != record.sourceImageLocalRelativePath
+            || generatedImageLocalRelativePath != record.generatedImageLocalRelativePath
+        else { return }
+
+        galleryStore.addRecord(
+            AnimateGalleryVideoRecord(
+                id: record.id,
+                videoId: record.videoId,
+                artifactId: record.artifactId,
+                title: record.title,
+                r2Key: record.r2Key,
+                localRelativePath: record.localRelativePath,
+                sourceImageLocalRelativePath: sourceImageLocalRelativePath,
+                generatedImageLocalRelativePath: generatedImageLocalRelativePath,
+                createdAt: record.createdAt
+            )
+        )
+    }
+
+    private func downloadRelatedSourceImage(
+        for video: AnimateGalleryVideoPresentation,
+        bearerToken: String
+    ) async -> String? {
+        guard let finalRenderClient,
+              let sourceImageArtifactId = video.remoteArtifact?.sourceImageArtifactId?.trimmingCharacters(in: .whitespacesAndNewlines),
+              !sourceImageArtifactId.isEmpty
+        else { return nil }
+
+        if let existingPath = video.record.sourceImageLocalRelativePath,
+           galleryStore.localFileExists(relativePath: existingPath) {
+            return existingPath
+        }
+
+        do {
+            let download = try await finalRenderClient.prepareImageArtifactDownload(
+                artifactId: sourceImageArtifactId,
+                bearerToken: bearerToken
+            )
+            let temporaryFileURL = try await finalRenderClient.downloadFinalArtifact(from: download)
+            let data = try Data(contentsOf: temporaryFileURL)
+            return try galleryStore.saveSourceImage(
+                data: data,
+                videoId: video.record.videoId,
+                artifactId: download.artifactId
+            )
+        } catch {
+            return nil
         }
     }
 
@@ -355,6 +421,20 @@ final class AnimateGalleryViewModel: ObservableObject {
         }
 
         return nil
+    }
+
+    private func remoteVideoArtifact(matching record: AnimateGalleryVideoRecord) -> AnimateArtifact? {
+        remoteArtifacts.first { artifact in
+            (artifact.kind == "final_export" || artifact.kind == "final_video")
+                && (
+                    artifact.id == record.artifactId
+                        || artifact.workflowArtifactId == record.artifactId
+                        || artifact.finalVideoArtifactId == record.artifactId
+                        || artifact.id == record.videoId
+                        || artifact.workflowArtifactId == record.videoId
+                        || artifact.finalVideoArtifactId == record.videoId
+                )
+        }
     }
 
     private func generatedImageURL(

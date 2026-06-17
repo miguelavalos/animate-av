@@ -749,7 +749,7 @@ private struct AnimateGalleryVideoInfoSheet: View {
             }
         }
         .onAppear {
-            viewModel.prepareVideoInfo(video)
+            viewModel.prepareVideoInfo(currentVideo)
         }
     }
 

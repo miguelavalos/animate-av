@@ -9,6 +9,8 @@ struct AnimateArtifact: Identifiable, Decodable, Equatable {
     let look: String?
     let videoJobId: String?
     let imageJobId: String?
+    let finalVideoArtifactId: String?
+    let sourceImageArtifactId: String?
     let generatedImageArtifactId: String?
     let status: String
     let durationSeconds: Double?
@@ -26,6 +28,8 @@ struct AnimateArtifact: Identifiable, Decodable, Equatable {
         look: String? = nil,
         videoJobId: String? = nil,
         imageJobId: String? = nil,
+        finalVideoArtifactId: String? = nil,
+        sourceImageArtifactId: String? = nil,
         generatedImageArtifactId: String? = nil,
         status: String,
         durationSeconds: Double? = nil,
@@ -42,6 +46,8 @@ struct AnimateArtifact: Identifiable, Decodable, Equatable {
         self.look = look
         self.videoJobId = videoJobId
         self.imageJobId = imageJobId
+        self.finalVideoArtifactId = finalVideoArtifactId
+        self.sourceImageArtifactId = sourceImageArtifactId
         self.generatedImageArtifactId = generatedImageArtifactId
         self.status = status
         self.durationSeconds = durationSeconds
@@ -60,6 +66,8 @@ struct AnimateArtifact: Identifiable, Decodable, Equatable {
         case look
         case videoJobId
         case imageJobId
+        case finalVideoArtifactId
+        case sourceImageArtifactId
         case generatedImageArtifactId
         case status
         case durationSeconds
@@ -80,6 +88,8 @@ struct AnimateArtifact: Identifiable, Decodable, Equatable {
         look = try container.decodeIfPresent(String.self, forKey: .look)
         videoJobId = try container.decodeIfPresent(String.self, forKey: .videoJobId)
         imageJobId = try container.decodeIfPresent(String.self, forKey: .imageJobId)
+        finalVideoArtifactId = try container.decodeIfPresent(String.self, forKey: .finalVideoArtifactId)
+        sourceImageArtifactId = try container.decodeIfPresent(String.self, forKey: .sourceImageArtifactId)
         generatedImageArtifactId = try container.decodeIfPresent(String.self, forKey: .generatedImageArtifactId)
         status = try container.decode(String.self, forKey: .status)
         durationSeconds = try container.decodeIfPresent(Double.self, forKey: .durationSeconds)
