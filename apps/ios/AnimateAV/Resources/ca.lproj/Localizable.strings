@@ -349,7 +349,8 @@
 "gallery.empty.shortTitle" = "La Galeria espera";
 "gallery.empty.title" = "El primer vídeo t’espera";
 "gallery.open" = "Obre la galeria";
-"gallery.subtitle" = "Els teus vídeos i imatges acabats viuen aquí.";
+"gallery.subtitle" = "Els teus vídeos i imatges acabats apareixen aquí.";
+"gallery.subtitle.videosOnly" = "Els teus vídeos acabats apareixen aquí.";
 "gallery.title" = "Galeria";
 "gallery.video.localFileMissing" = "Falta el fitxer local";
 "gallery.video.savedOnDevice" = "Desat en aquest dispositiu";

@@ -27,7 +27,7 @@ struct AnimateGalleryScreen: View {
                     .font(.system(size: 34, weight: .black))
                     .foregroundStyle(AVBrandColor.textPrimary)
 
-                Text(L10n.string("gallery.subtitle"))
+                Text(gallerySubtitle)
                     .font(AVBrandTypography.body)
                     .foregroundStyle(AVBrandColor.textSecondary)
             }
@@ -169,6 +169,12 @@ struct AnimateGalleryScreen: View {
     private var selectedAssetKind: AnimateGalleryAssetKind {
         guard canUseAnimateImageGeneration else { return .videos }
         return AnimateGalleryAssetKind(rawValue: selectedAssetKindRaw) ?? .videos
+    }
+
+    private var gallerySubtitle: String {
+        canUseAnimateImageGeneration
+            ? L10n.string("gallery.subtitle")
+            : L10n.string("gallery.subtitle.videosOnly")
     }
 
     private var selectedAssetKindBinding: Binding<AnimateGalleryAssetKind> {

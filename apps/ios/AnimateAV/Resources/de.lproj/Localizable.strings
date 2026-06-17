@@ -238,7 +238,8 @@
 "gallery.empty.shortTitle" = "Die Galerie wartet";
 "gallery.empty.title" = "Dein erstes Video wartet";
 "gallery.open" = "Galerie öffnen";
-"gallery.subtitle" = "Deine fertigen Videos und Bilder sind hier.";
+"gallery.subtitle" = "Deine fertigen Videos und Bilder erscheinen hier.";
+"gallery.subtitle.videosOnly" = "Deine fertigen Videos erscheinen hier.";
 "gallery.title" = "Galerie";
 "gallery.video.localFileMissing" = "Lokale Datei fehlt";
 "gallery.video.savedOnDevice" = "Auf diesem Gerät gespeichert";

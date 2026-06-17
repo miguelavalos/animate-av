@@ -352,7 +352,8 @@
 "gallery.empty.shortTitle" = "Gallery is waiting";
 "gallery.empty.title" = "Your first video is waiting";
 "gallery.open" = "Open Gallery";
-"gallery.subtitle" = "Your finished videos and images live here.";
+"gallery.subtitle" = "Your finished videos and images appear here.";
+"gallery.subtitle.videosOnly" = "Your finished videos appear here.";
 "gallery.title" = "Gallery";
 "gallery.video.localFileMissing" = "Local file missing";
 "gallery.video.savedOnDevice" = "Saved on this device";

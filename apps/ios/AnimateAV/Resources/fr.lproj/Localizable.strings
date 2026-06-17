@@ -349,7 +349,8 @@
 "gallery.empty.shortTitle" = "La Galerie attend";
 "gallery.empty.title" = "Ta première vidéo attend";
 "gallery.open" = "Ouvrir la galerie";
-"gallery.subtitle" = "Tes vidéos et images terminées sont ici.";
+"gallery.subtitle" = "Tes vidéos et images terminées apparaissent ici.";
+"gallery.subtitle.videosOnly" = "Tes vidéos terminées apparaissent ici.";
 "gallery.title" = "Galerie";
 "gallery.video.localFileMissing" = "Fichier local manquant";
 "gallery.video.savedOnDevice" = "Enregistrée sur cet appareil";
