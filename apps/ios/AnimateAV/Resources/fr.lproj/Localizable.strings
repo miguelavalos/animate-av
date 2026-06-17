@@ -247,7 +247,7 @@
 "avi.landing.story" = "Style";
 "avi.landing.title" = "Laisse Avi l’animer";
 "avi.prepare.action.button" = "Faire la vidéo";
-"avi.prepare.action.detail" = "Commence avec une photo, puis ajuste le style, la voix et le message.";
+"avi.prepare.action.detail" = "Commence avec une photo, puis ajuste le style, l’animation et le message.";
 "avi.prepare.action.title" = "Commencer une nouvelle vidéo";
 "avi.prepare.detail" = "Avi fonctionne mieux avec une photo claire et une idée claire.";
 "avi.prepare.look.detail" = "Choisis le style visuel avant qu’Avi prépare la vidéo.";
@@ -627,7 +627,7 @@
 "create.media.emptySummary" = "Choisis une photo dans ta photothèque.";
 "create.media.panelDetail" = "Ajoute une photo et Avi créera la vidéo.";
 "create.media.reorder" = "Remplacer l’image";
-"create.media.startDetail" = "Commence avec une photo. Elle sera redessinée, animée et accompagnée d’audio.";
+"create.media.startDetail" = "Commence avec une photo. Avi la transformera en vidéo animée stylisée.";
 "create.media.startTitle" = "Commencer avec une photo";
 "create.media.title" = "Photo";
 "create.discard.current" = "Supprimer la vidéo";
@@ -819,7 +819,7 @@
 "create.guided.summary.look" = "Style";
 "create.guided.summary.message" = "Message";
 "create.guided.summary.createVideo.title" = "Prêt à calculer le coût";
-"create.guided.summary.createVideo.detail" = "Style, message et voix sont prêts.";
+"create.guided.summary.createVideo.detail" = "Photo, style, animation et message sont prêts.";
 "create.videoDirection.summary.aviTitle" = "Ta configuration";
 "create.videoDirection.summary.aviDetail" = "%@, %@ et %@.";
 "create.videoDirection.summary.userTitle" = "Ta configuration";

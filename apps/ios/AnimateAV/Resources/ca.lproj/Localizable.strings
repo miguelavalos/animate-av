@@ -247,7 +247,7 @@
 "avi.landing.story" = "Estil";
 "avi.landing.title" = "Deixa que Avi ho animi";
 "avi.prepare.action.button" = "Fer vídeo";
-"avi.prepare.action.detail" = "Comença amb una foto i ajusta l’estil, la veu i el missatge.";
+"avi.prepare.action.detail" = "Comença amb una foto i ajusta l’estil, l’animació i el missatge.";
 "avi.prepare.action.title" = "Començar un vídeo nou";
 "avi.prepare.detail" = "Avi funciona millor amb una foto clara i una idea clara.";
 "avi.prepare.look.detail" = "Tria l’estil visual abans que l’Avi prepari el vídeo.";
@@ -627,7 +627,7 @@
 "create.media.emptySummary" = "Tria una foto de la biblioteca.";
 "create.media.panelDetail" = "Afegeix una foto i l’Avi crearà el vídeo.";
 "create.media.reorder" = "Substituir imatge";
-"create.media.startDetail" = "Comença amb una foto. Es redibuixarà, s’animarà i s’hi afegirà àudio.";
+"create.media.startDetail" = "Comença amb una foto. L’Avi la convertirà en un vídeo animat amb estil.";
 "create.media.startTitle" = "Comença amb una foto";
 "create.media.title" = "Foto";
 "create.discard.current" = "Descartar vídeo";
@@ -819,7 +819,7 @@
 "create.guided.summary.look" = "Estil";
 "create.guided.summary.message" = "Missatge";
 "create.guided.summary.createVideo.title" = "A punt per calcular el cost";
-"create.guided.summary.createVideo.detail" = "Estil, missatge i veu a punt.";
+"create.guided.summary.createVideo.detail" = "Foto, estil, animació i missatge a punt.";
 "create.videoDirection.summary.aviTitle" = "Avi ha decidit";
 "create.videoDirection.summary.aviDetail" = "%@, %@ i %@.";
 "create.videoDirection.summary.userTitle" = "La teva configuració";

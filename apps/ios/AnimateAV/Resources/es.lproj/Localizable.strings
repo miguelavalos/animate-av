@@ -250,7 +250,7 @@
 "avi.landing.story" = "Estilo";
 "avi.landing.title" = "Deja que Avi lo anime";
 "avi.prepare.action.button" = "Hacer video";
-"avi.prepare.action.detail" = "Empieza con una foto y ajusta el estilo, la voz y el mensaje.";
+"avi.prepare.action.detail" = "Empieza con una foto y ajusta el estilo, la animación y el mensaje.";
 "avi.prepare.action.title" = "Empezar un video nuevo";
 "avi.prepare.detail" = "Avi funciona mejor con una foto clara y una idea clara.";
 "avi.prepare.look.detail" = "Elige el estilo visual antes de que Avi prepare el video.";
@@ -630,7 +630,7 @@
 "create.media.emptySummary" = "Elige una foto de tu biblioteca.";
 "create.media.panelDetail" = "Añade una foto y Avi creará el video.";
 "create.media.reorder" = "Sustituir imagen";
-"create.media.startDetail" = "Empieza con una foto. Avi la redibuja, la anima y añade audio.";
+"create.media.startDetail" = "Empieza con una foto. Avi la convertirá en un video animado con estilo.";
 "create.media.startTitle" = "Empieza con una foto";
 "create.media.title" = "Foto";
 "create.discard.current" = "Descartar video";

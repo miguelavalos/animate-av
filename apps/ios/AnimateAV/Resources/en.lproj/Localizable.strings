@@ -630,7 +630,7 @@
 "create.media.emptySummary" = "Choose one photo from your library.";
 "create.media.panelDetail" = "Add one photo to build the video.";
 "create.media.reorder" = "Replace image";
-"create.media.startDetail" = "Start with one photo. It will be redrawn, animated, and paired with audio.";
+"create.media.startDetail" = "Start with one photo. Avi will turn it into a styled animated video.";
 "create.media.startTitle" = "Start with a photo";
 "create.media.title" = "Photo";
 "create.discard.current" = "Discard video";
@@ -822,7 +822,7 @@
 "create.guided.summary.look" = "Look";
 "create.guided.summary.message" = "Message";
 "create.guided.summary.createVideo.title" = "Ready to price";
-"create.guided.summary.createVideo.detail" = "Photo, look, motion, and message choice are ready.";
+"create.guided.summary.createVideo.detail" = "Photo, look, animation, and message choice are ready.";
 "create.videoDirection.summary.aviTitle" = "Your setup";
 "create.videoDirection.summary.aviDetail" = "%@, %@, and %@.";
 "create.videoDirection.summary.userTitle" = "Your setup";

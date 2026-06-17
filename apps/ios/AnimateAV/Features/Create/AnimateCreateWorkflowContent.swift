@@ -2418,7 +2418,9 @@ private struct AnimateCreatePhotoFrameSecondaryButtonStyle: ButtonStyle {
         if !isEnabled {
             return AVBrandColor.mutedSurface.opacity(0.62)
         }
-        return configuration.isPressed ? AVBrandColor.mutedSurface.opacity(0.88) : .white.opacity(0.72)
+        return configuration.isPressed
+            ? AVBrandColor.mutedSurface.opacity(0.88)
+            : AVBrandColor.cardSurface.opacity(0.94)
     }
 }
 

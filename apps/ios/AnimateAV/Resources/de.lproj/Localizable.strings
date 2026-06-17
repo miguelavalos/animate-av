@@ -629,7 +629,7 @@
 "create.media.emptySummary" = "Wähle ein Foto aus deiner Mediathek.";
 "create.media.panelDetail" = "Füge ein Foto hinzu und Avi erstellt das Video.";
 "create.media.reorder" = "Bild ersetzen";
-"create.media.startDetail" = "Starte mit einem Foto. Es wird neu gezeichnet, animiert und mit Audio ergänzt.";
+"create.media.startDetail" = "Starte mit einem Foto. Avi macht daraus ein stilisiertes animiertes Video.";
 "create.media.startTitle" = "Mit einem Foto beginnen";
 "create.media.title" = "Foto";
 "create.discard.current" = "Video verwerfen";
