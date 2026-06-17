@@ -310,6 +310,7 @@ final class AnimateGalleryViewModel: ObservableObject {
             galleryStore.addImageRecord(record)
             return record.localRelativePath
         } catch {
+            statusMessage = L10n.string("gallery.image.downloadFailed")
             return nil
         }
     }
@@ -341,6 +342,15 @@ final class AnimateGalleryViewModel: ObservableObject {
                 look: artifact.look,
                 r2Key: artifact.r2Key,
                 createdAt: artifact.createdAt
+            )
+        }
+
+        if !record.artifactId.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
+            return RelatedGeneratedImage(
+                artifactId: record.artifactId,
+                look: remoteArtifact?.look,
+                r2Key: nil,
+                createdAt: remoteArtifact?.createdAt ?? record.createdAt
             )
         }
 
