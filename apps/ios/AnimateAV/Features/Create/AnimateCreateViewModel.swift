@@ -516,7 +516,7 @@ final class AnimateCreateViewModel: ObservableObject {
         if let renderPlan {
             finalRenderWorkflow?.usePreparedRenderPlan(renderPlan)
         } else {
-            finalRenderWorkflow?.clearRenderPlan()
+            finalRenderWorkflow?.clearRenderPlan(invalidateActiveGeneration: true)
         }
         renderPlanInputSignature = renderPlan.map { currentFinalRenderInputSignature(videoId: $0.videoId) }
         isPreparingFinalPlan = fixtureMode == .videoPlanCheckingCost
@@ -781,6 +781,7 @@ final class AnimateCreateViewModel: ObservableObject {
         finalPlanPreparationGeneration += 1
         isPreparingFinalPlan = false
         pendingRenderPlanInputSignature = nil
+        finalRenderWorkflow?.clearRenderPlan(invalidateActiveGeneration: true)
         if finalVideoCommandState.isRunning {
             finalVideoCommandState = .idle
         }
@@ -814,7 +815,7 @@ final class AnimateCreateViewModel: ObservableObject {
         if latestFinalJob?.isTerminalFailure == true {
             latestFinalJob = nil
         }
-        finalRenderWorkflow?.clearRenderPlan()
+        finalRenderWorkflow?.clearRenderPlan(invalidateActiveGeneration: true)
     }
 
     func selectLook(_ look: AnimateVideoLook) {

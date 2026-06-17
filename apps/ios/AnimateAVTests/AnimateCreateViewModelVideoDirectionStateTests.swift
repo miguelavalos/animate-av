@@ -219,6 +219,70 @@ final class AnimateCreateViewModelVideoDirectionStateTests: XCTestCase {
         XCTAssertNotEqual(workflow.statusMessage, L10n.string("workflow.final.sourceMediaMissing"))
     }
 
+    func testClearingFinalRenderPlanInvalidatesPendingCostPreparation() async {
+        AnimateFinalRenderURLProtocolMock.reset()
+        AnimateFinalRenderURLProtocolMock.responseData = Data(Self.renderPlanWithoutBrandingJSON.utf8)
+        AnimateFinalRenderURLProtocolMock.responseDelayNanoseconds = 200_000_000
+        let configuration = URLSessionConfiguration.ephemeral
+        configuration.protocolClasses = [AnimateFinalRenderURLProtocolMock.self]
+        let harness = AnimateVideoCreationFailureHarness(
+            error: NSError(domain: "test", code: 1),
+            finalRenderSession: URLSession(configuration: configuration)
+        )
+        let workflow = harness.finalRenderWorkflow
+        harness.publishWorkspace(
+            AnimateWorkspace(
+                video: AnimateCreateTestFixtures.makeVideo(id: "video-1", status: "story_ready"),
+                mediaAssets: [
+                    AnimateCreateTestFixtures.makeMediaAsset(
+                        id: "backend-media-1",
+                        sourceLocalIdentifier: "local-asset-1",
+                        hasUploadId: true
+                    )
+                ],
+                storyScenes: [AnimateCreateTestFixtures.makeScene(id: "scene-1")],
+                renderJobs: [],
+                artifacts: []
+            )
+        )
+        await Task.yield()
+
+        let selectedMedia = [
+            AnimateCreateTestFixtures.makeSelectedMedia(
+                id: "00000000-0000-0000-0000-000000000001",
+                sourceLocalIdentifier: "local-asset-1"
+            )
+        ]
+        let preparationTask = Task {
+            await workflow.prepareFinalRenderPlan(
+                videoId: "video-1",
+                template: .birthdayMessage,
+                creationStyle: nil,
+                form: AnimateVideoSetupForm(template: .birthdayMessage),
+                selectedMedia: selectedMedia
+            )
+        }
+
+        for _ in 0..<40 where AnimateFinalRenderURLProtocolMock.requestCount == 0 {
+            try? await Task.sleep(nanoseconds: 10_000_000)
+        }
+        XCTAssertEqual(AnimateFinalRenderURLProtocolMock.requestCount, 1)
+        XCTAssertTrue(workflow.isGenerating)
+        XCTAssertEqual(workflow.statusMessage, L10n.string("workflow.final.checkingPlan"))
+
+        workflow.clearRenderPlan(invalidateActiveGeneration: true)
+
+        XCTAssertFalse(workflow.isGenerating)
+        XCTAssertNil(workflow.statusMessage)
+        XCTAssertNil(workflow.renderPlan)
+
+        await preparationTask.value
+
+        XCTAssertFalse(workflow.isGenerating)
+        XCTAssertNil(workflow.statusMessage)
+        XCTAssertNil(workflow.renderPlan)
+    }
+
     func testFinalRenderPlanWithoutWatermarkIsCurrentForWatermarkedRender() {
         let plan = AnimateCreateTestFixtures.makeRenderPlan(videoId: "video-1")
 
@@ -1546,6 +1610,7 @@ private struct TestGalleryStore: AnimateGalleryStoring {
 private final class AnimateFinalRenderURLProtocolMock: URLProtocol {
     nonisolated(unsafe) static var responseData = Data()
     nonisolated(unsafe) static var responseDataForRequest: ((URLRequest) -> Data)?
+    nonisolated(unsafe) static var responseDelayNanoseconds: UInt64 = 0
     nonisolated(unsafe) static var statusCode = 200
     nonisolated(unsafe) static var requestCount = 0
     nonisolated(unsafe) static var lastRequest: URLRequest?
@@ -1554,6 +1619,7 @@ private final class AnimateFinalRenderURLProtocolMock: URLProtocol {
     static func reset() {
         responseData = Data()
         responseDataForRequest = nil
+        responseDelayNanoseconds = 0
         statusCode = 200
         requestCount = 0
         lastRequest = nil
@@ -1572,6 +1638,13 @@ private final class AnimateFinalRenderURLProtocolMock: URLProtocol {
         Self.requestCount += 1
         Self.lastRequest = request
         Self.requestPaths.append(request.url?.path ?? "")
+        if Self.responseDelayNanoseconds > 0 {
+            Thread.sleep(forTimeInterval: Double(Self.responseDelayNanoseconds) / 1_000_000_000)
+        }
+        finishLoading()
+    }
+
+    private func finishLoading() {
         let response = HTTPURLResponse(
             url: request.url!,
             statusCode: Self.statusCode,

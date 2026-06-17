@@ -636,8 +636,13 @@ final class FinalRenderWorkflow: WorkspaceObservingWorkflow {
             || (renderPlan.watermark?.selectedRemoveWatermark ?? false) != removesWatermark
     }
 
-    func clearRenderPlan() {
-        guard !isGenerating else { return }
+    func clearRenderPlan(invalidateActiveGeneration: Bool = false) {
+        if invalidateActiveGeneration {
+            advanceWorkflowGeneration()
+            isGenerating = false
+        } else {
+            guard !isGenerating else { return }
+        }
         renderPlan = nil
         videoQuote = nil
         preparedVideoSourceUpload = nil
