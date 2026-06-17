@@ -3290,11 +3290,12 @@ private struct AnimateCreatePrimaryActionBar: View {
             }
             .padding(.horizontal, 12)
             .padding(.vertical, 10)
-            .background(Color.white, in: RoundedRectangle(cornerRadius: 20, style: .continuous))
+            .background(AVBrandColor.cardSurface.opacity(0.96), in: RoundedRectangle(cornerRadius: 20, style: .continuous))
             .overlay {
                 RoundedRectangle(cornerRadius: 20, style: .continuous)
                     .stroke(AVBrandColor.borderSubtle.opacity(0.56), lineWidth: 1)
             }
+            .shadow(color: AVBrandColor.textPrimary.opacity(0.18), radius: 18, y: 10)
         }
     }
 
@@ -3474,13 +3475,13 @@ private struct AnimateCreateFinalVideoActionDock: View {
         .padding(10)
         .background {
             Capsule(style: .continuous)
-                .fill(.ultraThinMaterial)
+                .fill(AVBrandColor.cardSurface.opacity(0.96))
                 .overlay(
                     LinearGradient(
                         colors: [
-                            Color.white.opacity(0.56),
-                            AVBrandColor.accent.opacity(0.10),
-                            AVBrandColor.accent.opacity(0.05)
+                            AVBrandColor.accent.opacity(0.16),
+                            AVBrandColor.cardSurface.opacity(0.92),
+                            AVBrandColor.cardSurface.opacity(0.96)
                         ],
                         startPoint: .topLeading,
                         endPoint: .bottomTrailing
