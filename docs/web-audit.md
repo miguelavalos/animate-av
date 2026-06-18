@@ -27,3 +27,6 @@ Animate AV app web now exists at `apps/web`.
 - Local and preview app web QA passed for public `/`, protected `/create`, and
   five-language rendering.
 - Preview app web deployed to `https://app.animate-av-preview.avalsys.com`.
+- The preview app web build no longer emits the large client chunk warning:
+  vendor chunks are split for Clerk, serialization, UI, and app bootstrap while
+  keeping the same public `/`, sign-in, and protected-route behavior.
