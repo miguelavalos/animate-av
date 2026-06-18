@@ -10,6 +10,7 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as SignInRouteImport } from './routes/sign-in'
+import { Route as InProgressRouteImport } from './routes/in-progress'
 import { Route as GalleryRouteImport } from './routes/gallery'
 import { Route as CreateRouteImport } from './routes/create'
 import { Route as AviRouteImport } from './routes/avi'
@@ -18,6 +19,11 @@ import { Route as IndexRouteImport } from './routes/index'
 const SignInRoute = SignInRouteImport.update({
   id: '/sign-in',
   path: '/sign-in',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const InProgressRoute = InProgressRouteImport.update({
+  id: '/in-progress',
+  path: '/in-progress',
   getParentRoute: () => rootRouteImport,
 } as any)
 const GalleryRoute = GalleryRouteImport.update({
@@ -46,6 +52,7 @@ export interface FileRoutesByFullPath {
   '/avi': typeof AviRoute
   '/create': typeof CreateRoute
   '/gallery': typeof GalleryRoute
+  '/in-progress': typeof InProgressRoute
   '/sign-in': typeof SignInRoute
 }
 export interface FileRoutesByTo {
@@ -53,6 +60,7 @@ export interface FileRoutesByTo {
   '/avi': typeof AviRoute
   '/create': typeof CreateRoute
   '/gallery': typeof GalleryRoute
+  '/in-progress': typeof InProgressRoute
   '/sign-in': typeof SignInRoute
 }
 export interface FileRoutesById {
@@ -61,14 +69,22 @@ export interface FileRoutesById {
   '/avi': typeof AviRoute
   '/create': typeof CreateRoute
   '/gallery': typeof GalleryRoute
+  '/in-progress': typeof InProgressRoute
   '/sign-in': typeof SignInRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/avi' | '/create' | '/gallery' | '/sign-in'
+  fullPaths: '/' | '/avi' | '/create' | '/gallery' | '/in-progress' | '/sign-in'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/avi' | '/create' | '/gallery' | '/sign-in'
-  id: '__root__' | '/' | '/avi' | '/create' | '/gallery' | '/sign-in'
+  to: '/' | '/avi' | '/create' | '/gallery' | '/in-progress' | '/sign-in'
+  id:
+    | '__root__'
+    | '/'
+    | '/avi'
+    | '/create'
+    | '/gallery'
+    | '/in-progress'
+    | '/sign-in'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -76,6 +92,7 @@ export interface RootRouteChildren {
   AviRoute: typeof AviRoute
   CreateRoute: typeof CreateRoute
   GalleryRoute: typeof GalleryRoute
+  InProgressRoute: typeof InProgressRoute
   SignInRoute: typeof SignInRoute
 }
 
@@ -86,6 +103,13 @@ declare module '@tanstack/react-router' {
       path: '/sign-in'
       fullPath: '/sign-in'
       preLoaderRoute: typeof SignInRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/in-progress': {
+      id: '/in-progress'
+      path: '/in-progress'
+      fullPath: '/in-progress'
+      preLoaderRoute: typeof InProgressRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/gallery': {
@@ -124,6 +148,7 @@ const rootRouteChildren: RootRouteChildren = {
   AviRoute: AviRoute,
   CreateRoute: CreateRoute,
   GalleryRoute: GalleryRoute,
+  InProgressRoute: InProgressRoute,
   SignInRoute: SignInRoute,
 }
 export const routeTree = rootRouteImport

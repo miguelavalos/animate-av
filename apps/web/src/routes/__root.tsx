@@ -3,6 +3,7 @@ import { AppsAvWebProvider, getAppsAvLocaleFromSearch, useAppsAvLocale } from "@
 import { HeadContent, Outlet, Scripts, createRootRoute, useRouterState } from "@tanstack/react-router";
 import type { ReactNode } from "react";
 import { getAccountApiBaseUrl, getAccountPublishableKey } from "@/lib/animate-config";
+import { AnimateConvexProvider, AnimateRealtimeSessionProvider } from "@/lib/animate-convex";
 import { localizedAppPath, useAnimateAccountLocalization, useAnimateText } from "@/lib/animate-i18n";
 import "../styles.css";
 
@@ -64,7 +65,9 @@ function AccountBoundary({ children }: Readonly<{ children: ReactNode }>) {
       signInUrl={localizedAppPath("/sign-in", locale)}
       signUpUrl={localizedAppPath("/sign-in", locale)}
     >
-      {children}
+      <AnimateConvexProvider>
+        <AnimateRealtimeSessionProvider>{children}</AnimateRealtimeSessionProvider>
+      </AnimateConvexProvider>
     </AccountAvProvider>
   );
 }

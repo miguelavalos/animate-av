@@ -19,7 +19,7 @@ function SignInRoute() {
       <main className="grid flex-1 lg:grid-cols-[0.92fr_1.08fr]">
         <section className="relative hidden min-h-screen overflow-hidden bg-[#20242e] p-10 text-white lg:flex lg:flex-col lg:justify-between">
           <div className="absolute inset-0 bg-[linear-gradient(160deg,#5e3041_0%,#20242e_54%,#11151d_100%)]" />
-          <a className="relative inline-flex items-center gap-2 text-sm font-medium text-white/76 transition hover:text-white" href={localizedAppPath("/", locale)}>
+          <a className="animate-visible-focus relative inline-flex items-center gap-2 rounded-sm text-sm font-medium text-white/76 outline-none transition hover:text-white" href={localizedAppPath("/", locale)}>
             <ArrowLeft className="size-4" aria-hidden="true" />
             Animate AV
           </a>
@@ -32,7 +32,7 @@ function SignInRoute() {
           </div>
           <div className="relative overflow-hidden rounded-[1.5rem] border border-white/12 bg-[#fbf7f2] p-5 pb-0 text-[#20242e] shadow-2xl shadow-black/22">
             <div className="relative z-10 max-w-xs pb-28">
-              <p className="text-sm font-semibold text-[#b94e70]">Avi</p>
+              <p className="text-sm font-semibold text-[#9b3658] dark:text-[#f0a5ba]">Avi</p>
               <p className="mt-2 font-serif text-3xl leading-tight">{text.signIn.aviPanelBody}</p>
             </div>
             <img
@@ -43,16 +43,16 @@ function SignInRoute() {
           </div>
         </section>
 
-        <section className="flex min-h-screen items-center justify-center px-5 py-10">
-          <div className="w-full max-w-md rounded-[1.5rem] border border-[#e5c1c7] bg-white/72 p-4 shadow-2xl shadow-[#7b233f]/10 backdrop-blur sm:p-6">
-            <a className="mb-8 inline-flex items-center gap-2 text-sm font-medium text-[#6d5960] transition hover:text-[#20242e] lg:hidden" href={localizedAppPath("/", locale)}>
+        <section className="flex min-h-screen min-w-0 items-center justify-center overflow-x-hidden px-4 py-10 sm:px-5">
+          <div className="w-full max-w-[calc(100vw-2rem)] rounded-[1.5rem] border border-[#e5c1c7] bg-white/72 p-4 shadow-2xl shadow-[#7b233f]/10 backdrop-blur sm:max-w-md sm:p-6 dark:border-white/12 dark:bg-white/8">
+            <a className="animate-visible-focus mb-8 inline-flex items-center gap-2 rounded-sm text-sm font-medium text-[#6d5960] outline-none transition hover:text-[#20242e] lg:hidden dark:text-white/72 dark:hover:text-white" href={localizedAppPath("/", locale)}>
               <ArrowLeft className="size-4" aria-hidden="true" />
               Animate AV
             </a>
-            <img className="mb-8 h-auto w-64 lg:hidden" src={animateBrandAssets.logo} alt="Animate AV" />
-            <div className="mb-5 flex items-center gap-3 rounded-2xl border border-[#e5c1c7] bg-[#fff8f3]/82 p-3 shadow-sm shadow-[#7b233f]/8 lg:hidden">
+            <img className="mb-8 h-auto w-64 max-w-full lg:hidden" src={animateBrandAssets.logo} alt="Animate AV" />
+            <div className="mb-5 flex min-w-0 items-center gap-3 rounded-2xl border border-[#e5c1c7] bg-[#fff8f3]/82 p-3 shadow-sm shadow-[#7b233f]/8 lg:hidden dark:border-white/12 dark:bg-white/6">
               <img className="h-16 w-16 object-contain" src={animateBrandAssets.aviFullBody} alt="Avi" />
-              <p className="text-sm font-medium leading-5 text-[#4d5563]">{text.signIn.aviPanelBody}</p>
+              <p className="min-w-0 text-sm font-medium leading-5 text-[#4d5563] dark:text-white/72">{text.signIn.aviPanelBody}</p>
             </div>
             <SignedIn>
               <div className="rounded-2xl border border-[#e5c1c7] bg-[#fff8f3] p-6 text-center shadow-lg shadow-[#7b233f]/10">
@@ -63,7 +63,25 @@ function SignInRoute() {
               </div>
             </SignedIn>
             <SignedOut>
-              <AccountSignIn fallbackRedirectUrl={localizedAppPath("/", locale)} path="/sign-in" />
+              <div className="min-h-[31rem]">
+                <AccountSignIn
+                  appearance={{
+                    elements: {
+                      card: "shadow-none border-0 bg-transparent",
+                      footerActionLink: "outline-none focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#7c2947]",
+                      formButtonPrimary: "outline-none focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#7c2947]",
+                      formFieldInput: "outline-none focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#7c2947]",
+                      headerSubtitle: "text-[#4d5563]",
+                      headerTitle: "text-[#20242e]",
+                      rootBox: "w-full",
+                      socialButtonsBlockButton: "outline-none focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#7c2947]",
+                      socialButtonsProviderIcon: "aria-hidden"
+                    }
+                  }}
+                  fallbackRedirectUrl={localizedAppPath("/", locale)}
+                  path="/sign-in"
+                />
+              </div>
             </SignedOut>
           </div>
         </section>

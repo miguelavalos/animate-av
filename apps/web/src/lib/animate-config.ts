@@ -46,6 +46,14 @@ export function getAccountPublishableKey() {
   return import.meta.env.VITE_ACCOUNTAV_PUBLISHABLE_KEY as string | undefined;
 }
 
+export function getAccountCreditsUrl() {
+  return accountManagementUrl("/credits") || accountManagementUrl("/");
+}
+
+export function getAnimateConvexUrl() {
+  return trimTrailingSlash(import.meta.env.VITE_ANIMATEAV_CONVEX_URL);
+}
+
 function requiredUrl(value: string | undefined, key: string) {
   const normalized = trimTrailingSlash(value);
   if (!normalized) {

@@ -4,7 +4,12 @@ import viteReact from "@vitejs/plugin-react";
 import { fileURLToPath } from "node:url";
 import { defineConfig } from "vite";
 
+const animateConvexUrl = process.env.VITE_ANIMATEAV_CONVEX_URL ?? process.env.ANIMATEAV_CONVEX_URL ?? "";
+
 export default defineConfig({
+  define: {
+    "import.meta.env.VITE_ANIMATEAV_CONVEX_URL": JSON.stringify(animateConvexUrl)
+  },
   build: {
     rollupOptions: {
       output: {
