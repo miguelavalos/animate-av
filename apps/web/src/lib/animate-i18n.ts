@@ -34,7 +34,7 @@ const en = {
     flow: [
       { title: "Choose one image", text: "Use a single source image so the animated result keeps a clear reference." },
       { title: "Pick style and guide", text: "Select the look and add optional short guidance before review." },
-      { title: "Review cost", text: "Render confirmation remains account-owned and is not exposed in guest mode." }
+      { title: "Review cost", text: "Render confirmation remains account-owned and available only after sign-in." }
     ],
     title: "Create an animated video from one image."
   },
@@ -82,7 +82,7 @@ const en = {
     heroBody: "Sign in to create animated videos, keep projects connected, and review each render from your AV account.",
     heroTitle: "One image, guided into motion.",
     intro: "Animate AV keeps video creation focused: one image, a clear look, optional guidance, and account-owned render review.",
-    mapBody: "The web app carries Animate AV's visual language into a protected creation surface without guest-mode rendering.",
+    mapBody: "The web app carries Animate AV's visual language into a protected creation surface for signed-in rendering.",
     mapTitle: "A focused path from source image to video.",
     notebook: "Videos",
     search: "Source image"
@@ -101,7 +101,7 @@ const en = {
     primaryNavigation: "Primary navigation"
   },
   protected: {
-    body: "Sign in to open creation, videos, and Avi routes. Animate AV web does not expose product functionality in guest mode.",
+    body: "Sign in to open creation, videos, and Avi routes. Animate AV web keeps product functionality behind your AV account.",
     cta: "Sign in",
     title: "Your creations stay behind your AV account."
   },
@@ -142,7 +142,7 @@ const translations: Record<AppsAvLocale, AnimateText> = {
       flow: [
         { title: "Elige una imagen", text: "Usa una sola imagen fuente para que el resultado conserve una referencia clara." },
         { title: "Elige look y guía", text: "Selecciona el estilo y añade una guía breve opcional antes de revisar." },
-        { title: "Revisa el coste", text: "La confirmación de render sigue siendo de la cuenta y no aparece en modo invitado." }
+        { title: "Revisa el coste", text: "La confirmación de render sigue siendo de la cuenta y sólo está disponible tras iniciar sesión." }
       ],
       title: "Crea un video animado desde una imagen."
     },
@@ -180,7 +180,7 @@ const translations: Record<AppsAvLocale, AnimateText> = {
       heroBody: "Inicia sesión para crear videos animados, mantener proyectos conectados y revisar cada render desde tu cuenta AV.",
       heroTitle: "Una imagen, guiada hacia el movimiento.",
       intro: "Animate AV mantiene enfocada la creación: una imagen, un look claro, guía opcional y revisión de render desde la cuenta.",
-      mapBody: "La web lleva el lenguaje visual de Animate AV a una superficie protegida sin render en modo invitado.",
+      mapBody: "La web lleva el lenguaje visual de Animate AV a una superficie protegida para render con sesión iniciada.",
       mapTitle: "Un camino enfocado desde imagen fuente a video.",
       notebook: "Videos",
       search: "Imagen fuente"
@@ -199,7 +199,7 @@ const translations: Record<AppsAvLocale, AnimateText> = {
       primaryNavigation: "Navegación principal"
     },
     protected: {
-      body: "Inicia sesión para abrir creación, videos y Avi. Animate AV web no expone funcionalidad de producto en modo invitado.",
+      body: "Inicia sesión para abrir creación, videos y Avi. Animate AV web mantiene la funcionalidad de producto detrás de tu cuenta AV.",
       cta: "Iniciar sesión",
       title: "Tus creaciones permanecen detrás de tu cuenta AV."
     },
@@ -240,7 +240,7 @@ const translations: Record<AppsAvLocale, AnimateText> = {
       heroBody: "Connectez-vous pour créer des vidéos animées, garder vos projets connectés et revoir chaque rendu depuis votre compte AV.",
       heroTitle: "Une image, guidée vers le mouvement.",
       intro: "Animate AV garde la création vidéo ciblée : une image, un style clair, une indication facultative et une révision du rendu côté compte.",
-      mapBody: "L’app web porte le langage visuel d’Animate AV vers une surface protégée sans rendu en mode invité.",
+      mapBody: "L’app web porte le langage visuel d’Animate AV vers une surface protégée pour un rendu connecté.",
       mapTitle: "Un chemin ciblé de l’image source vers la vidéo.",
       notebook: "Vidéos",
       search: "Image source"
@@ -252,12 +252,14 @@ const translations: Record<AppsAvLocale, AnimateText> = {
       home: "Accueil"
     },
     protected: {
-      body: "Connectez-vous pour ouvrir création, vidéos et Avi. Animate AV web n’expose aucune fonctionnalité produit en mode invité.",
+      body: "Connectez-vous pour ouvrir création, vidéos et Avi. Animate AV web garde les fonctions produit derrière votre compte AV.",
       cta: "Se connecter",
       title: "Vos créations restent derrière votre compte AV."
     },
     signIn: {
       ...en.signIn,
+      aviPanelBody: "Avi garde l’image source et les indications de mouvement alignées.",
+      body: "Connectez-vous pour garder l’image source, les options de création, l’état du rendu et les vidéos finales reliés à votre compte AV.",
       continue: "Continuer",
       signedIn: "Vous êtes connecté.",
       title: "Animate AV est prêt pour votre prochaine vidéo."
@@ -292,7 +294,7 @@ const translations: Record<AppsAvLocale, AnimateText> = {
       heroBody: "Melde dich an, um animierte Videos zu erstellen, Projekte verbunden zu halten und jeden Render über dein AV-Konto zu prüfen.",
       heroTitle: "Ein Bild, geführt in Bewegung.",
       intro: "Animate AV hält Videoerstellung fokussiert: ein Bild, ein klarer Look, optionale Hinweise und Render-Prüfung im Konto.",
-      mapBody: "Die Web-App bringt die visuelle Sprache von Animate AV in eine geschützte Oberfläche ohne Rendern im Gastmodus.",
+      mapBody: "Die Web-App bringt die visuelle Sprache von Animate AV in eine geschützte Oberfläche für angemeldetes Rendern.",
       mapTitle: "Ein fokussierter Weg vom Quellbild zum Video.",
       notebook: "Videos",
       search: "Quellbild"
@@ -304,12 +306,14 @@ const translations: Record<AppsAvLocale, AnimateText> = {
       home: "Start"
     },
     protected: {
-      body: "Melde dich an, um Erstellung, Videos und Avi zu öffnen. Animate AV Web zeigt keine Produktfunktionen im Gastmodus.",
+      body: "Melde dich an, um Erstellung, Videos und Avi zu öffnen. Animate AV Web hält Produktfunktionen hinter deinem AV-Konto.",
       cta: "Anmelden",
       title: "Deine Kreationen bleiben hinter deinem AV-Konto."
     },
     signIn: {
       ...en.signIn,
+      aviPanelBody: "Avi hält Quellbild und Bewegungshinweise aufeinander abgestimmt.",
+      body: "Melde dich an, um Quellbild, Erstellungsoptionen, Renderstatus und fertige Videos mit deinem AV-Konto zu verbinden.",
       continue: "Weiter",
       signedIn: "Du bist angemeldet.",
       title: "Animate AV ist bereit für dein nächstes Video."
@@ -344,7 +348,7 @@ const translations: Record<AppsAvLocale, AnimateText> = {
       heroBody: "Inicia sessió per crear vídeos animats, mantenir projectes connectats i revisar cada render des del teu compte AV.",
       heroTitle: "Una imatge, guiada cap al moviment.",
       intro: "Animate AV manté enfocada la creació: una imatge, un look clar, guia opcional i revisió del render des del compte.",
-      mapBody: "La web porta el llenguatge visual d’Animate AV a una superfície protegida sense render en mode convidat.",
+      mapBody: "La web porta el llenguatge visual d’Animate AV a una superfície protegida per al render amb sessió iniciada.",
       mapTitle: "Un camí enfocat des de la imatge font fins al vídeo.",
       notebook: "Vídeos",
       search: "Imatge font"
@@ -356,12 +360,14 @@ const translations: Record<AppsAvLocale, AnimateText> = {
       home: "Inici"
     },
     protected: {
-      body: "Inicia sessió per obrir creació, vídeos i Avi. Animate AV web no exposa funcionalitat de producte en mode convidat.",
+      body: "Inicia sessió per obrir creació, vídeos i Avi. Animate AV web manté la funcionalitat de producte darrere del teu compte AV.",
       cta: "Inicia sessió",
       title: "Les teves creacions queden darrere del teu compte AV."
     },
     signIn: {
       ...en.signIn,
+      aviPanelBody: "Avi manté alineades la imatge font i la guia de moviment.",
+      body: "Inicia sessió per mantenir imatge font, opcions de creació, estat del render i vídeos finals connectats amb el teu compte AV.",
       continue: "Continua",
       signedIn: "Has iniciat sessió.",
       title: "Animate AV està a punt per al teu proper vídeo."
