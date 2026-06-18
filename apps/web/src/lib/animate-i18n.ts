@@ -222,6 +222,7 @@ const translations: Record<AppsAvLocale, AnimateText> = {
         "Choisissez un style, ajoutez une courte indication facultative et relisez avant le rendu.",
         "Retrouvez les vidéos animées terminées depuis votre compte."
       ],
+      aviTitle: "Avi garde la scène ciblée",
       items: [
         { label: "Une image", value: "Gardez la scène source au centre" },
         { label: "Style et guide", value: "Façonnez le mouvement avec retenue" },
@@ -230,6 +231,27 @@ const translations: Record<AppsAvLocale, AnimateText> = {
       body: "Animate AV transforme une image en courte vidéo animée dans un flux connecté.",
       cta: "Créer une vidéo",
       title: "Animez une image en courte vidéo."
+    },
+    avi: {
+      body: "Avi garde le parcours de création clair : une image source, un style précis, une indication facultative, une relecture et un rendu final quand le flux connecté est disponible.",
+      cards: [
+        { title: "Gardez une image centrale", text: "Commencez par la photo ou l’image générée qui doit rester la référence visuelle." },
+        { title: "Choisissez le style", text: "Utilisez la famille visuelle et le look avant de passer aux indications ou au coût." },
+        { title: "Relisez avant le rendu", text: "Les étapes de crédits et de rendu restent derrière le compte." }
+      ],
+      createCta: "Créer une vidéo",
+      galleryCta: "Ouvrir les vidéos",
+      title: "Un parcours guidé de l’image vers la vidéo animée."
+    },
+    create: {
+      body: "Préparez une courte vidéo animée à partir d’une image. Le port web protège d’abord la route produit ; l’envoi, les crédits et le rendu restent derrière le backend connecté.",
+      cta: "Flux de création protégé",
+      flow: [
+        { title: "Choisissez une image", text: "Utilisez une seule image source pour garder une référence claire dans le résultat animé." },
+        { title: "Choisissez style et guide", text: "Sélectionnez le look et ajoutez une courte indication facultative avant la relecture." },
+        { title: "Relisez le coût", text: "La confirmation du rendu reste liée au compte et disponible seulement après connexion." }
+      ],
+      title: "Créez une vidéo animée à partir d’une image."
     },
     login: {
       ...en.login,
@@ -256,6 +278,19 @@ const translations: Record<AppsAvLocale, AnimateText> = {
       cta: "Se connecter",
       title: "Vos créations restent derrière votre compte AV."
     },
+    gallery: {
+      body: "Les créations connectées apparaîtront ici pour relecture, téléchargement et retour lorsque le flux web sera connecté.",
+      emptyBody: "Créez une vidéo animée depuis une session connectée et les vidéos terminées seront rassemblées ici.",
+      emptyTitle: "Vos vidéos sont prêtes pour la première création.",
+      filters: ["Toutes", "En rendu", "Prêtes", "Téléchargées"],
+      hints: [
+        { title: "Relire", text: "Vérifiez le résultat généré avant de l’enregistrer ou de le partager." },
+        { title: "Télécharger", text: "Les vidéos finales sont enregistrées par l’utilisateur lorsqu’elles sont prêtes." },
+        { title: "Historique", text: "Les créations terminées restent liées au compte pour un retour plus calme." }
+      ],
+      kicker: "Vidéos",
+      title: "Vos vidéos animées, réunies au même endroit."
+    },
     signIn: {
       ...en.signIn,
       aviPanelBody: "Avi garde l’image source et les indications de mouvement alignées.",
@@ -276,6 +311,7 @@ const translations: Record<AppsAvLocale, AnimateText> = {
         "Wähle einen Look, ergänze optional kurze Hinweise und prüfe vor dem Rendern.",
         "Kehre über dein Konto zu fertigen animierten Videos zurück."
       ],
+      aviTitle: "Avi hält die Szene fokussiert",
       items: [
         { label: "Ein Bild", value: "Die Ausgangsszene bleibt zentral" },
         { label: "Look und Hinweis", value: "Bewegung kontrolliert formen" },
@@ -284,6 +320,27 @@ const translations: Record<AppsAvLocale, AnimateText> = {
       body: "Animate AV verwandelt ein Bild in einem angemeldeten Ablauf in ein kurzes animiertes Video.",
       cta: "Video erstellen",
       title: "Ein Bild als kurzes Video animieren."
+    },
+    avi: {
+      body: "Avi hält den Erstellungsweg klar: ein Quellbild, ein fokussierter Look, optionale Hinweise, Prüfung und finaler Render, sobald der angemeldete Ablauf verfügbar ist.",
+      cards: [
+        { title: "Ein Bild zentral halten", text: "Beginne mit dem Foto oder generierten Bild, das die visuelle Referenz bleiben soll." },
+        { title: "Den Look wählen", text: "Nutze Stilfamilie und Look, bevor du zu Hinweisen oder Kostenprüfung wechselst." },
+        { title: "Vor dem Rendern prüfen", text: "Credits und Render-Schritte bleiben hinter dem Konto." }
+      ],
+      createCta: "Video erstellen",
+      galleryCta: "Videos öffnen",
+      title: "Ein geführter Weg vom Bild zum animierten Video."
+    },
+    create: {
+      body: "Bereite aus einem Bild ein kurzes animiertes Video vor. Der Web-Port schützt zuerst die Produktroute; Upload, Credits und Render-Aktionen bleiben hinter der angemeldeten Backend-Anbindung.",
+      cta: "Geschützter Erstellungsablauf",
+      flow: [
+        { title: "Ein Bild wählen", text: "Nutze ein einzelnes Quellbild, damit das animierte Ergebnis eine klare Referenz behält." },
+        { title: "Look und Hinweis wählen", text: "Wähle den Look und ergänze optional einen kurzen Hinweis vor der Prüfung." },
+        { title: "Kosten prüfen", text: "Die Render-Bestätigung bleibt kontogebunden und ist erst nach Anmeldung verfügbar." }
+      ],
+      title: "Erstelle ein animiertes Video aus einem Bild."
     },
     login: {
       ...en.login,
@@ -310,6 +367,19 @@ const translations: Record<AppsAvLocale, AnimateText> = {
       cta: "Anmelden",
       title: "Deine Kreationen bleiben hinter deinem AV-Konto."
     },
+    gallery: {
+      body: "Angemeldete Kreationen erscheinen hier zur Prüfung, zum Download und für spätere Rückkehr, sobald der Web-Ablauf verbunden ist.",
+      emptyBody: "Erstelle ein animiertes Video in einer angemeldeten Sitzung; fertige Videos werden hier gesammelt.",
+      emptyTitle: "Deine Videos sind bereit für die erste Erstellung.",
+      filters: ["Alle", "Rendern", "Bereit", "Heruntergeladen"],
+      hints: [
+        { title: "Prüfen", text: "Kontrolliere das generierte Ergebnis, bevor du es speicherst oder teilst." },
+        { title: "Download", text: "Finale Videos werden gespeichert, wenn sie bereit sind." },
+        { title: "Verlauf", text: "Abgeschlossene Kreationen bleiben für eine ruhigere Rückkehr mit dem Konto verbunden." }
+      ],
+      kicker: "Videos",
+      title: "Deine animierten Videos, an einem Ort gesammelt."
+    },
     signIn: {
       ...en.signIn,
       aviPanelBody: "Avi hält Quellbild und Bewegungshinweise aufeinander abgestimmt.",
@@ -330,6 +400,7 @@ const translations: Record<AppsAvLocale, AnimateText> = {
         "Tria un look, afegeix una guia breu opcional i revisa abans del render.",
         "Torna als vídeos animats acabats des del teu compte."
       ],
+      aviTitle: "Avi manté enfocada l’escena",
       items: [
         { label: "Una imatge", value: "Mantén central l’escena font" },
         { label: "Look i guia", value: "Dona forma al moviment amb control" },
@@ -338,6 +409,27 @@ const translations: Record<AppsAvLocale, AnimateText> = {
       body: "Animate AV converteix una imatge en un vídeo animat curt dins d’un flux amb sessió.",
       cta: "Crea vídeo",
       title: "Anima una imatge en un vídeo curt."
+    },
+    avi: {
+      body: "Avi manté clar el camí de creació: una imatge font, un look enfocat, guia opcional, revisió i render final quan el flux amb sessió estigui disponible.",
+      cards: [
+        { title: "Mantén una imatge central", text: "Comença amb la foto o imatge generada que ha de continuar sent la referència visual." },
+        { title: "Tria el look", text: "Fes servir la família visual i el look abans de passar a guia o revisió de cost." },
+        { title: "Revisa abans del render", text: "Els passos de crèdits i render queden darrere del compte." }
+      ],
+      createCta: "Crea vídeo",
+      galleryCta: "Obre vídeos",
+      title: "Un camí guiat de la imatge al vídeo animat."
+    },
+    create: {
+      body: "Prepara un vídeo animat curt des d’una imatge. El port web protegeix primer la ruta de producte; pujada, crèdits i render queden darrere del backend amb sessió.",
+      cta: "Flux de creació protegit",
+      flow: [
+        { title: "Tria una imatge", text: "Fes servir una sola imatge font perquè el resultat animat mantingui una referència clara." },
+        { title: "Tria look i guia", text: "Selecciona el look i afegeix una guia breu opcional abans de revisar." },
+        { title: "Revisa el cost", text: "La confirmació de render continua sent del compte i només està disponible després d’iniciar sessió." }
+      ],
+      title: "Crea un vídeo animat des d’una imatge."
     },
     login: {
       ...en.login,
@@ -363,6 +455,19 @@ const translations: Record<AppsAvLocale, AnimateText> = {
       body: "Inicia sessió per obrir creació, vídeos i Avi. Animate AV web manté la funcionalitat de producte darrere del teu compte AV.",
       cta: "Inicia sessió",
       title: "Les teves creacions queden darrere del teu compte AV."
+    },
+    gallery: {
+      body: "Les creacions amb sessió apareixeran aquí per revisar, descarregar i reprendre quan el flux web estigui connectat.",
+      emptyBody: "Crea un vídeo animat amb sessió i els vídeos acabats es reuniran aquí.",
+      emptyTitle: "Els teus vídeos estan preparats per a la primera creació.",
+      filters: ["Tots", "Renderitzant", "Preparats", "Descarregats"],
+      hints: [
+        { title: "Revisa", text: "Comprova el resultat generat abans de desar o compartir." },
+        { title: "Descarrega", text: "Els vídeos finals es desen quan estan preparats." },
+        { title: "Historial", text: "Les creacions acabades continuen unides al compte per tornar-hi amb calma." }
+      ],
+      kicker: "Vídeos",
+      title: "Els teus vídeos animats, reunits en un lloc."
     },
     signIn: {
       ...en.signIn,
