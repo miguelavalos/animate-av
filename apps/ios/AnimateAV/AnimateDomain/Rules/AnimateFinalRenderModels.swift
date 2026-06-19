@@ -34,6 +34,7 @@ struct AnimateRenderPlanRequest: Encodable {
     let mediaUse: String
     let movementDirection: String?
     let motionDirection: String?
+    let actionHint: String?
     let visualDirectionMode: String?
     let visualDirectionTemplateId: String?
     let visualDirectionText: String?
@@ -72,6 +73,7 @@ struct AnimateConfirmFinalRenderRequest: Encodable {
     let mediaUse: String
     let movementDirection: String?
     let motionDirection: String?
+    let actionHint: String?
     let visualDirectionMode: String?
     let visualDirectionTemplateId: String?
     let visualDirectionText: String?

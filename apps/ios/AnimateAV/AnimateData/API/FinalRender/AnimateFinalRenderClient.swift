@@ -144,10 +144,11 @@ struct AnimateFinalRenderClient {
             mediaUse: form.mediaUse.rawValue,
             movementDirection: form.movementDirection.rawValue,
             motionDirection: form.movementDirection.rawValue,
+            actionHint: visualDirection.text,
             visualDirectionMode: visualDirection.mode,
             visualDirectionTemplateId: visualDirection.templateId,
-            visualDirectionText: nil,
-            animationDirection: nil,
+            visualDirectionText: visualDirection.text,
+            animationDirection: visualDirection.text,
             selectedSourceLocalIdentifiers: Self.nonBlankIdentifiers(selectedSourceLocalIdentifiers),
             sourceImageUploadId: Self.nonBlankOptional(sourceImageUploadId),
             generatedImageArtifactId: Self.nonBlankOptional(generatedImageArtifactId),
@@ -236,10 +237,11 @@ struct AnimateFinalRenderClient {
             mediaUse: form.mediaUse.rawValue,
             movementDirection: form.movementDirection.rawValue,
             motionDirection: form.movementDirection.rawValue,
+            actionHint: visualDirection.text,
             visualDirectionMode: visualDirection.mode,
             visualDirectionTemplateId: visualDirection.templateId,
-            visualDirectionText: nil,
-            animationDirection: nil,
+            visualDirectionText: visualDirection.text,
+            animationDirection: visualDirection.text,
             selectedSourceLocalIdentifiers: Self.nonBlankIdentifiers(selectedSourceLocalIdentifiers),
             sourceImageUploadId: Self.nonBlankOptional(sourceImageUploadId),
             generatedImageArtifactId: Self.nonBlankOptional(generatedImageArtifactId),
@@ -401,7 +403,8 @@ struct AnimateFinalRenderClient {
         ),
         visualDirection: (
             mode: String,
-            templateId: String?
+            templateId: String?,
+            text: String?
         )
     ) -> String {
         let sourceSignature = nonBlankIdentifiers(selectedSourceLocalIdentifiers)?
@@ -417,7 +420,7 @@ struct AnimateFinalRenderClient {
             form.movementDirection.rawValue,
             visualDirection.mode,
             visualDirection.templateId ?? "",
-            form.animationDirection.trimmingCharacters(in: .whitespacesAndNewlines),
+            visualDirection.text ?? "",
             form.occasion.trimmingCharacters(in: .whitespacesAndNewlines),
             String(message.hasMessage),
             message.messageText ?? "",
@@ -461,15 +464,25 @@ struct AnimateFinalRenderClient {
 
     private static func videoVisualDirection(_ form: AnimateVideoSetupForm) -> (
         mode: String,
-        templateId: String?
+        templateId: String?,
+        text: String?
     ) {
-        guard form.visualDirectionMode == .template else {
-            return (AnimateVisualDirectionMode.none.rawValue, nil)
+        switch form.visualDirectionMode {
+        case .template:
+            return (
+                form.visualDirectionMode.rawValue,
+                nonBlankOptional(form.visualDirectionTemplateId),
+                nil
+            )
+        case .custom:
+            let text = nonBlankOptional(form.animationDirection)
+            guard text != nil else {
+                return (AnimateVisualDirectionMode.none.rawValue, nil, nil)
+            }
+            return (form.visualDirectionMode.rawValue, nil, text)
+        case .none:
+            return (AnimateVisualDirectionMode.none.rawValue, nil, nil)
         }
-        return (
-            form.visualDirectionMode.rawValue,
-            nonBlankOptional(form.visualDirectionTemplateId)
-        )
     }
 
     private static func nonBlankIdentifiers(_ values: [String]) -> [String]? {

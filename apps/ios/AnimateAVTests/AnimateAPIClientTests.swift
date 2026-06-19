@@ -324,6 +324,59 @@ final class AnimateAPIClientTests: XCTestCase {
         }
     }
 
+    func testVideoDirectionSendsCurrentGuideFields() async throws {
+        let session = makeMockSession(
+            json: """
+            {
+              "appId": "animateav",
+              "videoId": "video-1",
+              "workflowRunId": "workflow-1",
+              "status": "generated",
+              "provider": "mock",
+              "model": "mock",
+              "moderationStatus": "allowed",
+              "errorCode": null,
+              "errorMessage": null,
+              "narrationVoice": "none",
+              "helperCopy": "Ready.",
+              "scenes": [],
+              "generatedAt": "2026-05-16T16:00:00Z"
+            }
+            """
+        )
+        let client = AnimateVideoDirectionClient(baseURLString: accountAPIBaseURL, session: session)
+        var form = AnimateVideoSetupForm(template: .birthdayMessage)
+        form.movementDirection = .cinematic
+        form.visualDirectionMode = .custom
+        form.animationDirection = "  lanza besitos al aire  "
+
+        _ = try await client.generatePlan(
+            videoId: "video-1",
+            ownerUserId: "user-1",
+            bearerToken: "token-1",
+            form: form,
+            selectedMedia: [
+                AnimateVideoDirectionMedia(
+                    mediaAssetId: "media-1",
+                    mediaKind: "photo",
+                    sortOrder: 0,
+                    selected: true,
+                    moderationStatus: "approved"
+                )
+            ]
+        )
+
+        let body = try XCTUnwrap(AnimateURLProtocolMock.lastRequestBody)
+        let json = try XCTUnwrap(JSONSerialization.jsonObject(with: body) as? [String: Any])
+        XCTAssertEqual(json["movementDirection"] as? String, "cinematic")
+        XCTAssertEqual(json["motionDirection"] as? String, "cinematic")
+        XCTAssertEqual(json["visualDirectionMode"] as? String, "custom")
+        XCTAssertEqual(json["visualDirectionText"] as? String, "lanza besitos al aire")
+        XCTAssertEqual(json["animationDirection"] as? String, "lanza besitos al aire")
+        XCTAssertEqual(json["narrationVoice"] as? String, "none")
+        XCTAssertEqual(json["voiceTone"] as? String, "")
+    }
+
     func testConfirmFinalRenderDoesNotRetryTransientNetworkLoss() async throws {
         AnimateURLProtocolMock.failuresBeforeSuccess = 1
         let session = makeMockSession(json: "{}")
@@ -553,6 +606,65 @@ final class AnimateAPIClientTests: XCTestCase {
         XCTAssertEqual(json["startsWithSourcePhoto"] as? Bool, true)
     }
 
+    func testPrepareRenderPlanSendsCustomAnimationDirectionAsActionHint() async throws {
+        let session = makeMockSession(
+            json: """
+            {
+              "appId": "animateav",
+              "videoId": "video-1",
+              "planId": "plan-1",
+              "canCreateVideo": true,
+              "createVideoBlockers": [],
+              "generatedAt": "2026-05-16T16:00:00Z",
+              "plan": {
+                "schemaVersion": 1,
+                "secondsPerCredit": 15,
+                "renderOptionId": "short_video",
+                "renderOptionTitle": "Short Video",
+                "creationMode": "quick",
+                "look": "cartoon",
+                "theme": "celebration",
+                "mood": "warm",
+                "duration": "auto",
+                "mediaUse": "aviPick",
+                "creditCost": 1,
+                "totalCreditCost": 1,
+                "targetDurationMs": 10000,
+                "fps": 24,
+                "rendererMode": "image_to_video",
+                "plannedAssetCount": 1,
+                "usedAssetCount": 1,
+                "rejectedAssetCount": 0,
+                "qualityWarnings": [],
+                "userMessage": "Ready."
+              }
+            }
+            """
+        )
+        let client = AnimateFinalRenderClient(baseURLString: accountAPIBaseURL, session: session)
+        var form = AnimateVideoSetupForm(template: .birthdayMessage)
+        form.visualDirectionMode = .custom
+        form.animationDirection = "  lanza besitos al aire  "
+
+        _ = try await client.prepareRenderPlan(
+            videoId: "video-1",
+            bearerToken: "token-1",
+            template: .birthdayMessage,
+            creationStyle: nil,
+            form: form,
+            removesWatermark: false,
+            selectedSourceLocalIdentifiers: ["photo-1"]
+        )
+
+        let body = try XCTUnwrap(AnimateURLProtocolMock.lastRequestBody)
+        let json = try XCTUnwrap(JSONSerialization.jsonObject(with: body) as? [String: Any])
+        XCTAssertEqual(json["actionHint"] as? String, "lanza besitos al aire")
+        XCTAssertEqual(json["visualDirectionMode"] as? String, "custom")
+        XCTAssertEqual(json["visualDirectionText"] as? String, "lanza besitos al aire")
+        XCTAssertEqual(json["animationDirection"] as? String, "lanza besitos al aire")
+        XCTAssertNil(json["visualDirectionTemplateId"])
+    }
+
     func testConfirmFinalRenderUsesBackendOwnedEndpoint() async throws {
         let session = makeMockSession(
             json: """
@@ -650,6 +762,95 @@ final class AnimateAPIClientTests: XCTestCase {
         XCTAssertNil(json["voiceType"])
         XCTAssertNil(json["narrationVoice"])
         XCTAssertNil(json["mockNoSpend"])
+    }
+
+    func testConfirmFinalRenderSendsCustomAnimationDirectionAsActionHint() async throws {
+        let session = makeMockSession(
+            json: """
+            {
+              "appId": "animateav",
+              "videoId": "video-1",
+              "planId": "plan-1",
+              "reservation": {
+                "id": "reservation-1",
+                "appId": "animateav",
+                "userId": "user-1",
+                "videoId": "video-1",
+                "workflowRunId": null,
+                "amount": 2,
+                "status": "reserved",
+                "idempotencyKey": "final-confirm:video-1:birthdayMessage:watermarked:operation-1",
+                "expiresAt": "2026-06-16T16:00:00Z",
+                "createdAt": "2026-05-16T16:00:00Z",
+                "updatedAt": "2026-05-16T16:00:00Z"
+              },
+              "workflow": {
+                "appId": "animateav",
+                "videoId": "video-1",
+                "renderJobId": "render-1",
+                "workflowRunId": "workflow-1",
+                "status": "running",
+                "startedAt": "2026-05-16T16:00:00Z"
+              },
+              "renderPlan": {
+                "appId": "animateav",
+                "videoId": "video-1",
+                "planId": "plan-1",
+                "canCreateVideo": true,
+                "createVideoBlockers": [],
+                "generatedAt": "2026-05-16T16:00:00Z",
+                "plan": {
+                  "schemaVersion": 1,
+                  "secondsPerCredit": 15,
+                  "renderOptionId": "standard_video",
+                  "renderOptionTitle": "Standard Video",
+                  "creationMode": "quick",
+                  "look": "real",
+                  "theme": "birthday",
+                  "mood": "warm",
+                  "duration": "auto",
+                  "mediaUse": "aviPick",
+                  "creditCost": 2,
+                  "totalCreditCost": 2,
+                  "targetDurationMs": 30000,
+                  "fps": 24,
+                  "rendererMode": "image_to_video",
+                  "plannedAssetCount": 4,
+                  "usedAssetCount": 4,
+                  "rejectedAssetCount": 0,
+                  "qualityWarnings": [],
+                  "userMessage": "Ready."
+                }
+              },
+              "confirmedAt": "2026-05-16T16:00:00Z"
+            }
+            """
+        )
+        let client = AnimateFinalRenderClient(baseURLString: accountAPIBaseURL, session: session)
+        var form = AnimateVideoSetupForm(template: .birthdayMessage)
+        form.visualDirectionMode = .custom
+        form.animationDirection = "lanza besitos al aire"
+
+        _ = try await client.confirmFinalRender(
+            videoId: "video-1",
+            bearerToken: "token-1",
+            template: .birthdayMessage,
+            creationStyle: nil,
+            form: form,
+            removesWatermark: false,
+            selectedSourceLocalIdentifiers: ["local-1"],
+            sourceImageUploadId: "source-upload-1",
+            generatedImageArtifactId: nil,
+            planId: "plan-1",
+            renderOptionId: "standard_video"
+        )
+
+        let body = try XCTUnwrap(AnimateURLProtocolMock.lastRequestBody)
+        let json = try XCTUnwrap(JSONSerialization.jsonObject(with: body) as? [String: Any])
+        XCTAssertEqual(json["actionHint"] as? String, "lanza besitos al aire")
+        XCTAssertEqual(json["visualDirectionMode"] as? String, "custom")
+        XCTAssertEqual(json["visualDirectionText"] as? String, "lanza besitos al aire")
+        XCTAssertEqual(json["animationDirection"] as? String, "lanza besitos al aire")
     }
 
     func testVideoQuoteUsesBackendOwnedQuoteEndpoint() async throws {
