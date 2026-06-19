@@ -516,7 +516,7 @@ final class AnimateCreateWorkflowPresentationTests: XCTestCase {
         )
 
         XCTAssertEqual(presentation.activeVideoId, "video-1")
-        XCTAssertEqual(presentation.pickerTitle, "Adding media...")
+        XCTAssertEqual(presentation.pickerTitle, "Adding media")
         XCTAssertEqual(presentation.remainingSlots, 0)
         XCTAssertEqual(presentation.selectedCountTitle, "1 selected")
         XCTAssertEqual(presentation.selectionMessage, "")
@@ -555,7 +555,7 @@ final class AnimateCreateWorkflowPresentationTests: XCTestCase {
             availabilityMessage: "Ready."
         )
 
-        XCTAssertEqual(presentation.planButtonTitle, "Preparing video...")
+        XCTAssertEqual(presentation.planButtonTitle, "Preparing video")
         XCTAssertEqual(presentation.emptyMessage, "The video setup can be prepared from your photo.")
         XCTAssertEqual(presentation.savedScenes.map(\.id), ["scene-1", "scene-2"])
         XCTAssertTrue(presentation.canPrepareVideoDirection)
@@ -871,7 +871,7 @@ final class AnimateCreateWorkflowPresentationTests: XCTestCase {
         let presentation = AnimateRenderRealtimePresentation(renderJob: job)
 
         XCTAssertEqual(presentation.title, "Animating")
-        XCTAssertEqual(presentation.detail, "Avi is animating your video. This step can take a few minutes.")
+        XCTAssertEqual(presentation.detail, "Avi is animating your video.")
         XCTAssertEqual(presentation.progressFraction, 0.42)
         XCTAssertEqual(presentation.systemImage, "gearshape.2.fill")
         XCTAssertTrue(presentation.isActive)
