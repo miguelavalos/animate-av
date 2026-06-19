@@ -799,6 +799,12 @@ private struct AnimateCreateRenderProgressScene: View {
                         aviGuideBadge(systemImage: "wand.and.stars")
                     }
                     .transition(.asymmetric(insertion: .scale.combined(with: .opacity), removal: .opacity))
+            case .creatingImage:
+                imageCreationPreviewLayer(image: sourceImage)
+                    .overlay(alignment: .bottomTrailing) {
+                        aviGuideBadge(systemImage: "wand.and.stars")
+                    }
+                    .transition(.blurReplace)
             case .styledImage:
                 photoLayer(image: styledPreviewImage, isStyled: true)
                     .overlay(alignment: .bottomTrailing) {
@@ -912,6 +918,86 @@ private struct AnimateCreateRenderProgressScene: View {
         }
         .clipShape(RoundedRectangle(cornerRadius: 20, style: .continuous))
         .allowsHitTesting(false)
+    }
+
+    private func imageCreationPreviewLayer(image: UIImage?) -> some View {
+        photoLayer(image: image, isStyled: false)
+            .scaleEffect(isAnimating ? 1.03 : 0.985)
+            .offset(x: isAnimating ? -2 : 2, y: isAnimating ? 2 : -2)
+            .overlay {
+                imageCreationMotionOverlay
+            }
+    }
+
+    private var imageCreationMotionOverlay: some View {
+        TimelineView(.animation(minimumInterval: 1.0 / 30.0, paused: false)) { timeline in
+            let phase = timeline.date.timeIntervalSinceReferenceDate.truncatingRemainder(dividingBy: 1.9) / 1.9
+            let pulse = 0.5 + 0.5 * sin(phase * .pi * 2)
+            let scanOffset = -150 + phase * 300
+
+            ZStack {
+                LinearGradient(
+                    colors: [
+                        Color.clear,
+                        AVBrandColor.accent.opacity(0.18),
+                        Color.white.opacity(0.42),
+                        AVBrandColor.accent.opacity(0.16),
+                        Color.clear
+                    ],
+                    startPoint: .topLeading,
+                    endPoint: .bottomTrailing
+                )
+                .frame(width: 70)
+                .rotationEffect(.degrees(12))
+                .offset(x: scanOffset, y: -scanOffset * 0.18)
+                .blendMode(.screen)
+                .opacity(0.82)
+
+                RoundedRectangle(cornerRadius: 20, style: .continuous)
+                    .strokeBorder(AVBrandColor.accent.opacity(0.28 + pulse * 0.28), lineWidth: 2)
+                    .scaleEffect(0.96 + pulse * 0.06)
+                    .opacity(0.42 + pulse * 0.32)
+
+                VStack(spacing: 9) {
+                    HStack(spacing: 7) {
+                        ForEach(0..<5, id: \.self) { index in
+                            imageSparkle(index: index, phase: phase)
+                        }
+                    }
+
+                    HStack(alignment: .bottom, spacing: 5) {
+                        ForEach(0..<4, id: \.self) { index in
+                            renderBar(
+                                height: 9 + CGFloat(renderBarPulse(index: index, phase: phase)) * 17,
+                                opacity: 0.50 + renderBarPulse(index: index, phase: phase) * 0.30
+                            )
+                        }
+                    }
+                    .frame(height: 30)
+                }
+                .padding(.horizontal, 16)
+                .padding(.vertical, 12)
+                .background(.black.opacity(0.24), in: RoundedRectangle(cornerRadius: 17, style: .continuous))
+                .overlay {
+                    RoundedRectangle(cornerRadius: 17, style: .continuous)
+                        .stroke(.white.opacity(0.20), lineWidth: 1)
+                }
+                .offset(y: -2 + pulse * 7)
+            }
+            .clipShape(RoundedRectangle(cornerRadius: 20, style: .continuous))
+            .allowsHitTesting(false)
+        }
+    }
+
+    private func imageSparkle(index: Int, phase: Double) -> some View {
+        let shifted = (phase + Double(index) * 0.16).truncatingRemainder(dividingBy: 1)
+        let pulse = 0.5 + 0.5 * sin(shifted * .pi * 2)
+
+        return Image(systemName: index.isMultiple(of: 2) ? "sparkle" : "circle.fill")
+            .font(.system(size: index.isMultiple(of: 2) ? 9 : 5, weight: .black))
+            .foregroundStyle(index.isMultiple(of: 2) ? AVBrandColor.accent : .white)
+            .opacity(0.42 + pulse * 0.50)
+            .scaleEffect(0.78 + pulse * 0.48)
     }
 
     private func videoPreviewLayer(image: UIImage?) -> some View {
@@ -3909,10 +3995,10 @@ private struct AnimateCreateFinalVideoConfirmationSheet: View {
             }
             .padding(12)
             .frame(maxWidth: .infinity, alignment: .leading)
-            .background(.white.opacity(0.64), in: RoundedRectangle(cornerRadius: 8, style: .continuous))
+            .background(AVBrandColor.mutedSurface.opacity(0.72), in: RoundedRectangle(cornerRadius: 8, style: .continuous))
             .overlay {
                 RoundedRectangle(cornerRadius: 8, style: .continuous)
-                    .stroke(AVBrandColor.borderSubtle.opacity(0.42), lineWidth: 1)
+                    .stroke(AVBrandColor.borderSubtle.opacity(0.58), lineWidth: 1)
             }
         }
     }

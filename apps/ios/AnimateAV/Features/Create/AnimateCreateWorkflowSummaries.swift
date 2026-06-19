@@ -183,6 +183,7 @@ struct AnimateRenderRealtimePresentation: Equatable {
 
     enum VisualStage: Equatable {
         case sourcePhoto
+        case creatingImage
         case styledImage
         case animatingVideo
         case finishing
@@ -344,7 +345,7 @@ struct AnimateRenderRealtimePresentation: Equatable {
 
         switch phase {
         case "generating_image", "preparing", "preparing_source":
-            return .sourcePhoto
+            return .creatingImage
         case "generating_audio":
             return .animatingVideo
         case "animating_video", "rendering":
