@@ -67,11 +67,12 @@ struct AnimateAuthOnboardingView: View {
                 authPresentationState = .hidden
             } catch {
                 guard !error.avAnimateIsAuthenticationCancellation else {
+                    logAuthError(error, provider: provider, classification: "cancelled")
                     authPresentationState = .onboardingOptions
                     return
                 }
 
-                logAuthError(error, provider: provider)
+                logAuthError(error, provider: provider, classification: "failed")
                 authPresentationState = .error(message: error.localizedDescription, optionsExpanded: true)
             }
         }
@@ -120,14 +121,14 @@ struct AnimateAuthOnboardingView: View {
         return ""
     }
 
-    private func logAuthError(_ error: Error, provider: AVAuthProvider) {
+    private func logAuthError(_ error: Error, provider: AVAuthProvider, classification: String) {
         let nsError = error as NSError
         let underlyingError = nsError.userInfo[NSUnderlyingErrorKey] as? NSError
         let underlyingDomain = underlyingError?.domain ?? "none"
         let underlyingCode = underlyingError?.code ?? 0
         let providerName = provider == .apple ? "apple" : "google"
         authLogger.error(
-            "Account AV \(providerName, privacy: .public) failed domain=\(nsError.domain, privacy: .public) code=\(nsError.code, privacy: .public) underlying_domain=\(underlyingDomain, privacy: .public) underlying_code=\(underlyingCode, privacy: .public)"
+            "Account AV \(providerName, privacy: .public) \(classification, privacy: .public) domain=\(nsError.domain, privacy: .public) code=\(nsError.code, privacy: .public) underlying_domain=\(underlyingDomain, privacy: .public) underlying_code=\(underlyingCode, privacy: .public) description=\(nsError.localizedDescription, privacy: .public)"
         )
     }
 }
