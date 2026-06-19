@@ -1,17 +1,17 @@
 import { AccountUserButton } from "@avalsys/account-av-web";
 import { AppShell, useAppsAvLocale } from "@avalsys/apps-av-web";
 import { createFileRoute } from "@tanstack/react-router";
-import { Download, Film, Loader2, MoreHorizontal, Pencil, RefreshCw, Trash2 } from "lucide-react";
+import { Download, Film, Loader2, MessageSquareCheck, MoreHorizontal, Pencil, RefreshCw, Trash2 } from "lucide-react";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { ProtectedRoute } from "@/components/protected-route";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card } from "@/components/ui/card";
-import { deleteGalleryRecord, downloadBlobUrl, galleryRemoteVideosAvailableForDownload, hasSavedLocalGalleryFile, loadGalleryRecordsWithObjectUrls, remoteArtifactIdentifier, renameGalleryRecord, saveGalleryRecordWithBlob, subscribeGalleryRecords } from "@/lib/animate-browser-utils";
+import { deleteGalleryRecord, downloadBlobUrl, galleryRemoteVideosAvailableForDownload, hasSavedLocalGalleryFile, loadGalleryRecordsWithObjectUrls, remoteArtifactIdentifier, renameGalleryRecord, saveGalleryRecordWithBlob, subscribeGalleryRecords, updateGalleryRecordFeedback } from "@/lib/animate-browser-utils";
 import { useAnimateApiClient } from "@/lib/animate-client-hooks";
 import { useAnimateGalleryArtifacts } from "@/lib/animate-convex";
 import { localizedAnimateErrorMessage } from "@/lib/animate-errors";
-import { isAnimateLook, type AnimateArtifact, type AnimateGalleryVideoRecord } from "@/lib/animate-models";
+import { isAnimateLook, type AnimateArtifact, type AnimateGalleryVideoRecord, type AnimateVideoFeedback, type AnimateVideoFeedbackScore } from "@/lib/animate-models";
 import { localizedAppPath, useAnimateLookCopy, useAnimateNavLinks, useAnimateProductConfig, useAnimateShellLabels, useAnimateText } from "@/lib/animate-i18n";
 
 export const Route = createFileRoute("/gallery")({
@@ -100,6 +100,11 @@ function GallerySurface({ copy, createHref, errors }: { copy: ReturnType<typeof 
     renameGalleryRecord(record.id, draftTitle);
     setRenamingId(null);
     setDraftTitle("");
+    refresh();
+  }
+
+  function saveFeedback(record: AnimateGalleryVideoRecord, key: keyof Omit<AnimateVideoFeedback, "updatedAt">, score: AnimateVideoFeedbackScore) {
+    updateGalleryRecordFeedback(record.id, key, score);
     refresh();
   }
 
@@ -213,6 +218,7 @@ function GallerySurface({ copy, createHref, errors }: { copy: ReturnType<typeof 
                   )}
                   <p className="mt-1 text-xs text-[#6d5960] dark:text-white/62">{new Date(record.createdAt).toLocaleString()}</p>
                   <p className="mt-2 text-xs font-medium text-[#7c2947]">{hasLocalFile ? copy.savedOnDevice : copy.localFileMissingBadge}</p>
+                  <VideoFeedbackPanel copy={copy} feedback={record.feedback} onScore={(key, score) => saveFeedback(record, key, score)} />
                   <div className="mt-4 flex flex-wrap items-center gap-2">
                     {hasLocalFile ? (
                       <Button asChild size="sm" className="rounded-md bg-[#7c2947] text-white hover:bg-[#963956]">
@@ -255,6 +261,59 @@ function GallerySurface({ copy, createHref, errors }: { copy: ReturnType<typeof 
         </div>
       </Card>
     </section>
+  );
+}
+
+const feedbackFields: Array<{ key: keyof Omit<AnimateVideoFeedback, "updatedAt">; labelKey: "lookMatch" | "sourceLikeness" | "motionFollowed" | "voiceMessage" }> = [
+  { key: "lookMatch", labelKey: "lookMatch" },
+  { key: "sourceLikeness", labelKey: "sourceLikeness" },
+  { key: "motionFollowed", labelKey: "motionFollowed" },
+  { key: "voiceMessage", labelKey: "voiceMessage" }
+];
+
+const feedbackScores: AnimateVideoFeedbackScore[] = ["good", "okay", "bad"];
+
+function VideoFeedbackPanel({
+  copy,
+  feedback,
+  onScore
+}: {
+  copy: ReturnType<typeof useAnimateText>["gallery"];
+  feedback?: AnimateVideoFeedback;
+  onScore: (key: keyof Omit<AnimateVideoFeedback, "updatedAt">, score: AnimateVideoFeedbackScore) => void;
+}) {
+  return (
+    <div className="mt-4 rounded-md border border-[#ead0d5] bg-[#fff8f3]/70 p-3 dark:border-white/12 dark:bg-white/6">
+      <div className="flex items-center gap-2 text-xs font-semibold uppercase text-[#7c2947] dark:text-[#ffd4dd]">
+        <MessageSquareCheck className="size-4" aria-hidden="true" />
+        {copy.feedbackTitle}
+      </div>
+      <div className="mt-3 grid gap-2">
+        {feedbackFields.map((field) => (
+          <div key={field.key} className="grid gap-2 sm:grid-cols-[minmax(0,1fr)_auto] sm:items-center">
+            <p className="text-xs font-medium text-[#4d5563] dark:text-white/72">{copy.feedbackFields[field.labelKey]}</p>
+            <div className="grid grid-cols-3 gap-1">
+              {feedbackScores.map((score) => {
+                const selected = feedback?.[field.key] === score;
+                return (
+                  <button
+                    key={score}
+                    className={selected
+                      ? "h-8 rounded-md bg-[#7c2947] px-2 text-xs font-semibold text-white"
+                      : "h-8 rounded-md border border-[#d7b0b8] bg-white/75 px-2 text-xs font-semibold text-[#20242e] hover:bg-[#fff8f3] dark:border-white/14 dark:bg-white/8 dark:text-white dark:hover:bg-white/12"}
+                    type="button"
+                    aria-pressed={selected}
+                    onClick={() => onScore(field.key, score)}
+                  >
+                    {copy.feedbackScores[score]}
+                  </button>
+                );
+              })}
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
   );
 }
 

@@ -398,7 +398,18 @@ export interface AnimateGalleryVideoRecord {
   localAvailability?: "savedOnDevice" | "localFileMissing";
   sourceImageObjectUrl?: string;
   generatedImageObjectUrl?: string;
+  feedback?: AnimateVideoFeedback;
   createdAt: number;
+}
+
+export type AnimateVideoFeedbackScore = "good" | "okay" | "bad";
+
+export interface AnimateVideoFeedback {
+  lookMatch?: AnimateVideoFeedbackScore;
+  sourceLikeness?: AnimateVideoFeedbackScore;
+  motionFollowed?: AnimateVideoFeedbackScore;
+  voiceMessage?: AnimateVideoFeedbackScore;
+  updatedAt: number;
 }
 
 export interface AnimateCreateDraft {

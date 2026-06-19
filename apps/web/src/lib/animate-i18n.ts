@@ -173,6 +173,18 @@ const en = {
     save: "Save",
     savedOnDevice: "Saved on this device",
     clearLocal: "Clear local",
+    feedbackTitle: "Quick review",
+    feedbackFields: {
+      lookMatch: "Look/theme",
+      sourceLikeness: "Source likeness",
+      motionFollowed: "Motion",
+      voiceMessage: "Voice/message"
+    },
+    feedbackScores: {
+      good: "Good",
+      okay: "Okay",
+      bad: "Bad"
+    },
     title: "Downloaded Animate AV videos."
   },
   home: {
@@ -425,6 +437,18 @@ export const animateTranslations: Record<AppsAvLocale, AnimateText> = {
       save: "Guardar",
       savedOnDevice: "Guardado en este dispositivo",
       clearLocal: "Borrar local",
+      feedbackTitle: "Revisión rápida",
+      feedbackFields: {
+        lookMatch: "Look/theme",
+        sourceLikeness: "Parecido fuente",
+        motionFollowed: "Movimiento",
+        voiceMessage: "Voz/mensaje"
+      },
+      feedbackScores: {
+        good: "Bien",
+        okay: "Regular",
+        bad: "Mal"
+      },
       title: "Videos de Animate AV descargados."
     },
     home: {
@@ -740,6 +764,18 @@ export const animateTranslations: Record<AppsAvLocale, AnimateText> = {
       save: "Enregistrer",
       savedOnDevice: "Enregistré sur cet appareil",
       clearLocal: "Effacer localement",
+      feedbackTitle: "Avis rapide",
+      feedbackFields: {
+        lookMatch: "Look/thème",
+        sourceLikeness: "Ressemblance",
+        motionFollowed: "Mouvement",
+        voiceMessage: "Voix/message"
+      },
+      feedbackScores: {
+        good: "Bien",
+        okay: "Moyen",
+        bad: "Mal"
+      },
       title: "Vidéos Animate AV téléchargées."
     },
     signIn: {
@@ -979,6 +1015,18 @@ export const animateTranslations: Record<AppsAvLocale, AnimateText> = {
       save: "Speichern",
       savedOnDevice: "Auf diesem Gerät gespeichert",
       clearLocal: "Lokal entfernen",
+      feedbackTitle: "Kurzbewertung",
+      feedbackFields: {
+        lookMatch: "Look/Theme",
+        sourceLikeness: "Quellähnlichkeit",
+        motionFollowed: "Bewegung",
+        voiceMessage: "Stimme/Text"
+      },
+      feedbackScores: {
+        good: "Gut",
+        okay: "Okay",
+        bad: "Schlecht"
+      },
       title: "Heruntergeladene Animate AV Videos."
     },
     signIn: {
@@ -1218,6 +1266,18 @@ export const animateTranslations: Record<AppsAvLocale, AnimateText> = {
       save: "Desa",
       savedOnDevice: "Desat en aquest dispositiu",
       clearLocal: "Esborra local",
+      feedbackTitle: "Revisió ràpida",
+      feedbackFields: {
+        lookMatch: "Look/theme",
+        sourceLikeness: "Semblança font",
+        motionFollowed: "Moviment",
+        voiceMessage: "Veu/missatge"
+      },
+      feedbackScores: {
+        good: "Bé",
+        okay: "Regular",
+        bad: "Mal"
+      },
       title: "Vídeos d'Animate AV descarregats."
     },
     signIn: {

@@ -12,7 +12,7 @@ import { Input } from "@/components/ui/input";
 import { useAnimateApiClient } from "@/lib/animate-client-hooks";
 import { getAccountCreditsUrl } from "@/lib/animate-config";
 import { localizedAnimateErrorMessage } from "@/lib/animate-errors";
-import { createPortraitFrameFile, createSourceLocalIdentifier, createVideoId, fileTypeError, readImageDimensions, saveLocalInProgressJob, sha256Hex, sourceImageAccept } from "@/lib/animate-browser-utils";
+import { createPortraitFrameFile, createSourceLocalIdentifier, createVideoId, fileTypeError, normalizeSourceImageFile, readImageDimensions, saveLocalInProgressJob, sha256Hex, sourceImageAccept } from "@/lib/animate-browser-utils";
 import { animateLookFamilies, animateLookPreviewAssets, isAnimateFinalRenderLook, type AnimateLook, type AnimateRenderPlanResponse } from "@/lib/animate-models";
 import { animateCreateInputLimits, canSubmitConfirm, createFinalConfirmIdempotencyKey, createRenderPlanInputSignature, finalRenderQueuedMessage, isRenderPlanCurrent, renderPlanBlockerSummary, spendableCredits } from "@/lib/animate-render-state";
 import { localizedAppPath, useAnimateLookCopy, useAnimateNavLinks, useAnimateProductConfig, useAnimateShellLabels, useAnimateText } from "@/lib/animate-i18n";
@@ -133,7 +133,12 @@ function CreateVideoSurface() {
     setRenderPlan(null);
     setRenderPlanSignature(null);
     setOriginalFile(nextFile);
-    updateSourceFile(nextFile, "full");
+    try {
+      const normalizedFile = await normalizeSourceImageFile(nextFile, text.create.ui.imageReadFailed);
+      updateSourceFile(normalizedFile, "full");
+    } catch {
+      updateSourceFile(nextFile, "full");
+    }
   }
 
   async function applyFrameMode(nextFrameMode: SourceFrameMode) {

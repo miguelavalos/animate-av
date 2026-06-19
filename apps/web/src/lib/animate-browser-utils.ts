@@ -1,4 +1,4 @@
-import type { AnimateArtifact, AnimateGalleryVideoRecord, AnimateLocalInProgressJob } from "@/lib/animate-models";
+import type { AnimateArtifact, AnimateGalleryVideoRecord, AnimateLocalInProgressJob, AnimateVideoFeedback, AnimateVideoFeedbackScore } from "@/lib/animate-models";
 
 const galleryRecordsKey = "animate-av.gallery.videos.v1";
 const inProgressRecordsKey = "animate-av.in-progress.jobs.v1";
@@ -18,6 +18,10 @@ const supportedSourceImageMimeTypes = new Set([
 ]);
 const supportedSourceImageExtensions = new Set(["jpg", "jpeg", "png", "heic", "heif", "webp"]);
 export const sourceImageAccept = ".jpg,.jpeg,.png,.heic,.heif,.webp,image/jpeg,image/png,image/heic,image/heif,image/webp";
+const normalizedSourceImageType = "image/jpeg";
+const normalizedSourceImageQuality = 0.9;
+const portraitFrameWidth = 1024;
+const portraitFrameHeight = 1792;
 
 export function createVideoId() {
   return `animate-web-video-${crypto.randomUUID()}`;
@@ -35,13 +39,26 @@ export async function sha256Hex(file: File) {
 export async function readImageDimensions(file: File, readErrorMessage = "Selected image could not be read.") {
   const url = URL.createObjectURL(file);
   try {
-    const image = new Image();
-    await new Promise<void>((resolve, reject) => {
-      image.onload = () => resolve();
-      image.onerror = () => reject(new Error(readErrorMessage));
-      image.src = url;
-    });
+    const image = await loadImage(url, readErrorMessage);
     return { width: image.naturalWidth, height: image.naturalHeight };
+  } finally {
+    URL.revokeObjectURL(url);
+  }
+}
+
+export async function normalizeSourceImageFile(file: File, readErrorMessage = "Selected image could not be read.") {
+  const url = URL.createObjectURL(file);
+  try {
+    const image = await loadImage(url, readErrorMessage);
+    const canvas = document.createElement("canvas");
+    canvas.width = image.naturalWidth;
+    canvas.height = image.naturalHeight;
+    const context = canvas.getContext("2d");
+    if (!context) {
+      throw new Error(readErrorMessage);
+    }
+    context.drawImage(image, 0, 0);
+    return await canvasToFile(canvas, normalizedFilename(file.name), file.lastModified, readErrorMessage);
   } finally {
     URL.revokeObjectURL(url);
   }
@@ -50,52 +67,39 @@ export async function readImageDimensions(file: File, readErrorMessage = "Select
 export async function createPortraitFrameFile(file: File, readErrorMessage = "Selected image could not be read.") {
   const url = URL.createObjectURL(file);
   try {
-    const image = new Image();
-    await new Promise<void>((resolve, reject) => {
-      image.onload = () => resolve();
-      image.onerror = () => reject(new Error(readErrorMessage));
-      image.src = url;
-    });
+    const image = await loadImage(url, readErrorMessage);
 
     const sourceWidth = image.naturalWidth;
     const sourceHeight = image.naturalHeight;
-    const targetAspect = 9 / 16;
-    const sourceAspect = sourceWidth / sourceHeight;
-    let cropWidth = sourceWidth;
-    let cropHeight = sourceHeight;
-
-    if (sourceAspect > targetAspect) {
-      cropWidth = Math.round(sourceHeight * targetAspect);
-    } else {
-      cropHeight = Math.round(sourceWidth / targetAspect);
-    }
-
-    const cropX = Math.max(0, Math.round((sourceWidth - cropWidth) / 2));
-    const cropY = Math.max(0, Math.round((sourceHeight - cropHeight) / 2));
     const canvas = document.createElement("canvas");
-    canvas.width = cropWidth;
-    canvas.height = cropHeight;
+    canvas.width = portraitFrameWidth;
+    canvas.height = portraitFrameHeight;
     const context = canvas.getContext("2d");
     if (!context) {
       throw new Error(readErrorMessage);
     }
-    context.drawImage(image, cropX, cropY, cropWidth, cropHeight, 0, 0, cropWidth, cropHeight);
 
-    const blob = await new Promise<Blob>((resolve, reject) => {
-      canvas.toBlob((nextBlob) => {
-        if (nextBlob) {
-          resolve(nextBlob);
-        } else {
-          reject(new Error(readErrorMessage));
-        }
-      }, file.type || "image/png", 0.92);
-    });
-    const extension = imageFileExtension(blob.type || file.type);
+    const coverScale = Math.max(portraitFrameWidth / sourceWidth, portraitFrameHeight / sourceHeight);
+    const coverWidth = Math.ceil(sourceWidth * coverScale);
+    const coverHeight = Math.ceil(sourceHeight * coverScale);
+    const coverX = Math.round((portraitFrameWidth - coverWidth) / 2);
+    const coverY = Math.round((portraitFrameHeight - coverHeight) / 2);
+    context.save();
+    context.filter = "blur(28px)";
+    context.drawImage(image, coverX, coverY, coverWidth, coverHeight);
+    context.restore();
+    context.fillStyle = "rgba(255, 255, 255, 0.18)";
+    context.fillRect(0, 0, portraitFrameWidth, portraitFrameHeight);
+
+    const containScale = Math.min(portraitFrameWidth / sourceWidth, portraitFrameHeight / sourceHeight);
+    const containWidth = Math.round(sourceWidth * containScale);
+    const containHeight = Math.round(sourceHeight * containScale);
+    const containX = Math.round((portraitFrameWidth - containWidth) / 2);
+    const containY = Math.round((portraitFrameHeight - containHeight) / 2);
+    context.drawImage(image, containX, containY, containWidth, containHeight);
+
     const baseName = file.name.replace(/\.[^.]+$/, "") || "animate-source-image";
-    return new File([blob], `${baseName}-portrait-frame.${extension}`, {
-      lastModified: file.lastModified,
-      type: blob.type || file.type || "image/png"
-    });
+    return await canvasToFile(canvas, `${baseName}-portrait-frame.jpg`, file.lastModified, readErrorMessage);
   } finally {
     URL.revokeObjectURL(url);
   }
@@ -136,6 +140,36 @@ export function imageFileExtension(mimeType: string) {
     default:
       return "jpg";
   }
+}
+
+function loadImage(url: string, readErrorMessage: string) {
+  const image = new Image();
+  return new Promise<HTMLImageElement>((resolve, reject) => {
+    image.onload = () => resolve(image);
+    image.onerror = () => reject(new Error(readErrorMessage));
+    image.src = url;
+  });
+}
+
+async function canvasToFile(canvas: HTMLCanvasElement, filename: string, lastModified: number, readErrorMessage: string) {
+  const blob = await new Promise<Blob>((resolve, reject) => {
+    canvas.toBlob((nextBlob) => {
+      if (nextBlob) {
+        resolve(nextBlob);
+      } else {
+        reject(new Error(readErrorMessage));
+      }
+    }, normalizedSourceImageType, normalizedSourceImageQuality);
+  });
+  return new File([blob], filename, {
+    lastModified,
+    type: normalizedSourceImageType
+  });
+}
+
+function normalizedFilename(filename: string) {
+  const baseName = filename.replace(/\.[^.]+$/, "") || "animate-source-image";
+  return `${baseName}-normalized.jpg`;
 }
 
 export function loadGalleryRecords() {
@@ -219,6 +253,27 @@ export function renameGalleryRecord(recordId: string, title: string) {
     return;
   }
   const records = loadGalleryRecords().map((entry) => entry.id === recordId ? { ...entry, title: trimmed } : entry);
+  window.localStorage.setItem(galleryRecordsKey, JSON.stringify(records));
+  notifyGalleryRecordsChanged();
+}
+
+export function updateGalleryRecordFeedback(recordId: string, key: keyof Omit<AnimateVideoFeedback, "updatedAt">, score: AnimateVideoFeedbackScore) {
+  if (typeof window === "undefined") {
+    return;
+  }
+  const records = loadGalleryRecords().map((entry) => {
+    if (entry.id !== recordId) {
+      return entry;
+    }
+    return {
+      ...entry,
+      feedback: {
+        ...entry.feedback,
+        [key]: score,
+        updatedAt: Date.now()
+      }
+    };
+  });
   window.localStorage.setItem(galleryRecordsKey, JSON.stringify(records));
   notifyGalleryRecordsChanged();
 }

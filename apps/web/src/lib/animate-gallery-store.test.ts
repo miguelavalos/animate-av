@@ -1,5 +1,5 @@
 import { beforeEach, describe, expect, test } from "bun:test";
-import { deleteGalleryRecord, deleteLocalInProgressJob, deleteLocalInProgressJobsByReference, galleryRemoteVideosAvailableForDownload, isDownloadableRemoteVideoArtifact, loadGalleryRecords, loadGalleryRecordsWithObjectUrls, loadLocalInProgressJobs, renameGalleryRecord, saveGalleryRecord, saveGalleryRecordWithBlob, saveLocalInProgressJob, subscribeGalleryRecords, subscribeLocalInProgressJobs } from "./animate-browser-utils";
+import { deleteGalleryRecord, deleteLocalInProgressJob, deleteLocalInProgressJobsByReference, galleryRemoteVideosAvailableForDownload, isDownloadableRemoteVideoArtifact, loadGalleryRecords, loadGalleryRecordsWithObjectUrls, loadLocalInProgressJobs, renameGalleryRecord, saveGalleryRecord, saveGalleryRecordWithBlob, saveLocalInProgressJob, subscribeGalleryRecords, subscribeLocalInProgressJobs, updateGalleryRecordFeedback } from "./animate-browser-utils";
 
 const storage = new Map<string, string>();
 const listeners = new Map<string, Set<EventListener>>();
@@ -50,6 +50,22 @@ describe("Animate local gallery records", () => {
 
     deleteGalleryRecord("artifact-1");
     expect(loadGalleryRecords()).toEqual([]);
+  });
+
+  test("updates editable quick feedback on local gallery records", () => {
+    let notificationCount = 0;
+    subscribeGalleryRecords(() => {
+      notificationCount += 1;
+    });
+    saveGalleryRecord(record("artifact-1", "First"));
+    updateGalleryRecordFeedback("artifact-1", "lookMatch", "good");
+    updateGalleryRecordFeedback("artifact-1", "lookMatch", "bad");
+    updateGalleryRecordFeedback("artifact-1", "motionFollowed", "okay");
+
+    expect(loadGalleryRecords()[0]?.feedback?.lookMatch).toBe("bad");
+    expect(loadGalleryRecords()[0]?.feedback?.motionFollowed).toBe("okay");
+    expect(loadGalleryRecords()[0]?.feedback?.updatedAt).toBeNumber();
+    expect(notificationCount).toBe(4);
   });
 
   test("keeps local metadata without reusing stale object URLs when blob storage is unavailable", async () => {
