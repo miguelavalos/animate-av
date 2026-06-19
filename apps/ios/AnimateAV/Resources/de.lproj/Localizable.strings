@@ -769,6 +769,7 @@
 "create.preparation.uploadForVideo.detail" = "Das ausgewählte Foto für die finale Videoerstellung wird gesendet.";
 "create.preparation.prepareFinalPlan.detail" = "Avi prüft deine Optionen und Credits.";
 "create.preparation.createVideo.detail" = "Avi sendet das Foto und startet das finale Video.";
+"create.preparation.durationNotice" = "Der gesamte Vorgang kann ein paar Minuten dauern.";
 "create.preparation.prepareStory.progress" = "Video wird vorbereitet";
 "create.options.anotherTheme" = "eine andere Videoidee";
 "create.storyDirection.title" = "Video-Konfiguration";
@@ -883,7 +884,7 @@
 "workflow.final.needsUsableMedia" = "Avi benötigt ein verwendbares Bild, bevor das Video erstellt wird.";
 "workflow.final.sourceMediaMissing" = "Das ursprüngliche Foto fehlt auf diesem Gerät. Bearbeite das Bild, bevor du das finale Video erstellst.";
 "workflow.final.planReady" = "Prüfe die Credit-Kosten vor dem Start.";
-"workflow.final.creatingVideo" = "Video wird erstellt. Das kann ein paar Minuten dauern; Avi aktualisiert hier jeden Schritt.";
+"workflow.final.creatingVideo" = "Video wird erstellt. Avi aktualisiert hier jeden Schritt.";
 "workflow.final.savingStatus" = "Videostatus wird gespeichert.";
 "workflow.final.noDownloadReady" = "Noch kein finales Video zum Herunterladen bereit.";
 "workflow.final.downloadInProgress" = "Der Download des finalen Videos ist bereits aktiv.";
@@ -940,7 +941,7 @@
 "create.render.detail.preparing" = "Avi bereitet das Video vor.";
 "create.render.detail.uploading" = "Avi sendet das Bild, um das Video zu erstellen.";
 "create.render.detail.composing" = "Avi ordnet die ausgewählten Elemente an.";
-"create.render.detail.rendering" = "Avi animiert dein Video. Dieser Schritt kann ein paar Minuten dauern.";
+"create.render.detail.rendering" = "Avi animiert dein Video.";
 "create.render.detail.creating" = "Avi erstellt das Video.";
 "create.render.detail.image" = "Avi erstellt das Bild mit dem gewählten Look.";
 "create.render.detail.audio" = "Avi bereitet die Nachrichtenkarte vor.";

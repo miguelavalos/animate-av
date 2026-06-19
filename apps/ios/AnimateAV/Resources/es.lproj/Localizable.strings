@@ -770,6 +770,7 @@
 "create.preparation.uploadForVideo.detail" = "Preparando la foto seleccionada para crear el video final.";
 "create.preparation.prepareFinalPlan.detail" = "Avi comprueba opciones y créditos.";
 "create.preparation.createVideo.detail" = "Avi está enviando la foto e iniciando el video final.";
+"create.preparation.durationNotice" = "El proceso completo puede tardar unos minutos.";
 "create.preparation.prepareStory.progress" = "Preparando video";
 "create.options.anotherTheme" = "otra idea de video";
 "create.storyDirection.title" = "Configuración del video";
@@ -887,7 +888,7 @@
 "workflow.final.needsUsableMedia" = "Avi necesita una imagen utilizable antes de crear el video.";
 "workflow.final.sourceMediaMissing" = "Falta la imagen original de Fotos en este dispositivo. Edita la imagen antes de crear el video final.";
 "workflow.final.planReady" = "Revisa el coste en créditos antes de empezar.";
-"workflow.final.creatingVideo" = "Creando video. Puede tardar unos minutos; Avi actualizará cada paso aquí.";
+"workflow.final.creatingVideo" = "Creando video. Avi actualizará cada paso aquí.";
 "workflow.final.savingStatus" = "Guardando el estado del video.";
 "workflow.final.noDownloadReady" = "Aún no hay ningún video final listo para descargar.";
 "workflow.final.downloadInProgress" = "La descarga del video final ya está activa.";
@@ -944,7 +945,7 @@
 "create.render.detail.preparing" = "Avi está preparando el video.";
 "create.render.detail.uploading" = "Avi está enviando la imagen para crear el video.";
 "create.render.detail.composing" = "Avi está ordenando los elementos seleccionados.";
-"create.render.detail.rendering" = "Avi está animando tu video. Este paso puede tardar unos minutos.";
+"create.render.detail.rendering" = "Avi está animando tu video.";
 "create.render.detail.creating" = "Avi está creando el video.";
 "create.render.detail.image" = "Avi está creando la imagen con el look elegido.";
 "create.render.detail.audio" = "Avi está preparando la tarjeta de mensaje.";

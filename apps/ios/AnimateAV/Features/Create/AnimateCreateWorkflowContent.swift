@@ -517,6 +517,7 @@ struct AnimateCreateBlockingPreparationView: View {
                 status: realtimeStatus,
                 sourceImage: sourceImage,
                 generatedImageLocalRelativePath: presentation.finalRenderSummary.generatedImagePreviewLocalRelativePath,
+                fallbackVisualStage: fallbackVisualStage,
                 fallbackIconName: iconName,
                 tint: tint,
                 isAnimating: isAnimating
@@ -533,6 +534,16 @@ struct AnimateCreateBlockingPreparationView: View {
                     .multilineTextAlignment(.center)
                     .lineLimit(2)
                     .padding(.horizontal, 24)
+
+                if showsDurationNotice {
+                    Text(L10n.string("create.preparation.durationNotice"))
+                        .font(.system(size: 12, weight: .semibold))
+                        .foregroundStyle(AVBrandColor.textSecondary.opacity(0.78))
+                        .multilineTextAlignment(.center)
+                        .lineLimit(2)
+                        .padding(.horizontal, 28)
+                        .padding(.top, 2)
+                }
             }
 
             if let realtimeStatus {
@@ -579,6 +590,23 @@ struct AnimateCreateBlockingPreparationView: View {
 
     private var tint: Color {
         realtimeStatus == nil ? mode.tint : AVBrandColor.accent
+    }
+
+    private var fallbackVisualStage: AnimateRenderRealtimePresentation.VisualStage {
+        switch mode {
+        case .createVideo:
+            return .animatingVideo
+        case .prepareFinalPlan:
+            return presentation.finalRenderSummary.generatedImagePreviewLocalRelativePath == nil
+                ? .sourcePhoto
+                : .styledImage
+        default:
+            return .sourcePhoto
+        }
+    }
+
+    private var showsDurationNotice: Bool {
+        realtimeStatus != nil || mode.showsDurationNotice
     }
 
     private var progressFraction: Double? {
@@ -692,6 +720,15 @@ struct AnimateCreateBlockingPreparationView: View {
             }
         }
 
+        var showsDurationNotice: Bool {
+            switch self {
+            case .prepareFinalPlan, .createVideo:
+                return true
+            case .prepareVideoSetup, .importMedia, .prepareStory, .uploadForVideo:
+                return false
+            }
+        }
+
         func message(itemCount: Int?) -> String {
             switch self {
             case .prepareVideoSetup:
@@ -727,6 +764,7 @@ private struct AnimateCreateRenderProgressScene: View {
     let status: AnimateRenderRealtimePresentation?
     let sourceImage: UIImage?
     let generatedImageLocalRelativePath: String?
+    let fallbackVisualStage: AnimateRenderRealtimePresentation.VisualStage
     let fallbackIconName: String
     let tint: Color
     let isAnimating: Bool
@@ -791,7 +829,7 @@ private struct AnimateCreateRenderProgressScene: View {
     }
 
     private var visualStage: AnimateRenderRealtimePresentation.VisualStage {
-        status?.visualStage ?? .sourcePhoto
+        status?.visualStage ?? fallbackVisualStage
     }
 
     private var styledPreviewImage: UIImage? {

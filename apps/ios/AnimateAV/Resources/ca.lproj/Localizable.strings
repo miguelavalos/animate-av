@@ -767,6 +767,7 @@
 "create.preparation.uploadForVideo.detail" = "Enviant la foto necessària per crear el vídeo final.";
 "create.preparation.prepareFinalPlan.detail" = "L’Avi comprova opcions i crèdits.";
 "create.preparation.createVideo.detail" = "L’Avi envia la foto i inicia el vídeo final.";
+"create.preparation.durationNotice" = "El procés complet pot tardar uns minuts.";
 "create.preparation.prepareStory.progress" = "Preparant vídeo";
 "create.options.anotherTheme" = "una altra idea de vídeo";
 "create.storyDirection.title" = "Configuració del vídeo";
@@ -881,7 +882,7 @@
 "workflow.final.needsUsableMedia" = "Avi necessita una imatge utilitzable abans de crear el vídeo.";
 "workflow.final.sourceMediaMissing" = "Falta la imatge original de Fotos en aquest dispositiu. Edita la imatge abans de crear el vídeo final.";
 "workflow.final.planReady" = "Revisa el cost en crèdits abans de començar.";
-"workflow.final.creatingVideo" = "Creant vídeo. Pot tardar uns minuts; l’Avi actualitzarà cada pas aquí.";
+"workflow.final.creatingVideo" = "Creant vídeo. L’Avi actualitzarà cada pas aquí.";
 "workflow.final.savingStatus" = "Desant l’estat del vídeo.";
 "workflow.final.noDownloadReady" = "Encara no hi ha cap vídeo final llest per descarregar.";
 "workflow.final.downloadInProgress" = "La descàrrega del vídeo final ja està activa.";
@@ -938,7 +939,7 @@
 "create.render.detail.preparing" = "Avi està preparant el vídeo.";
 "create.render.detail.uploading" = "Avi està enviant la foto per crear el vídeo.";
 "create.render.detail.composing" = "Avi està ordenant els elements seleccionats.";
-"create.render.detail.rendering" = "L’Avi està animant el teu vídeo. Aquest pas pot tardar uns minuts.";
+"create.render.detail.rendering" = "L’Avi està animant el teu vídeo.";
 "create.render.detail.creating" = "Avi està creant el vídeo.";
 "create.render.detail.image" = "Avi està creant la imatge amb l’estil triat.";
 "create.render.detail.audio" = "Avi està preparant la targeta de missatge.";

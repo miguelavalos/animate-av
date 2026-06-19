@@ -770,6 +770,7 @@
 "create.preparation.uploadForVideo.detail" = "Preparing the selected photo for final video creation.";
 "create.preparation.prepareFinalPlan.detail" = "Avi is checking your options and credits.";
 "create.preparation.createVideo.detail" = "Avi is sending the photo and starting the final video.";
+"create.preparation.durationNotice" = "The full process can take a few minutes.";
 "create.preparation.prepareStory.progress" = "Preparing video";
 "create.options.anotherTheme" = "another video idea";
 "create.storyDirection.title" = "Video setup";
@@ -887,7 +888,7 @@
 "workflow.final.needsUsableMedia" = "Avi needs a usable photo before creating the video.";
 "workflow.final.sourceMediaMissing" = "The original Photos image is missing on this device. Edit the photo before creating the final video.";
 "workflow.final.planReady" = "Review the credit cost before starting.";
-"workflow.final.creatingVideo" = "Creating video. This can take a few minutes; Avi will update each step here.";
+"workflow.final.creatingVideo" = "Creating video. Avi will update each step here.";
 "workflow.final.savingStatus" = "Saving video status.";
 "workflow.final.noDownloadReady" = "No final video is ready to download yet.";
 "workflow.final.downloadInProgress" = "Final video download is already active.";
@@ -944,7 +945,7 @@
 "create.render.detail.preparing" = "Avi is getting the video ready.";
 "create.render.detail.uploading" = "Avi is sending the photo for video creation.";
 "create.render.detail.composing" = "Avi is preparing the animation.";
-"create.render.detail.rendering" = "Avi is animating your video. This step can take a few minutes.";
+"create.render.detail.rendering" = "Avi is animating your video.";
 "create.render.detail.creating" = "Avi is creating the video.";
 "create.render.detail.image" = "Avi is making the styled image.";
 "create.render.detail.audio" = "Avi is preparing the message card.";
