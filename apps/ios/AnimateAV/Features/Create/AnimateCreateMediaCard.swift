@@ -593,8 +593,11 @@ struct AnimateCreatePhotoAdjustView: View {
     let changePhoto: () -> Void
     let cancel: () -> Void
 
-    @State private var cropRect = CGRect(x: 0.32, y: 0.18, width: 0.36, height: 0.64)
-    @State private var activeDragCropRect = CGRect(x: 0.32, y: 0.18, width: 0.36, height: 0.64)
+    @State private var frameScale: CGFloat = 1
+    @State private var activeFrameScale: CGFloat = 1
+    @State private var imageOffset: CGSize = .zero
+    @State private var activeImageOffset: CGSize = .zero
+    @State private var editorFrameSize = CGSize(width: 9, height: 16)
 
     private var image: UIImage? {
         UIImage(data: media.sourceImageDataForEditing)
@@ -616,8 +619,7 @@ struct AnimateCreatePhotoAdjustView: View {
             .padding(.bottom, 16)
         }
         .onAppear {
-            cropRect = constrainedCropRect(cropRect)
-            activeDragCropRect = cropRect
+            resetFrame()
         }
     }
 
@@ -651,8 +653,13 @@ struct AnimateCreatePhotoAdjustView: View {
 
     private var cropEditor: some View {
         GeometryReader { proxy in
-            let imageRect = fittedImageRect(in: proxy.size)
-            let absoluteCropRect = absoluteCropRect(in: imageRect)
+            let frameSize = fixedFrameSize(in: proxy.size)
+            let frameRect = CGRect(
+                x: (proxy.size.width - frameSize.width) / 2,
+                y: (proxy.size.height - frameSize.height) / 2,
+                width: frameSize.width,
+                height: frameSize.height
+            )
 
             ZStack {
                 Color.black
@@ -666,14 +673,28 @@ struct AnimateCreatePhotoAdjustView: View {
                         .opacity(0.18)
                         .clipped()
 
-                    Image(uiImage: image)
-                        .resizable()
-                        .scaledToFit()
-                        .frame(width: imageRect.width, height: imageRect.height)
-                        .position(x: imageRect.midX, y: imageRect.midY)
-                        .clipShape(RoundedRectangle(cornerRadius: 14, style: .continuous))
+                    framedImageEditor(image: image, frameSize: frameSize)
+                        .frame(width: frameRect.width, height: frameRect.height)
+                        .clipShape(RoundedRectangle(cornerRadius: 18, style: .continuous))
+                        .overlay(frameOverlay)
+                        .position(x: frameRect.midX, y: frameRect.midY)
+                        .contentShape(Rectangle())
+                        .gesture(dragFrameGesture(frameSize: frameSize, image: image))
+                        .simultaneousGesture(pinchFrameGesture(frameSize: frameSize, image: image))
+                        .onTapGesture(count: 2) {
+                            toggleFrameZoom(frameSize: frameSize, image: image)
+                        }
+                        .onAppear {
+                            editorFrameSize = frameSize
+                            clampFrameState(frameSize: frameSize, image: image)
+                        }
+                        .onChange(of: proxy.size) { _, _ in
+                            editorFrameSize = frameSize
+                            clampFrameState(frameSize: frameSize, image: image)
+                        }
 
-                    cropOverlay(imageRect: imageRect, cropRect: absoluteCropRect)
+                    frameInstruction
+                        .position(x: frameRect.midX, y: min(frameRect.maxY + 34, proxy.size.height - 22))
                 } else {
                     fallbackImage
                         .frame(width: proxy.size.width, height: proxy.size.height)
@@ -683,6 +704,48 @@ struct AnimateCreatePhotoAdjustView: View {
         }
         .frame(maxWidth: .infinity)
         .frame(maxHeight: .infinity)
+    }
+
+    private func framedImageEditor(image: UIImage, frameSize: CGSize) -> some View {
+        let displaySize = imageDisplaySize(for: image, frameSize: frameSize)
+        return Image(uiImage: image)
+            .resizable()
+            .scaledToFill()
+            .frame(width: displaySize.width, height: displaySize.height)
+            .offset(imageOffset)
+    }
+
+    private var frameOverlay: some View {
+        ZStack {
+            RoundedRectangle(cornerRadius: 18, style: .continuous)
+                .stroke(.black.opacity(0.88), lineWidth: 4)
+            RoundedRectangle(cornerRadius: 18, style: .continuous)
+                .stroke(.white.opacity(0.72), lineWidth: 1.4)
+            frameGrid
+                .stroke(.white.opacity(0.42), lineWidth: 0.8)
+        }
+    }
+
+    private var frameGrid: Path {
+        Path { path in
+            for fraction in [CGFloat(1.0 / 3.0), CGFloat(2.0 / 3.0)] {
+                path.move(to: CGPoint(x: editorFrameSize.width * fraction, y: 0))
+                path.addLine(to: CGPoint(x: editorFrameSize.width * fraction, y: editorFrameSize.height))
+                path.move(to: CGPoint(x: 0, y: editorFrameSize.height * fraction))
+                path.addLine(to: CGPoint(x: editorFrameSize.width, y: editorFrameSize.height * fraction))
+            }
+        }
+    }
+
+    private var frameInstruction: some View {
+        Text(L10n.string("create.mediaAdjust.frameDetail"))
+            .font(.caption.weight(.semibold))
+            .foregroundStyle(.white.opacity(0.78))
+            .multilineTextAlignment(.center)
+            .lineLimit(2)
+            .padding(.horizontal, 12)
+            .padding(.vertical, 7)
+            .background(.black.opacity(0.42), in: Capsule())
     }
 
     private var actionBar: some View {
@@ -704,83 +767,6 @@ struct AnimateCreatePhotoAdjustView: View {
         .frame(maxWidth: .infinity)
     }
 
-    private func cropOverlay(imageRect: CGRect, cropRect: CGRect) -> some View {
-        ZStack {
-            Path { path in
-                path.addRect(imageRect)
-                path.addRect(cropRect)
-            }
-            .fill(Color.black.opacity(0.48), style: FillStyle(eoFill: true))
-
-            cropGrid(in: cropRect)
-                .stroke(.white.opacity(0.55), lineWidth: 0.8)
-
-            Rectangle()
-                .fill(Color.white.opacity(0.001))
-                .frame(width: cropRect.width, height: cropRect.height)
-                .position(x: cropRect.midX, y: cropRect.midY)
-                .contentShape(Rectangle())
-                .highPriorityGesture(moveCropGesture(in: imageRect))
-
-            Rectangle()
-                .stroke(.black.opacity(0.88), lineWidth: 3)
-                .frame(width: cropRect.width, height: cropRect.height)
-                .position(x: cropRect.midX, y: cropRect.midY)
-
-            Rectangle()
-                .stroke(.white.opacity(0.38), lineWidth: 1)
-                .frame(width: cropRect.width, height: cropRect.height)
-                .position(x: cropRect.midX, y: cropRect.midY)
-
-            ForEach(CropHandle.allCases) { handle in
-                cropHandle(handle, cropRect: cropRect, imageRect: imageRect)
-            }
-        }
-    }
-
-    private func cropGrid(in rect: CGRect) -> Path {
-        Path { path in
-            for fraction in [CGFloat(1.0 / 3.0), CGFloat(2.0 / 3.0)] {
-                let x = rect.minX + rect.width * fraction
-                path.move(to: CGPoint(x: x, y: rect.minY))
-                path.addLine(to: CGPoint(x: x, y: rect.maxY))
-
-                let y = rect.minY + rect.height * fraction
-                path.move(to: CGPoint(x: rect.minX, y: y))
-                path.addLine(to: CGPoint(x: rect.maxX, y: y))
-            }
-        }
-    }
-
-    private func cropHandle(_ handle: CropHandle, cropRect: CGRect, imageRect: CGRect) -> some View {
-        ZStack {
-            Rectangle()
-                .fill(Color.white.opacity(0.001))
-                .frame(width: handle.hitSize(in: cropRect).width, height: handle.hitSize(in: cropRect).height)
-
-            cropHandleShape(handle)
-        }
-        .position(handle.position(in: cropRect))
-        .contentShape(Rectangle())
-        .highPriorityGesture(resizeCropGesture(handle: handle, imageRect: imageRect))
-    }
-
-    @ViewBuilder
-    private func cropHandleShape(_ handle: CropHandle) -> some View {
-        if handle.isCorner {
-            CropCornerHandle(corner: handle)
-                .frame(width: 34, height: 34)
-        } else {
-            RoundedRectangle(cornerRadius: 1, style: .continuous)
-                .fill(.black.opacity(0.92))
-                .frame(width: handle.isHorizontalEdge ? 42 : 4, height: handle.isHorizontalEdge ? 4 : 42)
-                .overlay {
-                    RoundedRectangle(cornerRadius: 1, style: .continuous)
-                        .stroke(.white.opacity(0.35), lineWidth: 0.8)
-                }
-        }
-    }
-
     private var fallbackImage: some View {
         ZStack {
             RoundedRectangle(cornerRadius: 12, style: .continuous)
@@ -791,48 +777,9 @@ struct AnimateCreatePhotoAdjustView: View {
         }
     }
 
-    private func moveCropGesture(in imageRect: CGRect) -> some Gesture {
-        DragGesture()
-            .onChanged { value in
-                let dx = value.translation.width / max(imageRect.width, 1)
-                let dy = value.translation.height / max(imageRect.height, 1)
-                cropRect = constrainedCropRect(
-                    CGRect(
-                        x: activeDragCropRect.minX + dx,
-                        y: activeDragCropRect.minY + dy,
-                        width: activeDragCropRect.width,
-                        height: activeDragCropRect.height
-                    )
-                )
-            }
-            .onEnded { _ in
-                activeDragCropRect = cropRect
-            }
-    }
-
-    private func resizeCropGesture(handle: CropHandle, imageRect: CGRect) -> some Gesture {
-        DragGesture()
-            .onChanged { value in
-                let dx = value.translation.width / max(imageRect.width, 1)
-                let dy = value.translation.height / max(imageRect.height, 1)
-                cropRect = constrainedCropRect(
-                    handle.resized(
-                        activeDragCropRect,
-                        dx: dx,
-                        dy: dy,
-                        aspect: normalizedCropAspect()
-                    )
-                )
-            }
-            .onEnded { _ in
-                activeDragCropRect = cropRect
-            }
-    }
-
     private func resetCrop() {
         withAnimation(.spring(response: 0.28, dampingFraction: 0.86)) {
-            cropRect = defaultCropRect()
-            activeDragCropRect = cropRect
+            resetFrame()
         }
     }
 
@@ -852,238 +799,119 @@ struct AnimateCreatePhotoAdjustView: View {
             UIColor.black.setFill()
             context.fill(CGRect(origin: .zero, size: outputSize))
 
-            let sourceRect = CGRect(
-                x: cropRect.minX * image.size.width,
-                y: cropRect.minY * image.size.height,
-                width: cropRect.width * image.size.width,
-                height: cropRect.height * image.size.height
+            let baseScale = max(
+                outputSize.width / max(image.size.width, 1),
+                outputSize.height / max(image.size.height, 1)
             )
-            let scale = max(
-                outputSize.width / max(sourceRect.width, 1),
-                outputSize.height / max(sourceRect.height, 1)
+            let drawScale = baseScale * frameScale
+            let scaledSourceSize = CGSize(width: image.size.width * drawScale, height: image.size.height * drawScale)
+            let outputOffset = CGSize(
+                width: imageOffset.width * outputSize.width / max(editorFrameSize.width, 1),
+                height: imageOffset.height * outputSize.height / max(editorFrameSize.height, 1)
             )
-            let scaledSourceSize = CGSize(width: sourceRect.width * scale, height: sourceRect.height * scale)
             let drawRect = CGRect(
-                x: (outputSize.width - scaledSourceSize.width) / 2 - sourceRect.minX * scale,
-                y: (outputSize.height - scaledSourceSize.height) / 2 - sourceRect.minY * scale,
-                width: image.size.width * scale,
-                height: image.size.height * scale
+                x: (outputSize.width - scaledSourceSize.width) / 2 + outputOffset.width,
+                y: (outputSize.height - scaledSourceSize.height) / 2 + outputOffset.height,
+                width: scaledSourceSize.width,
+                height: scaledSourceSize.height
             )
             image.draw(in: drawRect)
         }
         return rendered.jpegData(compressionQuality: 0.92)
     }
 
-    private func fittedImageRect(in size: CGSize) -> CGRect {
-        guard let image else {
-            return CGRect(origin: .zero, size: size)
+    private func fixedFrameSize(in size: CGSize) -> CGSize {
+        let available = CGSize(width: max(size.width - 12, 1), height: max(size.height - 72, 1))
+        let aspect = CGFloat(9.0 / 16.0)
+        var width = min(available.width, available.height * aspect)
+        var height = width / aspect
+        if height > available.height {
+            height = available.height
+            width = height * aspect
         }
-        let available = CGSize(width: max(size.width - 4, 1), height: max(size.height - 4, 1))
-        let imageAspect = image.size.width / max(image.size.height, 1)
-        let availableAspect = available.width / max(available.height, 1)
-        let fittedSize: CGSize
-        if imageAspect > availableAspect {
-            fittedSize = CGSize(width: available.width, height: available.width / imageAspect)
-        } else {
-            fittedSize = CGSize(width: available.height * imageAspect, height: available.height)
-        }
-        return CGRect(
-            x: (size.width - fittedSize.width) / 2,
-            y: (size.height - fittedSize.height) / 2,
-            width: fittedSize.width,
-            height: fittedSize.height
+        return CGSize(width: width, height: height)
+    }
+
+    private func imageDisplaySize(for image: UIImage, frameSize: CGSize) -> CGSize {
+        let baseScale = max(
+            frameSize.width / max(image.size.width, 1),
+            frameSize.height / max(image.size.height, 1)
+        )
+        let scale = baseScale * frameScale
+        return CGSize(width: image.size.width * scale, height: image.size.height * scale)
+    }
+
+    private func constrainedOffset(_ offset: CGSize, frameSize: CGSize, image: UIImage, scale: CGFloat) -> CGSize {
+        let baseScale = max(
+            frameSize.width / max(image.size.width, 1),
+            frameSize.height / max(image.size.height, 1)
+        )
+        let displaySize = CGSize(width: image.size.width * baseScale * scale, height: image.size.height * baseScale * scale)
+        let maxX = max((displaySize.width - frameSize.width) / 2, 0)
+        let maxY = max((displaySize.height - frameSize.height) / 2, 0)
+        return CGSize(
+            width: min(max(offset.width, -maxX), maxX),
+            height: min(max(offset.height, -maxY), maxY)
         )
     }
 
-    private func absoluteCropRect(in imageRect: CGRect) -> CGRect {
-        CGRect(
-            x: imageRect.minX + cropRect.minX * imageRect.width,
-            y: imageRect.minY + cropRect.minY * imageRect.height,
-            width: cropRect.width * imageRect.width,
-            height: cropRect.height * imageRect.height
-        )
+    private func dragFrameGesture(frameSize: CGSize, image: UIImage) -> some Gesture {
+        DragGesture(minimumDistance: 0)
+            .onChanged { value in
+                imageOffset = constrainedOffset(
+                    CGSize(
+                        width: activeImageOffset.width + value.translation.width,
+                        height: activeImageOffset.height + value.translation.height
+                    ),
+                    frameSize: frameSize,
+                    image: image,
+                    scale: frameScale
+                )
+            }
+            .onEnded { _ in
+                activeImageOffset = imageOffset
+            }
     }
 
-    private func defaultCropRect() -> CGRect {
-        constrainedCropRect(CGRect(x: 0.32, y: 0.18, width: 0.36, height: 0.64))
+    private func pinchFrameGesture(frameSize: CGSize, image: UIImage) -> some Gesture {
+        MagnificationGesture()
+            .onChanged { value in
+                frameScale = min(max(activeFrameScale * value, 1), 4)
+                imageOffset = constrainedOffset(imageOffset, frameSize: frameSize, image: image, scale: frameScale)
+            }
+            .onEnded { _ in
+                frameScale = min(max(frameScale, 1), 4)
+                imageOffset = constrainedOffset(imageOffset, frameSize: frameSize, image: image, scale: frameScale)
+                activeFrameScale = frameScale
+                activeImageOffset = imageOffset
+            }
     }
 
-    private func constrainedCropRect(_ rect: CGRect) -> CGRect {
-        let normalizedAspect = normalizedCropAspect()
-        var width = min(max(rect.width, 0.24), 0.90)
-        var height = width / normalizedAspect
-        if height > 0.90 {
-            height = 0.90
-            width = height * normalizedAspect
-        }
-        let x = min(max(rect.midX - width / 2, 0), 1 - width)
-        let y = min(max(rect.midY - height / 2, 0), 1 - height)
-        return CGRect(x: x, y: y, width: width, height: height)
-    }
-
-    private func normalizedCropAspect() -> CGFloat {
-        let outputAspect = CGFloat(9.0 / 16.0)
-        let imageAspect = image.map { $0.size.width / max($0.size.height, 1) } ?? 1
-        return outputAspect / max(imageAspect, 0.001)
-    }
-}
-
-private enum CropHandle: CaseIterable, Identifiable {
-    case top
-    case bottom
-    case leading
-    case trailing
-    case topLeading
-    case topTrailing
-    case bottomLeading
-    case bottomTrailing
-
-    var id: String { String(describing: self) }
-
-    var isCorner: Bool {
-        switch self {
-        case .topLeading, .topTrailing, .bottomLeading, .bottomTrailing:
-            true
-        case .top, .bottom, .leading, .trailing:
-            false
-        }
-    }
-
-    var isHorizontalEdge: Bool {
-        self == .top || self == .bottom
-    }
-
-    func position(in rect: CGRect) -> CGPoint {
-        switch self {
-        case .top:
-            CGPoint(x: rect.midX, y: rect.minY)
-        case .bottom:
-            CGPoint(x: rect.midX, y: rect.maxY)
-        case .leading:
-            CGPoint(x: rect.minX, y: rect.midY)
-        case .trailing:
-            CGPoint(x: rect.maxX, y: rect.midY)
-        case .topLeading:
-            CGPoint(x: rect.minX, y: rect.minY)
-        case .topTrailing:
-            CGPoint(x: rect.maxX, y: rect.minY)
-        case .bottomLeading:
-            CGPoint(x: rect.minX, y: rect.maxY)
-        case .bottomTrailing:
-            CGPoint(x: rect.maxX, y: rect.maxY)
-        }
-    }
-
-    func hitSize(in rect: CGRect) -> CGSize {
-        switch self {
-        case .top, .bottom:
-            CGSize(width: max(rect.width - 72, 44), height: 64)
-        case .leading, .trailing:
-            CGSize(width: 64, height: max(rect.height - 72, 44))
-        case .topLeading, .topTrailing, .bottomLeading, .bottomTrailing:
-            CGSize(width: 72, height: 72)
-        }
-    }
-
-    func resized(_ rect: CGRect, dx: CGFloat, dy: CGFloat, aspect: CGFloat) -> CGRect {
-        let signedDelta: CGFloat
-        switch self {
-        case .top:
-            signedDelta = -dy * aspect
-        case .bottom:
-            signedDelta = dy * aspect
-        case .leading:
-            signedDelta = -dx
-        case .trailing:
-            signedDelta = dx
-        case .topLeading:
-            signedDelta = min(-dx, -dy * aspect)
-        case .topTrailing:
-            signedDelta = min(dx, -dy * aspect)
-        case .bottomLeading:
-            signedDelta = min(-dx, dy * aspect)
-        case .bottomTrailing:
-            signedDelta = min(dx, dy * aspect)
-        }
-
-        let width = rect.width + signedDelta
-        let height = width / aspect
-
-        switch self {
-        case .top:
-            return CGRect(x: rect.midX - width / 2, y: rect.maxY - height, width: width, height: height)
-        case .bottom:
-            return CGRect(x: rect.midX - width / 2, y: rect.minY, width: width, height: height)
-        case .leading:
-            return CGRect(x: rect.maxX - width, y: rect.midY - height / 2, width: width, height: height)
-        case .trailing:
-            return CGRect(x: rect.minX, y: rect.midY - height / 2, width: width, height: height)
-        case .topLeading:
-            return CGRect(x: rect.maxX - width, y: rect.maxY - height, width: width, height: height)
-        case .topTrailing:
-            return CGRect(x: rect.minX, y: rect.maxY - height, width: width, height: height)
-        case .bottomLeading:
-            return CGRect(x: rect.maxX - width, y: rect.minY, width: width, height: height)
-        case .bottomTrailing:
-            return CGRect(x: rect.minX, y: rect.minY, width: width, height: height)
-        }
-    }
-}
-
-private struct CropCornerHandle: View {
-    let corner: CropHandle
-
-    var body: some View {
-        Path { path in
-            let length: CGFloat = 18
-            switch corner {
-            case .topLeading:
-                path.move(to: CGPoint(x: 0, y: length))
-                path.addLine(to: .zero)
-                path.addLine(to: CGPoint(x: length, y: 0))
-            case .topTrailing:
-                path.move(to: CGPoint(x: 34 - length, y: 0))
-                path.addLine(to: CGPoint(x: 34, y: 0))
-                path.addLine(to: CGPoint(x: 34, y: length))
-            case .bottomLeading:
-                path.move(to: CGPoint(x: 0, y: 34 - length))
-                path.addLine(to: CGPoint(x: 0, y: 34))
-                path.addLine(to: CGPoint(x: length, y: 34))
-            case .bottomTrailing:
-                path.move(to: CGPoint(x: 34 - length, y: 34))
-                path.addLine(to: CGPoint(x: 34, y: 34))
-                path.addLine(to: CGPoint(x: 34, y: 34 - length))
-            case .top, .bottom, .leading, .trailing:
-                break
+    private func toggleFrameZoom(frameSize: CGSize, image: UIImage) {
+        withAnimation(.spring(response: 0.28, dampingFraction: 0.86)) {
+            if frameScale > 1.01 {
+                resetFrame()
+            } else {
+                frameScale = 2
+                activeFrameScale = 2
+                imageOffset = constrainedOffset(imageOffset, frameSize: frameSize, image: image, scale: frameScale)
+                activeImageOffset = imageOffset
             }
         }
-        .stroke(.black.opacity(0.92), style: StrokeStyle(lineWidth: 4, lineCap: .square, lineJoin: .miter))
-        .overlay {
-            Path { path in
-                let length: CGFloat = 18
-                switch corner {
-                case .topLeading:
-                    path.move(to: CGPoint(x: 0, y: length))
-                    path.addLine(to: .zero)
-                    path.addLine(to: CGPoint(x: length, y: 0))
-                case .topTrailing:
-                    path.move(to: CGPoint(x: 34 - length, y: 0))
-                    path.addLine(to: CGPoint(x: 34, y: 0))
-                    path.addLine(to: CGPoint(x: 34, y: length))
-                case .bottomLeading:
-                    path.move(to: CGPoint(x: 0, y: 34 - length))
-                    path.addLine(to: CGPoint(x: 0, y: 34))
-                    path.addLine(to: CGPoint(x: length, y: 34))
-                case .bottomTrailing:
-                    path.move(to: CGPoint(x: 34 - length, y: 34))
-                    path.addLine(to: CGPoint(x: 34, y: 34))
-                    path.addLine(to: CGPoint(x: 34, y: 34 - length))
-                case .top, .bottom, .leading, .trailing:
-                    break
-                }
-            }
-            .stroke(.white.opacity(0.35), style: StrokeStyle(lineWidth: 1, lineCap: .square, lineJoin: .miter))
-        }
+    }
+
+    private func clampFrameState(frameSize: CGSize, image: UIImage) {
+        frameScale = min(max(frameScale, 1), 4)
+        activeFrameScale = frameScale
+        imageOffset = constrainedOffset(imageOffset, frameSize: frameSize, image: image, scale: frameScale)
+        activeImageOffset = imageOffset
+    }
+
+    private func resetFrame() {
+        frameScale = 1
+        activeFrameScale = 1
+        imageOffset = .zero
+        activeImageOffset = .zero
     }
 }
 

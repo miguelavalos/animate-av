@@ -1319,7 +1319,7 @@
 "create.movement.custom.detail" = "Leave room for Avi to follow your message or future direction.";
 "create.mediaCard.adjustFrame" = "Modifier le cadrage";
 "create.mediaAdjust.adjustFrame" = "Modifier le cadrage";
-"create.mediaAdjust.frameDetail" = "Pinch and drag to choose the frame used for the video.";
+"create.mediaAdjust.frameDetail" = "Faites glisser et pincez la photo pour choisir la partie à animer.";
 "create.storyDirection.cardTitle" = "Réglages";
 "create.guided.direction.none" = "Naturel";
 "create.guided.direction.none.detail" = "Mouvement doux.";

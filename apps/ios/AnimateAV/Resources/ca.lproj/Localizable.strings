@@ -1319,7 +1319,7 @@
 "create.movement.custom.detail" = "Leave room for Avi to follow your message or future direction.";
 "create.mediaCard.adjustFrame" = "Editar enquadrament";
 "create.mediaAdjust.adjustFrame" = "Editar enquadrament";
-"create.mediaAdjust.frameDetail" = "Pinch and drag to choose the frame used for the video.";
+"create.mediaAdjust.frameDetail" = "Arrossega i pessiga la foto per triar què animarà el vídeo.";
 "create.storyDirection.cardTitle" = "Configuració";
 "create.guided.direction.none" = "Natural";
 "create.guided.direction.none.detail" = "Moviment suau.";

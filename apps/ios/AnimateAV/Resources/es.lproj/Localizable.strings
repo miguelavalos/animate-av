@@ -1325,7 +1325,7 @@
 "create.movement.custom.detail" = "Deja espacio para que Avi siga tu dirección visual.";
 "create.mediaCard.adjustFrame" = "Ajustar encuadre";
 "create.mediaAdjust.adjustFrame" = "Editar encuadre";
-"create.mediaAdjust.frameDetail" = "Mueve o redimensiona el marco para elegir qué parte animar.";
+"create.mediaAdjust.frameDetail" = "Arrastra y pellizca la foto para elegir qué parte animar.";
 "create.guided.direction.none" = "Natural";
 "create.guided.direction.none.detail" = "Movimiento suave.";
 "create.guided.direction.template" = "Plantilla visual";
