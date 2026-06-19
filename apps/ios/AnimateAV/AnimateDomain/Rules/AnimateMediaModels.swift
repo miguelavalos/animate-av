@@ -54,6 +54,10 @@ struct AnimateSelectedMedia: Identifiable, Equatable {
         originalData ?? data
     }
 
+    var activeSourceImageData: Data {
+        data
+    }
+
     var hasFrameAdjustment: Bool {
         sourceLocalIdentifier.contains(":crop:") || (originalData != nil && originalData != data)
     }

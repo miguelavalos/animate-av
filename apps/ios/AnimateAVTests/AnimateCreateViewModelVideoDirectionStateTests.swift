@@ -156,6 +156,76 @@ final class AnimateCreateViewModelVideoDirectionStateTests: XCTestCase {
         XCTAssertEqual(workflow.finalDownloadArtifactId(for: artifact), "workflow-artifact-1")
     }
 
+    func testFinalRenderSummaryUsesExistingGeneratedImagePreviewDuringVideoLoading() async {
+        let generatedImage = AnimateGalleryImageRecord(
+            id: "generated-image-1",
+            artifactId: "generated-image-1",
+            title: "Generated image",
+            look: "cinematic",
+            r2Key: "animateav/generated-image-1.jpg",
+            localRelativePath: "Images/generated-image-1.jpg",
+            createdAt: 1_780_000_000_000
+        )
+        let harness = AnimateVideoCreationFailureHarness(
+            error: NSError(domain: "test", code: 1),
+            galleryStore: TestGalleryStore(
+                imageRecords: [generatedImage],
+                localImageRelativePaths: ["Images/generated-image-1.jpg"]
+            )
+        )
+        let finalRenderWorkflow = harness.finalRenderWorkflow
+        let viewModel = AnimateCreateViewModel()
+        viewModel.bind(
+            accountStateProvider: harness,
+            videoCreationWorkflow: harness.videoCreationWorkflow,
+            mediaUploadWorkflow: harness.mediaUploadWorkflow,
+            videoDirectionWorkflow: harness.videoDirectionWorkflow,
+            finalRenderWorkflow: finalRenderWorkflow,
+            authTokenProvider: harness,
+            imageGenerationAccountingClient: AnimateImageGenerationAccountingClient(baseURLString: "https://api.example.test")
+        )
+
+        harness.publishWorkspace(
+            AnimateWorkspace(
+                video: AnimateCreateTestFixtures.makeVideo(id: "video-1", status: "rendering"),
+                mediaAssets: [],
+                storyScenes: [],
+                renderJobs: [
+                    AnimateCreateTestFixtures.makeRenderJob(
+                        id: "final-render-1",
+                        kind: "final",
+                        status: "running",
+                        phase: "animating_video"
+                    )
+                ],
+                artifacts: [
+                    AnimateArtifact(
+                        id: "generated-image-1",
+                        kind: "generated_image",
+                        r2Key: "animateav/generated-image-1.jpg",
+                        title: nil,
+                        look: "cinematic",
+                        status: "available",
+                        hasWatermark: false,
+                        expiresAt: 1_781_592_000_000,
+                        createdAt: 1_780_000_000_000
+                    )
+                ]
+            )
+        )
+        await waitForGeneratedImagePreview(in: viewModel)
+
+        XCTAssertEqual(finalRenderWorkflow.pendingGalleryImage?.localRelativePath, "Images/generated-image-1.jpg")
+        XCTAssertEqual(
+            viewModel.workflowPresentation.finalRenderSummary.generatedImagePreviewLocalRelativePath,
+            "Images/generated-image-1.jpg"
+        )
+        XCTAssertEqual(
+            viewModel.workflowPresentation.finalRenderSummary.realtimeStatus?.visualStage,
+            .animatingVideo
+        )
+    }
+
     func testFinalRenderPlanBlocksRecoveredWorkspaceWhenSourceMediaIsMissing() async {
         let harness = AnimateVideoCreationFailureHarness(error: NSError(domain: "test", code: 1))
         let workflow = harness.finalRenderWorkflow
@@ -1403,6 +1473,13 @@ final class AnimateCreateViewModelVideoDirectionStateTests: XCTestCase {
             try? await Task.sleep(nanoseconds: 25_000_000)
         }
     }
+
+    private func waitForGeneratedImagePreview(in viewModel: AnimateCreateViewModel) async {
+        for _ in 0..<40
+            where viewModel.workflowPresentation.finalRenderSummary.generatedImagePreviewLocalRelativePath == nil {
+            try? await Task.sleep(nanoseconds: 25_000_000)
+        }
+    }
 }
 
 @MainActor
@@ -1427,10 +1504,16 @@ private final class AnimateVideoCreationFailureHarness:
     private let workspaceSubject = CurrentValueSubject<AnimateWorkspace?, Never>(nil)
     private let workspaceErrorSubject = CurrentValueSubject<String?, Never>(nil)
     private let finalRenderSession: URLSession
+    private let galleryStore: TestGalleryStore
 
-    init(error: Error, finalRenderSession: URLSession = .shared) {
+    init(
+        error: Error,
+        finalRenderSession: URLSession = .shared,
+        galleryStore: TestGalleryStore = TestGalleryStore()
+    ) {
         creationError = error
         self.finalRenderSession = finalRenderSession
+        self.galleryStore = galleryStore
     }
 
     var videoCreationWorkflow: AnimateVideoCreationWorkflow {
@@ -1472,7 +1555,7 @@ private final class AnimateVideoCreationFailureHarness:
                 baseURLString: "https://api.example.com",
                 session: finalRenderSession
             ),
-            galleryStore: TestGalleryStore()
+            galleryStore: galleryStore
         )
     }
 
@@ -1544,18 +1627,25 @@ private final class AnimateVideoCreationFailureHarness:
 }
 
 private struct TestGalleryStore: AnimateGalleryStoring {
+    var imageRecords: [AnimateGalleryImageRecord] = []
+    var localImageRelativePaths: Set<String> = []
+
     func loadRecords() -> [AnimateGalleryVideoRecord] { [] }
     func saveRecords(_ records: [AnimateGalleryVideoRecord]) {}
-    func loadImageRecords() -> [AnimateGalleryImageRecord] { [] }
+    func loadImageRecords() -> [AnimateGalleryImageRecord] { imageRecords }
     func saveImageRecords(_ records: [AnimateGalleryImageRecord]) {}
     func localFileExists(for record: AnimateGalleryVideoRecord) -> Bool { false }
     func localFileURL(for record: AnimateGalleryVideoRecord) -> URL { URL(fileURLWithPath: "/tmp/\(record.id).mp4") }
-    func localFileExists(for record: AnimateGalleryImageRecord) -> Bool { false }
+    func localFileExists(for record: AnimateGalleryImageRecord) -> Bool {
+        localImageRelativePaths.contains(record.localRelativePath)
+    }
     func localFileURL(for record: AnimateGalleryImageRecord) -> URL { URL(fileURLWithPath: "/tmp/\(record.id).png") }
-    func localFileExists(relativePath: String) -> Bool { false }
+    func localFileExists(relativePath: String) -> Bool { localImageRelativePaths.contains(relativePath) }
     func localFileURL(relativePath: String) -> URL { URL(fileURLWithPath: "/tmp/\(relativePath)") }
     func contains(artifactId: String) -> Bool { false }
-    func containsImage(artifactId: String) -> Bool { false }
+    func containsImage(artifactId: String) -> Bool {
+        imageRecords.contains { $0.artifactId == artifactId }
+    }
     func saveSourceImage(data: Data, videoId: String, artifactId: String) throws -> String {
         "source-\(artifactId).jpg"
     }

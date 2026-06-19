@@ -62,6 +62,7 @@ final class AnimateMediaRulesTests: XCTestCase {
 
         XCTAssertEqual(adjusted.data, cropped)
         XCTAssertEqual(adjusted.sourceImageDataForEditing, original)
+        XCTAssertEqual(adjusted.activeSourceImageData, cropped)
         XCTAssertTrue(adjusted.hasFrameAdjustment)
         XCTAssertTrue(adjusted.sourceLocalIdentifier.contains(":crop:"))
     }

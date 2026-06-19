@@ -713,11 +713,16 @@ final class FinalRenderWorkflow: WorkspaceObservingWorkflow {
     }
 
     private func scheduleGeneratedImagePreviewDownloadIfNeeded(workspace: AnimateWorkspace?) {
+        guard let artifact = workspace?.latestGeneratedImageArtifact else {
+            return
+        }
+        if let localImage = localGeneratedImageRecord(for: artifact) {
+            pendingGalleryImage = localImage
+            return
+        }
         guard
-            let artifact = workspace?.latestGeneratedImageArtifact,
             artifact.status == "available",
             pendingGalleryImage?.artifactId != finalDownloadArtifactId(for: artifact),
-            !galleryStore.containsImage(artifactId: finalDownloadArtifactId(for: artifact)),
             !downloadingArtifactIds.contains(artifact.id)
         else {
             return
@@ -872,16 +877,8 @@ final class FinalRenderWorkflow: WorkspaceObservingWorkflow {
            galleryStore.localFileExists(for: pendingGalleryImage) {
             return pendingGalleryImage
         }
-        if galleryStore.containsImage(artifactId: artifactId) {
-            return AnimateGalleryImageRecord(
-                id: artifactId,
-                artifactId: artifactId,
-                title: L10n.string("gallery.image.defaultTitle"),
-                look: artifact.look,
-                r2Key: artifact.r2Key,
-                localRelativePath: "Images/\(artifactId).jpg",
-                createdAt: artifact.createdAt
-            )
+        if let localImage = localGeneratedImageRecord(for: artifact) {
+            return localImage
         }
 
         let download = try await finalRenderClient.prepareImageArtifactDownload(
@@ -897,6 +894,24 @@ final class FinalRenderWorkflow: WorkspaceObservingWorkflow {
             r2Key: download.r2Key ?? artifact.r2Key,
             createdAt: Date(timeIntervalSince1970: artifact.createdAt / 1000)
         )
+    }
+
+    private func localGeneratedImageRecord(for artifact: AnimateArtifact) -> AnimateGalleryImageRecord? {
+        let artifactId = finalDownloadArtifactId(for: artifact)
+        guard galleryStore.containsImage(artifactId: artifactId) else {
+            return nil
+        }
+
+        let record = AnimateGalleryImageRecord(
+            id: artifactId,
+            artifactId: artifactId,
+            title: L10n.string("gallery.image.defaultTitle"),
+            look: artifact.look,
+            r2Key: artifact.r2Key,
+            localRelativePath: "Images/\(artifactId).jpg",
+            createdAt: artifact.createdAt
+        )
+        return galleryStore.localFileExists(for: record) ? record : nil
     }
 
     func prepareUITestFinalExportForGallery(workspace: AnimateWorkspace) {

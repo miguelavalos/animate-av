@@ -626,7 +626,7 @@ struct AnimateCreateBlockingPreparationView: View {
 
     private var sourceImage: UIImage? {
         presentation.mediaSummary.selectedMedia.first(where: \.selected)
-            .flatMap { UIImage(data: $0.sourceImageDataForEditing) }
+            .flatMap { UIImage(data: $0.activeSourceImageData) }
     }
 
     private var realtimeStatus: AnimateRenderRealtimePresentation? {
@@ -802,7 +802,7 @@ private struct AnimateCreateRenderProgressScene: View {
                     }
                     .transition(.blurReplace)
             case .animatingVideo:
-                photoLayer(image: styledPreviewImage, isStyled: true)
+                videoPreviewLayer(image: styledPreviewImage)
                     .overlay {
                         videoMotionOverlay
                     }
@@ -882,6 +882,27 @@ private struct AnimateCreateRenderProgressScene: View {
                     .offset(x: 12, y: -12)
             }
         }
+    }
+
+    private func videoPreviewLayer(image: UIImage?) -> some View {
+        photoLayer(image: image, isStyled: true)
+            .scaleEffect(isAnimating ? 1.04 : 0.99)
+            .offset(x: isAnimating ? 3 : -3, y: isAnimating ? -2 : 2)
+            .overlay {
+                LinearGradient(
+                    colors: [
+                        Color.clear,
+                        Color.white.opacity(0.20),
+                        Color.clear
+                    ],
+                    startPoint: .topLeading,
+                    endPoint: .bottomTrailing
+                )
+                .blendMode(.screen)
+                .offset(x: isAnimating ? 86 : -86)
+                .opacity(0.62)
+                .clipShape(RoundedRectangle(cornerRadius: 20, style: .continuous))
+            }
     }
 
     private var fallbackImage: some View {
