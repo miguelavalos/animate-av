@@ -64,12 +64,12 @@ xcodebuild test -project apps/ios/AnimateAV.xcodeproj -scheme AnimateAV -destina
 
 - [ ] App launches in a simulator build safe for public QA.
 - [ ] Create Video no-spend smoke reaches Foto y encuadre, Look, Guide and
-  optional written Dedication, and final confirmation
+  voice, and final confirmation
   with synthetic or fixture media only.
 - [ ] Runtime localization lint/key parity passes for `en`, `es`, `ca`, `fr`,
   and `de`.
 - [ ] Animation accepts custom visual instructions and the final summary
-  preserves them separately from any written Dedication.
+  preserves guide text separately from the optional voice line.
 - [ ] Foto y encuadre smoke covers choose photo, adjust frame, re-enter frame
   adjustment from the locally retained original, restore original when
   available, change photo, and continue to Look without hidden sheets or paid

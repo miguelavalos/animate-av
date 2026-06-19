@@ -96,7 +96,7 @@
 /* Create flow setup selectors */
 "common.back" = "Atrás";
 "common.soon" = "Pronto";
-"create.duration.auto.subtitle" = "Avi mantiene el video tan corto como permita el mensaje.";
+"create.duration.auto.subtitle" = "Avi mantiene el video corto y centrado.";
 "create.duration.auto.title" = "Avi calcula el timing";
 "create.storyDirection.cardTitle" = "Ajustes";
 "create.look.anime.subtitle" = "Escenas estilizadas inspiradas en anime.";
@@ -158,7 +158,7 @@
 "create.music.upbeat.title" = "Enérgico";
 "create.music.warm.subtitle" = "Cercano, cálido y personal.";
 "create.music.warm.title" = "Cálido";
-"create.rules.missingOccasion" = "Añade un mensaje antes de empezar un video.";
+"create.rules.missingOccasion" = "Añade una frase de voz o elige Sin voz antes de empezar un video.";
 "create.selector.look.accessibility" = "Estilo %@";
 "create.selector.look.intro.detail" = "Elige primero el estilo visual. Avi mantiene la idea de la foto y cambia cómo se dibuja el mundo animado.";
 "create.selector.look.intro.title" = "Elige el estilo";
@@ -187,8 +187,8 @@
 "create.template.mediaRange" = "%d foto";
 "create.template.softRoast.summary" = "Un video animado divertido un poco más largo desde una foto.";
 "create.template.softRoast.title" = "Extendido";
-"create.theme.birthday.subtitle" = "Un saludo corto en video.";
-"create.theme.birthday.title" = "Mensaje animado";
+"create.theme.birthday.subtitle" = "Un saludo animado corto.";
+"create.theme.birthday.title" = "Clip de saludo";
 "create.theme.celebration.subtitle" = "Una entrada divertida para un protagonista.";
 "create.theme.celebration.title" = "Presentación";
 "create.theme.eventRecap.subtitle" = "Cortes rápidos, movimiento y fuerza.";
@@ -225,8 +225,8 @@
 "avi.credits.signIn.message" = "Los créditos aparecerán aquí después de iniciar sesión.";
 "avi.currentFocus.detail" = "Avi te indica el siguiente paso para este video animado.";
 "avi.currentFocus.title" = "Siguiente empujón de Avi";
-"avi.focus.empty.message" = "Empieza con una foto, elige un estilo y dile a Avi qué debe decir.";
-"avi.focus.finished.message" = "Los videos terminados aparecen en Galería después de guardarse en este dispositivo. Empieza otro cuando tengas la siguiente foto.";
+"avi.focus.empty.message" = "Elige una foto en Crear video y Avi guiará la configuración.";
+"avi.focus.finished.message" = "Ningún video necesita atención. Tus videos terminados están en Galería.";
 "avi.focus.firstMemory.title" = "Hacer el primer video";
 "avi.focus.activeVideo.message" = "Abre Crear video para terminar la configuración o crear el video final.";
 "avi.focus.activeVideo.title" = "Continúa en Crear video";
@@ -240,17 +240,17 @@
 "avi.help.create.detail" = "El video terminado se guarda en Galería cuando está listo.";
 "avi.help.create.title" = "Guardar";
 "avi.help.detail" = "Tras confirmar el coste, Avi crea y guarda el resultado.";
-"avi.help.story.detail" = "Avi crea el video con el look y el mensaje elegidos.";
+"avi.help.story.detail" = "Avi crea el video con el estilo, la guía y la voz elegidos.";
 "avi.help.story.title" = "Animar";
 "avi.help.title" = "Tras confirmar";
 "avi.landing.choose" = "Elige";
 "avi.landing.create" = "Crea";
-"avi.landing.detail" = "Elige una foto, escoge un estilo, añade un mensaje y Avi le da movimiento.";
+"avi.landing.detail" = "Elige una foto, escoge un estilo, añade guía y voz opcional, y Avi le da movimiento.";
 "avi.landing.eyebrow" = "Guía de video";
 "avi.landing.story" = "Estilo";
 "avi.landing.title" = "Deja que Avi lo anime";
 "avi.prepare.action.button" = "Hacer video";
-"avi.prepare.action.detail" = "Empieza con una foto y ajusta el estilo, la animación y el mensaje.";
+"avi.prepare.action.detail" = "Termina la configuración o empieza de nuevo con otra foto.";
 "avi.prepare.action.title" = "Empezar un video nuevo";
 "avi.prepare.detail" = "Avi funciona mejor con una foto clara y una idea clara.";
 "avi.prepare.look.detail" = "Elige el estilo visual antes de que Avi prepare el video.";
@@ -261,10 +261,10 @@
 "avi.prepare.occasion.title" = "Elige el momento";
 "avi.prepare.story.detail" = "Da forma al video antes de gastar Créditos.";
 "avi.prepare.story.title" = "Dar forma al video";
-"avi.prepare.voice.detail" = "Añade un mensaje escrito corto o deja que el video sea visual.";
-"avi.prepare.voice.title" = "Mensaje";
-"avi.prepare.message.detail" = "Añade un mensaje corto opcional o deja que el video sea visual.";
-"avi.prepare.message.title" = "Mensaje y movimiento";
+"avi.prepare.voice.detail" = "Añade una frase breve para la voz o deja que el video sea visual.";
+"avi.prepare.voice.title" = "Configurar voz";
+"avi.prepare.message.detail" = "Añade una frase de voz opcional o deja que el video sea visual.";
+"avi.prepare.message.title" = "Guía y voz";
 "avi.prepare.title" = "Hacer un video animado";
 "avi.library.detail" = "Usa En progreso para los videos que todavía necesitan un toque.";
 "avi.library.gallery.detail" = "Mira los videos animados terminados guardados en este dispositivo.";
@@ -370,9 +370,9 @@
 "home.account.signInRequired" = "Debes iniciar sesión antes de crear y guardar videos.";
 "home.account.signedInAs" = "Sesión iniciada como %@.";
 "home.action.continueLatest.title" = "Continuar último video";
-"home.action.create.detail" = "Elige una foto y Avi la convertirá en una escena animada breve.";
+"home.action.create.detail" = "Elige una foto y luego define el estilo, la guía y la voz opcional.";
 "home.action.create.title" = "Hacer un video animado";
-"home.action.guidance.detail" = "Elige el estilo, el movimiento y el mensaje.";
+"home.action.guidance.detail" = "Elige el estilo, la guía y la voz.";
 "home.action.guidance.title" = "Preguntar a Avi";
 "home.action.continueVideo.detail.empty" = "Abre Crear video para empezar con una foto.";
 "home.action.continueVideo.detail.hasVideo" = "Abre Crear video para terminar el siguiente paso.";
@@ -381,14 +381,14 @@
 "home.action.openInProgress.detail.hasVideos" = "Termina los videos que ya están en progreso.";
 "home.action.openInProgress.title" = "Abrir En progreso";
 "home.avi.addMedia.detail" = "Añade una foto y Avi empezará el video animado.";
-"home.avi.createVideo.detail" = "Elige una foto para convertirla en una escena animada breve.";
+"home.avi.createVideo.detail" = "Elige una foto y luego define el estilo, la guía y la voz opcional.";
 "home.avi.createVideo.title" = "Hacer un video animado";
-"home.avi.creating.detail" = "Avi está dibujando el movimiento, el mensaje y el estilo.";
+"home.avi.creating.detail" = "Avi está dando forma al movimiento, la guía, la voz y el estilo.";
 "home.avi.creating.title" = "Avi está animando";
 "home.avi.currentVideo.title" = "Video actual";
 "home.avi.preparing.detail" = "Avi está convirtiendo la foto en un plan de video.";
 "home.avi.preparing.title" = "Avi está calentando motores";
-"home.avi.selected.detail" = "%d %@. Ahora toca elegir el estilo, el movimiento y el mensaje.";
+"home.avi.selected.detail" = "%d %@. Ahora toca elegir estilo, guía y voz.";
 "home.avi.signIn.detail" = "Conecta tu cuenta para que Avi guarde tus videos animados.";
 "home.avi.signIn.title" = "Inicia sesión para crear";
 "home.aviBrief.continueVideo" = "Continúa %@ desde el siguiente paso pendiente.";
@@ -567,7 +567,7 @@
 "create.current.addMedia" = "Añade una foto antes de preparar el video.";
 "create.current.continue" = "Continuar video actual";
 "create.video.title" = "Crear video";
-"create.video.subtitle" = "Convierte una foto en una escena animada con estilo, movimiento y mensaje opcional.";
+"create.video.subtitle" = "Convierte una foto en una escena animada con estilo, guía y voz opcional.";
 "create.current.selected" = "%d ítems seleccionados.";
 "credits.getMore" = "Conseguir más créditos";
 "profile.account.connected" = "Conectado a %@.";
@@ -651,7 +651,7 @@
 "create.final.confirmMessage" = "Solo se descuentan créditos por videos finales completados. Este video cuesta %@.";
 "create.final.confirmTitle" = "¿Crear video?";
 "create.final.confirmSheet.title" = "Crear video final";
-"create.final.confirmSheet.detail" = "Tu foto, el estilo y el mensaje se usarán para crear el video final.";
+"create.final.confirmSheet.detail" = "Tu foto, el estilo, la guía y la voz se usarán para crear el video final.";
 "create.final.confirmSheet.cost" = "Coste";
 "create.final.confirmSheet.media" = "Foto";
 "create.final.confirmSheet.mediaPending" = "Comprobando imagen";
@@ -717,7 +717,7 @@
 "create.aviStatus.preparing.detail" = "Avi está convirtiendo la foto en un plan de video.";
 "create.aviStatus.storyReady.detail" = "Foto, estilo y guía están listos. Revisa el coste antes de crear.";
 "create.aviStatus.goodSelection.detail" = "Esta foto está lista. Sigue con el estilo.";
-"create.aviStatus.startMedia.detail" = "Añade una foto y después elige el estilo, el movimiento y el mensaje.";
+"create.aviStatus.startMedia.detail" = "Añade una foto y después elige el estilo, la guía y la voz.";
 "recovery.mediaImportFailure" = "No se pudo añadir esa foto. Sigue en este dispositivo; inténtalo de nuevo o elige otra imagen.";
 "recovery.mediaUploadUnavailable" = "La subida de la foto aún no está lista. Tu foto sigue en este dispositivo; inténtalo de nuevo en un momento.";
 "recovery.mediaStorySaveFailure" = "No se pudo guardar la foto para el video. Tu foto sigue en este dispositivo; inténtalo de nuevo o elige otra imagen.";
@@ -774,7 +774,7 @@
 "create.preparation.prepareStory.progress" = "Preparando video";
 "create.options.anotherTheme" = "otra idea de video";
 "create.storyDirection.title" = "Configuración del video";
-"create.storyDirection.detail" = "Elige el estilo, el movimiento y el mensaje opcional.";
+"create.storyDirection.detail" = "Elige el estilo, la guía y la voz opcional.";
 "create.storyDirection.needsStory" = "Revisarás los créditos antes de crear.";
 "create.media.itemCount" = "%d ítems";
 "create.final.createVideoTitle" = "Crear el video";
@@ -788,7 +788,6 @@
 "create.primary.continueWithVideo" = "Revisar créditos";
 "create.guided.look.tab" = "Estilo";
 "create.guided.script.tab" = "Guía y voz";
-"create.guided.voice.tab" = "Mensaje";
 "create.guided.look.title" = "Estilo";
 "create.guided.look.detail" = "Elige el estilo visual del video.";
 "create.guided.look.selected" = "Seleccionado: %@";
@@ -817,8 +816,6 @@
 "create.guided.script.motivation.message" = "Puedes con esto. Sigue adelante y hazlo tuyo.";
 "create.guided.script.funny" = "Divertido";
 "create.guided.script.funny.message" = "Modo encanto activado. Prepárate para máxima personalidad.";
-"create.guided.voice.title" = "Revisa el mensaje";
-"create.guided.voice.detail" = "Mantén el mensaje escrito corto y claro.";
 "create.guided.continue.message" = "Continuar a guía y voz";
 "create.guided.continue.finish" = "Finalizar configuración";
 "create.guided.summary.title" = "Resumen del video";
@@ -942,7 +939,7 @@
 "create.render.phase.rendering" = "Animando";
 "create.render.phase.creating" = "Creando";
 "create.render.phase.image" = "Creando imagen";
-"create.render.phase.audio" = "Preparando mensaje";
+"create.render.phase.audio" = "Preparando voz";
 "create.render.phase.saving" = "Guardando";
 "create.render.detail.preparing" = "Avi está preparando el video.";
 "create.render.detail.uploading" = "Avi está enviando la imagen para crear el video.";
@@ -950,7 +947,7 @@
 "create.render.detail.rendering" = "Avi está animando tu video.";
 "create.render.detail.creating" = "Avi está creando el video.";
 "create.render.detail.image" = "Avi está creando la imagen con el look elegido.";
-"create.render.detail.audio" = "Avi está preparando la tarjeta de mensaje.";
+"create.render.detail.audio" = "Avi está preparando la frase de voz.";
 "create.render.detail.saving" = "Avi está guardando el video terminado. Normalmente termina en poco tiempo.";
 "create.render.detail.realtime" = "Avi está actualizando el estado del video en tiempo real.";
 "create.render.detail.available" = "El estado del video está disponible.";
@@ -992,9 +989,9 @@
 "create.mediaCard.item.plural" = "elementos";
 "create.mediaCard.removeMedia" = "Quitar foto";
 "create.mediaCard.closePreview" = "Cerrar vista previa";
-"create.mediaCard.videoPreview" = "Vista previa de imagen";
+"create.mediaCard.videoPreview" = "Vista previa de video";
 "create.mediaCard.mediaPreview" = "Vista previa de foto";
-"create.mediaCard.menu.yourEdits" = "Imagen";
+"create.mediaCard.menu.yourEdits" = "Opciones de foto";
 "create.mediaCard.selectionMessage" = "Previsualiza la foto o sustitúyela antes de crear el video.";
 "create.mediaCard.noDate" = "Sin fecha";
 "create.mediaCard.kind.video" = "Video";
@@ -1016,7 +1013,7 @@
 "create.workflowContent.assetUsageItems" = "%d de %d elementos";
 "create.workflowContent.beforeVideo" = "Antes del video";
 "create.workflowContent.modePending" = "Elige el camino";
-"create.workflowContent.renderPlanFallback" = "Avi comprueba la configuración, el mensaje y la calidad antes de crear el video final.";
+"create.workflowContent.renderPlanFallback" = "Avi comprueba la configuración, la voz y la calidad antes de crear el video final.";
 "create.videoDirection.selectedSetup" = "Imagen y dirección";
 "create.videoDirection.status.ready" = "Listo para revisar créditos. Comprueba el coste o ajusta la configuración primero.";
 "create.videoDirection.status.improving" = "Avi está preparando la configuración.";
@@ -1062,7 +1059,7 @@
 "create.workflowContent.mediaAndTiming" = "Imagen y dirección";
 "create.workflowContent.finalVideoCost" = "%@ para video final";
 "create.workflowContent.needsMediaBeforeVideo" = "Avi necesita la foto antes de crear el video.";
-"create.workflowContent.finalEditSummary" = "La foto seleccionada, la configuración y el mensaje se usarán para la edición final.";
+"create.workflowContent.finalEditSummary" = "La foto seleccionada, la configuración y la voz se usarán para la edición final.";
 "create.workflowContent.itemCount" = "%d elemento";
 "create.workflowContent.itemsCount" = "%d elementos";
 "create.workflowContent.locked" = "Bloqueado";
@@ -1083,7 +1080,7 @@
 "create.workflowContent.aviTip" = "Consejo de Avi";
 "create.workflowContent.tipFinalReady" = "Tu video está listo para descargar y mover a la Galería.";
 "create.workflowContent.tipFinalWorking" = "Avi está terminando el video final. El progreso se actualiza automáticamente.";
-"create.workflowContent.tipPickVideos" = "Elige la imagen. Avi definirá estilo, animación y mensaje.";
+"create.workflowContent.tipPickVideos" = "Elige la imagen y después el estilo, la guía y la voz.";
 "create.workflowContent.planDetail" = "%ds · %d foto";
 
 
@@ -1196,15 +1193,15 @@
 "create.look.fantasyQuest.subtitle" = "Fantasía luminosa con aire de misión.";
 "create.look.miniAvatar.title" = "Mini avatar";
 "create.look.miniAvatar.subtitle" = "Figura compacta con acabado coleccionable.";
-"create.voiceProfile.narratorWoman.title" = "Mensaje";
-"create.voiceProfile.narratorWoman.detail" = "Mensaje escrito";
-"create.voiceProfile.narratorMan.title" = "Mensaje";
-"create.voiceProfile.narratorMan.detail" = "Mensaje escrito";
+"create.voiceProfile.narratorWoman.title" = "Voz";
+"create.voiceProfile.narratorWoman.detail" = "Frase de voz";
+"create.voiceProfile.narratorMan.title" = "Voz";
+"create.voiceProfile.narratorMan.detail" = "Frase de voz";
 "create.voiceTone.warm.title" = "Cálida";
 "create.voiceTone.cheerful.title" = "Alegre";
 "create.voiceTone.calm.title" = "Calma";
 "create.voiceTone.dramatic.title" = "Dramática";
-"create.voiceTone.section.title" = "Tono del mensaje";
+"create.voiceTone.section.title" = "Tono de voz";
 
 /* Look families */
 "create.look.family.popular.title" = "Estilos populares";
@@ -1304,14 +1301,13 @@
 "create.look.embroideredTextile.subtitle" = "Textura de hilo con detalle de personaje bordado.";
 "create.guided.photoFrame.tab" = "Foto y encuadre";
 "create.guided.photoFrame.title" = "Foto y encuadre";
-"create.guided.photoFrame.detail" = "Elige la foto de origen y decide si Animate AV usa la imagen completa o un encuadre más cercano.";
+"create.guided.photoFrame.detail" = "Elige la foto de origen y, si hace falta, define un encuadre cuadrado o vertical.";
 "create.guided.photoFrame.empty" = "Elige una foto para empezar este video.";
-"create.guided.photoFrame.ready" = "Foto seleccionada. Usaremos la imagen completa salvo que ajustes el encuadre.";
+"create.guided.photoFrame.ready" = "Foto seleccionada. Usaremos la imagen completa salvo que edites el encuadre.";
 "create.guided.movement.tab" = "Guía y voz";
 "create.guided.movement.title" = "Guía y voz";
 "create.guided.movement.detail" = "Solo guía básica. Mejor una acción pequeña.";
 "create.guided.summary.photoFrame" = "Foto y encuadre";
-"create.guided.summary.movement" = "Animación";
 "create.guided.continue.look" = "Continuar a estilo";
 "create.guided.continue.movement" = "Continuar a guía y voz";
 "create.movement.subtleFaithful.title" = "Sutil y fiel";
@@ -1328,11 +1324,10 @@
 "create.movement.custom.detail" = "Deja espacio para que Avi siga tu dirección visual.";
 "create.mediaCard.adjustFrame" = "Ajustar encuadre";
 "create.mediaAdjust.adjustFrame" = "Editar encuadre";
-"create.mediaAdjust.frameDetail" = "Arrastra y pellizca la foto para elegir qué parte animar.";
+"create.mediaAdjust.frameDetail" = "Arrastra y pellizca para elegir el sujeto o la zona que Avi debe animar.";
 "create.mediaAdjust.zoom" = "Zoom";
 "create.mediaAdjust.zoomIn" = "Acercar";
 "create.mediaAdjust.zoomOut" = "Alejar";
-"create.mediaAdjust.fit" = "Ajustar";
 "create.mediaAdjust.mode.square" = "Cuadrado";
 "create.mediaAdjust.mode.vertical" = "Vertical";
 "create.guided.direction.none" = "Natural";
@@ -1365,6 +1360,6 @@
 "create.guided.direction.celebration.prompt" = "Crea una animación de celebración con energía alegre, pequeños destellos y un final expresivo sin deformar las caras.";
 "create.guided.direction.custom.title" = "Personalizada";
 "create.guided.direction.custom.detail" = "Texto propio.";
-"create.guided.script.template" = "Plantilla de mensaje";
+"create.guided.script.template" = "Plantilla de voz";
 "create.guided.script.custom" = "Personalizado";
 "create.guided.script.custom.preview" = "Frase orientativa para la voz.";

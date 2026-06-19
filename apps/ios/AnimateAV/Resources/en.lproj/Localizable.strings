@@ -96,7 +96,7 @@
 /* Create flow setup selectors */
 "common.back" = "Back";
 "common.soon" = "Soon";
-"create.duration.auto.subtitle" = "Avi keeps the video as short as the message allows.";
+"create.duration.auto.subtitle" = "Avi keeps the video short and focused.";
 "create.duration.auto.title" = "Avi times it";
 "create.storyDirection.cardTitle" = "Setup";
 "create.look.anime.subtitle" = "Stylized anime-inspired scenes.";
@@ -158,7 +158,7 @@
 "create.music.upbeat.title" = "Upbeat";
 "create.music.warm.subtitle" = "Soft, close, and personal.";
 "create.music.warm.title" = "Warm";
-"create.rules.missingOccasion" = "Add a message before starting a video.";
+"create.rules.missingOccasion" = "Add a voice line or choose No voice before starting a video.";
 "create.selector.look.accessibility" = "%@ look";
 "create.selector.look.intro.detail" = "Pick the visual style first. Avi keeps the same photo idea and changes how the animated world is drawn.";
 "create.selector.look.intro.title" = "Pick the look";
@@ -187,7 +187,7 @@
 "create.template.mediaRange" = "%d photo";
 "create.template.softRoast.summary" = "A longer playful video from one photo.";
 "create.template.softRoast.title" = "Extended";
-"create.theme.birthday.subtitle" = "A short animated message.";
+"create.theme.birthday.subtitle" = "A short animated greeting.";
 "create.theme.birthday.title" = "Greeting Clip";
 "create.theme.celebration.subtitle" = "A playful reveal for one subject.";
 "create.theme.celebration.title" = "Character Intro";
@@ -240,12 +240,12 @@
 "avi.help.create.detail" = "The finished video is saved in Gallery when it is ready.";
 "avi.help.create.title" = "Save";
 "avi.help.detail" = "After you confirm the cost, Avi handles creation and saves the result.";
-"avi.help.story.detail" = "Avi creates the styled video with the selected look and message.";
+"avi.help.story.detail" = "Avi creates the styled video with the selected look, guide, and voice choice.";
 "avi.help.story.title" = "Animate";
 "avi.help.title" = "After confirmation";
 "avi.landing.choose" = "Choose";
 "avi.landing.create" = "Create";
-"avi.landing.detail" = "Choose one photo, pick a look, add a message, and Avi gives it motion.";
+"avi.landing.detail" = "Choose one photo, pick a look, add guidance and optional voice, and Avi gives it motion.";
 "avi.landing.eyebrow" = "Video guide";
 "avi.landing.story" = "Style";
 "avi.landing.title" = "Let Avi animate it";
@@ -261,10 +261,10 @@
 "avi.prepare.occasion.title" = "Choose the moment";
 "avi.prepare.story.detail" = "Shape the video before spending Credits.";
 "avi.prepare.story.title" = "Shape the video";
-"avi.prepare.voice.detail" = "Add a short written message or keep the video visual.";
-"avi.prepare.voice.title" = "Set message";
-"avi.prepare.message.detail" = "Add an optional short message or keep the video visual.";
-"avi.prepare.message.title" = "Message and motion";
+"avi.prepare.voice.detail" = "Add a short voice line or keep the video visual.";
+"avi.prepare.voice.title" = "Set voice";
+"avi.prepare.message.detail" = "Add an optional short voice line or keep the video visual.";
+"avi.prepare.message.title" = "Guide and voice";
 "avi.prepare.title" = "Create Video with Avi";
 "avi.library.detail" = "Use Create Video for new or unfinished videos. Use Gallery for finished videos.";
 "avi.library.gallery.detail" = "See finished animated videos saved on this device.";
@@ -370,9 +370,9 @@
 "home.account.signInRequired" = "Sign in is required before creating and saving videos.";
 "home.account.signedInAs" = "Signed in as %@.";
 "home.action.continueLatest.title" = "Continue in Create Video";
-"home.action.create.detail" = "Choose one photo, then set the look, motion, and optional message.";
+"home.action.create.detail" = "Choose one photo, then set the look, guide, and optional voice.";
 "home.action.create.title" = "Create Video";
-"home.action.guidance.detail" = "Choose the look, motion, and message.";
+"home.action.guidance.detail" = "Choose the look, guide, and voice.";
 "home.action.guidance.title" = "Ask Avi";
 "home.action.continueVideo.detail.empty" = "Open Create Video to start with one photo.";
 "home.action.continueVideo.detail.hasVideo" = "Open Create Video to finish the next step.";
@@ -381,14 +381,14 @@
 "home.action.openInProgress.detail.hasVideos" = "Finish videos already in progress.";
 "home.action.openInProgress.title" = "Open In Progress";
 "home.avi.addMedia.detail" = "Choose one photo to start the setup.";
-"home.avi.createVideo.detail" = "Choose one photo, then set the look, motion, and optional message.";
+"home.avi.createVideo.detail" = "Choose one photo, then set the look, guide, and optional voice.";
 "home.avi.createVideo.title" = "Create Video";
-"home.avi.creating.detail" = "Avi is sketching the motion, message, and style.";
+"home.avi.creating.detail" = "Avi is shaping the motion, guide, voice, and style.";
 "home.avi.creating.title" = "Avi is animating";
 "home.avi.currentVideo.title" = "Continue in Create Video";
 "home.avi.preparing.detail" = "Avi is preparing the setup for this video.";
 "home.avi.preparing.title" = "Preparing video";
-"home.avi.selected.detail" = "%d %@. Continue with look, motion, and message.";
+"home.avi.selected.detail" = "%d %@. Continue with look, guide, and voice.";
 "home.avi.signIn.detail" = "Connect your account so Avi can save your animated videos.";
 "home.avi.signIn.title" = "Sign in to create";
 "home.aviBrief.continueVideo" = "Continue %@ from the next unfinished step.";
@@ -567,7 +567,7 @@
 "create.current.addMedia" = "Add one photo to start the video.";
 "create.current.continue" = "Continue current video";
 "create.video.title" = "Create video";
-"create.video.subtitle" = "Turn one photo into an animated scene with a look, motion, and optional message.";
+"create.video.subtitle" = "Turn one photo into an animated scene with a look, guide, and optional voice.";
 "create.current.selected" = "%d items selected.";
 "credits.getMore" = "Get more credits";
 "profile.account.connected" = "Connected to %@.";
@@ -651,7 +651,7 @@
 "create.final.confirmMessage" = "Credits are only charged for completed final videos. This video costs %@.";
 "create.final.confirmTitle" = "Create video?";
 "create.final.confirmSheet.title" = "Create final video";
-"create.final.confirmSheet.detail" = "Your photo, look, and message will be used to create the final video.";
+"create.final.confirmSheet.detail" = "Your photo, look, guide, and voice choice will be used to create the final video.";
 "create.final.confirmSheet.cost" = "Cost";
 "create.final.confirmSheet.media" = "Photo";
 "create.final.confirmSheet.mediaPending" = "Checking image";
@@ -717,7 +717,7 @@
 "create.aviStatus.preparing.detail" = "Avi is turning the photo into a video plan.";
 "create.aviStatus.storyReady.detail" = "Photo, look, and guide are ready. Review the cost before creating.";
 "create.aviStatus.goodSelection.detail" = "This photo is ready. Choose the look next.";
-"create.aviStatus.startMedia.detail" = "Add one photo, then choose the look, motion, and message.";
+"create.aviStatus.startMedia.detail" = "Add one photo, then choose the look, guide, and voice.";
 "recovery.mediaImportFailure" = "Couldn’t add that photo. It is still on this device; try again or choose a different image.";
 "recovery.mediaUploadUnavailable" = "Photo upload is not ready yet. Your photo is still on this device; please try again in a moment.";
 "recovery.mediaStorySaveFailure" = "Couldn’t save the photo for the video. Your photo is still on this device; try again or choose a different image.";
@@ -774,7 +774,7 @@
 "create.preparation.prepareStory.progress" = "Preparing video";
 "create.options.anotherTheme" = "another video idea";
 "create.storyDirection.title" = "Video setup";
-"create.storyDirection.detail" = "Choose the look, motion, and optional message.";
+"create.storyDirection.detail" = "Choose the look, guide, and optional voice.";
 "create.storyDirection.needsStory" = "You’ll review credits before creating.";
 "create.media.itemCount" = "%d items";
 "create.final.createVideoTitle" = "Create the video";
@@ -788,7 +788,6 @@
 "create.primary.continueWithVideo" = "Check cost";
 "create.guided.look.tab" = "Look";
 "create.guided.script.tab" = "Guide and voice";
-"create.guided.voice.tab" = "Message";
 "create.guided.look.title" = "Look";
 "create.guided.look.detail" = "Choose the visual style for the video.";
 "create.guided.look.selected" = "Selected: %@";
@@ -817,8 +816,6 @@
 "create.guided.script.motivation.message" = "You have got this. Keep going and make it yours.";
 "create.guided.script.funny" = "Funny";
 "create.guided.script.funny.message" = "Charm mode activated. Prepare for maximum personality.";
-"create.guided.voice.title" = "Review the message";
-"create.guided.voice.detail" = "Keep the written message short and clear.";
 "create.guided.continue.message" = "Continue to guide and voice";
 "create.guided.continue.finish" = "Finish setup";
 "create.guided.summary.title" = "Video summary";
@@ -826,7 +823,7 @@
 "create.guided.summary.look" = "Look";
 "create.guided.summary.message" = "Guide and voice";
 "create.guided.summary.createVideo.title" = "Ready to price";
-"create.guided.summary.createVideo.detail" = "Photo, look, guide, and voice choice are ready.";
+"create.guided.summary.createVideo.detail" = "Photo, look, guide, and voice are ready.";
 "create.videoDirection.summary.aviTitle" = "Your setup";
 "create.videoDirection.summary.aviDetail" = "%@, %@, and %@.";
 "create.videoDirection.summary.userTitle" = "Your setup";
@@ -942,7 +939,7 @@
 "create.render.phase.rendering" = "Animating";
 "create.render.phase.creating" = "Creating";
 "create.render.phase.image" = "Creating image";
-"create.render.phase.audio" = "Preparing message";
+"create.render.phase.audio" = "Preparing voice";
 "create.render.phase.saving" = "Saving";
 "create.render.detail.preparing" = "Avi is getting the video ready.";
 "create.render.detail.uploading" = "Avi is sending the photo for video creation.";
@@ -950,7 +947,7 @@
 "create.render.detail.rendering" = "Avi is animating your video.";
 "create.render.detail.creating" = "Avi is creating the video.";
 "create.render.detail.image" = "Avi is making the styled image.";
-"create.render.detail.audio" = "Avi is preparing the message card.";
+"create.render.detail.audio" = "Avi is preparing the voice line.";
 "create.render.detail.saving" = "Avi is saving the finished video. This usually finishes shortly.";
 "create.render.detail.realtime" = "Avi is updating the video status in realtime.";
 "create.render.detail.available" = "Video status is available.";
@@ -993,9 +990,9 @@
 "create.mediaCard.removeMedia" = "Remove photo";
 "create.mediaCard.adjustFrame" = "Adjust frame";
 "create.mediaCard.closePreview" = "Close preview";
-"create.mediaCard.videoPreview" = "Image preview";
+"create.mediaCard.videoPreview" = "Video preview";
 "create.mediaCard.mediaPreview" = "Photo preview";
-"create.mediaCard.menu.yourEdits" = "Image";
+"create.mediaCard.menu.yourEdits" = "Photo options";
 "create.mediaCard.selectionMessage" = "Preview the photo or replace it before creating the video.";
 "create.mediaCard.noDate" = "No date";
 "create.mediaCard.kind.video" = "Video";
@@ -1008,11 +1005,10 @@
 "create.mediaAdjust.restoreOriginal" = "Restore original";
 "create.mediaAdjust.frameApplied" = "Frame applied";
 "create.mediaAdjust.reset" = "Reset";
-"create.mediaAdjust.frameDetail" = "Drag and pinch the photo to choose what the video should animate.";
+"create.mediaAdjust.frameDetail" = "Drag and pinch to choose the subject or area Avi should animate.";
 "create.mediaAdjust.zoom" = "Zoom";
 "create.mediaAdjust.zoomIn" = "Zoom in";
 "create.mediaAdjust.zoomOut" = "Zoom out";
-"create.mediaAdjust.fit" = "Fit";
 "create.mediaAdjust.mode.square" = "Square";
 "create.mediaAdjust.mode.vertical" = "Vertical";
 "create.mediaTransition.sourcePhoto.title" = "Start with original photo";
@@ -1025,7 +1021,7 @@
 "create.workflowContent.assetUsageItems" = "%d of %d items";
 "create.workflowContent.beforeVideo" = "Before video";
 "create.workflowContent.modePending" = "Pick a path";
-"create.workflowContent.renderPlanFallback" = "Avi checks the setup, message, and quality before creating the final video.";
+"create.workflowContent.renderPlanFallback" = "Avi checks the setup, voice, and quality before creating the final video.";
 "create.videoDirection.selectedSetup" = "Image and direction";
 "create.videoDirection.status.ready" = "Ready to price. Review the cost or adjust the setup first.";
 "create.videoDirection.status.improving" = "Avi is preparing the setup.";
@@ -1071,7 +1067,7 @@
 "create.workflowContent.mediaAndTiming" = "Image and direction";
 "create.workflowContent.finalVideoCost" = "%@ final video";
 "create.workflowContent.needsMediaBeforeVideo" = "Avi needs the photo before creating the video.";
-"create.workflowContent.finalEditSummary" = "The selected photo, setup, and message will be used for the final edit.";
+"create.workflowContent.finalEditSummary" = "The selected photo, setup, and voice choice will be used for the final edit.";
 "create.workflowContent.itemCount" = "%d item";
 "create.workflowContent.itemsCount" = "%d items";
 "create.workflowContent.locked" = "Locked";
@@ -1092,19 +1088,18 @@
 "create.workflowContent.aviTip" = "Avi tip";
 "create.workflowContent.tipFinalReady" = "Your video is ready to download and move to Gallery.";
 "create.workflowContent.tipFinalWorking" = "Avi is finishing the final video. Progress updates automatically.";
-"create.workflowContent.tipPickVideos" = "Pick the image, then choose the style, animation, and message.";
+"create.workflowContent.tipPickVideos" = "Pick the image, then choose the style, guide, and voice.";
 "create.workflowContent.planDetail" = "%ds · %d photo";
 
 "create.guided.photoFrame.tab" = "Photo and frame";
 "create.guided.photoFrame.title" = "Photo and frame";
-"create.guided.photoFrame.detail" = "Choose the source photo and decide whether Animate AV uses the whole image or a tighter frame.";
+"create.guided.photoFrame.detail" = "Choose the source photo and, if needed, set a square or vertical reference frame.";
 "create.guided.photoFrame.empty" = "Choose one photo to start this video.";
-"create.guided.photoFrame.ready" = "Photo selected. Full image is ready unless you adjust the frame.";
+"create.guided.photoFrame.ready" = "Photo selected. The full image is ready unless you edit the frame.";
 "create.guided.movement.tab" = "Guide and voice";
 "create.guided.movement.title" = "Guide and voice";
 "create.guided.movement.detail" = "Basic guide only. Small motion works best.";
 "create.guided.summary.photoFrame" = "Photo and frame";
-"create.guided.summary.movement" = "Animation";
 "create.guided.continue.look" = "Continue to look";
 "create.guided.continue.movement" = "Continue to guide and voice";
 "create.movement.subtleFaithful.title" = "Subtle and faithful";
@@ -1230,15 +1225,15 @@
 "create.look.fantasyQuest.subtitle" = "Bright fantasy with an adventure feel.";
 "create.look.miniAvatar.title" = "Mini avatar";
 "create.look.miniAvatar.subtitle" = "Compact figure with a collectible finish.";
-"create.voiceProfile.narratorWoman.title" = "Message";
-"create.voiceProfile.narratorWoman.detail" = "Written message";
-"create.voiceProfile.narratorMan.title" = "Message";
-"create.voiceProfile.narratorMan.detail" = "Written message";
+"create.voiceProfile.narratorWoman.title" = "Voice";
+"create.voiceProfile.narratorWoman.detail" = "Voice line";
+"create.voiceProfile.narratorMan.title" = "Voice";
+"create.voiceProfile.narratorMan.detail" = "Voice line";
 "create.voiceTone.warm.title" = "Warm";
 "create.voiceTone.cheerful.title" = "Cheerful";
 "create.voiceTone.calm.title" = "Calm";
 "create.voiceTone.dramatic.title" = "Dramatic";
-"create.voiceTone.section.title" = "Message tone";
+"create.voiceTone.section.title" = "Voice tone";
 
 /* Look families */
 "create.look.family.popular.title" = "Popular Looks";
@@ -1259,7 +1254,7 @@
 "create.look.family.craftTexture.subtitle" = "Paper, felt, collage, and tactile materials.";
 "create.look.family.back" = "Look";
 "create.look.family.accessibility" = "%@ family";
-"create.look.preview.accessibility" = "Preview %@";
+"create.look.preview.accessibility" = "Preview %@ larger";
 "create.guided.look.noneSelected.title" = "Choose a look";
 "create.guided.look.noneSelected.detail" = "No look selected yet.";
 "create.look.kawaiiPop.title" = "Kawaii Pop";
@@ -1366,6 +1361,6 @@
 "create.guided.direction.celebration.prompt" = "Create a celebratory animation with bright energy, small sparkles, and an expressive ending without distorting faces.";
 "create.guided.direction.custom.title" = "Custom";
 "create.guided.direction.custom.detail" = "Custom text.";
-"create.guided.script.template" = "Message template";
+"create.guided.script.template" = "Voice template";
 "create.guided.script.custom" = "Custom";
 "create.guided.script.custom.preview" = "Guidance for the voice.";

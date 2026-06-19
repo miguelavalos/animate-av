@@ -36,7 +36,7 @@ docs/
 The current public product shape is a one-photo creation flow:
 
 ```text
-Foto y encuadre -> Look -> Animation -> optional written Dedication -> Check cost -> Create video -> local download -> Gallery
+Foto y encuadre -> Look -> Guide and voice -> Check cost -> Create video -> local download -> Gallery
 ```
 
 Generated images are a separate source-photo workflow. Public docs should not

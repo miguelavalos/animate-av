@@ -19,35 +19,35 @@ implementation plan.
 - Every final look has a unique `Look*.imageset` preview asset.
 - Look tiles may include a small secondary preview affordance for inspecting the
   asset larger. Previewing a look must be separate from selecting it.
-- Look selection is independent from Animation and optional written
-  Message/Dedication.
+- Look selection is independent from Guide and voice.
 - The Look step must stay focused on visual style. Do not add animation preset
   cards, message inputs, voice controls, or audio controls to the look flow.
-- Animation guidance is collected as free text in the next guided step, together
-  with optional written Message/Dedication.
-- Animate AV V1 is not a voice product. Do not add visible narrator, voice,
-  tone, generated-audio, or in-app audio controls to the look flow.
+- Animation guidance and the optional voice line are collected in the next
+  guided step.
+- Animate AV V1 has one optional voice line, not narrator controls. Do not add
+  visible narrator, tone, generated-audio, uploaded-audio, or in-app audio
+  controls to the look flow.
 
 ## Guided Create Video Flow
 
 The visible guided setup order is:
 
 ```text
-Photo and framing -> Look -> Guide and optional written Message/Dedication
+Photo and framing -> Look -> Guide and voice
 ```
 
 Credit review becomes visible only after:
 
 - a renderable local source photo exists;
 - a look has been selected;
-- the Guide and optional Message/Dedication step has been completed or skipped.
+- the Guide and voice step has been completed or skipped.
 
-The setup summary must show Photo/framing, Look, and Guide and Message in that
+The setup summary must show Photo/framing, Look, and Guide and voice in that
 order.
 
 Any compact/basic guide shown outside the sheet must mirror the same setup
 state. It can point the user to the next required action, but it must not put
-animation presets or message entry back into the Look step, and it must not add
+animation presets or voice entry back into the Look step, and it must not add
 a separate review step before credit confirmation.
 
 ## Families And Looks

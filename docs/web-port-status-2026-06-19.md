@@ -41,8 +41,8 @@ operator tokens, private deployment details, or paid-provider instructions.
 - Added full-image default framing and explicit 9:16 portrait-frame generation.
 - Added upload prepare, signed upload, completion, and source metadata hashing.
 - Added Look step with 8 families x 8 looks and copied preview assets.
-- Kept Animation as a separate step with one short optional guidance field.
-- Added optional written Message/Dedication field without voice/audio controls.
+- Kept guidance as a separate step with one short optional guidance field.
+- Added one optional voice line without narrator/audio controls.
 - Added setup summary and render review.
 - Uses `/v1/apps/animateav/renders/plan` as the single source of cost, blockers,
   watermark, and confirmable plan state.

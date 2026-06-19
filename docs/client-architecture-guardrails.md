@@ -14,7 +14,7 @@ renders the state returned by the configured backend/realtime layer.
 The current v1 user flow is:
 
 ```text
-Foto y encuadre -> Look -> Guide and optional written Dedication -> quote credits -> generate animated card -> local download -> Gallery
+Foto y encuadre -> Look -> Guide and voice -> quote credits -> generate animated card -> local download -> Gallery
 ```
 
 The Foto y encuadre step owns source-photo choice, full-photo use, frame
@@ -41,33 +41,34 @@ treated as the source of truth for restoring the user's pre-adjusted photo.
 
 Look is a separate guided step and must stay focused on visual style selection:
 8 look families, 8 looks per family, and one selected look. It must not contain
-animation preset cards, message controls, voice controls, or hidden audio
+animation preset cards, guide controls, voice controls, or hidden audio
 choices.
 The Look grid may provide a secondary preview action that opens the selected
 look asset larger for inspection. That preview must not change the selected look
 unless the user explicitly taps the look selection control.
 
-The animation guide is collected with optional written Dedication in the next
-guided sheet. It captures optional free-text visual direction for what should
-happen in the animated scene.
-A valid one-photo video can be confirmed with no message, no dedication, and no
-voice. Custom visual instructions are capped client-side and sent as user text
-only when the user has actually typed non-empty text. Client copy must describe
-this as basic, orientative guidance, not an exact command.
+The animation guide and optional voice line are collected in the next guided
+sheet. The guide captures optional free-text visual direction for what should
+happen in the animated scene. The voice line is a short optional line that can
+be disabled with "No voice".
+A valid one-photo video can be confirmed with no guide text and no voice.
+Custom visual instructions are capped client-side and sent as user text only
+when the user has actually typed non-empty text. Client copy must describe this
+as basic, orientative guidance, not an exact command.
 
 Create Video status cards, Avi guidance, summary rows, and fixed action bars
 must follow the guided client state before backend-ready legacy state. A saved
 story direction or previous fixture state is not enough to show credit review.
 Credit review becomes visible only after a renderable local photo exists, the
-user has selected a look/style, and the guided Guide and optional Dedication
+user has selected a look/style, and the guided Guide and voice
 path is complete. If the local photo data is missing or cannot decode as an
 image, the client must reset visible state to Foto y encuadre and block
 later-step actions.
 
 The basic guide is a lightweight state guide, not a separate product step. It
 may summarize the next required action and open the relevant guided sheet, but
-it must mirror the same Photo/framing -> Look -> Guide and optional written
-Dedication order and must not introduce voice, audio, preview-versioning, or
+it must mirror the same Photo/framing -> Look -> Guide and voice
+order and must not introduce custom audio controls, preview-versioning, or
 extra review branches.
 
 Images use the same ownership model with a simpler output: choose one source
@@ -184,8 +185,8 @@ hidden from users.
 V1 final videos are animated one-photo card videos. The client must not present
 multi-photo sorting, album-style edit screens, audio controls, voice presets,
 voice cloning, captions, subtitles, or user audio uploads as available v1
-features. If a written dedication is exposed, it is a controlled card/compositor
-input, not a prompt asking the model to draw readable text.
+features. If future written card text is exposed, it must be a controlled
+card/compositor input, not a prompt asking the model to draw readable text.
 
 Create Video text entry should rely on the native iOS keyboard, including
 system dictation when the user has it enabled. Do not add an in-app microphone

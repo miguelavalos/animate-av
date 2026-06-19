@@ -40,7 +40,7 @@ handoff values belong in the private AVALSYS suite.
 V1 is a signed-in one-photo animation workflow:
 
 ```text
-Foto y encuadre -> Look -> Guide and optional Message -> Check cost -> Create video -> local download -> Gallery
+Foto y encuadre -> Look -> Guide and voice -> Check cost -> Create video -> local download -> Gallery
 ```
 
 Foto y encuadre is the normal source-photo step: choose one photo, use the full
@@ -51,23 +51,22 @@ editable so re-entering frame adjustment and restore-original work without
 backend state.
 
 Look is the main visual style choice. The Look screen must stay focused on the
-8 families and 64 looks, without animation preset cards or message controls.
+8 families and 64 looks, without animation preset cards or voice controls.
 
-Guide and optional Message is the next guided step. The animation guide is a
-small free-text hint for how the short animation should behave. It is optional,
-basic, and orientative: the client should not promise scene-accurate custom
-scripts, exact control, or complex choreography.
+Guide and voice is the next guided step. The animation guide is a small
+free-text hint for how the short animation should behave. The voice line is
+optional and can be disabled. Both inputs are basic and orientative: the client
+should not promise scene-accurate custom scripts, exact control, or complex
+choreography.
 
-Message/dedication is optional. The simplified V1 direction treats Animate AV as
-a visual animated card: user-facing voice-over, narrator tone, voice cloning,
-and custom audio controls should stay hidden or disabled. If a written
-dedication is exposed, it must be rendered by deterministic composition, not by
-asking the generative model to draw readable text inside the image/video.
+Animate AV V1 may expose one short optional voice line, but it is not a custom
+audio-control product. Narrator tone, voice cloning, uploaded audio, and custom
+audio controls should stay hidden or disabled.
 
 The client must treat the guided setup state as the source of truth for the
 visible Create Video status. It must not show "Check cost" or "Ready to review
 credits" until a renderable local source photo exists, a look/style is selected,
-and the guided Guide and optional Message step has been completed.
+and the guided Guide and voice step has been completed.
 If the source photo is missing or no longer renderable, the UI resets to Foto y
 encuadre and hides later steps and credit actions.
 
@@ -102,9 +101,9 @@ behavior blindly; audit the user-facing terminology first.
 
 Create Video style review note: the shipped client has 8 look families with 8
 looks each, one unique preview asset per look, Look as its own focused step,
-Guide and optional written Message/Dedication as the next step, and synchronized
-runtime copy for `en`, `es`, `ca`, `fr`, and `de`. Do not reintroduce
-look-to-character-voice coupling; Animate AV V1 is not a voice product.
+Guide and voice as the next step, and synchronized runtime copy for `en`, `es`,
+`ca`, `fr`, and `de`. Do not reintroduce look-to-character-voice coupling or
+custom audio controls.
 
 ## Branding And First Run
 
