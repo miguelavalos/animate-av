@@ -1219,6 +1219,7 @@
 "create.look.family.craftTexture.subtitle" = "Papier, feutre, collage et matières.";
 "create.look.family.back" = "Style";
 "create.look.family.accessibility" = "Famille %@";
+"create.look.preview.accessibility" = "Agrandir %@";
 "create.guided.look.noneSelected.title" = "Choisis un style";
 "create.guided.look.noneSelected.detail" = "Aucun style sélectionné.";
 "create.look.kawaiiPop.title" = "Kawaii pop";
@@ -1326,6 +1327,8 @@
 "create.mediaAdjust.zoomIn" = "Zoom avant";
 "create.mediaAdjust.zoomOut" = "Zoom arrière";
 "create.mediaAdjust.fit" = "Ajuster";
+"create.mediaAdjust.mode.square" = "Carré";
+"create.mediaAdjust.mode.vertical" = "Vertical";
 "create.storyDirection.cardTitle" = "Réglages";
 "create.guided.direction.none" = "Naturel";
 "create.guided.direction.none.detail" = "Mouvement doux.";

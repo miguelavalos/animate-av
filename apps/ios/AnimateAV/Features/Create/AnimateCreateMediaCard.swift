@@ -597,7 +597,8 @@ struct AnimateCreatePhotoAdjustView: View {
     @State private var activeFrameScale: CGFloat = 1
     @State private var imageOffset: CGSize = .zero
     @State private var activeImageOffset: CGSize = .zero
-    @State private var editorFrameSize = CGSize(width: 9, height: 16)
+    @State private var editorFrameSize = CGSize(width: 1, height: 1)
+    @State private var cropMode: CropMode = .square
 
     private var image: UIImage? {
         UIImage(data: media.sourceImageDataForEditing)
@@ -620,6 +621,31 @@ struct AnimateCreatePhotoAdjustView: View {
         }
         .onAppear {
             resetFrame()
+        }
+    }
+
+    private enum CropMode: String, CaseIterable, Identifiable {
+        case square
+        case vertical
+
+        var id: String { rawValue }
+
+        var aspectRatio: CGFloat {
+            switch self {
+            case .square:
+                return 1
+            case .vertical:
+                return CGFloat(9.0 / 16.0)
+            }
+        }
+
+        var title: String {
+            switch self {
+            case .square:
+                return L10n.string("create.mediaAdjust.mode.square")
+            case .vertical:
+                return L10n.string("create.mediaAdjust.mode.vertical")
+            }
         }
     }
 
@@ -708,11 +734,15 @@ struct AnimateCreatePhotoAdjustView: View {
 
     private func framedImageEditor(image: UIImage, frameSize: CGSize) -> some View {
         let displaySize = imageDisplaySize(for: image, frameSize: frameSize)
-        return Image(uiImage: image)
-            .resizable()
-            .scaledToFill()
-            .frame(width: displaySize.width, height: displaySize.height)
-            .offset(imageOffset)
+        return ZStack {
+            Color.black
+
+            Image(uiImage: image)
+                .resizable()
+                .scaledToFill()
+                .frame(width: displaySize.width, height: displaySize.height)
+                .offset(imageOffset)
+        }
     }
 
     private var frameOverlay: some View {
@@ -751,6 +781,7 @@ struct AnimateCreatePhotoAdjustView: View {
     private var actionBar: some View {
         VStack(spacing: 12) {
             if let image {
+                modeControls(image: image)
                 zoomControls(image: image)
             }
 
@@ -767,6 +798,30 @@ struct AnimateCreatePhotoAdjustView: View {
             .buttonStyle(.plain)
         }
         .frame(maxWidth: .infinity)
+    }
+
+    private func modeControls(image: UIImage) -> some View {
+        HStack(spacing: 6) {
+            ForEach(CropMode.allCases) { mode in
+                Button {
+                    setCropMode(mode, image: image)
+                } label: {
+                    Text(mode.title)
+                        .font(.caption.weight(.black))
+                        .foregroundStyle(cropMode == mode ? .black : .white)
+                        .frame(maxWidth: .infinity)
+                        .frame(height: 34)
+                        .background(
+                            cropMode == mode ? AVBrandColor.accent : .white.opacity(0.10),
+                            in: Capsule()
+                        )
+                }
+                .buttonStyle(.plain)
+            }
+        }
+        .padding(5)
+        .background(.white.opacity(0.10), in: Capsule())
+        .padding(.horizontal, 8)
     }
 
     private func zoomControls(image: UIImage) -> some View {
@@ -793,17 +848,6 @@ struct AnimateCreatePhotoAdjustView: View {
             .tint(AVBrandColor.accent)
             .accessibilityLabel(L10n.string("create.mediaAdjust.zoom"))
             .accessibilityValue("\(Int(frameScale * 100))%")
-
-            Button {
-                fitFrame(image: image)
-            } label: {
-                Text(L10n.string("create.mediaAdjust.fit"))
-                    .font(.caption.weight(.black))
-                    .frame(width: 42, height: 38)
-            }
-            .buttonStyle(.plain)
-            .foregroundStyle(.white)
-            .accessibilityLabel(L10n.string("create.mediaAdjust.fit"))
 
             Button {
                 adjustZoom(by: 0.25, image: image)
@@ -848,25 +892,10 @@ struct AnimateCreatePhotoAdjustView: View {
     }
 
     private func renderCrop(from image: UIImage) -> Data? {
-        let outputSize = CGSize(width: 1080, height: 1920)
+        let outputSize = outputSize(for: cropMode)
         let renderer = UIGraphicsImageRenderer(size: outputSize)
         let rendered = renderer.image { context in
             UIColor.black.setFill()
-            context.fill(CGRect(origin: .zero, size: outputSize))
-
-            let backgroundScale = max(
-                outputSize.width / max(image.size.width, 1),
-                outputSize.height / max(image.size.height, 1)
-            )
-            let backgroundSize = CGSize(width: image.size.width * backgroundScale, height: image.size.height * backgroundScale)
-            let backgroundRect = CGRect(
-                x: (outputSize.width - backgroundSize.width) / 2,
-                y: (outputSize.height - backgroundSize.height) / 2,
-                width: backgroundSize.width,
-                height: backgroundSize.height
-            )
-            image.draw(in: backgroundRect, blendMode: .normal, alpha: 0.32)
-            UIColor.black.withAlphaComponent(0.36).setFill()
             context.fill(CGRect(origin: .zero, size: outputSize))
 
             let baseScale = max(
@@ -890,9 +919,18 @@ struct AnimateCreatePhotoAdjustView: View {
         return rendered.jpegData(compressionQuality: 0.92)
     }
 
+    private func outputSize(for mode: CropMode) -> CGSize {
+        switch mode {
+        case .square:
+            return CGSize(width: 1080, height: 1080)
+        case .vertical:
+            return CGSize(width: 1080, height: 1920)
+        }
+    }
+
     private func fixedFrameSize(in size: CGSize) -> CGSize {
         let available = CGSize(width: max(size.width - 12, 1), height: max(size.height - 72, 1))
-        let aspect = CGFloat(9.0 / 16.0)
+        let aspect = cropMode.aspectRatio
         var width = min(available.width, available.height * aspect)
         var height = width / aspect
         if height > available.height {
@@ -912,15 +950,7 @@ struct AnimateCreatePhotoAdjustView: View {
     }
 
     private func minimumFrameScale(for image: UIImage, frameSize: CGSize) -> CGFloat {
-        let fillScale = max(
-            frameSize.width / max(image.size.width, 1),
-            frameSize.height / max(image.size.height, 1)
-        )
-        let fitScale = min(
-            frameSize.width / max(image.size.width, 1),
-            frameSize.height / max(image.size.height, 1)
-        )
-        return max(min(fitScale / max(fillScale, 0.0001), 1), 0.2)
+        1
     }
 
     private func constrainedOffset(_ offset: CGSize, frameSize: CGSize, image: UIImage, scale: CGFloat) -> CGSize {
@@ -990,9 +1020,14 @@ struct AnimateCreatePhotoAdjustView: View {
         }
     }
 
-    private func fitFrame(image: UIImage) {
+    private func setCropMode(_ mode: CropMode, image: UIImage) {
+        guard cropMode != mode else { return }
         withAnimation(.spring(response: 0.24, dampingFraction: 0.88)) {
-            setZoom(minimumFrameScale(for: image, frameSize: editorFrameSize), image: image)
+            cropMode = mode
+            frameScale = 1
+            activeFrameScale = 1
+            imageOffset = .zero
+            activeImageOffset = .zero
         }
     }
 
@@ -1013,6 +1048,7 @@ struct AnimateCreatePhotoAdjustView: View {
     }
 
     private func resetFrame() {
+        cropMode = .square
         frameScale = 1
         activeFrameScale = 1
         imageOffset = .zero

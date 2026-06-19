@@ -74,6 +74,10 @@ xcodebuild test -project apps/ios/AnimateAV.xcodeproj -scheme AnimateAV -destina
   adjustment from the locally retained original, restore original when
   available, change photo, and continue to Look without hidden sheets or paid
   provider calls.
+- [ ] Foto y encuadre square and vertical adjustment modes were checked with
+  synthetic/local media and no paid provider calls.
+- [ ] Look large preview was checked from a family detail screen and did not
+  mutate selection.
 - [ ] The normal Create Video path does not show inherited multi-photo editing,
   sorting, empty media actions, or visible `Crop` language.
 - [ ] No debug URLs, local config, tokens, account identifiers, receipts, or

@@ -33,6 +33,10 @@ in the private AVALSYS suite.
   adjustment from the locally retained original, restore original when
   available, change photo, and continue to Look without hidden sheets or paid
   provider calls.
+- [ ] Foto y encuadre smoke covers both square and vertical adjustment modes and
+  confirms the saved reference has no artificial bars or padding.
+- [ ] Look smoke covers family paging, look selection, and large look preview
+  without changing the selected look accidentally.
 - [ ] `scripts/check-public-hygiene.sh` passes for normal public repo changes.
 - [ ] `scripts/check-public-release-readiness.sh` passes before App Store release
   candidate handoff.

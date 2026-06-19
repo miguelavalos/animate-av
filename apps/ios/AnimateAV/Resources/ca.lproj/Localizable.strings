@@ -1219,6 +1219,7 @@
 "create.look.family.craftTexture.subtitle" = "Paper, feltre, collage i materials tàctils.";
 "create.look.family.back" = "Estil";
 "create.look.family.accessibility" = "Família %@";
+"create.look.preview.accessibility" = "Veure %@ gran";
 "create.guided.look.noneSelected.title" = "Tria un estil";
 "create.guided.look.noneSelected.detail" = "Encara no has triat cap estil.";
 "create.look.kawaiiPop.title" = "Kawaii pop";
@@ -1326,6 +1327,8 @@
 "create.mediaAdjust.zoomIn" = "Apropar";
 "create.mediaAdjust.zoomOut" = "Allunyar";
 "create.mediaAdjust.fit" = "Ajustar";
+"create.mediaAdjust.mode.square" = "Quadrat";
+"create.mediaAdjust.mode.vertical" = "Vertical";
 "create.storyDirection.cardTitle" = "Configuració";
 "create.guided.direction.none" = "Natural";
 "create.guided.direction.none.detail" = "Moviment suau.";

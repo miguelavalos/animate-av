@@ -17,6 +17,8 @@ implementation plan.
 - The look picker shows family navigation first, then the selected family's 8
   looks.
 - Every final look has a unique `Look*.imageset` preview asset.
+- Look tiles may include a small secondary preview affordance for inspecting the
+  asset larger. Previewing a look must be separate from selecting it.
 - Look selection is independent from Animation and optional written
   Message/Dedication.
 - The Look step must stay focused on visual style. Do not add animation preset
@@ -163,6 +165,8 @@ After any look picker, look model, preview asset, or visible look copy change:
 - run `AnimateLookFamilyMatrixTests`;
 - build the iOS app for Simulator;
 - inspect the family grid and at least two complete family detail screens;
+- verify the look preview affordance opens in front of the active Look UI and
+  returns to the same family without changing selection;
 - verify the guided Create Video summary still shows Photo/framing, Look, and
   Guide and Message in order;
 - check that no visible voice/audio/tone controls appear in Create Video.

@@ -28,6 +28,12 @@ frame adjustment must edit from the local original, not from a prior cropped
 derivative. Restore-original is a local operation that copies the retained
 original back into the active workflow image.
 
+Frame adjustment is allowed to save a non-9:16 source reference. The default
+reference frame is square for subject selection; a vertical 9:16 frame is
+available for users who want video-oriented framing. The client must not fake a
+vertical frame by adding black bars, blurred side/top bands, or other padding to
+the active workflow image.
+
 The backend receives only the active workflow image. Do not upload both the
 local original and adjusted image in v1. If metadata is useful, it may identify
 that a frame adjustment was applied, but the private backend should not be
@@ -37,6 +43,9 @@ Look is a separate guided step and must stay focused on visual style selection:
 8 look families, 8 looks per family, and one selected look. It must not contain
 animation preset cards, message controls, voice controls, or hidden audio
 choices.
+The Look grid may provide a secondary preview action that opens the selected
+look asset larger for inspection. That preview must not change the selected look
+unless the user explicitly taps the look selection control.
 
 The animation guide is collected with optional written Dedication in the next
 guided sheet. It captures optional free-text visual direction for what should

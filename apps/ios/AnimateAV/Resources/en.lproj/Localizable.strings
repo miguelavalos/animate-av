@@ -1013,6 +1013,8 @@
 "create.mediaAdjust.zoomIn" = "Zoom in";
 "create.mediaAdjust.zoomOut" = "Zoom out";
 "create.mediaAdjust.fit" = "Fit";
+"create.mediaAdjust.mode.square" = "Square";
+"create.mediaAdjust.mode.vertical" = "Vertical";
 "create.mediaTransition.sourcePhoto.title" = "Start with original photo";
 "create.mediaTransition.sourcePhoto.enabledDetail" = "The original photo appears first, pops into the styled image, then starts the video.";
 "create.mediaTransition.sourcePhoto.disabledDetail" = "The video starts directly with the animated result.";
@@ -1257,6 +1259,7 @@
 "create.look.family.craftTexture.subtitle" = "Paper, felt, collage, and tactile materials.";
 "create.look.family.back" = "Look";
 "create.look.family.accessibility" = "%@ family";
+"create.look.preview.accessibility" = "Preview %@";
 "create.guided.look.noneSelected.title" = "Choose a look";
 "create.guided.look.noneSelected.detail" = "No look selected yet.";
 "create.look.kawaiiPop.title" = "Kawaii Pop";

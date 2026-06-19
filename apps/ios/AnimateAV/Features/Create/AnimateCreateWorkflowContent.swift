@@ -1285,6 +1285,7 @@ private struct AnimateCreateVideoDirectionCard: View {
     @State private var showsGuidedPhotoPicker = false
     @State private var shouldReturnToPhotoFrameAfterPicker = false
     @State private var handledContinueGuidedFlowRequest = 0
+    @State private var previewedLook: AnimateVideoLook?
 
     private let minimumMessageCharacterCount = 3
 
@@ -1558,6 +1559,12 @@ private struct AnimateCreateVideoDirectionCard: View {
                 )
             }
         case .look:
+            if let previewedLook {
+                AnimateCreateLookPreviewView(look: previewedLook) {
+                    self.previewedLook = nil
+                }
+                .frame(minHeight: 620)
+            } else {
             VStack(alignment: .leading, spacing: 10) {
                 if let family = activeGuidedLookFamily {
                     Button {
@@ -1595,6 +1602,9 @@ private struct AnimateCreateVideoDirectionCard: View {
                                 isSelected: selectedLook == look,
                                 select: {
                                     selectLook(look)
+                                },
+                                preview: {
+                                    previewedLook = look
                                 }
                             )
                         }
@@ -1623,6 +1633,7 @@ private struct AnimateCreateVideoDirectionCard: View {
                 if guidedLookFamily == nil, selectedLook != nil {
                     guidedLookFamily = AnimateVideoLook.family(containing: selectedLook)
                 }
+            }
             }
         case .scriptIdea:
             VStack(alignment: .leading, spacing: 18) {
@@ -2822,13 +2833,31 @@ private struct AnimateCreateGuidedLookTile: View {
     let look: AnimateVideoLook
     let isSelected: Bool
     let select: () -> Void
+    let preview: () -> Void
 
     var body: some View {
         GeometryReader { proxy in
-            Button(action: select) {
-                tileContent(width: proxy.size.width)
+            ZStack(alignment: .topLeading) {
+                Button(action: select) {
+                    tileContent(width: proxy.size.width)
+                }
+                .buttonStyle(.plain)
+
+                Button(action: preview) {
+                    Image(systemName: "magnifyingglass")
+                        .font(.system(size: 10, weight: .black))
+                        .foregroundStyle(.white)
+                        .frame(width: 24, height: 24)
+                        .background(.black.opacity(0.34), in: Circle())
+                        .overlay {
+                            Circle()
+                                .stroke(.white.opacity(0.14), lineWidth: 1)
+                        }
+                        .padding(6)
+                }
+                .buttonStyle(.plain)
+                .accessibilityLabel(L10n.string("create.look.preview.accessibility", look.title))
             }
-            .buttonStyle(.plain)
         }
         .frame(height: 92)
     }
@@ -2917,6 +2946,62 @@ private struct AnimateCreateGuidedMessageModeTile: View {
             )
         }
         .buttonStyle(.plain)
+    }
+}
+
+private struct AnimateCreateLookPreviewView: View {
+    let look: AnimateVideoLook
+    let dismiss: () -> Void
+
+    var body: some View {
+        ZStack(alignment: .topTrailing) {
+            Color.black.ignoresSafeArea()
+
+            VStack(spacing: 18) {
+                Spacer(minLength: 24)
+
+                Image(look.assetName)
+                    .resizable()
+                    .scaledToFit()
+                    .clipShape(RoundedRectangle(cornerRadius: 18, style: .continuous))
+                    .overlay {
+                        RoundedRectangle(cornerRadius: 18, style: .continuous)
+                            .stroke(.white.opacity(0.16), lineWidth: 1)
+                    }
+                    .shadow(color: .black.opacity(0.5), radius: 18, y: 10)
+
+                VStack(spacing: 6) {
+                    Text(look.title)
+                        .font(.system(size: 24, weight: .black))
+                        .foregroundStyle(.white)
+                        .multilineTextAlignment(.center)
+
+                    Text(look.subtitle)
+                        .font(.system(size: 14, weight: .semibold))
+                        .foregroundStyle(.white.opacity(0.72))
+                        .multilineTextAlignment(.center)
+                        .lineLimit(3)
+                }
+                .padding(.horizontal, 18)
+
+                Spacer(minLength: 24)
+            }
+            .padding(.horizontal, 18)
+            .padding(.vertical, 28)
+
+            Button(action: dismiss) {
+                Image(systemName: "xmark")
+                    .font(.system(size: 16, weight: .black))
+                    .foregroundStyle(.white)
+                    .frame(width: 44, height: 44)
+                    .background(.white.opacity(0.18), in: Circle())
+                    .contentShape(Circle())
+            }
+            .buttonStyle(.plain)
+            .padding(.top, 18)
+            .padding(.trailing, 18)
+            .accessibilityLabel(L10n.string("common.close"))
+        }
     }
 }
 
@@ -4219,6 +4304,7 @@ private struct AnimateCreateLookChooserPage: View {
 
     @State private var setupLook: AnimateVideoLook?
     @State private var selectedFamily: AnimateVideoLookFamily?
+    @State private var previewedLook: AnimateVideoLook?
 
     private var families: [AnimateVideoLookFamily] {
         AnimateVideoLook.families
@@ -4326,7 +4412,8 @@ private struct AnimateCreateLookChooserPage: View {
                                     AnimateCreateLookImageTile(
                                         look: look,
                                         isSelected: setupLook == look,
-                                        selectLook: { setupLook = look }
+                                        selectLook: { setupLook = look },
+                                        previewLook: { previewedLook = look }
                                     )
                                 }
                             }
@@ -4364,6 +4451,11 @@ private struct AnimateCreateLookChooserPage: View {
         .background(AnimateTheme.shellBackground.ignoresSafeArea())
         .navigationBarBackButtonHidden(true)
         .toolbar(.hidden, for: .navigationBar)
+        .fullScreenCover(item: $previewedLook) { look in
+            AnimateCreateLookPreviewView(look: look) {
+                previewedLook = nil
+            }
+        }
     }
 
     private func applySelection() {
@@ -4608,16 +4700,34 @@ private struct AnimateCreateLookImageTile: View {
     let look: AnimateVideoLook
     let isSelected: Bool
     let selectLook: () -> Void
+    let previewLook: () -> Void
 
     private let tileHeight: CGFloat = 112
 
     var body: some View {
         GeometryReader { proxy in
-            Button(action: selectLook) {
-                tileContent(width: proxy.size.width)
+            ZStack(alignment: .topLeading) {
+                Button(action: selectLook) {
+                    tileContent(width: proxy.size.width)
+                }
+                .buttonStyle(.plain)
+                .accessibilityLabel(L10n.string("create.selector.look.accessibility", look.title))
+
+                Button(action: previewLook) {
+                    Image(systemName: "magnifyingglass")
+                        .font(.system(size: 10, weight: .black))
+                        .foregroundStyle(.white)
+                        .frame(width: 24, height: 24)
+                        .background(.black.opacity(0.34), in: Circle())
+                        .overlay {
+                            Circle()
+                                .stroke(.white.opacity(0.14), lineWidth: 1)
+                        }
+                        .padding(6)
+                }
+                .buttonStyle(.plain)
+                .accessibilityLabel(L10n.string("create.look.preview.accessibility", look.title))
             }
-            .buttonStyle(.plain)
-            .accessibilityLabel(L10n.string("create.selector.look.accessibility", look.title))
         }
         .frame(height: tileHeight)
     }

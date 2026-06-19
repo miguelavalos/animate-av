@@ -1225,6 +1225,7 @@
 "create.look.family.craftTexture.subtitle" = "Papel, fieltro, collage y materiales táctiles.";
 "create.look.family.back" = "Estilo";
 "create.look.family.accessibility" = "Familia %@";
+"create.look.preview.accessibility" = "Ver %@ grande";
 "create.guided.look.noneSelected.title" = "Elige un estilo";
 "create.guided.look.noneSelected.detail" = "Aún no has elegido un estilo.";
 "create.look.kawaiiPop.title" = "Kawaii pop";
@@ -1332,6 +1333,8 @@
 "create.mediaAdjust.zoomIn" = "Acercar";
 "create.mediaAdjust.zoomOut" = "Alejar";
 "create.mediaAdjust.fit" = "Ajustar";
+"create.mediaAdjust.mode.square" = "Cuadrado";
+"create.mediaAdjust.mode.vertical" = "Vertical";
 "create.guided.direction.none" = "Natural";
 "create.guided.direction.none.detail" = "Movimiento suave.";
 "create.guided.direction.template" = "Plantilla visual";

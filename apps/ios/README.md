@@ -44,6 +44,12 @@ re-entering frame adjustment should start from the local original, not from a
 previously cropped derivative. Restore-original behavior is local UI state and
 must not require backend recovery.
 
+Frame adjustment is a source-reference tool, not always the final video frame.
+The default adjustment frame is square for choosing a person or subject without
+forcing a 9:16 crop. A vertical 9:16 frame remains available when the user wants
+to control the video-oriented reference directly. Do not add padding, blurred
+bars, or black bars to make a non-vertical source fit a vertical output.
+
 Look and motion is the main creative setup surface. It chooses the visual style
 and a simple movement guide for the generated image-to-video step. Keep motion
 copy modest: it can guide the result, but the client must not promise precise
