@@ -79,7 +79,7 @@ struct AnimateWorkflowClients {
         videoDirection = AnimateVideoDirectionClient(baseURLString: baseURLString)
         videoQuote = AnimateVideoQuoteClient(baseURLString: baseURLString)
         imageGenerationAccounting = AnimateImageGenerationAccountingClient(baseURLString: baseURLString)
-        finalRender = AnimateFinalRenderClient(baseURLString: baseURLString)
+        finalRender = AnimateFinalRenderClient(baseURLString: baseURLString, session: Self.makeFinalRenderSession())
     }
 
     private static func makeUploadSession() -> URLSession {
@@ -87,6 +87,16 @@ struct AnimateWorkflowClients {
         configuration.httpMaximumConnectionsPerHost = 3
         configuration.timeoutIntervalForRequest = 45
         configuration.timeoutIntervalForResource = 90
+        configuration.waitsForConnectivity = false
+        configuration.requestCachePolicy = .reloadIgnoringLocalAndRemoteCacheData
+        return URLSession(configuration: configuration)
+    }
+
+    private static func makeFinalRenderSession() -> URLSession {
+        let configuration = URLSessionConfiguration.ephemeral
+        configuration.httpMaximumConnectionsPerHost = 3
+        configuration.timeoutIntervalForRequest = 30
+        configuration.timeoutIntervalForResource = 120
         configuration.waitsForConnectivity = false
         configuration.requestCachePolicy = .reloadIgnoringLocalAndRemoteCacheData
         return URLSession(configuration: configuration)

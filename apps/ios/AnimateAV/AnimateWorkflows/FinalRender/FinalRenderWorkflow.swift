@@ -30,6 +30,7 @@ final class FinalRenderWorkflow: WorkspaceObservingWorkflow {
     private var lastCreditRefreshKey: String?
     private var preparedVideoSourceUpload: PreparedVideoSourceUpload?
     private var pendingSourceComparisonImageData: Data?
+    private let finalArtifactDownloadTimeout: UInt64 = 130_000_000_000
 
     init(
         currentUserProvider: any AnimateCurrentUserProviding,
@@ -780,12 +781,15 @@ final class FinalRenderWorkflow: WorkspaceObservingWorkflow {
                 ]
             )
             let downloadArtifactId = finalDownloadArtifactId(for: artifact)
-            let download = try await finalRenderClient.prepareFinalArtifactDownload(
-                videoId: workspace.video.id,
-                artifactId: downloadArtifactId,
-                bearerToken: bearerToken
-            )
-            let temporaryFileURL = try await finalRenderClient.downloadFinalArtifact(from: download)
+            let (temporaryFileURL, downloadedR2Key) = try await withFinalArtifactDownloadTimeout { [self] in
+                let download = try await self.finalRenderClient.prepareFinalArtifactDownload(
+                    videoId: workspace.video.id,
+                    artifactId: downloadArtifactId,
+                    bearerToken: bearerToken
+                )
+                let fileURL = try await self.finalRenderClient.downloadFinalArtifact(from: download)
+                return (fileURL, download.r2Key)
+            }
             var generatedImageRelativePath: String?
             if let imageArtifact = workspace.latestGeneratedImageArtifact {
                 do {
@@ -839,7 +843,7 @@ final class FinalRenderWorkflow: WorkspaceObservingWorkflow {
                     lookTitle: workspace.video.look.formattedAnimateLookTitle,
                     createdAt: createdAt.timeIntervalSince1970 * 1000
                 ),
-                r2Key: download.r2Key ?? artifact.r2Key,
+                r2Key: downloadedR2Key ?? artifact.r2Key,
                 sourceImageLocalRelativePath: sourceImageRelativePath,
                 generatedImageLocalRelativePath: generatedImageRelativePath,
                 createdAt: createdAt
@@ -860,6 +864,24 @@ final class FinalRenderWorkflow: WorkspaceObservingWorkflow {
             )
             canRetryFinalVideoDownload = true
             statusMessage = L10n.string("workflow.final.saveLocalFailed")
+        }
+    }
+
+    private func withFinalArtifactDownloadTimeout<T: Sendable>(
+        operation: @escaping @Sendable () async throws -> T
+    ) async throws -> T {
+        try await withThrowingTaskGroup(of: T.self) { group in
+            group.addTask {
+                try await operation()
+            }
+            group.addTask { [finalArtifactDownloadTimeout] in
+                try await Task.sleep(nanoseconds: finalArtifactDownloadTimeout)
+                throw AnimateFinalRenderError.downloadFailed
+            }
+
+            let result = try await group.next()!
+            group.cancelAll()
+            return result
         }
     }
 

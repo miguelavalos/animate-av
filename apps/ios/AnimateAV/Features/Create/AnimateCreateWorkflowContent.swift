@@ -303,8 +303,16 @@ private struct AnimateCreateMediaFirstWorkspace: View {
                 showsCreateVideoConfirmation = false
             }
         }
+        .onChange(of: presentation.finalRenderSummary.isGenerating) { _, isGenerating in
+            if isGenerating {
+                waitsForFinalRenderPlan = false
+                showsCreateVideoConfirmation = false
+            }
+        }
         .onChange(of: presentation.finalRenderSummary.isPreparingPlan) { _, isPreparingPlan in
-            guard waitsForFinalRenderPlan, !isPreparingPlan else { return }
+            guard waitsForFinalRenderPlan,
+                  !isPreparingPlan,
+                  !presentation.finalRenderSummary.isGenerating else { return }
             presentCreateVideoConfirmationIfReady()
         }
         .onAppear {
@@ -368,6 +376,9 @@ private struct AnimateCreateMediaFirstWorkspace: View {
     }
 
     private func primaryFinalRenderAction() {
+        guard !presentation.finalRenderSummary.isGenerating,
+              presentation.finalRenderSummary.latestFinalJob?.isActiveRender != true else { return }
+
         if finalVideoAction.hasRenderPlan {
             showsCreateVideoConfirmation = true
             return
@@ -380,6 +391,7 @@ private struct AnimateCreateMediaFirstWorkspace: View {
 
     private func presentCreateVideoConfirmationIfReady() {
         guard waitsForFinalRenderPlan,
+              !presentation.finalRenderSummary.isGenerating,
               presentation.finalRenderSummary.latestFinalJob == nil,
               presentation.videoDirectionSummary.hasScenes || presentation.finalRenderSummary.renderPlan != nil,
               finalVideoAction.canShowConfirmationSheet else { return }
@@ -395,6 +407,7 @@ private struct AnimateCreateMediaFirstWorkspace: View {
 
     private func presentCreateVideoConfirmationIfPreparingPlan() {
         guard presentation.finalRenderSummary.isPreparingPlan,
+              !presentation.finalRenderSummary.isGenerating,
               presentation.finalRenderSummary.latestFinalJob == nil else { return }
         waitsForFinalRenderPlan = true
         showsCreateVideoConfirmation = true

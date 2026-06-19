@@ -39,7 +39,9 @@ struct AnimateCreateFinalVideoActionPresentation: Equatable {
     }
 
     var canShowConfirmationSheet: Bool {
-        hasRenderPlan || blockedRenderPlanIsInsufficientCredits
+        guard !summary.isGenerating,
+              summary.latestFinalJob?.isActiveRender != true else { return false }
+        return hasRenderPlan || blockedRenderPlanIsInsufficientCredits
     }
 
     var totalCreditCost: Int {

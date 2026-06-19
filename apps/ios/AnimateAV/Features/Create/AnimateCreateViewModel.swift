@@ -1162,12 +1162,6 @@ extension AnimateCreateViewModel {
             )
             return
         }
-        if state.finalExport != nil {
-            finalVideoCommandState = .completedDownloadReady(
-                state.statusMessage ?? L10n.string("create.primary.finalReady")
-            )
-            return
-        }
         if let latestFinalJob = state.latestFinalJob,
            latestFinalJob.status == "queued" || latestFinalJob.status == "running" {
             finalVideoCommandState = .queued(
@@ -1175,6 +1169,18 @@ extension AnimateCreateViewModel {
                     ?? state.statusMessage
                     ?? L10n.string("workflow.final.creatingVideo")
             )
+            return
+        }
+        if state.finalExport != nil {
+            if state.canRetryFinalVideoDownload {
+                finalVideoCommandState = .failed(
+                    state.statusMessage ?? L10n.string("workflow.final.saveLocalFailed")
+                )
+            } else {
+                finalVideoCommandState = .confirming(
+                    state.statusMessage ?? L10n.string("workflow.final.savingToGallery")
+                )
+            }
             return
         }
         if let latestFinalJob = state.latestFinalJob,
