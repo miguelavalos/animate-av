@@ -74,6 +74,10 @@ enum MediaPickerImport {
     }
 
     private static func loadMedia(from item: PhotosPickerItem, sortOrder: Int) async throws -> AnimateSelectedMedia {
+        if let asset = photoAsset(for: item) {
+            return try await loadLibraryAsset(asset, sortOrder: sortOrder)
+        }
+
         guard let data = try await item.loadTransferable(type: Data.self) else {
             throw AnimateUploadError.unreadableSelection
         }

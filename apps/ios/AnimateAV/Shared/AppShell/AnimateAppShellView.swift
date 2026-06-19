@@ -256,7 +256,9 @@ struct AnimateAppShellView: View {
     }
 
     private var footerSelectedTab: AnimateRootTab {
-        guard chromeItem == nil else { return .profile }
+        guard chromeItem == nil else {
+            return selectedTab == .createImage && !accountController.canUseAnimateImageGeneration ? .create : selectedTab
+        }
         guard selectedTab != .createImage || accountController.canUseAnimateImageGeneration else {
             return .create
         }
