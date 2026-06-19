@@ -1008,7 +1008,7 @@
 "create.mediaAdjust.frameApplied" = "Enquadrament aplicat";
 "create.mediaAdjust.reset" = "Restablir";
 "create.mediaTransition.sourcePhoto.title" = "Començar amb la foto original";
-"create.mediaTransition.sourcePhoto.enabledDetail" = "La foto original apareix primer, passa a la imatge amb estil i comença el vídeo.";
+"create.mediaTransition.sourcePhoto.enabledDetail" = "Afegeix la foto original al principi abans que comenci el vídeo. No consumeix crèdits extra.";
 "create.mediaTransition.sourcePhoto.disabledDetail" = "El vídeo comença directament amb el resultat animat.";
 "create.workflowContent.videoPlan" = "Comprovació final";
 "create.workflowContent.preparedVideoPlan" = "Llest per crear";

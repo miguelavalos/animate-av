@@ -1019,7 +1019,7 @@
 "create.mediaAdjust.mode.square" = "Square";
 "create.mediaAdjust.mode.vertical" = "Vertical";
 "create.mediaTransition.sourcePhoto.title" = "Start with original photo";
-"create.mediaTransition.sourcePhoto.enabledDetail" = "The original photo appears first, pops into the styled image, then starts the video.";
+"create.mediaTransition.sourcePhoto.enabledDetail" = "Adds your original photo at the start before the video begins. No extra credits.";
 "create.mediaTransition.sourcePhoto.disabledDetail" = "The video starts directly with the animated result.";
 "create.workflowContent.videoPlan" = "Final check";
 "create.workflowContent.preparedVideoPlan" = "Ready to create";

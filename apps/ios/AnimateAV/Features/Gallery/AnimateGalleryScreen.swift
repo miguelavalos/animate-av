@@ -50,30 +50,26 @@ struct AnimateGalleryScreen: View {
                         action: startVideoCreation
                     )
                 } else {
-                    LazyVStack(spacing: 12) {
-                        ForEach(viewModel.videos) { video in
-                            AnimateGalleryVideoRow(
-                                video: video,
-                                openVideo: {
-                                    if video.isLocalFileAvailable {
-                                        selectedVideo = AnimateGalleryVideoPlayerItem(video: video)
-                                    }
-                                },
-                                downloadVideo: {
-                                    viewModel.redownloadVideo(video)
-                                },
-                                showInfo: {
-                                    videoPendingInfo = video
-                                },
-                                renameVideo: {
-                                    videoPendingRename = video
-                                },
-                                deleteVideo: {
-                                    pendingDeletion = .video(video)
-                                }
-                            )
+                    AnimateGalleryVideosGrid(
+                        videos: viewModel.videos,
+                        openVideo: { video in
+                            if video.isLocalFileAvailable {
+                                selectedVideo = AnimateGalleryVideoPlayerItem(video: video)
+                            }
+                        },
+                        downloadVideo: { video in
+                            viewModel.redownloadVideo(video)
+                        },
+                        showInfo: { video in
+                            videoPendingInfo = video
+                        },
+                        renameVideo: { video in
+                            videoPendingRename = video
+                        },
+                        deleteVideo: { video in
+                            pendingDeletion = .video(video)
                         }
-                    }
+                    )
                 }
             case .images:
                 if viewModel.images.isEmpty {
@@ -523,8 +519,55 @@ private struct AnimateGalleryEmptyState: View {
     }
 }
 
-private struct AnimateGalleryVideoRow: View {
+private struct AnimateGalleryVideosGrid: View {
+    let videos: [AnimateGalleryVideoPresentation]
+    let openVideo: (AnimateGalleryVideoPresentation) -> Void
+    let downloadVideo: (AnimateGalleryVideoPresentation) -> Void
+    let showInfo: (AnimateGalleryVideoPresentation) -> Void
+    let renameVideo: (AnimateGalleryVideoPresentation) -> Void
+    let deleteVideo: (AnimateGalleryVideoPresentation) -> Void
+
+    private let horizontalSpacing: CGFloat = 12
+    private let verticalSpacing: CGFloat = 16
+
+    var body: some View {
+        LazyVGrid(columns: columns, alignment: .center, spacing: verticalSpacing) {
+            ForEach(videos) { video in
+                AnimateGalleryVideoTile(
+                    video: video,
+                    tileWidth: itemWidth,
+                    openVideo: { openVideo(video) },
+                    downloadVideo: { downloadVideo(video) },
+                    showInfo: { showInfo(video) },
+                    renameVideo: { renameVideo(video) },
+                    deleteVideo: { deleteVideo(video) }
+                )
+                .frame(width: itemWidth, alignment: .top)
+            }
+        }
+        .frame(width: gridWidth, alignment: .center)
+        .frame(maxWidth: .infinity, alignment: .center)
+    }
+
+    private var gridWidth: CGFloat {
+        max(280, UIScreen.main.bounds.width - 40)
+    }
+
+    private var itemWidth: CGFloat {
+        floor((gridWidth - horizontalSpacing) / 2)
+    }
+
+    private var columns: [GridItem] {
+        [
+            GridItem(.fixed(itemWidth), spacing: horizontalSpacing, alignment: .top),
+            GridItem(.fixed(itemWidth), spacing: 0, alignment: .top)
+        ]
+    }
+}
+
+private struct AnimateGalleryVideoTile: View {
     let video: AnimateGalleryVideoPresentation
+    let tileWidth: CGFloat
     let openVideo: () -> Void
     let downloadVideo: () -> Void
     let showInfo: () -> Void
@@ -532,72 +575,79 @@ private struct AnimateGalleryVideoRow: View {
     let deleteVideo: () -> Void
 
     var body: some View {
-        Button(action: primaryAction) {
-            ZStack {
-                AnimateGalleryVideoThumbnail(url: video.localFileURL, isAvailable: video.isLocalFileAvailable)
-                    .frame(height: 184)
-                    .clipped()
-                    .clipShape(RoundedRectangle(cornerRadius: 14, style: .continuous))
+        VStack(alignment: .leading, spacing: 7) {
+            Button(action: primaryAction) {
+                ZStack {
+                    AnimateGalleryVideoThumbnail(url: video.localFileURL, isAvailable: video.isLocalFileAvailable)
+                        .frame(width: tileWidth, height: thumbnailHeight)
+                        .clipped()
+                        .clipShape(RoundedRectangle(cornerRadius: 12, style: .continuous))
 
-                LinearGradient(
-                    colors: [.black.opacity(0.02), .black.opacity(0.50)],
-                    startPoint: .top,
-                    endPoint: .bottom
-                )
-                .clipShape(RoundedRectangle(cornerRadius: 14, style: .continuous))
+                    LinearGradient(
+                        colors: [.black.opacity(0.0), .black.opacity(0.36)],
+                        startPoint: .top,
+                        endPoint: .bottom
+                    )
+                    .clipShape(RoundedRectangle(cornerRadius: 12, style: .continuous))
 
-                Image(systemName: video.isLocalFileAvailable ? "play.fill" : "arrow.down.circle.fill")
-                    .font(.system(size: 22, weight: .black))
-                    .foregroundStyle(.white)
-                    .frame(width: 56, height: 56)
-                    .background(.black.opacity(0.28), in: Circle())
+                    Image(systemName: video.isLocalFileAvailable ? "play.fill" : "arrow.down.circle.fill")
+                        .font(.system(size: 18, weight: .black))
+                        .foregroundStyle(.white)
+                        .frame(width: 46, height: 46)
+                        .background(.black.opacity(0.30), in: Circle())
 
-                VStack {
-                    HStack {
-                        Spacer(minLength: 0)
+                    VStack {
+                        HStack {
+                            Spacer(minLength: 0)
 
-                        AnimateGalleryVideoMenu(
-                            video: video,
-                            downloadVideo: downloadVideo,
-                            showInfo: showInfo,
-                            renameVideo: renameVideo,
-                            deleteVideo: deleteVideo
-                        )
-                    }
-
-                    Spacer(minLength: 0)
-
-                    HStack {
-                        VStack(alignment: .leading, spacing: 6) {
-                            Text(video.displayTitle)
-                                .font(.system(size: 22, weight: .black))
-                                .foregroundStyle(.white)
-                                .lineLimit(1)
-                                .minimumScaleFactor(0.82)
-
-                            if let availabilityBadgeTitle {
-                                Text(availabilityBadgeTitle)
-                                    .font(.system(size: 11, weight: .black))
-                                    .foregroundStyle(.white)
-                                    .lineLimit(1)
-                                    .minimumScaleFactor(0.86)
-                                    .padding(.horizontal, 9)
-                                    .padding(.vertical, 5)
-                                    .background(availabilityBadgeBackground, in: Capsule())
-                            }
+                            AnimateGalleryVideoMenu(
+                                video: video,
+                                downloadVideo: downloadVideo,
+                                showInfo: showInfo,
+                                renameVideo: renameVideo,
+                                deleteVideo: deleteVideo
+                            )
                         }
 
                         Spacer(minLength: 0)
+
+                        if let availabilityBadgeTitle {
+                            HStack {
+                                Text(availabilityBadgeTitle)
+                                    .font(.system(size: 10, weight: .black))
+                                    .foregroundStyle(.white)
+                                    .lineLimit(1)
+                                    .minimumScaleFactor(0.82)
+                                    .padding(.horizontal, 8)
+                                    .padding(.vertical, 5)
+                                    .background(availabilityBadgeBackground, in: Capsule())
+
+                                Spacer(minLength: 0)
+                            }
+                        }
                     }
+                    .padding(8)
                 }
-                .padding(12)
+                .frame(width: tileWidth, height: thumbnailHeight)
+                .contentShape(RoundedRectangle(cornerRadius: 12, style: .continuous))
+                .clipped()
             }
-            .frame(height: 184)
-            .contentShape(RoundedRectangle(cornerRadius: 14, style: .continuous))
-            .clipped()
+            .buttonStyle(.plain)
+            .disabled(!video.isLocalFileAvailable && !video.canDownload)
+
+            Text(video.displayTitle)
+                .font(.system(size: 13, weight: .black))
+                .foregroundStyle(AVBrandColor.textPrimary)
+                .lineLimit(2)
+                .minimumScaleFactor(0.82)
+                .fixedSize(horizontal: false, vertical: true)
+                .padding(.horizontal, 2)
         }
-        .buttonStyle(.plain)
-        .disabled(!video.isLocalFileAvailable && !video.canDownload)
+        .frame(width: tileWidth, alignment: .leading)
+    }
+
+    private var thumbnailHeight: CGFloat {
+        tileWidth * 16 / 9
     }
 
     private var availabilityBadgeTitle: String? {
@@ -1332,7 +1382,7 @@ private struct AnimateGalleryVideoPlayerSheet: View {
     @Environment(\.dismiss) private var dismiss
     @State private var player: AVPlayer
     @State private var thumbnail: UIImage?
-    @State private var isPlaying = false
+    @State private var isPlaying = true
 
     init(item: AnimateGalleryVideoPlayerItem) {
         self.item = item
@@ -1386,6 +1436,10 @@ private struct AnimateGalleryVideoPlayerSheet: View {
         }
         .task(id: item.url) {
             thumbnail = await AnimateGalleryVideoThumbnail.loadThumbnail(url: item.url)
+        }
+        .onAppear {
+            isPlaying = true
+            player.play()
         }
         .onDisappear {
             player.pause()

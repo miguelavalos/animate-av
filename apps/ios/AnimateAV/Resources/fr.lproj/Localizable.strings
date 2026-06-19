@@ -1008,7 +1008,7 @@
 "create.mediaAdjust.frameApplied" = "Recadrage appliqué";
 "create.mediaAdjust.reset" = "Réinitialiser";
 "create.mediaTransition.sourcePhoto.title" = "Commencer par la photo originale";
-"create.mediaTransition.sourcePhoto.enabledDetail" = "La photo originale apparaît d’abord, passe à l’image stylisée, puis lance la vidéo.";
+"create.mediaTransition.sourcePhoto.enabledDetail" = "Ajoute ta photo originale au début avant que la vidéo commence. Aucun crédit supplémentaire.";
 "create.mediaTransition.sourcePhoto.disabledDetail" = "La vidéo commence directement avec le résultat animé.";
 "create.workflowContent.videoPlan" = "Vérification finale";
 "create.workflowContent.preparedVideoPlan" = "Prêt à créer";

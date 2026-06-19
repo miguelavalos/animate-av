@@ -1010,7 +1010,7 @@
 "create.mediaAdjust.frameApplied" = "Ausschnitt angewendet";
 "create.mediaAdjust.reset" = "Zurücksetzen";
 "create.mediaTransition.sourcePhoto.title" = "Mit Originalfoto starten";
-"create.mediaTransition.sourcePhoto.enabledDetail" = "Das Originalfoto erscheint zuerst, wechselt zum stilisierten Bild und startet dann das Video.";
+"create.mediaTransition.sourcePhoto.enabledDetail" = "Fügt dein Originalfoto am Anfang hinzu, bevor das Video startet. Keine zusätzlichen Credits.";
 "create.mediaTransition.sourcePhoto.disabledDetail" = "Das Video startet direkt mit dem animierten Ergebnis.";
 "create.workflowContent.videoPlan" = "Finaler Check";
 "create.workflowContent.preparedVideoPlan" = "Bereit zum Erstellen";

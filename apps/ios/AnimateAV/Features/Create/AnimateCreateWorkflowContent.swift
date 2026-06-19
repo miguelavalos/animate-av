@@ -272,6 +272,7 @@ private struct AnimateCreateMediaFirstWorkspace: View {
             AnimateCreateFinalVideoConfirmationSheet(
                 action: finalVideoAction,
                 mediaSummary: presentation.mediaSummary,
+                startsWithSourcePhoto: $form.startsWithSourcePhoto,
                 isPreparingPlan: presentation.finalRenderSummary.isPreparingPlan,
                 confirm: { removesWatermark in
                     showsCreateVideoConfirmation = false
@@ -3683,6 +3684,7 @@ private struct AnimateCreateFinalVideoButtonStyle: ButtonStyle {
 private struct AnimateCreateFinalVideoConfirmationSheet: View {
     let action: AnimateCreateFinalVideoActionPresentation
     let mediaSummary: AnimateCreateMediaSummary
+    @Binding var startsWithSourcePhoto: Bool
     let isPreparingPlan: Bool
     let confirm: (Bool) -> Void
     let openCredits: () -> Void
@@ -3693,6 +3695,7 @@ private struct AnimateCreateFinalVideoConfirmationSheet: View {
     init(
         action: AnimateCreateFinalVideoActionPresentation,
         mediaSummary: AnimateCreateMediaSummary,
+        startsWithSourcePhoto: Binding<Bool>,
         isPreparingPlan: Bool,
         confirm: @escaping (Bool) -> Void,
         openCredits: @escaping () -> Void,
@@ -3700,6 +3703,7 @@ private struct AnimateCreateFinalVideoConfirmationSheet: View {
     ) {
         self.action = action
         self.mediaSummary = mediaSummary
+        _startsWithSourcePhoto = startsWithSourcePhoto
         self.isPreparingPlan = isPreparingPlan
         self.confirm = confirm
         self.openCredits = openCredits
@@ -3748,6 +3752,8 @@ private struct AnimateCreateFinalVideoConfirmationSheet: View {
             }
 
             costDetails
+
+            sourcePhotoControl
 
             watermarkControl
 
@@ -3930,9 +3936,9 @@ private struct AnimateCreateFinalVideoConfirmationSheet: View {
         HStack(alignment: .top, spacing: 10) {
             Image(systemName: showsPlanPreparation ? "creditcard.fill" : "video.fill")
                 .font(.system(size: 16, weight: .black))
-                .foregroundStyle(.white)
+                .foregroundStyle(AVBrandColor.accent)
                 .frame(width: 38, height: 38)
-                .background(AVBrandColor.textPrimary, in: Circle())
+                .background(AVBrandColor.accent.opacity(0.14), in: Circle())
 
             VStack(alignment: .leading, spacing: 4) {
                 Text(showsPlanPreparation ? L10n.string("create.final.checkingCost") : L10n.string("create.final.confirmSheet.title"))
@@ -4024,6 +4030,43 @@ private struct AnimateCreateFinalVideoConfirmationSheet: View {
 
     private var canAffordSelectedCost: Bool {
         action.balance.spendable >= selectedCreditCost
+    }
+
+    private var sourcePhotoControl: some View {
+        Toggle(isOn: $startsWithSourcePhoto) {
+            HStack(alignment: .top, spacing: 10) {
+                Image(systemName: "photo.on.rectangle.angled")
+                    .font(.system(size: 13, weight: .black))
+                    .foregroundStyle(AVBrandColor.accent)
+                    .frame(width: 30, height: 30)
+                    .background(AVBrandColor.accent.opacity(0.12), in: Circle())
+
+                VStack(alignment: .leading, spacing: 3) {
+                    HStack(alignment: .firstTextBaseline, spacing: 6) {
+                        Text(L10n.string("create.mediaTransition.sourcePhoto.title"))
+                            .font(.system(size: 12, weight: .black))
+                            .foregroundStyle(AVBrandColor.textPrimary)
+
+                        Text(L10n.string("create.final.costDetails.noExtraCost"))
+                            .font(.system(size: 9, weight: .black))
+                            .foregroundStyle(AVBrandColor.accent)
+                            .textCase(.uppercase)
+                            .padding(.horizontal, 6)
+                            .padding(.vertical, 3)
+                            .background(AVBrandColor.accent.opacity(0.12), in: Capsule())
+                    }
+
+                    Text(L10n.string(startsWithSourcePhoto ? "create.mediaTransition.sourcePhoto.enabledDetail" : "create.mediaTransition.sourcePhoto.disabledDetail"))
+                        .font(.system(size: 11, weight: .semibold))
+                        .foregroundStyle(AVBrandColor.textSecondary)
+                        .fixedSize(horizontal: false, vertical: true)
+                }
+            }
+        }
+        .toggleStyle(.switch)
+        .tint(AVBrandColor.accent)
+        .padding(12)
+        .background(AVBrandColor.mutedSurface.opacity(0.72), in: RoundedRectangle(cornerRadius: 8, style: .continuous))
     }
 
     @ViewBuilder
