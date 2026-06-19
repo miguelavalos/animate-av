@@ -428,6 +428,7 @@
 "video.nextAction.videoAttention.message" = "%@ hit a problem. Return to Create and try again.";
 "video.nextAction.videoAttention.title" = "Video needs attention";
 "video.status.creatingVideo" = "Creating video";
+"video.status.completed" = "Completed";
 "video.status.storyReady" = "Direction ready";
 "video.status.videoReady" = "Video ready";
 "video.status.videoReadyDownloadNeeded" = "Video ready - download needed";
@@ -581,6 +582,10 @@
 "video.artifact.none" = "None";
 "video.artifact.storageKey" = "Storage key";
 "video.artifact.watermark" = "Branding";
+"video.artifact.watermarked" = "Branded";
+"video.artifact.expiresAt" = "Expires %@";
+"video.date.saved" = "Saved %@";
+"video.date.updated" = "Updated %@";
 "video.job.configured" = "Configured";
 "video.job.created" = "Created";
 "video.job.id" = "Job ID";
@@ -592,6 +597,8 @@
 "video.job.videoProfile" = "Video profile";
 "video.job.videoService" = "Video service";
 "video.job.workflow" = "Workflow";
+"video.media.notSelected" = "Not selected";
+"video.media.selected" = "Selected";
 "video.progress.assets" = "%d assets";
 "video.progress.createVideo" = "Create Video";
 "video.progress.media" = "Photo";

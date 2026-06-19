@@ -314,6 +314,7 @@
 "video.nextAction.videoAttention.message" = "%@ hatte ein Problem. Kehre zu Erstellen zurück und versuche es erneut.";
 "video.nextAction.videoAttention.title" = "Video braucht Aufmerksamkeit";
 "video.status.creatingVideo" = "Video wird erstellt";
+"video.status.completed" = "Abgeschlossen";
 "video.status.storyReady" = "Ausrichtung bereit";
 "video.status.videoReady" = "Video bereit";
 "video.status.videoReadyDownloadNeeded" = "Video bereit - Download nötig";
@@ -580,6 +581,10 @@
 "video.artifact.none" = "Keine";
 "video.artifact.storageKey" = "Speicherschlüssel";
 "video.artifact.watermark" = "Branding";
+"video.artifact.watermarked" = "Mit Branding";
+"video.artifact.expiresAt" = "Läuft ab %@";
+"video.date.saved" = "Gespeichert %@";
+"video.date.updated" = "Aktualisiert %@";
 "video.job.configured" = "Konfiguriert";
 "video.job.created" = "Erstellt";
 "video.job.id" = "Job-ID";
@@ -591,6 +596,8 @@
 "video.job.videoProfile" = "Videoprofil";
 "video.job.videoService" = "Videodienst";
 "video.job.workflow" = "Ablauf";
+"video.media.notSelected" = "Nicht ausgewählt";
+"video.media.selected" = "Ausgewählt";
 "video.progress.assets" = "%d Bilder";
 "video.progress.createVideo" = "Video erstellen";
 "video.progress.media" = "Foto";

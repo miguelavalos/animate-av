@@ -425,6 +425,7 @@
 "video.nextAction.videoAttention.message" = "%@ ha tingut un problema. Torna a Crear i prova-ho de nou.";
 "video.nextAction.videoAttention.title" = "El vídeo necessita atenció";
 "video.status.creatingVideo" = "Creant vídeo";
+"video.status.completed" = "Completat";
 "video.status.storyReady" = "Direcció a punt";
 "video.status.videoReady" = "Vídeo a punt";
 "video.status.videoReadyDownloadNeeded" = "Vídeo a punt - cal baixar-lo";
@@ -578,6 +579,10 @@
 "video.artifact.none" = "Cap";
 "video.artifact.storageKey" = "Clau d'emmagatzematge";
 "video.artifact.watermark" = "Branding";
+"video.artifact.watermarked" = "Amb branding";
+"video.artifact.expiresAt" = "Caduca %@";
+"video.date.saved" = "Desat %@";
+"video.date.updated" = "Actualitzat %@";
 "video.job.configured" = "Configurat";
 "video.job.created" = "Creat";
 "video.job.id" = "ID de treball";
@@ -589,6 +594,8 @@
 "video.job.videoProfile" = "Perfil de vídeo";
 "video.job.videoService" = "Servei de vídeo";
 "video.job.workflow" = "Flux de treball";
+"video.media.notSelected" = "No seleccionada";
+"video.media.selected" = "Seleccionada";
 "video.progress.assets" = "%d recursos";
 "video.progress.createVideo" = "Crear vídeo";
 "video.progress.media" = "Foto";

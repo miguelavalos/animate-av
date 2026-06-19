@@ -9,11 +9,14 @@ enum AnimateDateFormatting {
 
 enum AnimateVideoFormatting {
     static func updatedAt(_ video: AnimateVideo) -> String {
-        "Updated \(AnimateDateFormatting.formattedDate(milliseconds: video.updatedAt))"
+        L10n.string(
+            "video.date.updated",
+            AnimateDateFormatting.formattedDate(milliseconds: video.updatedAt)
+        )
     }
 
     static func galleryDate(_ milliseconds: Double) -> String {
-        "Saved \(AnimateDateFormatting.formattedDate(milliseconds: milliseconds))"
+        L10n.string("video.date.saved", AnimateDateFormatting.formattedDate(milliseconds: milliseconds))
     }
 
     static func storyUsage(_ video: AnimateVideo) -> String {
@@ -38,7 +41,9 @@ enum AnimateVideoFormatting {
     }
 
     static func mediaAssetDetail(_ media: AnimateMediaAsset) -> String {
-        let selection = media.selected ? "Selected" : "Not selected"
+        let selection = media.selected
+            ? L10n.string("video.media.selected")
+            : L10n.string("video.media.notSelected")
         return "\(selection) · \(AnimateStatusRules.displayTitle(for: media.moderationStatus))"
     }
 
@@ -48,10 +53,13 @@ enum AnimateVideoFormatting {
         ]
 
         if artifact.hasWatermark == true {
-            parts.append("Watermarked")
+            parts.append(L10n.string("video.artifact.watermarked"))
         }
 
-        parts.append("Expires \(AnimateDateFormatting.formattedDate(milliseconds: artifact.expiresAt))")
+        parts.append(L10n.string(
+            "video.artifact.expiresAt",
+            AnimateDateFormatting.formattedDate(milliseconds: artifact.expiresAt)
+        ))
         return parts.joined(separator: " · ")
     }
 }

@@ -28,6 +28,9 @@ enum AnimateStatusRules {
         if status == "gallery_ready" {
             return L10n.string("video.status.videoReady")
         }
+        if status == "completed" {
+            return L10n.string("video.status.completed")
+        }
         if status == "in_progress" {
             return L10n.string("inProgress.summary.active")
         }
