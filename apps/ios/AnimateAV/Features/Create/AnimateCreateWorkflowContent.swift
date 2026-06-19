@@ -792,6 +792,9 @@ private struct AnimateCreateRenderProgressScene: View {
             switch visualStage {
             case .sourcePhoto:
                 photoLayer(image: sourceImage, isStyled: false)
+                    .overlay {
+                        imageGenerationMotionOverlay
+                    }
                     .overlay(alignment: .bottomTrailing) {
                         aviGuideBadge(systemImage: "wand.and.stars")
                     }
@@ -883,6 +886,32 @@ private struct AnimateCreateRenderProgressScene: View {
                     .offset(x: 12, y: -12)
             }
         }
+    }
+
+    private var imageGenerationMotionOverlay: some View {
+        ZStack {
+            LinearGradient(
+                colors: [
+                    Color.clear,
+                    AVBrandColor.accent.opacity(0.22),
+                    Color.white.opacity(0.30),
+                    Color.clear
+                ],
+                startPoint: .topLeading,
+                endPoint: .bottomTrailing
+            )
+            .blendMode(.screen)
+            .offset(x: isAnimating ? 82 : -82, y: isAnimating ? -18 : 18)
+            .opacity(0.74)
+
+            Circle()
+                .strokeBorder(AVBrandColor.accent.opacity(0.52), lineWidth: 2)
+                .frame(width: isAnimating ? 96 : 54, height: isAnimating ? 96 : 54)
+                .opacity(isAnimating ? 0.06 : 0.38)
+                .blur(radius: 0.4)
+        }
+        .clipShape(RoundedRectangle(cornerRadius: 20, style: .continuous))
+        .allowsHitTesting(false)
     }
 
     private func videoPreviewLayer(image: UIImage?) -> some View {
