@@ -213,6 +213,70 @@ Repo path: apps/ios/AnimateAV/App/Assets.xcassets/VoiceTeenBoy.imageset/VoiceTee
 Repo path: apps/ios/AnimateAV/App/Assets.xcassets/VoiceTeenGirl.imageset/VoiceTeenGirl.png
 ```
 
+## Approved Web Runtime Derivatives
+
+The following tracked web runtime files are approved as part of the Animate AV
+public web surface. The icon and splash match the private canonical base files
+byte-for-byte. The Avi files are web-sized derivatives from the same approved
+initial branding package and are approved only for the public web runtime paths
+listed below.
+
+```text
+Asset: Animate AV web icon
+Repo path: apps/web/public/assets/animate-av-icon.png
+Type: web icon
+Export size: 1254 x 1254
+Format: PNG
+Checksum: sha256 8f85bf90f18513841a8e480d6c85840a1b1f11eb8b3c2ff76b56490872f200ef
+Purpose: public web product icon and app metadata
+Approved: yes
+
+Asset: Animate AV web splash hero
+Repo path: apps/web/public/assets/animate-av-splash.jpg
+Type: splash artwork / Avi artwork
+Export size: 941 x 1672
+Format: JPEG-compatible tracked asset
+Checksum: sha256 badc4d67c89a19b937403c386d7409ee59f67628fd25514b48e6052cbd5534ac
+Purpose: public web splash and onboarding brand surface
+Approved: yes
+
+Asset: Avi footer icon
+Repo path: apps/web/public/assets/avi-footer-icon.png
+Type: Avi artwork
+Export size: 203 x 132
+Format: PNG
+Checksum: sha256 f7628081859d0208ce8ee5bbeee46e30d3a79c0b8872fd715b751f1eca84d114
+Purpose: public web footer/support assistant mark
+Approved: yes
+
+Asset: Avi full body web derivative
+Repo path: apps/web/public/assets/avi-full-body.png
+Type: Avi artwork
+Export size: 256 x 256
+Format: PNG
+Checksum: sha256 a0721c198d92b25397d5481865c3860da4b94740c83d32130622c408defde88e
+Purpose: public web assistant artwork
+Approved: yes
+
+Asset: Avi login sheet peek web derivative
+Repo path: apps/web/public/assets/avi-login-sheet-peek.png
+Type: Avi artwork
+Export size: 256 x 256
+Format: PNG
+Checksum: sha256 6c3d68844d63a566891f50fd8a9f3819c9317883fa91550a9b1b1490087c66aa
+Purpose: public web sign-in assistant artwork
+Approved: yes
+
+Asset: Avi onboarding CTA web derivative
+Repo path: apps/web/public/assets/avi-onboarding-cta.png
+Type: Avi artwork
+Export size: 256 x 256
+Format: PNG
+Checksum: sha256 b4a5a808d1590079735409764e8de8689cf543b94167c7b4ef0bbaf1cf55ae79
+Purpose: public web onboarding call-to-action assistant artwork
+Approved: yes
+```
+
 ## Required Rules
 
 - [x] App icon source is approved for Animate AV.
