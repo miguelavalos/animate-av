@@ -918,6 +918,8 @@
 "gallery.info.branding.removed" = "Sin branding";
 "gallery.info.compare.original" = "Original";
 "gallery.info.compare.generated" = "Generada";
+"gallery.info.compare.action" = "Comparar";
+"gallery.info.viewFull" = "Ver completa";
 "gallery.info.saved" = "Guardado";
 "gallery.info.remoteAvailableUntil" = "Copia en la nube disponible hasta";
 
@@ -1329,6 +1331,7 @@
 "create.mediaAdjust.zoom" = "Zoom";
 "create.mediaAdjust.zoomIn" = "Acercar";
 "create.mediaAdjust.zoomOut" = "Alejar";
+"create.mediaAdjust.fit" = "Ajustar";
 "create.guided.direction.none" = "Natural";
 "create.guided.direction.none.detail" = "Movimiento suave.";
 "create.guided.direction.template" = "Plantilla visual";

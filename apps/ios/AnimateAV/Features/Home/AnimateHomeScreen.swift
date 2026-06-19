@@ -192,11 +192,18 @@ private struct AnimateHomeAviContextCard: View {
 
                     Image(systemName: actionSystemImage)
                         .font(.system(size: 17, weight: .black))
-                        .foregroundStyle(isSignedIn ? AVBrandColor.textInverse : AVBrandColor.textPrimary)
+                        .foregroundStyle(isSignedIn ? AVBrandColor.textInverse : AVBrandColor.accent)
                         .frame(width: 44, height: 44)
                         .background(
                             Circle()
-                                .fill(isSignedIn ? AVBrandColor.accent : AVBrandColor.neutral100)
+                                .fill(isSignedIn ? AVBrandColor.accent : AVBrandColor.accent.opacity(0.16))
+                        )
+                        .overlay(
+                            Circle()
+                                .stroke(
+                                    isSignedIn ? Color.clear : AVBrandColor.accent.opacity(0.42),
+                                    lineWidth: 1.2
+                                )
                         )
                 }
             }

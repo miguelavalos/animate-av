@@ -1571,7 +1571,7 @@ private struct AnimateCreateVideoDirectionCard: View {
                     }
                     .buttonStyle(.plain)
 
-                    stepHeader(family.title, family.subtitle)
+                    stepHeader(family.title, family.subtitle, reservedTextHeight: 62)
 
                     AnimateCreateLookFamilyNavigator(
                         family: family,
@@ -1701,24 +1701,18 @@ private struct AnimateCreateVideoDirectionCard: View {
                                 .font(.caption.weight(.bold))
                                 .foregroundStyle(AVBrandColor.textSecondary)
                         }
-                        TextEditor(text: Binding(
-                            get: { form.details },
-                            set: {
+                        AnimateCreateLimitedTextEditor(
+                            text: form.details,
+                            limit: AnimateVideoSetupLimits.messageCharacterLimit,
+                            minHeight: 160,
+                            update: {
                                 guideState.selectedScriptIdea = .custom
                                 let hasText = !$0.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty
                                 form.hasMessage = hasText
                                 form.voiceEnabled = false
                                 updateMessage($0)
                             }
-                        ))
-                        .font(.system(size: 15, weight: .semibold))
-                        .frame(minHeight: 160)
-                        .padding(10)
-                        .background(AVBrandColor.cardSurface, in: RoundedRectangle(cornerRadius: 14, style: .continuous))
-                        .overlay {
-                            RoundedRectangle(cornerRadius: 14, style: .continuous)
-                                .stroke(AVBrandColor.borderSubtle.opacity(0.7), lineWidth: 1)
-                        }
+                        )
                         Text(L10n.string("create.guided.script.tip"))
                             .font(.caption.weight(.semibold))
                             .foregroundStyle(AVBrandColor.textSecondary)
@@ -1808,21 +1802,23 @@ private struct AnimateCreateVideoDirectionCard: View {
         }
     }
 
-    private func stepHeader(_ title: String, _ detail: String) -> some View {
+    private func stepHeader(_ title: String, _ detail: String, reservedTextHeight: CGFloat? = nil) -> some View {
         HStack(alignment: .top, spacing: 12) {
             VStack(alignment: .leading, spacing: 6) {
                 Text(title)
                     .font(.system(size: 20, weight: .black))
                     .foregroundStyle(AVBrandColor.textPrimary)
-                    .lineLimit(2)
+                    .lineLimit(reservedTextHeight == nil ? 2 : 1)
+                    .minimumScaleFactor(0.82)
                     .fixedSize(horizontal: false, vertical: true)
                 Text(detail)
                     .font(.system(size: 14, weight: .semibold))
                     .foregroundStyle(AVBrandColor.textSecondary)
-                    .lineLimit(3)
+                    .lineLimit(reservedTextHeight == nil ? 3 : 2)
                     .fixedSize(horizontal: false, vertical: true)
             }
             .frame(maxWidth: .infinity, alignment: .leading)
+            .frame(height: reservedTextHeight, alignment: .topLeading)
 
             if canShowDiscardAction {
                 Menu {
@@ -1888,18 +1884,12 @@ private struct AnimateCreateVideoDirectionCard: View {
                         .foregroundStyle(AVBrandColor.textSecondary)
                 }
 
-                TextEditor(text: Binding(
-                    get: { form.animationDirection },
-                    set: { updateCustomAnimationGuide($0) }
-                ))
-                .font(.system(size: 15, weight: .semibold))
-                .frame(minHeight: 96)
-                .padding(10)
-                .background(AVBrandColor.cardSurface, in: RoundedRectangle(cornerRadius: 14, style: .continuous))
-                .overlay {
-                    RoundedRectangle(cornerRadius: 14, style: .continuous)
-                        .stroke(AVBrandColor.borderSubtle.opacity(0.7), lineWidth: 1)
-                }
+                AnimateCreateLimitedTextEditor(
+                    text: form.animationDirection,
+                    limit: AnimateVideoSetupLimits.animationDirectionCharacterLimit,
+                    minHeight: 96,
+                    update: updateCustomAnimationGuide
+                )
             }
         }
     }
@@ -2264,6 +2254,62 @@ private struct AnimateCreateVideoDirectionCard: View {
         AnimateCreatePrimaryActionPresentation(workflow: presentation)
     }
 
+}
+
+private struct AnimateCreateLimitedTextEditor: View {
+    let text: String
+    let limit: Int
+    let minHeight: CGFloat
+    let update: (String) -> Void
+
+    @State private var draftText: String
+    @State private var lastSentText: String
+    @FocusState private var isFocused: Bool
+
+    init(
+        text: String,
+        limit: Int,
+        minHeight: CGFloat,
+        update: @escaping (String) -> Void
+    ) {
+        self.text = text
+        self.limit = limit
+        self.minHeight = minHeight
+        self.update = update
+        let initialText = String(text.prefix(limit))
+        _draftText = State(initialValue: initialText)
+        _lastSentText = State(initialValue: initialText)
+    }
+
+    var body: some View {
+        TextEditor(text: $draftText)
+            .focused($isFocused)
+            .font(.system(size: 15, weight: .semibold))
+            .frame(minHeight: minHeight)
+            .padding(10)
+            .background(AVBrandColor.cardSurface, in: RoundedRectangle(cornerRadius: 14, style: .continuous))
+            .overlay {
+                RoundedRectangle(cornerRadius: 14, style: .continuous)
+                    .stroke(AVBrandColor.borderSubtle.opacity(0.7), lineWidth: 1)
+            }
+            .onChange(of: draftText) { _, newValue in
+                let limitedText = String(newValue.prefix(limit))
+                if limitedText != newValue {
+                    draftText = limitedText
+                    return
+                }
+                guard limitedText != lastSentText else { return }
+                lastSentText = limitedText
+                update(limitedText)
+            }
+            .onChange(of: text) { _, newValue in
+                let limitedText = String(newValue.prefix(limit))
+                if limitedText != draftText {
+                    draftText = limitedText
+                }
+                lastSentText = limitedText
+            }
+    }
 }
 
 private struct AnimateCreateGuidedStepSheet<Content: View, Footer: View>: View {
@@ -4250,10 +4296,15 @@ private struct AnimateCreateLookChooserPage: View {
                                 Text(selectedFamily.title)
                                     .font(.system(size: 20, weight: .black))
                                     .foregroundStyle(AVBrandColor.textPrimary)
+                                    .lineLimit(1)
+                                    .minimumScaleFactor(0.82)
                                 Text(selectedFamily.subtitle)
                                     .font(.system(size: 13, weight: .semibold))
                                     .foregroundStyle(AVBrandColor.textSecondary)
+                                    .lineLimit(2)
+                                    .fixedSize(horizontal: false, vertical: true)
                             }
+                            .frame(height: 58, alignment: .topLeading)
 
                             AnimateCreateLookFamilyNavigator(
                                 family: selectedFamily,

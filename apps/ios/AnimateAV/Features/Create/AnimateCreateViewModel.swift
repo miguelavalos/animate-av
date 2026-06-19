@@ -425,6 +425,7 @@ final class AnimateCreateViewModel: ObservableObject {
     }
 
     func prepareNewVideoCreation() {
+        resetActiveVideoCreation(force: true)
         isContinuingVideoCreation = false
         continuationFocusHint = nil
         isLocalVideoCreationStarted = false

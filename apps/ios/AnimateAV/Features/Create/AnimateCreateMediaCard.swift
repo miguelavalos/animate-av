@@ -770,7 +770,8 @@ struct AnimateCreatePhotoAdjustView: View {
     }
 
     private func zoomControls(image: UIImage) -> some View {
-        HStack(spacing: 12) {
+        let minimumScale = minimumFrameScale(for: image, frameSize: editorFrameSize)
+        return HStack(spacing: 12) {
             Button {
                 adjustZoom(by: -0.25, image: image)
             } label: {
@@ -787,11 +788,22 @@ struct AnimateCreatePhotoAdjustView: View {
                     get: { Double(frameScale) },
                     set: { setZoom(CGFloat($0), image: image) }
                 ),
-                in: 1...4
+                in: minimumScale...4
             )
             .tint(AVBrandColor.accent)
             .accessibilityLabel(L10n.string("create.mediaAdjust.zoom"))
             .accessibilityValue("\(Int(frameScale * 100))%")
+
+            Button {
+                fitFrame(image: image)
+            } label: {
+                Text(L10n.string("create.mediaAdjust.fit"))
+                    .font(.caption.weight(.black))
+                    .frame(width: 42, height: 38)
+            }
+            .buttonStyle(.plain)
+            .foregroundStyle(.white)
+            .accessibilityLabel(L10n.string("create.mediaAdjust.fit"))
 
             Button {
                 adjustZoom(by: 0.25, image: image)
@@ -842,6 +854,21 @@ struct AnimateCreatePhotoAdjustView: View {
             UIColor.black.setFill()
             context.fill(CGRect(origin: .zero, size: outputSize))
 
+            let backgroundScale = max(
+                outputSize.width / max(image.size.width, 1),
+                outputSize.height / max(image.size.height, 1)
+            )
+            let backgroundSize = CGSize(width: image.size.width * backgroundScale, height: image.size.height * backgroundScale)
+            let backgroundRect = CGRect(
+                x: (outputSize.width - backgroundSize.width) / 2,
+                y: (outputSize.height - backgroundSize.height) / 2,
+                width: backgroundSize.width,
+                height: backgroundSize.height
+            )
+            image.draw(in: backgroundRect, blendMode: .normal, alpha: 0.32)
+            UIColor.black.withAlphaComponent(0.36).setFill()
+            context.fill(CGRect(origin: .zero, size: outputSize))
+
             let baseScale = max(
                 outputSize.width / max(image.size.width, 1),
                 outputSize.height / max(image.size.height, 1)
@@ -884,6 +911,18 @@ struct AnimateCreatePhotoAdjustView: View {
         return CGSize(width: image.size.width * scale, height: image.size.height * scale)
     }
 
+    private func minimumFrameScale(for image: UIImage, frameSize: CGSize) -> CGFloat {
+        let fillScale = max(
+            frameSize.width / max(image.size.width, 1),
+            frameSize.height / max(image.size.height, 1)
+        )
+        let fitScale = min(
+            frameSize.width / max(image.size.width, 1),
+            frameSize.height / max(image.size.height, 1)
+        )
+        return max(min(fitScale / max(fillScale, 0.0001), 1), 0.2)
+    }
+
     private func constrainedOffset(_ offset: CGSize, frameSize: CGSize, image: UIImage, scale: CGFloat) -> CGSize {
         let baseScale = max(
             frameSize.width / max(image.size.width, 1),
@@ -919,11 +958,13 @@ struct AnimateCreatePhotoAdjustView: View {
     private func pinchFrameGesture(frameSize: CGSize, image: UIImage) -> some Gesture {
         MagnificationGesture()
             .onChanged { value in
-                frameScale = min(max(activeFrameScale * value, 1), 4)
+                let minimumScale = minimumFrameScale(for: image, frameSize: frameSize)
+                frameScale = min(max(activeFrameScale * value, minimumScale), 4)
                 imageOffset = constrainedOffset(imageOffset, frameSize: frameSize, image: image, scale: frameScale)
             }
             .onEnded { _ in
-                frameScale = min(max(frameScale, 1), 4)
+                let minimumScale = minimumFrameScale(for: image, frameSize: frameSize)
+                frameScale = min(max(frameScale, minimumScale), 4)
                 imageOffset = constrainedOffset(imageOffset, frameSize: frameSize, image: image, scale: frameScale)
                 activeFrameScale = frameScale
                 activeImageOffset = imageOffset
@@ -949,15 +990,23 @@ struct AnimateCreatePhotoAdjustView: View {
         }
     }
 
+    private func fitFrame(image: UIImage) {
+        withAnimation(.spring(response: 0.24, dampingFraction: 0.88)) {
+            setZoom(minimumFrameScale(for: image, frameSize: editorFrameSize), image: image)
+        }
+    }
+
     private func setZoom(_ scale: CGFloat, image: UIImage) {
-        frameScale = min(max(scale, 1), 4)
+        let minimumScale = minimumFrameScale(for: image, frameSize: editorFrameSize)
+        frameScale = min(max(scale, minimumScale), 4)
         imageOffset = constrainedOffset(imageOffset, frameSize: editorFrameSize, image: image, scale: frameScale)
         activeFrameScale = frameScale
         activeImageOffset = imageOffset
     }
 
     private func clampFrameState(frameSize: CGSize, image: UIImage) {
-        frameScale = min(max(frameScale, 1), 4)
+        let minimumScale = minimumFrameScale(for: image, frameSize: frameSize)
+        frameScale = min(max(frameScale, minimumScale), 4)
         activeFrameScale = frameScale
         imageOffset = constrainedOffset(imageOffset, frameSize: frameSize, image: image, scale: frameScale)
         activeImageOffset = imageOffset

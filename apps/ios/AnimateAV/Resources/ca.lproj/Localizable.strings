@@ -912,6 +912,8 @@
 "gallery.info.branding.removed" = "Sense branding";
 "gallery.info.compare.original" = "Original";
 "gallery.info.compare.generated" = "Generada";
+"gallery.info.compare.action" = "Comparar";
+"gallery.info.viewFull" = "Veure completa";
 "gallery.info.saved" = "Desat";
 "gallery.info.remoteAvailableUntil" = "Còpia al núvol disponible fins";
 
@@ -1323,6 +1325,7 @@
 "create.mediaAdjust.zoom" = "Zoom";
 "create.mediaAdjust.zoomIn" = "Apropar";
 "create.mediaAdjust.zoomOut" = "Allunyar";
+"create.mediaAdjust.fit" = "Ajustar";
 "create.storyDirection.cardTitle" = "Configuració";
 "create.guided.direction.none" = "Natural";
 "create.guided.direction.none.detail" = "Moviment suau.";

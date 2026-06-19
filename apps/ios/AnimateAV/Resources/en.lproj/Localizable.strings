@@ -918,6 +918,8 @@
 "gallery.info.branding.removed" = "No branding";
 "gallery.info.compare.original" = "Original";
 "gallery.info.compare.generated" = "Generated";
+"gallery.info.compare.action" = "Compare";
+"gallery.info.viewFull" = "View full";
 "gallery.info.saved" = "Saved";
 "gallery.info.remoteAvailableUntil" = "Cloud copy available until";
 
@@ -1010,6 +1012,7 @@
 "create.mediaAdjust.zoom" = "Zoom";
 "create.mediaAdjust.zoomIn" = "Zoom in";
 "create.mediaAdjust.zoomOut" = "Zoom out";
+"create.mediaAdjust.fit" = "Fit";
 "create.mediaTransition.sourcePhoto.title" = "Start with original photo";
 "create.mediaTransition.sourcePhoto.enabledDetail" = "The original photo appears first, pops into the styled image, then starts the video.";
 "create.mediaTransition.sourcePhoto.disabledDetail" = "The video starts directly with the animated result.";

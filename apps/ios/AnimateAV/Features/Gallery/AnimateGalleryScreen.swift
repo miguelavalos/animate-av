@@ -444,9 +444,7 @@ private struct AnimateGalleryImageThumbnail: View {
             )
 
             if let url, let uiImage = UIImage(contentsOfFile: url.path) {
-                Image(uiImage: uiImage)
-                    .resizable()
-                    .scaledToFill()
+                AnimateGalleryTopCoverImage(image: uiImage)
             } else {
                 Image(systemName: "photo.fill")
                     .font(.system(size: 42, weight: .black))
@@ -510,7 +508,7 @@ private struct AnimateGalleryEmptyState: View {
                     .frame(height: 48)
             }
             .buttonStyle(.borderedProminent)
-            .tint(AVBrandColor.textPrimary)
+            .tint(AVBrandColor.accent)
         }
         .padding(24)
         .frame(maxWidth: .infinity)
@@ -721,6 +719,7 @@ private struct AnimateGalleryVideoInfoSheet: View {
     let video: AnimateGalleryVideoPresentation
     @Environment(\.dismiss) private var dismiss
     @EnvironmentObject private var viewModel: AnimateGalleryViewModel
+    @State private var selectedPreview: AnimateGalleryInfoPreview?
 
     var body: some View {
         let currentVideo = viewModel.videos.first { $0.id == video.id } ?? video
@@ -730,7 +729,8 @@ private struct AnimateGalleryVideoInfoSheet: View {
                     AnimateGalleryVideoInfoHero(
                         videoURL: currentVideo.localFileURL,
                         sourceImageURL: currentVideo.sourceImageURL,
-                        generatedImageURL: currentVideo.generatedImageURL
+                        generatedImageURL: currentVideo.generatedImageURL,
+                        openPreview: { selectedPreview = $0 }
                     )
 
                     AnimateGalleryMetadataPanel(rows: metadataRows(for: currentVideo))
@@ -750,6 +750,9 @@ private struct AnimateGalleryVideoInfoSheet: View {
         }
         .onAppear {
             viewModel.prepareVideoInfo(currentVideo)
+        }
+        .sheet(item: $selectedPreview) { preview in
+            AnimateGalleryInfoPreviewSheet(preview: preview)
         }
     }
 
@@ -802,17 +805,38 @@ private struct AnimateGalleryVideoInfoHero: View {
     let videoURL: URL?
     let sourceImageURL: URL?
     let generatedImageURL: URL?
+    let openPreview: (AnimateGalleryInfoPreview) -> Void
 
     var body: some View {
         VStack(alignment: .leading, spacing: 12) {
             Group {
                 if let sourceImageURL, let generatedImageURL {
-                    AnimateGalleryBeforeAfterImageView(
-                        sourceImageURL: sourceImageURL,
-                        generatedImageURL: generatedImageURL
-                    )
-                } else if generatedImageURL != nil || sourceImageURL != nil {
-                    AnimateGalleryImageThumbnail(url: generatedImageURL ?? sourceImageURL)
+                    Button {
+                        openPreview(.comparison(sourceImageURL: sourceImageURL, generatedImageURL: generatedImageURL))
+                    } label: {
+                        AnimateGalleryInfoHeroImage(
+                            url: generatedImageURL,
+                            badgeTitle: L10n.string("gallery.info.compare.action")
+                        )
+                    }
+                    .buttonStyle(.plain)
+                } else if let imageURL = generatedImageURL ?? sourceImageURL {
+                    Button {
+                        openPreview(
+                            .single(
+                                title: generatedImageURL != nil
+                                    ? L10n.string("gallery.info.compare.generated")
+                                    : L10n.string("gallery.info.compare.original"),
+                                url: imageURL
+                            )
+                        )
+                    } label: {
+                        AnimateGalleryInfoHeroImage(
+                            url: imageURL,
+                            badgeTitle: L10n.string("gallery.info.viewFull")
+                        )
+                    }
+                    .buttonStyle(.plain)
                 } else {
                     AnimateGalleryVideoThumbnail(url: videoURL, isAvailable: videoURL != nil)
                 }
@@ -827,9 +851,31 @@ private struct AnimateGalleryVideoInfoHero: View {
     }
 }
 
+private struct AnimateGalleryInfoHeroImage: View {
+    let url: URL
+    let badgeTitle: String
+
+    var body: some View {
+        ZStack(alignment: .topTrailing) {
+            AnimateGalleryImageThumbnail(url: url)
+
+            Text(badgeTitle)
+                .font(.system(size: 11, weight: .black))
+                .textCase(.uppercase)
+                .foregroundStyle(AVBrandColor.textPrimary)
+                .padding(.horizontal, 10)
+                .padding(.vertical, 7)
+                .background(.ultraThinMaterial, in: Capsule())
+                .padding(12)
+        }
+        .contentShape(Rectangle())
+    }
+}
+
 private struct AnimateGalleryBeforeAfterImageView: View {
     let sourceImageURL: URL
     let generatedImageURL: URL
+    let openPreview: (AnimateGalleryInfoPreview) -> Void
     @State private var sourceImage: UIImage?
     @State private var generatedImage: UIImage?
     @State private var reveal: CGFloat = 0.5
@@ -839,17 +885,9 @@ private struct AnimateGalleryBeforeAfterImageView: View {
             ZStack(alignment: .leading) {
                 switch displayState {
                 case let .comparison(sourceImage, generatedImage):
-                    Image(uiImage: generatedImage)
-                        .resizable()
-                        .scaledToFill()
-                        .frame(width: proxy.size.width, height: proxy.size.height)
-                        .clipped()
+                    topCoverImage(generatedImage)
 
-                    Image(uiImage: sourceImage)
-                        .resizable()
-                        .scaledToFill()
-                        .frame(width: proxy.size.width, height: proxy.size.height)
-                        .clipped()
+                    topCoverImage(sourceImage)
                         .mask(alignment: .leading) {
                             Rectangle()
                                 .frame(width: proxy.size.width * reveal)
@@ -875,11 +913,7 @@ private struct AnimateGalleryBeforeAfterImageView: View {
                         .shadow(color: .black.opacity(0.20), radius: 10, y: 4)
                         .position(x: proxy.size.width * reveal, y: proxy.size.height / 2)
                 case let .single(image):
-                    Image(uiImage: image)
-                        .resizable()
-                        .scaledToFill()
-                        .frame(width: proxy.size.width, height: proxy.size.height)
-                        .clipped()
+                    topCoverImage(image)
                 case .placeholder:
                     AnimateGalleryVideoThumbnail(url: nil, isAvailable: false)
                 }
@@ -893,11 +927,21 @@ private struct AnimateGalleryBeforeAfterImageView: View {
                         reveal = min(max(value.location.x / width, 0), 1)
                     }
             )
+            .simultaneousGesture(
+                SpatialTapGesture()
+                    .onEnded { value in
+                        openPreview(.comparison(sourceImageURL: sourceImageURL, generatedImageURL: generatedImageURL))
+                    }
+            )
         }
         .task(id: "\(sourceImageURL.absoluteString)|\(generatedImageURL.absoluteString)") {
             sourceImage = Self.loadImage(url: sourceImageURL)
             generatedImage = Self.loadImage(url: generatedImageURL)
         }
+    }
+
+    private func topCoverImage(_ image: UIImage) -> some View {
+        AnimateGalleryTopCoverImage(image: image)
     }
 
     private var displayState: DisplayState {
@@ -946,6 +990,185 @@ private struct AnimateGalleryBeforeAfterImageView: View {
     private static func loadImage(url: URL) -> UIImage? {
         guard let data = try? Data(contentsOf: url) else { return nil }
         return UIImage(data: data)
+    }
+}
+
+private enum AnimateGalleryInfoPreview: Identifiable {
+    case single(title: String, url: URL)
+    case comparison(sourceImageURL: URL, generatedImageURL: URL)
+
+    var id: String {
+        switch self {
+        case let .single(title, url):
+            "single:\(title):\(url.absoluteString)"
+        case let .comparison(sourceImageURL, generatedImageURL):
+            "comparison:\(sourceImageURL.absoluteString):\(generatedImageURL.absoluteString)"
+        }
+    }
+
+    var title: String {
+        switch self {
+        case let .single(title, _):
+            title
+        case .comparison:
+            L10n.string("gallery.info.title")
+        }
+    }
+}
+
+private struct AnimateGalleryInfoPreviewSheet: View {
+    let preview: AnimateGalleryInfoPreview
+    @Environment(\.dismiss) private var dismiss
+
+    var body: some View {
+        NavigationStack {
+            ZStack {
+                AnimateTheme.shellBackground
+                    .ignoresSafeArea()
+
+                switch preview {
+                case let .single(_, url):
+                    AnimateGalleryFitImage(url: url)
+                        .padding(16)
+                case let .comparison(sourceImageURL, generatedImageURL):
+                    AnimateGalleryFitComparisonView(
+                        sourceImageURL: sourceImageURL,
+                        generatedImageURL: generatedImageURL
+                    )
+                    .padding(16)
+                }
+            }
+            .navigationTitle(preview.title)
+            .navigationBarTitleDisplayMode(.inline)
+            .toolbar {
+                ToolbarItem(placement: .topBarLeading) {
+                    Button(L10n.string("common.close")) {
+                        dismiss()
+                    }
+                }
+            }
+        }
+    }
+}
+
+private struct AnimateGalleryFitComparisonView: View {
+    let sourceImageURL: URL
+    let generatedImageURL: URL
+    @State private var sourceImage: UIImage?
+    @State private var generatedImage: UIImage?
+    @State private var reveal: CGFloat = 0.5
+
+    var body: some View {
+        GeometryReader { proxy in
+            ZStack(alignment: .leading) {
+                if let sourceImage, let generatedImage {
+                    fitImage(generatedImage)
+
+                    fitImage(sourceImage)
+                        .mask(alignment: .leading) {
+                            Rectangle()
+                                .frame(width: proxy.size.width * reveal)
+                        }
+
+                    comparisonLabels
+                        .padding(12)
+
+                    Rectangle()
+                        .fill(.white.opacity(0.92))
+                        .frame(width: 3)
+                        .shadow(color: .black.opacity(0.18), radius: 6, y: 2)
+                        .position(x: proxy.size.width * reveal, y: proxy.size.height / 2)
+
+                    Circle()
+                        .fill(.white)
+                        .frame(width: 44, height: 44)
+                        .overlay {
+                            Image(systemName: "arrow.left.and.right")
+                                .font(.system(size: 16, weight: .black))
+                                .foregroundStyle(AVBrandColor.accent)
+                        }
+                        .shadow(color: .black.opacity(0.20), radius: 10, y: 4)
+                        .position(x: proxy.size.width * reveal, y: proxy.size.height / 2)
+                } else {
+                    AnimateGalleryVideoThumbnail(url: nil, isAvailable: false)
+                }
+            }
+            .clipShape(RoundedRectangle(cornerRadius: 16, style: .continuous))
+            .contentShape(Rectangle())
+            .gesture(
+                DragGesture(minimumDistance: 0)
+                    .onChanged { value in
+                        let width = max(proxy.size.width, 1)
+                        reveal = min(max(value.location.x / width, 0), 1)
+                    }
+            )
+        }
+        .task(id: "\(sourceImageURL.absoluteString)|\(generatedImageURL.absoluteString)") {
+            sourceImage = Self.loadImage(url: sourceImageURL)
+            generatedImage = Self.loadImage(url: generatedImageURL)
+        }
+    }
+
+    private func fitImage(_ image: UIImage) -> some View {
+        ZStack {
+            Image(uiImage: image)
+                .resizable()
+                .scaledToFill()
+                .blur(radius: 18)
+                .opacity(0.18)
+                .clipped()
+
+            Image(uiImage: image)
+                .resizable()
+                .scaledToFit()
+                .padding(8)
+        }
+        .background(AVBrandColor.ink.opacity(0.18))
+    }
+
+    private var comparisonLabels: some View {
+        VStack {
+            HStack {
+                Text(L10n.string("gallery.info.compare.original"))
+                    .font(.system(size: 11, weight: .black))
+                    .textCase(.uppercase)
+                    .padding(.horizontal, 9)
+                    .padding(.vertical, 6)
+                    .background(.ultraThinMaterial, in: Capsule())
+
+                Spacer()
+
+                Text(L10n.string("gallery.info.compare.generated"))
+                    .font(.system(size: 11, weight: .black))
+                    .textCase(.uppercase)
+                    .padding(.horizontal, 9)
+                    .padding(.vertical, 6)
+                    .background(.ultraThinMaterial, in: Capsule())
+            }
+            Spacer()
+        }
+        .foregroundStyle(AVBrandColor.textPrimary)
+    }
+
+    private static func loadImage(url: URL) -> UIImage? {
+        guard let data = try? Data(contentsOf: url) else { return nil }
+        return UIImage(data: data)
+    }
+}
+
+private struct AnimateGalleryFitImage: View {
+    let url: URL
+
+    var body: some View {
+        if let image = UIImage(contentsOfFile: url.path) {
+            Image(uiImage: image)
+                .resizable()
+                .scaledToFit()
+                .clipShape(RoundedRectangle(cornerRadius: 16, style: .continuous))
+        } else {
+            AnimateGalleryVideoThumbnail(url: nil, isAvailable: false)
+                .clipShape(RoundedRectangle(cornerRadius: 16, style: .continuous))
+        }
     }
 }
 
@@ -1011,9 +1234,7 @@ private struct AnimateGalleryVideoThumbnail: View {
             )
 
             if let image {
-                Image(uiImage: image)
-                    .resizable()
-                    .scaledToFill()
+                AnimateGalleryTopCoverImage(image: image)
             } else {
                 Image(systemName: isAvailable ? "play.rectangle.fill" : "exclamationmark.triangle.fill")
                     .font(.system(size: 42, weight: .black))
@@ -1026,7 +1247,7 @@ private struct AnimateGalleryVideoThumbnail: View {
         }
     }
 
-    private static func loadThumbnail(url: URL) async -> UIImage? {
+    static func loadThumbnail(url: URL) async -> UIImage? {
         let asset = AVURLAsset(url: url)
         let generator = AVAssetImageGenerator(asset: asset)
         generator.appliesPreferredTrackTransform = true
@@ -1036,6 +1257,20 @@ private struct AnimateGalleryVideoThumbnail: View {
             return nil
         }
         return UIImage(cgImage: cgImage)
+    }
+}
+
+private struct AnimateGalleryTopCoverImage: View {
+    let image: UIImage
+
+    var body: some View {
+        GeometryReader { proxy in
+            Image(uiImage: image)
+                .resizable()
+                .scaledToFill()
+                .frame(width: proxy.size.width, height: proxy.size.height, alignment: .top)
+                .clipped()
+        }
     }
 }
 
@@ -1096,6 +1331,8 @@ private struct AnimateGalleryVideoPlayerSheet: View {
     let item: AnimateGalleryVideoPlayerItem
     @Environment(\.dismiss) private var dismiss
     @State private var player: AVPlayer
+    @State private var thumbnail: UIImage?
+    @State private var isPlaying = false
 
     init(item: AnimateGalleryVideoPlayerItem) {
         self.item = item
@@ -1104,7 +1341,38 @@ private struct AnimateGalleryVideoPlayerSheet: View {
 
     var body: some View {
         NavigationStack {
-            VideoPlayer(player: player)
+            ZStack {
+                Color.black.ignoresSafeArea()
+
+                if isPlaying {
+                    VideoPlayer(player: player)
+                } else {
+                    ZStack {
+                        if let thumbnail {
+                            Image(uiImage: thumbnail)
+                                .resizable()
+                                .scaledToFit()
+                        }
+
+                        Button {
+                            isPlaying = true
+                            player.play()
+                        } label: {
+                            Image(systemName: "play.fill")
+                                .font(.system(size: 30, weight: .black))
+                                .foregroundStyle(.white)
+                                .frame(width: 74, height: 74)
+                                .background(.black.opacity(0.46), in: Circle())
+                                .overlay(
+                                    Circle()
+                                        .stroke(.white.opacity(0.20), lineWidth: 1)
+                                )
+                        }
+                        .buttonStyle(.plain)
+                    }
+                    .frame(maxWidth: .infinity, maxHeight: .infinity)
+                }
+            }
                 .ignoresSafeArea(edges: .bottom)
                 .navigationTitle(item.title)
                 .navigationBarTitleDisplayMode(.inline)
@@ -1116,8 +1384,8 @@ private struct AnimateGalleryVideoPlayerSheet: View {
                     }
                 }
         }
-        .onAppear {
-            player.play()
+        .task(id: item.url) {
+            thumbnail = await AnimateGalleryVideoThumbnail.loadThumbnail(url: item.url)
         }
         .onDisappear {
             player.pause()
