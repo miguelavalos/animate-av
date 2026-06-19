@@ -1007,6 +1007,9 @@
 "create.mediaAdjust.frameApplied" = "Frame applied";
 "create.mediaAdjust.reset" = "Reset";
 "create.mediaAdjust.frameDetail" = "Drag and pinch the photo to choose what the video should animate.";
+"create.mediaAdjust.zoom" = "Zoom";
+"create.mediaAdjust.zoomIn" = "Zoom in";
+"create.mediaAdjust.zoomOut" = "Zoom out";
 "create.mediaTransition.sourcePhoto.title" = "Start with original photo";
 "create.mediaTransition.sourcePhoto.enabledDetail" = "The original photo appears first, pops into the styled image, then starts the video.";
 "create.mediaTransition.sourcePhoto.disabledDetail" = "The video starts directly with the animated result.";

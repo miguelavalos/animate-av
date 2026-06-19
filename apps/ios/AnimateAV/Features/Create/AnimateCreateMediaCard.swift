@@ -749,8 +749,11 @@ struct AnimateCreatePhotoAdjustView: View {
     }
 
     private var actionBar: some View {
-        HStack {
-            Spacer(minLength: 0)
+        VStack(spacing: 12) {
+            if let image {
+                zoomControls(image: image)
+            }
+
             Button(action: resetCrop) {
                 VStack(spacing: 5) {
                     Image(systemName: "arrow.counterclockwise")
@@ -762,9 +765,49 @@ struct AnimateCreatePhotoAdjustView: View {
                 .frame(width: 88, height: 52)
             }
             .buttonStyle(.plain)
-            Spacer(minLength: 0)
         }
         .frame(maxWidth: .infinity)
+    }
+
+    private func zoomControls(image: UIImage) -> some View {
+        HStack(spacing: 12) {
+            Button {
+                adjustZoom(by: -0.25, image: image)
+            } label: {
+                Image(systemName: "minus.magnifyingglass")
+                    .font(.system(size: 18, weight: .semibold))
+                    .frame(width: 38, height: 38)
+            }
+            .buttonStyle(.plain)
+            .foregroundStyle(.white)
+            .accessibilityLabel(L10n.string("create.mediaAdjust.zoomOut"))
+
+            Slider(
+                value: Binding(
+                    get: { Double(frameScale) },
+                    set: { setZoom(CGFloat($0), image: image) }
+                ),
+                in: 1...4
+            )
+            .tint(AVBrandColor.accent)
+            .accessibilityLabel(L10n.string("create.mediaAdjust.zoom"))
+            .accessibilityValue("\(Int(frameScale * 100))%")
+
+            Button {
+                adjustZoom(by: 0.25, image: image)
+            } label: {
+                Image(systemName: "plus.magnifyingglass")
+                    .font(.system(size: 18, weight: .semibold))
+                    .frame(width: 38, height: 38)
+            }
+            .buttonStyle(.plain)
+            .foregroundStyle(.white)
+            .accessibilityLabel(L10n.string("create.mediaAdjust.zoomIn"))
+        }
+        .padding(.horizontal, 12)
+        .padding(.vertical, 8)
+        .background(.white.opacity(0.10), in: Capsule())
+        .padding(.horizontal, 8)
     }
 
     private var fallbackImage: some View {
@@ -898,6 +941,19 @@ struct AnimateCreatePhotoAdjustView: View {
                 activeImageOffset = imageOffset
             }
         }
+    }
+
+    private func adjustZoom(by delta: CGFloat, image: UIImage) {
+        withAnimation(.spring(response: 0.22, dampingFraction: 0.88)) {
+            setZoom(frameScale + delta, image: image)
+        }
+    }
+
+    private func setZoom(_ scale: CGFloat, image: UIImage) {
+        frameScale = min(max(scale, 1), 4)
+        imageOffset = constrainedOffset(imageOffset, frameSize: editorFrameSize, image: image, scale: frameScale)
+        activeFrameScale = frameScale
+        activeImageOffset = imageOffset
     }
 
     private func clampFrameState(frameSize: CGSize, image: UIImage) {

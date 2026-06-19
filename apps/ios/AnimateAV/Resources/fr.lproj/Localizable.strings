@@ -1320,6 +1320,9 @@
 "create.mediaCard.adjustFrame" = "Modifier le cadrage";
 "create.mediaAdjust.adjustFrame" = "Modifier le cadrage";
 "create.mediaAdjust.frameDetail" = "Faites glisser et pincez la photo pour choisir la partie à animer.";
+"create.mediaAdjust.zoom" = "Zoom";
+"create.mediaAdjust.zoomIn" = "Zoom avant";
+"create.mediaAdjust.zoomOut" = "Zoom arrière";
 "create.storyDirection.cardTitle" = "Réglages";
 "create.guided.direction.none" = "Naturel";
 "create.guided.direction.none.detail" = "Mouvement doux.";

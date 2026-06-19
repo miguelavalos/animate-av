@@ -1322,6 +1322,9 @@
 "create.mediaCard.adjustFrame" = "Ausschnitt bearbeiten";
 "create.mediaAdjust.adjustFrame" = "Ausschnitt bearbeiten";
 "create.mediaAdjust.frameDetail" = "Ziehe und zoome das Foto, um den animierten Bereich zu wählen.";
+"create.mediaAdjust.zoom" = "Zoom";
+"create.mediaAdjust.zoomIn" = "Vergrößern";
+"create.mediaAdjust.zoomOut" = "Verkleinern";
 "create.storyDirection.cardTitle" = "Einstellungen";
 "create.guided.direction.none" = "Natürlich";
 "create.guided.direction.none.detail" = "Sanfte Bewegung.";

@@ -1320,6 +1320,9 @@
 "create.mediaCard.adjustFrame" = "Editar enquadrament";
 "create.mediaAdjust.adjustFrame" = "Editar enquadrament";
 "create.mediaAdjust.frameDetail" = "Arrossega i pessiga la foto per triar què animarà el vídeo.";
+"create.mediaAdjust.zoom" = "Zoom";
+"create.mediaAdjust.zoomIn" = "Apropar";
+"create.mediaAdjust.zoomOut" = "Allunyar";
 "create.storyDirection.cardTitle" = "Configuració";
 "create.guided.direction.none" = "Natural";
 "create.guided.direction.none.detail" = "Moviment suau.";
