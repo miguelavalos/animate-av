@@ -43,6 +43,18 @@ Generated images are a separate source-photo workflow. Public docs should not
 describe inherited multi-photo editing, provider/model routing, pricing
 strategy, or generated video preview/versioning as Animate AV client features.
 
+Current v1 polish:
+
+- `Foto y encuadre` starts from the full selected photo and lets the user save a
+  square or vertical reference frame without adding artificial bars or padding.
+- Final credit review includes the optional "start with original photo" switch;
+  it adds the original photo at the start of the final video and does not change
+  the credit cost.
+- Gallery video cards use a two-column grid with vertical thumbnails. Opening a
+  local video starts playback directly.
+- Gallery video info may show source and generated images together. Tapping the
+  image preview opens a larger full-image comparison when both are available.
+
 ## Local Setup
 
 See [docs/install-ios.md](docs/install-ios.md) for local iOS setup.

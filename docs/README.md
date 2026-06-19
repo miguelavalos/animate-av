@@ -74,6 +74,11 @@ The basic guide is a compact status/helper surface for the same setup order. It
 is not an additional step and must not describe unavailable audio, voice,
 provider, preview-versioning, or cloud-storage features.
 
+The final credit review mirrors the source-photo setting. When enabled, the
+final video starts with the original photo before the animated video begins; the
+setting has no extra credit cost and must not be described as a generated-image
+preview step.
+
 Local no-spend QA may use fixture or mock final-render routes to reach the
 confirmation and queued/completed states. Do not use public docs to authorize a
 paid provider smoke; that approval belongs in the private runbook.
@@ -93,6 +98,12 @@ recover after sign-in. Local media files remain device-local availability: a
 Gallery item can exist while its video or image file is missing on the current
 device, and redownload is offered only when the backend reports an available
 artifact.
+
+Gallery video cards currently render as a two-column grid to preserve the
+vertical 9:16 thumbnail shape. Opening a playable local video starts playback
+directly. The video info sheet can show the source and generated images in a
+compact comparison; tapping that preview opens a larger full-image comparison or
+single-image preview depending on which images are available.
 
 Current polish note: the implementation still contains visible `Gallery` and
 `In Progress` labels from the reusable Apps AV foundation. Those labels are

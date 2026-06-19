@@ -1177,6 +1177,15 @@ extension AnimateCreateViewModel {
             )
             return
         }
+        if let latestFinalJob = state.latestFinalJob,
+           latestFinalJob.isTerminalFailure {
+            finalVideoCommandState = .failed(
+                latestFinalJob.userMessage
+                    ?? state.statusMessage
+                    ?? L10n.string("workflow.final.tryAgain")
+            )
+            return
+        }
         if state.isGenerating {
             finalVideoCommandState = .confirming(
                 state.statusMessage ?? L10n.string("workflow.final.creatingVideo")

@@ -24,9 +24,9 @@ implementation plan.
   cards, message inputs, voice controls, or audio controls to the look flow.
 - Animation guidance and the optional voice line are collected in the next
   guided step.
-- Animate AV V1 has one optional voice line, not narrator controls. Do not add
-  visible narrator, tone, generated-audio, uploaded-audio, or in-app audio
-  controls to the look flow.
+- Animate AV V1 may expose one short optional voice line, but not narrator or
+  audio controls. Do not add visible narrator, tone, generated-audio,
+  uploaded-audio, or in-app audio controls to the look flow.
 
 ## Guided Create Video Flow
 

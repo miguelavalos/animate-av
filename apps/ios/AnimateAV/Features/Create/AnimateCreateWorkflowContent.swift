@@ -808,7 +808,7 @@ private struct AnimateCreateRenderProgressScene: View {
                         videoMotionOverlay
                     }
                     .overlay(alignment: .bottomTrailing) {
-                        aviGuideBadge(systemImage: "play.fill")
+                        aviGuideBadge(systemImage: "sparkles")
                     }
                     .transition(.blurReplace)
             case .finishing, .completed:
@@ -947,18 +947,77 @@ private struct AnimateCreateRenderProgressScene: View {
     }
 
     private var videoMotionOverlay: some View {
-        ZStack {
-            RoundedRectangle(cornerRadius: 20, style: .continuous)
-                .strokeBorder(.white.opacity(0.76), lineWidth: 2)
-                .scaleEffect(isAnimating ? 1.04 : 0.96)
-                .opacity(isAnimating ? 0.30 : 0.70)
+        TimelineView(.animation(minimumInterval: 1.0 / 30.0, paused: false)) { timeline in
+            let phase = timeline.date.timeIntervalSinceReferenceDate.truncatingRemainder(dividingBy: 1.8) / 1.8
+            let activeDot = Int((phase * 3).rounded(.down)) % 3
+            let pulse = 0.5 + 0.5 * sin(phase * .pi * 2)
 
-            Image(systemName: "play.fill")
-                .font(.system(size: 24, weight: .black))
-                .foregroundStyle(.white)
-                .frame(width: 62, height: 62)
-                .background(.black.opacity(0.28), in: Circle())
+            ZStack {
+                RoundedRectangle(cornerRadius: 20, style: .continuous)
+                    .strokeBorder(.white.opacity(0.76), lineWidth: 2)
+                    .scaleEffect(0.96 + pulse * 0.08)
+                    .opacity(0.30 + (1 - pulse) * 0.40)
+
+                RoundedRectangle(cornerRadius: 18, style: .continuous)
+                    .strokeBorder(AVBrandColor.accent.opacity(0.22 + pulse * 0.34), lineWidth: 2)
+                    .scaleEffect(1.08 - pulse * 0.16)
+                    .opacity(0.26 + pulse * 0.56)
+
+                VStack(spacing: 10) {
+                    HStack(alignment: .bottom, spacing: 5) {
+                        ForEach(0..<4, id: \.self) { index in
+                            renderBar(
+                                height: renderBarHeight(index: index, phase: phase),
+                                opacity: 0.60 + renderBarPulse(index: index, phase: phase) * 0.34
+                            )
+                        }
+                    }
+                    .frame(width: 74, height: 38)
+
+                    HStack(spacing: 5) {
+                        ForEach(0..<3, id: \.self) { index in
+                            Circle()
+                                .fill(.white.opacity(index == activeDot ? 0.96 : 0.42))
+                                .frame(width: index == activeDot ? 7 : 5, height: index == activeDot ? 7 : 5)
+                                .scaleEffect(index == activeDot ? 1.18 : 0.92)
+                        }
+                    }
+                }
+                .padding(.horizontal, 18)
+                .padding(.vertical, 14)
+                .background(.black.opacity(0.28), in: RoundedRectangle(cornerRadius: 18, style: .continuous))
+                .overlay {
+                    RoundedRectangle(cornerRadius: 18, style: .continuous)
+                        .stroke(.white.opacity(0.22), lineWidth: 1)
+                }
+                .offset(y: -4 + pulse * 8)
+            }
         }
+    }
+
+    private func renderBarHeight(index: Int, phase: Double) -> CGFloat {
+        10 + CGFloat(renderBarPulse(index: index, phase: phase)) * 22
+    }
+
+    private func renderBarPulse(index: Int, phase: Double) -> Double {
+        let shifted = (phase + Double(index) * 0.17).truncatingRemainder(dividingBy: 1)
+        return 0.5 + 0.5 * sin(shifted * .pi * 2)
+    }
+
+    private func renderBar(height: CGFloat, opacity: Double) -> some View {
+        Capsule()
+            .fill(
+                LinearGradient(
+                    colors: [
+                        AVBrandColor.accent.opacity(opacity),
+                        .white.opacity(0.92)
+                    ],
+                    startPoint: .bottom,
+                    endPoint: .top
+                )
+            )
+            .frame(width: 9, height: height)
+            .shadow(color: AVBrandColor.accent.opacity(0.36), radius: 6, y: 2)
     }
 
     private var finishingCollage: some View {

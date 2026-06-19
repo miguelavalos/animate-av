@@ -35,8 +35,13 @@ in the private AVALSYS suite.
   provider calls.
 - [ ] Foto y encuadre smoke covers both square and vertical adjustment modes and
   confirms the saved reference has no artificial bars or padding.
+- [ ] Final credit review shows the optional original-photo intro switch,
+  explains that it has no extra credit cost, and does not describe a
+  generated-image preview transition.
 - [ ] Look smoke covers family paging, look selection, and large look preview
   without changing the selected look accidentally.
+- [ ] Gallery smoke covers two-column video cards, direct autoplay when opening
+  a playable video, and full-image preview/comparison from the video info sheet.
 - [ ] `scripts/check-public-hygiene.sh` passes for normal public repo changes.
 - [ ] `scripts/check-public-release-readiness.sh` passes before App Store release
   candidate handoff.

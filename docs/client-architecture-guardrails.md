@@ -39,6 +39,11 @@ local original and adjusted image in v1. If metadata is useful, it may identify
 that a frame adjustment was applied, but the private backend should not be
 treated as the source of truth for restoring the user's pre-adjusted photo.
 
+Final credit review may expose a source-photo intro switch. That setting only
+controls whether the original photo appears briefly at the start of the final
+video. It must be shown as no-extra-credit-cost client intent, not as an
+additional generated-image preview or a second user approval step.
+
 Look is a separate guided step and must stay focused on visual style selection:
 8 look families, 8 looks per family, and one selected look. It must not contain
 animation preset cards, guide controls, voice controls, or hidden audio
@@ -165,6 +170,11 @@ availability. Gallery is local-first after download. Do not keep Gallery remote
 artifact subscriptions running for the full signed-in app session just because
 the user is authenticated; start remote Gallery observation only when a screen
 needs remote availability, and stop it when that screen no longer needs it.
+
+Gallery video cards should preserve the product video aspect ratio when
+possible. Current v1 uses a two-column video grid, direct playback for available
+local videos, and full-image source/generated preview from the video info sheet
+when those related images are available.
 
 ## Product Terminology Review Rule
 

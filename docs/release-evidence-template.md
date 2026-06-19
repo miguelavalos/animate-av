@@ -76,8 +76,13 @@ xcodebuild test -project apps/ios/AnimateAV.xcodeproj -scheme AnimateAV -destina
   provider calls.
 - [ ] Foto y encuadre square and vertical adjustment modes were checked with
   synthetic/local media and no paid provider calls.
+- [ ] Final credit review source-photo intro switch was checked and the copy
+  says no extra credit cost without describing an intermediate generated-image
+  preview.
 - [ ] Look large preview was checked from a family detail screen and did not
   mutate selection.
+- [ ] Gallery Videos two-column grid, video autoplay, and Info image
+  preview/comparison were checked.
 - [ ] The normal Create Video path does not show inherited multi-photo editing,
   sorting, empty media actions, or visible `Crop` language.
 - [ ] No debug URLs, local config, tokens, account identifiers, receipts, or
