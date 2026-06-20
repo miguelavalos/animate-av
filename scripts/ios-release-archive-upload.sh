@@ -131,6 +131,7 @@ if [ "$use_existing_archive" -eq 0 ]; then
     -configuration Release \
     -destination "generic/platform=iOS" \
     -archivePath "$archive_path" \
+    -derivedDataPath "$repo_root/.derived-data/release-build" \
     -clonedSourcePackagesDirPath "$repo_root/.derived-data/release-spm-packages" \
     -allowProvisioningUpdates \
     DEVELOPMENT_TEAM="$team_id" \
