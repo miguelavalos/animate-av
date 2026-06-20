@@ -208,6 +208,19 @@ final class AccountController: ObservableObject {
         }
     }
 
+    func signOutAfterAccountDeletion() async throws {
+        addAccountBreadcrumb("account_deletion_sign_out_started")
+        try await service.signOut()
+        await purchaseService.logOut()
+        user = nil
+        canUseAnimateImageGeneration = false
+        AVDiagnostics.clearUserContext()
+        isAccountSessionTemporarilyUnavailable = false
+        clearLastKnownAccountUser()
+        resetSignedOutAccountState()
+        addAccountBreadcrumb("account_deletion_sign_out_completed")
+    }
+
     func claimPromotionCode(_ code: String) async throws -> Int {
         let normalizedCode = code.trimmingCharacters(in: .whitespacesAndNewlines)
         guard let user, !normalizedCode.isEmpty else { return 0 }

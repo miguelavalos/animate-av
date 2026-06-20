@@ -44,6 +44,7 @@
 		27FCC18D0DBBCC01BF29C343 /* AnimateAviScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = A61BA7E27A2E8D0127BA0575 /* AnimateAviScreen.swift */; };
 		296BD3C8F52A2DD696FE66D6 /* AnimateInProgressProgressSection.swift in Sources */ = {isa = PBXBuildFile; fileRef = E4E66DA9A3AC02947AB861AC /* AnimateInProgressProgressSection.swift */; };
 		2A31F7F2A6009726BFD0CB23 /* AnimateAviViewModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C13E1D534FFAD38AA5BFDAB0 /* AnimateAviViewModelTests.swift */; };
+		2A46DF33F463919C6B1338CB /* AnimateAccountDeletionClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 426B32EE98A82D3CE50DAA6C /* AnimateAccountDeletionClient.swift */; };
 		2A478E225E7DD981A0884A6D /* AnimateInProgressListGroup.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC3686B3081E5366CC256E80 /* AnimateInProgressListGroup.swift */; };
 		2AF2E92410C252E6E5626F85 /* AnimateAviViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = E45ADEF9D75391618084EA5E /* AnimateAviViewModel.swift */; };
 		2B7A1A95C6F5636491F230D6 /* AnimateInProgressListSummaryPill.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD459D9DF472D1A543315281 /* AnimateInProgressListSummaryPill.swift */; };
@@ -60,9 +61,9 @@
 		3E304E3254433A22F5BFCD71 /* AnimateFormatting.swift in Sources */ = {isa = PBXBuildFile; fileRef = 18DB6E9D33734AB4316174E4 /* AnimateFormatting.swift */; };
 		3E9AA23776BA133843CBE9AA /* AnimateVideoTemplateModels.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC2099384CFEF21CBC6B45B3 /* AnimateVideoTemplateModels.swift */; };
 		3E9C81C293494BF25246E326 /* AnimateCreateMediaCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9FFDE855F5F008B8E7E94FEB /* AnimateCreateMediaCard.swift */; };
-		3F9A4B1094478A63BF3CC862 /* AnimateCreateMediaRows.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0C766B791B94B0F863980C2 /* AnimateCreateMediaRows.swift */; };
 		40395F111A325249FA7669CE /* WorkspaceObservingWorkflow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D2117570E128B0B05FD08D7 /* WorkspaceObservingWorkflow.swift */; };
 		41730078490E593A9D151D3D /* AVSettingsFoundation in Frameworks */ = {isa = PBXBuildFile; productRef = 75E26B9A88E4C3E7FF0EF28F /* AVSettingsFoundation */; };
+		420B12267686A99BAFC543CA /* AnimateAccountDeletionModels.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4AC03B4A49DB43509057B231 /* AnimateAccountDeletionModels.swift */; };
 		42FC2C9384715D012125AEC8 /* AnimateInProgressWorkspaceHeaderPresentation.swift in Sources */ = {isa = PBXBuildFile; fileRef = D379BF171DC081DAB5DDE7CE /* AnimateInProgressWorkspaceHeaderPresentation.swift */; };
 		430E790CEAB5798965150ED6 /* AnimateGalleryViewModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3756D2D825EDB7BA3F51454A /* AnimateGalleryViewModelTests.swift */; };
 		431617A64F011BAA790CB9FF /* AnimateMediaAsset.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB9BC90205E5D8DC7CD23628 /* AnimateMediaAsset.swift */; };
@@ -90,6 +91,7 @@
 		5CEBF46CE267E0F17F6EA9D5 /* AnimateUploadClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24003299FC7911EE6CC7C98F /* AnimateUploadClient.swift */; };
 		5CEEB17AD4FD574F2A57198D /* AnimateCreditProducts.swift in Sources */ = {isa = PBXBuildFile; fileRef = 29816ADEF6A7D83AB53CB866 /* AnimateCreditProducts.swift */; };
 		5F722622A8C4DFB99AF32B59 /* AnimateInProgressWorkspaceDetail.swift in Sources */ = {isa = PBXBuildFile; fileRef = CF8AF85459BB2D640533641A /* AnimateInProgressWorkspaceDetail.swift */; };
+		606C822C4853D4B62E2BDC29 /* AnimateLookFamilyMatrixTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 18F28C71035F9C91CBC73D77 /* AnimateLookFamilyMatrixTests.swift */; };
 		624417419631D74D890C83E5 /* AnimateVideoCreationWorkflow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8ACC2B239B5DE27268B7D045 /* AnimateVideoCreationWorkflow.swift */; };
 		63D1E46503590C8BD2DC710C /* AnimateRenderStatusClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A7BD45EAE2608DE2A3CE675 /* AnimateRenderStatusClient.swift */; };
 		642A6E20AD08C910D7011CFD /* AnimateTheme.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A0ABB46F5506757D32192C4 /* AnimateTheme.swift */; };
@@ -97,8 +99,10 @@
 		67AD7FA21FCB702B5363A11A /* AnimateRenderJob.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6EF64CAD0EC05383DA966154 /* AnimateRenderJob.swift */; };
 		6B76F816E195555ED41A3576 /* AnimateInProgressVideosWorkflowContracts.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73E9D4ACB0ADA835B5B2511F /* AnimateInProgressVideosWorkflowContracts.swift */; };
 		6D279F04925C53142ED4C1DC /* AnimateHomeSections.swift in Sources */ = {isa = PBXBuildFile; fileRef = 46A8E1CD7E8934A0A2A040E3 /* AnimateHomeSections.swift */; };
+		6D5D5BD5339D26DD6F12652E /* AnimateCreateMediaRows.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C62F720B42062CB275C3737 /* AnimateCreateMediaRows.swift */; };
 		70C27823474E69578FF83E3F /* AnimateCreateVideoDirectionRows.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6B238ADE90A5DFAEAA2C7171 /* AnimateCreateVideoDirectionRows.swift */; };
 		731F954334106C5675E17033 /* AnimateRecoveryCopy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 57E85C5F37D0B4A1B8336ACC /* AnimateRecoveryCopy.swift */; };
+		73CD8B2DEF9280864ABEB903 /* AnimateAccountDeletionPolicy.swift in Sources */ = {isa = PBXBuildFile; fileRef = C7C046F492BCA9AE92BBA77F /* AnimateAccountDeletionPolicy.swift */; };
 		7868566F88D4499EE1954DFA /* AnimateCreateVideoSetupGuideStateTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E8C24C0C807D5D9D0CBD7D9F /* AnimateCreateVideoSetupGuideStateTests.swift */; };
 		7926C41F0370411EE767800B /* AnimateInProgressList.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1A3FBA0C9FC14DBBC3FF5A2 /* AnimateInProgressList.swift */; };
 		7C974AAD23174DA7D10ADC09 /* AnimateNewVideoStartControllerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 06B13485A04681D3768A9381 /* AnimateNewVideoStartControllerTests.swift */; };
@@ -141,7 +145,6 @@
 		AF3BEFBE8DDC18A80D288957 /* AnimateStatusRulesTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3F6AD72314F4BDB84C5BD7D /* AnimateStatusRulesTests.swift */; };
 		B0D98EC4BAA4A6F242AD129E /* AccountControllerSessionRestoreTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 51D0E9A918C07CAE445BE5B1 /* AccountControllerSessionRestoreTests.swift */; };
 		B2828B812D7A354F7D65F04F /* AVLaunchFoundation in Frameworks */ = {isa = PBXBuildFile; productRef = 4B3EF81651B2A70B0858AB2E /* AVLaunchFoundation */; };
-		B5C526B06D822E94CC656998 /* AnimateLookFamilyMatrixTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B07D40F67D595D334758C3A1 /* AnimateLookFamilyMatrixTests.swift */; };
 		B776E8016E86EFA077612FE0 /* AnimateVideoCreationModels.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44B7CF1E0C34BDD4D22DC1AC /* AnimateVideoCreationModels.swift */; };
 		BA0FFE0C96B8F671042F7A04 /* AnimateCreditCopy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 736ADE8047FDF48CD4662F70 /* AnimateCreditCopy.swift */; };
 		BA153D9C6487188B021B1E5D /* AnimateCreateAvailabilityPresentationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C029E23218DAE1E7E873DDE /* AnimateCreateAvailabilityPresentationTests.swift */; };
@@ -149,6 +152,7 @@
 		BAE93369D2B2888E906D27FB /* AnimateWorkspaceSelectionWorkflow.swift in Sources */ = {isa = PBXBuildFile; fileRef = B08FA5D583B3EF6ACF167E6E /* AnimateWorkspaceSelectionWorkflow.swift */; };
 		BB487821451CF7D6C58A5994 /* AnimateContinuation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2D59629D3D06A0E090C6C25E /* AnimateContinuation.swift */; };
 		BBE18B61A2347D73702F6858 /* AnimateCreateWorkflowPresentation.swift in Sources */ = {isa = PBXBuildFile; fileRef = CC9CA13379DE0C02F21828A2 /* AnimateCreateWorkflowPresentation.swift */; };
+		BCAE61FBADE66851FEE2C21F /* AnimateAccountDeletionScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF7BCD050231B2E10019D821 /* AnimateAccountDeletionScreen.swift */; };
 		BDCF190D9B867275EB447C9D /* AnimateCreateWorkflowContent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 971903B1A68E9CFC3CBEA68B /* AnimateCreateWorkflowContent.swift */; };
 		BDEEEB84EAA887503BD21D29 /* AnimateInProgressVideoDirectionPresentation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8403B8E7C1F6DA32B631CD4F /* AnimateInProgressVideoDirectionPresentation.swift */; };
 		BE7A07220E471F6E6F2E847B /* AnimateInProgressProgressModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 275D027023F688743FC87C14 /* AnimateInProgressProgressModelTests.swift */; };
@@ -197,6 +201,7 @@
 		FB3FADE8D05875B148C6A28B /* AnimateInProgressPresentationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF13A90B1A370DE01610E315 /* AnimateInProgressPresentationTests.swift */; };
 		FB7AA715DD2AE4134844845C /* DependencyContainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 721A782AE8ED97A7C47D9FAC /* DependencyContainer.swift */; };
 		FC87EDBB1E533671D2EAB20E /* AnimateHomeActionModels.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A1B7760632D1E8B138E464B /* AnimateHomeActionModels.swift */; };
+		FD14D6A977C880264E8E458B /* AnimateAccountDeletionViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A4AEAF7FD7225A21D9DAA0C /* AnimateAccountDeletionViewModel.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -225,6 +230,7 @@
 		11F37F6D3E50B15D24DA625E /* MediaUploadPersistence.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MediaUploadPersistence.swift; sourceTree = "<group>"; };
 		15B4B1517C76E0DAFBD8F13B /* AnimateCreditGateTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnimateCreditGateTests.swift; sourceTree = "<group>"; };
 		18DB6E9D33734AB4316174E4 /* AnimateFormatting.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnimateFormatting.swift; sourceTree = "<group>"; };
+		18F28C71035F9C91CBC73D77 /* AnimateLookFamilyMatrixTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnimateLookFamilyMatrixTests.swift; sourceTree = "<group>"; };
 		19FC0994E47515FC672C7EE5 /* AnimateWorkflowBundle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnimateWorkflowBundle.swift; sourceTree = "<group>"; };
 		1A0ABB46F5506757D32192C4 /* AnimateTheme.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnimateTheme.swift; sourceTree = "<group>"; };
 		1A2DB72F26518EEC4F636A9B /* AnimateWorkflowDiagnostics.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnimateWorkflowDiagnostics.swift; sourceTree = "<group>"; };
@@ -237,6 +243,7 @@
 		275D027023F688743FC87C14 /* AnimateInProgressProgressModelTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnimateInProgressProgressModelTests.swift; sourceTree = "<group>"; };
 		29816ADEF6A7D83AB53CB866 /* AnimateCreditProducts.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnimateCreditProducts.swift; sourceTree = "<group>"; };
 		29D314035C53B3F66BCA44FE /* AnimateInProgressWorkspacePresentation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnimateInProgressWorkspacePresentation.swift; sourceTree = "<group>"; };
+		2C62F720B42062CB275C3737 /* AnimateCreateMediaRows.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnimateCreateMediaRows.swift; sourceTree = "<group>"; };
 		2D59629D3D06A0E090C6C25E /* AnimateContinuation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnimateContinuation.swift; sourceTree = "<group>"; };
 		2E4689EF1994C5A673E18015 /* AnimateInProgressArtifactPresentation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnimateInProgressArtifactPresentation.swift; sourceTree = "<group>"; };
 		2FC2E2AD85EAE531415BAF15 /* AnimateInProgressWorkspaceSummaryPresentation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnimateInProgressWorkspaceSummaryPresentation.swift; sourceTree = "<group>"; };
@@ -248,8 +255,10 @@
 		3756D2D825EDB7BA3F51454A /* AnimateGalleryViewModelTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnimateGalleryViewModelTests.swift; sourceTree = "<group>"; };
 		39613CC5D87E48819BC8CD59 /* AnimateCreateWorkflowCapability.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnimateCreateWorkflowCapability.swift; sourceTree = "<group>"; };
 		39E607E04535C5B89723204E /* AnimateAviFocusCards.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnimateAviFocusCards.swift; sourceTree = "<group>"; };
+		3A4AEAF7FD7225A21D9DAA0C /* AnimateAccountDeletionViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnimateAccountDeletionViewModel.swift; sourceTree = "<group>"; };
 		3A7BD45EAE2608DE2A3CE675 /* AnimateRenderStatusClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnimateRenderStatusClient.swift; sourceTree = "<group>"; };
 		3C3F9F462255F31B1CE171D0 /* AnimateInProgressObserver.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnimateInProgressObserver.swift; sourceTree = "<group>"; };
+		426B32EE98A82D3CE50DAA6C /* AnimateAccountDeletionClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnimateAccountDeletionClient.swift; sourceTree = "<group>"; };
 		42C30E26B181C704F6C8CAAC /* AnimateInProgressWorkspaceSections.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnimateInProgressWorkspaceSections.swift; sourceTree = "<group>"; };
 		43CCBAF7B7D00CE258D044D1 /* AnimateCreateWorkflowPresentationTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnimateCreateWorkflowPresentationTests.swift; sourceTree = "<group>"; };
 		44B7CF1E0C34BDD4D22DC1AC /* AnimateVideoCreationModels.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnimateVideoCreationModels.swift; sourceTree = "<group>"; };
@@ -259,6 +268,7 @@
 		49F6163269348E025A0C01E1 /* AnimateAuthOnboardingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnimateAuthOnboardingView.swift; sourceTree = "<group>"; };
 		4A46ED29ECE2F042F63F5EFA /* AnimateCreateViewModel+Actions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "AnimateCreateViewModel+Actions.swift"; sourceTree = "<group>"; };
 		4A7C726D689EDBAB78AB3779 /* AnimateInProgressMediaPresentation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnimateInProgressMediaPresentation.swift; sourceTree = "<group>"; };
+		4AC03B4A49DB43509057B231 /* AnimateAccountDeletionModels.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnimateAccountDeletionModels.swift; sourceTree = "<group>"; };
 		4CB034994ACBEF118B33BE67 /* AnimateAppPreferences.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnimateAppPreferences.swift; sourceTree = "<group>"; };
 		4FD75D3531EC27FF889610CA /* AnimateInProgressListMetadata.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnimateInProgressListMetadata.swift; sourceTree = "<group>"; };
 		5095314F8AF17187BDFE4708 /* AnimateRootTab.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnimateRootTab.swift; sourceTree = "<group>"; };
@@ -336,7 +346,6 @@
 		AE1DC055C0739B41C971804E /* AnimateAVSplashView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnimateAVSplashView.swift; sourceTree = "<group>"; };
 		AECC5029E378B079E4DC9B85 /* apple */ = {isa = PBXFileReference; lastKnownFileType = folder; name = apple; path = "../../../apps-av/apple"; sourceTree = SOURCE_ROOT; };
 		B03E862B016AFC32F5D56341 /* AnimateVideosWorkflow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnimateVideosWorkflow.swift; sourceTree = "<group>"; };
-		B07D40F67D595D334758C3A1 /* AnimateLookFamilyMatrixTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnimateLookFamilyMatrixTests.swift; sourceTree = "<group>"; };
 		B08FA5D583B3EF6ACF167E6E /* AnimateWorkspaceSelectionWorkflow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnimateWorkspaceSelectionWorkflow.swift; sourceTree = "<group>"; };
 		B0A456C5ADA131E9E3E7BE70 /* AVAccountService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AVAccountService.swift; sourceTree = "<group>"; };
 		B1A3FBA0C9FC14DBBC3FF5A2 /* AnimateInProgressList.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnimateInProgressList.swift; sourceTree = "<group>"; };
@@ -360,6 +369,7 @@
 		C6BD3877D89095AFE9798613 /* AnimateCreateViewModel+Presentations.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "AnimateCreateViewModel+Presentations.swift"; sourceTree = "<group>"; };
 		C728C783141C1BC05D89968A /* AnimateCreditsPaywallView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnimateCreditsPaywallView.swift; sourceTree = "<group>"; };
 		C7524D5221607A3AE6A9AF0B /* AnimateRenderStatusModels.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnimateRenderStatusModels.swift; sourceTree = "<group>"; };
+		C7C046F492BCA9AE92BBA77F /* AnimateAccountDeletionPolicy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnimateAccountDeletionPolicy.swift; sourceTree = "<group>"; };
 		C7E22BDC8596511D79D66BBE /* AnimateSyncDiagnostics.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnimateSyncDiagnostics.swift; sourceTree = "<group>"; };
 		C8950C8A6DABCC8BCFB78827 /* AnimateRepositoryTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnimateRepositoryTests.swift; sourceTree = "<group>"; };
 		C904F93695BF87FB7FE432AD /* AnimateRemoteClient+Dates.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "AnimateRemoteClient+Dates.swift"; sourceTree = "<group>"; };
@@ -378,8 +388,8 @@
 		DB9BC90205E5D8DC7CD23628 /* AnimateMediaAsset.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnimateMediaAsset.swift; sourceTree = "<group>"; };
 		DD459D9DF472D1A543315281 /* AnimateInProgressListSummaryPill.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnimateInProgressListSummaryPill.swift; sourceTree = "<group>"; };
 		DE6324F5C56546A52C065ABB /* AnimateInProgressPresentation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnimateInProgressPresentation.swift; sourceTree = "<group>"; };
+		DF7BCD050231B2E10019D821 /* AnimateAccountDeletionScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnimateAccountDeletionScreen.swift; sourceTree = "<group>"; };
 		E18E805C3F2AF47B255194C2 /* AnimateAviPresentation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnimateAviPresentation.swift; sourceTree = "<group>"; };
-		E0C766B791B94B0F863980C2 /* AnimateCreateMediaRows.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnimateCreateMediaRows.swift; sourceTree = "<group>"; };
 		E295EF5914D1F014D4184BC8 /* AnimateCreateOverviewCards.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnimateCreateOverviewCards.swift; sourceTree = "<group>"; };
 		E2E751F7DADF2B2D30303248 /* AnimateCreateOperationRunner.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnimateCreateOperationRunner.swift; sourceTree = "<group>"; };
 		E45ADEF9D75391618084EA5E /* AnimateAviViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnimateAviViewModel.swift; sourceTree = "<group>"; };
@@ -515,7 +525,7 @@
 				0C643D9379944E9FE0EE14A1 /* AnimateCreateBindingState.swift */,
 				AAC4117AE936523A8C09F76A /* AnimateCreateImagesWorkspace.swift */,
 				9FFDE855F5F008B8E7E94FEB /* AnimateCreateMediaCard.swift */,
-				E0C766B791B94B0F863980C2 /* AnimateCreateMediaRows.swift */,
+				2C62F720B42062CB275C3737 /* AnimateCreateMediaRows.swift */,
 				E2E751F7DADF2B2D30303248 /* AnimateCreateOperationRunner.swift */,
 				E295EF5914D1F014D4184BC8 /* AnimateCreateOverviewCards.swift */,
 				A21A163F667B6C8882B0AC49 /* AnimateCreateScreen.swift */,
@@ -692,6 +702,8 @@
 		64348E82CB97C03715BB1183 /* Profile */ = {
 			isa = PBXGroup;
 			children = (
+				DF7BCD050231B2E10019D821 /* AnimateAccountDeletionScreen.swift */,
+				3A4AEAF7FD7225A21D9DAA0C /* AnimateAccountDeletionViewModel.swift */,
 				349182D5412B86549143E168 /* AnimateProfileScreen.swift */,
 			);
 			path = Profile;
@@ -737,6 +749,9 @@
 			children = (
 				A46B7887BA17BECA78D03777 /* AccountController.swift */,
 				C63C312D85116F1F2FF2B342 /* AnimateAccountContracts.swift */,
+				426B32EE98A82D3CE50DAA6C /* AnimateAccountDeletionClient.swift */,
+				4AC03B4A49DB43509057B231 /* AnimateAccountDeletionModels.swift */,
+				C7C046F492BCA9AE92BBA77F /* AnimateAccountDeletionPolicy.swift */,
 			);
 			path = State;
 			sourceTree = "<group>";
@@ -811,7 +826,7 @@
 				BF13A90B1A370DE01610E315 /* AnimateInProgressPresentationTests.swift */,
 				275D027023F688743FC87C14 /* AnimateInProgressProgressModelTests.swift */,
 				EB50A8AC8B169432D3AAD0FD /* AnimateInProgressWorkspacePresentationTests.swift */,
-				B07D40F67D595D334758C3A1 /* AnimateLookFamilyMatrixTests.swift */,
+				18F28C71035F9C91CBC73D77 /* AnimateLookFamilyMatrixTests.swift */,
 				82EC3DBDDB512940FB60CEF3 /* AnimateMediaDeduplicatorTests.swift */,
 				F040C2220EDC9F9CB5486A55 /* AnimateMediaRulesTests.swift */,
 				06B13485A04681D3768A9381 /* AnimateNewVideoStartControllerTests.swift */,
@@ -1148,6 +1163,11 @@
 				ADC53786F68E0AB12A036B38 /* AnimateAVApp.swift in Sources */,
 				FABADD2956EEBBF06104336B /* AnimateAVSplashView.swift in Sources */,
 				C66FB6C9F7F411947E899D8C /* AnimateAccountContracts.swift in Sources */,
+				2A46DF33F463919C6B1338CB /* AnimateAccountDeletionClient.swift in Sources */,
+				420B12267686A99BAFC543CA /* AnimateAccountDeletionModels.swift in Sources */,
+				73CD8B2DEF9280864ABEB903 /* AnimateAccountDeletionPolicy.swift in Sources */,
+				BCAE61FBADE66851FEE2C21F /* AnimateAccountDeletionScreen.swift in Sources */,
+				FD14D6A977C880264E8E458B /* AnimateAccountDeletionViewModel.swift in Sources */,
 				4A723E3F3AB82FD5958E9BF4 /* AnimateAppExperience.swift in Sources */,
 				4BBB13FFFB3BF5428FA8EBAE /* AnimateAppPreferences.swift in Sources */,
 				5CA454E4B3FCC14C03130F80 /* AnimateAppShellView.swift in Sources */,
@@ -1166,7 +1186,7 @@
 				CE11572CECD38640CFC08160 /* AnimateCreateBindingState.swift in Sources */,
 				33E7263E97155D86C53B4B45 /* AnimateCreateImagesWorkspace.swift in Sources */,
 				3E9C81C293494BF25246E326 /* AnimateCreateMediaCard.swift in Sources */,
-				3F9A4B1094478A63BF3CC862 /* AnimateCreateMediaRows.swift in Sources */,
+				6D5D5BD5339D26DD6F12652E /* AnimateCreateMediaRows.swift in Sources */,
 				8E0B4599436F33822BEC2B74 /* AnimateCreateOperationRunner.swift in Sources */,
 				D2411288F4C6A78D5C6667F5 /* AnimateCreateOverviewCards.swift in Sources */,
 				58008EE897078DF18B5C230B /* AnimateCreateScreen.swift in Sources */,
@@ -1316,7 +1336,7 @@
 				FB3FADE8D05875B148C6A28B /* AnimateInProgressPresentationTests.swift in Sources */,
 				BE7A07220E471F6E6F2E847B /* AnimateInProgressProgressModelTests.swift in Sources */,
 				A6815989BA128CA6F1F659A4 /* AnimateInProgressWorkspacePresentationTests.swift in Sources */,
-				B5C526B06D822E94CC656998 /* AnimateLookFamilyMatrixTests.swift in Sources */,
+				606C822C4853D4B62E2BDC29 /* AnimateLookFamilyMatrixTests.swift in Sources */,
 				EE3B040D7D86FF498F413E49 /* AnimateMediaDeduplicatorTests.swift in Sources */,
 				A83AA5FC4F44350B2193C102 /* AnimateMediaRulesTests.swift in Sources */,
 				7C974AAD23174DA7D10ADC09 /* AnimateNewVideoStartControllerTests.swift in Sources */,
