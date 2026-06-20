@@ -13,6 +13,7 @@ final class FinalRenderWorkflow: WorkspaceObservingWorkflow {
     @Published private(set) var pendingGalleryVideo: AnimateGalleryVideoRecord?
     @Published private(set) var pendingGalleryImage: AnimateGalleryImageRecord?
     @Published private(set) var canRetryFinalVideoDownload = false
+    @Published private(set) var isSavingFinalVideo = false
     @Published private(set) var statusMessage: String?
 
     private var latestFinalJobVideoId: String?
@@ -63,7 +64,12 @@ final class FinalRenderWorkflow: WorkspaceObservingWorkflow {
         logger.info(
             "Animate workspace update videoId=\(workspace?.video.id ?? "nil", privacy: .public) finalArtifact=\(workspace?.latestFinalVideoArtifact?.id ?? "nil", privacy: .public) latestJobStatus=\(workspace?.latestRenderJob(kind: "final")?.status ?? "nil", privacy: .public)"
         )
-        finalExport = workspace?.latestFinalVideoArtifact
+        let latestFinalExport = workspace?.latestFinalVideoArtifact
+        if shouldScheduleLocalGalleryDownload(workspace: workspace, artifact: latestFinalExport) {
+            isSavingFinalVideo = true
+            canRetryFinalVideoDownload = false
+        }
+        finalExport = latestFinalExport
         let videoId = workspace?.video.id
         if let workspaceFinalJob = workspace?.latestRenderJob(kind: "final") {
             latestFinalJob = workspaceFinalJob
@@ -670,6 +676,7 @@ final class FinalRenderWorkflow: WorkspaceObservingWorkflow {
         pendingGalleryImage = nil
         pendingSourceComparisonImageData = nil
         canRetryFinalVideoDownload = false
+        isSavingFinalVideo = false
         statusMessage = nil
     }
 
@@ -698,19 +705,35 @@ final class FinalRenderWorkflow: WorkspaceObservingWorkflow {
         guard
             let workspace,
             let artifact = workspace.latestFinalVideoArtifact,
-            artifact.status == "available",
-            pendingGalleryVideo?.artifactId != finalDownloadArtifactId(for: artifact),
-            !galleryStore.contains(artifactId: finalDownloadArtifactId(for: artifact)),
-            !downloadingArtifactIds.contains(artifact.id)
+            shouldScheduleLocalGalleryDownload(workspace: workspace, artifact: artifact)
         else {
             return
         }
 
         downloadingArtifactIds.insert(artifact.id)
         canRetryFinalVideoDownload = false
+        isSavingFinalVideo = true
         Task { [weak self] in
             await self?.downloadFinalExportToGallery(workspace: workspace, artifact: artifact)
         }
+    }
+
+    private func shouldScheduleLocalGalleryDownload(
+        workspace: AnimateWorkspace?,
+        artifact: AnimateArtifact?
+    ) -> Bool {
+        guard
+            workspace != nil,
+            let artifact,
+            artifact.status == "available",
+            pendingGalleryVideo?.artifactId != finalDownloadArtifactId(for: artifact),
+            !galleryStore.contains(artifactId: finalDownloadArtifactId(for: artifact)),
+            !downloadingArtifactIds.contains(artifact.id)
+        else {
+            return false
+        }
+
+        return true
     }
 
     private func scheduleGeneratedImagePreviewDownloadIfNeeded(workspace: AnimateWorkspace?) {
@@ -764,10 +787,15 @@ final class FinalRenderWorkflow: WorkspaceObservingWorkflow {
         workspace: AnimateWorkspace,
         artifact: AnimateArtifact
     ) async {
-        defer { downloadingArtifactIds.remove(artifact.id) }
+        isSavingFinalVideo = true
+        defer {
+            downloadingArtifactIds.remove(artifact.id)
+            isSavingFinalVideo = false
+        }
 
         guard let bearerToken = try? await authTokenProvider.currentBearerToken() else {
             statusMessage = L10n.string("workflow.final.signInAgainSaveLocal")
+            canRetryFinalVideoDownload = true
             return
         }
 
@@ -1016,6 +1044,7 @@ final class FinalRenderWorkflow: WorkspaceObservingWorkflow {
         pendingGalleryImage = nil
         pendingSourceComparisonImageData = nil
         canRetryFinalVideoDownload = false
+        isSavingFinalVideo = false
         downloadingArtifactIds.removeAll()
         lastCreditRefreshKey = nil
         statusMessage = nil

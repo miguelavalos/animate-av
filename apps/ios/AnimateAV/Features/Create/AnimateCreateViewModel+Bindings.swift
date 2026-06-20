@@ -98,7 +98,7 @@ extension AnimateCreateViewModel {
     }
 
     private func bindFinalRender(_ workflow: FinalRenderWorkflow) {
-        Publishers.CombineLatest3(
+        Publishers.CombineLatest4(
             Publishers.CombineLatest4(
                 workflow.$finalExport,
                 workflow.$latestFinalJob,
@@ -111,10 +111,11 @@ extension AnimateCreateViewModel {
                 workflow.$statusMessage,
                 workflow.$canRetryFinalVideoDownload
             ),
-            workflow.$pendingGalleryImage
+            workflow.$pendingGalleryImage,
+            workflow.$isSavingFinalVideo
         )
             .receive(on: DispatchQueue.main)
-            .sink { [weak self] content, state, pendingGalleryImage in
+            .sink { [weak self] content, state, pendingGalleryImage, isSavingFinalVideo in
                 let (finalExport, latestFinalJob, renderPlan, pendingGalleryVideo) = content
                 let (videoQuote, isGenerating, statusMessage, canRetryFinalVideoDownload) = state
                 self?.applyFinalRenderState(
@@ -126,6 +127,7 @@ extension AnimateCreateViewModel {
                         pendingGalleryVideo: pendingGalleryVideo,
                         pendingGalleryImage: pendingGalleryImage,
                         canRetryFinalVideoDownload: canRetryFinalVideoDownload,
+                        isSavingFinalVideo: isSavingFinalVideo,
                         statusMessage: statusMessage,
                         isGenerating: isGenerating
                     )

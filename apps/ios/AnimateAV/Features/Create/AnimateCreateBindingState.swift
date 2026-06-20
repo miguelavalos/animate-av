@@ -35,6 +35,7 @@ struct AnimateCreateFinalRenderState {
     var pendingGalleryVideo: AnimateGalleryVideoRecord? = nil
     var pendingGalleryImage: AnimateGalleryImageRecord? = nil
     var canRetryFinalVideoDownload = false
+    var isSavingFinalVideo = false
     let statusMessage: String?
     let isGenerating: Bool
 }

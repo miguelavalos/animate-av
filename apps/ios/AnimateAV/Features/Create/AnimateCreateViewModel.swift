@@ -1028,7 +1028,7 @@ extension AnimateCreateViewModel {
         if hasStoryScenes {
             reconcilePreparedVideoDirectionSignature()
             videoDirectionStatusMessage = nil
-        } else {
+        } else if state.isPlanning || state.statusMessage != nil {
             videoDirectionStatusMessage = state.statusMessage
         }
     }
@@ -1172,13 +1172,17 @@ extension AnimateCreateViewModel {
             return
         }
         if state.finalExport != nil {
-            if state.canRetryFinalVideoDownload {
+            if state.isSavingFinalVideo {
+                finalVideoCommandState = .confirming(
+                    state.statusMessage ?? L10n.string("workflow.final.savingToGallery")
+                )
+            } else if state.canRetryFinalVideoDownload {
                 finalVideoCommandState = .failed(
                     state.statusMessage ?? L10n.string("workflow.final.saveLocalFailed")
                 )
             } else {
-                finalVideoCommandState = .confirming(
-                    state.statusMessage ?? L10n.string("workflow.final.savingToGallery")
+                finalVideoCommandState = .failed(
+                    state.statusMessage ?? L10n.string("workflow.final.saveLocalFailed")
                 )
             }
             return
@@ -1220,6 +1224,7 @@ extension AnimateCreateViewModel {
         let lowercased = message.lowercased()
         return lowercased.contains("couldn’t")
             || lowercased.contains("couldn't")
+            || lowercased.contains("could not")
             || lowercased.contains("failed")
             || lowercased.contains("not configured")
             || lowercased.contains("not available")

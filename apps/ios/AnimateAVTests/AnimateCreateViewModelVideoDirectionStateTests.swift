@@ -65,6 +65,48 @@ final class AnimateCreateViewModelVideoDirectionStateTests: XCTestCase {
         XCTAssertEqual(viewModel.workflowErrorAlertMessage, L10n.string("workflow.final.tryAgain"))
     }
 
+    func testFinalVideoCommandShowsSavingOnlyWhileFinalVideoSaveIsActive() {
+        let viewModel = AnimateCreateViewModel()
+        let finalExport = AnimateCreateTestFixtures.makeArtifact(id: "artifact-1", kind: "final_export")
+
+        viewModel.applyFinalRenderState(
+            AnimateCreateFinalRenderState(
+                finalExport: finalExport,
+                latestFinalJob: nil,
+                renderPlan: nil,
+                isSavingFinalVideo: true,
+                statusMessage: L10n.string("workflow.final.savingToGallery"),
+                isGenerating: false
+            )
+        )
+
+        XCTAssertEqual(
+            viewModel.finalVideoCommandState,
+            .confirming(L10n.string("workflow.final.savingToGallery"))
+        )
+    }
+
+    func testFinalVideoCommandDoesNotStaySavingWhenFinalVideoSaveIsNotActive() {
+        let viewModel = AnimateCreateViewModel()
+        let finalExport = AnimateCreateTestFixtures.makeArtifact(id: "artifact-1", kind: "final_export")
+
+        viewModel.applyFinalRenderState(
+            AnimateCreateFinalRenderState(
+                finalExport: finalExport,
+                latestFinalJob: nil,
+                renderPlan: nil,
+                statusMessage: nil,
+                isGenerating: false
+            )
+        )
+
+        XCTAssertEqual(
+            viewModel.finalVideoCommandState,
+            .failed(L10n.string("workflow.final.saveLocalFailed"))
+        )
+        XCTAssertEqual(viewModel.workflowErrorAlertMessage, L10n.string("workflow.final.saveLocalFailed"))
+    }
+
     func testClearingFinalSessionAfterGalleryMoveRemovesDownloadState() {
         let viewModel = AnimateCreateViewModel()
         let finalExport = AnimateCreateTestFixtures.makeArtifact(id: "artifact-1", kind: "final_export")
@@ -154,6 +196,31 @@ final class AnimateCreateViewModelVideoDirectionStateTests: XCTestCase {
         )
 
         XCTAssertEqual(workflow.finalDownloadArtifactId(for: artifact), "workflow-artifact-1")
+    }
+
+    func testRestoredFinalExportWithoutBearerTokenBecomesRetryableSaveFailure() async {
+        let harness = AnimateVideoCreationFailureHarness(error: NSError(domain: "test", code: 1))
+        harness.bearerToken = nil
+        let workflow = harness.finalRenderWorkflow
+        let workspace = AnimateWorkspace(
+            video: AnimateCreateTestFixtures.makeVideo(id: "video-1", status: "completed"),
+            mediaAssets: [],
+            storyScenes: [],
+            renderJobs: [],
+            artifacts: [
+                AnimateCreateTestFixtures.makeArtifact(id: "artifact-1", kind: "final_export")
+            ]
+        )
+
+        harness.publishWorkspace(workspace)
+        for _ in 0..<20 where workflow.isSavingFinalVideo || !workflow.canRetryFinalVideoDownload {
+            await Task.yield()
+            try? await Task.sleep(nanoseconds: 10_000_000)
+        }
+
+        XCTAssertFalse(workflow.isSavingFinalVideo)
+        XCTAssertTrue(workflow.canRetryFinalVideoDownload)
+        XCTAssertEqual(workflow.statusMessage, L10n.string("workflow.final.signInAgainSaveLocal"))
     }
 
     func testFinalRenderSummaryUsesExistingGeneratedImagePreviewDuringVideoLoading() async {
@@ -1505,6 +1572,7 @@ private final class AnimateVideoCreationFailureHarness:
     private let workspaceErrorSubject = CurrentValueSubject<String?, Never>(nil)
     private let finalRenderSession: URLSession
     private let galleryStore: TestGalleryStore
+    var bearerToken: String? = "token-1"
 
     init(
         error: Error,
@@ -1602,7 +1670,7 @@ private final class AnimateVideoCreationFailureHarness:
     }
 
     func currentBearerToken() async throws -> String? {
-        "token-1"
+        bearerToken
     }
 
     func createVideo(bearerToken: String, form: AnimateVideoSetupForm) async throws -> String {
