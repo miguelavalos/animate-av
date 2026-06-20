@@ -641,7 +641,7 @@
 "create.discard.currentMessage" = "Cela supprime la vidéo actuelle, la photo et la direction.";
 "create.discard.local" = "Supprimer le brouillon";
 "create.discard.localMessage" = "Cela supprime ce brouillon, l’image sélectionnée et la direction avant tout enregistrement.";
-"create.final.chooseDestination" = "Finish and move to Gallery";
+"create.final.chooseDestination" = "Voir dans la galerie";
 "create.final.create" = "Créer la finale";
 "create.final.creating" = "Création finale";
 "create.final.video" = "Vidéo";
@@ -748,7 +748,7 @@
 "create.error.videoCreationNotReady" = "La création vidéo n’est pas encore prête.";
 "create.error.noVideoStatus" = "Aucun statut vidéo n’est disponible pour l’instant.";
 "create.error.finalDownloadUnavailable" = "Le téléchargement de la vidéo finale n’est pas disponible dans cette build.";
-"create.error.galleryUnavailable" = "Gallery n’est pas disponible dans cette build.";
+"create.error.galleryUnavailable" = "La galerie n’est pas disponible dans cette build.";
 "create.story.status.ready" = "La configuration vidéo est prête.";
 "create.story.status.tooFew" = "Ajoute encore %d %@ avant de préparer la vidéo.";
 "create.story.status.tooMany" = "Retire %d %@ avant de préparer la vidéo.";
@@ -883,7 +883,7 @@
 "workflow.story.notConfigured" = "La configuration vidéo n’est pas encore prête.";
 "workflow.final.signInRender" = "Connecte-toi avant de créer la vidéo finale.";
 "workflow.final.signInAgainRender" = "Reconnecte-toi avant de créer la vidéo finale.";
-"workflow.final.notConfigured" = "Le vidéo finale n’est pas configuré pour cette build.";
+"workflow.final.notConfigured" = "La vidéo finale n’est pas configurée pour cette build.";
 "workflow.final.preparing" = "Avi prépare l’export final.";
 "workflow.final.checkingPlan" = "Avi vérifie ta photo et les crédits disponibles.";
 "workflow.final.needsUsableMedia" = "Avi a besoin d’une image utilisable avant de créer la vidéo.";

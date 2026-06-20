@@ -751,7 +751,7 @@
 "create.error.videoCreationNotReady" = "La creación de video aún no está lista.";
 "create.error.noVideoStatus" = "Aún no hay estado de video disponible.";
 "create.error.finalDownloadUnavailable" = "La descarga del video final no está disponible en esta build.";
-"create.error.galleryUnavailable" = "Gallery no está disponible en esta build.";
+"create.error.galleryUnavailable" = "La galería no está disponible en esta build.";
 "create.story.status.ready" = "La configuración del video está lista.";
 "create.story.status.tooFew" = "Añade %d %@ más antes de preparar el video.";
 "create.story.status.tooMany" = "Elimina %d %@ antes de preparar el video.";

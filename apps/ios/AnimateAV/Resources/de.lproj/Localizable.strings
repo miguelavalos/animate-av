@@ -38,15 +38,15 @@
 "profile.local.keep.photos.detail" = "Fotos und Clips bleiben in Fotos.";
 "profile.local.keep.photos.title" = "Fotos bleibt erhalten";
 "profile.local.manage" = "Lokale Daten verwalten";
-"profile.local.media.detail" = "Fotoer aktiver Animate AV-Entwürfe bleiben auf diesem Gerät.";
-"profile.local.media.title" = "Fotoer";
+"profile.local.media.detail" = "Fotos aktiver Animate AV-Entwürfe bleiben auf diesem Gerät.";
+"profile.local.media.title" = "Fotos";
 "profile.local.library.detail" = "Verweise aus In Arbeit und Galerie bleiben auf diesem Gerät.";
 "profile.local.library.title" = "In Arbeit und Galerie";
 "profile.local.sheet.close" = "Abbrechen";
 "profile.local.sheet.danger" = "Lokale Bereinigung";
 "profile.local.sheet.subtitle" = "Entferne unfertige Arbeit von diesem Gerät, ohne Fotos, Galerie-Videos, Credits, Käufe oder dein Konto zu löschen.";
 "profile.local.sheet.title" = "Lokale Daten";
-"profile.local.subtitle" = "Deine Videos, Fotoer und generierten Artefakte bleiben auf diesem Gerät.";
+"profile.local.subtitle" = "Deine Videos, Fotos und generierten Artefakte bleiben auf diesem Gerät.";
 "profile.local.title" = "Auf diesem Gerät";
 "profile.preferences.language.detail" = "Wähle die Sprache der Animate AV Oberfläche.";
 "profile.preferences.language.title" = "App-Sprache";
@@ -343,7 +343,7 @@
 "inProgress.empty.whatAppears.title" = "Was hier erscheint";
 "library.finished.title" = "Fertig";
 "inProgress.title" = "Aktive Videos";
-"library.inProgressAndGallery.title" = "Aktiv und Galerie";
+"library.inProgressAndGallery.title" = "Aktive Videos und Galerie";
 "inProgress.newVideo" = "Neues Video";
 "inProgress.rename.failed" = "Video konnte nicht umbenannt werden. Versuche es erneut.";
 "inProgress.rename.placeholder" = "Videoname";
@@ -643,7 +643,7 @@
 "create.discard.currentMessage" = "Dadurch werden das aktuelle Video, das Foto und die Ausrichtung gelöscht.";
 "create.discard.local" = "Entwurf verwerfen";
 "create.discard.localMessage" = "Dies entfernt diesen Entwurf, das Foto und die Einrichtung, bevor etwas gespeichert wird.";
-"create.final.chooseDestination" = "Finish and move to Gallery";
+"create.final.chooseDestination" = "In Galerie ansehen";
 "create.final.create" = "Final erstellen";
 "create.final.creating" = "Final wird erstellt";
 "create.final.video" = "Video";
@@ -736,7 +736,7 @@
 "media.item.singular" = "Element";
 "media.item.plural" = "Elemente";
 "media.photoOrClip.singular" = "Foto";
-"media.photoOrClip.plural" = "Fotoer";
+"media.photoOrClip.plural" = "Fotos";
 "create.error.startWhenReady" = "Starte ein Video, wenn Konto und Credits bereit sind.";
 "create.error.startVideo" = "Dieses Video konnte noch nicht gestartet werden.";
 "create.error.waitBeforeDiscard" = "Warte, bis der aktuelle Schritt fertig ist, bevor du dieses Video verwirfst.";
@@ -750,7 +750,7 @@
 "create.error.videoCreationNotReady" = "Videoerstellung ist noch nicht bereit.";
 "create.error.noVideoStatus" = "Noch kein Videostatus verfügbar.";
 "create.error.finalDownloadUnavailable" = "Der Download des finalen Videos ist in diesem Build nicht verfügbar.";
-"create.error.galleryUnavailable" = "Gallery ist in diesem Build nicht verfügbar.";
+"create.error.galleryUnavailable" = "Die Galerie ist in diesem Build nicht verfügbar.";
 "create.story.status.ready" = "Das Video-Setup ist bereit.";
 "create.story.status.tooFew" = "Füge %d weitere %@ hinzu, bevor du das Video vorbereitest.";
 "create.story.status.tooMany" = "Entferne %d %@, bevor du das Video vorbereitest.";
@@ -903,7 +903,7 @@
 "workflow.final.movedToGallery" = "Finales Video in die Galerie verschoben.";
 "workflow.final.missingVideo" = "Starte oder setze ein Video fort, bevor du den finalen Export erstellst.";
 "workflow.final.addCredits" = "Füge Credits vor dem finalen Video hinzu.";
-"workflow.final.notReady" = "Der finale Export ist noch nicht bereit zum Video creationn.";
+"workflow.final.notReady" = "Der finale Export ist noch nicht bereit.";
 "workflow.final.tryAgain" = "Das Video konnte nicht abgeschlossen werden. Bitte versuche es erneut.";
 "workflow.final.staleRender" = "Das Video wurde zu lange nicht aktualisiert. Bitte versuche es erneut.";
 "workflow.final.planChanged" = "Der Videoplan hat sich geändert. Prüfe die Kosten erneut, bevor du das Video erstellst.";
