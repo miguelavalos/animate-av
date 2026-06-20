@@ -14,7 +14,7 @@ struct AnimateAppShellView: View {
     @EnvironmentObject private var galleryViewModel: AnimateGalleryViewModel
     @EnvironmentObject private var aviViewModel: AnimateAviViewModel
     @Environment(\.avCommonAppExperience) private var appExperience
-    @State private var chromeItem: AVAppShellChromeItem?
+    @State private var chromeItem: AVAppShellChromeItem? = AnimateUITestEnvironment.current.initialChromeItem
     @State private var creditsPaywallIsPresented = false
     @State private var navigationPath = NavigationPath()
     @State private var navigationStackResetID = UUID()

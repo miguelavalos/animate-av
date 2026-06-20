@@ -1,3 +1,4 @@
+import AVAppShellFoundation
 import Foundation
 
 struct AnimateLaunchContext {
@@ -44,6 +45,25 @@ struct AnimateUITestEnvironment {
     var createFixture: String? {
         guard isEnabled else { return nil }
         return settings["ANIMATEAV_CREATE_FIXTURE"]
+    }
+
+    var initialChromeItem: AVAppShellChromeItem? {
+        guard isEnabled else { return nil }
+        switch settings["ANIMATEAV_UI_TESTS_INITIAL_CHROME"] {
+        case "account":
+            return .account
+        case "accountSafety":
+            return .account
+        case "settings":
+            return .settings
+        default:
+            return nil
+        }
+    }
+
+    var showsAccountSafetyOnly: Bool {
+        guard isEnabled else { return false }
+        return settings["ANIMATEAV_UI_TESTS_INITIAL_CHROME"] == "accountSafety"
     }
 
     var hasAccountOverride: Bool {

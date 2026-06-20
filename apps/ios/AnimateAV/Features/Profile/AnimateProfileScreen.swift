@@ -86,13 +86,17 @@ struct AnimateProfileScreen: View {
 
     @ViewBuilder
     private var accountContent: some View {
-        accountCard
-        if accountController.isSignedIn {
-            creditsCard
-        }
-        animateProCard
-        if accountController.isSignedIn {
+        if AnimateUITestEnvironment.current.showsAccountSafetyOnly {
             accountSafetyCard
+        } else {
+            accountCard
+            if accountController.isSignedIn {
+                creditsCard
+            }
+            animateProCard
+            if accountController.isSignedIn {
+                accountSafetyCard
+            }
         }
     }
 
