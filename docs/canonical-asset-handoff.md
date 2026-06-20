@@ -103,6 +103,7 @@ thumbnails reviewed in the shipped iOS UI.
 
 ```text
 Repo path: apps/ios/AnimateAV/App/Assets.xcassets/AnimateHeaderWordmark.imageset/animate-header-wordmark-dark.png
+Repo path: apps/ios/AnimateAV/App/Assets.xcassets/AnimateOnboardingWordmark.imageset/animate-onboarding-wordmark.png
 Repo path: apps/ios/AnimateAV/App/Assets.xcassets/AnimateLaunchIcon.imageset/animate-launch-icon.png
 Repo path: apps/ios/AnimateAV/App/Assets.xcassets/AppIcon.appiconset/Icon-20@2x.png
 Repo path: apps/ios/AnimateAV/App/Assets.xcassets/AppIcon.appiconset/Icon-20@3x.png
