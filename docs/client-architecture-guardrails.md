@@ -14,7 +14,7 @@ renders the state returned by the configured backend/realtime layer.
 The current v1 user flow is:
 
 ```text
-Foto y encuadre -> Look -> Guide and voice -> quote credits -> generate animated card -> local download -> Gallery
+Foto y encuadre -> Look -> Guide and message -> quote credits -> generate animated card -> local download -> Gallery
 ```
 
 The Foto y encuadre step owns source-photo choice, full-photo use, frame
@@ -52,27 +52,28 @@ The Look grid may provide a secondary preview action that opens the selected
 look asset larger for inspection. That preview must not change the selected look
 unless the user explicitly taps the look selection control.
 
-The animation guide and optional voice line are collected in the next guided
-sheet. The guide captures optional free-text visual direction for what should
-happen in the animated scene. The voice line is a short optional line that can
-be disabled with "No voice".
-A valid one-photo video can be confirmed with no guide text and no voice.
-Custom visual instructions are capped client-side and sent as user text only
-when the user has actually typed non-empty text. Client copy must describe this
-as basic, orientative guidance, not an exact command.
+The animation guide and optional written message are collected in the next
+guided sheet. The guide captures optional free-text visual direction for what
+should happen in the animated scene. The message is short optional user text
+and can be omitted.
+A valid one-photo video can be confirmed with no guide text and no message.
+Custom visual instructions and message text are capped client-side and sent as
+user text only when the user has actually typed non-empty text. Client copy must
+describe this as basic, orientative guidance, not an exact command, generated
+narration, or spoken dialogue promise.
 
 Create Video status cards, Avi guidance, summary rows, and fixed action bars
 must follow the guided client state before backend-ready legacy state. A saved
 story direction or previous fixture state is not enough to show credit review.
 Credit review becomes visible only after a renderable local photo exists, the
-user has selected a look/style, and the guided Guide and voice
+user has selected a look/style, and the guided Guide and message
 path is complete. If the local photo data is missing or cannot decode as an
 image, the client must reset visible state to Foto y encuadre and block
 later-step actions.
 
 The basic guide is a lightweight state guide, not a separate product step. It
 may summarize the next required action and open the relevant guided sheet, but
-it must mirror the same Photo/framing -> Look -> Guide and voice
+it must mirror the same Photo/framing -> Look -> Guide and message
 order and must not introduce custom audio controls, preview-versioning, or
 extra review branches.
 

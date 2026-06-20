@@ -19,30 +19,30 @@ implementation plan.
 - Every final look has a unique `Look*.imageset` preview asset.
 - Look tiles may include a small secondary preview affordance for inspecting the
   asset larger. Previewing a look must be separate from selecting it.
-- Look selection is independent from Guide and voice.
+- Look selection is independent from Guide and message.
 - The Look step must stay focused on visual style. Do not add animation preset
   cards, message inputs, voice controls, or audio controls to the look flow.
-- Animation guidance and the optional voice line are collected in the next
+- Animation guidance and the optional written message are collected in the next
   guided step.
-- Animate AV V1 may expose one short optional voice line, but not narrator or
-  audio controls. Do not add visible narrator, tone, generated-audio,
-  uploaded-audio, or in-app audio controls to the look flow.
+- Animate AV V1 does not expose voice or audio controls. Do not add visible
+  voice lines, narrator, tone, generated-audio, uploaded-audio, or in-app audio
+  controls to the look flow.
 
 ## Guided Create Video Flow
 
 The visible guided setup order is:
 
 ```text
-Photo and framing -> Look -> Guide and voice
+Photo and framing -> Look -> Guide and message
 ```
 
 Credit review becomes visible only after:
 
 - a renderable local source photo exists;
 - a look has been selected;
-- the Guide and voice step has been completed or skipped.
+- the Guide and message step has been completed or skipped.
 
-The setup summary must show Photo/framing, Look, and Guide and voice in that
+The setup summary must show Photo/framing, Look, and Guide and message in that
 order.
 
 Any compact/basic guide shown outside the sheet must mirror the same setup
