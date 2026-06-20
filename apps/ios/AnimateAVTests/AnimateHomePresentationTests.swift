@@ -40,7 +40,7 @@ final class AnimateHomePresentationTests: XCTestCase {
     }
 
     func testLatestInProgressVideoAddsContinuationAction() {
-        let video = makeVideo(id: "latest-plan", status: "story_ready", updatedAt: 20)
+        let video = makeVideo(id: "latest-plan", status: "video_direction_ready", updatedAt: 20)
         let presentation = AnimateHomePresentation.make(
             isSignedIn: true,
             displayName: nil,

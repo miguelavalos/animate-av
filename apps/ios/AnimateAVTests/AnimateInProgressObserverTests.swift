@@ -150,7 +150,7 @@ final class AnimateInProgressObserverTests: XCTestCase {
         AnimateWorkspace(
             video: video,
             mediaAssets: [],
-            storyScenes: [],
+            videoDirectionScenes: [],
             renderJobs: [],
             artifacts: []
         )

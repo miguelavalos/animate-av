@@ -20,7 +20,7 @@ final class AnimateAviViewModelTests: XCTestCase {
         let presentation = AnimateAviPresentation.make(
             isSignedIn: true,
             videosSummary: AnimateInProgressSummary.make(from: [
-                makeVideo(id: "active-1", status: "story_ready", updatedAt: 20),
+                makeVideo(id: "active-1", status: "video_direction_ready", updatedAt: 20),
                 makeVideo(id: "done-1", status: "gallery_ready", updatedAt: 10)
             ]),
             creditBalance: .empty
@@ -102,7 +102,7 @@ final class AnimateAviViewModelTests: XCTestCase {
         )
         summaryProvider.summary.send(
             AnimateInProgressSummary.make(from: [
-                makeVideo(id: "active-1", status: "story_ready", updatedAt: 20)
+                makeVideo(id: "active-1", status: "video_direction_ready", updatedAt: 20)
             ])
         )
 

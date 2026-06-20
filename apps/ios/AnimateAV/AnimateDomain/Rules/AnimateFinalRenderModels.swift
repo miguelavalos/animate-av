@@ -240,7 +240,7 @@ enum AnimateFinalRenderRules {
     static func canPreparePlan(video: AnimateVideo?, storySceneCount: Int = 0) -> Bool {
         if storySceneCount > 0 { return true }
         guard let video else { return false }
-        return video.status == "story_ready"
+        return video.status == "video_direction_ready"
             || video.status == "gallery_ready"
     }
 

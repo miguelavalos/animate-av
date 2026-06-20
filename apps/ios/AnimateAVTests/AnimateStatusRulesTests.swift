@@ -4,7 +4,7 @@ import XCTest
 final class AnimateStatusRulesTests: XCTestCase {
     func testGroupsCompletedVideosAsFinished() {
         let plan = makeVideo(id: "in_progress", status: "in_progress", updatedAt: 10)
-        let videoDirectionReady = makeVideo(id: "direction", status: "story_ready", updatedAt: 20)
+        let videoDirectionReady = makeVideo(id: "direction", status: "video_direction_ready", updatedAt: 20)
         let completed = makeVideo(id: "completed", status: "gallery_ready", updatedAt: 30)
 
         let groups = AnimateStatusRules.group([plan, videoDirectionReady, completed])
@@ -15,7 +15,7 @@ final class AnimateStatusRulesTests: XCTestCase {
 
     func testGroupsSortVideosByLatestUpdateWithinEachSection() {
         let olderInProgress = makeVideo(id: "older-plan", status: "in_progress", updatedAt: 10)
-        let newerInProgress = makeVideo(id: "newer-plan", status: "story_ready", updatedAt: 30)
+        let newerInProgress = makeVideo(id: "newer-plan", status: "video_direction_ready", updatedAt: 30)
         let olderFinished = makeVideo(id: "older-finished", status: "gallery_ready", updatedAt: 20)
         let newerFinished = makeVideo(id: "newer-finished", status: "gallery_ready", updatedAt: 40)
 
@@ -32,7 +32,7 @@ final class AnimateStatusRulesTests: XCTestCase {
 
     func testListSummaryCountsAndLatestVideoUseStatusRules() {
         let oldest = makeVideo(id: "oldest", status: "gallery_ready", updatedAt: 10)
-        let newest = makeVideo(id: "newest", status: "story_ready", updatedAt: 30)
+        let newest = makeVideo(id: "newest", status: "video_direction_ready", updatedAt: 30)
         let middle = makeVideo(id: "middle", status: "gallery_ready", updatedAt: 20)
 
         let summary = AnimateInProgressSummary.make(from: [oldest, newest, middle])
@@ -61,7 +61,7 @@ final class AnimateStatusRulesTests: XCTestCase {
     func testListSummaryExposesLatestInProgressContinuationRequest() {
         let olderInProgress = makeVideo(id: "older-plan", status: "in_progress", updatedAt: 10)
         let newestFinished = makeVideo(id: "newest-finished", status: "gallery_ready", updatedAt: 30)
-        let latestInProgress = makeVideo(id: "latest-plan", status: "story_ready", updatedAt: 20)
+        let latestInProgress = makeVideo(id: "latest-plan", status: "video_direction_ready", updatedAt: 20)
 
         let summary = AnimateInProgressSummary.make(from: [olderInProgress, newestFinished, latestInProgress])
 
@@ -84,7 +84,7 @@ final class AnimateStatusRulesTests: XCTestCase {
     }
 
     func testDisplayHelpersFormatBackendValuesForUI() {
-        XCTAssertEqual(AnimateStatusRules.displayTitle(for: "story_ready"), "Direction ready")
+        XCTAssertEqual(AnimateStatusRules.displayTitle(for: "video_direction_ready"), "Direction ready")
         XCTAssertEqual(AnimateStatusRules.displayKind("final"), "Final")
         XCTAssertEqual(AnimateStatusRules.displayKind("final_export"), "Final Export")
     }
@@ -111,7 +111,7 @@ final class AnimateStatusRulesTests: XCTestCase {
         let action = AnimateStatusRules.nextAction(
             for: makeWorkspace(
                 mediaAssets: [makeMediaAsset()],
-                storyScenes: [makeVideoDirectionScene()]
+                videoDirectionScenes: [makeVideoDirectionScene()]
             )
         )
 
@@ -125,7 +125,7 @@ final class AnimateStatusRulesTests: XCTestCase {
         let action = AnimateStatusRules.nextAction(
             for: makeWorkspace(
                 mediaAssets: [makeMediaAsset()],
-                storyScenes: [makeVideoDirectionScene()],
+                videoDirectionScenes: [makeVideoDirectionScene()],
                 artifacts: [
                     makeArtifact(kind: "final_export")
                 ]
@@ -142,7 +142,7 @@ final class AnimateStatusRulesTests: XCTestCase {
         let action = AnimateStatusRules.nextAction(
             for: makeWorkspace(
                 mediaAssets: [makeMediaAsset()],
-                storyScenes: [makeVideoDirectionScene()],
+                videoDirectionScenes: [makeVideoDirectionScene()],
                 renderJobs: [makeRenderJob(kind: "final", status: "failed")]
             )
         )
@@ -177,14 +177,14 @@ final class AnimateStatusRulesTests: XCTestCase {
 
     private func makeWorkspace(
         mediaAssets: [AnimateMediaAsset] = [],
-        storyScenes: [AnimateVideoDirectionScene] = [],
+        videoDirectionScenes: [AnimateVideoDirectionScene] = [],
         renderJobs: [AnimateRenderJob] = [],
         artifacts: [AnimateArtifact] = []
     ) -> AnimateWorkspace {
         AnimateWorkspace(
             video: makeVideo(id: "video-1", status: "in_progress", updatedAt: 10),
             mediaAssets: mediaAssets,
-            storyScenes: storyScenes,
+            videoDirectionScenes: videoDirectionScenes,
             renderJobs: renderJobs,
             artifacts: artifacts
         )

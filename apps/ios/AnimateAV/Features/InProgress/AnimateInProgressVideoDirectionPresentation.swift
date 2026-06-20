@@ -6,8 +6,8 @@ struct AnimateInProgressVideoDirectionSectionPresentation: Equatable {
     let emptyMessage = L10n.string("video.story.empty")
     let videoDirectionScenes: [AnimateInProgressVideoDirectionScenePresentation]
 
-    init(storyScenes: [AnimateVideoDirectionScene]) {
-        self.videoDirectionScenes = AnimateInProgressVideoDirectionScenePresentation.sorted(storyScenes)
+    init(videoDirectionScenes: [AnimateVideoDirectionScene]) {
+        self.videoDirectionScenes = AnimateInProgressVideoDirectionScenePresentation.sorted(videoDirectionScenes)
     }
 }
 

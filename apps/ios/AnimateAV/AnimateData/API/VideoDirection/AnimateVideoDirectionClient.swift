@@ -54,7 +54,7 @@ struct AnimateVideoDirectionClient {
             .appendingPathComponent("v1")
             .appendingPathComponent("apps")
             .appendingPathComponent("animateav")
-            .appendingPathComponent("story")
+            .appendingPathComponent("video-direction")
             .appendingPathComponent("plans")
 
         let visualDirection = Self.videoVisualDirection(form)
@@ -77,7 +77,7 @@ struct AnimateVideoDirectionClient {
             narrationVoice: form.activeVoiceProfile?.rawValue ?? "none",
             voiceTone: form.activeVoiceProfile == nil ? "" : form.voiceTone.rawValue,
             media: selectedMedia,
-            idempotencyKey: "story:\(videoId):\(AnimateVideoDirectionInputSignature.make(videoId: videoId, form: form, selectedMedia: selectedMedia))"
+            idempotencyKey: "video-direction:\(videoId):\(AnimateVideoDirectionInputSignature.make(videoId: videoId, form: form, selectedMedia: selectedMedia))"
         )
 
         var request = URLRequest(url: endpoint)
@@ -90,7 +90,7 @@ struct AnimateVideoDirectionClient {
         guard let httpResponse = response as? HTTPURLResponse, 200..<300 ~= httpResponse.statusCode else {
             let apiError = AnimateAPIError.decode(
                 from: data,
-                fallbackCode: "animate_story_plan_failed",
+                fallbackCode: "animate_video_direction_plan_failed",
                 fallbackMessage: AnimateVideoDirectionError.planFailed.localizedDescription
             )
             throw apiError

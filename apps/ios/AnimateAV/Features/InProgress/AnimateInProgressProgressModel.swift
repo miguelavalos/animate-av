@@ -19,9 +19,9 @@ struct AnimateInProgressProgressModel {
             ),
             AnimateInProgressProgressPhase(
                 title: L10n.string("video.progress.story"),
-                detail: workspace.storyScenes.isEmpty ? L10n.string("video.progress.notReady") : L10n.string("video.progress.scenes", workspace.storyScenes.count),
+                detail: workspace.videoDirectionScenes.isEmpty ? L10n.string("video.progress.notReady") : L10n.string("video.progress.scenes", workspace.videoDirectionScenes.count),
                 systemImage: "text.bubble",
-                state: workspace.storyScenes.isEmpty ? .waiting : .complete
+                state: workspace.videoDirectionScenes.isEmpty ? .waiting : .complete
             ),
             AnimateInProgressProgressPhase(
                 title: L10n.string("video.progress.createVideo"),

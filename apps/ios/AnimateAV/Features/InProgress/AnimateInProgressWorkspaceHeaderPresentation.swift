@@ -10,7 +10,7 @@ struct AnimateInProgressWorkspaceHeaderPresentation: Equatable {
         updatedAtTitle = AnimateVideoFormatting.updatedAt(workspace.video)
         countsTitle = [
             Self.countTitle(workspace.mediaAssets.count, singular: "media item", plural: "media items"),
-            Self.countTitle(workspace.storyScenes.count, singular: "scene", plural: "scenes"),
+            Self.countTitle(workspace.videoDirectionScenes.count, singular: "scene", plural: "scenes"),
             Self.countTitle(workspace.renderJobs.count, singular: "job", plural: "jobs")
         ].joined(separator: " · ")
     }

@@ -87,7 +87,7 @@ extension AnimateCreateViewModel {
                 self?.applyVideoDirectionState(
                     AnimateCreateVideoDirectionState(
                         activeWorkspace: activeWorkspace,
-                        savedScenes: activeWorkspace?.storyScenes ?? [],
+                        savedScenes: activeWorkspace?.videoDirectionScenes ?? [],
                         generatedScenes: generatedScenes,
                         statusMessage: statusMessage,
                         isPlanning: isPlanning

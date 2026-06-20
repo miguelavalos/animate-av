@@ -202,7 +202,7 @@ final class MediaUploadWorkflow: WorkspaceObservingWorkflow {
         await persistSelectedMedia(
             videoId: videoId,
             requiresProductStateSave: true,
-            saveFailureMessage: AnimateRecoveryCopy.mediaStorySaveFailure()
+            saveFailureMessage: AnimateRecoveryCopy.mediaVideoDirectionSaveFailure()
         )
     }
 

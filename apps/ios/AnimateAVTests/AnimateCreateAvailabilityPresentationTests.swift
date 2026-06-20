@@ -166,7 +166,7 @@ final class AnimateCreateAvailabilityPresentationTests: XCTestCase {
                 isFinalRenderAvailable: true,
                 isFinalRenderGenerating: false,
                 isFinalRenderConfigured: true,
-                video: AnimateCreateTestFixtures.makeVideo(id: "video-1", status: "story_ready"),
+                video: AnimateCreateTestFixtures.makeVideo(id: "video-1", status: "video_direction_ready"),
                 template: .birthdayMessage,
                 balance: .empty,
                 creditBalanceLoadState: .loading
@@ -182,7 +182,7 @@ final class AnimateCreateAvailabilityPresentationTests: XCTestCase {
                 isFinalRenderAvailable: true,
                 isFinalRenderGenerating: false,
                 isFinalRenderConfigured: true,
-                video: AnimateCreateTestFixtures.makeVideo(id: "video-1", status: "story_ready"),
+                video: AnimateCreateTestFixtures.makeVideo(id: "video-1", status: "video_direction_ready"),
                 template: .birthdayMessage,
                 balance: .empty,
                 creditBalanceLoadState: .offline

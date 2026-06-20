@@ -39,7 +39,7 @@ final class AnimateInProgressWorkspacePresentationTests: XCTestCase {
                 mediaAssets: [
                     makeMediaAsset(id: "media-1", kind: "image", sortOrder: 0, selected: true, moderationStatus: "approved")
                 ],
-                storyScenes: [
+                videoDirectionScenes: [
                     makeScene(id: "scene-1", sceneIndex: 0, caption: "Opening")
                 ],
                 renderJobs: [
@@ -61,7 +61,7 @@ final class AnimateInProgressWorkspacePresentationTests: XCTestCase {
                     makeMediaAsset(id: "media-1", kind: "image", sortOrder: 0, selected: true, moderationStatus: "approved"),
                     makeMediaAsset(id: "media-2", kind: "video", sortOrder: 1, selected: false, moderationStatus: "pending")
                 ],
-                storyScenes: [
+                videoDirectionScenes: [
                     makeScene(id: "scene-1", sceneIndex: 0, caption: "Opening"),
                     makeScene(id: "scene-2", sceneIndex: 1, caption: "Middle")
                 ],
@@ -78,7 +78,7 @@ final class AnimateInProgressWorkspacePresentationTests: XCTestCase {
     func testWorkspaceSummaryPresentationFormatsStatusArtifactsAndLatestJob() {
         let presentation = AnimateInProgressWorkspaceSummaryPresentation(
             workspace: makeWorkspace(
-                video: makeVideo(status: "story_ready"),
+                video: makeVideo(status: "video_direction_ready"),
                 renderJobs: [
                     makeRenderJob(id: "old", kind: "final", status: "queued", updatedAt: 10),
                     makeRenderJob(id: "new", kind: "final", status: "failed", updatedAt: 20)
@@ -134,7 +134,7 @@ final class AnimateInProgressWorkspacePresentationTests: XCTestCase {
     }
 
     func testVideoDirectionSectionPresentationFormatsTitleEmptyStateAndRows() {
-        let presentation = AnimateInProgressVideoDirectionSectionPresentation(storyScenes: [
+        let presentation = AnimateInProgressVideoDirectionSectionPresentation(videoDirectionScenes: [
             makeScene(id: "scene-2", sceneIndex: 1, caption: "Second beat"),
             makeScene(id: "scene-1", sceneIndex: 0, caption: "Opening beat")
         ])
@@ -163,14 +163,14 @@ final class AnimateInProgressWorkspacePresentationTests: XCTestCase {
     private func makeWorkspace(
         video: AnimateVideo,
         mediaAssets: [AnimateMediaAsset] = [],
-        storyScenes: [AnimateVideoDirectionScene] = [],
+        videoDirectionScenes: [AnimateVideoDirectionScene] = [],
         renderJobs: [AnimateRenderJob] = [],
         artifacts: [AnimateArtifact] = []
     ) -> AnimateWorkspace {
         AnimateWorkspace(
             video: video,
             mediaAssets: mediaAssets,
-            storyScenes: storyScenes,
+            videoDirectionScenes: videoDirectionScenes,
             renderJobs: renderJobs,
             artifacts: artifacts
         )

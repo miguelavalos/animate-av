@@ -236,7 +236,7 @@ final class AnimateCreateWorkflowPresentationTests: XCTestCase {
             savedScenes: [AnimateCreateTestFixtures.makeScene(id: "scene-1")],
             generatedScenes: [],
             isPlanning: true,
-            statusMessage: "Planning story."
+            statusMessage: "Planning video direction."
         )
         let finalRenderSummary = AnimateCreateFinalRenderSummary(
             creditCost: 2,
@@ -924,15 +924,15 @@ final class AnimateCreateWorkflowPresentationTests: XCTestCase {
             "Photo upload is not ready yet. Your photo is still on this device; please try again in a moment."
         )
         XCTAssertEqual(
-            AnimateRecoveryCopy.mediaStorySaveFailure(),
+            AnimateRecoveryCopy.mediaVideoDirectionSaveFailure(),
             "Couldn’t save the photo for the video. Your photo is still on this device; try again or choose a different image."
         )
         XCTAssertEqual(
-            AnimateRecoveryCopy.storyStartFailure(),
+            AnimateRecoveryCopy.videoDirectionStartFailure(),
             "Couldn’t start this video. No Credits were used. Please try again."
         )
         XCTAssertEqual(
-            AnimateRecoveryCopy.storyFailure(),
+            AnimateRecoveryCopy.videoDirectionFailure(),
             "Avi couldn’t prepare the video right now. No Credits were used. Please try again."
         )
     }
@@ -950,7 +950,7 @@ final class AnimateCreateWorkflowPresentationTests: XCTestCase {
     }
 
     func testCreateUITestFixturesExposePreRenderStates() {
-        let storyReadyWorkspace = AnimateCreateUITestFixtures.workspace(for: .storyReady)
+        let videoDirectionReadyWorkspace = AnimateCreateUITestFixtures.workspace(for: .videoDirectionReady)
         let checkingCostWorkspace = AnimateCreateUITestFixtures.workspace(for: .videoPlanCheckingCost)
         let videoPlanWorkspace = AnimateCreateUITestFixtures.workspace(for: .videoPlanReady)
         let lowCreditsPlan = AnimateCreateUITestFixtures.renderPlan(for: .videoPlanInsufficientCredits)
@@ -958,16 +958,16 @@ final class AnimateCreateWorkflowPresentationTests: XCTestCase {
         let runningWorkspace = AnimateCreateUITestFixtures.workspace(for: .finalRunning)
         let fullWorkspace = AnimateCreateUITestFixtures.workspace(for: .full)
 
-        XCTAssertEqual(storyReadyWorkspace.video.status, "story_ready")
-        XCTAssertEqual(checkingCostWorkspace.video.status, "story_ready")
-        XCTAssertEqual(videoPlanWorkspace.video.status, "story_ready")
+        XCTAssertEqual(videoDirectionReadyWorkspace.video.status, "video_direction_ready")
+        XCTAssertEqual(checkingCostWorkspace.video.status, "video_direction_ready")
+        XCTAssertEqual(videoPlanWorkspace.video.status, "video_direction_ready")
         XCTAssertEqual(queuedWorkspace.video.status, "rendering")
         XCTAssertEqual(runningWorkspace.video.status, "rendering")
         XCTAssertEqual(fullWorkspace.video.status, "gallery_ready")
-        XCTAssertFalse(storyReadyWorkspace.storyScenes.isEmpty)
-        XCTAssertFalse(checkingCostWorkspace.storyScenes.isEmpty)
-        XCTAssertFalse(videoPlanWorkspace.storyScenes.isEmpty)
-        XCTAssertTrue(storyReadyWorkspace.renderJobs.isEmpty)
+        XCTAssertFalse(videoDirectionReadyWorkspace.videoDirectionScenes.isEmpty)
+        XCTAssertFalse(checkingCostWorkspace.videoDirectionScenes.isEmpty)
+        XCTAssertFalse(videoPlanWorkspace.videoDirectionScenes.isEmpty)
+        XCTAssertTrue(videoDirectionReadyWorkspace.renderJobs.isEmpty)
         XCTAssertTrue(checkingCostWorkspace.renderJobs.isEmpty)
         XCTAssertTrue(videoPlanWorkspace.renderJobs.isEmpty)
         XCTAssertEqual(queuedWorkspace.latestRenderJob(kind: "final")?.status, "queued")
@@ -975,7 +975,7 @@ final class AnimateCreateWorkflowPresentationTests: XCTestCase {
         XCTAssertEqual(AnimateCreateUITestFixtures.balance(for: .videoPlanInsufficientCredits).spendable, 0)
         XCTAssertFalse(lowCreditsPlan.canCreateVideo)
         XCTAssertEqual(lowCreditsPlan.createVideoBlockers, ["insufficient_credits"])
-        XCTAssertNil(storyReadyWorkspace.latestArtifact(kind: "final_export"))
+        XCTAssertNil(videoDirectionReadyWorkspace.latestArtifact(kind: "final_export"))
         XCTAssertNil(checkingCostWorkspace.latestArtifact(kind: "final_export"))
         XCTAssertNil(videoPlanWorkspace.latestArtifact(kind: "final_export"))
         XCTAssertNil(queuedWorkspace.latestArtifact(kind: "final_export"))

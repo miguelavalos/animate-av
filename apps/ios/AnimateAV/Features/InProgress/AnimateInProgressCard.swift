@@ -373,7 +373,7 @@ private struct AnimateAnimateVideoCard: View {
             "gearshape.2.fill"
         case "gallery_ready":
             "arrow.down.circle.fill"
-        case "story_ready":
+        case "video_direction_ready":
             "text.bubble.fill"
         default:
             "sparkles.rectangle.stack.fill"

@@ -20,7 +20,7 @@ struct AnimateCreateWorkspaceSummary: Equatable {
     ) -> AnimateCreateWorkspaceSummary {
         AnimateCreateWorkspaceSummary(
             mediaCount: workspace?.mediaAssets.count ?? 0,
-            sceneCount: workspace?.storyScenes.count ?? 0,
+            sceneCount: workspace?.videoDirectionScenes.count ?? 0,
             renderJobCount: workspace?.renderJobs.count ?? 0,
             hasFinalExport: finalExport != nil
         )

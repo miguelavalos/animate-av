@@ -40,14 +40,14 @@ final class AnimateInProgressProgressModelTests: XCTestCase {
 
     private func makeWorkspace(
         mediaAssets: [AnimateMediaAsset] = [],
-        storyScenes: [AnimateVideoDirectionScene] = [],
+        videoDirectionScenes: [AnimateVideoDirectionScene] = [],
         renderJobs: [AnimateRenderJob] = [],
         artifacts: [AnimateArtifact] = []
     ) -> AnimateWorkspace {
         AnimateWorkspace(
             video: makeVideo(id: "video-1", status: "in_progress", updatedAt: 10),
             mediaAssets: mediaAssets,
-            storyScenes: storyScenes,
+            videoDirectionScenes: videoDirectionScenes,
             renderJobs: renderJobs,
             artifacts: artifacts
         )

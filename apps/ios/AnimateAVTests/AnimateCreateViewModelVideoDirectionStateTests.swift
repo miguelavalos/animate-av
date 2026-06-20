@@ -205,7 +205,7 @@ final class AnimateCreateViewModelVideoDirectionStateTests: XCTestCase {
         let workspace = AnimateWorkspace(
             video: AnimateCreateTestFixtures.makeVideo(id: "video-1", status: "completed"),
             mediaAssets: [],
-            storyScenes: [],
+            videoDirectionScenes: [],
             renderJobs: [],
             artifacts: [
                 AnimateCreateTestFixtures.makeArtifact(id: "artifact-1", kind: "final_export")
@@ -256,7 +256,7 @@ final class AnimateCreateViewModelVideoDirectionStateTests: XCTestCase {
             AnimateWorkspace(
                 video: AnimateCreateTestFixtures.makeVideo(id: "video-1", status: "rendering"),
                 mediaAssets: [],
-                storyScenes: [],
+                videoDirectionScenes: [],
                 renderJobs: [
                     AnimateCreateTestFixtures.makeRenderJob(
                         id: "final-render-1",
@@ -306,7 +306,7 @@ final class AnimateCreateViewModelVideoDirectionStateTests: XCTestCase {
                         hasUploadId: false
                     )
                 ],
-                storyScenes: [],
+                videoDirectionScenes: [],
                 renderJobs: [],
                 artifacts: []
             )
@@ -338,7 +338,7 @@ final class AnimateCreateViewModelVideoDirectionStateTests: XCTestCase {
                         sourceLocalIdentifier: "backend-source-1"
                     )
                 ],
-                storyScenes: [],
+                videoDirectionScenes: [],
                 renderJobs: [],
                 artifacts: []
             )
@@ -369,7 +369,7 @@ final class AnimateCreateViewModelVideoDirectionStateTests: XCTestCase {
         let workflow = harness.finalRenderWorkflow
         harness.publishWorkspace(
             AnimateWorkspace(
-                video: AnimateCreateTestFixtures.makeVideo(id: "video-1", status: "story_ready"),
+                video: AnimateCreateTestFixtures.makeVideo(id: "video-1", status: "video_direction_ready"),
                 mediaAssets: [
                     AnimateCreateTestFixtures.makeMediaAsset(
                         id: "backend-media-1",
@@ -377,7 +377,7 @@ final class AnimateCreateViewModelVideoDirectionStateTests: XCTestCase {
                         hasUploadId: true
                     )
                 ],
-                storyScenes: [AnimateCreateTestFixtures.makeScene(id: "scene-1")],
+                videoDirectionScenes: [AnimateCreateTestFixtures.makeScene(id: "scene-1")],
                 renderJobs: [],
                 artifacts: []
             )
@@ -456,7 +456,7 @@ final class AnimateCreateViewModelVideoDirectionStateTests: XCTestCase {
                 mediaAssets: [
                     AnimateCreateTestFixtures.makeMediaAsset(id: "backend-media-1", hasUploadId: true)
                 ],
-                storyScenes: [AnimateCreateTestFixtures.makeScene(id: "scene-1")],
+                videoDirectionScenes: [AnimateCreateTestFixtures.makeScene(id: "scene-1")],
                 renderJobs: [],
                 artifacts: []
             )
@@ -519,11 +519,11 @@ final class AnimateCreateViewModelVideoDirectionStateTests: XCTestCase {
             imageGenerationAccountingClient: AnimateImageGenerationAccountingClient(baseURLString: "https://api.example.test")
         )
         viewModel.continueVideo(
-            AnimateCreateTestFixtures.makeVideo(id: "video-1", status: "story_ready"),
+            AnimateCreateTestFixtures.makeVideo(id: "video-1", status: "video_direction_ready"),
             focus: .video
         )
         let workspace = AnimateWorkspace(
-            video: AnimateCreateTestFixtures.makeVideo(id: "video-1", status: "story_ready"),
+            video: AnimateCreateTestFixtures.makeVideo(id: "video-1", status: "video_direction_ready"),
             mediaAssets: [
                 AnimateCreateTestFixtures.makeMediaAsset(
                     id: "backend-media-1",
@@ -531,7 +531,7 @@ final class AnimateCreateViewModelVideoDirectionStateTests: XCTestCase {
                     hasUploadId: true
                 )
             ],
-            storyScenes: [AnimateCreateTestFixtures.makeScene(id: "scene-1")],
+            videoDirectionScenes: [AnimateCreateTestFixtures.makeScene(id: "scene-1")],
             renderJobs: [],
             artifacts: []
         )
@@ -614,15 +614,15 @@ final class AnimateCreateViewModelVideoDirectionStateTests: XCTestCase {
             imageGenerationAccountingClient: AnimateImageGenerationAccountingClient(baseURLString: "https://api.example.test")
         )
         viewModel.continueVideo(
-            AnimateCreateTestFixtures.makeVideo(id: "video-1", status: "story_ready"),
+            AnimateCreateTestFixtures.makeVideo(id: "video-1", status: "video_direction_ready"),
             focus: .video
         )
         let workspace = AnimateWorkspace(
-            video: AnimateCreateTestFixtures.makeVideo(id: "video-1", status: "story_ready"),
+            video: AnimateCreateTestFixtures.makeVideo(id: "video-1", status: "video_direction_ready"),
             mediaAssets: [
                 AnimateCreateTestFixtures.makeMediaAsset(id: "backend-media-1", hasUploadId: true)
             ],
-            storyScenes: [AnimateCreateTestFixtures.makeScene(id: "scene-1")],
+            videoDirectionScenes: [AnimateCreateTestFixtures.makeScene(id: "scene-1")],
             renderJobs: [],
             artifacts: []
         )
@@ -690,7 +690,7 @@ final class AnimateCreateViewModelVideoDirectionStateTests: XCTestCase {
                 mediaAssets: [
                     AnimateCreateTestFixtures.makeMediaAsset(id: "backend-media-1", hasUploadId: true)
                 ],
-                storyScenes: [AnimateCreateTestFixtures.makeScene(id: "scene-1")],
+                videoDirectionScenes: [AnimateCreateTestFixtures.makeScene(id: "scene-1")],
                 renderJobs: [],
                 artifacts: []
             )
@@ -732,7 +732,7 @@ final class AnimateCreateViewModelVideoDirectionStateTests: XCTestCase {
                 mediaAssets: [
                     AnimateCreateTestFixtures.makeMediaAsset(id: "backend-media-1", hasUploadId: true)
                 ],
-                storyScenes: [AnimateCreateTestFixtures.makeScene(id: "scene-1")],
+                videoDirectionScenes: [AnimateCreateTestFixtures.makeScene(id: "scene-1")],
                 renderJobs: [],
                 artifacts: []
             )
@@ -884,12 +884,12 @@ final class AnimateCreateViewModelVideoDirectionStateTests: XCTestCase {
                 activeWorkspace: nil,
                 savedScenes: [],
                 generatedScenes: [],
-                statusMessage: AnimateRecoveryCopy.storyFailure(),
+                statusMessage: AnimateRecoveryCopy.videoDirectionFailure(),
                 isPlanning: false
             )
         )
 
-        XCTAssertEqual(viewModel.videoDirectionSummary.statusMessage, AnimateRecoveryCopy.storyFailure())
+        XCTAssertEqual(viewModel.videoDirectionSummary.statusMessage, AnimateRecoveryCopy.videoDirectionFailure())
         XCTAssertFalse(viewModel.isVideoDirectionPreparedForCurrentInput)
 
         viewModel.applyVideoDirectionState(
@@ -897,7 +897,7 @@ final class AnimateCreateViewModelVideoDirectionStateTests: XCTestCase {
                 activeWorkspace: nil,
                 savedScenes: [AnimateCreateTestFixtures.makeScene(id: "scene-1")],
                 generatedScenes: [],
-                statusMessage: AnimateRecoveryCopy.storyFailure(),
+                statusMessage: AnimateRecoveryCopy.videoDirectionFailure(),
                 isPlanning: false
             )
         )
@@ -939,7 +939,7 @@ final class AnimateCreateViewModelVideoDirectionStateTests: XCTestCase {
                             sortOrder: 0
                         )
                     ],
-                    storyScenes: [],
+                    videoDirectionScenes: [],
                     renderJobs: [],
                     artifacts: []
                 ),
@@ -1029,7 +1029,7 @@ final class AnimateCreateViewModelVideoDirectionStateTests: XCTestCase {
                 activeWorkspace: AnimateWorkspace(
                     video: video.withStoryInputSignature(backendSignature),
                     mediaAssets: [backendMedia],
-                    storyScenes: [AnimateCreateTestFixtures.makeScene(id: "scene-1")],
+                    videoDirectionScenes: [AnimateCreateTestFixtures.makeScene(id: "scene-1")],
                     renderJobs: [],
                     artifacts: []
                 ),
@@ -1107,7 +1107,7 @@ final class AnimateCreateViewModelVideoDirectionStateTests: XCTestCase {
                         storyInputSignature: preparedVideoDirection.signature
                     ),
                     mediaAssets: [preparedVideoDirection.media],
-                    storyScenes: [AnimateCreateTestFixtures.makeScene(id: "scene-1")],
+                    videoDirectionScenes: [AnimateCreateTestFixtures.makeScene(id: "scene-1")],
                     renderJobs: [],
                     artifacts: []
                 ),
@@ -1183,7 +1183,7 @@ final class AnimateCreateViewModelVideoDirectionStateTests: XCTestCase {
                             sourceLocalIdentifier: "local-asset-1"
                         )
                     ],
-                    storyScenes: [],
+                    videoDirectionScenes: [],
                     renderJobs: [],
                     artifacts: []
                 ),
@@ -1216,7 +1216,7 @@ final class AnimateCreateViewModelVideoDirectionStateTests: XCTestCase {
                             sourceLocalIdentifier: "local-asset-1"
                         )
                     ],
-                    storyScenes: [],
+                    videoDirectionScenes: [],
                     renderJobs: [],
                     artifacts: []
                 ),
@@ -1491,7 +1491,7 @@ final class AnimateCreateViewModelVideoDirectionStateTests: XCTestCase {
                 activeWorkspace: AnimateWorkspace(
                     video: video.withStoryInputSignature(signature),
                     mediaAssets: [media],
-                    storyScenes: [AnimateCreateTestFixtures.makeScene(id: "scene-1")],
+                    videoDirectionScenes: [AnimateCreateTestFixtures.makeScene(id: "scene-1")],
                     renderJobs: [],
                     artifacts: []
                 ),

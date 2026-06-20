@@ -5,7 +5,7 @@ final class AnimateInProgressListPresentationTests: XCTestCase {
     func testSummaryPillsUseVideoSummaryCounts() {
         let presentation = AnimateInProgressListPresentation.make(
             videosSummary: AnimateInProgressSummary.make(from: [
-                makeVideo(id: "active", status: "story_ready", updatedAt: 20),
+                makeVideo(id: "active", status: "video_direction_ready", updatedAt: 20),
                 makeVideo(id: "done", status: "gallery_ready", updatedAt: 10)
             ]),
             selectedVideoId: nil
@@ -20,7 +20,7 @@ final class AnimateInProgressListPresentationTests: XCTestCase {
         let presentation = AnimateInProgressListPresentation.make(
             videosSummary: AnimateInProgressSummary.make(from: [
                 makeVideo(id: "older-active", status: "in_progress", updatedAt: 10),
-                makeVideo(id: "newer-active", status: "story_ready", updatedAt: 30),
+                makeVideo(id: "newer-active", status: "video_direction_ready", updatedAt: 30),
                 makeVideo(id: "done", status: "gallery_ready", updatedAt: 20)
             ]),
             selectedVideoId: nil
@@ -34,7 +34,7 @@ final class AnimateInProgressListPresentationTests: XCTestCase {
     func testRowPresentationFormatsVideoMetadataAndSelection() {
         let video = makeVideo(
             id: "video-1",
-            status: "story_ready",
+            status: "video_direction_ready",
             title: "Family Weekend",
             creditCost: 3,
         )

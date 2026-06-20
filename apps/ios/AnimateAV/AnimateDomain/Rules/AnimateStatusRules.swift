@@ -19,8 +19,8 @@ enum AnimateStatusRules {
     }
 
     static func displayTitle(for status: String) -> String {
-        if status == "story_ready" {
-            return L10n.string("video.status.storyReady")
+        if status == "video_direction_ready" {
+            return L10n.string("video.status.videoDirectionReady")
         }
         if status == "final_render_pending" || status == "final_rendering" {
             return L10n.string("video.status.creatingVideo")
@@ -66,7 +66,7 @@ enum AnimateStatusRules {
             )
         }
 
-        if workspace.storyScenes.isEmpty {
+        if workspace.videoDirectionScenes.isEmpty {
             return AnimateNextAction(
                 title: L10n.string("video.nextAction.prepareStory.title"),
                 message: L10n.string("video.nextAction.prepareStory.message"),

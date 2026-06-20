@@ -231,7 +231,7 @@ final class AnimateCreditGateTests: XCTestCase {
         let video = AnimateVideo(
             id: "video-1",
             template: .birthdayMessage,
-            status: "story_ready",
+            status: "video_direction_ready",
             title: "Birthday",
             tone: nil,
             tempo: nil,

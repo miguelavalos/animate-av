@@ -9,20 +9,20 @@ enum AnimateRecoveryCopy {
         L10n.string("recovery.mediaUploadUnavailable")
     }
 
-    static func mediaStorySaveFailure() -> String {
-        L10n.string("recovery.mediaStorySaveFailure")
+    static func mediaVideoDirectionSaveFailure() -> String {
+        L10n.string("recovery.mediaVideoDirectionSaveFailure")
     }
 
     static func mediaVideoSaveFailure() -> String {
         L10n.string("recovery.mediaVideoSaveFailure")
     }
 
-    static func storyStartFailure() -> String {
-        L10n.string("recovery.storyStartFailure")
+    static func videoDirectionStartFailure() -> String {
+        L10n.string("recovery.videoDirectionStartFailure")
     }
 
-    static func storyFailure() -> String {
-        L10n.string("recovery.storyFailure")
+    static func videoDirectionFailure() -> String {
+        L10n.string("recovery.videoDirectionFailure")
     }
 
     static func renderStartFailure() -> String {

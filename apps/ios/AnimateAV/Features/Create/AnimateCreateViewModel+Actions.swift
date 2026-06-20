@@ -149,7 +149,7 @@ extension AnimateCreateViewModel {
             let persistedMedia = await self.mediaUploadWorkflow?.persistSelectedMedia(videoId: videoId)
             guard persistedMedia != nil || selectedMedia.isEmpty else {
                 self.failVideoDirectionPreparation(self.mediaStatusMessage
-                    ?? AnimateRecoveryCopy.mediaStorySaveFailure()
+                    ?? AnimateRecoveryCopy.mediaVideoDirectionSaveFailure()
                 )
                 return
             }
@@ -183,7 +183,7 @@ extension AnimateCreateViewModel {
                 }
             }
             guard didPrepareVideoDirection else {
-                self.failVideoDirectionPreparation(AnimateRecoveryCopy.storyFailure())
+                self.failVideoDirectionPreparation(AnimateRecoveryCopy.videoDirectionFailure())
                 return
             }
             guard (self.videoDirectionSummary.hasScenes || videoDirectionWorkflow.generatedPlan?.scenes.isEmpty == false),
@@ -437,7 +437,7 @@ extension AnimateCreateViewModel {
 
         let persistedMedia = await mediaUploadWorkflow?.persistSelectedMedia(videoId: videoId)
         guard persistedMedia != nil || selectedMedia.isEmpty else {
-            updateVideoDirectionStatusMessage(mediaStatusMessage ?? AnimateRecoveryCopy.mediaStorySaveFailure())
+            updateVideoDirectionStatusMessage(mediaStatusMessage ?? AnimateRecoveryCopy.mediaVideoDirectionSaveFailure())
             return false
         }
         inputSignature = currentVideoDirectionInputSignature(
@@ -521,6 +521,6 @@ extension AnimateCreateViewModel {
     private func videoCreationFailureMessage() -> String {
         videoCreationWorkflow?.errorMessage
             ?? setupErrorMessage
-            ?? AnimateRecoveryCopy.storyStartFailure()
+            ?? AnimateRecoveryCopy.videoDirectionStartFailure()
     }
 }

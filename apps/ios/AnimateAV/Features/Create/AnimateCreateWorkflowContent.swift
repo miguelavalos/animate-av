@@ -3530,7 +3530,7 @@ private struct AnimateCreateCompactAviGuide: View {
             return L10n.string("create.aviStatus.working.title")
         }
         if isReadyToReviewCredits {
-            return L10n.string("create.aviStatus.storyReady.title")
+            return L10n.string("create.aviStatus.videoDirectionReady.title")
         }
         if hasSelectedMedia, presentation.selectedLook != nil, !isVideoSetupGuideComplete {
             return L10n.string("create.guided.movement.title")
@@ -3552,7 +3552,7 @@ private struct AnimateCreateCompactAviGuide: View {
             return realtimeStatus.detail
         }
         if isReadyToReviewCredits {
-            return L10n.string("create.aviStatus.storyReady.detail")
+            return L10n.string("create.aviStatus.videoDirectionReady.detail")
         }
         if hasSelectedMedia, presentation.selectedLook != nil, !isVideoSetupGuideComplete {
             return L10n.string("create.guided.movement.detail")

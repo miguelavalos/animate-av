@@ -122,7 +122,7 @@ final class VideoDirectionWorkflow: WorkspaceObservingWorkflow {
                     "total_count": String(media.count),
                 ]
             )
-            statusMessage = AnimateRecoveryCopy.storyFailure()
+            statusMessage = AnimateRecoveryCopy.videoDirectionFailure()
             isPlanning = false
             return false
         } catch {
@@ -138,7 +138,7 @@ final class VideoDirectionWorkflow: WorkspaceObservingWorkflow {
                     "total_count": String(media.count),
                 ]
             )
-            statusMessage = AnimateRecoveryCopy.storyFailure()
+            statusMessage = AnimateRecoveryCopy.videoDirectionFailure()
             isPlanning = false
             return false
         }

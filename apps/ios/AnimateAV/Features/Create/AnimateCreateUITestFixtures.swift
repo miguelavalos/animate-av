@@ -2,7 +2,7 @@ import Foundation
 
 enum AnimateCreateUITestFixtures {
     enum Mode: String {
-        case storyReady = "story_ready"
+        case videoDirectionReady = "video_direction_ready"
         case videoPlanCheckingCost = "video_plan_checking_cost"
         case videoPlanReady = "video_plan_ready"
         case videoPlanReadyNoMessage = "video_plan_ready_no_message"
@@ -57,7 +57,7 @@ enum AnimateCreateUITestFixtures {
         AnimateWorkspace(
             video: video(for: mode),
             mediaAssets: mediaAssets,
-            storyScenes: storyScenes,
+            videoDirectionScenes: videoDirectionScenes,
             renderJobs: renderJobs(for: mode),
             artifacts: artifacts(for: mode)
         )
@@ -71,7 +71,7 @@ enum AnimateCreateUITestFixtures {
         switch mode {
         case .videoPlanInsufficientCredits:
             return .empty
-        case .storyReady, .videoPlanCheckingCost, .videoPlanReady, .videoPlanReadyNoMessage, .videoPlanReadyWithMessage, .finalQueued, .finalRunning, .full:
+        case .videoDirectionReady, .videoPlanCheckingCost, .videoPlanReady, .videoPlanReadyNoMessage, .videoPlanReadyWithMessage, .finalQueued, .finalRunning, .full:
             return AnimateCreditBalance(proMonthly: 4, promotional: 1, purchased: 3)
         }
     }
@@ -88,7 +88,7 @@ enum AnimateCreateUITestFixtures {
         ]
     }
 
-    static var storyScenes: [AnimateVideoDirectionScene] {
+    static var videoDirectionScenes: [AnimateVideoDirectionScene] {
         [
             storyScene(
                 id: "scene-1",
@@ -111,7 +111,7 @@ enum AnimateCreateUITestFixtures {
 
     static func renderJobs(for mode: Mode) -> [AnimateRenderJob] {
         switch mode {
-        case .storyReady, .videoPlanCheckingCost, .videoPlanReady, .videoPlanReadyNoMessage, .videoPlanReadyWithMessage, .videoPlanInsufficientCredits:
+        case .videoDirectionReady, .videoPlanCheckingCost, .videoPlanReady, .videoPlanReadyNoMessage, .videoPlanReadyWithMessage, .videoPlanInsufficientCredits:
             return []
         case .finalQueued:
             return [
@@ -134,7 +134,7 @@ enum AnimateCreateUITestFixtures {
 
     static func artifacts(for mode: Mode) -> [AnimateArtifact] {
         switch mode {
-        case .storyReady, .videoPlanCheckingCost, .videoPlanReady, .videoPlanReadyNoMessage, .videoPlanReadyWithMessage, .videoPlanInsufficientCredits:
+        case .videoDirectionReady, .videoPlanCheckingCost, .videoPlanReady, .videoPlanReadyNoMessage, .videoPlanReadyWithMessage, .videoPlanInsufficientCredits:
             return []
         case .finalQueued, .finalRunning:
             return []
@@ -191,8 +191,8 @@ enum AnimateCreateUITestFixtures {
             return "gallery_ready"
         case .finalQueued, .finalRunning:
             return "rendering"
-        case .storyReady, .videoPlanCheckingCost, .videoPlanReady, .videoPlanReadyNoMessage, .videoPlanReadyWithMessage, .videoPlanInsufficientCredits:
-            return "story_ready"
+        case .videoDirectionReady, .videoPlanCheckingCost, .videoPlanReady, .videoPlanReadyNoMessage, .videoPlanReadyWithMessage, .videoPlanInsufficientCredits:
+            return "video_direction_ready"
         }
     }
 

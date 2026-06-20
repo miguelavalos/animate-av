@@ -25,10 +25,10 @@ struct AnimateInProgressMediaSection: View {
 }
 
 struct AnimateInProgressVideoDirectionSection: View {
-    let storyScenes: [AnimateVideoDirectionScene]
+    let videoDirectionScenes: [AnimateVideoDirectionScene]
 
     private var presentation: AnimateInProgressVideoDirectionSectionPresentation {
-        AnimateInProgressVideoDirectionSectionPresentation(storyScenes: storyScenes)
+        AnimateInProgressVideoDirectionSectionPresentation(videoDirectionScenes: videoDirectionScenes)
     }
 
     var body: some View {

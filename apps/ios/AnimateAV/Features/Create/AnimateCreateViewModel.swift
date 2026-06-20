@@ -494,7 +494,7 @@ final class AnimateCreateViewModel: ObservableObject {
         setupErrorMessage = nil
         selectedMedia = AnimateCreateUITestFixtures.selectedMedia
         mediaStatusMessage = L10n.string("create.media.fixture.synced")
-        savedScenes = workspace.storyScenes
+        savedScenes = workspace.videoDirectionScenes
         generatedScenes = []
         videoDirectionStatusMessage = L10n.string("create.story.status.ready")
         lastPreparedVideoDirectionInputSignature = workspace.video.storyInputSignature
@@ -511,7 +511,7 @@ final class AnimateCreateViewModel: ObservableObject {
         switch fixtureMode {
         case .videoPlanReady, .videoPlanReadyNoMessage, .videoPlanReadyWithMessage, .videoPlanInsufficientCredits:
             renderPlan = AnimateCreateUITestFixtures.renderPlan(for: fixtureMode)
-        case .storyReady, .videoPlanCheckingCost, .finalQueued, .finalRunning, .full:
+        case .videoDirectionReady, .videoPlanCheckingCost, .finalQueued, .finalRunning, .full:
             renderPlan = nil
         }
         if let renderPlan {
@@ -523,7 +523,7 @@ final class AnimateCreateViewModel: ObservableObject {
         isPreparingFinalPlan = fixtureMode == .videoPlanCheckingCost
         finalRenderStatusMessage = {
             switch fixtureMode {
-            case .storyReady:
+            case .videoDirectionReady:
                 return nil
             case .videoPlanCheckingCost:
                 return L10n.string("workflow.final.checkingPlan")
@@ -543,7 +543,7 @@ final class AnimateCreateViewModel: ObservableObject {
         case .videoPlanCheckingCost, .videoPlanReady, .videoPlanReadyNoMessage, .videoPlanReadyWithMessage, .videoPlanInsufficientCredits:
             pendingFocus = nil
             continuationFocusHint = nil
-        case .storyReady, .finalQueued, .finalRunning, .full:
+        case .videoDirectionReady, .finalQueued, .finalRunning, .full:
             pendingFocus = .video
             continuationFocusHint = .video
         }
@@ -561,7 +561,7 @@ final class AnimateCreateViewModel: ObservableObject {
     }
 
     var effectiveSavedScenes: [AnimateVideoDirectionScene] {
-        effectiveActiveWorkspace?.storyScenes ?? savedScenes
+        effectiveActiveWorkspace?.videoDirectionScenes ?? savedScenes
     }
 
     var effectiveFinalExport: AnimateArtifact? {
