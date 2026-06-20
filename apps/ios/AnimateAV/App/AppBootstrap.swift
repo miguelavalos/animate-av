@@ -8,7 +8,6 @@ struct AnimateAppBootstrapView: View {
     @State private var selectedTab: AnimateRootTab = .home
     @State private var authPresentationState: AVProductAccountAuthPresentationState = .hidden
     @State private var authenticationWasSkipped = false
-    @State private var initialSplashIsPresented = true
     @State private var initialAccountRestoreCompleted = false
     @State private var initialAccountRestoreInProgress = false
     @State private var didApplyLaunchTab = false
@@ -21,9 +20,7 @@ struct AnimateAppBootstrapView: View {
 
     var body: some View {
         Group {
-            if shouldShowInitialSplash {
-                AnimateAVSplashView()
-            } else if shouldShowOnboarding {
+            if shouldShowOnboarding {
                 AnimateAuthOnboardingView(
                     authPresentationState: $authPresentationState,
                     accountIsAvailable: dependencies.accountController.isAccountAvailable,
@@ -37,6 +34,9 @@ struct AnimateAppBootstrapView: View {
                     startSignInFlow: { startSignInFlow(showAuthOptions: true) }
                 )
                 .id(dependencies.accountController.isSignedIn ? "signed-in-shell" : "skipped-auth-shell")
+                .avSplashTransition(policy: splashPolicy) {
+                    AnimateAVSplashView()
+                }
                 .overlay {
                     if postAuthenticationSplashIsPresented {
                         AnimateAVSplashView()
@@ -59,7 +59,7 @@ struct AnimateAppBootstrapView: View {
             dependencies.applyUITestFixturesIfNeeded()
             await Task.yield()
             dependencies.applyUITestFixturesIfNeeded()
-            await completeInitialSplashIfNeeded()
+            showInitialOnboardingAfterRestoreIfNeeded()
         }
         .task(id: scenePhase) {
             guard scenePhase == .active else { return }
@@ -80,10 +80,6 @@ struct AnimateAppBootstrapView: View {
         return rootGate.shouldShowOnboarding
     }
 
-    private var shouldShowInitialSplash: Bool {
-        initialSplashIsPresented && !launchContext.shouldDisableSplash
-    }
-
     private func applyLaunchTabIfNeeded() {
         guard !didApplyLaunchTab else { return }
         didApplyLaunchTab = true
@@ -91,20 +87,7 @@ struct AnimateAppBootstrapView: View {
         selectedTab = AnimateRootTab(preferredTab)
     }
 
-    private func completeInitialSplashIfNeeded() async {
-        guard initialSplashIsPresented else { return }
-        if !launchContext.shouldDisableSplash {
-            try? await Task.sleep(for: splashPolicy.displayDuration)
-        }
-        await MainActor.run {
-            withAnimation(splashPolicy.dismissAnimation) {
-                initialSplashIsPresented = false
-                showInitialOnboardingAfterSplashIfNeeded()
-            }
-        }
-    }
-
-    private func showInitialOnboardingAfterSplashIfNeeded() {
+    private func showInitialOnboardingAfterRestoreIfNeeded() {
         guard initialAccountRestoreCompleted else { return }
         guard !dependencies.accountController.isSignedIn else { return }
         guard !dependencies.accountController.isAccountSessionTemporarilyUnavailable else { return }
