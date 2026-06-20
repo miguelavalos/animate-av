@@ -163,6 +163,25 @@ If the app appears to need a timer or manual status loop for normal video or
 image creation state, stop and review the private architecture contract before
 adding code.
 
+## External Links And Search Rule
+
+Animate AV V1 does not have a product browser, web search surface, station
+catalog search, or music-search shortcut surface. Do not copy Tune AV's in-app
+browser/search routing into Animate AV unless a real Animate product feature
+needs a contained browsing experience.
+
+The allowed v1 external links are controlled app/support/legal/account links
+from `AppConfig`: support, privacy, terms, account deletion, open source, and
+Apple subscription management. These values must come from generated runtime
+config or explicit app constants and must stay HTTPS. Profile, paywall, and
+onboarding surfaces may open those links with the native SwiftUI `openURL`
+environment.
+
+If a future Animate feature needs free-text search or arbitrary external
+destinations, add a product-specific privacy/App Review review first. Do not
+log free-text search terms or introduce open browsing by treating Tune AV's
+radio/music search behavior as a shared Apps AV default.
+
 ## Realtime Subscription Rule
 
 Owner-scoped realtime reads must be established in this order:

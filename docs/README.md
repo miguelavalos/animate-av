@@ -75,6 +75,12 @@ The basic guide is a compact status/helper surface for the same setup order. It
 is not an additional step and must not describe unavailable audio, voice,
 provider, preview-versioning, or cloud-storage features.
 
+Animate AV V1 does not have a Tune-style in-app browser, catalog search, or
+music-search shortcut surface. User-visible external navigation is limited to
+configured support, privacy, terms, account deletion, open source, and Apple
+subscription-management links. Do not add arbitrary browsing/search defaults
+without a product-specific privacy and App Review review.
+
 The final credit review mirrors the source-photo setting. When enabled, the
 final video starts with the original photo before the animated video begins; the
 setting has no extra credit cost and must not be described as a generated-image
