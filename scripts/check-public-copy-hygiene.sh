@@ -9,6 +9,14 @@ checks=(
   "Moments AV"
   "MomentsAV"
   "momentsav"
+  "Guide and voice"
+  "optional voice line"
+  "short voice line"
+  "who speaks"
+  "quién habla"
+  "wer spricht"
+  "spoken exactly"
+  "exact spoken text"
 )
 
 paths=(
