@@ -4,17 +4,6 @@
       "filename": "animate-av-logo-transparent.png",
       "idiom": "universal",
       "scale": "1x"
-    },
-    {
-      "appearances": [
-        {
-          "appearance": "luminosity",
-          "value": "dark"
-        }
-      ],
-      "filename": "animate-av-logo-transparent-dark.png",
-      "idiom": "universal",
-      "scale": "1x"
     }
   ],
   "info": {
