@@ -22,6 +22,8 @@ struct AnimateRenderJob: Identifiable, Decodable, Equatable {
     let provider: String?
     let model: String?
     let providerRequestId: String?
+    let sourceImageArtifactId: String?
+    let generatedImageArtifactId: String?
     let errorCode: String?
     let errorMessage: String?
     let createdAt: Double
@@ -49,6 +51,8 @@ struct AnimateRenderJob: Identifiable, Decodable, Equatable {
         provider: String? = nil,
         model: String? = nil,
         providerRequestId: String? = nil,
+        sourceImageArtifactId: String? = nil,
+        generatedImageArtifactId: String? = nil,
         errorCode: String? = nil,
         errorMessage: String? = nil,
         createdAt: Double,
@@ -75,6 +79,8 @@ struct AnimateRenderJob: Identifiable, Decodable, Equatable {
         self.provider = provider
         self.model = model
         self.providerRequestId = providerRequestId
+        self.sourceImageArtifactId = sourceImageArtifactId
+        self.generatedImageArtifactId = generatedImageArtifactId
         self.errorCode = errorCode
         self.errorMessage = errorMessage
         self.createdAt = createdAt
@@ -103,6 +109,8 @@ struct AnimateRenderJob: Identifiable, Decodable, Equatable {
         case provider
         case model
         case providerRequestId
+        case sourceImageArtifactId
+        case generatedImageArtifactId
         case errorCode
         case errorMessage
         case createdAt

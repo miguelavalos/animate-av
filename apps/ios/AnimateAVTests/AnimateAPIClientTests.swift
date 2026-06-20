@@ -1209,6 +1209,8 @@ final class AnimateAPIClientTests: XCTestCase {
               "artifactId": null,
               "artifactKind": null,
               "artifactStatus": null,
+              "sourceImageArtifactId": null,
+              "generatedImageArtifactId": null,
               "errorCode": null,
               "errorMessage": null,
               "updatedAt": "2026-05-16T16:00:00Z"
@@ -1224,6 +1226,41 @@ final class AnimateAPIClientTests: XCTestCase {
         XCTAssertEqual(AnimateURLProtocolMock.lastRequest?.value(forHTTPHeaderField: "Authorization"), "Bearer token-1")
         XCTAssertEqual(status.status, "running")
         XCTAssertEqual(status.progressPercent, 25)
+    }
+
+    func testRenderStatusDecodesRelatedImageArtifactIds() async throws {
+        let session = makeMockSession(
+            json: """
+            {
+              "appId": "animateav",
+              "videoId": "video-1",
+              "renderJobId": "render-1",
+              "workflowRunId": "workflow-1",
+              "renderKind": "final",
+              "status": "completed",
+              "phase": "completed",
+              "progressPercent": 100,
+              "artifactId": "final-video-1",
+              "artifactKind": "final_video",
+              "artifactStatus": "available",
+              "artifactR2Key": "final/video-1.mp4",
+              "artifactDurationSeconds": 5,
+              "artifactCreditCost": 1,
+              "artifactHasWatermark": true,
+              "sourceImageArtifactId": "source-upload-1",
+              "generatedImageArtifactId": "generated-image-1",
+              "errorCode": null,
+              "errorMessage": null,
+              "updatedAt": "2026-06-20T00:00:00Z"
+            }
+            """
+        )
+        let client = AnimateRenderStatusClient(baseURLString: accountAPIBaseURL, session: session)
+
+        let status = try await client.fetchStatus(renderJobId: "render-1", bearerToken: "token-1")
+
+        XCTAssertEqual(status.sourceImageArtifactId, "source-upload-1")
+        XCTAssertEqual(status.generatedImageArtifactId, "generated-image-1")
     }
 
     func testRenderStatusSurfacesAPIErrorMessage() async throws {

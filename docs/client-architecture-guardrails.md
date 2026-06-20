@@ -131,6 +131,12 @@ listen to realtime workspace state and also have an authenticated
 that exits to a recoverable error. A network, projection, or app relaunch gap
 must never leave iOS waiting forever.
 
+The final MP4 save is the only operation that may gate the `Saving` state.
+Source and generated images used by the Info comparison are companion media:
+attach local copies when already available, otherwise backfill them from backend
+artifact ids after the video is saved. Missing or slow companion image downloads
+must not block the video from becoming ready for Gallery.
+
 When the final artifact is ready, v1 shows only the download/finish path. After
 finish, the creation screen closes and Gallery shows the newest finished item
 first. A Gallery item may be remote metadata only until the final video or image

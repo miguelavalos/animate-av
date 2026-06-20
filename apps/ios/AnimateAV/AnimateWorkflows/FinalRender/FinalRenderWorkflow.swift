@@ -33,6 +33,7 @@ final class FinalRenderWorkflow: WorkspaceObservingWorkflow {
     private var preparedVideoSourceUpload: PreparedVideoSourceUpload?
     private var pendingSourceComparisonImageData: Data?
     private let finalArtifactDownloadTimeout: UInt64 = 130_000_000_000
+    private let relatedArtifactDownloadTimeout: UInt64 = 25_000_000_000
     private var renderStatusWatchTask: Task<Void, Never>?
     private var watchedRenderJobId: String?
     private let renderStatusWatchTimeout: TimeInterval = 12 * 60
@@ -784,6 +785,8 @@ final class FinalRenderWorkflow: WorkspaceObservingWorkflow {
             targetDurationMs: status.artifactDurationSeconds.map { Double($0) * 1000 },
             rendererMode: nil,
             workflowRunId: status.workflowRunId,
+            sourceImageArtifactId: status.sourceImageArtifactId,
+            generatedImageArtifactId: status.generatedImageArtifactId,
             errorCode: status.errorCode,
             errorMessage: status.errorMessage,
             createdAt: Date().timeIntervalSince1970 * 1000,
@@ -855,6 +858,8 @@ final class FinalRenderWorkflow: WorkspaceObservingWorkflow {
             title: nil,
             look: nil,
             videoJobId: status.renderJobId,
+            sourceImageArtifactId: status.sourceImageArtifactId,
+            generatedImageArtifactId: status.generatedImageArtifactId,
             status: artifactStatus,
             durationSeconds: status.artifactDurationSeconds.map(Double.init),
             creditCost: status.artifactCreditCost,
@@ -1009,27 +1014,8 @@ final class FinalRenderWorkflow: WorkspaceObservingWorkflow {
                 let fileURL = try await self.finalRenderClient.downloadFinalArtifact(from: download)
                 return (fileURL, download.r2Key)
             }
-            var generatedImageRelativePath: String?
-            if let imageArtifact = workspace.latestGeneratedImageArtifact {
-                do {
-                    pendingGalleryImage = try await downloadGeneratedImageToGallery(
-                        artifact: imageArtifact,
-                        bearerToken: bearerToken
-                    )
-                    generatedImageRelativePath = pendingGalleryImage?.localRelativePath
-                } catch {
-                    pendingGalleryImage = nil
-                    AnimateWorkflowDiagnostics.capture(
-                        error,
-                        feature: "animate.final_render",
-                        operation: "download",
-                        step: "generated_image_gallery_save",
-                        data: [
-                            "artifact_status": imageArtifact.status,
-                        ]
-                    )
-                }
-            }
+            let generatedImageRelativePath = workspace.latestGeneratedImageArtifact
+                .flatMap { localGeneratedImageRecord(for: $0)?.localRelativePath }
             let sourceImageRelativePath: String?
             if let pendingSourceComparisonImageData {
                 do {
@@ -1054,7 +1040,7 @@ final class FinalRenderWorkflow: WorkspaceObservingWorkflow {
                 sourceImageRelativePath = nil
             }
             let createdAt = Date()
-            pendingGalleryVideo = try galleryStore.saveDownloadedVideo(
+            let savedVideo = try galleryStore.saveDownloadedVideo(
                 temporaryFileURL: temporaryFileURL,
                 videoId: workspace.video.id,
                 artifactId: downloadArtifactId,
@@ -1067,8 +1053,15 @@ final class FinalRenderWorkflow: WorkspaceObservingWorkflow {
                 generatedImageLocalRelativePath: generatedImageRelativePath,
                 createdAt: createdAt
             )
+            pendingGalleryVideo = savedVideo
             canRetryFinalVideoDownload = false
             statusMessage = L10n.string("workflow.final.savedLocal")
+            scheduleComparisonImageBackfillIfNeeded(
+                record: savedVideo,
+                workspace: workspace,
+                artifact: artifact,
+                bearerToken: bearerToken
+            )
         } catch {
             pendingGalleryVideo = nil
             pendingGalleryImage = nil
@@ -1083,6 +1076,114 @@ final class FinalRenderWorkflow: WorkspaceObservingWorkflow {
             )
             canRetryFinalVideoDownload = true
             statusMessage = L10n.string("workflow.final.saveLocalFailed")
+        }
+    }
+
+    private func scheduleComparisonImageBackfillIfNeeded(
+        record: AnimateGalleryVideoRecord,
+        workspace: AnimateWorkspace,
+        artifact: AnimateArtifact,
+        bearerToken: String
+    ) {
+        guard record.sourceImageLocalRelativePath == nil
+                || record.generatedImageLocalRelativePath == nil
+        else {
+            return
+        }
+
+        Task { [weak self] in
+            await self?.backfillComparisonImages(
+                record: record,
+                workspace: workspace,
+                artifact: artifact,
+                bearerToken: bearerToken
+            )
+        }
+    }
+
+    private func backfillComparisonImages(
+        record: AnimateGalleryVideoRecord,
+        workspace: AnimateWorkspace,
+        artifact: AnimateArtifact,
+        bearerToken: String
+    ) async {
+        var sourceImageRelativePath = record.sourceImageLocalRelativePath
+        var generatedImageRelativePath = record.generatedImageLocalRelativePath
+        var downloadedGeneratedImage: AnimateGalleryImageRecord?
+
+        if generatedImageRelativePath == nil,
+           let generatedArtifact = generatedImageArtifact(for: workspace, finalArtifact: artifact) {
+            do {
+                let imageRecord = try await downloadGeneratedImageToGallery(
+                    artifact: generatedArtifact,
+                    bearerToken: bearerToken
+                )
+                downloadedGeneratedImage = imageRecord
+                generatedImageRelativePath = imageRecord.localRelativePath
+            } catch {
+                AnimateWorkflowDiagnostics.capture(
+                    error,
+                    feature: "animate.final_render",
+                    operation: "download",
+                    step: "generated_image_gallery_backfill",
+                    data: ["artifact_status": generatedArtifact.status]
+                )
+            }
+        }
+
+        if sourceImageRelativePath == nil,
+           let sourceImageArtifactId = sourceImageArtifactId(for: workspace, finalArtifact: artifact) {
+            do {
+                let temporaryFileURL = try await withRelatedArtifactDownloadTimeout { [self] in
+                    let download = try await self.finalRenderClient.prepareImageArtifactDownload(
+                        artifactId: sourceImageArtifactId,
+                        bearerToken: bearerToken
+                    )
+                    return try await self.finalRenderClient.downloadFinalArtifact(from: download)
+                }
+                let data = try Data(contentsOf: temporaryFileURL)
+                sourceImageRelativePath = try galleryStore.saveSourceImage(
+                    data: data,
+                    videoId: record.videoId,
+                    artifactId: record.artifactId
+                )
+            } catch {
+                AnimateWorkflowDiagnostics.capture(
+                    error,
+                    feature: "animate.final_render",
+                    operation: "download",
+                    step: "source_image_gallery_backfill",
+                    data: ["artifact_status": artifact.status]
+                )
+            }
+        }
+
+        guard sourceImageRelativePath != record.sourceImageLocalRelativePath
+                || generatedImageRelativePath != record.generatedImageLocalRelativePath
+        else {
+            return
+        }
+
+        let updatedRecord = AnimateGalleryVideoRecord(
+            id: record.id,
+            videoId: record.videoId,
+            artifactId: record.artifactId,
+            title: record.title,
+            r2Key: record.r2Key,
+            localRelativePath: record.localRelativePath,
+            sourceImageLocalRelativePath: sourceImageRelativePath,
+            generatedImageLocalRelativePath: generatedImageRelativePath,
+            createdAt: record.createdAt
+        )
+        if pendingGalleryVideo?.artifactId == record.artifactId {
+            pendingGalleryVideo = updatedRecord
+        }
+        if let downloadedGeneratedImage {
+            pendingGalleryImage = downloadedGeneratedImage
+            galleryStore.addImageRecord(downloadedGeneratedImage)
+        }
+        if galleryStore.contains(artifactId: record.artifactId) {
+            galleryStore.addRecord(updatedRecord)
         }
     }
 
@@ -1104,8 +1205,63 @@ final class FinalRenderWorkflow: WorkspaceObservingWorkflow {
         }
     }
 
+    private func withRelatedArtifactDownloadTimeout<T: Sendable>(
+        operation: @escaping @Sendable () async throws -> T
+    ) async throws -> T {
+        try await withThrowingTaskGroup(of: T.self) { group in
+            group.addTask {
+                try await operation()
+            }
+            group.addTask { [relatedArtifactDownloadTimeout] in
+                try await Task.sleep(nanoseconds: relatedArtifactDownloadTimeout)
+                throw AnimateFinalRenderError.downloadFailed
+            }
+
+            let result = try await group.next()!
+            group.cancelAll()
+            return result
+        }
+    }
+
     func finalDownloadArtifactId(for artifact: AnimateArtifact) -> String {
         artifact.workflowArtifactId ?? artifact.id
+    }
+
+    private func sourceImageArtifactId(
+        for workspace: AnimateWorkspace,
+        finalArtifact: AnimateArtifact
+    ) -> String? {
+        finalArtifact.sourceImageArtifactId
+            ?? latestFinalJob?.sourceImageArtifactId
+            ?? workspace.latestRenderJob(kind: "final")?.sourceImageArtifactId
+    }
+
+    private func generatedImageArtifact(
+        for workspace: AnimateWorkspace,
+        finalArtifact: AnimateArtifact
+    ) -> AnimateArtifact? {
+        if let artifact = workspace.latestGeneratedImageArtifact {
+            return artifact
+        }
+        guard let artifactId = finalArtifact.generatedImageArtifactId
+            ?? latestFinalJob?.generatedImageArtifactId
+            ?? workspace.latestRenderJob(kind: "final")?.generatedImageArtifactId
+        else {
+            return nil
+        }
+        return AnimateArtifact(
+            id: artifactId,
+            workflowArtifactId: artifactId,
+            kind: "generated_image",
+            r2Key: "",
+            title: nil,
+            look: workspace.video.look,
+            videoJobId: finalArtifact.videoJobId,
+            status: "available",
+            hasWatermark: nil,
+            expiresAt: finalArtifact.expiresAt,
+            createdAt: finalArtifact.createdAt
+        )
     }
 
     private func downloadGeneratedImageToGallery(

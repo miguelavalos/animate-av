@@ -19,6 +19,8 @@ struct AnimateRenderStatusResponse: Decodable, Equatable {
     let artifactDurationSeconds: Int?
     let artifactCreditCost: Int?
     let artifactHasWatermark: Bool?
+    let sourceImageArtifactId: String?
+    let generatedImageArtifactId: String?
     let errorCode: String?
     let errorMessage: String?
     let updatedAt: String
@@ -42,6 +44,8 @@ struct AnimateRenderStatusResponse: Decodable, Equatable {
         case artifactDurationSeconds
         case artifactCreditCost
         case artifactHasWatermark
+        case sourceImageArtifactId
+        case generatedImageArtifactId
         case errorCode
         case errorMessage
         case updatedAt

@@ -103,7 +103,10 @@ Gallery video cards currently render as a two-column grid to preserve the
 vertical 9:16 thumbnail shape. Opening a playable local video starts playback
 directly. The video info sheet can show the source and generated images in a
 compact comparison; tapping that preview opens a larger full-image comparison or
-single-image preview depending on which images are available.
+single-image preview depending on which images are available. These comparison
+images are companion media and must not block final video save; the MP4 becomes
+ready for Gallery first, then missing comparison images can be backfilled from
+backend artifact metadata when available.
 
 Current polish note: the implementation still contains visible `Gallery` and
 `In Progress` labels from the reusable Apps AV foundation. Those labels are
