@@ -51,6 +51,11 @@ in the private AVALSYS suite.
 - [ ] Public Markdown links are valid.
 - [ ] Public copy hygiene passes: no legacy credit phrasing, technical photo
   wording, or copied prior-product naming in public app copy/docs.
+- [ ] App Store metadata and review-note drafts do not describe a Tune-style
+  browser, catalog search, music search, open web browsing, or arbitrary
+  external search. Animate AV V1 external navigation is limited to configured
+  support, privacy, terms, account deletion, open source, and Apple
+  subscription-management links.
 - [ ] Public screenshots, if any, contain no private user data, account data,
   request IDs, receipts, or internal logs.
 - [ ] Final icons, splash assets, AV marks, and Avi artwork are added only after
