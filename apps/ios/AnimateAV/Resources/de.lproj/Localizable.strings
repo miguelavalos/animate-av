@@ -905,6 +905,7 @@
 "workflow.final.addCredits" = "Füge Credits vor dem finalen Video hinzu.";
 "workflow.final.notReady" = "Der finale Export ist noch nicht bereit zum Video creationn.";
 "workflow.final.tryAgain" = "Das Video konnte nicht abgeschlossen werden. Bitte versuche es erneut.";
+"workflow.final.staleRender" = "Das Video wurde zu lange nicht aktualisiert. Bitte versuche es erneut.";
 "workflow.final.planChanged" = "Der Videoplan hat sich geändert. Prüfe die Kosten erneut, bevor du das Video erstellst.";
 "workflow.final.notCreatable" = "Dieses Video kann noch nicht erstellt werden. Prüfe Foto, Credits und Optionen.";
 "workflow.final.contactSupport" = "Es gibt ein Serviceproblem. Versuche es später erneut oder kontaktiere den Support.";

@@ -38,6 +38,19 @@ final class AnimateInProgressProgressModelTests: XCTestCase {
         XCTAssertEqual(final?.detail, "Available")
     }
 
+    func testAvailableFinalVideoArtifactCompletesFinalProgress() {
+        let model = AnimateInProgressProgressModel(
+            workspace: makeWorkspace(
+                renderJobs: [makeRenderJob(kind: "final", status: "running")],
+                artifacts: [makeArtifact(kind: "final_video", status: "available")]
+            )
+        )
+
+        let final = model.phases.first { $0.title == "Create Video" }
+        XCTAssertEqual(final?.state, .complete)
+        XCTAssertEqual(final?.detail, "Available")
+    }
+
     private func makeWorkspace(
         mediaAssets: [AnimateMediaAsset] = [],
         videoDirectionScenes: [AnimateVideoDirectionScene] = [],
@@ -91,8 +104,8 @@ final class AnimateInProgressProgressModelTests: XCTestCase {
             providerRequestId: "provider-request-1",
             errorCode: status == "failed" ? "provider_failed" : nil,
             errorMessage: status == "failed" ? "Render failed." : nil,
-            createdAt: 1_779_000_000_000,
-            updatedAt: 1_779_000_001_000
+            createdAt: Date().timeIntervalSince1970 * 1_000,
+            updatedAt: Date().timeIntervalSince1970 * 1_000
         )
     }
 }

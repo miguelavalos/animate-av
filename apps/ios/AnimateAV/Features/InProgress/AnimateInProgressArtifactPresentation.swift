@@ -45,7 +45,8 @@ struct AnimateInProgressArtifactPresentation: Equatable {
     }
 
     static func finalExport(in artifacts: [AnimateArtifact]) -> AnimateInProgressArtifactPresentation? {
-        artifacts.last { $0.kind == "final_export" }.map(AnimateInProgressArtifactPresentation.init)
+        artifacts.last { $0.kind == "final_video" || $0.kind == "final_export" }
+            .map(AnimateInProgressArtifactPresentation.init)
     }
 }
 
@@ -63,22 +64,23 @@ struct AnimateInProgressRenderJobPresentation: Identifiable, Equatable {
     let errorMessage: String?
 
     init(renderJob: AnimateRenderJob) {
-        id = renderJob.id
-        status = renderJob.status
-        kindTitle = AnimateStatusRules.displayKind(renderJob.kind)
-        providerTitle = renderJob.provider == nil ? L10n.string("video.job.notRecorded") : L10n.string("video.job.recorded")
-        modelTitle = renderJob.model == nil ? L10n.string("video.job.notRecorded") : L10n.string("video.job.configured")
-        createdAtTitle = AnimateDateFormatting.formattedDate(milliseconds: renderJob.createdAt)
-        updatedAtTitle = AnimateDateFormatting.formattedDate(milliseconds: renderJob.updatedAt)
-        workflowRunId = renderJob.workflowRunId
-        providerRequestId = renderJob.providerRequestId
-        errorCode = renderJob.errorCode
-        errorMessage = renderJob.status == "failed"
+        let resolvedRenderJob = renderJob.resolvedForUser()
+        id = resolvedRenderJob.id
+        status = resolvedRenderJob.status
+        kindTitle = AnimateStatusRules.displayKind(resolvedRenderJob.kind)
+        providerTitle = resolvedRenderJob.provider == nil ? L10n.string("video.job.notRecorded") : L10n.string("video.job.recorded")
+        modelTitle = resolvedRenderJob.model == nil ? L10n.string("video.job.notRecorded") : L10n.string("video.job.configured")
+        createdAtTitle = AnimateDateFormatting.formattedDate(milliseconds: resolvedRenderJob.createdAt)
+        updatedAtTitle = AnimateDateFormatting.formattedDate(milliseconds: resolvedRenderJob.updatedAt)
+        workflowRunId = resolvedRenderJob.workflowRunId
+        providerRequestId = resolvedRenderJob.providerRequestId
+        errorCode = resolvedRenderJob.errorCode
+        errorMessage = resolvedRenderJob.status == "failed"
             ? AnimateRecoveryCopy.failedRenderDetail(
-                userMessage: renderJob.userMessage,
-                errorMessage: renderJob.errorMessage
+                userMessage: resolvedRenderJob.userMessage,
+                errorMessage: resolvedRenderJob.errorMessage
             )
-            : renderJob.errorMessage
+            : resolvedRenderJob.errorMessage
     }
 
     static func sorted(_ renderJobs: [AnimateRenderJob]) -> [AnimateInProgressRenderJobPresentation] {

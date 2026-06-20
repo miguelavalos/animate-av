@@ -138,6 +138,23 @@ final class AnimateStatusRulesTests: XCTestCase {
         XCTAssertEqual(action.continuationFocus, .finalRender)
     }
 
+    func testNextActionMarksFinishedWhenFinalVideoIsAvailable() {
+        let action = AnimateStatusRules.nextAction(
+            for: makeWorkspace(
+                mediaAssets: [makeMediaAsset()],
+                videoDirectionScenes: [makeVideoDirectionScene()],
+                artifacts: [
+                    makeArtifact(kind: "final_video")
+                ]
+            )
+        )
+
+        XCTAssertEqual(action.title, "Finished")
+        XCTAssertEqual(action.systemImage, "checkmark.circle")
+        XCTAssertEqual(action.primaryButtonTitle, "Open in Create")
+        XCTAssertEqual(action.continuationFocus, .finalRender)
+    }
+
     func testNextActionPrioritizesFailedRenderJobs() {
         let action = AnimateStatusRules.nextAction(
             for: makeWorkspace(
@@ -151,6 +168,25 @@ final class AnimateStatusRulesTests: XCTestCase {
         XCTAssertEqual(action.systemImage, "exclamationmark.triangle")
         XCTAssertEqual(action.primaryButtonTitle, "Open in Create")
         XCTAssertEqual(action.continuationFocus, .finalRender)
+    }
+
+    func testStaleSavingRenderJobResolvesAsRecoverableFailure() {
+        let now = Date(timeIntervalSince1970: 1_800_000)
+        let staleJob = makeRenderJob(
+            kind: "final",
+            status: "running",
+            phase: "saving",
+            updatedAt: (now.timeIntervalSince1970 * 1_000) - (5 * 60 * 1_000)
+        )
+
+        let resolved = staleJob.resolvedForUser(now: now)
+
+        XCTAssertEqual(resolved.status, "failed")
+        XCTAssertEqual(resolved.phase, "failed_recoverable")
+        XCTAssertEqual(resolved.errorCode, "stale_render_status")
+        XCTAssertEqual(resolved.canRetry, true)
+        XCTAssertEqual(resolved.canEditSetup, true)
+        XCTAssertFalse(staleJob.isActiveRender(now: now))
     }
 
     private func makeVideo(
@@ -229,11 +265,17 @@ final class AnimateStatusRulesTests: XCTestCase {
         )
     }
 
-    private func makeRenderJob(kind: String, status: String) -> AnimateRenderJob {
+    private func makeRenderJob(
+        kind: String,
+        status: String,
+        phase: String? = nil,
+        updatedAt: Double = 1_779_000_001_000
+    ) -> AnimateRenderJob {
         AnimateRenderJob(
             id: "\(kind)-job-1",
             kind: kind,
             status: status,
+            phase: phase,
             workflowRunId: "workflow-1",
             provider: "mock-provider",
             model: "mock-model",
@@ -241,7 +283,7 @@ final class AnimateStatusRulesTests: XCTestCase {
             errorCode: status == "failed" ? "provider_failed" : nil,
             errorMessage: status == "failed" ? "Render failed." : nil,
             createdAt: 1_779_000_000_000,
-            updatedAt: 1_779_000_001_000
+            updatedAt: updatedAt
         )
     }
 }

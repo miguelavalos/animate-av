@@ -16,8 +16,8 @@ struct AnimateInProgressWorkspaceSummaryPresentation: Equatable {
     }
 
     init(workspace: AnimateWorkspace) {
-        let finalExport = workspace.latestArtifact(kind: "final_export")
-        let latestRenderJob = workspace.latestRenderJob()
+        let finalExport = workspace.latestFinalVideoArtifact
+        let latestRenderJob = workspace.latestRenderJob()?.resolvedForUser()
 
         tiles = [
             AnimateInProgressSummaryTilePresentation(

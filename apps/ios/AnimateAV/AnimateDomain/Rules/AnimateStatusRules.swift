@@ -46,7 +46,7 @@ enum AnimateStatusRules {
     }
 
     static func nextAction(for workspace: AnimateWorkspace) -> AnimateNextAction {
-        if let failedJob = workspace.renderJobs.latest(where: { isFailureStatus($0.status) }) {
+        if let failedJob = workspace.renderJobs.map({ $0.resolvedForUser() }).latest(where: { isFailureStatus($0.status) }) {
             return AnimateNextAction(
                 title: L10n.string("video.nextAction.videoAttention.title"),
                 message: L10n.string("video.nextAction.videoAttention.message", displayKind(failedJob.kind)),
@@ -76,7 +76,7 @@ enum AnimateStatusRules {
             )
         }
 
-        if !workspace.artifacts.containsAvailable(kind: "final_export") {
+        if workspace.latestFinalVideoArtifact == nil {
             return AnimateNextAction(
                 title: L10n.string("video.nextAction.createVideo.title"),
                 message: L10n.string("video.nextAction.createVideo.message"),
@@ -120,11 +120,5 @@ private extension [AnimateRenderJob] {
         filter(predicate)
             .sorted { $0.updatedAt < $1.updatedAt }
             .last
-    }
-}
-
-private extension [AnimateArtifact] {
-    func containsAvailable(kind: String) -> Bool {
-        contains { $0.kind == kind && $0.status == "available" }
     }
 }

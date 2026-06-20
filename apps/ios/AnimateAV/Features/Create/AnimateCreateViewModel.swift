@@ -580,7 +580,7 @@ final class AnimateCreateViewModel: ObservableObject {
     }
 
     var effectiveLatestFinalJob: AnimateRenderJob? {
-        effectiveActiveWorkspace?.latestRenderJob(kind: "final") ?? latestFinalJob
+        (effectiveActiveWorkspace?.latestRenderJob(kind: "final") ?? latestFinalJob)?.resolvedForUser()
     }
 
     var activeUITestFixtureMode: AnimateCreateUITestFixtures.Mode? {
@@ -1048,7 +1048,7 @@ extension AnimateCreateViewModel {
     func applyFinalRenderState(_ state: AnimateCreateFinalRenderState) {
         guard !usesCreateUITestFixture else { return }
         finalExport = state.finalExport
-        latestFinalJob = state.latestFinalJob
+        latestFinalJob = state.latestFinalJob?.resolvedForUser()
         renderPlan = state.renderPlan
         videoQuote = state.videoQuote
         if let renderPlan = state.renderPlan {
@@ -1137,7 +1137,7 @@ extension AnimateCreateViewModel {
 
     private var hasActiveFinalRenderJob: Bool {
         guard let latestFinalJob else { return false }
-        return latestFinalJob.status == "queued" || latestFinalJob.status == "running"
+        return latestFinalJob.isActiveRender
     }
 
     private func normalizedFinalRenderStatusMessage(
@@ -1147,7 +1147,7 @@ extension AnimateCreateViewModel {
         guard let message,
               Self.isUserFacingErrorMessage(message),
               let latestFinalJob,
-              latestFinalJob.status == "queued" || latestFinalJob.status == "running"
+              latestFinalJob.isActiveRender
         else {
             return message
         }
@@ -1162,8 +1162,9 @@ extension AnimateCreateViewModel {
             )
             return
         }
-        if let latestFinalJob = state.latestFinalJob,
-           latestFinalJob.status == "queued" || latestFinalJob.status == "running" {
+        let resolvedLatestFinalJob = state.latestFinalJob?.resolvedForUser()
+        if let latestFinalJob = resolvedLatestFinalJob,
+           latestFinalJob.isActiveRender {
             finalVideoCommandState = .queued(
                 latestFinalJob.userMessage
                     ?? state.statusMessage
@@ -1187,7 +1188,7 @@ extension AnimateCreateViewModel {
             }
             return
         }
-        if let latestFinalJob = state.latestFinalJob,
+        if let latestFinalJob = resolvedLatestFinalJob,
            latestFinalJob.isTerminalFailure {
             finalVideoCommandState = .failed(
                 latestFinalJob.userMessage

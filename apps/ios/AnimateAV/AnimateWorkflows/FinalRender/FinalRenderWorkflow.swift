@@ -79,9 +79,14 @@ final class FinalRenderWorkflow: WorkspaceObservingWorkflow {
         }
         finalExport = latestFinalExport
         let videoId = workspace?.video.id
-        if let workspaceFinalJob = workspace?.latestRenderJob(kind: "final") {
+        if let workspaceFinalJob = workspace?.latestRenderJob(kind: "final")?.resolvedForUser() {
             latestFinalJob = workspaceFinalJob
             latestFinalJobVideoId = videoId
+            if workspaceFinalJob.isTerminalFailure {
+                isGenerating = false
+                isSavingFinalVideo = false
+                statusMessage = workspaceFinalJob.userMessage ?? L10n.string("workflow.final.tryAgain")
+            }
         } else if videoId == nil || latestFinalJobVideoId != videoId {
             latestFinalJob = nil
             latestFinalJobVideoId = videoId
