@@ -4,6 +4,8 @@ node_modules/
 .swiftpm/
 DerivedData/
 .derived-data/
+.derived-data*/
+.derived-*/
 .DerivedData*/
 *.xcuserstate
 xcuserdata/
