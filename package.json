@@ -6,6 +6,9 @@
     "apps/*"
   ],
   "scripts": {
+    "check:doc-links": "./scripts/check-doc-links.sh",
+    "check:public-hygiene": "./scripts/check-public-hygiene.sh",
+    "check:public-release-readiness": "./scripts/check-public-release-readiness.sh",
     "config:hygiene": "./scripts/check-public-config-hygiene.sh",
     "ios:config:dev": "./scripts/generate-ios-local-xcconfig.sh --env dev",
     "ios:config:prod": "./scripts/generate-ios-local-xcconfig.sh --env prod",
