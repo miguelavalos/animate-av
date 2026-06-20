@@ -190,15 +190,19 @@ possible. Current v1 uses a two-column video grid, direct playback for available
 local videos, and full-image source/generated preview from the video info sheet
 when those related images are available.
 
-## Product Terminology Review Rule
+## Product Terminology Rule
 
-The current app still uses visible `Gallery` and `In Progress` concepts inherited
-from the reusable app foundation. Before changing those labels, audit all
-surface areas that depend on them: Home, bottom navigation, create completion,
-Videos, Images, active jobs, local media availability, and recovery. The
-underlying behavior remains: active workflow state is realtime-backed, completed
-media is local-first after download, and remote artifact availability is
-short-lived.
+Animate AV uses `Videos` for the visible completed-media surface. The underlying
+implementation may continue to use `gallery` for compatibility, local-first media
+records, and recovery contracts. Do not rename backend storage, Convex fields, or
+local cache behavior just to match UI copy.
+
+Use `Active`/active videos for the iOS active-work surface. Before any further
+terminology changes, audit all affected surfaces: Home, bottom navigation, create
+completion, Videos/Images, active jobs, local media availability, and recovery.
+The underlying behavior remains: active workflow state is realtime-backed,
+completed media is local-first after download, and remote artifact availability
+is short-lived.
 
 Do not use adjacent product language such as memory, moment, story, album, or
 library in visible Animate AV copy unless it is a deliberate compatibility term

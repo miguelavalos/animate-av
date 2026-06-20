@@ -108,10 +108,11 @@ images are companion media and must not block final video save; the MP4 becomes
 ready for Gallery first, then missing comparison images can be backfilled from
 backend artifact metadata when available.
 
-Current polish note: the implementation still contains visible `Gallery` and
-`In Progress` labels from the reusable Apps AV foundation. Those labels are
-under product review for Animate AV. Do not rename backend/local-first media
-behavior blindly; audit the user-facing terminology first.
+Current polish note: Animate AV uses `Videos` for the visible completed-media
+surface while keeping `gallery` as an implementation/local-first compatibility
+term. Do not rename backend/local-first media behavior blindly. Keep
+`Active`/active videos for the iOS active-work surface unless a broader
+terminology audit changes it.
 
 Create Video style review note: the shipped client has 8 look families with 8
 looks each, one unique preview asset per look, Look as its own focused step,

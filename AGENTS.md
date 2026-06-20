@@ -102,9 +102,11 @@ Mandatory rules:
   `en`, `es`, `ca`, `fr`, and `de`. Future visible copy changes must keep key
   sets and placeholders synchronized, avoid inherited Moments/Tune wording, and
   keep `...` out of CTAs or info cards.
-- treat visible `Gallery` and `In Progress` wording as inherited terminology
-  under review. Audit Home, navigation, Create completion, Videos/Images,
-  active jobs, and recovery before renaming behavior or labels.
+- use `Videos` for the visible completed-media surface. Keep `gallery` as an
+  internal compatibility/local-first media concept unless a scoped migration is
+  planned. Use `Active`/active videos for the iOS active-work surface; audit
+  Home, navigation, Create completion, Videos/Images, active jobs, and recovery
+  before any further terminology changes.
 
 If the private repo is unavailable, stop and say that the authoritative runbook
 cannot be checked. Do not substitute a guessed local workflow.
