@@ -82,6 +82,67 @@ final class AnimateGalleryViewModelTests: XCTestCase {
 
         XCTAssertEqual(provider.clearCount, 1)
     }
+
+    func testFinishedRemoteVideoMetadataAppearsWithoutLocalRecord() {
+        let summaryProvider = TestAnimateInProgressSummaryProvider()
+        let viewModel = AnimateGalleryViewModel(
+            galleryStore: TestAnimateGalleryStore(),
+            galleryArtifactsProvider: TestAnimateGalleryArtifactsProvider()
+        )
+
+        viewModel.bind(to: summaryProvider)
+        summaryProvider.send(
+            AnimateInProgressSummary.make(from: [
+                makeVideo(id: "finished-video", status: "gallery_ready", title: "Finished video", finalExport: nil)
+            ])
+        )
+
+        XCTAssertEqual(viewModel.videos.map(\.id), ["finished-video"])
+        XCTAssertEqual(viewModel.videos.first?.availability, .remoteMetadataOnly)
+        XCTAssertEqual(viewModel.videos.first?.title, "Finished video")
+    }
+
+    func testFinishedRemoteVideoWithFinalExportIsDownloadable() {
+        let summaryProvider = TestAnimateInProgressSummaryProvider()
+        let viewModel = AnimateGalleryViewModel(
+            galleryStore: TestAnimateGalleryStore(),
+            galleryArtifactsProvider: TestAnimateGalleryArtifactsProvider()
+        )
+        let finalExport = makeArtifact(
+            id: "artifact-1",
+            workflowArtifactId: "workflow-artifact-1",
+            status: "available"
+        )
+
+        viewModel.bind(to: summaryProvider)
+        summaryProvider.send(
+            AnimateInProgressSummary.make(from: [
+                makeVideo(
+                    id: "finished-video",
+                    status: "gallery_ready",
+                    title: "Finished video",
+                    finalExport: finalExport
+                )
+            ])
+        )
+
+        XCTAssertEqual(viewModel.videos.map(\.id), ["workflow-artifact-1"])
+        XCTAssertEqual(viewModel.videos.first?.record.videoId, "finished-video")
+        XCTAssertEqual(viewModel.videos.first?.availability, .downloadAvailable)
+        XCTAssertEqual(viewModel.videos.first?.remoteArtifact, finalExport)
+    }
+}
+
+private final class TestAnimateInProgressSummaryProvider: AnimateInProgressSummaryProviding {
+    private let summarySubject = CurrentValueSubject<AnimateInProgressSummary, Never>(AnimateInProgressSummary())
+
+    var inProgressSummaryPublisher: AnyPublisher<AnimateInProgressSummary, Never> {
+        summarySubject.eraseToAnyPublisher()
+    }
+
+    func send(_ summary: AnimateInProgressSummary) {
+        summarySubject.send(summary)
+    }
 }
 
 private final class TestAnimateGalleryArtifactsProvider: AnimateGalleryListProviding {
@@ -138,6 +199,49 @@ private final class TestAnimateAccountStateProvider: AnimateAccountStateProvidin
     var creditBalanceLoadStatePublisher: AnyPublisher<AnimateCreditBalanceLoadState, Never> {
         Just(.loaded).eraseToAnyPublisher()
     }
+}
+
+private func makeArtifact(
+    id: String,
+    workflowArtifactId: String?,
+    status: String
+) -> AnimateArtifact {
+    AnimateArtifact(
+        id: id,
+        workflowArtifactId: workflowArtifactId,
+        kind: "final_video",
+        r2Key: "animateav/video.mp4",
+        title: "Cartoon",
+        look: "cartoon",
+        status: status,
+        durationSeconds: 5,
+        creditCost: 1,
+        hasWatermark: true,
+        expiresAt: Date().addingTimeInterval(3600).timeIntervalSince1970 * 1000,
+        createdAt: 1_780_000_000_000
+    )
+}
+
+private func makeVideo(
+    id: String,
+    status: String,
+    title: String,
+    finalExport: AnimateArtifact?
+) -> AnimateVideo {
+    AnimateVideo(
+        id: id,
+        template: .birthdayMessage,
+        status: status,
+        title: title,
+        tone: nil,
+        tempo: nil,
+        occasion: nil,
+        details: nil,
+        durationSeconds: 5,
+        creditCost: 1,
+        updatedAt: 1_780_000_000_000,
+        finalExport: finalExport
+    )
 }
 
 private final class TestAnimateGalleryStore: AnimateGalleryStoring {

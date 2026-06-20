@@ -15,6 +15,7 @@ final class AnimateGalleryViewModel: ObservableObject {
     private let authTokenProvider: (any AnimateAuthTokenProviding)?
     private let finalRenderClient: AnimateFinalRenderClient?
     private var remoteArtifacts: [AnimateArtifact] = []
+    private var remoteFinishedVideos: [AnimateVideo] = []
     private var currentOwnerUserId: String?
     private var downloadingImageIds = Set<String>()
     private var dismissedRemoteVideoIds: Set<String>
@@ -63,6 +64,15 @@ final class AnimateGalleryViewModel: ObservableObject {
                 if ownerUserId == nil {
                     self?.stopRemoteGalleryObservation()
                 }
+            }
+            .store(in: &galleryCancellables)
+    }
+
+    func bind(to summaryProvider: any AnimateInProgressSummaryProviding) {
+        summaryProvider.inProgressSummaryPublisher
+            .sink { [weak self] summary in
+                self?.remoteFinishedVideos = summary.videoSummary.groups.finished
+                self?.refreshVideos()
             }
             .store(in: &galleryCancellables)
     }
@@ -122,6 +132,40 @@ final class AnimateGalleryViewModel: ObservableObject {
                     generatedImageURL: nil,
                     availability: availabilityForRemoteOnlyArtifact(artifact),
                     remoteArtifact: artifact
+                )
+            )
+        }
+
+        for video in remoteFinishedVideos {
+            let remoteArtifact = video.finalExport
+            let artifactId = remoteArtifact?.workflowArtifactId ?? remoteArtifact?.id ?? video.id
+            guard !dismissedRemoteVideoIds.contains(artifactId),
+                  !dismissedRemoteVideoIds.contains(video.id)
+            else { continue }
+            let alreadyPresented = presentations.contains { presentation in
+                presentation.record.videoId == video.id
+                    || presentation.record.artifactId == artifactId
+                    || presentation.record.artifactId == remoteArtifact?.id
+            }
+            guard !alreadyPresented else { continue }
+
+            let record = AnimateGalleryVideoRecord(
+                id: artifactId,
+                videoId: video.id,
+                artifactId: artifactId,
+                title: video.title,
+                r2Key: remoteArtifact?.r2Key ?? "",
+                localRelativePath: "Videos/\(artifactId).mp4",
+                createdAt: remoteArtifact?.createdAt ?? video.updatedAt
+            )
+            presentations.append(
+                AnimateGalleryVideoPresentation(
+                    record: record,
+                    localFileURL: nil,
+                    sourceImageURL: nil,
+                    generatedImageURL: nil,
+                    availability: remoteArtifact.map(availabilityForRemoteOnlyArtifact) ?? .remoteMetadataOnly,
+                    remoteArtifact: remoteArtifact
                 )
             )
         }
