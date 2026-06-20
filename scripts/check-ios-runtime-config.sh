@@ -116,6 +116,7 @@ support_email_to="$(setting SUPPORT_EMAIL_TO)"
 privacy_url="$(setting ANIMATEAV_PRIVACY_URL)"
 terms_url="$(setting ANIMATEAV_TERMS_URL)"
 delete_account_url="$(setting ACCOUNTAV_DELETE_ACCOUNT_URL)"
+animate_delete_account_url="$(setting ANIMATEAV_DELETE_ACCOUNT_URL)"
 open_source_url="$(setting ANIMATEAV_OPEN_SOURCE_URL)"
 code_sign_entitlements="$(setting CODE_SIGN_ENTITLEMENTS)"
 
@@ -137,6 +138,7 @@ for item in \
   "ANIMATEAV_PRIVACY_URL:$privacy_url" \
   "ANIMATEAV_TERMS_URL:$terms_url" \
   "ACCOUNTAV_DELETE_ACCOUNT_URL:$delete_account_url" \
+  "ANIMATEAV_DELETE_ACCOUNT_URL:$animate_delete_account_url" \
   "ANIMATEAV_OPEN_SOURCE_URL:$open_source_url" \
   "CODE_SIGN_ENTITLEMENTS:$code_sign_entitlements"; do
   require_present "${item%%:*}" "${item#*:}"
@@ -152,6 +154,7 @@ done
 [[ "$privacy_url" == https://* ]] || fail "ANIMATEAV_PRIVACY_URL must be https"
 [[ "$terms_url" == https://* ]] || fail "ANIMATEAV_TERMS_URL must be https"
 [[ "$delete_account_url" == https://* ]] || fail "ACCOUNTAV_DELETE_ACCOUNT_URL must be https"
+[[ "$animate_delete_account_url" == https://* ]] || fail "ANIMATEAV_DELETE_ACCOUNT_URL must be https"
 [[ "$open_source_url" == https://* ]] || fail "ANIMATEAV_OPEN_SOURCE_URL must be https"
 
 if [ -n "$revenuecat_api_key" ] && [ "$revenuecat_api_key" != '$(inherited)' ]; then

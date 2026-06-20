@@ -55,6 +55,8 @@
 	<string>$(ANIMATEAV_TERMS_URL)</string>
 	<key>ACCOUNTAV_DELETE_ACCOUNT_URL</key>
 	<string>$(ACCOUNTAV_DELETE_ACCOUNT_URL)</string>
+	<key>ANIMATEAV_DELETE_ACCOUNT_URL</key>
+	<string>$(ANIMATEAV_DELETE_ACCOUNT_URL)</string>
 	<key>ANIMATEAV_OPEN_SOURCE_URL</key>
 	<string>$(ANIMATEAV_OPEN_SOURCE_URL)</string>
 	<key>NSPhotoLibraryUsageDescription</key>

@@ -103,6 +103,7 @@ SUPPORT_EMAIL_TO=support@avalsys.com
 ANIMATEAV_PRIVACY_URL=https://animate-av.avalsys.com/privacy
 ANIMATEAV_TERMS_URL=https://animate-av.avalsys.com/terms
 ACCOUNTAV_DELETE_ACCOUNT_URL=https://account-av.avalsys.com/account/delete
+ANIMATEAV_DELETE_ACCOUNT_URL=https://animate-av.avalsys.com/delete-account/
 ANIMATEAV_OPEN_SOURCE_URL=infisical()
 SCHEMA
 
@@ -190,6 +191,7 @@ support_email_to="$(read_required_config SUPPORT_EMAIL_TO)"
 privacy_url="$(read_required_config ANIMATEAV_PRIVACY_URL)"
 terms_url="$(read_required_config ANIMATEAV_TERMS_URL)"
 delete_account_url="$(read_required_config ACCOUNTAV_DELETE_ACCOUNT_URL)"
+animate_delete_account_url="$(read_required_config ANIMATEAV_DELETE_ACCOUNT_URL)"
 open_source_url="$(read_required_config ANIMATEAV_OPEN_SOURCE_URL)"
 
 require_http_url ANIMATEAV_CONVEX_URL "$animate_convex_url"
@@ -203,6 +205,7 @@ esac
 require_http_url ANIMATEAV_PRIVACY_URL "$privacy_url"
 require_http_url ANIMATEAV_TERMS_URL "$terms_url"
 require_http_url ACCOUNTAV_DELETE_ACCOUNT_URL "$delete_account_url"
+require_http_url ANIMATEAV_DELETE_ACCOUNT_URL "$animate_delete_account_url"
 require_http_url ANIMATEAV_OPEN_SOURCE_URL "$open_source_url"
 require_revenuecat_public_key "$revenuecat_api_key"
 [ -n "$revenuecat_offering_id" ] || {
@@ -245,6 +248,7 @@ SUPPORT_EMAIL_TO = $support_email_to
 ANIMATEAV_PRIVACY_URL = $(escape_xcconfig_value "$privacy_url")
 ANIMATEAV_TERMS_URL = $(escape_xcconfig_value "$terms_url")
 ACCOUNTAV_DELETE_ACCOUNT_URL = $(escape_xcconfig_value "$delete_account_url")
+ANIMATEAV_DELETE_ACCOUNT_URL = $(escape_xcconfig_value "$animate_delete_account_url")
 ANIMATEAV_OPEN_SOURCE_URL = $(escape_xcconfig_value "$open_source_url")
 EOF
 )"

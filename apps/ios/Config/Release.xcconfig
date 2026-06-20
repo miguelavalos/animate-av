@@ -19,6 +19,7 @@ SUPPORT_EMAIL_TO = $(inherited)
 ANIMATEAV_PRIVACY_URL = $(inherited)
 ANIMATEAV_TERMS_URL = $(inherited)
 ACCOUNTAV_DELETE_ACCOUNT_URL = $(inherited)
+ANIMATEAV_DELETE_ACCOUNT_URL = $(inherited)
 ANIMATEAV_OPEN_SOURCE_URL = $(inherited)
 ANIMATEAV_IOS_SENTRY_DSN = $(inherited)
 
