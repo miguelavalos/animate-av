@@ -22,7 +22,7 @@ final class AnimateInProgressProgressModelTests: XCTestCase {
 
         let final = model.phases.first { $0.title == "Create Video" }
         XCTAssertEqual(final?.state, .active)
-        XCTAssertEqual(final?.detail, "Running")
+        XCTAssertEqual(final?.detail, "Working")
     }
 
     func testAvailableFinalExportArtifactCompletesFinalProgress() {

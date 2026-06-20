@@ -150,7 +150,8 @@ final class AnimateCreateViewModel: ObservableObject {
             finalRenderAlertMessage
         ]
             .compactMap(\.self)
-            .first(where: Self.isUserFacingErrorMessage)
+            .compactMap(Self.sanitizedUserFacingErrorMessage)
+            .first
     }
 
     func bind(
@@ -1145,14 +1146,14 @@ extension AnimateCreateViewModel {
         latestFinalJob: AnimateRenderJob?
     ) -> String? {
         guard let message,
-              Self.isUserFacingErrorMessage(message),
+              let userFacingMessage = Self.sanitizedUserFacingErrorMessage(message),
               let latestFinalJob,
               latestFinalJob.isActiveRender
         else {
-            return message
+            return message.flatMap(Self.sanitizedUserFacingErrorMessage)
         }
 
-        return latestFinalJob.userMessage
+        return latestFinalJob.userMessage ?? userFacingMessage
     }
 
     private func reconcileFinalVideoCommandState(with state: AnimateCreateFinalRenderState) {
@@ -1204,9 +1205,9 @@ extension AnimateCreateViewModel {
             return
         }
         if let statusMessage = state.statusMessage,
-           Self.isUserFacingErrorMessage(statusMessage),
+           let userFacingStatusMessage = Self.sanitizedUserFacingErrorMessage(statusMessage),
            finalVideoCommandState.isRunning {
-            finalVideoCommandState = .failed(statusMessage)
+            finalVideoCommandState = .failed(userFacingStatusMessage)
             return
         }
         if case .failed = finalVideoCommandState {
@@ -1238,5 +1239,24 @@ extension AnimateCreateViewModel {
             || lowercased.contains("error")
             || lowercased.contains("falló")
             || lowercased.contains("fallo")
+    }
+
+    private static func sanitizedUserFacingErrorMessage(_ message: String) -> String? {
+        guard isUserFacingErrorMessage(message) else { return nil }
+        let lowercased = message.lowercased()
+        let technicalMarkers = [
+            "uniffi",
+            "clienterror",
+            "internalerror",
+            "localizeddescription",
+            "stack trace",
+            "nsurl",
+            "sqlite",
+            "jsondecode"
+        ]
+        if technicalMarkers.contains(where: lowercased.contains) {
+            return L10n.string("workflow.final.tryAgain")
+        }
+        return message
     }
 }

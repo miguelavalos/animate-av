@@ -34,6 +34,12 @@ enum AnimateStatusRules {
         if status == "in_progress" {
             return L10n.string("inProgress.summary.active")
         }
+        if status == "queued" || status == "pending" {
+            return L10n.string("create.render.status.queued")
+        }
+        if status == "running" || status == "processing" {
+            return L10n.string("create.render.status.working")
+        }
         return status
             .replacingOccurrences(of: "_", with: " ")
             .capitalized
