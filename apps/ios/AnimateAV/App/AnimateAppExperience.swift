@@ -37,7 +37,7 @@ enum AnimateAppExperience {
             headerLogoName: "AnimateHeaderWordmark",
             splashLogoName: "AnimateAVLogo",
             splashHeroName: "AnimateSplashHero",
-            onboardingBrandName: "AnimateHeaderWordmark",
+            onboardingBrandName: "AnimateOnboardingWordmark",
             onboardingHeroName: "AnimateOnboardingHero",
             onboardingCTACompanionName: "AviOnboardingCTA",
             onboardingAuthPanelCompanionName: "AviLoginSheetPeek",
