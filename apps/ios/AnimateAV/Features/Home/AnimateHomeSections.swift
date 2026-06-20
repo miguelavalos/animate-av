@@ -111,7 +111,7 @@ struct AnimateHomeVideoStatusCard: View {
                         createdAt: latestVideo.updatedAt
                     ),
                     detail: AnimateVideoFormatting.compactDetail(for: latestVideo),
-                    openVideo: openVideo
+                    openVideo: latestVideo.id == presentation.latestInProgressContinuationRequest?.video.id ? openVideo : nil
                 )
             } else if isSignedIn {
                 AnimateHomeEmptyVideoRow()

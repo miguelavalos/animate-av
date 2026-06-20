@@ -9,6 +9,15 @@ enum AnimateStatusRules {
         status == "gallery_ready" || status == "completed"
     }
 
+    static func isContinuableInCreate(_ video: AnimateVideo) -> Bool {
+        switch video.status {
+        case "in_progress", "video_direction_ready", "final_render_pending":
+            true
+        default:
+            false
+        }
+    }
+
     static func group(_ videos: [AnimateVideo]) -> AnimateVideoGroups {
         let sortedVideos = videos.sortedByLatestUpdate()
 

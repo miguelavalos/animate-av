@@ -71,6 +71,28 @@ final class AnimateStatusRulesTests: XCTestCase {
         XCTAssertEqual(summary.latestInProgressContinuationRequest?.focus, .video)
     }
 
+    func testListSummaryDoesNotExposeRunningVideoAsContinuationRequest() {
+        let running = makeVideo(id: "running", status: "running", updatedAt: 30)
+        let continuable = makeVideo(id: "continuable", status: "video_direction_ready", updatedAt: 20)
+
+        let summary = AnimateInProgressSummary.make(from: [continuable, running])
+
+        XCTAssertEqual(summary.latestAnimateVideo?.id, "running")
+        XCTAssertEqual(summary.latestContinuableVideo?.id, "continuable")
+        XCTAssertEqual(summary.latestInProgressContinuationRequest?.video.id, "continuable")
+    }
+
+    func testListSummaryHasNoContinuationRequestWhenOnlyRunningVideoExists() {
+        let running = makeVideo(id: "running", status: "running", updatedAt: 30)
+
+        let summary = AnimateInProgressSummary.make(from: [running])
+
+        XCTAssertEqual(summary.inProgressCount, 1)
+        XCTAssertEqual(summary.latestAnimateVideo?.id, "running")
+        XCTAssertNil(summary.latestContinuableVideo)
+        XCTAssertNil(summary.latestInProgressContinuationRequest)
+    }
+
     func testEmptyListSummaryHasNoVideos() {
         let summary = AnimateInProgressSummary.make(from: [])
 

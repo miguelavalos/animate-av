@@ -144,7 +144,8 @@ struct AnimateHomeScreen: View {
     }
 
     private func openLatestVideo() {
-        if videosSummary.latestAnimateVideo != nil {
+        if let latestVideo = videosSummary.latestVideo,
+           latestVideo.id == presentation.latestInProgressContinuationRequest?.video.id {
             startVideoCreation()
             return
         }

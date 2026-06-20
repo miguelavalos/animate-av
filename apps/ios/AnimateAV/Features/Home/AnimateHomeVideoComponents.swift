@@ -4,17 +4,26 @@ import SwiftUI
 struct AnimateHomeLatestVideoRow: View {
     let title: String
     let detail: String
-    let openVideo: () -> Void
+    let openVideo: (() -> Void)?
 
     var body: some View {
-        AVAppShellActionRow(
-            title: title,
-            detail: detail,
-            systemImage: "clock.badge.checkmark",
-            eyebrow: L10n.string("home.latestVideo.eyebrow"),
-            accessibilityIdentifier: "animate.home.latestVideo",
-            action: openVideo
-        )
+        if let openVideo {
+            AVAppShellActionRow(
+                title: title,
+                detail: detail,
+                systemImage: "clock.badge.checkmark",
+                eyebrow: L10n.string("home.latestVideo.eyebrow"),
+                accessibilityIdentifier: "animate.home.latestVideo",
+                action: openVideo
+            )
+        } else {
+            AVAppShellInfoRow(
+                title: title,
+                detail: detail,
+                systemImage: "clock.badge.checkmark",
+                accessibilityIdentifier: "animate.home.latestVideo.status"
+            )
+        }
     }
 }
 

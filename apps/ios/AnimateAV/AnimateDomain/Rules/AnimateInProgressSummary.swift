@@ -30,8 +30,12 @@ struct AnimateInProgressSummary: Equatable {
         groups.inProgress.first
     }
 
+    var latestContinuableVideo: AnimateVideo? {
+        groups.inProgress.first(where: AnimateStatusRules.isContinuableInCreate)
+    }
+
     var latestInProgressContinuationRequest: AnimateContinuationRequest? {
-        latestAnimateVideo.map { AnimateContinuationRequest(video: $0) }
+        latestContinuableVideo.map { AnimateContinuationRequest(video: $0) }
     }
 
     var videoSummary: AnimateInProgressSummary {
