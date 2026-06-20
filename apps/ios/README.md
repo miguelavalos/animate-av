@@ -29,7 +29,7 @@ credit commit/release.
 Current v1 flow:
 
 ```text
-Photo and framing -> Look -> Guide and voice -> backend quotes credits -> create video -> local download -> Gallery
+Photo and framing -> Look -> Guide and message -> backend quotes credits -> create video -> local download -> Gallery
 ```
 
 Photo and framing is the normal source-photo step. It lets the user choose one
@@ -50,14 +50,13 @@ forcing a 9:16 crop. A vertical 9:16 frame remains available when the user wants
 to control the video-oriented reference directly. Do not add padding, blurred
 bars, or black bars to make a non-vertical source fit a vertical output.
 
-Look is the main visual style surface. Guide and voice is the next setup step:
-it collects a simple movement guide and one optional voice line for the
+Look is the main visual style surface. Guide and message is the next setup step:
+it collects a simple movement guide and one optional written message for the
 generated image-to-video step. Keep guidance copy modest: it can guide the
 result, but the client must not promise precise custom choreography, exact
-actions, or scene-by-scene scripting.
+actions, scene-by-scene scripting, generated narration, or spoken dialogue.
 
-Voice remains optional. When present, it is a short guided line; who speaks
-depends on the photo and backend workflow. A one-photo video with no voice is a
+A written message remains optional. A one-photo video with no message is a
 valid v1 setup.
 
 Images are a separate v1 workflow: choose one source photo, generate a stylized
@@ -83,15 +82,15 @@ Current product-polish scope:
 
 - Review visible `Gallery` and `In Progress` naming before production smoke; the
   behavior may stay, but the labels may not fit Animate AV.
-- Keep Create Video aligned to Photo and framing, Look, and Guide and voice.
+- Keep Create Video aligned to Photo and framing, Look, and Guide and message.
   Avoid reintroducing
   inherited multi-photo edit surfaces in the normal path.
-- Treat guidance as lightweight visual guidance. It works without voice and
+- Treat guidance as lightweight visual guidance. It works without a message and
   should stay stable enough for a low-cost consumer flow.
 - Review Create Video style families, look names, subtitles, and preview images
   across the shipped locales when product copy changes.
-- Keep the optional voice line independent from selected look and source-photo
-  people.
+- Keep the optional written message independent from selected look and
+  source-photo people.
 - Runtime localization is active for `en`, `es`, `ca`, `fr`, and `de`. Keep
   every `Localizable.strings` key set synchronized and validate placeholders
   before release.

@@ -802,10 +802,10 @@
 "create.guided.message.clear" = "Löschen";
 "create.guided.message.minimum" = "Schreibe mindestens %d Zeichen oder wähle „Nur visuell“.";
 "create.guided.message.sectionTitle" = "Animationsbotschaft";
-"create.guided.message.sectionDetail" = "Eine kurze Zeile für die Botschaft. Avi nutzt sie als Hinweis; wer spricht, hängt vom Foto ab.";
+"create.guided.message.sectionDetail" = "Eine kurze Zeile für die Animation. Avi nutzt sie als emotionalen Hinweis.";
 "create.guided.message.inputLabel" = "Botschaft";
 "create.guided.script.message" = "Mit Botschaft";
-"create.guided.script.tip" = "Stimmhinweise funktionieren am besten mit einem klaren Gesicht und wenigen Elementen.";
+"create.guided.script.tip" = "Botschaftshinweise funktionieren am besten mit einem klaren Gesicht und wenigen Elementen.";
 "create.guided.script.none" = "Nur visuell";
 "create.guided.script.none.preview" = "Visuelles Video mit dem gewählten Look.";
 "create.guided.script.birthday" = "Geburtstag";
@@ -954,7 +954,7 @@
 "create.render.detail.rendering" = "Avi animiert dein Video.";
 "create.render.detail.creating" = "Avi erstellt das Video.";
 "create.render.detail.image" = "Avi erstellt das Bild mit dem gewählten Look.";
-"create.render.detail.audio" = "Avi bereitet die Botschaft vor.";
+"create.render.detail.audio" = "Avi bereitet den finalen Bewegungsdurchgang vor.";
 "create.render.detail.saving" = "Avi speichert das fertige Video. Das ist normalerweise bald fertig.";
 "create.render.detail.realtime" = "Avi aktualisiert den Videostatus in Echtzeit.";
 "create.render.detail.available" = "Der Videostatus ist verfügbar.";
@@ -1368,7 +1368,7 @@
 "create.guided.direction.celebration.prompt" = "Erzeuge eine feierliche Animation mit fröhlicher Energie, kleinen Glanzeffekten und einem ausdrucksstarken Ende, ohne Gesichter zu verzerren.";
 "create.guided.direction.custom.title" = "Benutzerdefiniert";
 "create.guided.direction.custom.detail" = "Eigener Text.";
-"create.guided.script.template" = "Stimmvorlage";
+"create.guided.script.template" = "Botschaftsvorlage";
 "create.guided.script.custom" = "Benutzerdefiniert";
 "create.guided.script.custom.preview" = "Hinweis für die Animation.";
 

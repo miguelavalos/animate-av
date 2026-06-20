@@ -803,7 +803,7 @@
 "create.guided.message.clear" = "Borrar";
 "create.guided.message.minimum" = "Escribe al menos %d caracteres o elige “Solo visual”.";
 "create.guided.message.sectionTitle" = "Mensaje de animación";
-"create.guided.message.sectionDetail" = "Frase breve para la guía. Avi la usa como orientación; quién habla depende de la foto.";
+"create.guided.message.sectionDetail" = "Frase breve para la animación. Avi la usa como orientación emocional.";
 "create.guided.message.inputLabel" = "Mensaje";
 "create.guided.script.message" = "Con mensaje";
 "create.guided.script.tip" = "La guía es orientativa y funciona mejor con una cara clara y pocos elementos.";
