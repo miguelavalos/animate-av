@@ -35,7 +35,7 @@
 "profile.local.keep.account.title" = "Konto und Credits bleiben erhalten";
 "profile.local.keep.gallery.detail" = "Fertige Videos in der Galerie bleiben erhalten.";
 "profile.local.keep.gallery.title" = "Galerie bleibt erhalten";
-"profile.local.keep.photos.detail" = "Fotos und Clips bleiben in Fotos.";
+"profile.local.keep.photos.detail" = "Fotos bleiben in Fotos.";
 "profile.local.keep.photos.title" = "Fotos bleibt erhalten";
 "profile.local.manage" = "Lokale Daten verwalten";
 "profile.local.media.detail" = "Fotos aktiver Animate AV-Entwürfe bleiben auf diesem Gerät.";
@@ -60,11 +60,11 @@
 "profile.creationPreferences.title" = "Videoerstellung";
 "profile.creationPreferences.subtitle" = "Lege fest, wie neue Videos auf diesem Gerät starten.";
 "profile.creationPreferences.start.title" = "Start eines neuen Videos";
-"profile.creationPreferences.start.detail" = "Standardmäßig öffnet sich die schnelle Foto- und Clip-Auswahl. Ändere dies, wenn du Alben oder einen Auswahlbildschirm bevorzugst.";
+"profile.creationPreferences.start.detail" = "Standardmäßig öffnet sich die schnelle Fotoauswahl. Ändere dies, wenn du vor dem Start auswählen möchtest.";
 "profile.creationPreferences.start.ask.title" = "Immer fragen";
-"profile.creationPreferences.start.ask.detail" = "Zeigt vor dem Start beide Bildoptionen.";
+"profile.creationPreferences.start.ask.detail" = "Zeigt vor dem Erstellen die Startoptionen.";
 "profile.creationPreferences.start.photos.title" = "Foto";
-"profile.creationPreferences.start.photos.detail" = "Öffnet die Bildauswahl sofort.";
+"profile.creationPreferences.start.photos.detail" = "Öffnet die Fotoauswahl sofort.";
 "profile.pro.avi.detail" = "Finale Videos ohne Branding, solange Pro aktiv ist.";
 "profile.pro.avi.title" = "Kein Branding";
 "profile.pro.library.detail" = "Besserer Monatswert als Credits einzeln zu kaufen.";
@@ -451,7 +451,7 @@
 "create.template.softRoast.summary" = "Ein längeres verspieltes animiertes Video aus einem Foto.";
 "create.template.softRoast.title" = "Sanfter Roast";
 "create.theme.birthday.subtitle" = "Ein kurzer animierter Gruß.";
-"create.theme.birthday.title" = "Grußclip";
+"create.theme.birthday.title" = "Grußvideo";
 "create.theme.celebration.subtitle" = "Ein verspielter Auftritt für ein Motiv.";
 "create.theme.celebration.title" = "Figuren-Intro";
 "create.theme.eventRecap.subtitle" = "Schnelle Schnitte, Bewegung und Punch.";
@@ -1214,7 +1214,7 @@
 "create.look.family.popular.title" = "Beliebte Stile";
 "create.look.family.popular.subtitle" = "Schnelle, klare Stile.";
 "create.look.family.cuteSocial.title" = "Cute und social";
-"create.look.family.cuteSocial.subtitle" = "Sanfte Stile für freundliche Clips.";
+"create.look.family.cuteSocial.subtitle" = "Sanfte Stile für freundliche Szenen.";
 "create.look.family.comicsInk.title" = "Comic und Tinte";
 "create.look.family.comicsInk.subtitle" = "Starke Linien, Panels und Poster.";
 "create.look.family.animeManga.title" = "Anime und Manga";

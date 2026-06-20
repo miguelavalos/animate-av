@@ -60,11 +60,11 @@
 "profile.creationPreferences.title" = "Creació de vídeos";
 "profile.creationPreferences.subtitle" = "Tria com comencen els nous vídeos en aquest dispositiu.";
 "profile.creationPreferences.start.title" = "Inici d’un vídeo nou";
-"profile.creationPreferences.start.detail" = "Per defecte obre la selecció ràpida d’imatge. Canvia-ho si prefereixes àlbums o una pantalla amb opcions.";
+"profile.creationPreferences.start.detail" = "Per defecte obre la selecció ràpida de foto. Canvia-ho si prefereixes triar abans de començar.";
 "profile.creationPreferences.start.ask.title" = "Pregunta sempre";
-"profile.creationPreferences.start.ask.detail" = "Mostra les opcions d’imatge abans de començar.";
-"profile.creationPreferences.start.photos.title" = "Fotos o clips";
-"profile.creationPreferences.start.photos.detail" = "Obre la selecció d’imatge immediatament.";
+"profile.creationPreferences.start.ask.detail" = "Mostra les opcions d’inici abans de crear.";
+"profile.creationPreferences.start.photos.title" = "Foto";
+"profile.creationPreferences.start.photos.detail" = "Obre la selecció de foto immediatament.";
 "profile.pro.avi.detail" = "Vídeos finals sense branding mentre Pro sigui actiu.";
 "profile.pro.avi.title" = "Sense branding";
 "profile.pro.library.detail" = "Millor valor mensual que comprar crèdits un a un.";
@@ -187,7 +187,7 @@
 "create.template.softRoast.summary" = "Un vídeo animat divertit una mica més llarg a partir d’una foto.";
 "create.template.softRoast.title" = "Broma suau";
 "create.theme.birthday.subtitle" = "Una salutació animada curta.";
-"create.theme.birthday.title" = "Clip de salutació";
+"create.theme.birthday.title" = "Vídeo de salutació";
 "create.theme.celebration.subtitle" = "Una entrada divertida per a un protagonista.";
 "create.theme.celebration.title" = "Presentació";
 "create.theme.eventRecap.subtitle" = "Talls ràpids, moviment i força.";
@@ -1212,7 +1212,7 @@
 "create.look.family.popular.title" = "Estils populars";
 "create.look.family.popular.subtitle" = "Estils ràpids i reconeixibles.";
 "create.look.family.cuteSocial.title" = "Cute i social";
-"create.look.family.cuteSocial.subtitle" = "Estils suaus per a clips propers.";
+"create.look.family.cuteSocial.subtitle" = "Estils suaus per a escenes properes.";
 "create.look.family.comicsInk.title" = "Còmic i tinta";
 "create.look.family.comicsInk.subtitle" = "Línies fortes, vinyetes i pòsters.";
 "create.look.family.animeManga.title" = "Anime i manga";

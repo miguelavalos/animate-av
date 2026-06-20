@@ -35,7 +35,7 @@
 "profile.local.keep.account.title" = "Compte et crédits conservés";
 "profile.local.keep.gallery.detail" = "Les vidéos terminées dans Galerie sont conservées.";
 "profile.local.keep.gallery.title" = "Galerie est conservée";
-"profile.local.keep.photos.detail" = "Les photos et clips restent dans Photos.";
+"profile.local.keep.photos.detail" = "Les photos restent dans Photos.";
 "profile.local.keep.photos.title" = "Photos est conservé";
 "profile.local.manage" = "Gérer les données locales";
 "profile.local.media.detail" = "Les photos utilisées par les brouillons Animate AV actifs restent sur cet appareil.";
@@ -60,11 +60,11 @@
 "profile.creationPreferences.title" = "Création de vidéos";
 "profile.creationPreferences.subtitle" = "Choisissez comment les nouvelles vidéos commencent sur cet appareil.";
 "profile.creationPreferences.start.title" = "Début d’une nouvelle vidéo";
-"profile.creationPreferences.start.detail" = "Par défaut, la sélection rapide de photos et clips s'ouvre. Changez ce réglage si vous préférez les albums ou un écran de choix.";
+"profile.creationPreferences.start.detail" = "Par défaut, la sélection rapide de photo s'ouvre. Changez ce réglage si vous préférez choisir avant de commencer.";
 "profile.creationPreferences.start.ask.title" = "Toujours demander";
-"profile.creationPreferences.start.ask.detail" = "Affiche les deux options de média avant de commencer.";
-"profile.creationPreferences.start.photos.title" = "Photos ou clips";
-"profile.creationPreferences.start.photos.detail" = "Ouvre immédiatement la sélection de média.";
+"profile.creationPreferences.start.ask.detail" = "Affiche les options de démarrage avant de créer.";
+"profile.creationPreferences.start.photos.title" = "Photo";
+"profile.creationPreferences.start.photos.detail" = "Ouvre immédiatement la sélection de photo.";
 "profile.pro.avi.detail" = "Vidéos finales sans branding tant que Pro est actif.";
 "profile.pro.avi.title" = "Sans branding";
 "profile.pro.library.detail" = "Meilleure valeur mensuelle que l'achat de crédits un par un.";
@@ -187,7 +187,7 @@
 "create.template.softRoast.summary" = "Une vidéo animée ludique un peu plus longue à partir d’une photo.";
 "create.template.softRoast.title" = "Taquinerie douce";
 "create.theme.birthday.subtitle" = "Une courte salutation animée.";
-"create.theme.birthday.title" = "Clip de salutation";
+"create.theme.birthday.title" = "Vidéo de salutation";
 "create.theme.celebration.subtitle" = "Une entrée ludique pour un sujet.";
 "create.theme.celebration.title" = "Présentation";
 "create.theme.eventRecap.subtitle" = "Coupes rapides, mouvement et impact.";
@@ -1212,7 +1212,7 @@
 "create.look.family.popular.title" = "Styles populaires";
 "create.look.family.popular.subtitle" = "Styles rapides et reconnaissables.";
 "create.look.family.cuteSocial.title" = "Doux et social";
-"create.look.family.cuteSocial.subtitle" = "Styles doux pour clips chaleureux.";
+"create.look.family.cuteSocial.subtitle" = "Styles doux pour scènes chaleureuses.";
 "create.look.family.comicsInk.title" = "BD et encre";
 "create.look.family.comicsInk.subtitle" = "Traits forts, cases et affiches.";
 "create.look.family.animeManga.title" = "Anime et manga";

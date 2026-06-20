@@ -60,7 +60,7 @@
 "profile.creationPreferences.title" = "Video creation";
 "profile.creationPreferences.subtitle" = "Choose how new videos start on this device.";
 "profile.creationPreferences.start.title" = "New video start";
-"profile.creationPreferences.start.detail" = "Default is fast photo selection. Change it if you prefer a choice screen.";
+"profile.creationPreferences.start.detail" = "Default is fast photo selection. Change it if you prefer to choose before starting.";
 "profile.creationPreferences.start.ask.title" = "Ask every time";
 "profile.creationPreferences.start.ask.detail" = "Show start options before creating.";
 "profile.creationPreferences.start.photos.title" = "Photo";
@@ -188,7 +188,7 @@
 "create.template.softRoast.summary" = "A longer playful video from one photo.";
 "create.template.softRoast.title" = "Extended";
 "create.theme.birthday.subtitle" = "A short animated greeting.";
-"create.theme.birthday.title" = "Greeting Clip";
+"create.theme.birthday.title" = "Greeting Video";
 "create.theme.celebration.subtitle" = "A playful reveal for one subject.";
 "create.theme.celebration.title" = "Character Intro";
 "create.theme.eventRecap.subtitle" = "Fast cuts, motion, and punch.";
@@ -1247,7 +1247,7 @@
 "create.look.family.popular.title" = "Popular Looks";
 "create.look.family.popular.subtitle" = "Fast, recognizable styles for most videos.";
 "create.look.family.cuteSocial.title" = "Cute & Social";
-"create.look.family.cuteSocial.subtitle" = "Soft, playful looks for friendly clips.";
+"create.look.family.cuteSocial.subtitle" = "Soft, playful looks for friendly scenes.";
 "create.look.family.comicsInk.title" = "Comics & Ink";
 "create.look.family.comicsInk.subtitle" = "Bold lines, panels, posters, and graphic art.";
 "create.look.family.animeManga.title" = "Anime & Manga";
