@@ -1356,6 +1356,139 @@ final class AnimateAPIClientTests: XCTestCase {
         XCTAssertEqual(response.balance, AnimateCreditBalance(proMonthly: 0, promotional: 5, purchased: 0, availableCredits: 5))
     }
 
+    @MainActor
+    func testAccountDeletionSummaryUsesAccountAPI() async throws {
+        let session = makeMockSession(
+            json: """
+            {
+              "user": {
+                "id": "user-1",
+                "email": "animate@example.test",
+                "name": "Animate User"
+              },
+              "linkedApps": [
+                { "appId": "animateav", "label": "Animate AV" }
+              ],
+              "deleteAccountEligibility": {
+                "status": "eligible",
+                "blockers": [],
+                "warnings": [],
+                "currentJob": null
+              }
+            }
+            """
+        )
+        let client = AnimateAccountDeletionClient(
+            baseURLString: accountAPIBaseURL,
+            tokenProvider: { "token-1" },
+            session: session
+        )
+
+        let summary = try await client.fetchAccountDeletionSummary()
+
+        XCTAssertEqual(summary.id, "user-1")
+        XCTAssertEqual(summary.emailAddress, "animate@example.test")
+        XCTAssertEqual(summary.deleteAccountEligibility?.status, .eligible)
+        XCTAssertEqual(AnimateURLProtocolMock.lastRequest?.httpMethod, "GET")
+        XCTAssertEqual(AnimateURLProtocolMock.lastRequest?.url?.absoluteString, "\(accountAPIBaseURL)/v1/me")
+        XCTAssertEqual(AnimateURLProtocolMock.lastRequest?.value(forHTTPHeaderField: "Authorization"), "Bearer token-1")
+    }
+
+    @MainActor
+    func testAccountDeletionRequestUsesAccountAPI() async throws {
+        let session = makeMockSession(
+            json: """
+            {
+              "status": "inProgress",
+              "deletionJob": {
+                "id": "job-1",
+                "status": "pending",
+                "detail": "Deletion started"
+              },
+              "deleteAccountEligibility": {
+                "status": "inProgress",
+                "blockers": [],
+                "warnings": [],
+                "currentJob": {
+                  "id": "job-1",
+                  "status": "pending",
+                  "detail": "Deletion started"
+                }
+              }
+            }
+            """
+        )
+        let client = AnimateAccountDeletionClient(
+            baseURLString: accountAPIBaseURL,
+            tokenProvider: { "token-1" },
+            session: session
+        )
+
+        let response = try await client.requestAccountDeletion()
+
+        XCTAssertEqual(response.job?.id, "job-1")
+        XCTAssertEqual(response.deleteAccountEligibility?.status, .inProgress)
+        XCTAssertEqual(AnimateURLProtocolMock.lastRequest?.httpMethod, "POST")
+        XCTAssertEqual(AnimateURLProtocolMock.lastRequest?.url?.absoluteString, "\(accountAPIBaseURL)/v1/me/delete-account-request")
+    }
+
+    @MainActor
+    func testAccountDeletionFinalizeUsesAccountAPI() async throws {
+        let session = makeMockSession(
+            json: """
+            {
+              "status": "completed",
+              "deleteAccountEligibility": {
+                "status": "completed",
+                "blockers": [],
+                "warnings": [],
+                "currentJob": null
+              }
+            }
+            """
+        )
+        let client = AnimateAccountDeletionClient(
+            baseURLString: accountAPIBaseURL,
+            tokenProvider: { "token-1" },
+            session: session
+        )
+
+        let response = try await client.finalizeAccountDeletion()
+
+        XCTAssertEqual(response.status, "completed")
+        XCTAssertEqual(response.deleteAccountEligibility?.status, .completed)
+        XCTAssertEqual(AnimateURLProtocolMock.lastRequest?.httpMethod, "POST")
+        XCTAssertEqual(AnimateURLProtocolMock.lastRequest?.url?.absoluteString, "\(accountAPIBaseURL)/v1/me/delete-account-finalize")
+    }
+
+    @MainActor
+    func testAccountDeletionUnlinkUsesAnimateAppLink() async throws {
+        let session = makeMockSession(
+            json: """
+            {
+              "link": {
+                "appId": "animateav",
+                "remainingLinkedApps": 2,
+                "unlinked": true
+              },
+              "message": "Animate AV unlinked."
+            }
+            """
+        )
+        let client = AnimateAccountDeletionClient(
+            baseURLString: accountAPIBaseURL,
+            tokenProvider: { "token-1" },
+            session: session
+        )
+
+        let response = try await client.unlinkCurrentApp()
+
+        XCTAssertEqual(response.link.appId, "animateav")
+        XCTAssertTrue(response.link.unlinked)
+        XCTAssertEqual(AnimateURLProtocolMock.lastRequest?.httpMethod, "DELETE")
+        XCTAssertEqual(AnimateURLProtocolMock.lastRequest?.url?.absoluteString, "\(accountAPIBaseURL)/v1/apps/animateav/link")
+    }
+
     private var accountAPIBaseURL: String {
         "https://api-account-av-preview.avalsys.com"
     }
