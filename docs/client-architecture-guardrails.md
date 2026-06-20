@@ -93,7 +93,7 @@ The iOS app must not:
 - create or persist generation jobs as local authority;
 - update generation job status;
 - attach generation artifacts;
-- poll backend status endpoints for normal product UI;
+- use backend status polling as the primary source for normal product UI;
 - treat a locally supplied owner id as sufficient authorization for realtime
   reads;
 - call provider APIs directly.
@@ -110,6 +110,8 @@ The iOS app may:
   owner-scoped subscriptions;
 - subscribe to synced workspace state and generation progress, failure, and final
   artifact availability after that realtime session is available;
+- poll the authenticated render-status endpoint as a recovery fallback for an
+  active final render when realtime/workspace projection is late or unavailable;
 - download the completed final artifact to local device storage;
 - move the downloaded final video or image into Gallery and clear the active
   draft/session;
@@ -122,6 +124,12 @@ The iOS app may:
 After video or image confirmation, editing must lock from synced workflow state
 until the generation reaches a terminal state. The user should see exactly one
 clear status: waiting, creating, failed, or ready.
+
+No loading state may depend on a single async signal. Final render waiting must
+listen to realtime workspace state and also have an authenticated
+`/v1/apps/animateav/renders/:renderJobId/status` fallback plus a local timeout
+that exits to a recoverable error. A network, projection, or app relaunch gap
+must never leave iOS waiting forever.
 
 When the final artifact is ready, v1 shows only the download/finish path. After
 finish, the creation screen closes and Gallery shows the newest finished item

@@ -23,6 +23,7 @@ final class FinalRenderWorkflow: WorkspaceObservingWorkflow {
     private let authTokenProvider: any AnimateAuthTokenProviding
     private let creditBalanceProvider: any AnimateCreditBalanceProviding
     private let finalRenderClient: AnimateFinalRenderClient
+    private let renderStatusClient: AnimateRenderStatusClient
     private let videoQuoteClient: AnimateVideoQuoteClient
     private let uploadClient: AnimateUploadClient?
     private let galleryStore: any AnimateGalleryStoring
@@ -32,6 +33,10 @@ final class FinalRenderWorkflow: WorkspaceObservingWorkflow {
     private var preparedVideoSourceUpload: PreparedVideoSourceUpload?
     private var pendingSourceComparisonImageData: Data?
     private let finalArtifactDownloadTimeout: UInt64 = 130_000_000_000
+    private var renderStatusWatchTask: Task<Void, Never>?
+    private var watchedRenderJobId: String?
+    private let renderStatusWatchTimeout: TimeInterval = 12 * 60
+    private let renderStatusWatchInterval: UInt64 = 10_000_000_000
 
     init(
         currentUserProvider: any AnimateCurrentUserProviding,
@@ -39,6 +44,7 @@ final class FinalRenderWorkflow: WorkspaceObservingWorkflow {
         creditBalanceProvider: any AnimateCreditBalanceProviding,
         workspaceObserver: any AnimateActiveWorkspaceObserving,
         finalRenderClient: AnimateFinalRenderClient,
+        renderStatusClient: AnimateRenderStatusClient? = nil,
         videoQuoteClient: AnimateVideoQuoteClient? = nil,
         uploadClient: AnimateUploadClient? = nil,
         galleryStore: any AnimateGalleryStoring = AnimateGalleryStore()
@@ -47,6 +53,7 @@ final class FinalRenderWorkflow: WorkspaceObservingWorkflow {
         self.authTokenProvider = authTokenProvider
         self.creditBalanceProvider = creditBalanceProvider
         self.finalRenderClient = finalRenderClient
+        self.renderStatusClient = renderStatusClient ?? AnimateRenderStatusClient(baseURLString: finalRenderClient.baseURLString)
         self.videoQuoteClient = videoQuoteClient ?? AnimateVideoQuoteClient(baseURLString: finalRenderClient.baseURLString)
         self.uploadClient = uploadClient
         self.galleryStore = galleryStore
@@ -81,6 +88,7 @@ final class FinalRenderWorkflow: WorkspaceObservingWorkflow {
         refreshCreditBalanceIfTerminalStateChanged(workspace: workspace)
         scheduleGeneratedImagePreviewDownloadIfNeeded(workspace: workspace)
         scheduleLocalGalleryDownloadIfNeeded(workspace: workspace)
+        updateRenderStatusWatch(workspace: workspace)
     }
 
     var isConfigured: Bool {
@@ -358,6 +366,7 @@ final class FinalRenderWorkflow: WorkspaceObservingWorkflow {
                 updatedAt: Date().timeIntervalSince1970 * 1000
             )
             latestFinalJobVideoId = videoId
+            startRenderStatusWatch(renderJobId: confirmed.workflow.renderJobId, videoId: videoId)
 
             guard isCurrentWorkflowGeneration(generation) else { return true }
 
@@ -677,7 +686,186 @@ final class FinalRenderWorkflow: WorkspaceObservingWorkflow {
         pendingSourceComparisonImageData = nil
         canRetryFinalVideoDownload = false
         isSavingFinalVideo = false
+        stopRenderStatusWatch()
         statusMessage = nil
+    }
+
+    private func updateRenderStatusWatch(workspace: AnimateWorkspace?) {
+        guard let workspace,
+              let job = workspace.latestRenderJob(kind: "final"),
+              job.isActiveRender else {
+            stopRenderStatusWatchIfNoActiveJob()
+            return
+        }
+        startRenderStatusWatch(renderJobId: job.id, videoId: workspace.video.id)
+    }
+
+    private func startRenderStatusWatch(renderJobId: String, videoId: String) {
+        guard renderStatusClient.isConfigured else { return }
+        guard watchedRenderJobId != renderJobId else { return }
+        stopRenderStatusWatch()
+        watchedRenderJobId = renderJobId
+        renderStatusWatchTask = Task { [weak self] in
+            await self?.watchRenderStatus(renderJobId: renderJobId, videoId: videoId)
+        }
+    }
+
+    private func stopRenderStatusWatchIfNoActiveJob() {
+        guard latestFinalJob?.isActiveRender != true else { return }
+        stopRenderStatusWatch()
+    }
+
+    private func stopRenderStatusWatch() {
+        renderStatusWatchTask?.cancel()
+        renderStatusWatchTask = nil
+        watchedRenderJobId = nil
+    }
+
+    private func watchRenderStatus(renderJobId: String, videoId: String) async {
+        let startedAt = Date()
+
+        while !Task.isCancelled {
+            if Date().timeIntervalSince(startedAt) > renderStatusWatchTimeout {
+                await applyRenderStatusWatchTimeout(renderJobId: renderJobId, videoId: videoId)
+                return
+            }
+
+            do {
+                guard let bearerToken = try? await authTokenProvider.currentBearerToken() else {
+                    try await Task.sleep(nanoseconds: renderStatusWatchInterval)
+                    continue
+                }
+                let status = try await renderStatusClient.fetchStatus(
+                    renderJobId: renderJobId,
+                    bearerToken: bearerToken
+                )
+                await applyPolledRenderStatus(status, videoId: videoId)
+                if Self.isTerminalRenderStatus(status.status) {
+                    return
+                }
+            } catch {
+                AnimateWorkflowDiagnostics.capture(
+                    error,
+                    feature: "animate.final_render",
+                    operation: "watch_status",
+                    step: "poll",
+                    data: [
+                        "render_job_id": renderJobId,
+                    ]
+                )
+            }
+
+            do {
+                try await Task.sleep(nanoseconds: renderStatusWatchInterval)
+            } catch {
+                return
+            }
+        }
+    }
+
+    private func applyPolledRenderStatus(
+        _ status: AnimateRenderStatusResponse,
+        videoId: String
+    ) async {
+        guard status.renderJobId == latestFinalJob?.id || latestFinalJob?.id == nil else {
+            return
+        }
+
+        latestFinalJob = AnimateRenderJob(
+            id: status.renderJobId,
+            kind: status.renderKind,
+            status: status.status,
+            phase: status.phase,
+            progressPercent: Double(status.progressPercent),
+            userMessage: status.userMessage,
+            canEditSetup: status.canEditSetup,
+            canRetry: status.canRetry,
+            totalCreditCost: status.artifactCreditCost.map(Double.init),
+            targetDurationMs: status.artifactDurationSeconds.map { Double($0) * 1000 },
+            rendererMode: nil,
+            workflowRunId: status.workflowRunId,
+            errorCode: status.errorCode,
+            errorMessage: status.errorMessage,
+            createdAt: Date().timeIntervalSince1970 * 1000,
+            updatedAt: Self.milliseconds(from: status.updatedAt)
+        )
+        latestFinalJobVideoId = videoId
+
+        if status.status == "completed",
+           let artifact = Self.artifact(from: status) {
+            finalExport = artifact
+            canRetryFinalVideoDownload = false
+            refreshCreditBalanceIfTerminalStateChanged(workspace: activeWorkspace)
+            if let workspace = activeWorkspace {
+                scheduleLocalGalleryDownloadIfNeeded(workspace: workspace, artifact: artifact)
+            }
+            stopRenderStatusWatch()
+        } else if Self.isTerminalRenderStatus(status.status) {
+            canRetryFinalVideoDownload = false
+            await creditBalanceProvider.refreshCreditBalance()
+            stopRenderStatusWatch()
+        }
+    }
+
+    private func applyRenderStatusWatchTimeout(renderJobId: String, videoId: String) async {
+        guard latestFinalJob?.id == renderJobId,
+              latestFinalJob?.isActiveRender == true else {
+            return
+        }
+
+        latestFinalJob = AnimateRenderJob(
+            id: renderJobId,
+            kind: "final",
+            status: "failed",
+            phase: "failed_recoverable",
+            progressPercent: 100,
+            userMessage: L10n.string("workflow.final.tryAgain"),
+            canEditSetup: true,
+            canRetry: true,
+            workflowRunId: latestFinalJob?.workflowRunId,
+            errorCode: "animate_ios_render_status_timeout",
+            errorMessage: L10n.string("workflow.final.tryAgain"),
+            createdAt: latestFinalJob?.createdAt ?? Date().timeIntervalSince1970 * 1000,
+            updatedAt: Date().timeIntervalSince1970 * 1000
+        )
+        latestFinalJobVideoId = videoId
+        statusMessage = L10n.string("recovery.renderRefreshFailure")
+        canRetryFinalVideoDownload = false
+        await creditBalanceProvider.refreshCreditBalance()
+        stopRenderStatusWatch()
+    }
+
+    private static func isTerminalRenderStatus(_ status: String) -> Bool {
+        ["completed", "failed", "blocked", "cancelled"].contains(status)
+    }
+
+    private static func artifact(from status: AnimateRenderStatusResponse) -> AnimateArtifact? {
+        guard let artifactId = status.artifactId,
+              let kind = status.artifactKind,
+              let artifactStatus = status.artifactStatus,
+              let r2Key = status.artifactR2Key else {
+            return nil
+        }
+
+        return AnimateArtifact(
+            id: artifactId,
+            workflowArtifactId: artifactId,
+            kind: kind,
+            r2Key: r2Key,
+            title: nil,
+            look: nil,
+            videoJobId: status.renderJobId,
+            status: artifactStatus,
+            durationSeconds: status.artifactDurationSeconds.map(Double.init),
+            creditCost: status.artifactCreditCost,
+            hasWatermark: status.artifactHasWatermark,
+            expiresAt: Date().addingTimeInterval(30 * 24 * 60 * 60).timeIntervalSince1970 * 1000,
+            createdAt: Self.milliseconds(from: status.updatedAt)
+        )
+    }
+
+    private static func milliseconds(from isoString: String) -> Double {
+        (ISO8601DateFormatter().date(from: isoString)?.timeIntervalSince1970 ?? Date().timeIntervalSince1970) * 1000
     }
 
     func retryFinalVideoDownload(workspace workspaceOverride: AnimateWorkspace? = nil) {
@@ -701,10 +889,13 @@ final class FinalRenderWorkflow: WorkspaceObservingWorkflow {
         }
     }
 
-    private func scheduleLocalGalleryDownloadIfNeeded(workspace: AnimateWorkspace?) {
+    private func scheduleLocalGalleryDownloadIfNeeded(
+        workspace: AnimateWorkspace?,
+        artifact artifactOverride: AnimateArtifact? = nil
+    ) {
         guard
             let workspace,
-            let artifact = workspace.latestFinalVideoArtifact,
+            let artifact = artifactOverride ?? workspace.latestFinalVideoArtifact,
             shouldScheduleLocalGalleryDownload(workspace: workspace, artifact: artifact)
         else {
             return

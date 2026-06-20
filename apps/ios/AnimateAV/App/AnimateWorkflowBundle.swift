@@ -57,6 +57,7 @@ struct AnimateWorkflowBundle {
             creditBalanceProvider: accountController,
             workspaceObserver: workspaceObserver,
             finalRenderClient: clients.finalRender,
+            renderStatusClient: clients.renderStatus,
             videoQuoteClient: clients.videoQuote,
             uploadClient: clients.upload
         )
@@ -71,6 +72,7 @@ struct AnimateWorkflowClients {
     let videoQuote: AnimateVideoQuoteClient
     let imageGenerationAccounting: AnimateImageGenerationAccountingClient
     let finalRender: AnimateFinalRenderClient
+    let renderStatus: AnimateRenderStatusClient
 
     init(baseURLString: String) {
         workspaceCommands = AnimateWorkspaceCommandClient(baseURLString: baseURLString)
@@ -80,6 +82,7 @@ struct AnimateWorkflowClients {
         videoQuote = AnimateVideoQuoteClient(baseURLString: baseURLString)
         imageGenerationAccounting = AnimateImageGenerationAccountingClient(baseURLString: baseURLString)
         finalRender = AnimateFinalRenderClient(baseURLString: baseURLString, session: Self.makeFinalRenderSession())
+        renderStatus = AnimateRenderStatusClient(baseURLString: baseURLString, session: Self.makeFinalRenderSession())
     }
 
     private static func makeUploadSession() -> URLSession {
