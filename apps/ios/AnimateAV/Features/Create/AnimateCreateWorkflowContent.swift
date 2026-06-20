@@ -1,6 +1,7 @@
 import AVAppShellFoundation
 import AVBrandFoundation
 import AVFoundation
+import Photos
 import PhotosUI
 import SwiftUI
 import UIKit
@@ -530,6 +531,7 @@ struct AnimateCreateBlockingPreparationView: View {
             AnimateCreateRenderProgressScene(
                 status: realtimeStatus,
                 sourceImage: sourceImage,
+                syncedMediaAssets: presentation.mediaSummary.syncedMediaAssets,
                 generatedImageLocalRelativePath: presentation.finalRenderSummary.generatedImagePreviewLocalRelativePath,
                 fallbackVisualStage: fallbackVisualStage,
                 fallbackIconName: iconName,
@@ -777,6 +779,7 @@ struct AnimateCreateBlockingPreparationView: View {
 private struct AnimateCreateRenderProgressScene: View {
     let status: AnimateRenderRealtimePresentation?
     let sourceImage: UIImage?
+    let syncedMediaAssets: [AnimateMediaAsset]
     let generatedImageLocalRelativePath: String?
     let fallbackVisualStage: AnimateRenderRealtimePresentation.VisualStage
     let fallbackIconName: String
@@ -784,6 +787,7 @@ private struct AnimateCreateRenderProgressScene: View {
     let isAnimating: Bool
 
     @State private var generatedImage: UIImage?
+    @State private var restoredSourceImage: UIImage?
 
     var body: some View {
         ZStack {
@@ -804,7 +808,7 @@ private struct AnimateCreateRenderProgressScene: View {
 
             switch visualStage {
             case .sourcePhoto:
-                photoLayer(image: sourceImage, isStyled: false)
+                photoLayer(image: effectiveSourceImage, isStyled: false)
                     .overlay {
                         imageGenerationMotionOverlay
                     }
@@ -813,7 +817,7 @@ private struct AnimateCreateRenderProgressScene: View {
                     }
                     .transition(.asymmetric(insertion: .scale.combined(with: .opacity), removal: .opacity))
             case .creatingImage:
-                imageCreationPreviewLayer(image: sourceImage)
+                imageCreationPreviewLayer(image: effectiveSourceImage)
                     .overlay(alignment: .bottomTrailing) {
                         aviGuideBadge(systemImage: "wand.and.stars")
                     }
@@ -848,6 +852,13 @@ private struct AnimateCreateRenderProgressScene: View {
         .task(id: generatedImageLocalRelativePath) {
             generatedImage = Self.loadGeneratedImage(relativePath: generatedImageLocalRelativePath)
         }
+        .task(id: restoredSourceImageTaskId) {
+            guard sourceImage == nil else {
+                restoredSourceImage = nil
+                return
+            }
+            restoredSourceImage = await Self.loadRestoredSourceImage(from: syncedMediaAssets)
+        }
         .accessibilityHidden(true)
     }
 
@@ -856,7 +867,19 @@ private struct AnimateCreateRenderProgressScene: View {
     }
 
     private var styledPreviewImage: UIImage? {
-        generatedImage ?? sourceImage
+        generatedImage ?? effectiveSourceImage
+    }
+
+    private var effectiveSourceImage: UIImage? {
+        sourceImage ?? restoredSourceImage
+    }
+
+    private var restoredSourceImageTaskId: String {
+        guard sourceImage == nil else { return "local-source" }
+        return syncedMediaAssets
+            .sorted { $0.sortOrder < $1.sortOrder }
+            .map { "\($0.id):\($0.platformMediaAssetId ?? ""):\($0.selected)" }
+            .joined(separator: "|")
     }
 
     private func photoLayer(image: UIImage?, isStyled: Bool) -> some View {
@@ -1150,7 +1173,7 @@ private struct AnimateCreateRenderProgressScene: View {
 
     private var finishingCollage: some View {
         ZStack {
-            photoLayer(image: sourceImage, isStyled: false)
+            photoLayer(image: effectiveSourceImage, isStyled: false)
                 .frame(width: 142, height: 194)
                 .offset(x: -42, y: -26)
                 .rotationEffect(.degrees(-8))
@@ -1177,6 +1200,38 @@ private struct AnimateCreateRenderProgressScene: View {
         return UIImage(data: data)
     }
 
+    private static func loadRestoredSourceImage(from mediaAssets: [AnimateMediaAsset]) async -> UIImage? {
+        let selectedAssets = mediaAssets
+            .filter { ($0.kind == "photo" || $0.kind == "image") && $0.selected }
+            .sorted { $0.sortOrder < $1.sortOrder }
+        let candidates = selectedAssets.isEmpty
+            ? mediaAssets
+                .filter { $0.kind == "photo" || $0.kind == "image" }
+                .sorted { $0.sortOrder < $1.sortOrder }
+            : selectedAssets
+        guard let media = candidates.first else { return nil }
+
+        if let image = AnimateLocalMediaThumbnailCache.thumbnail(
+            mediaAssetId: media.id,
+            platformMediaAssetId: media.platformMediaAssetId
+        ) {
+            return image
+        }
+
+        guard let image = await AnimateCreateRestoredSourceImageLoader.thumbnail(
+            for: media.platformMediaAssetId,
+            targetSize: CGSize(width: 420, height: 520)
+        ) else {
+            return nil
+        }
+        AnimateLocalMediaThumbnailCache.store(
+            image,
+            mediaAssetId: media.id,
+            platformMediaAssetId: media.platformMediaAssetId
+        )
+        return image
+    }
+
     private var failedScene: some View {
         VStack(spacing: 14) {
             fallbackImage
@@ -1185,6 +1240,30 @@ private struct AnimateCreateRenderProgressScene: View {
             Image(systemName: "exclamationmark.triangle.fill")
                 .font(.system(size: 30, weight: .black))
                 .foregroundStyle(.orange)
+        }
+    }
+}
+
+private enum AnimateCreateRestoredSourceImageLoader {
+    static func thumbnail(for localIdentifier: String?, targetSize: CGSize) async -> UIImage? {
+        guard let localIdentifier, !localIdentifier.isEmpty else { return nil }
+        let result = PHAsset.fetchAssets(withLocalIdentifiers: [localIdentifier], options: nil)
+        guard let asset = result.firstObject else { return nil }
+
+        return await withCheckedContinuation { continuation in
+            let options = PHImageRequestOptions()
+            options.deliveryMode = .highQualityFormat
+            options.resizeMode = .fast
+            options.isNetworkAccessAllowed = true
+
+            PHImageManager.default().requestImage(
+                for: asset,
+                targetSize: targetSize,
+                contentMode: .aspectFill,
+                options: options
+            ) { image, _ in
+                continuation.resume(returning: image)
+            }
         }
     }
 }
