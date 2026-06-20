@@ -86,6 +86,7 @@ fi
 version="$(plist_print "$app_info" "CFBundleShortVersionString")"
 build="$(plist_print "$app_info" "CFBundleVersion")"
 bundle_id="$(plist_print "$app_info" "CFBundleIdentifier")"
+url_scheme="$(plist_print "$app_info" "CFBundleURLTypes:0:CFBundleURLSchemes:0")"
 keychain_service="$(plist_print "$app_info" "ACCOUNTAV_KEYCHAIN_SERVICE")"
 keychain_access_group="$(plist_print "$app_info" "ACCOUNTAV_KEYCHAIN_ACCESS_GROUP")"
 archive_team="$(plist_print "$archive_path/Info.plist" "ApplicationProperties:Team")"
@@ -95,6 +96,7 @@ entitlements_file="$(mktemp)"
 trap 'rm -f "$entitlements_file"' EXIT
 
 [ "$bundle_id" = "$expected_bundle_id" ] || fail "bundle id must be $expected_bundle_id, got ${bundle_id:-<missing>}"
+[ "$url_scheme" = "$bundle_id" ] || fail "callback URL scheme must match bundle id $bundle_id, got ${url_scheme:-<missing>}"
 if [ -n "$expected_keychain_service" ]; then
   [ "$keychain_service" = "$expected_keychain_service" ] || fail "ACCOUNTAV_KEYCHAIN_SERVICE must be $expected_keychain_service, got ${keychain_service:-<missing>}"
 else

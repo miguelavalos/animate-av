@@ -123,6 +123,9 @@ delete_account_url="$(setting ACCOUNTAV_DELETE_ACCOUNT_URL)"
 animate_delete_account_url="$(setting ANIMATEAV_DELETE_ACCOUNT_URL)"
 open_source_url="$(setting ANIMATEAV_OPEN_SOURCE_URL)"
 code_sign_entitlements="$(setting CODE_SIGN_ENTITLEMENTS)"
+info_url_scheme="$(
+  plutil -extract CFBundleURLTypes.0.CFBundleURLSchemes.0 raw "$repo_root/apps/ios/AnimateAV/App/Info.plist" 2>/dev/null || true
+)"
 
 for item in \
   "PRODUCT_BUNDLE_IDENTIFIER:$product_bundle_identifier" \
@@ -149,6 +152,7 @@ for item in \
 done
 
 [ "$config_environment" = "$env_name" ] || fail "ANIMATEAV_CONFIG_ENVIRONMENT must be $env_name, got ${config_environment:-missing}"
+[ "$info_url_scheme" = '$(PRODUCT_BUNDLE_IDENTIFIER)' ] || fail "Info.plist must register PRODUCT_BUNDLE_IDENTIFIER as the Clerk callback URL scheme"
 [ "$code_sign_entitlements" = "AnimateAV/App/AnimateAV.entitlements" ] || fail "CODE_SIGN_ENTITLEMENTS must point to AnimateAV/App/AnimateAV.entitlements"
 entitlements_path="$repo_root/apps/ios/$code_sign_entitlements"
 [ -f "$entitlements_path" ] || fail "CODE_SIGN_ENTITLEMENTS file does not exist: $code_sign_entitlements"
