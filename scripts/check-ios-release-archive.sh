@@ -8,6 +8,7 @@ expected_bundle_id="${ANIMATEAV_IOS_BUNDLE_ID:-com.avalsys.animateav}"
 expected_team_id="${ANIMATEAV_APPLE_TEAM_ID:-935PM55U6R}"
 expected_keychain_service="${ANIMATEAV_KEYCHAIN_SERVICE:-}"
 expected_keychain_access_group="${ANIMATEAV_KEYCHAIN_ACCESS_GROUP:-935PM55U6R.com.avalsys.animateav}"
+expected_associated_domain="${ANIMATEAV_ASSOCIATED_DOMAIN:-webcredentials:clerk.avalsys.com}"
 
 usage() {
   cat <<'USAGE'
@@ -90,6 +91,8 @@ keychain_access_group="$(plist_print "$app_info" "ACCOUNTAV_KEYCHAIN_ACCESS_GROU
 archive_team="$(plist_print "$archive_path/Info.plist" "ApplicationProperties:Team")"
 architectures="$(plist_print "$archive_path/Info.plist" "ApplicationProperties:Architectures")"
 app_binary="$app_path/AnimateAV"
+entitlements_file="$(mktemp)"
+trap 'rm -f "$entitlements_file"' EXIT
 
 [ "$bundle_id" = "$expected_bundle_id" ] || fail "bundle id must be $expected_bundle_id, got ${bundle_id:-<missing>}"
 if [ -n "$expected_keychain_service" ]; then
@@ -111,6 +114,13 @@ fi
 
 codesign_team="$(codesign -dv "$app_path" 2>&1 | awk -F= '/TeamIdentifier=/ {print $2; exit}')"
 [ "$codesign_team" = "$expected_team_id" ] || fail "codesign team must be $expected_team_id, got ${codesign_team:-<missing>}"
+codesign -d --entitlements :- "$app_path" > "$entitlements_file" 2>/dev/null || fail "could not read signed app entitlements"
+apple_signin_entitlement="$(plist_print "$entitlements_file" "com.apple.developer.applesignin:0")"
+associated_domain_entitlement="$(plist_print "$entitlements_file" "com.apple.developer.associated-domains:0")"
+keychain_entitlement="$(plist_print "$entitlements_file" "keychain-access-groups:0")"
+[ "$apple_signin_entitlement" = "Default" ] || fail "signed app must include Sign in with Apple Default entitlement"
+[ "$associated_domain_entitlement" = "$expected_associated_domain" ] || fail "signed app associated domain must be $expected_associated_domain"
+[ "$keychain_entitlement" = "$expected_keychain_access_group" ] || fail "signed app keychain entitlement must be $expected_keychain_access_group"
 
 if [ -n "$archive_team" ]; then
   [ "$archive_team" = "$expected_team_id" ] || fail "archive team must be $expected_team_id, got $archive_team"

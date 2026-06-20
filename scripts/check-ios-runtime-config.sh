@@ -97,6 +97,10 @@ require_present() {
   fi
 }
 
+plist_print() {
+  /usr/libexec/PlistBuddy -c "Print :$2" "$1" 2>/dev/null || true
+}
+
 product_bundle_identifier="$(setting PRODUCT_BUNDLE_IDENTIFIER)"
 config_environment="$(setting ANIMATEAV_CONFIG_ENVIRONMENT)"
 account_api_base_url="$(setting ACCOUNTAV_API_BASE_URL)"
@@ -146,6 +150,14 @@ done
 
 [ "$config_environment" = "$env_name" ] || fail "ANIMATEAV_CONFIG_ENVIRONMENT must be $env_name, got ${config_environment:-missing}"
 [ "$code_sign_entitlements" = "AnimateAV/App/AnimateAV.entitlements" ] || fail "CODE_SIGN_ENTITLEMENTS must point to AnimateAV/App/AnimateAV.entitlements"
+entitlements_path="$repo_root/apps/ios/$code_sign_entitlements"
+[ -f "$entitlements_path" ] || fail "CODE_SIGN_ENTITLEMENTS file does not exist: $code_sign_entitlements"
+apple_signin_entitlement="$(plist_print "$entitlements_path" "com.apple.developer.applesignin:0")"
+associated_domain_entitlement="$(plist_print "$entitlements_path" "com.apple.developer.associated-domains:0")"
+keychain_entitlement="$(plist_print "$entitlements_path" "keychain-access-groups:0")"
+[ "$apple_signin_entitlement" = "Default" ] || fail "Sign in with Apple entitlement must remain Default"
+[ "$associated_domain_entitlement" = "webcredentials:clerk.avalsys.com" ] || fail "Associated Domains entitlement must include Clerk webcredentials"
+[ "$keychain_entitlement" = '$(AppIdentifierPrefix)$(PRODUCT_BUNDLE_IDENTIFIER)' ] || fail "keychain-access-groups entitlement must stay scoped to the bundle identifier"
 [[ "$convex_url" == https://*.convex.cloud ]] || fail "ANIMATEAV_CONVEX_URL must be a Convex cloud URL"
 [[ "$marketing_version" =~ ^[0-9]+(\.[0-9]+){1,2}$ ]] || fail "MARKETING_VERSION must look like 1.0 or 1.0.0"
 [[ "$current_project_version" =~ ^[0-9]+$ ]] || fail "CURRENT_PROJECT_VERSION must be an integer"
