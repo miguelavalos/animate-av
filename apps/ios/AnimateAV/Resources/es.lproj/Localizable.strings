@@ -360,7 +360,7 @@
 "gallery.video.downloadAvailable" = "Descarga disponible";
 "gallery.video.downloadAction" = "Descargar";
 "gallery.video.downloadUnavailable" = "Descarga no disponible";
-"gallery.video.remoteMetadataOnly" = "Solo metadata en la nube";
+"gallery.video.remoteMetadataOnly" = "Solo metadatos en la nube";
 "gallery.video.redownload" = "Descargar de nuevo";
 "gallery.video.downloaded" = "Video descargado en este dispositivo.";
 "gallery.video.downloadFailed" = "No se pudo descargar el video.";

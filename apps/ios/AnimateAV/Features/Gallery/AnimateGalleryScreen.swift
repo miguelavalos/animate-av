@@ -658,8 +658,10 @@ private struct AnimateGalleryVideoTile: View {
             L10n.string("gallery.video.downloadAction")
         case .localFileMissing:
             video.availabilityTitle
-        case .downloadUnavailable, .remoteMetadataOnly:
+        case .downloadUnavailable:
             L10n.string("gallery.video.downloadUnavailable")
+        case .remoteMetadataOnly:
+            L10n.string("gallery.video.remoteMetadataOnly")
         }
     }
 
