@@ -1,6 +1,6 @@
 import { AccountAvProvider } from "@avalsys/account-av-web";
 import { AppsAvWebProvider, getAppsAvLocaleFromSearch, useAppsAvLocale } from "@avalsys/apps-av-web";
-import { HeadContent, Outlet, Scripts, createRootRoute, useRouterState } from "@tanstack/react-router";
+import { HeadContent, Outlet, Scripts, createRootRoute, redirect, useRouterState } from "@tanstack/react-router";
 import type { ReactNode } from "react";
 import { useEffect } from "react";
 import { getAccountApiBaseUrl, getAccountPublishableKey, isAnimateWebAppComingSoon } from "@/lib/animate-config";
@@ -12,6 +12,11 @@ const faviconUrl = "https://cdn.avalsys.com/apps-av/animate-av/favicon-32x32.png
 const appleTouchIconUrl = "https://cdn.avalsys.com/apps-av/animate-av/apple-touch-icon.png?v=20260619b";
 
 export const Route = createRootRoute({
+  beforeLoad: ({ location }) => {
+    if (isAnimateWebAppComingSoon() && location.pathname !== "/") {
+      throw redirect({ href: comingSoonHomeHref(location.searchStr) });
+    }
+  },
   component: RootComponent,
   head: () => ({
     meta: [
@@ -25,6 +30,11 @@ export const Route = createRootRoute({
     ]
   })
 });
+
+function comingSoonHomeHref(searchStr: string) {
+  const lang = new URLSearchParams(searchStr).get("lang");
+  return lang ? `/?lang=${encodeURIComponent(lang)}` : "/";
+}
 
 function RootComponent() {
   return (
