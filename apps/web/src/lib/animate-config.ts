@@ -52,6 +52,10 @@ export function getAccountPublishableKey() {
   return import.meta.env.VITE_ACCOUNTAV_PUBLISHABLE_KEY as string | undefined;
 }
 
+export function isAnimateWebAppComingSoon() {
+  return import.meta.env.VITE_ANIMATEAV_WEBAPP_COMING_SOON === "true";
+}
+
 export function getAccountCreditsUrl() {
   return accountManagementUrl("/credits") || accountManagementUrl("/");
 }

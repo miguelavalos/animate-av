@@ -7,7 +7,7 @@ import { AnimateAppShell } from "@/components/animate-app-shell";
 import { AnimateLoginPage } from "@/components/animate-login-page";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
-import { animateBrandAssets } from "@/lib/animate-config";
+import { animateBrandAssets, isAnimateWebAppComingSoon } from "@/lib/animate-config";
 import { localizedAppPath, useAnimateText } from "@/lib/animate-i18n";
 
 export const Route = createFileRoute("/")({
@@ -15,6 +15,10 @@ export const Route = createFileRoute("/")({
 });
 
 function IndexRoute() {
+  if (isAnimateWebAppComingSoon()) {
+    return <AnimateLoginPage comingSoon />;
+  }
+
   const locale = useAppsAvLocale();
 
   return (

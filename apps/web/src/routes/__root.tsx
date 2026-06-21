@@ -2,7 +2,8 @@ import { AccountAvProvider } from "@avalsys/account-av-web";
 import { AppsAvWebProvider, getAppsAvLocaleFromSearch, useAppsAvLocale } from "@avalsys/apps-av-web";
 import { HeadContent, Outlet, Scripts, createRootRoute, useRouterState } from "@tanstack/react-router";
 import type { ReactNode } from "react";
-import { getAccountApiBaseUrl, getAccountPublishableKey } from "@/lib/animate-config";
+import { useEffect } from "react";
+import { getAccountApiBaseUrl, getAccountPublishableKey, isAnimateWebAppComingSoon } from "@/lib/animate-config";
 import { AnimateConvexProvider, AnimateRealtimeSessionProvider } from "@/lib/animate-convex";
 import { localizedAppPath, useAnimateAccountLocalization, useAnimateText } from "@/lib/animate-i18n";
 import "../styles.css";
@@ -44,12 +45,26 @@ function RootDocument({ children }: Readonly<{ children: ReactNode }>) {
       </head>
       <body>
         <AppsAvWebProvider initialLocale={initialLocale}>
+          <ComingSoonRouteGate />
           <AccountBoundary>{children}</AccountBoundary>
         </AppsAvWebProvider>
         <Scripts />
       </body>
     </html>
   );
+}
+
+function ComingSoonRouteGate() {
+  const locale = useAppsAvLocale();
+  const pathname = useRouterState({ select: (state) => state.location.pathname });
+
+  useEffect(() => {
+    if (isAnimateWebAppComingSoon() && pathname !== "/") {
+      window.location.replace(localizedAppPath("/", locale));
+    }
+  }, [locale, pathname]);
+
+  return null;
 }
 
 function AccountBoundary({ children }: Readonly<{ children: ReactNode }>) {

@@ -6,7 +6,7 @@ import { Card } from "@/components/ui/card";
 import { animateBrandAssets } from "@/lib/animate-config";
 import { localizedAppPath, useAnimateProductConfig, useAnimateText } from "@/lib/animate-i18n";
 
-export function AnimateLoginPage({ compact = false }: { compact?: boolean }) {
+export function AnimateLoginPage({ comingSoon = false, compact = false }: { comingSoon?: boolean; compact?: boolean }) {
   const text = useAnimateText();
   const locale = useAppsAvLocale();
   const productConfig = useAnimateProductConfig();
@@ -15,20 +15,20 @@ export function AnimateLoginPage({ compact = false }: { compact?: boolean }) {
   if (compact) {
     return (
       <div className="overflow-hidden rounded-lg border border-[#e5c1c7] bg-[#fff8f3]/90 shadow-lg shadow-[#7b233f]/10">
-        <LoginContent signInHref={signInHref} text={text} />
+        <LoginContent comingSoon={comingSoon} locale={locale} signInHref={signInHref} text={text} />
       </div>
     );
   }
 
   return (
     <div className="animate-guest-shell min-h-screen overflow-hidden px-5 pt-5 sm:px-8">
-      <LoginContent signInHref={signInHref} text={text} />
+      <LoginContent comingSoon={comingSoon} locale={locale} signInHref={signInHref} text={text} />
       <AvAppFooter className="mt-4 border-transparent bg-transparent px-0 pb-4 pt-2" labels={text.footer} product={productConfig} />
     </div>
   );
 }
 
-function LoginContent({ signInHref, text }: { signInHref: string; text: ReturnType<typeof useAnimateText> }) {
+function LoginContent({ comingSoon, locale, signInHref, text }: { comingSoon: boolean; locale: ReturnType<typeof useAppsAvLocale>; signInHref: string; text: ReturnType<typeof useAnimateText> }) {
   const guestScenes = [
     {
       body: text.login.mapBody,
@@ -62,15 +62,21 @@ function LoginContent({ signInHref, text }: { signInHref: string; text: ReturnTy
               {text.login.heroBody}
             </p>
             <div className="mt-8 flex flex-wrap gap-3">
-              <Button asChild className="h-12 rounded-full bg-[#7c2947] px-5 text-white shadow-lg shadow-[#7c2947]/18 hover:bg-[#963956]">
-                <a href={signInHref} onClick={(event) => {
-                  event.preventDefault();
-                  window.location.assign(signInHref);
-                }}>
-                  {text.login.cta}
-                  <ArrowRight className="size-4" aria-hidden="true" />
-                </a>
-              </Button>
+              {comingSoon ? (
+                <Button disabled className="h-12 rounded-full bg-[#7c2947] px-5 text-white shadow-lg shadow-[#7c2947]/18 disabled:opacity-100">
+                  {comingSoonLabel(locale)}
+                </Button>
+              ) : (
+                <Button asChild className="h-12 rounded-full bg-[#7c2947] px-5 text-white shadow-lg shadow-[#7c2947]/18 hover:bg-[#963956]">
+                  <a href={signInHref} onClick={(event) => {
+                    event.preventDefault();
+                    window.location.assign(signInHref);
+                  }}>
+                    {text.login.cta}
+                    <ArrowRight className="size-4" aria-hidden="true" />
+                  </a>
+                </Button>
+              )}
             </div>
           </div>
 
@@ -103,6 +109,10 @@ function LoginContent({ signInHref, text }: { signInHref: string; text: ReturnTy
         </section>
       </main>
   );
+}
+
+function comingSoonLabel(locale: ReturnType<typeof useAppsAvLocale>) {
+  return ({ ca: "Properament", de: "Demnächst", en: "Coming soon", es: "Próximamente", fr: "Prochainement" } as const)[locale] ?? "Coming soon";
 }
 
 function LoginMetric({ icon, label }: { icon: ReactNode; label: string }) {
