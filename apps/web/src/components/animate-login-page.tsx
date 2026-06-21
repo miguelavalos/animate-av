@@ -1,8 +1,7 @@
-import { ArrowRight, Film, Images, ListChecks, Sparkles } from "lucide-react";
+import { ArrowRight, Film, Images, Sparkles } from "lucide-react";
 import type { ReactNode } from "react";
 import { AvAppFooter, useAppsAvLocale } from "@avalsys/apps-av-web";
 import { Button } from "@/components/ui/button";
-import { Card } from "@/components/ui/card";
 import { animateBrandAssets } from "@/lib/animate-config";
 import { localizedAppPath, useAnimateProductConfig, useAnimateText } from "@/lib/animate-i18n";
 
@@ -55,19 +54,6 @@ function LoginContent({ comingSoon, locale, signInHref, text }: { comingSoon: bo
     );
   }
 
-  const guestScenes = [
-    {
-      body: text.login.mapBody,
-      src: animateBrandAssets.guestHomeLooks,
-      title: text.login.mapTitle
-    },
-    {
-      body: text.login.cardBody,
-      src: animateBrandAssets.guestHomeReview,
-      title: text.login.cardTitle
-    }
-  ];
-
   return (
       <main className="animate-guest-stage mx-auto min-h-[32rem] max-w-6xl overflow-hidden rounded-[1.75rem] border border-[#e5c1c7] shadow-2xl shadow-[#7b233f]/14">
         <img className="animate-guest-backdrop" src={animateBrandAssets.guestHomeMotion} alt="" />
@@ -114,24 +100,11 @@ function LoginContent({ comingSoon, locale, signInHref, text }: { comingSoon: bo
         </section>
 
         <section className="animate-guest-gallery" aria-hidden="true">
-          {guestScenes.map((scene, index) => (
-            <article className={`animate-guest-scene animate-guest-scene-${index + 1}`} key={scene.src}>
-              <img src={scene.src} alt="" />
-              <div>
-                <p className="font-serif text-2xl leading-tight text-[#20242e]">{scene.title}</p>
-                <p className="mt-2 text-sm leading-6 text-[#4d5563]">{scene.body}</p>
-              </div>
-            </article>
-          ))}
-          <Card className="animate-guest-note relative gap-2 rounded-2xl border-[#e5c1c7] bg-[#fff8f3]/92 p-5 py-5 text-[#20242e] shadow-xl shadow-[#7c2947]/12">
-            <p className="flex items-center gap-2 text-sm font-semibold">
-              <ListChecks className="size-4 text-[#b94e70]" aria-hidden="true" />
-              {text.login.cardTitle}
-            </p>
-            <p className="mt-2 text-sm leading-6 text-[#47566f]">
-              {text.login.cardBody}
-            </p>
-          </Card>
+          <img className="animate-guest-gallery-image" src={animateBrandAssets.guestHomeLooks} alt="" />
+          <div className="animate-guest-note">
+            <p className="font-serif text-2xl leading-tight text-[#20242e]">{text.login.mapTitle}</p>
+            <p className="mt-2 text-sm leading-6 text-[#4d5563]">{text.login.mapBody}</p>
+          </div>
         </section>
       </main>
   );
