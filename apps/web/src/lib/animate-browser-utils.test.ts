@@ -86,11 +86,39 @@ describe("Animate browser source utilities", () => {
     localStorage.removeItem("animate-av.gallery.videos.v1");
   });
 
+  test("ignores malformed gallery entries from older browser storage arrays", () => {
+    const localStorage = installLocalStorageMock();
+    localStorage.setItem("animate-av.gallery.videos.v1", JSON.stringify([
+      null,
+      "old",
+      { id: "missing-artifact" },
+      { id: "saved", artifactId: "artifact-1" }
+    ]));
+
+    expect(loadGalleryRecords()).toEqual([{ id: "saved", artifactId: "artifact-1" }]);
+
+    localStorage.removeItem("animate-av.gallery.videos.v1");
+  });
+
   test("ignores non-array in-progress jobs from older browser storage", () => {
     const localStorage = installLocalStorageMock();
     localStorage.setItem("animate-av.in-progress.jobs.v1", JSON.stringify({ id: "old" }));
 
     expect(loadLocalInProgressJobs()).toEqual([]);
+
+    localStorage.removeItem("animate-av.in-progress.jobs.v1");
+  });
+
+  test("ignores malformed in-progress entries from older browser storage arrays", () => {
+    const localStorage = installLocalStorageMock();
+    localStorage.setItem("animate-av.in-progress.jobs.v1", JSON.stringify([
+      null,
+      "old",
+      { id: "missing-title", updatedAt: 1 },
+      { id: "valid", title: "Valid job", status: "running", updatedAt: 2 }
+    ]));
+
+    expect(loadLocalInProgressJobs()).toEqual([{ id: "valid", title: "Valid job", status: "running", updatedAt: 2 }]);
 
     localStorage.removeItem("animate-av.in-progress.jobs.v1");
   });

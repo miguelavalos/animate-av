@@ -179,7 +179,7 @@ export function loadGalleryRecords() {
   try {
     const raw = window.localStorage.getItem(galleryRecordsKey);
     const records = raw ? JSON.parse(raw) as unknown : [];
-    return Array.isArray(records) ? records as AnimateGalleryVideoRecord[] : [];
+    return Array.isArray(records) ? records.filter(isGalleryRecord) : [];
   } catch {
     return [];
   }
@@ -314,7 +314,7 @@ export function loadLocalInProgressJobs() {
   try {
     const raw = window.localStorage.getItem(inProgressRecordsKey);
     const jobs = raw ? JSON.parse(raw) as unknown : [];
-    return Array.isArray(jobs) ? jobs as AnimateLocalInProgressJob[] : [];
+    return Array.isArray(jobs) ? jobs.filter(isLocalInProgressJob) : [];
   } catch {
     return [];
   }
@@ -384,8 +384,24 @@ function localInProgressJobReferences(job: AnimateLocalInProgressJob) {
   ].filter(isNonEmptyString);
 }
 
-function isNonEmptyString(value: string | null | undefined): value is string {
+function isNonEmptyString(value: unknown): value is string {
   return typeof value === "string" && value.trim().length > 0;
+}
+
+function isGalleryRecord(value: unknown): value is AnimateGalleryVideoRecord {
+  return isRecord(value) && isNonEmptyString(value.id) && isNonEmptyString(value.artifactId);
+}
+
+function isLocalInProgressJob(value: unknown): value is AnimateLocalInProgressJob {
+  return isRecord(value) &&
+    isNonEmptyString(value.id) &&
+    isNonEmptyString(value.title) &&
+    isNonEmptyString(value.status) &&
+    typeof value.updatedAt === "number";
+}
+
+function isRecord(value: unknown): value is Record<string, unknown> {
+  return typeof value === "object" && value !== null;
 }
 
 async function saveGalleryBlob(key: string, blob: Blob) {
