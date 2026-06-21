@@ -1,5 +1,7 @@
 import type { AppsAvProductConfig } from "@avalsys/apps-av-web";
 
+const animateCommercialWordmarkUrl = "https://cdn.avalsys.com/apps-av/animate-av/web-v2/animate-av-wordmark-transparent.png";
+
 export const animateProductConfig: AppsAvProductConfig = {
   appId: "animateav",
   accentColor: "#B94E70",
@@ -10,8 +12,8 @@ export const animateProductConfig: AppsAvProductConfig = {
     name: "Avi"
   },
   iconSrc: "/assets/animate-av-icon.png",
-  logoSrc: "/assets/animate-av-logo.png",
-  logoDarkSrc: "/assets/animate-av-logo.png",
+  logoSrc: animateCommercialWordmarkUrl,
+  logoDarkSrc: animateCommercialWordmarkUrl,
   name: "Animate AV",
   links: {
     deleteAccount: externalLink(accountManagementUrl("/account/delete"), "Delete account"),
