@@ -178,7 +178,8 @@ export function loadGalleryRecords() {
   }
   try {
     const raw = window.localStorage.getItem(galleryRecordsKey);
-    return raw ? JSON.parse(raw) as AnimateGalleryVideoRecord[] : [];
+    const records = raw ? JSON.parse(raw) as unknown : [];
+    return Array.isArray(records) ? records as AnimateGalleryVideoRecord[] : [];
   } catch {
     return [];
   }
@@ -312,7 +313,8 @@ export function loadLocalInProgressJobs() {
   }
   try {
     const raw = window.localStorage.getItem(inProgressRecordsKey);
-    return raw ? JSON.parse(raw) as AnimateLocalInProgressJob[] : [];
+    const jobs = raw ? JSON.parse(raw) as unknown : [];
+    return Array.isArray(jobs) ? jobs as AnimateLocalInProgressJob[] : [];
   } catch {
     return [];
   }

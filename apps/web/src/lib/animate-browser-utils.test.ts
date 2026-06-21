@@ -1,5 +1,13 @@
 import { describe, expect, test } from "bun:test";
-import { createSourceLocalIdentifier, fileTypeError, imageFileExtension, isSupportedSourceImageFile, sourceImageAccept } from "./animate-browser-utils";
+import {
+  createSourceLocalIdentifier,
+  fileTypeError,
+  imageFileExtension,
+  isSupportedSourceImageFile,
+  loadGalleryRecords,
+  loadLocalInProgressJobs,
+  sourceImageAccept
+} from "./animate-browser-utils";
 
 describe("Animate browser source utilities", () => {
   test("builds stable local source identifiers from file metadata", () => {
@@ -68,4 +76,37 @@ describe("Animate browser source utilities", () => {
     expect(imageFileExtension("image/jpeg")).toBe("jpg");
     expect(imageFileExtension("")).toBe("jpg");
   });
+
+  test("ignores non-array gallery records from older browser storage", () => {
+    const localStorage = installLocalStorageMock();
+    localStorage.setItem("animate-av.gallery.videos.v1", JSON.stringify({ artifactId: "old" }));
+
+    expect(loadGalleryRecords()).toEqual([]);
+
+    localStorage.removeItem("animate-av.gallery.videos.v1");
+  });
+
+  test("ignores non-array in-progress jobs from older browser storage", () => {
+    const localStorage = installLocalStorageMock();
+    localStorage.setItem("animate-av.in-progress.jobs.v1", JSON.stringify({ id: "old" }));
+
+    expect(loadLocalInProgressJobs()).toEqual([]);
+
+    localStorage.removeItem("animate-av.in-progress.jobs.v1");
+  });
 });
+
+function installLocalStorageMock() {
+  const values = new Map<string, string>();
+  const localStorage = {
+    getItem: (key: string) => values.get(key) ?? null,
+    removeItem: (key: string) => {
+      values.delete(key);
+    },
+    setItem: (key: string, value: string) => {
+      values.set(key, value);
+    }
+  };
+  Object.assign(globalThis, { window: { localStorage }, localStorage });
+  return localStorage;
+}
