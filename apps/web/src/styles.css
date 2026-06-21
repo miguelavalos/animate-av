@@ -300,6 +300,18 @@ button:focus {
       linear-gradient(0deg, rgb(17 21 29 / 34%), rgb(17 21 29 / 0%) 45%);
   }
 
+  .animate-coming-soon-copy h1 {
+    color: #fff8f3;
+  }
+
+  .animate-coming-soon-copy img {
+    filter: brightness(1.45) saturate(1.08) drop-shadow(0 2px 10px rgb(0 0 0 / 48%));
+  }
+
+  .animate-coming-soon-copy p:not(:first-child) {
+    color: rgb(255 248 243 / 82%);
+  }
+
   .animate-public-copy-card,
   .animate-public-scene-card,
   .animate-public-review-card,

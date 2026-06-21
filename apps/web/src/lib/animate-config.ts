@@ -17,10 +17,10 @@ export const animateProductConfig: AppsAvProductConfig = {
   name: "Animate AV",
   links: {
     deleteAccount: externalLink(accountManagementUrl("/account/delete"), "Delete account"),
-    privacy: externalLink(import.meta.env.VITE_ANIMATEAV_PRIVACY_URL, "Privacy"),
+    privacy: externalLink(import.meta.env.VITE_ANIMATEAV_PRIVACY_URL || commercialSiteUrl("/privacy"), "Privacy"),
     suite: externalLink(import.meta.env.VITE_ACCOUNTAV_MANAGEMENT_URL, "Apps"),
     support: externalLink(supportUrl(), "Support"),
-    terms: externalLink(import.meta.env.VITE_ANIMATEAV_TERMS_URL, "Terms")
+    terms: externalLink(import.meta.env.VITE_ANIMATEAV_TERMS_URL || commercialSiteUrl("/terms"), "Terms")
   }
 };
 

@@ -29,6 +29,32 @@ export function AnimateLoginPage({ comingSoon = false, compact = false }: { comi
 }
 
 function LoginContent({ comingSoon, locale, signInHref, text }: { comingSoon: boolean; locale: ReturnType<typeof useAppsAvLocale>; signInHref: string; text: ReturnType<typeof useAnimateText> }) {
+  if (comingSoon) {
+    return (
+      <main className="animate-guest-stage mx-auto min-h-[32rem] max-w-6xl overflow-hidden rounded-[1.75rem] border border-[#e5c1c7] shadow-2xl shadow-[#7b233f]/14">
+        <img className="animate-guest-backdrop" src={animateBrandAssets.guestHomeMotion} alt="" />
+        <div className="animate-guest-shade" />
+        <div className="animate-coming-soon-copy relative z-10 flex min-h-[32rem] items-end p-6 sm:p-10">
+          <div className="max-w-2xl pb-2">
+            <img className="h-auto w-56 max-w-full sm:w-64" src={animateBrandAssets.logo} alt="Animate AV" />
+            <p className="mt-8 text-sm font-semibold uppercase tracking-[0.18em] text-[#b94e70]">
+              {comingSoonLabel(locale)}
+            </p>
+            <h1 className="mt-4 text-4xl font-semibold leading-tight text-[#112a55] sm:text-5xl">
+              {text.login.heroTitle}
+            </h1>
+            <p className="mt-5 max-w-lg text-base leading-7 text-[#334766]">
+              {text.login.heroBody}
+            </p>
+            <Button disabled className="mt-7 h-12 rounded-full bg-[#7c2947] px-5 text-white shadow-lg shadow-[#7c2947]/18 disabled:opacity-100">
+              {comingSoonLabel(locale)}
+            </Button>
+          </div>
+        </div>
+      </main>
+    );
+  }
+
   const guestScenes = [
     {
       body: text.login.mapBody,
