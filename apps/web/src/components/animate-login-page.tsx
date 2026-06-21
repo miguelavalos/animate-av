@@ -43,7 +43,7 @@ function LoginContent({ comingSoon, locale, signInHref, text }: { comingSoon: bo
               {text.login.heroTitle}
             </h1>
             <p className="mt-5 max-w-lg text-base leading-7 text-[#334766]">
-              {text.login.heroBody}
+              {text.login.comingSoonBody}
             </p>
             <Button disabled className="mt-7 h-12 rounded-full bg-[#7c2947] px-5 text-white shadow-lg shadow-[#7c2947]/18 disabled:opacity-100">
               {comingSoonLabel(locale)}
