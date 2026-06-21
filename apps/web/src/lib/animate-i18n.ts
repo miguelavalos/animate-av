@@ -1696,6 +1696,12 @@ export function useAnimateProductConfig(): AppsAvProductConfig {
 
   return useMemo(() => ({
     ...animateProductConfig,
+    links: Object.fromEntries(
+      Object.entries(animateProductConfig.links).map(([key, link]) => [
+        key,
+        link ? { ...link, href: localizedExternalUrl(link.href, locale) } : link
+      ])
+    ) as AppsAvProductConfig["links"],
     assistant: animateProductConfig.assistant
       ? {
         ...animateProductConfig.assistant,
@@ -1704,6 +1710,19 @@ export function useAnimateProductConfig(): AppsAvProductConfig {
       }
       : undefined
   }), [locale, text.nav.aviLabel]);
+}
+
+function localizedExternalUrl(href: string, locale: AppsAvLocale) {
+  if (locale === "en") return href;
+
+  try {
+    const url = new URL(href);
+    const path = url.pathname === "/" ? "" : url.pathname.replace(/^\/(en|es|fr|de|ca)(?=\/|$)/, "");
+    url.pathname = `/${locale}${path}`;
+    return url.toString().replace(/\/$/, "");
+  } catch {
+    return href;
+  }
 }
 
 export function localizedAppPath(path: string, locale: AppsAvLocale): string {

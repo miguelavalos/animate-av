@@ -20,7 +20,8 @@ export const animateProductConfig: AppsAvProductConfig = {
     privacy: externalLink(import.meta.env.VITE_ANIMATEAV_PRIVACY_URL, "Privacy"),
     suite: externalLink(import.meta.env.VITE_ACCOUNTAV_MANAGEMENT_URL, "Apps"),
     support: externalLink(supportUrl(), "Support"),
-    terms: externalLink(import.meta.env.VITE_ANIMATEAV_TERMS_URL, "Terms")
+    terms: externalLink(import.meta.env.VITE_ANIMATEAV_TERMS_URL, "Terms"),
+    website: externalLink("https://animate-av.avalsys.com", "Animate AV")
   }
 };
 
