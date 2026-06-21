@@ -1,4 +1,3 @@
-import { AccountUserButton } from "@avalsys/account-av-web";
 import { AppShell } from "@avalsys/apps-av-web";
 import { useRouterState } from "@tanstack/react-router";
 import type { ReactNode } from "react";
@@ -13,7 +12,6 @@ export function AnimateAppShell({ children }: { children: ReactNode }) {
 
   return (
     <AppShell
-      accountArea={<AccountUserButton />}
       currentPath={pathname}
       footerLabels={text.footer}
       labels={shellLabels}
