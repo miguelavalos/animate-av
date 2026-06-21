@@ -81,6 +81,9 @@ function GallerySurface({ copy, createHref, errors }: { copy: ReturnType<typeof 
   }
 
   function deleteRecord(record: AnimateGalleryVideoRecord) {
+    if (!window.confirm(copy.confirmClearLocal)) {
+      return;
+    }
     if (record.objectUrl) {
       URL.revokeObjectURL(record.objectUrl);
     }

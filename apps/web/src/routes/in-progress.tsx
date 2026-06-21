@@ -87,6 +87,10 @@ function InProgressSurface({ copy, createHref, errors, galleryHref }: { copy: Re
   }
 
   async function deleteJob(job: AnimateActiveJob) {
+    const confirmMessage = job.source === "realtime" ? copy.confirmDelete : copy.confirmClearLocal;
+    if (!window.confirm(confirmMessage)) {
+      return;
+    }
     setBusyJobId(job.id);
     setError(null);
     try {
