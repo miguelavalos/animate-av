@@ -4,7 +4,6 @@ import { createFileRoute } from "@tanstack/react-router";
 import { ArrowRight, Film, Images, SlidersHorizontal, Sparkles } from "lucide-react";
 import type { ReactNode } from "react";
 import { AnimateAppShell } from "@/components/animate-app-shell";
-import { AnimateLoginPage } from "@/components/animate-login-page";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { animateBrandAssets } from "@/lib/animate-config";
@@ -102,9 +101,6 @@ function PublicHome({ locale }: { locale: ReturnType<typeof useAppsAvLocale> }) 
           </div>
         </section>
 
-        <SignedOut>
-          <AnimateLoginPage compact />
-        </SignedOut>
       </main>
   );
 }
