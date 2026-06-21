@@ -11,6 +11,7 @@ import { useAnimateText } from "@/lib/animate-i18n";
 import type { AnimateArtifact, AnimateVideoJob } from "@/lib/animate-models";
 
 const convexUrl = getAnimateConvexUrl();
+const emptyQueries = {};
 
 const listVideoJobs = makeFunctionReference<"query", { ownerUserId: string; realtimeSessionId: string }, AnimateVideoJob[]>("animate:listVideoJobs");
 const listImageJobs = makeFunctionReference<"query", { ownerUserId: string; realtimeSessionId: string }, AnimateVideoJob[]>("animate:listImageJobs");
@@ -106,16 +107,18 @@ export function useAnimateInProgressJobs() {
   const canSubscribe = Boolean(convexUrl && session.userId && realtime.realtimeSessionId);
   const ownerUserId = session.userId ?? "";
   const realtimeSessionId = realtime.realtimeSessionId ?? "";
-  const queries = useQueries(canSubscribe ? {
+  const queryArgs = useMemo(() => ({ ownerUserId, realtimeSessionId }), [ownerUserId, realtimeSessionId]);
+  const querySet = useMemo(() => canSubscribe ? {
     videoJobs: {
       query: listVideoJobs as FunctionReference<"query">,
-      args: { ownerUserId, realtimeSessionId }
+      args: queryArgs
     },
     imageJobs: {
       query: listImageJobs as FunctionReference<"query">,
-      args: { ownerUserId, realtimeSessionId }
+      args: queryArgs
     }
-  } : {});
+  } : emptyQueries, [canSubscribe, queryArgs]);
+  const queries = useQueries(querySet);
 
   return {
     jobs: [
@@ -142,12 +145,14 @@ export function useAnimateGalleryArtifacts() {
   const canSubscribe = Boolean(convexUrl && session.userId && realtime.realtimeSessionId);
   const ownerUserId = session.userId ?? "";
   const realtimeSessionId = realtime.realtimeSessionId ?? "";
-  const queries = useQueries(canSubscribe ? {
+  const queryArgs = useMemo(() => ({ ownerUserId, realtimeSessionId }), [ownerUserId, realtimeSessionId]);
+  const querySet = useMemo(() => canSubscribe ? {
     artifacts: {
       query: listGalleryArtifacts as FunctionReference<"query">,
-      args: { ownerUserId, realtimeSessionId }
+      args: queryArgs
     }
-  } : {});
+  } : emptyQueries, [canSubscribe, queryArgs]);
+  const queries = useQueries(querySet);
 
   return {
     artifacts: (queries.artifacts ?? []) as AnimateArtifact[],
