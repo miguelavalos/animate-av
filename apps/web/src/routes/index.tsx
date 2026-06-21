@@ -4,6 +4,7 @@ import { createFileRoute } from "@tanstack/react-router";
 import { ArrowRight, Film, Images, SlidersHorizontal, Sparkles } from "lucide-react";
 import type { ReactNode } from "react";
 import { AnimateAppShell } from "@/components/animate-app-shell";
+import { AnimateLoginPage } from "@/components/animate-login-page";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { animateBrandAssets } from "@/lib/animate-config";
@@ -17,9 +18,16 @@ function IndexRoute() {
   const locale = useAppsAvLocale();
 
   return (
-    <AnimateAppShell>
-      <PublicHome locale={locale} />
-    </AnimateAppShell>
+    <>
+      <SignedOut>
+        <AnimateLoginPage />
+      </SignedOut>
+      <SignedIn>
+        <AnimateAppShell>
+          <PublicHome locale={locale} />
+        </AnimateAppShell>
+      </SignedIn>
+    </>
   );
 }
 
@@ -38,22 +46,12 @@ function PublicHome({ locale }: { locale: ReturnType<typeof useAppsAvLocale> }) 
               {text.home.body}
             </p>
             <div className="mt-7 flex flex-wrap gap-3">
-              <SignedIn>
-                <Button asChild className="h-11 rounded-full bg-[#7c2947] px-5 text-white shadow-lg shadow-[#7c2947]/18 hover:bg-[#963956]">
-                  <a href={localizedAppPath("/create", locale)}>
-                    {text.home.cta}
-                    <ArrowRight className="size-4" aria-hidden="true" />
-                  </a>
-                </Button>
-              </SignedIn>
-              <SignedOut>
-                <Button asChild className="h-11 rounded-full bg-[#7c2947] px-5 text-white shadow-lg shadow-[#7c2947]/18 hover:bg-[#963956]">
-                  <a href={localizedAppPath("/sign-in", locale)}>
-                    {text.login.cta}
-                    <ArrowRight className="size-4" aria-hidden="true" />
-                  </a>
-                </Button>
-              </SignedOut>
+              <Button asChild className="h-11 rounded-full bg-[#7c2947] px-5 text-white shadow-lg shadow-[#7c2947]/18 hover:bg-[#963956]">
+                <a href={localizedAppPath("/create", locale)}>
+                  {text.home.cta}
+                  <ArrowRight className="size-4" aria-hidden="true" />
+                </a>
+              </Button>
               <Button asChild variant="outline" className="h-11 rounded-full border-[#d8bbc0] bg-white/72 px-5 text-[#20242e] backdrop-blur hover:bg-white dark:border-white/14 dark:bg-white/8 dark:text-white">
                 <a href={localizedAppPath("/avi", locale)}>{text.nav.avi}</a>
               </Button>
