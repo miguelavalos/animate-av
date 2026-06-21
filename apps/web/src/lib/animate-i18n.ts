@@ -178,7 +178,7 @@ const en = {
       lookMatch: "Look/theme",
       sourceLikeness: "Source likeness",
       motionFollowed: "Motion",
-      voiceMessage: "Voice/message"
+      voiceMessage: "Message"
     },
     feedbackScores: {
       good: "Good",
@@ -442,7 +442,7 @@ export const animateTranslations: Record<AppsAvLocale, AnimateText> = {
         lookMatch: "Look/theme",
         sourceLikeness: "Parecido fuente",
         motionFollowed: "Movimiento",
-        voiceMessage: "Voz/mensaje"
+        voiceMessage: "Mensaje"
       },
       feedbackScores: {
         good: "Bien",
@@ -769,7 +769,7 @@ export const animateTranslations: Record<AppsAvLocale, AnimateText> = {
         lookMatch: "Look/thème",
         sourceLikeness: "Ressemblance",
         motionFollowed: "Mouvement",
-        voiceMessage: "Voix/message"
+        voiceMessage: "Message"
       },
       feedbackScores: {
         good: "Bien",
@@ -1020,7 +1020,7 @@ export const animateTranslations: Record<AppsAvLocale, AnimateText> = {
         lookMatch: "Look/Theme",
         sourceLikeness: "Quellähnlichkeit",
         motionFollowed: "Bewegung",
-        voiceMessage: "Stimme/Text"
+        voiceMessage: "Text"
       },
       feedbackScores: {
         good: "Gut",
@@ -1271,7 +1271,7 @@ export const animateTranslations: Record<AppsAvLocale, AnimateText> = {
         lookMatch: "Look/theme",
         sourceLikeness: "Semblança font",
         motionFollowed: "Moviment",
-        voiceMessage: "Veu/missatge"
+        voiceMessage: "Missatge"
       },
       feedbackScores: {
         good: "Bé",
@@ -1686,8 +1686,7 @@ export function useAnimateNavLinks(): AppsAvProductLink[] {
     { href: localizedAppPath("/", locale), label: text.nav.home },
     { href: localizedAppPath("/create", locale), label: text.nav.create },
     { href: localizedAppPath("/in-progress", locale), label: text.nav.inProgress },
-    { href: localizedAppPath("/gallery", locale), label: text.nav.gallery },
-    { href: localizedAppPath("/avi", locale), label: text.nav.avi }
+    { href: localizedAppPath("/gallery", locale), label: text.nav.gallery }
   ];
 }
 

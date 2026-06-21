@@ -1,10 +1,11 @@
-import { AccountUserButton, useAccountSession } from "@avalsys/account-av-web";
-import { AppShell, useAppsAvLocale } from "@avalsys/apps-av-web";
+import { useAccountSession } from "@avalsys/account-av-web";
+import { useAppsAvLocale } from "@avalsys/apps-av-web";
 import { createFileRoute } from "@tanstack/react-router";
 import { useQuery } from "@tanstack/react-query";
 import { CreditCard, Film, Images, ListVideo, Sparkles } from "lucide-react";
 import type { ReactNode } from "react";
 import { useEffect, useMemo, useState } from "react";
+import { AnimateAppShell } from "@/components/animate-app-shell";
 import { ProtectedRoute } from "@/components/protected-route";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
@@ -14,24 +15,20 @@ import { useAnimateInProgressJobs } from "@/lib/animate-convex";
 import { mergeInProgressJobs } from "@/lib/animate-in-progress-state";
 import type { AnimateLocalInProgressJob } from "@/lib/animate-models";
 import { spendableCredits } from "@/lib/animate-render-state";
-import { localizedAppPath, useAnimateNavLinks, useAnimateProductConfig, useAnimateShellLabels, useAnimateText } from "@/lib/animate-i18n";
+import { localizedAppPath, useAnimateText } from "@/lib/animate-i18n";
 
 export const Route = createFileRoute("/avi")({
   component: AviRoute
 });
 
 function AviRoute() {
-  const text = useAnimateText();
   const locale = useAppsAvLocale();
-  const navLinks = useAnimateNavLinks();
-  const productConfig = useAnimateProductConfig();
-  const shellLabels = useAnimateShellLabels();
 
   return (
     <ProtectedRoute>
-      <AppShell accountArea={<AccountUserButton />} footerLabels={text.footer} labels={shellLabels} navLinks={navLinks} product={productConfig}>
+      <AnimateAppShell>
         <AviSurface locale={locale} />
-      </AppShell>
+      </AnimateAppShell>
     </ProtectedRoute>
   );
 }

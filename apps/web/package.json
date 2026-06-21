@@ -14,6 +14,7 @@
     "deploy:preview:dry-run": "bun run build:preview && bash ../../../../private/avalsys-suite/scripts/wrangler-account.sh deploy --dry-run --config wrangler.preview.jsonc",
     "deploy:production:dry-run": "bun run build:production && bash ../../../../private/avalsys-suite/scripts/wrangler-account.sh deploy --dry-run --config wrangler.production.jsonc",
     "typecheck": "tsc --noEmit -p tsconfig.json",
+    "qa:shared": "node scripts/qa-shared-web.mjs",
     "test": "bun test"
   },
   "dependencies": {

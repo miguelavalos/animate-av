@@ -1,8 +1,8 @@
-import { AccountUserButton } from "@avalsys/account-av-web";
-import { AppShell, useAppsAvLocale } from "@avalsys/apps-av-web";
+import { useAppsAvLocale } from "@avalsys/apps-av-web";
 import { createFileRoute } from "@tanstack/react-router";
 import { Activity, Film, Images, Loader2, MoreHorizontal, Pencil, RefreshCw, Trash2 } from "lucide-react";
 import { useEffect, useMemo, useState } from "react";
+import { AnimateAppShell } from "@/components/animate-app-shell";
 import { ProtectedRoute } from "@/components/protected-route";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
@@ -13,7 +13,7 @@ import { useAnimateInProgressJobs, useAnimateRealtimeStatus } from "@/lib/animat
 import { localizedAnimateErrorMessage } from "@/lib/animate-errors";
 import { mergeInProgressJobs, type AnimateActiveJob } from "@/lib/animate-in-progress-state";
 import type { AnimateLocalInProgressJob, AnimateLook } from "@/lib/animate-models";
-import { localizedAppPath, useAnimateLookCopy, useAnimateNavLinks, useAnimateProductConfig, useAnimateShellLabels, useAnimateText } from "@/lib/animate-i18n";
+import { localizedAppPath, useAnimateLookCopy, useAnimateText } from "@/lib/animate-i18n";
 
 export const Route = createFileRoute("/in-progress")({
   component: InProgressRoute
@@ -22,16 +22,13 @@ export const Route = createFileRoute("/in-progress")({
 function InProgressRoute() {
   const text = useAnimateText();
   const locale = useAppsAvLocale();
-  const navLinks = useAnimateNavLinks();
-  const productConfig = useAnimateProductConfig();
-  const shellLabels = useAnimateShellLabels();
   const copy = text.inProgress;
 
   return (
     <ProtectedRoute>
-      <AppShell accountArea={<AccountUserButton />} footerLabels={text.footer} labels={shellLabels} navLinks={navLinks} product={productConfig}>
+      <AnimateAppShell>
         <InProgressSurface copy={copy} createHref={localizedAppPath("/create", locale)} errors={text.errors} galleryHref={localizedAppPath("/gallery", locale)} />
-      </AppShell>
+      </AnimateAppShell>
     </ProtectedRoute>
   );
 }

@@ -1,10 +1,11 @@
-import { AccountUserButton, useAccountSession } from "@avalsys/account-av-web";
-import { AppShell, useAppsAvLocale } from "@avalsys/apps-av-web";
+import { useAccountSession } from "@avalsys/account-av-web";
+import { useAppsAvLocale } from "@avalsys/apps-av-web";
 import { createFileRoute } from "@tanstack/react-router";
 import { useQuery } from "@tanstack/react-query";
 import { CheckCircle2, CreditCard, Film, ImagePlus, Loader2, MessageSquare, Play, Upload } from "lucide-react";
 import type { LucideIcon } from "lucide-react";
 import { useEffect, useMemo, useRef, useState } from "react";
+import { AnimateAppShell } from "@/components/animate-app-shell";
 import { ProtectedRoute } from "@/components/protected-route";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
@@ -15,7 +16,7 @@ import { localizedAnimateErrorMessage } from "@/lib/animate-errors";
 import { createPortraitFrameFile, createSourceLocalIdentifier, createVideoId, fileTypeError, normalizeSourceImageFile, readImageDimensions, saveLocalInProgressJob, sha256Hex, sourceImageAccept } from "@/lib/animate-browser-utils";
 import { animateLookFamilies, animateLookPreviewAssets, isAnimateFinalRenderLook, type AnimateLook, type AnimateRenderPlanResponse } from "@/lib/animate-models";
 import { animateCreateInputLimits, canSubmitConfirm, createFinalConfirmIdempotencyKey, createRenderPlanInputSignature, finalRenderQueuedMessage, isRenderPlanCurrent, renderPlanBlockerSummary, spendableCredits } from "@/lib/animate-render-state";
-import { localizedAppPath, useAnimateLookCopy, useAnimateNavLinks, useAnimateProductConfig, useAnimateShellLabels, useAnimateText } from "@/lib/animate-i18n";
+import { localizedAppPath, useAnimateLookCopy, useAnimateText } from "@/lib/animate-i18n";
 
 export const Route = createFileRoute("/create")({
   component: CreateRoute
@@ -30,16 +31,11 @@ interface QueuedRenderJob {
 }
 
 function CreateRoute() {
-  const text = useAnimateText();
-  const navLinks = useAnimateNavLinks();
-  const productConfig = useAnimateProductConfig();
-  const shellLabels = useAnimateShellLabels();
-
   return (
     <ProtectedRoute>
-      <AppShell accountArea={<AccountUserButton />} footerLabels={text.footer} labels={shellLabels} navLinks={navLinks} product={productConfig}>
+      <AnimateAppShell>
         <CreateVideoSurface />
-      </AppShell>
+      </AnimateAppShell>
     </ProtectedRoute>
   );
 }
