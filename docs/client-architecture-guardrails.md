@@ -132,6 +132,15 @@ listen to realtime workspace state and also have an authenticated
 that exits to a recoverable error. A network, projection, or app relaunch gap
 must never leave iOS waiting forever.
 
+Final render planning and final render confirmation have different retry
+semantics. Requesting a backend render plan is a preflight operation and should
+use the normal transient network retry policy so a brief connection loss does
+not block Create Video before the user can confirm. Final render confirmation is
+the credit-reserving command and must remain single-attempt from the client
+side, with backend idempotency handling any replay. Do not add automatic client
+retries around final confirmation, credit reservation, or generation-start
+commands.
+
 The final MP4 save is the only operation that may gate the `Saving` state.
 Source and generated images used by the Info comparison are companion media:
 attach local copies when already available, otherwise backfill them from backend

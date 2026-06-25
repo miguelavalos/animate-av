@@ -70,6 +70,8 @@ xcodebuild test -project apps/ios/AnimateAV.xcodeproj -scheme AnimateAV -destina
   and `de`.
 - [ ] Animation accepts custom visual instructions and the final summary
   preserves guide text separately from the optional written message.
+- [ ] Render-plan preflight retry coverage passes, and final confirmation
+  remains single-attempt/idempotency-protected.
 - [ ] Foto y encuadre smoke covers choose photo, adjust frame, re-enter frame
   adjustment from the locally retained original, restore original when
   available, change photo, and continue to Look without hidden sheets or paid
