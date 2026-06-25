@@ -25,6 +25,10 @@ in the private AVALSYS suite.
   signed install. Any simulator that previously ran an unsigned build has had
   both `com.avalsys.animateav.dev` and `com.avalsys.animateav` uninstalled
   before the signed smoke.
+- [ ] Production signed simulator smoke has confirmed login/session restore,
+  photo selection, style selection, `Revisar créditos`, and automatic
+  `Crear video final` summary sheet presentation. Stop at the credit summary;
+  do not tap the final create button or start a paid final-render provider call.
 - [ ] Focused tests pass or failures are documented in the private handoff.
 - [ ] Create Video no-spend smoke reaches
   `Foto y encuadre -> Look -> Guide and message -> confirmation`

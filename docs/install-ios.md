@@ -98,6 +98,12 @@ This does not replace real-device TestFlight purchase testing, but it should
 match the production Account AV environment closely enough to catch auth
 configuration drift before upload.
 
+The safe production simulator smoke for Create Video is limited to login/session
+restore, photo selection, style selection, `Revisar créditos`, and confirmation
+that the `Crear video final` credit summary sheet opens automatically. Stop on
+that sheet. Do not tap the final create button, because that can start a real
+final-render provider call.
+
 Before any auth smoke after unsigned testing, remove stale app state before
 reinstalling a signed simulator build:
 
