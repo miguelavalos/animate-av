@@ -65,6 +65,50 @@ final class AnimateGalleryViewModelTests: XCTestCase {
         XCTAssertTrue(viewModel.videos.isEmpty)
     }
 
+    func testDeletingRemoteVideoSuppressesArtifactAndFinishedSummaryAliases() {
+        let provider = TestAnimateGalleryArtifactsProvider()
+        let summaryProvider = TestAnimateInProgressSummaryProvider()
+        let artifact = makeArtifact(
+            id: "remote-artifact-2",
+            workflowArtifactId: "workflow-artifact-2",
+            videoJobId: "video-job-2",
+            status: "available"
+        )
+        let store = TestAnimateGalleryStore()
+        let viewModel = AnimateGalleryViewModel(
+            galleryStore: store,
+            galleryArtifactsProvider: provider
+        )
+
+        viewModel.bind(to: summaryProvider)
+        provider.send([artifact])
+
+        XCTAssertEqual(viewModel.videos.map(\.id), ["workflow-artifact-2"])
+
+        guard let video = viewModel.videos.first else {
+            XCTFail("Expected remote video placeholder")
+            return
+        }
+        viewModel.deleteVideo(video)
+
+        XCTAssertTrue(viewModel.videos.isEmpty)
+        XCTAssertTrue(store.deletedVideoIds.contains("workflow-artifact-2"))
+
+        provider.send([artifact])
+        summaryProvider.send(
+            AnimateInProgressSummary.make(from: [
+                makeVideo(
+                    id: "video-job-2",
+                    status: "gallery_ready",
+                    title: "Finished video",
+                    finalExport: artifact
+                )
+            ])
+        )
+
+        XCTAssertTrue(viewModel.videos.isEmpty)
+    }
+
     func testRemoteGalleryObservationIsExplicitAndStopsCleanly() {
         let provider = TestAnimateGalleryArtifactsProvider()
         let accountState = TestAnimateAccountStateProvider(ownerUserId: "user-1")
@@ -204,6 +248,7 @@ private final class TestAnimateAccountStateProvider: AnimateAccountStateProvidin
 private func makeArtifact(
     id: String,
     workflowArtifactId: String?,
+    videoJobId: String? = nil,
     status: String
 ) -> AnimateArtifact {
     AnimateArtifact(
@@ -213,6 +258,7 @@ private func makeArtifact(
         r2Key: "animateav/video.mp4",
         title: "Cartoon",
         look: "cartoon",
+        videoJobId: videoJobId,
         status: status,
         durationSeconds: 5,
         creditCost: 1,

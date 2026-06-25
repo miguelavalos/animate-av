@@ -106,18 +106,17 @@ final class AnimateGalleryViewModel: ObservableObject {
 
         for artifact in remoteArtifacts where artifact.kind == "final_export" || artifact.kind == "final_video" {
             let artifactId = artifact.workflowArtifactId ?? artifact.id
-            guard !dismissedRemoteVideoIds.contains(artifactId),
-                  !dismissedRemoteVideoIds.contains(artifact.id)
-            else { continue }
+            guard !isDismissedRemoteVideo(artifact: artifact) else { continue }
             let alreadyPresented = presentations.contains { presentation in
                 presentation.record.artifactId == artifactId
                     || presentation.record.artifactId == artifact.id
+                    || presentation.record.videoId == artifact.videoJobId
             }
             guard !alreadyPresented else { continue }
 
             let record = AnimateGalleryVideoRecord(
                 id: artifactId,
-                videoId: artifactId,
+                videoId: artifact.videoJobId ?? artifactId,
                 artifactId: artifactId,
                 title: L10n.string("gallery.video.defaultTitle"),
                 r2Key: artifact.r2Key,
@@ -139,9 +138,7 @@ final class AnimateGalleryViewModel: ObservableObject {
         for video in remoteFinishedVideos {
             let remoteArtifact = video.finalExport
             let artifactId = remoteArtifact?.workflowArtifactId ?? remoteArtifact?.id ?? video.id
-            guard !dismissedRemoteVideoIds.contains(artifactId),
-                  !dismissedRemoteVideoIds.contains(video.id)
-            else { continue }
+            guard !isDismissedRemoteVideo(video: video, artifact: remoteArtifact) else { continue }
             let alreadyPresented = presentations.contains { presentation in
                 presentation.record.videoId == video.id
                     || presentation.record.artifactId == artifactId
@@ -216,13 +213,9 @@ final class AnimateGalleryViewModel: ObservableObject {
     }
 
     func deleteVideo(_ video: AnimateGalleryVideoPresentation) {
-        dismissedRemoteVideoIds.insert(video.record.artifactId)
-        if let remoteArtifact = video.remoteArtifact {
-            dismissedRemoteVideoIds.insert(remoteArtifact.id)
-            if let workflowArtifactId = remoteArtifact.workflowArtifactId {
-                dismissedRemoteVideoIds.insert(workflowArtifactId)
-            }
-        }
+        dismissedRemoteVideoIds.formUnion(
+            remoteVideoDismissalIds(record: video.record, artifact: video.remoteArtifact)
+        )
         persistDismissedRemoteVideoIds()
         galleryStore.deleteRecord(video.record, deleteLocalFile: true)
         refreshVideos()
@@ -474,9 +467,11 @@ final class AnimateGalleryViewModel: ObservableObject {
                     artifact.id == record.artifactId
                         || artifact.workflowArtifactId == record.artifactId
                         || artifact.finalVideoArtifactId == record.artifactId
+                        || artifact.videoJobId == record.artifactId
                         || artifact.id == record.videoId
                         || artifact.workflowArtifactId == record.videoId
                         || artifact.finalVideoArtifactId == record.videoId
+                        || artifact.videoJobId == record.videoId
                 )
         }
     }
@@ -511,6 +506,48 @@ final class AnimateGalleryViewModel: ObservableObject {
             Array(dismissedRemoteVideoIds).sorted(),
             forKey: Self.dismissedRemoteVideoIdsDefaultsKey
         )
+    }
+
+    private func isDismissedRemoteVideo(artifact: AnimateArtifact) -> Bool {
+        !remoteVideoDismissalIds(artifact: artifact).isDisjoint(with: dismissedRemoteVideoIds)
+    }
+
+    private func isDismissedRemoteVideo(video: AnimateVideo, artifact: AnimateArtifact?) -> Bool {
+        !remoteVideoDismissalIds(video: video, artifact: artifact).isDisjoint(with: dismissedRemoteVideoIds)
+    }
+
+    private func remoteVideoDismissalIds(
+        record: AnimateGalleryVideoRecord,
+        artifact: AnimateArtifact?
+    ) -> Set<String> {
+        var ids = Set<String>()
+        ids.insertNonBlank(record.id)
+        ids.insertNonBlank(record.videoId)
+        ids.insertNonBlank(record.artifactId)
+        ids.formUnion(remoteVideoDismissalIds(artifact: artifact))
+        return ids
+    }
+
+    private func remoteVideoDismissalIds(video: AnimateVideo, artifact: AnimateArtifact?) -> Set<String> {
+        var ids = Set<String>()
+        ids.insertNonBlank(video.id)
+        ids.insertNonBlank(video.finalExport?.id)
+        ids.insertNonBlank(video.finalExport?.workflowArtifactId)
+        ids.insertNonBlank(video.finalExport?.videoJobId)
+        ids.insertNonBlank(video.finalExport?.finalVideoArtifactId)
+        ids.formUnion(remoteVideoDismissalIds(artifact: artifact))
+        return ids
+    }
+
+    private func remoteVideoDismissalIds(artifact: AnimateArtifact?) -> Set<String> {
+        guard let artifact else { return [] }
+
+        var ids = Set<String>()
+        ids.insertNonBlank(artifact.id)
+        ids.insertNonBlank(artifact.workflowArtifactId)
+        ids.insertNonBlank(artifact.videoJobId)
+        ids.insertNonBlank(artifact.finalVideoArtifactId)
+        return ids
     }
 
     func downloadImage(_ image: AnimateGalleryImagePresentation) {
@@ -596,4 +633,14 @@ private struct RelatedGeneratedImage {
     let look: String?
     let r2Key: String?
     let createdAt: Double
+}
+
+private extension Set where Element == String {
+    mutating func insertNonBlank(_ value: String?) {
+        guard let normalized = value?.trimmingCharacters(in: .whitespacesAndNewlines),
+              !normalized.isEmpty
+        else { return }
+
+        insert(normalized)
+    }
 }
