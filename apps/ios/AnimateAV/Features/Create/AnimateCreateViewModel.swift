@@ -82,6 +82,7 @@ final class AnimateCreateViewModel: ObservableObject {
     @Published private(set) var isGeneratingFinalRender = false
     @Published private(set) var isPreparingFinalPlan = false
     @Published private(set) var finalVideoCommandState = AnimateFinalVideoCommandState.idle
+    @Published private(set) var finalVideoConfirmationRequest = 0
     @Published var pendingFocus: AnimateContinuationFocus?
     @Published private(set) var continuationFocusHint: AnimateContinuationFocus?
     @Published var mediaPickerOpenRequest = 0
@@ -99,6 +100,7 @@ final class AnimateCreateViewModel: ObservableObject {
     private var renderPlanInputSignature: String?
     private var pendingRenderPlanInputSignature: String?
     private var finalPlanPreparationGeneration = 0
+    private var shouldRequestFinalVideoConfirmationAfterPlan = false
     private var hasExplicitMediaEditsAfterPreparedVideoDirection = false
     private var hasLocalSetupEdits = false
     private var hasUserStyleOverride = false
@@ -592,6 +594,13 @@ final class AnimateCreateViewModel: ObservableObject {
         activeUITestFixtureMode != nil
     }
 
+    var usesNoSpendUITestFinalRender: Bool {
+        guard AnimateUITestEnvironment.current.isEnabled else { return false }
+        let value = AnimateLaunchSettings
+            .merged(environment: ProcessInfo.processInfo.environment)["ANIMATEAV_MOCK_NO_SPEND_FINAL_RENDER"]
+        return ["1", "true", "yes"].contains(value?.trimmingCharacters(in: .whitespacesAndNewlines).lowercased() ?? "")
+    }
+
     func resetActiveVideoCreation(force: Bool) {
         cancelOperations()
         invalidateFinalPlanPreparation()
@@ -783,6 +792,7 @@ final class AnimateCreateViewModel: ObservableObject {
         finalPlanPreparationGeneration += 1
         isPreparingFinalPlan = false
         pendingRenderPlanInputSignature = nil
+        shouldRequestFinalVideoConfirmationAfterPlan = false
         finalRenderWorkflow?.clearRenderPlan(invalidateActiveGeneration: true)
         if finalVideoCommandState.isRunning {
             finalVideoCommandState = .idle
@@ -799,6 +809,7 @@ final class AnimateCreateViewModel: ObservableObject {
     }
 
     func failFinalVideoCommand(_ message: String) {
+        shouldRequestFinalVideoConfirmationAfterPlan = false
         finalVideoCommandState = .failed(message)
         updateFinalRenderStatusMessage(message)
     }
@@ -818,6 +829,15 @@ final class AnimateCreateViewModel: ObservableObject {
             latestFinalJob = nil
         }
         finalRenderWorkflow?.clearRenderPlan(invalidateActiveGeneration: true)
+    }
+
+    func requestFinalVideoConfirmationAfterPreparedPlan() {
+        shouldRequestFinalVideoConfirmationAfterPlan = true
+    }
+
+    func consumeFinalVideoConfirmationRequest(_ request: Int) {
+        guard request == finalVideoConfirmationRequest else { return }
+        shouldRequestFinalVideoConfirmationAfterPlan = false
     }
 
     func selectLook(_ look: AnimateVideoLook) {
@@ -1047,7 +1067,7 @@ extension AnimateCreateViewModel {
     }
 
     func applyFinalRenderState(_ state: AnimateCreateFinalRenderState) {
-        guard !usesCreateUITestFixture else { return }
+        guard !usesCreateUITestFixture || usesNoSpendUITestFinalRender else { return }
         finalExport = state.finalExport
         latestFinalJob = state.latestFinalJob?.resolvedForUser()
         renderPlan = state.renderPlan
@@ -1068,6 +1088,21 @@ extension AnimateCreateViewModel {
         )
         isGeneratingFinalRender = state.isGenerating
         reconcileFinalVideoCommandState(with: state)
+        requestFinalVideoConfirmationIfPreparedPlanIsReady(state)
+    }
+
+    private func requestFinalVideoConfirmationIfPreparedPlanIsReady(_ state: AnimateCreateFinalRenderState) {
+        guard shouldRequestFinalVideoConfirmationAfterPlan,
+              !state.isGenerating,
+              state.latestFinalJob?.resolvedForUser().isActiveRender != true,
+              let renderPlan = state.renderPlan else { return }
+        guard renderPlan.canCreateVideo
+                || renderPlan.createVideoBlockers.contains("insufficient_credits") else {
+            shouldRequestFinalVideoConfirmationAfterPlan = false
+            return
+        }
+        shouldRequestFinalVideoConfirmationAfterPlan = false
+        finalVideoConfirmationRequest += 1
     }
 
     private func syncFormWithActiveWorkspace(_ workspace: AnimateWorkspace?) {

@@ -212,6 +212,9 @@ extension AnimateCreateViewModel {
         }
         let form = effectiveFinalRenderForm()
         let creationStyleId = selectedCreationStyle.id
+        if !confirmsAfterPreparation {
+            requestFinalVideoConfirmationAfterPreparedPlan()
+        }
         beginFinalVideoCommand(.preparingPlan(L10n.string("workflow.final.checkingPlan")))
         updateFinalRenderStatusMessage(L10n.string("workflow.final.checkingPlan"))
 
@@ -419,6 +422,7 @@ extension AnimateCreateViewModel {
 
     private func persistSetupEditsIfNeeded(videoId: String, form: AnimateVideoSetupForm) async -> Bool {
         guard hasPendingLocalSetupEdits else { return true }
+        guard !usesNoSpendUITestFinalRender else { return true }
         guard let videoCreationWorkflow else { return false }
         return await videoCreationWorkflow.updateVideoSetup(videoId: videoId, form: form)
     }

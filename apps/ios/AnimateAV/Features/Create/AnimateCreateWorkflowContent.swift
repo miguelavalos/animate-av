@@ -43,6 +43,8 @@ struct AnimateCreateWorkflowContent: View {
                     undoAutoStyleSuggestion: viewModel.undoAutoStyleSuggestion,
                     openPickerRequest: 0,
                     consumeOpenPickerRequest: {},
+                    finalVideoConfirmationRequest: viewModel.finalVideoConfirmationRequest,
+                    consumeFinalVideoConfirmationRequest: viewModel.consumeFinalVideoConfirmationRequest,
                     updateMessage: viewModel.updateVideoMessage,
                     discardVideoCreation: viewModel.discardVideoCreation,
                     cancelLocalVideoCreationDraft: viewModel.cancelLocalVideoCreationDraft,
@@ -90,6 +92,8 @@ private struct AnimateCreateMediaFirstWorkspace: View {
     let undoAutoStyleSuggestion: () -> Void
     let openPickerRequest: Int
     let consumeOpenPickerRequest: () -> Void
+    let finalVideoConfirmationRequest: Int
+    let consumeFinalVideoConfirmationRequest: (Int) -> Void
     let updateMessage: (String) -> Void
     let discardVideoCreation: () -> Void
     let cancelLocalVideoCreationDraft: () -> Void
@@ -112,6 +116,7 @@ private struct AnimateCreateMediaFirstWorkspace: View {
     @State private var isReviewingImportedMedia = false
     @State private var handledOpenPickerRequest = 0
     @State private var handledOpenAlbumRequest = 0
+    @State private var handledFinalVideoConfirmationRequest = 0
     @State private var continueGuidedFlowRequest = 0
     @State private var isVideoSetupGuideComplete = false
     @State private var mediaPendingReplacement: AnimateSelectedMedia?
@@ -302,6 +307,9 @@ private struct AnimateCreateMediaFirstWorkspace: View {
         .onChange(of: finalVideoAction.canShowConfirmationSheet) { _, _ in
             presentCreateVideoConfirmationAfterViewUpdateIfReady()
         }
+        .onChange(of: finalVideoConfirmationRequest) { _, request in
+            presentRequestedFinalVideoConfirmation(request)
+        }
         .onChange(of: presentation.finalRenderSummary.latestFinalJob?.id) { _, jobId in
             if jobId != nil {
                 waitsForFinalRenderPlan = false
@@ -326,6 +334,7 @@ private struct AnimateCreateMediaFirstWorkspace: View {
         .onAppear {
             markVideoSetupGuideCompleteIfFinalPlanExists()
             presentCreateVideoConfirmationIfPreparingPlan()
+            presentRequestedFinalVideoConfirmation(finalVideoConfirmationRequest)
             openCompactPickerIfRequested(openPickerRequest)
         }
         .onChange(of: openPickerRequest) { _, newValue in
@@ -421,6 +430,18 @@ private struct AnimateCreateMediaFirstWorkspace: View {
             await Task.yield()
             presentCreateVideoConfirmationIfReady()
         }
+    }
+
+    private func presentRequestedFinalVideoConfirmation(_ request: Int) {
+        guard request > 0,
+              request != handledFinalVideoConfirmationRequest,
+              !presentation.finalRenderSummary.isGenerating,
+              presentation.finalRenderSummary.latestFinalJob?.isActiveRender != true,
+              finalVideoAction.canShowConfirmationSheet else { return }
+        handledFinalVideoConfirmationRequest = request
+        waitsForFinalRenderPlan = false
+        showsCreateVideoConfirmation = true
+        consumeFinalVideoConfirmationRequest(request)
     }
 
     private func markVideoSetupGuideCompleteIfFinalPlanExists() {

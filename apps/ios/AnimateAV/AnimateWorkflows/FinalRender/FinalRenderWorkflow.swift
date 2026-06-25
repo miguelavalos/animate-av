@@ -157,6 +157,9 @@ final class FinalRenderWorkflow: WorkspaceObservingWorkflow {
         selectedMedia: [AnimateSelectedMedia],
         removesWatermark: Bool = false
     ) async {
+        if await prepareUITestFinalRenderPlanIfNeeded(videoId: videoId) {
+            return
+        }
         guard let bearerToken = await validatedBearerTokenForFinalRender() else { return }
         guard validateRecoveredSourceMediaAvailable(selectedMedia: selectedMedia) else { return }
         pendingSourceComparisonImageData = comparisonSourceImageData(from: selectedMedia)
@@ -450,6 +453,28 @@ final class FinalRenderWorkflow: WorkspaceObservingWorkflow {
         Task { [creditBalanceProvider] in
             await creditBalanceProvider.refreshCreditBalance()
         }
+    }
+
+    private func prepareUITestFinalRenderPlanIfNeeded(videoId: String) async -> Bool {
+        guard AnimateUITestEnvironment.current.isEnabled,
+              Self.shouldUseUITestMockNoSpendFinalRender else { return false }
+        let generation = beginWorkflowGeneration()
+        isGenerating = true
+        renderPlan = nil
+        videoQuote = nil
+        statusMessage = L10n.string("workflow.final.checkingPlan")
+        try? await Task.sleep(nanoseconds: 350_000_000)
+        guard isCurrentWorkflowGeneration(generation) else { return true }
+        let fixtureMode = AnimateCreateUITestFixtures.Mode.current == .videoPlanInsufficientCredits
+            ? AnimateCreateUITestFixtures.Mode.videoPlanInsufficientCredits
+            : AnimateCreateUITestFixtures.Mode.videoPlanReady
+        renderPlan = AnimateCreateUITestFixtures.renderPlan(for: fixtureMode)
+        statusMessage = renderPlan?.canCreateVideo == true
+            ? L10n.string("workflow.final.planReady")
+            : L10n.string("workflow.final.needsUsableMedia")
+        isGenerating = false
+        latestFinalJob = nil
+        return true
     }
 
     private func validatedBearerTokenForFinalRender() async -> String? {
@@ -1440,6 +1465,12 @@ final class FinalRenderWorkflow: WorkspaceObservingWorkflow {
             return nil
         }
         return trimmed
+    }
+
+    private static var shouldUseUITestMockNoSpendFinalRender: Bool {
+        let value = AnimateLaunchSettings
+            .merged(environment: ProcessInfo.processInfo.environment)["ANIMATEAV_MOCK_NO_SPEND_FINAL_RENDER"]
+        return ["1", "true", "yes"].contains(value?.trimmingCharacters(in: .whitespacesAndNewlines).lowercased() ?? "")
     }
 
 }

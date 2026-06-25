@@ -107,6 +107,68 @@ final class AnimateCreateViewModelVideoDirectionStateTests: XCTestCase {
         XCTAssertEqual(viewModel.workflowErrorAlertMessage, L10n.string("workflow.final.saveLocalFailed"))
     }
 
+    func testFinalVideoConfirmationRequestFiresWhenPreparedPlanBecomesReady() {
+        let viewModel = AnimateCreateViewModel()
+        let plan = AnimateCreateTestFixtures.makeRenderPlan(videoId: "video-1")
+
+        viewModel.requestFinalVideoConfirmationAfterPreparedPlan()
+        viewModel.applyFinalRenderState(
+            AnimateCreateFinalRenderState(
+                finalExport: nil,
+                latestFinalJob: nil,
+                renderPlan: plan,
+                statusMessage: L10n.string("workflow.final.planReady"),
+                isGenerating: false
+            )
+        )
+
+        XCTAssertEqual(viewModel.finalVideoConfirmationRequest, 1)
+    }
+
+    func testFinalVideoConfirmationRequestFiresForInsufficientCreditsPlan() {
+        let viewModel = AnimateCreateViewModel()
+        let plan = AnimateCreateTestFixtures.makeRenderPlan(
+            videoId: "video-1",
+            canCreateVideo: false,
+            createVideoBlockers: ["insufficient_credits"]
+        )
+
+        viewModel.requestFinalVideoConfirmationAfterPreparedPlan()
+        viewModel.applyFinalRenderState(
+            AnimateCreateFinalRenderState(
+                finalExport: nil,
+                latestFinalJob: nil,
+                renderPlan: plan,
+                statusMessage: L10n.string("create.final.blocker.insufficientCredits"),
+                isGenerating: false
+            )
+        )
+
+        XCTAssertEqual(viewModel.finalVideoConfirmationRequest, 1)
+    }
+
+    func testFinalVideoConfirmationRequestDoesNotFireForUnavailablePlan() {
+        let viewModel = AnimateCreateViewModel()
+        let plan = AnimateCreateTestFixtures.makeRenderPlan(
+            videoId: "video-1",
+            canCreateVideo: false,
+            createVideoBlockers: ["provider_adapter_unavailable"]
+        )
+
+        viewModel.requestFinalVideoConfirmationAfterPreparedPlan()
+        viewModel.applyFinalRenderState(
+            AnimateCreateFinalRenderState(
+                finalExport: nil,
+                latestFinalJob: nil,
+                renderPlan: plan,
+                statusMessage: L10n.string("create.final.blocker.videoSetupUnavailable"),
+                isGenerating: false
+            )
+        )
+
+        XCTAssertEqual(viewModel.finalVideoConfirmationRequest, 0)
+    }
+
     func testClearingFinalSessionAfterGalleryMoveRemovesDownloadState() {
         let viewModel = AnimateCreateViewModel()
         let finalExport = AnimateCreateTestFixtures.makeArtifact(id: "artifact-1", kind: "final_export")
