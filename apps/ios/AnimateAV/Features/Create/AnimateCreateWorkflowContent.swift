@@ -294,6 +294,7 @@ private struct AnimateCreateMediaFirstWorkspace: View {
         }
         .onChange(of: presentation.finalRenderSummary.renderPlan != nil) { _, _ in
             markVideoSetupGuideCompleteIfFinalPlanExists()
+            presentCreateVideoConfirmationIfReady()
         }
         .onChange(of: finalVideoAction.canShowConfirmationSheet) { _, _ in
             presentCreateVideoConfirmationIfReady()
@@ -3862,7 +3863,7 @@ private struct AnimateCreatePrimaryActionBar: View {
             } else if primaryActionPresentation.needsCreditsForPreparedPlan {
                 openCreateVideoConfirmation()
             } else if primaryActionPresentation.finalVideoAction.hasRenderPlan {
-                openCreateVideoConfirmation()
+                generateFinalRender()
             } else {
                 generateFinalRender()
             }
