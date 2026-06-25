@@ -116,7 +116,8 @@ enum AnimateCreateTestFixtures {
         totalCreditCost: Double? = nil,
         plannedAssetCount: Double? = nil,
         usedAssetCount: Double? = nil,
-        errorMessage: String? = nil
+        errorMessage: String? = nil,
+        updatedAt: Double = Date().timeIntervalSince1970 * 1_000
     ) -> AnimateRenderJob {
         AnimateRenderJob(
             id: id,
@@ -139,8 +140,8 @@ enum AnimateCreateTestFixtures {
             providerRequestId: "request-\(id)",
             errorCode: nil,
             errorMessage: errorMessage,
-            createdAt: 9,
-            updatedAt: 10
+            createdAt: updatedAt - 1_000,
+            updatedAt: updatedAt
         )
     }
 

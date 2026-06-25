@@ -157,7 +157,7 @@ final class AnimateInProgressWorkspacePresentationTests: XCTestCase {
         XCTAssertEqual(presentations[0].detail, "Selected · Approved")
         XCTAssertEqual(presentations[1].systemImage, "video")
         XCTAssertEqual(presentations[1].title, "Video 2")
-        XCTAssertEqual(presentations[1].detail, "Not selected · Pending")
+        XCTAssertEqual(presentations[1].detail, "Not selected · Queued")
     }
 
     private func makeWorkspace(

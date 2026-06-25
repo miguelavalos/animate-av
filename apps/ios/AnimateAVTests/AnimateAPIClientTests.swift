@@ -481,6 +481,61 @@ final class AnimateAPIClientTests: XCTestCase {
         XCTAssertEqual(json["startsWithSourcePhoto"] as? Bool, true)
     }
 
+    func testPrepareRenderPlanRetriesTransientNetworkLoss() async throws {
+        AnimateURLProtocolMock.failuresBeforeSuccess = 1
+        let session = makeMockSession(
+            json: """
+            {
+              "appId": "animateav",
+              "videoId": "video-1",
+              "planId": "plan-1",
+              "canCreateVideo": true,
+              "createVideoBlockers": [],
+              "generatedAt": "2026-05-16T16:00:00Z",
+              "plan": {
+                "schemaVersion": 1,
+                "secondsPerCredit": 15,
+                "renderOptionId": "short_video",
+                "renderOptionTitle": "Short Video",
+                "creationMode": "quick",
+                "look": "cartoon",
+                "theme": "celebration",
+                "mood": "warm",
+                "duration": "auto",
+                "mediaUse": "aviPick",
+                "creditCost": 1,
+                "totalCreditCost": 1,
+                "targetDurationMs": 10000,
+                "fps": 24,
+                "rendererMode": "image_to_video",
+                "plannedAssetCount": 1,
+                "usedAssetCount": 1,
+                "rejectedAssetCount": 0,
+                "qualityWarnings": [],
+                "userMessage": "Ready."
+              }
+            }
+            """
+        )
+        let client = AnimateFinalRenderClient(
+            baseURLString: accountAPIBaseURL,
+            session: session,
+            retryPolicy: AnimateNetworkRetryPolicy(maximumRetries: 1, baseDelayNanoseconds: 1)
+        )
+
+        _ = try await client.prepareRenderPlan(
+            videoId: "video-1",
+            bearerToken: "token-1",
+            template: .birthdayMessage,
+            creationStyle: nil,
+            form: AnimateVideoSetupForm(template: .birthdayMessage),
+            removesWatermark: false,
+            selectedSourceLocalIdentifiers: ["photo-1"]
+        )
+
+        XCTAssertEqual(AnimateURLProtocolMock.requestCount, 2)
+    }
+
     func testPrepareRenderPlanUsesMockNoSpendEnvironmentOverride() async throws {
         setenv("ANIMATEAV_MOCK_NO_SPEND_FINAL_RENDER", "1", 1)
         let session = makeMockSession(
