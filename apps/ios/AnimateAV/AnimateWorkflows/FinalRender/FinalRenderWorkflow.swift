@@ -526,6 +526,10 @@ final class FinalRenderWorkflow: WorkspaceObservingWorkflow {
         selectedMedia: [AnimateSelectedMedia],
         bearerToken: String
     ) async throws -> String? {
+        if let existingUploadId = existingWorkspaceUploadIdForSelectedSourceMedia(selectedMedia) {
+            return existingUploadId
+        }
+
         guard let client = uploadClient,
               client.isConfigured,
               let media = selectedMedia
@@ -557,6 +561,26 @@ final class FinalRenderWorkflow: WorkspaceObservingWorkflow {
             sourceImageUploadId: uploadedSource.mediaAssetId
         )
         return uploadedSource.mediaAssetId
+    }
+
+    private func existingWorkspaceUploadIdForSelectedSourceMedia(_ selectedMedia: [AnimateSelectedMedia]) -> String? {
+        let selectedIdentifiers = selectedMedia
+            .filter(\.selected)
+            .sorted { $0.sortOrder < $1.sortOrder }
+            .compactMap { Self.nonBlankIdentifier($0.sourceLocalIdentifier) }
+        guard !selectedIdentifiers.isEmpty else { return nil }
+
+        let workspaceMedia = activeWorkspace?.mediaAssets ?? []
+        for identifier in selectedIdentifiers {
+            if let media = workspaceMedia.first(where: {
+                Self.nonBlankIdentifier($0.platformMediaAssetId) == identifier
+                    || Self.nonBlankIdentifier($0.id) == identifier
+            }),
+               let uploadId = Self.nonBlankIdentifier(media.uploadId) {
+                return uploadId
+            }
+        }
+        return nil
     }
 
     func selectedSourceLocalIdentifiersForFinalRender(from selectedMedia: [AnimateSelectedMedia]) -> [String] {

@@ -483,6 +483,60 @@ final class AnimateCreateViewModelVideoDirectionStateTests: XCTestCase {
         XCTAssertFalse(workflow.isGenerating)
     }
 
+    func testConfirmPreparedFinalRenderReusesWorkspaceUploadIdForSelectedSourceImage() async throws {
+        AnimateFinalRenderURLProtocolMock.reset()
+        AnimateFinalRenderURLProtocolMock.responseData = Data(Self.confirmFinalRenderJSON.utf8)
+        let configuration = URLSessionConfiguration.ephemeral
+        configuration.protocolClasses = [AnimateFinalRenderURLProtocolMock.self]
+        let session = URLSession(configuration: configuration)
+        let harness = AnimateVideoCreationFailureHarness(
+            error: NSError(domain: "test", code: 1),
+            finalRenderSession: session,
+            uploadSession: session
+        )
+        let workflow = harness.finalRenderWorkflow
+        workflow.usePreparedRenderPlan(AnimateCreateTestFixtures.makeRenderPlan(videoId: "video-1"))
+        harness.publishWorkspace(
+            AnimateWorkspace(
+                video: AnimateCreateTestFixtures.makeVideo(id: "video-1"),
+                mediaAssets: [
+                    AnimateCreateTestFixtures.makeMediaAsset(
+                        id: "backend-media-1",
+                        sourceLocalIdentifier: "local-asset-1",
+                        hasUploadId: true
+                    )
+                ],
+                videoDirectionScenes: [AnimateCreateTestFixtures.makeScene(id: "scene-1")],
+                renderJobs: [],
+                artifacts: []
+            )
+        )
+        await Task.yield()
+
+        await workflow.confirmPreparedFinalRender(
+            videoId: "video-1",
+            template: .birthdayMessage,
+            creationStyle: nil,
+            form: AnimateVideoSetupForm(template: .birthdayMessage),
+            selectedMedia: [
+                AnimateCreateTestFixtures.makeSelectedMedia(
+                    id: "00000000-0000-0000-0000-000000000001",
+                    sourceLocalIdentifier: "local-asset-1"
+                )
+            ],
+            removesWatermark: false
+        )
+
+        XCTAssertEqual(AnimateFinalRenderURLProtocolMock.requestPaths, [
+            "/v1/apps/animateav/renders/final/confirm",
+        ])
+        let body = try XCTUnwrap(AnimateFinalRenderURLProtocolMock.lastRequestBody)
+        let json = try XCTUnwrap(JSONSerialization.jsonObject(with: body) as? [String: Any])
+        XCTAssertEqual(json["sourceImageUploadId"] as? String, "upload-backend-media-1")
+        XCTAssertEqual(workflow.latestFinalJob?.id, "render-1")
+        XCTAssertFalse(workflow.isGenerating)
+    }
+
     func testSubmitFinalVideoConfirmationReplansAndConfirmsWhenBrandingRemovalChanges() async {
         AnimateFinalRenderURLProtocolMock.reset()
         AnimateFinalRenderURLProtocolMock.responseDataForRequest = { request in
@@ -1571,16 +1625,19 @@ private final class AnimateVideoCreationFailureHarness:
     private let workspaceSubject = CurrentValueSubject<AnimateWorkspace?, Never>(nil)
     private let workspaceErrorSubject = CurrentValueSubject<String?, Never>(nil)
     private let finalRenderSession: URLSession
+    private let uploadSession: URLSession?
     private let galleryStore: TestGalleryStore
     var bearerToken: String? = "token-1"
 
     init(
         error: Error,
         finalRenderSession: URLSession = .shared,
+        uploadSession: URLSession? = nil,
         galleryStore: TestGalleryStore = TestGalleryStore()
     ) {
         creationError = error
         self.finalRenderSession = finalRenderSession
+        self.uploadSession = uploadSession
         self.galleryStore = galleryStore
     }
 
@@ -1623,6 +1680,9 @@ private final class AnimateVideoCreationFailureHarness:
                 baseURLString: "https://api.example.com",
                 session: finalRenderSession
             ),
+            uploadClient: uploadSession.map {
+                AnimateUploadClient(baseURLString: "https://api.example.com", session: $0)
+            },
             galleryStore: galleryStore
         )
     }
@@ -1772,6 +1832,7 @@ private final class AnimateFinalRenderURLProtocolMock: URLProtocol {
     nonisolated(unsafe) static var statusCode = 200
     nonisolated(unsafe) static var requestCount = 0
     nonisolated(unsafe) static var lastRequest: URLRequest?
+    nonisolated(unsafe) static var lastRequestBody: Data?
     nonisolated(unsafe) static var requestPaths: [String] = []
 
     static func reset() {
@@ -1781,6 +1842,7 @@ private final class AnimateFinalRenderURLProtocolMock: URLProtocol {
         statusCode = 200
         requestCount = 0
         lastRequest = nil
+        lastRequestBody = nil
         requestPaths = []
     }
 
@@ -1795,6 +1857,22 @@ private final class AnimateFinalRenderURLProtocolMock: URLProtocol {
     override func startLoading() {
         Self.requestCount += 1
         Self.lastRequest = request
+        Self.lastRequestBody = request.httpBody
+        if Self.lastRequestBody == nil,
+           let stream = request.httpBodyStream {
+            stream.open()
+            defer { stream.close() }
+            var data = Data()
+            let bufferSize = 1_024
+            let buffer = UnsafeMutablePointer<UInt8>.allocate(capacity: bufferSize)
+            defer { buffer.deallocate() }
+            while stream.hasBytesAvailable {
+                let count = stream.read(buffer, maxLength: bufferSize)
+                if count <= 0 { break }
+                data.append(buffer, count: count)
+            }
+            Self.lastRequestBody = data
+        }
         Self.requestPaths.append(request.url?.path ?? "")
         if Self.responseDelayNanoseconds > 0 {
             Thread.sleep(forTimeInterval: Double(Self.responseDelayNanoseconds) / 1_000_000_000)
