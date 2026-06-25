@@ -294,10 +294,13 @@ private struct AnimateCreateMediaFirstWorkspace: View {
         }
         .onChange(of: presentation.finalRenderSummary.renderPlan != nil) { _, _ in
             markVideoSetupGuideCompleteIfFinalPlanExists()
-            presentCreateVideoConfirmationIfReady()
+            presentCreateVideoConfirmationAfterViewUpdateIfReady()
+        }
+        .onChange(of: finalRenderConfirmationTriggerKey) { _, _ in
+            presentCreateVideoConfirmationAfterViewUpdateIfReady()
         }
         .onChange(of: finalVideoAction.canShowConfirmationSheet) { _, _ in
-            presentCreateVideoConfirmationIfReady()
+            presentCreateVideoConfirmationAfterViewUpdateIfReady()
         }
         .onChange(of: presentation.finalRenderSummary.latestFinalJob?.id) { _, jobId in
             if jobId != nil {
@@ -312,10 +315,13 @@ private struct AnimateCreateMediaFirstWorkspace: View {
             }
         }
         .onChange(of: presentation.finalRenderSummary.isPreparingPlan) { _, isPreparingPlan in
+            if isPreparingPlan {
+                waitsForFinalRenderPlan = true
+                return
+            }
             guard waitsForFinalRenderPlan,
-                  !isPreparingPlan,
                   !presentation.finalRenderSummary.isGenerating else { return }
-            presentCreateVideoConfirmationIfReady()
+            presentCreateVideoConfirmationAfterViewUpdateIfReady()
         }
         .onAppear {
             markVideoSetupGuideCompleteIfFinalPlanExists()
@@ -377,6 +383,15 @@ private struct AnimateCreateMediaFirstWorkspace: View {
         AnimateCreatePrimaryActionPresentation(workflow: presentation)
     }
 
+    private var finalRenderConfirmationTriggerKey: String {
+        let renderPlan = presentation.finalRenderSummary.renderPlan
+        return [
+            renderPlan?.planId ?? "no-plan",
+            String(renderPlan?.plan.totalCreditCost ?? -1),
+            String(finalVideoAction.canShowConfirmationSheet)
+        ].joined(separator: ":")
+    }
+
     private func primaryFinalRenderAction() {
         guard !presentation.finalRenderSummary.isGenerating,
               presentation.finalRenderSummary.latestFinalJob?.isActiveRender != true else { return }
@@ -399,6 +414,13 @@ private struct AnimateCreateMediaFirstWorkspace: View {
               finalVideoAction.canShowConfirmationSheet else { return }
         waitsForFinalRenderPlan = false
         showsCreateVideoConfirmation = true
+    }
+
+    private func presentCreateVideoConfirmationAfterViewUpdateIfReady() {
+        Task { @MainActor in
+            await Task.yield()
+            presentCreateVideoConfirmationIfReady()
+        }
     }
 
     private func markVideoSetupGuideCompleteIfFinalPlanExists() {
