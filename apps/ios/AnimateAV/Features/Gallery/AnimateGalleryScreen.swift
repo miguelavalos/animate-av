@@ -633,7 +633,6 @@ private struct AnimateGalleryVideoTile: View {
                 .clipped()
             }
             .buttonStyle(.plain)
-            .disabled(!video.isLocalFileAvailable && !video.canDownload)
 
             Text(video.displayTitle)
                 .font(.system(size: 13, weight: .black))
