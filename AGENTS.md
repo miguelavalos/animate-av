@@ -52,6 +52,10 @@ Mandatory rules:
   uploading. Animate AV release archives must repair `Sentry.framework.dSYM`,
   verify app and Sentry dSYM UUIDs, and only then export/upload. A successful
   upload with a missing Sentry dSYM warning is not a completed release.
+- before unattended TestFlight/App Store export/upload from a new or recently
+  reconfigured Mac, complete the private release-machine setup in
+  `private/avalsys-suite/docs/platform/apple-release-machine-setup.md`; the
+  Apple Distribution private key must pass non-interactive `codesign`.
 - use the mock final-render route for no-spend validation unless private docs
   explicitly approve a paid provider smoke;
 - treat "no-spend" as "no paid provider call", not "skip user credit workflow";

@@ -18,6 +18,10 @@ in the private AVALSYS suite.
   `Sentry.framework.dSYM` inside the `.xcarchive`, verify matching app and
   Sentry dSYM UUIDs, and only then export/upload. Do not accept a missing Sentry
   dSYM warning as a completed release.
+- [ ] The release Mac has completed the private
+  `docs/platform/apple-release-machine-setup.md` gate before unattended
+  export/upload; the Apple Distribution private key passes non-interactive
+  `codesign`.
 - [ ] Account AV login matches the Tune AV signed iOS pattern: publishable key,
   keychain service, and keychain access group are exposed in runtime config,
   passed into Account AV/Clerk setup, and validated before TestFlight.
