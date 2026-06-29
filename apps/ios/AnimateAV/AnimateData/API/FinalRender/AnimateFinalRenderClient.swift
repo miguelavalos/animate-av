@@ -514,6 +514,7 @@ struct AnimateFinalRenderClient {
 enum AnimateFinalRenderError: LocalizedError {
     case apiNotConfigured
     case planFailed
+    case planTimeout
     case generationFailed
     case downloadPreparationFailed
     case downloadFailed
@@ -522,6 +523,7 @@ enum AnimateFinalRenderError: LocalizedError {
         switch self {
         case .apiNotConfigured: "Final render is not configured for this build."
         case .planFailed: "Avi could not check this video for final video creation."
+        case .planTimeout: "Avi could not check this video in time."
         case .generationFailed: "Final render failed before delivery. Credits were not committed unless an export was delivered."
         case .downloadPreparationFailed: "The final video download could not be prepared."
         case .downloadFailed: "The final video could not be downloaded."

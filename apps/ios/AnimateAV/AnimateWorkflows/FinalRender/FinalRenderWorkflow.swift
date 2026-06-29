@@ -32,6 +32,7 @@ final class FinalRenderWorkflow: WorkspaceObservingWorkflow {
     private var lastCreditRefreshKey: String?
     private var preparedVideoSourceUpload: PreparedVideoSourceUpload?
     private var pendingSourceComparisonImageData: Data?
+    private let finalRenderPlanTimeout: UInt64 = 45_000_000_000
     private let finalArtifactDownloadTimeout: UInt64 = 130_000_000_000
     private let relatedArtifactDownloadTimeout: UInt64 = 25_000_000_000
     private var renderStatusWatchTask: Task<Void, Never>?
@@ -197,16 +198,18 @@ final class FinalRenderWorkflow: WorkspaceObservingWorkflow {
                     "selected_source_count": String(selectedSourceLocalIdentifiers.count),
                 ]
             )
-            let plan = try await prepareRenderPlanWithUploadVisibilityRetry(
-                videoId: videoId,
-                bearerToken: bearerToken,
-                template: template,
-                creationStyle: creationStyle,
-                form: form,
-                removesWatermark: removesWatermark,
-                selectedSourceLocalIdentifiers: selectedSourceLocalIdentifiers,
-                sourceImageUploadId: nil
-            )
+            let plan = try await withFinalRenderPlanTimeout { [self] in
+                try await prepareRenderPlanWithUploadVisibilityRetry(
+                    videoId: videoId,
+                    bearerToken: bearerToken,
+                    template: template,
+                    creationStyle: creationStyle,
+                    form: form,
+                    removesWatermark: removesWatermark,
+                    selectedSourceLocalIdentifiers: selectedSourceLocalIdentifiers,
+                    sourceImageUploadId: nil
+                )
+            }
             guard isCurrentWorkflowGeneration(generation) else { return }
             renderPlan = plan
             statusMessage = plan.canCreateVideo
@@ -236,6 +239,21 @@ final class FinalRenderWorkflow: WorkspaceObservingWorkflow {
             )
             renderPlan = nil
             statusMessage = finalRenderMessage(for: error)
+        } catch AnimateFinalRenderError.planTimeout {
+            guard isCurrentWorkflowGeneration(generation) else { return }
+            logger.error("Final render plan timed out videoId=\(videoId, privacy: .public)")
+            AnimateWorkflowDiagnostics.capture(
+                AnimateFinalRenderError.planTimeout,
+                feature: "animate.final_render",
+                operation: "prepare_plan",
+                step: "timeout",
+                data: [
+                    "selected_count": String(selectedMedia.filter(\.selected).count),
+                    "removes_watermark": String(removesWatermark),
+                ]
+            )
+            renderPlan = nil
+            statusMessage = L10n.string("workflow.final.planTimeout")
         } catch {
             guard isCurrentWorkflowGeneration(generation) else { return }
             AnimateWorkflowDiagnostics.capture(
@@ -1251,6 +1269,24 @@ final class FinalRenderWorkflow: WorkspaceObservingWorkflow {
             group.addTask { [finalArtifactDownloadTimeout] in
                 try await Task.sleep(nanoseconds: finalArtifactDownloadTimeout)
                 throw AnimateFinalRenderError.downloadFailed
+            }
+
+            let result = try await group.next()!
+            group.cancelAll()
+            return result
+        }
+    }
+
+    private func withFinalRenderPlanTimeout(
+        operation: @escaping @Sendable () async throws -> AnimateRenderPlanResponse
+    ) async throws -> AnimateRenderPlanResponse {
+        try await withThrowingTaskGroup(of: AnimateRenderPlanResponse.self) { group in
+            group.addTask {
+                try await operation()
+            }
+            group.addTask { [finalRenderPlanTimeout] in
+                try await Task.sleep(nanoseconds: finalRenderPlanTimeout)
+                throw AnimateFinalRenderError.planTimeout
             }
 
             let result = try await group.next()!

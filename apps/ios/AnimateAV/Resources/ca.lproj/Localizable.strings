@@ -892,6 +892,7 @@
 "workflow.final.needsUsableMedia" = "Avi necessita una imatge utilitzable abans de crear el vídeo.";
 "workflow.final.sourceMediaMissing" = "Falta la imatge original de Fotos en aquest dispositiu. Edita la imatge abans de crear el vídeo final.";
 "workflow.final.planReady" = "Revisa el cost en crèdits abans de començar.";
+"workflow.final.planTimeout" = "L’Avi no ha pogut comprovar el cost en crèdits ara mateix. No s’ha fet servir cap crèdit. Torna-ho a provar.";
 "workflow.final.creatingVideo" = "Creant vídeo. L’Avi actualitzarà cada pas aquí.";
 "workflow.final.savingStatus" = "Desant l’estat del vídeo.";
 "workflow.final.noDownloadReady" = "Encara no hi ha cap vídeo final llest per descarregar.";

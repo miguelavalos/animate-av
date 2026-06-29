@@ -895,6 +895,7 @@
 "workflow.final.needsUsableMedia" = "Avi needs a usable photo before creating the video.";
 "workflow.final.sourceMediaMissing" = "The original Photos image is missing on this device. Edit the photo before creating the final video.";
 "workflow.final.planReady" = "Review the credit cost before starting.";
+"workflow.final.planTimeout" = "Avi could not check the credit cost right now. No credits were used. Please try again.";
 "workflow.final.creatingVideo" = "Creating video. Avi will update each step here.";
 "workflow.final.savingStatus" = "Saving video status.";
 "workflow.final.noDownloadReady" = "No final video is ready to download yet.";

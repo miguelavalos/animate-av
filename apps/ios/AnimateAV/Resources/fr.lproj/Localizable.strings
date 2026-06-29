@@ -892,6 +892,7 @@
 "workflow.final.needsUsableMedia" = "Avi a besoin d’une image utilisable avant de créer la vidéo.";
 "workflow.final.sourceMediaMissing" = "L’image Photos d’origine manque sur cet appareil. Modifie l’image avant de créer la vidéo finale.";
 "workflow.final.planReady" = "Vérifie le coût en crédits avant de commencer.";
+"workflow.final.planTimeout" = "Avi n’a pas pu vérifier le coût en crédits pour le moment. Aucun crédit n’a été utilisé. Réessaie.";
 "workflow.final.creatingVideo" = "Création de la vidéo. Avi mettra chaque étape à jour ici.";
 "workflow.final.savingStatus" = "Enregistrement de l’état de la vidéo.";
 "workflow.final.noDownloadReady" = "Aucune vidéo finale n’est encore prête à télécharger.";
