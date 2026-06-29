@@ -16,6 +16,8 @@ enum AnimateSyncDiagnostics {
     }
 
     static func captureObserverError(_ error: Error, observer: String) {
+        guard shouldCapture(error) else { return }
+
         AVDiagnostics.capture(
             error: error,
             context: AVDiagnosticsContext(
@@ -27,6 +29,14 @@ enum AnimateSyncDiagnostics {
                 ]
             )
         )
+    }
+
+    static func shouldCapture(_ error: Error) -> Bool {
+        if let syncError = error as? AnimateSyncError,
+           syncError == .notConfigured {
+            return false
+        }
+        return true
     }
 
     private static func diagnosticsErrorCode(for error: Error) -> String {

@@ -3,6 +3,11 @@ import XCTest
 
 @MainActor
 final class AnimateRepositoryTests: XCTestCase {
+    func testSyncDiagnosticsDoesNotCaptureExpectedNotConfiguredError() {
+        XCTAssertFalse(AnimateSyncDiagnostics.shouldCapture(AnimateSyncError.notConfigured))
+        XCTAssertTrue(AnimateSyncDiagnostics.shouldCapture(AnimateSyncError.unexpectedResponse))
+    }
+
     func testRepositoryIsNotConfiguredWithoutDeploymentURL() {
         let repository = AnimateRepository(deploymentURL: "  ")
 
