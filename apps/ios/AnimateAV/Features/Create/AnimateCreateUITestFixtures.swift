@@ -1,4 +1,5 @@
 import Foundation
+import UIKit
 
 enum AnimateCreateUITestFixtures {
     enum Mode: String {
@@ -211,11 +212,17 @@ enum AnimateCreateUITestFixtures {
             kind: kind,
             byteSize: kind == "video" ? 8_800_000 : 2_400_000,
             sha256: "ui-test-\(id)",
-            data: Data(base64Encoded: "iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mP8z8BQDwAFgwJ/luznxAAAAABJRU5ErkJggg==") ?? Data(),
+            data: fixtureSourceImageData(),
             capturedAt: nil,
             sortOrder: Int(sortOrder),
             selected: true
         )
+    }
+
+    private static func fixtureSourceImageData() -> Data {
+        UIImage(named: "StyleFavoritePeople")?.pngData()
+            ?? Data(base64Encoded: "iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mP8z8BQDwAFgwJ/luznxAAAAABJRU5ErkJggg==")
+            ?? Data()
     }
 
     private static func mediaAsset(id: String, kind: String, sortOrder: Double) -> AnimateMediaAsset {
