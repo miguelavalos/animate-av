@@ -53,6 +53,7 @@
 		2F2EEEDA0A4D594A4DE9C847 /* AnimateInProgressStateViews.swift in Sources */ = {isa = PBXBuildFile; fileRef = E537C87F0760B13F00233FE9 /* AnimateInProgressStateViews.swift */; };
 		312FEEAEDF3C3AA0B59BDFCA /* WorkflowGeneration.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2FB5B93BD3144CA156D97B2 /* WorkflowGeneration.swift */; };
 		33E7263E97155D86C53B4B45 /* AnimateCreateImagesWorkspace.swift in Sources */ = {isa = PBXBuildFile; fileRef = AAC4117AE936523A8C09F76A /* AnimateCreateImagesWorkspace.swift */; };
+		33F6A6D70C55B6F6F9F0A611 /* AnimateCreateSheetPresentation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 33F6A6D60C55B6F6F9F0A611 /* AnimateCreateSheetPresentation.swift */; };
 		341F84E928EE02D54921E395 /* AnimateLaunchContext.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BDA94180CA012FB17377C31 /* AnimateLaunchContext.swift */; };
 		358C5FCCDE6CC2DF37BAE66F /* AnimateCreditGate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 59154E3BD15B101B72FCC2B1 /* AnimateCreditGate.swift */; };
 		3A2DE7E59802CBA3904FACA2 /* AnimateInProgressListPresentationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B46BA26B84DB49B0BC110BB2 /* AnimateInProgressListPresentationTests.swift */; };
@@ -327,6 +328,7 @@
 		955B03CF582923D0473F8D91 /* account-av */ = {isa = PBXFileReference; lastKnownFileType = folder; name = "account-av"; path = "../../../account-av"; sourceTree = SOURCE_ROOT; };
 		96ED7D51080F1DF098DD426E /* AnimateInProgressWorkspaceChrome.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnimateInProgressWorkspaceChrome.swift; sourceTree = "<group>"; };
 		971903B1A68E9CFC3CBEA68B /* AnimateCreateWorkflowContent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnimateCreateWorkflowContent.swift; sourceTree = "<group>"; };
+		33F6A6D60C55B6F6F9F0A611 /* AnimateCreateSheetPresentation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnimateCreateSheetPresentation.swift; sourceTree = "<group>"; };
 		98C635FA97FC6673CD774829 /* LaunchScreen.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = LaunchScreen.storyboard; sourceTree = "<group>"; };
 		997EC84FF4B9D435F97DCDCB /* AnimateVideoSetupFormModels.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnimateVideoSetupFormModels.swift; sourceTree = "<group>"; };
 		9C2555460400EDED4F62925E /* MediaUploadWorkflow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MediaUploadWorkflow.swift; sourceTree = "<group>"; };
@@ -533,6 +535,7 @@
 				9F5B36F304E65B0EE6559726 /* AnimateCreateVideoDirectionPresentation.swift */,
 				6B238ADE90A5DFAEAA2C7171 /* AnimateCreateVideoDirectionRows.swift */,
 				80F90A17D43E7641BD095D1C /* AnimateCreateViewModel.swift */,
+				33F6A6D60C55B6F6F9F0A611 /* AnimateCreateSheetPresentation.swift */,
 				4A46ED29ECE2F042F63F5EFA /* AnimateCreateViewModel+Actions.swift */,
 				D84D1517710BD0049B8D62F8 /* AnimateCreateViewModel+AvailabilityMessages.swift */,
 				CC27713AE02B13847FA1E575 /* AnimateCreateViewModel+Bindings.swift */,
@@ -1190,6 +1193,7 @@
 				8E0B4599436F33822BEC2B74 /* AnimateCreateOperationRunner.swift in Sources */,
 				D2411288F4C6A78D5C6667F5 /* AnimateCreateOverviewCards.swift in Sources */,
 				58008EE897078DF18B5C230B /* AnimateCreateScreen.swift in Sources */,
+				33F6A6D70C55B6F6F9F0A611 /* AnimateCreateSheetPresentation.swift in Sources */,
 				A8E259107A207D6090E9F4C9 /* AnimateCreateUITestFixtures.swift in Sources */,
 				14ED15748EAAF407A9DA127E /* AnimateCreateVideoDirectionPresentation.swift in Sources */,
 				70C27823474E69578FF83E3F /* AnimateCreateVideoDirectionRows.swift in Sources */,
@@ -1391,7 +1395,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = "$(PRODUCT_BUNDLE_IDENTIFIER)";
 				SDKROOT = iphoneos;
 				SUPPORTS_MACCATALYST = NO;
-				TARGETED_DEVICE_FAMILY = 1;
+				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Release;
 		};
@@ -1408,7 +1412,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = "$(PRODUCT_BUNDLE_IDENTIFIER).tests";
 				PRODUCT_MODULE_NAME = AnimateAVTests;
 				SDKROOT = iphoneos;
-				TARGETED_DEVICE_FAMILY = 1;
+				TARGETED_DEVICE_FAMILY = "1,2";
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/AnimateAV.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/AnimateAV";
 			};
 			name = Debug;
@@ -1498,7 +1502,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = "$(PRODUCT_BUNDLE_IDENTIFIER)";
 				SDKROOT = iphoneos;
 				SUPPORTS_MACCATALYST = NO;
-				TARGETED_DEVICE_FAMILY = 1;
+				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Debug;
 		};
@@ -1573,7 +1577,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = "$(PRODUCT_BUNDLE_IDENTIFIER).tests";
 				PRODUCT_MODULE_NAME = AnimateAVTests;
 				SDKROOT = iphoneos;
-				TARGETED_DEVICE_FAMILY = 1;
+				TARGETED_DEVICE_FAMILY = "1,2";
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/AnimateAV.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/AnimateAV";
 			};
 			name = Release;

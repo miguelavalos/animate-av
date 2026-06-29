@@ -293,8 +293,7 @@ private struct AnimateCreateMediaFirstWorkspace: View {
                     showsCreateVideoConfirmation = false
                 }
             )
-            .presentationDetents([.large])
-            .presentationDragIndicator(.visible)
+            .animateCreateSheetPresentation()
             .interactiveDismissDisabled(presentation.finalRenderSummary.isPreparingPlan)
         }
         .onChange(of: presentation.finalRenderSummary.renderPlan != nil) { _, _ in
@@ -1558,6 +1557,8 @@ private struct AnimateCreateFinalVideoRecoveryScene: View {
 }
 
 private struct AnimateCreateVideoDirectionCard: View {
+    @Environment(\.horizontalSizeClass) private var horizontalSizeClass
+
     let presentation: AnimateCreateWorkflowPresentation
     @Binding var form: AnimateVideoSetupForm
     @Binding var pickerItems: [PhotosPickerItem]
@@ -1658,8 +1659,7 @@ private struct AnimateCreateVideoDirectionCard: View {
                     guidedStepContent(sheetStep)
                 }
             )
-            .presentationDetents(guidedSheetDetents(for: sheetStep))
-            .presentationDragIndicator(.visible)
+            .animateCreateSheetPresentation(detents: guidedSheetDetents(for: sheetStep))
             .photosPicker(
                 isPresented: $showsGuidedPhotoPicker,
                 selection: $pickerItems,
@@ -1907,10 +1907,15 @@ private struct AnimateCreateVideoDirectionCard: View {
                             selectFamily: selectGuidedLookFamily
                         )
 
-                        AnimateCreateTwoColumnGrid(items: family.looks, verticalSpacing: 10, itemHeight: 92) { look in
+                        AnimateCreateTwoColumnGrid(
+                            items: family.looks,
+                            verticalSpacing: guidedLookTileVerticalSpacing,
+                            itemHeight: guidedLookTileHeight
+                        ) { look in
                             AnimateCreateGuidedLookTile(
                                 look: look,
                                 isSelected: selectedLook == look,
+                                height: guidedLookTileHeight,
                                 select: {
                                     selectLook(look)
                                 },
@@ -2055,6 +2060,14 @@ private struct AnimateCreateVideoDirectionCard: View {
 
     private var activeGuidedLookFamily: AnimateVideoLookFamily? {
         guidedLookFamily
+    }
+
+    private var guidedLookTileHeight: CGFloat {
+        horizontalSizeClass == .regular ? 168 : 92
+    }
+
+    private var guidedLookTileVerticalSpacing: CGFloat {
+        horizontalSizeClass == .regular ? 14 : 10
     }
 
     private var guidedLookFamilyIndex: Int? {
@@ -3143,6 +3156,7 @@ enum ScriptIdea: String, CaseIterable, Identifiable, AnimateCreateGuidedTemplate
 private struct AnimateCreateGuidedLookTile: View {
     let look: AnimateVideoLook
     let isSelected: Bool
+    let height: CGFloat
     let select: () -> Void
     let preview: () -> Void
 
@@ -3156,21 +3170,21 @@ private struct AnimateCreateGuidedLookTile: View {
 
                 Button(action: preview) {
                     Image(systemName: "magnifyingglass")
-                        .font(.system(size: 10, weight: .black))
+                        .font(.system(size: previewIconSize, weight: .black))
                         .foregroundStyle(.white)
-                        .frame(width: 24, height: 24)
+                        .frame(width: previewButtonSize, height: previewButtonSize)
                         .background(.black.opacity(0.34), in: Circle())
                         .overlay {
                             Circle()
                                 .stroke(.white.opacity(0.14), lineWidth: 1)
                         }
-                        .padding(6)
+                        .padding(previewPadding)
                 }
                 .buttonStyle(.plain)
                 .accessibilityLabel(L10n.string("create.look.preview.accessibility", look.title))
             }
         }
-        .frame(height: 92)
+        .frame(height: height)
     }
 
     private func tileContent(width: CGFloat) -> some View {
@@ -3178,7 +3192,7 @@ private struct AnimateCreateGuidedLookTile: View {
                 Image(look.assetName)
                     .resizable()
                     .scaledToFill()
-                    .frame(width: width, height: 92)
+                    .frame(width: width, height: height)
                     .clipped()
 
                 LinearGradient(
@@ -3192,22 +3206,22 @@ private struct AnimateCreateGuidedLookTile: View {
                 )
 
                 Text(look.title)
-                    .font(.system(size: 12, weight: .black))
+                    .font(.system(size: titleFontSize, weight: .black))
                     .foregroundStyle(.white)
                     .lineLimit(2)
                     .minimumScaleFactor(0.72)
                     .shadow(color: .black.opacity(0.45), radius: 4, y: 1)
-                    .padding(9)
+                    .padding(titlePadding)
 
                 if isSelected {
                     Image(systemName: "checkmark.circle.fill")
-                        .font(.system(size: 20, weight: .black))
+                        .font(.system(size: checkmarkSize, weight: .black))
                         .foregroundStyle(.white, AVBrandColor.accent)
-                        .padding(7)
+                        .padding(checkmarkPadding)
                         .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topTrailing)
                 }
             }
-            .frame(width: width, height: 92)
+            .frame(width: width, height: height)
             .clipShape(RoundedRectangle(cornerRadius: 12, style: .continuous))
             .contentShape(RoundedRectangle(cornerRadius: 12, style: .continuous))
             .overlay {
@@ -3215,6 +3229,38 @@ private struct AnimateCreateGuidedLookTile: View {
                     .stroke(isSelected ? AVBrandColor.accent : AVBrandColor.borderSubtle.opacity(0.58), lineWidth: isSelected ? 2 : 1)
             }
             .shadow(color: AVBrandColor.ink.opacity(isSelected ? 0.14 : 0.08), radius: isSelected ? 8 : 4, y: isSelected ? 4 : 2)
+    }
+
+    private var isExpanded: Bool {
+        height >= 140
+    }
+
+    private var previewButtonSize: CGFloat {
+        isExpanded ? 30 : 24
+    }
+
+    private var previewIconSize: CGFloat {
+        isExpanded ? 12 : 10
+    }
+
+    private var previewPadding: CGFloat {
+        isExpanded ? 8 : 6
+    }
+
+    private var titleFontSize: CGFloat {
+        isExpanded ? 14 : 12
+    }
+
+    private var titlePadding: CGFloat {
+        isExpanded ? 12 : 9
+    }
+
+    private var checkmarkSize: CGFloat {
+        isExpanded ? 24 : 20
+    }
+
+    private var checkmarkPadding: CGFloat {
+        isExpanded ? 9 : 7
     }
 }
 
@@ -4099,7 +4145,7 @@ private struct AnimateCreateFinalVideoConfirmationSheet: View {
                         .foregroundStyle(AVBrandColor.textPrimary)
                         .multilineTextAlignment(.center)
 
-                    Text(L10n.string("workflow.final.checkingPlan"))
+                    Text(L10n.string("create.final.checkingCost.detail"))
                         .font(.system(size: 12, weight: .semibold))
                         .foregroundStyle(AVBrandColor.textSecondary)
                         .lineLimit(2)
@@ -4251,13 +4297,13 @@ private struct AnimateCreateFinalVideoConfirmationSheet: View {
                 .background(AVBrandColor.accent.opacity(0.14), in: Circle())
 
             VStack(alignment: .leading, spacing: 4) {
-                Text(showsPlanPreparation ? L10n.string("create.final.checkingCost") : L10n.string("create.final.confirmSheet.title"))
+                Text(showsPlanPreparation ? L10n.string("create.final.preparingVideo.title") : L10n.string("create.final.confirmSheet.title"))
                     .font(.system(size: 20, weight: .black))
                     .foregroundStyle(AVBrandColor.textPrimary)
                     .lineLimit(1)
                     .minimumScaleFactor(0.82)
 
-                Text(showsPlanPreparation ? L10n.string("workflow.final.checkingPlan") : L10n.string("create.final.confirmSheet.detail"))
+                Text(showsPlanPreparation ? L10n.string("create.final.preparingVideo.detail") : L10n.string("create.final.confirmSheet.detail"))
                     .font(.system(size: 12, weight: .semibold))
                     .foregroundStyle(AVBrandColor.textSecondary)
                     .lineLimit(2)

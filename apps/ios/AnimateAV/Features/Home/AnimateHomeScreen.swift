@@ -16,6 +16,8 @@ struct AnimateHomeScreen: View {
     let selectTab: (AnimateRootTab) -> Void
     let startVideoCreation: () -> Void
     let continueVideo: (AnimateContinuationRequest) -> Void
+    let isTabletLayout: Bool
+    let maxContentWidth: CGFloat?
     private var videosSummary: AnimateInProgressSummary { viewModel.videosSummary.videoSummary }
     private var presentation: AnimateHomePresentation {
         AnimateHomePresentation.make(
@@ -33,7 +35,9 @@ struct AnimateHomeScreen: View {
         retryCredits: @escaping () -> Void,
         selectTab: @escaping (AnimateRootTab) -> Void,
         startVideoCreation: @escaping () -> Void,
-        continueVideo: @escaping (AnimateContinuationRequest) -> Void
+        continueVideo: @escaping (AnimateContinuationRequest) -> Void,
+        isTabletLayout: Bool = false,
+        maxContentWidth: CGFloat? = nil
     ) {
         self.openSettings = openSettings
         self.openAccount = openAccount
@@ -43,31 +47,20 @@ struct AnimateHomeScreen: View {
         self.selectTab = selectTab
         self.startVideoCreation = startVideoCreation
         self.continueVideo = continueVideo
+        self.isTabletLayout = isTabletLayout
+        self.maxContentWidth = maxContentWidth
     }
 
     var body: some View {
-        AVAppShellScrollableScreenScaffold {
+        AVAppShellScrollableScreenScaffold(
+            alignment: .leading,
+            spacing: isTabletLayout ? 22 : 18,
+            bottomPadding: isTabletLayout ? 56 : AVAppShellScreenMetric.bottomContentPadding,
+            maxContentWidth: maxContentWidth
+        ) {
             AnimateTheme.shellBackground
         } content: {
-            AVAppShellHomeHeader(
-                title: L10n.string("home.header.title"),
-                subtitle: L10n.string("home.header.subtitle")
-            ) {
-                AVAppShellConfiguredBrandHeader(
-                    activeItem: nil,
-                    openSettings: openSettings,
-                    openAccount: openAccount
-                )
-            } content: {
-                AnimateHomeAviContextCard(
-                    title: aviContextTitle,
-                    detail: aviContextDetail,
-                    buttonTitle: aviContextButtonTitle,
-                    hasVideoContext: createViewModel.hasRecoverableVideoContext,
-                    isSignedIn: viewModel.isSignedIn,
-                    action: viewModel.isSignedIn ? startVideoCreation : startSignInFlow
-                )
-            }
+            homeHeader(isTabletLike: isTabletLayout)
 
             if viewModel.isSignedIn {
                 AnimateHomeAccountCard(
@@ -97,6 +90,44 @@ struct AnimateHomeScreen: View {
     }
 
     @Environment(\.avCommonAppExperience) private var appExperience
+
+    @ViewBuilder
+    private func homeHeader(isTabletLike: Bool) -> some View {
+        if isTabletLike {
+            VStack(alignment: .leading, spacing: 18) {
+                AVAppShellScreenHeader(
+                    title: L10n.string("home.header.title"),
+                    subtitle: L10n.string("home.header.subtitle")
+                )
+
+                aviContextCard
+            }
+        } else {
+            AVAppShellHomeHeader(
+                title: L10n.string("home.header.title"),
+                subtitle: L10n.string("home.header.subtitle")
+            ) {
+                AVAppShellConfiguredBrandHeader(
+                    activeItem: nil,
+                    openSettings: openSettings,
+                    openAccount: openAccount
+                )
+            } content: {
+                aviContextCard
+            }
+        }
+    }
+
+    private var aviContextCard: some View {
+        AnimateHomeAviContextCard(
+            title: aviContextTitle,
+            detail: aviContextDetail,
+            buttonTitle: aviContextButtonTitle,
+            hasVideoContext: createViewModel.hasRecoverableVideoContext,
+            isSignedIn: viewModel.isSignedIn,
+            action: viewModel.isSignedIn ? startVideoCreation : startSignInFlow
+        )
+    }
 
     private var aviContextTitle: String {
         guard viewModel.isSignedIn else { return L10n.string("home.avi.signIn.title") }

@@ -663,7 +663,7 @@
 "create.final.confirmSheet.durationRange" = "%d-%d s";
 "create.final.confirmSheet.upToSeconds" = "fins a %ds";
 "create.final.confirmSheet.watermark" = "Branding";
-"create.final.costDetails.chargedOnCompletion" = "Només es cobra si el vídeo final es completa.";
+"create.final.costDetails.chargedOnCompletion" = "No es descomptarà cap crèdit fins que el vídeo final es completi.";
 "create.final.costDetails.includedWithPro" = "Sense branding";
 "create.final.costDetails.noExtraCost" = "Sense cost extra";
 "create.final.costDetails.title" = "Detall del cost";
@@ -673,7 +673,8 @@
 "create.final.costDetails.watermarkIncluded" = "Targeta final de branding inclosa.";
 "create.final.createVideo" = "Crear vídeo";
 "create.final.checkCredits" = "Veure cost";
-"create.final.checkingCost" = "Calculant el cost";
+"create.final.checkingCost" = "Calculant crèdits";
+"create.final.checkingCost.detail" = "Revisant la foto, l’estil i els crèdits disponibles.";
 "create.final.retrySetup" = "Torna-ho a provar";
 "create.final.recovery.title" = "El vídeo necessita atenció";
 "create.final.recovery.detail" = "Avi no ha pogut crear aquest vídeo. Torna-ho a provar o comença un vídeo nou.";
@@ -684,6 +685,8 @@
 "create.final.creditCost" = "%@ necessaris";
 "create.final.creditPolicy.preflight" = "L’Avi comprova opcions i crèdits abans de crear.";
 "create.final.creditPolicy.create" = "Els crèdits només es cobren pels vídeos finals completats. Aquest vídeo costa %@.";
+"create.final.preparingVideo.title" = "Preparant el teu vídeo";
+"create.final.preparingVideo.detail" = "L’Avi comprova el cost abans de continuar.";
 "create.final.blocker.providerUnavailable" = "Aquesta opció de vídeo encara no està disponible.";
 "create.final.blocker.videoSetupUnavailable" = "L’Avi no ha pogut preparar el vídeo. Torna-ho a provar o ajusta la foto i les opcions.";
 "create.final.blocker.insufficientCredits" = "Necessites més crèdits per crear aquest vídeo final.";

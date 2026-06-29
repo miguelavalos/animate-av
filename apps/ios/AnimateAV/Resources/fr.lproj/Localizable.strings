@@ -663,7 +663,7 @@
 "create.final.confirmSheet.durationRange" = "%d-%d s";
 "create.final.confirmSheet.upToSeconds" = "jusqu'à %ds";
 "create.final.confirmSheet.watermark" = "Branding";
-"create.final.costDetails.chargedOnCompletion" = "Facturé uniquement si la vidéo finale est terminée.";
+"create.final.costDetails.chargedOnCompletion" = "Aucun crédit n’est utilisé avant que la vidéo finale soit terminée.";
 "create.final.costDetails.includedWithPro" = "Sans branding";
 "create.final.costDetails.noExtraCost" = "Sans coût supplémentaire";
 "create.final.costDetails.title" = "Détail du coût";
@@ -673,7 +673,8 @@
 "create.final.costDetails.watermarkIncluded" = "Carte finale de branding incluse.";
 "create.final.createVideo" = "Créer la vidéo";
 "create.final.checkCredits" = "Voir le coût";
-"create.final.checkingCost" = "Calcul du coût";
+"create.final.checkingCost" = "Calcul des crédits";
+"create.final.checkingCost.detail" = "Vérification de la photo, du style et des crédits disponibles.";
 "create.final.retrySetup" = "Réessayer";
 "create.final.recovery.title" = "La vidéo nécessite une attention";
 "create.final.recovery.detail" = "Avi n’a pas pu créer cette vidéo. Réessaie ou commence une nouvelle vidéo.";
@@ -684,6 +685,8 @@
 "create.final.creditCost" = "%@ nécessaires";
 "create.final.creditPolicy.preflight" = "Avi vérifie les options et les crédits avant de créer.";
 "create.final.creditPolicy.create" = "Le lancement de la vidéo finale réserve %@. Les crédits ne sont finalisés qu'après la livraison de l'export.";
+"create.final.preparingVideo.title" = "Préparation de ta vidéo";
+"create.final.preparingVideo.detail" = "Avi vérifie le coût avant de continuer.";
 "create.final.blocker.providerUnavailable" = "Cette option vidéo n'est pas encore disponible.";
 "create.final.blocker.videoSetupUnavailable" = "Avi n’a pas pu préparer la vidéo. Réessaie ou ajuste la photo et les options.";
 "create.final.blocker.insufficientCredits" = "Il vous faut plus de crédits pour créer cette vidéo finale.";

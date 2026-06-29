@@ -209,8 +209,7 @@ struct AnimateCreateImagesWorkspace: View {
                 selectedLooks: $selectedLooks,
                 selectionLimit: lookSelectionLimit
             )
-            .presentationDetents([.large])
-            .presentationDragIndicator(.visible)
+            .animateCreateSheetPresentation()
         }
         .onChange(of: pickerItem) { _, item in
             loadImage(from: item)
