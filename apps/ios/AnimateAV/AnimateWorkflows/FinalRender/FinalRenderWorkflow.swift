@@ -32,7 +32,7 @@ final class FinalRenderWorkflow: WorkspaceObservingWorkflow {
     private var lastCreditRefreshKey: String?
     private var preparedVideoSourceUpload: PreparedVideoSourceUpload?
     private var pendingSourceComparisonImageData: Data?
-    private let finalRenderPlanTimeout: UInt64 = 45_000_000_000
+    private let finalRenderPlanTimeout: UInt64
     private let finalArtifactDownloadTimeout: UInt64 = 130_000_000_000
     private let relatedArtifactDownloadTimeout: UInt64 = 25_000_000_000
     private var renderStatusWatchTask: Task<Void, Never>?
@@ -49,7 +49,8 @@ final class FinalRenderWorkflow: WorkspaceObservingWorkflow {
         renderStatusClient: AnimateRenderStatusClient? = nil,
         videoQuoteClient: AnimateVideoQuoteClient? = nil,
         uploadClient: AnimateUploadClient? = nil,
-        galleryStore: any AnimateGalleryStoring = AnimateGalleryStore()
+        galleryStore: any AnimateGalleryStoring = AnimateGalleryStore(),
+        finalRenderPlanTimeout: UInt64 = 45_000_000_000
     ) {
         self.currentUserProvider = currentUserProvider
         self.authTokenProvider = authTokenProvider
@@ -59,6 +60,7 @@ final class FinalRenderWorkflow: WorkspaceObservingWorkflow {
         self.videoQuoteClient = videoQuoteClient ?? AnimateVideoQuoteClient(baseURLString: finalRenderClient.baseURLString)
         self.uploadClient = uploadClient
         self.galleryStore = galleryStore
+        self.finalRenderPlanTimeout = finalRenderPlanTimeout
         super.init(workspaceObserver: workspaceObserver)
         workspaceErrorCancellable = workspaceObserver.workspaceErrorPublisher
             .receive(on: DispatchQueue.main)

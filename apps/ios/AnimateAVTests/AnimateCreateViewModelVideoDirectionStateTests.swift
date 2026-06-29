@@ -482,6 +482,54 @@ final class AnimateCreateViewModelVideoDirectionStateTests: XCTestCase {
         XCTAssertNil(workflow.renderPlan)
     }
 
+    func testFinalRenderPlanTimesOutAndStopsCheckingCost() async {
+        AnimateFinalRenderURLProtocolMock.reset()
+        AnimateFinalRenderURLProtocolMock.responseData = Data(Self.renderPlanWithoutBrandingJSON.utf8)
+        AnimateFinalRenderURLProtocolMock.responseDelayNanoseconds = 1_000_000_000
+        let configuration = URLSessionConfiguration.ephemeral
+        configuration.protocolClasses = [AnimateFinalRenderURLProtocolMock.self]
+        let harness = AnimateVideoCreationFailureHarness(
+            error: NSError(domain: "test", code: 1),
+            finalRenderSession: URLSession(configuration: configuration),
+            finalRenderPlanTimeout: 20_000_000
+        )
+        let workflow = harness.finalRenderWorkflow
+        harness.publishWorkspace(
+            AnimateWorkspace(
+                video: AnimateCreateTestFixtures.makeVideo(id: "video-1", status: "video_direction_ready"),
+                mediaAssets: [
+                    AnimateCreateTestFixtures.makeMediaAsset(
+                        id: "backend-media-1",
+                        sourceLocalIdentifier: "local-asset-1",
+                        hasUploadId: true
+                    )
+                ],
+                videoDirectionScenes: [AnimateCreateTestFixtures.makeScene(id: "scene-1")],
+                renderJobs: [],
+                artifacts: []
+            )
+        )
+        await Task.yield()
+
+        let selectedMedia = [
+            AnimateCreateTestFixtures.makeSelectedMedia(
+                id: "00000000-0000-0000-0000-000000000001",
+                sourceLocalIdentifier: "local-asset-1"
+            )
+        ]
+        await workflow.prepareFinalRenderPlan(
+            videoId: "video-1",
+            template: .birthdayMessage,
+            creationStyle: nil,
+            form: AnimateVideoSetupForm(template: .birthdayMessage),
+            selectedMedia: selectedMedia
+        )
+
+        XCTAssertFalse(workflow.isGenerating)
+        XCTAssertNil(workflow.renderPlan)
+        XCTAssertEqual(workflow.statusMessage, L10n.string("workflow.final.planTimeout"))
+    }
+
     func testFinalRenderPlanWithoutWatermarkIsCurrentForWatermarkedRender() {
         let plan = AnimateCreateTestFixtures.makeRenderPlan(videoId: "video-1")
 
@@ -1687,6 +1735,7 @@ private final class AnimateVideoCreationFailureHarness:
     private let workspaceSubject = CurrentValueSubject<AnimateWorkspace?, Never>(nil)
     private let workspaceErrorSubject = CurrentValueSubject<String?, Never>(nil)
     private let finalRenderSession: URLSession
+    private let finalRenderPlanTimeout: UInt64
     private let uploadSession: URLSession?
     private let galleryStore: TestGalleryStore
     var bearerToken: String? = "token-1"
@@ -1694,11 +1743,13 @@ private final class AnimateVideoCreationFailureHarness:
     init(
         error: Error,
         finalRenderSession: URLSession = .shared,
+        finalRenderPlanTimeout: UInt64 = 45_000_000_000,
         uploadSession: URLSession? = nil,
         galleryStore: TestGalleryStore = TestGalleryStore()
     ) {
         creationError = error
         self.finalRenderSession = finalRenderSession
+        self.finalRenderPlanTimeout = finalRenderPlanTimeout
         self.uploadSession = uploadSession
         self.galleryStore = galleryStore
     }
@@ -1745,7 +1796,8 @@ private final class AnimateVideoCreationFailureHarness:
             uploadClient: uploadSession.map {
                 AnimateUploadClient(baseURLString: "https://api.example.com", session: $0)
             },
-            galleryStore: galleryStore
+            galleryStore: galleryStore,
+            finalRenderPlanTimeout: finalRenderPlanTimeout
         )
     }
 
