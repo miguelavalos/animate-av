@@ -25,32 +25,48 @@ struct AnimateAppShellView: View {
     @State private var inProgressPreferredAssetKindRaw: String?
 
     var body: some View {
-        appScaffold
+        adaptiveShell
             .sheet(isPresented: $creditsPaywallIsPresented) {
-            AnimateCreditsPaywallView(
-                balance: accountController.creditBalance,
-                isSignedIn: accountController.isSignedIn,
-                startSignInFlow: startSignInFlow,
-                claimPromotionCode: accountController.claimPromotionCode,
-                purchaseCatalog: accountController.purchaseCatalog,
-                isPurchaseCatalogLoading: accountController.isPurchaseCatalogLoading,
-                purchaseCatalogErrorMessage: accountController.purchaseCatalogErrorMessage,
-                loadPurchaseProducts: accountController.loadPurchaseProducts,
-                purchaseProduct: accountController.purchase,
-                restorePurchases: accountController.restorePurchases,
-                dismiss: { creditsPaywallIsPresented = false }
-            )
-        }
-        .onChange(of: createViewModel.imageGenerationQueueNonce) { _, _ in
-            guard accountController.canUseAnimateImageGeneration else { return }
-            clearImageDraft()
-            galleryViewModel.refreshImages()
-            inProgressPreferredAssetKindRaw = "images"
-            selectRootTab(.inProgress)
+                AnimateCreditsPaywallView(
+                    balance: accountController.creditBalance,
+                    isSignedIn: accountController.isSignedIn,
+                    startSignInFlow: startSignInFlow,
+                    claimPromotionCode: accountController.claimPromotionCode,
+                    purchaseCatalog: accountController.purchaseCatalog,
+                    isPurchaseCatalogLoading: accountController.isPurchaseCatalogLoading,
+                    purchaseCatalogErrorMessage: accountController.purchaseCatalogErrorMessage,
+                    loadPurchaseProducts: accountController.loadPurchaseProducts,
+                    purchaseProduct: accountController.purchase,
+                    restorePurchases: accountController.restorePurchases,
+                    dismiss: { creditsPaywallIsPresented = false }
+                )
+            }
+            .onChange(of: createViewModel.imageGenerationQueueNonce) { _, _ in
+                guard accountController.canUseAnimateImageGeneration else { return }
+                clearImageDraft()
+                galleryViewModel.refreshImages()
+                inProgressPreferredAssetKindRaw = "images"
+                selectRootTab(.inProgress)
+            }
+            .onChange(of: accountController.canUseAnimateImageGeneration) { _, canUseImages in
+                guard !canUseImages else { return }
+                redirectImageGenerationIfUnavailable()
+            }
+            .onAppear(perform: redirectImageGenerationIfUnavailable)
+    }
+
+    @ViewBuilder
+    private var adaptiveShell: some View {
+        AVAppShellAdaptiveLayoutReader { layout in
+            if layout.layoutClass.isTabletLike {
+                tabletShell(layout: layout)
+            } else {
+                compactShell
+            }
         }
     }
 
-    private var appScaffold: some View {
+    private var compactShell: some View {
         AVAppShellConfiguredScaffold(
             selectedTabID: footerSelectedTab,
             tabs: AnimateRootTab.footerTabs(
@@ -67,12 +83,7 @@ struct AnimateAppShellView: View {
             },
             onSelectAssistant: {
                 guard canNavigateAwayFromCurrentTab else { return }
-                chromeItem = nil
-                if createViewModel.hasRecoverableVideoContext {
-                    selectRootTab(.create)
-                } else {
-                    selectRootTab(.avi)
-                }
+                selectAssistantTab()
             },
             content: {
                 NavigationStack(path: $navigationPath) {
@@ -86,31 +97,160 @@ struct AnimateAppShellView: View {
             }
         )
         .overlay(alignment: .bottomTrailing) {
-            if showsNewVideoFloatingAction {
-                Button {
-                    startFloatingVideoCreationAction()
-                } label: {
-                    Image(systemName: "plus")
-                        .font(.system(size: 22, weight: .black))
-                        .foregroundStyle(AVBrandColor.textInverse)
-                        .frame(width: 58, height: 58)
-                        .background(
-                            Circle()
-                                .fill(AVBrandColor.accent)
-                        )
-                        .shadow(color: AVBrandColor.accent.opacity(0.24), radius: 16, x: 0, y: 8)
-                }
-                .buttonStyle(.plain)
-                .accessibilityLabel(L10n.string("inProgress.newVideo"))
-                .padding(.trailing, 28)
-                .padding(.bottom, 104)
+            newVideoFloatingAction(bottomPadding: 104)
+        }
+        .accessibilityIdentifier("animate.shell.compact")
+    }
+
+    private func tabletShell(layout: AVAppShellLayoutContext) -> some View {
+        HStack(spacing: 0) {
+            tabletSidebar
+
+            Divider()
+
+            tabletContentArea(layout: layout)
+        }
+        .background(AVBrandSurface.shellBackground.ignoresSafeArea())
+        .accessibilityIdentifier("animate.shell.tablet")
+    }
+
+    private func tabletContentArea(layout: AVAppShellLayoutContext) -> some View {
+        ZStack(alignment: .bottomTrailing) {
+            NavigationStack(path: $navigationPath) {
+                screen(
+                    for: selectedTab,
+                    isTabletLayout: true,
+                    readableContentWidth: layout.readableContentWidth,
+                    createBottomSafeAreaPadding: 28,
+                    imageBottomSafeAreaPadding: 28
+                )
+            }
+            .id(navigationStackResetID)
+            .frame(maxWidth: .infinity, maxHeight: .infinity)
+
+            newVideoFloatingAction(bottomPadding: 28)
+        }
+        .frame(maxWidth: .infinity, maxHeight: .infinity)
+    }
+
+    private var tabletSidebar: some View {
+        VStack(alignment: .leading, spacing: 10) {
+            tabletSidebarBrandHeader
+                .padding(.bottom, 12)
+
+            ForEach(tabletTabs) { tab in
+                tabletSidebarButton(
+                    tab: tab,
+                    isSelected: chromeItem == nil && selectedTab == tab
+                )
+            }
+
+            Spacer(minLength: 16)
+
+            tabletChromeButton(
+                title: L10n.string("profile.settingsScreen.title"),
+                systemImage: "gearshape.fill",
+                isSelected: chromeItem == .settings,
+                accessibilityIdentifier: "animate.sidebar.settings"
+            ) {
+                openChromeItem(.settings)
+            }
+
+            tabletChromeButton(
+                title: L10n.string("profile.accountScreen.title"),
+                systemImage: "person.crop.circle.fill",
+                isSelected: chromeItem == .account,
+                accessibilityIdentifier: "animate.sidebar.account"
+            ) {
+                openChromeItem(.account)
             }
         }
-        .onChange(of: accountController.canUseAnimateImageGeneration) { _, canUseImages in
-            guard !canUseImages else { return }
-            redirectImageGenerationIfUnavailable()
+        .padding(.horizontal, AVAppShellTabletSidebarMetric.horizontalPadding)
+        .padding(.vertical, AVAppShellTabletSidebarMetric.verticalPadding)
+        .frame(width: 256, alignment: .topLeading)
+        .frame(maxHeight: .infinity, alignment: .topLeading)
+        .background(.regularMaterial)
+        .accessibilityIdentifier("animate.shell.tablet.sidebar")
+    }
+
+    private var tabletSidebarBrandHeader: some View {
+        AVAppShellTabletSidebarBrandHeader(
+            logoAssetName: appExperience.visualAssets?.headerLogoName ?? "AnimateHeaderWordmark",
+            accessibilityLabel: appExperience.identity.displayName,
+            logoWidth: 146,
+            logoHeight: 44,
+            logoLeadingCorrection: -2
+        )
+    }
+
+    private var tabletTabs: [AnimateRootTab] {
+        var tabs: [AnimateRootTab] = [.home, .create]
+        if accountController.canUseAnimateImageGeneration {
+            tabs.append(.createImage)
         }
-        .onAppear(perform: redirectImageGenerationIfUnavailable)
+        tabs.append(contentsOf: [.inProgress, .gallery, .avi])
+        return tabs
+    }
+
+    private func tabletSidebarButton(tab: AnimateRootTab, isSelected: Bool) -> some View {
+        let shellTab = tab.shellTab
+        return AVAppShellTabletSidebarButton(
+            title: shellTab.title,
+            systemImage: shellTab.systemImage,
+            isSelected: isSelected
+        ) {
+            guard canNavigateAwayFromCurrentTab else { return }
+            if tab == .avi {
+                selectAssistantTab()
+            } else {
+                selectFooterTab(tab)
+            }
+        }
+        .accessibilityIdentifier("animate.sidebar.\(tab.rawValue)")
+        .accessibilityElement(children: .ignore)
+        .accessibilityLabel(shellTab.title)
+    }
+
+    private func tabletChromeButton(
+        title: String,
+        systemImage: String,
+        isSelected: Bool,
+        accessibilityIdentifier: String,
+        action: @escaping () -> Void
+    ) -> some View {
+        AVAppShellTabletSidebarButton(
+            title: title,
+            systemImage: systemImage,
+            isSelected: isSelected,
+            fontSize: 15,
+            action: action
+        )
+        .accessibilityIdentifier(accessibilityIdentifier)
+        .accessibilityElement(children: .ignore)
+        .accessibilityLabel(title)
+    }
+
+    @ViewBuilder
+    private func newVideoFloatingAction(bottomPadding: CGFloat) -> some View {
+        if showsNewVideoFloatingAction {
+            Button {
+                startFloatingVideoCreationAction()
+            } label: {
+                Image(systemName: "plus")
+                    .font(.system(size: 22, weight: .black))
+                    .foregroundStyle(AVBrandColor.textInverse)
+                    .frame(width: 58, height: 58)
+                    .background(
+                        Circle()
+                            .fill(AVBrandColor.accent)
+                    )
+                    .shadow(color: AVBrandColor.accent.opacity(0.24), radius: 16, x: 0, y: 8)
+            }
+            .buttonStyle(.plain)
+            .accessibilityLabel(L10n.string("inProgress.newVideo"))
+            .padding(.trailing, 28)
+            .padding(.bottom, bottomPadding)
+        }
     }
 
     private var footerAssistant: AVAppShellConfiguredAssistant {
@@ -133,7 +273,13 @@ struct AnimateAppShellView: View {
     }
 
     @ViewBuilder
-    private func screen(for tab: AnimateRootTab) -> some View {
+    private func screen(
+        for tab: AnimateRootTab,
+        isTabletLayout: Bool = false,
+        readableContentWidth: CGFloat? = nil,
+        createBottomSafeAreaPadding: CGFloat = 82,
+        imageBottomSafeAreaPadding: CGFloat = 82
+    ) -> some View {
         if let chromeItem {
             AnimateProfileScreen(
                 mode: chromeItem,
@@ -158,7 +304,9 @@ struct AnimateAppShellView: View {
                     continueVideo: { request in
                         createViewModel.continueVideo(request.video, focus: request.focus)
                         selectRootTab(.create)
-                    }
+                    },
+                    isTabletLayout: isTabletLayout,
+                    maxContentWidth: readableContentWidth
                 )
             case .create:
                 AnimateCreateScreen(
@@ -166,7 +314,7 @@ struct AnimateAppShellView: View {
                     openCredits: openCredits,
                     cancelCreation: cancelCreation,
                     finishFinalVideoToGallery: finishFinalVideoToGallery,
-                    bottomSafeAreaPadding: 82
+                    bottomSafeAreaPadding: createBottomSafeAreaPadding
                 )
             case .createImage:
                 if accountController.canUseAnimateImageGeneration {
@@ -190,14 +338,14 @@ struct AnimateAppShellView: View {
                     )
                     .safeAreaPadding(.horizontal, 20)
                     .safeAreaPadding(.top, 12)
-                    .safeAreaPadding(.bottom, 82)
+                    .safeAreaPadding(.bottom, imageBottomSafeAreaPadding)
                 } else {
                     AnimateCreateScreen(
                         startSignInFlow: startSignInFlow,
                         openCredits: openCredits,
                         cancelCreation: cancelCreation,
                         finishFinalVideoToGallery: finishFinalVideoToGallery,
-                        bottomSafeAreaPadding: 82
+                        bottomSafeAreaPadding: createBottomSafeAreaPadding
                     )
                 }
             case .inProgress:
@@ -305,6 +453,13 @@ struct AnimateAppShellView: View {
         }
     }
 
+    private func openChromeItem(_ item: AVAppShellChromeItem) {
+        guard canNavigateAwayFromCurrentTab else { return }
+        navigationPath = NavigationPath()
+        navigationStackResetID = UUID()
+        chromeItem = item
+    }
+
     private func finishFinalVideoToGallery() {
         guard createViewModel.finishFinalVideoToGallery() else { return }
 
@@ -364,7 +519,16 @@ struct AnimateAppShellView: View {
         guard selectedTab != tab || chromeItem != nil else { return }
         navigationPath = NavigationPath()
         navigationStackResetID = UUID()
+        chromeItem = nil
         selectedTab = tab
+    }
+
+    private func selectAssistantTab() {
+        if createViewModel.hasRecoverableVideoContext {
+            selectRootTab(.create)
+        } else {
+            selectRootTab(.avi)
+        }
     }
 
     private func selectFooterTab(_ tab: AnimateRootTab) {
