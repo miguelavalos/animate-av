@@ -184,9 +184,12 @@ struct AnimateAppShellView: View {
     }
 
     private var tabletTabs: [AnimateRootTab] {
-        AnimateRootTab.footerTabs(
-            canUseAnimateImageGeneration: accountController.canUseAnimateImageGeneration
-        ) + [.avi]
+        var tabs: [AnimateRootTab] = [.home, .create]
+        if accountController.canUseAnimateImageGeneration {
+            tabs.append(.createImage)
+        }
+        tabs.append(contentsOf: [.inProgress, .gallery, .avi])
+        return tabs
     }
 
     private func tabletSidebarButton(tab: AnimateRootTab, isSelected: Bool) -> some View {
