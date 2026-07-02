@@ -1,4 +1,4 @@
-import { beforeEach, describe, expect, test } from "bun:test";
+import { beforeEach, describe, expect, test } from "vite-plus/test";
 import { deleteGalleryRecord, deleteLocalInProgressJob, deleteLocalInProgressJobsByReference, galleryRemoteVideosAvailableForDownload, isDownloadableRemoteVideoArtifact, loadGalleryRecords, loadGalleryRecordsWithObjectUrls, loadLocalInProgressJobs, renameGalleryRecord, saveGalleryRecord, saveGalleryRecordWithBlob, saveLocalInProgressJob, subscribeGalleryRecords, subscribeLocalInProgressJobs, updateGalleryRecordFeedback } from "./animate-browser-utils";
 
 const storage = new Map<string, string>();
@@ -64,7 +64,7 @@ describe("Animate local gallery records", () => {
 
     expect(loadGalleryRecords()[0]?.feedback?.lookMatch).toBe("bad");
     expect(loadGalleryRecords()[0]?.feedback?.motionFollowed).toBe("okay");
-    expect(loadGalleryRecords()[0]?.feedback?.updatedAt).toBeNumber();
+    expect(typeof loadGalleryRecords()[0]?.feedback?.updatedAt).toBe("number");
     expect(notificationCount).toBe(4);
   });
 

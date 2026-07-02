@@ -28,16 +28,16 @@ Run these checks before pushing web shell or route changes:
 
 ```bash
 cd apps/web
-bun run typecheck
-bun run build:production
-bun run qa:shared
+vp run typecheck
+vp run build:production
+vp run qa:shared
 ```
 
 For browser QA, start the local server with the existing Varlock wrapper:
 
 ```bash
 cd apps/web
-bun run dev --force
+vp run dev --force
 ```
 
 Then verify `/`, `/sign-in`, `/create`, `/in-progress`, `/gallery`, and `/avi`

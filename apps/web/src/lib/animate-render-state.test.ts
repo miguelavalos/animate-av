@@ -1,4 +1,4 @@
-import { describe, expect, test } from "bun:test";
+import { describe, expect, test } from "vite-plus/test";
 import { animateCreateInputLimits, canSubmitConfirm, createFinalConfirmIdempotencyKey, createRenderPlanInputSignature, creditAvailabilityMessage, finalRenderQueuedMessage, isRenderPlanCurrent, renderPlanBlockerSummary, spendableCredits } from "./animate-render-state";
 
 describe("Animate render state", () => {

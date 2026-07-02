@@ -1,4 +1,4 @@
-import { describe, expect, test } from "bun:test";
+import { describe, expect, test } from "vite-plus/test";
 import { AnimateApiError } from "./animate-api-client";
 import { localizedAnimateErrorMessage, type AnimateErrorCopy } from "./animate-errors";
 

@@ -126,9 +126,9 @@ Added web tests for:
 Commands run successfully:
 
 ```sh
-bun test
-bun run web:typecheck
-bun run web:build
+vp test
+vp run web:typecheck
+vp run web:build
 ```
 
 Latest observed unit result:

@@ -1,10 +1,12 @@
-import { describe, expect, test } from "bun:test";
+import { describe, expect, test } from "vite-plus/test";
 import { existsSync } from "node:fs";
-import { join } from "node:path";
+import { dirname, join } from "node:path";
+import { fileURLToPath } from "node:url";
 import type { AppsAvLocale } from "@avalsys/apps-av-web";
 import { getAnimateLookFamilyCopy, getAnimateLookTitle } from "./animate-i18n";
 import { animateFinalRenderLookValues, animateLookFamilies, animateLookPreviewAssets, isAnimateFinalRenderLook, isAnimateLook } from "./animate-models";
 
+const testDir = dirname(fileURLToPath(import.meta.url));
 const locales: AppsAvLocale[] = ["en", "es", "fr", "de", "ca"];
 
 describe("Animate look families", () => {
@@ -25,7 +27,7 @@ describe("Animate look families", () => {
     expect(new Set(assetNames).size).toBe(64);
 
     for (const assetPath of paths) {
-      expect(existsSync(join(import.meta.dir, "../../public", assetPath.replace(/^\//, "")))).toBe(true);
+      expect(existsSync(join(testDir, "../../public", assetPath.replace(/^\//, "")))).toBe(true);
     }
   });
 

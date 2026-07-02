@@ -1,5 +1,5 @@
 import { readFileSync } from "node:fs";
-import { describe, expect, it } from "vitest";
+import { describe, expect, it } from "vite-plus/test";
 
 describe("Animate destructive web actions", () => {
   const gallerySource = readFileSync(new URL("./gallery.tsx", import.meta.url), "utf8");

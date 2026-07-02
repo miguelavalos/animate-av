@@ -1,4 +1,4 @@
-import { describe, expect, test } from "bun:test";
+import { describe, expect, test } from "vite-plus/test";
 import { animateTranslations, localizedAppPath } from "./animate-i18n";
 
 describe("Animate localized paths", () => {

@@ -1,4 +1,4 @@
-import { describe, expect, test } from "bun:test";
+import { describe, expect, test } from "vite-plus/test";
 import { mergeInProgressJobs } from "./animate-in-progress-state";
 import type { AnimateLocalInProgressJob, AnimateVideoJob } from "./animate-models";
 
