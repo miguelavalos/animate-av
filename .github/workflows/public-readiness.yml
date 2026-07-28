@@ -7,6 +7,10 @@ on:
       - main
   workflow_dispatch:
 
+concurrency:
+  group: public-readiness-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
 permissions:
   contents: read
 
@@ -14,20 +18,65 @@ jobs:
   public-hygiene:
     name: Public hygiene
     runs-on: ubuntu-latest
+    timeout-minutes: 10
     steps:
       - name: Check out repository
-        uses: actions/checkout@v5
+        uses: actions/checkout@93cb6efe18208431cddfb8368fd83d5badbf9bfd # v5
 
       - name: Run public hygiene checks
         run: scripts/check-public-hygiene.sh
+
+  web-verification:
+    name: Verify public web source
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - name: Check out Animate AV
+        uses: actions/checkout@93cb6efe18208431cddfb8368fd83d5badbf9bfd # v5
+
+      - name: Check out Account AV
+        uses: actions/checkout@93cb6efe18208431cddfb8368fd83d5badbf9bfd # v5
+        with:
+          repository: miguelavalos/account-av
+          path: account-av
+
+      - name: Check out Apps AV
+        uses: actions/checkout@93cb6efe18208431cddfb8368fd83d5badbf9bfd # v5
+        with:
+          repository: miguelavalos/apps-av
+          path: apps-av
+
+      - name: Link local packages
+        run: |
+          set -euo pipefail
+          ln -s "$GITHUB_WORKSPACE/account-av" "$GITHUB_WORKSPACE/../account-av"
+          ln -s "$GITHUB_WORKSPACE/apps-av" "$GITHUB_WORKSPACE/../apps-av"
+
+      - name: Set up Vite+
+        uses: voidzero-dev/setup-vp@250f29ce396baf5e8f24498e17c0dfdebabc26eb # v1
+        with:
+          node-version: "22"
+          cache: true
+
+      - name: Install dependencies
+        run: vp install --frozen-lockfile
+
+      - name: Typecheck and test web source
+        run: |
+          vp run web:typecheck
+          vp run --filter ./apps/web test
+
+      - name: Verify generated files are current
+        run: git diff --exit-code
 
   release-asset-gate:
     name: Release canonical asset gate
     if: github.event_name == 'workflow_dispatch'
     runs-on: ubuntu-latest
+    timeout-minutes: 10
     steps:
       - name: Check out repository
-        uses: actions/checkout@v5
+        uses: actions/checkout@93cb6efe18208431cddfb8368fd83d5badbf9bfd # v5
 
       - name: Run public release readiness checks
         run: scripts/check-public-release-readiness.sh
