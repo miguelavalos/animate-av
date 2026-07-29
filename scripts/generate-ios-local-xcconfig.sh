@@ -73,7 +73,7 @@ trap cleanup EXIT
 cat > "$tmpdir/.env.schema" <<'SCHEMA'
 # This env file uses @env-spec - see https://varlock.dev/env-spec for more info
 #
-# @plugin(@varlock/infisical-plugin@1.1.0)
+# @plugin(@varlock/infisical-plugin@2.0.1)
 # @initInfisical(
 #   projectId=$INFISICAL_PROJECT_ID,
 #   environment=$INFISICAL_ENVIRONMENT,
@@ -111,7 +111,12 @@ read_required_config() {
   local name="$1"
   local value
 
-  if value="$("$varlock_bin" printenv --path "$tmpdir" "$name" 2>/dev/null)" && [ -n "$value" ]; then
+  if ! value="$("$varlock_bin" printenv --path "$tmpdir" "$name" 2>/dev/null)"; then
+    echo "Unable to resolve $name from Infisical environment $env_name." >&2
+    exit 1
+  fi
+
+  if [ -n "$value" ]; then
     printf '%s' "$value"
     return 0
   fi
