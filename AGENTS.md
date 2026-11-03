@@ -118,3 +118,18 @@ Mandatory rules:
 
 If the private repo is unavailable, stop and say that the authoritative runbook
 cannot be checked. Do not substitute a guessed local workflow.
+
+## Review
+
+The independent review that sets the `agent-review` status follows
+[`project-bootstrap/docs/REVIEW.md`](https://github.com/miguelavalos/project-bootstrap/blob/main/docs/REVIEW.md)
+(`~/github/project-bootstrap/docs/REVIEW.md` on agent machines). The reviewer
+is a fresh agent that did not write the change, and its review comment starts
+with `PASS` or `BLOCK`.
+
+## Verification
+
+Before opening a pull request, run `scripts/check-public-hygiene.sh` once from
+the repository root. The full suite, release builds and device runs belong to
+CI and the required checks; do not repeat them locally unless the change needs
+it.

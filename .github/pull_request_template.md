@@ -1,33 +1,27 @@
-## Summary
+## Problem
 
-- 
+<!-- What failed or was missing, in one or two sentences. -->
 
-## Checks
+## Change
 
-- [ ] `scripts/check-public-hygiene.sh`
-- [ ] iOS build/test run, if app code changed:
+<!-- How it is solved and why it touches what it touches. -->
 
-## Release Impact
+## Owner
 
-- [ ] No private release-handoff updates needed.
-- [ ] Any App Store metadata, screenshots, review notes, privacy answers, promo,
-  pricing, or release evidence changes are handled in the private suite, not in
-  this public PR.
-- [ ] Public docs updated where release behavior changed.
+<!-- Which CODEOWNERS area changes, and which manual step remains for the
+owner (an Infisical value, the Apple Developer portal, a deploy, a store
+submission). Write "Nothing" when none.
+App Store metadata, screenshots, review notes, privacy answers, pricing and
+release evidence live in the private suite, not in this public repository.
+Brand assets come from the approved canonical assets only. -->
 
-## Branding And Assets
+## Verification
 
-- [ ] No icon, splash, AV monogram, Avi artwork, or screenshot frame changes.
-- [ ] Any brand asset changes use approved canonical assets and are documented
-  in the private/public canonical asset handoff.
-- [ ] Full `scripts/check-public-release-readiness.sh` run before release if
-  canonical assets changed.
+<!-- What was checked, with which command, device or environment, and what
+could not be checked. "Checks pass" alone is not enough.
+No secrets, local config, signing material, tokens, private URLs, account
+identifiers, purchase data, private media or demo account passwords in a
+public pull request. -->
 
-## Data Safety
-
-- [ ] No secrets, local config, signing material, tokens, private URLs, account
-  identifiers, purchase data, private media, or demo account passwords included.
-
-## Notes
-
-- 
+<!-- The last line is mandatory. Replace the placeholders. -->
+Created with <model> in <harness>, run from T3 Code.
